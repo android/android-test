@@ -1,0 +1,50 @@
+<header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary tac-header">
+  <div class="mdl-layout__header-row tac-logo-row mdl-grid">
+
+    <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-phone mdl-cell--hide-tablet"></div>
+
+    <form class="header-content mdl-cell mdl-cell--8-col" action="http://www.google.com/search">
+
+        <!-- Expandable Textfield -->
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable textfield-demo">
+            <label class="mdl-button mdl-js-button mdl-button--icon" for="q">
+              <i class="material-icons">search</i>
+            </label>
+            <div class="mdl-textfield__expandable-holder">
+              <input class="mdl-textfield__input" type="text" name="q" id="q" />
+              <input type="hidden" name="sitesearch" value="google.github.io/android-testing-support-library" />
+              <label class="mdl-textfield__label" for="sample-expandable">Expandable Input</label>
+            </div>
+          </div>
+
+        <div class="mdl-layout-spacer"></div>
+
+        <a class="tac-site-title" href="{{ site.baseurl }}/">
+          <img src="{{ site.baseurl }}/assets/logogrey.png"/>
+          <span class="mdl-layout-title tac-title">
+            {{ site.title }}
+          </span>
+        </a>
+    </form>
+
+  </div>
+  <div class="mdl-layout__header-row scrollable-header-row mdl-layout--large-screen-only mdl-grid mdl-grid--no-spacing">
+
+    <div class="mdl-cell--hide-phone mdl-cell--hide-tablet mdl-cell mdl-cell--2-col"></div>
+    <nav class="mdl-navigation tac-tab-navigation mdl-cell mdl-cell--8-col">
+
+      <a class="mdl-navigation__link mdl-js-ripple-effect{% if page.site_nav_category == "docs" %} mdl-navigation__link--current{% endif %}"
+      href="{{ "/docs/index.html" | prepend: site.baseurl }}">Documentation<div class="mdl-ripple"></div></a>
+
+      <a class="mdl-navigation__link mdl-js-ripple-effect{% if page.site_nav_category == "samples" %} mdl-navigation__link--current{% endif %}"
+      href="{{ "/samples/index.html" | prepend: site.baseurl }}">Samples<div class="mdl-ripple"></div></a>
+
+      <a class="mdl-navigation__link mdl-js-ripple-effect{% if page.site_nav_category == "downloads" %} mdl-navigation__link--current{% endif %}"
+      href="{{ "/downloads/index.html" | prepend: site.baseurl }}">Downloads<div class="mdl-ripple"></div></a>
+
+      <a class="mdl-navigation__link mdl-js-ripple-effect{% if page.site_nav_category == "support" %} mdl-navigation__link--current{% endif %}"
+      href="{{ "/support/index.html" | prepend: site.baseurl }}">Help<div class="mdl-ripple"></div></a>
+
+    </nav>
+  </div>
+</header>
