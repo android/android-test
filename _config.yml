@@ -2,9 +2,7 @@
 title: Android Testing Support Library
 email: your-email@domain.com
 description: > # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+  This is the official page for the Android Testing Support Library, a library provided by Google for testing Android apps.
 baseurl: "/android-testing-support-library" # the subpath of your site, e.g. /blog/
 url: "https://google.github.io" # the base hostname & protocol for your site
 sourceUrl: "https://android.googlesource.com/platform/frameworks/testing/+/android-support-test/"
