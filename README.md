@@ -2,7 +2,7 @@
 
 The Android Testing Support Library provides an extensive framework for testing Android apps. This library provides a set of APIs that allow you to quickly build and run test code for your apps, including JUnit 4 and functional user interface (UI) tests. You can run tests created using these APIs from the Android Studio IDE or from the command line.
 
-Continue to the [https://google.github.com/android-testing-support-library](ATSL documentation page).
+Continue to the [ATSL documentation page](https://google.github.com/android-testing-support-library).
 
 ## Contributing to the ATSL documentation page
 
