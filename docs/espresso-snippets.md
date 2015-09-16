@@ -404,7 +404,7 @@ For more information see the [FailureHandler](({{ site.sourceUrl }}espresso/core
 
 ### Using inRoot to target non-default windows
 
-Surprising, but true - Android supports multiple [windows](http://developer.android.com/reference/android/view/Window.html). Normally, this is transparent (pun intended) to the users and the app developer, yet in certain cases multiple windows are visible (e.g. an auto-complete window gets drawn over the main application window in the search widget). To simplify your life, by default Espresso uses a heuristic to guess which Window you intend to interact with. This heuristic is almost always "good enough"; however, in rare cases, you'll need to specify which window an interaction should target. You can do this by providing your own root window (aka [Root](({{ site.sourceUrl }}espresso/core/src/main/java/android/support/test/espresso/Root.java)) matcher:
+Surprising, but true - Android supports multiple [windows](http://developer.android.com/reference/android/view/Window.html). Normally, this is transparent (pun intended) to the users and the app developer, yet in certain cases multiple windows are visible (e.g. an auto-complete window gets drawn over the main application window in the search widget). To simplify your life, by default Espresso uses a heuristic to guess which Window you intend to interact with. This heuristic is almost always "good enough"; however, in rare cases, you'll need to specify which window an interaction should target. You can do this by providing your own root window (aka [Root]({{ site.sourceUrl }}espresso/core/src/main/java/android/support/test/espresso/Root.java) matcher:
 
 {% highlight java %}
 onView(withText("South China Sea"))
