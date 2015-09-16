@@ -89,7 +89,7 @@ Now the code to click on the item is simple:
 onData(withItemContent("item: 50")) .perform(click());
 {% endhighlight %}
 
-For the full code of this test, take a look at [AdapterViewTest#testClickOnItem50](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java) and the [custom matcher](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/sample/src/androidTest/java/android/support/test/testapp/LongListMatchers.java).
+For the full code of this test, take a look at [AdapterViewTest#testClickOnItem50]({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java) and the [custom matcher]({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/LongListMatchers.java).
 
 ### Matching a specific child view of a view
 
@@ -105,7 +105,7 @@ onData(withItemContent("item: 60"))
   .perform(click());
 {% endhighlight %}
 
-**Note**: This sample uses the ``withItemContent` matcher from the sample above it! Take a look at [ApdaterViewTest#testClickOnSpecificChildOfRow60](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java)!
+**Note**: This sample uses the ``withItemContent` matcher from the sample above it! Take a look at [ApdaterViewTest#testClickOnSpecificChildOfRow60]({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java)!
 
 ### Matching a view that is a footer/header in a ListView
 
@@ -147,11 +147,11 @@ public void testClickFooter() {
 }
 {% endhighlight %}
 
-Take a look at the full code sample at: [AdapterViewtest#testClickFooter](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java)
+Take a look at the full code sample at: [AdapterViewtest#testClickFooter](({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java)
 
 ### Matching a view that is inside an ActionBar
 
-The [ActionBarTestActivity](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/sample/src/main/java/android/support/test/testapp/ActionBarTestActivity.java) has two different action bars: a normal ActionBar and a contextual action bar that is created from a [options menu](http://developer.android.com/guide/topics/ui/menus.html#options-menu). Both action bars have one item that is always visible and two items that are only visible in overflow menu. When an item is clicked, it changes a TextView to the content of the clicked item.
+The [ActionBarTestActivity](({{ site.sourceUrl }}espresso/sample/src/main/java/android/support/test/testapp/ActionBarTestActivity.java) has two different action bars: a normal ActionBar and a contextual action bar that is created from a [options menu](http://developer.android.com/guide/topics/ui/menus.html#options-menu). Both action bars have one item that is always visible and two items that are only visible in overflow menu. When an item is clicked, it changes a TextView to the content of the clicked item.
 
 Matching visible icons on both of the action bars is easy:
 
@@ -248,7 +248,7 @@ public void testActionModeOverflow() {
 
 ![]({{ site.baseurl }}/docs/images/actionbar_contextual_hidden.png)
 
-See the full code for these samples: [ActionBarTest.java](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/sample/src/androidTest/java/android/support/test/testapp/ActionBarTest.java).
+See the full code for these samples: [ActionBarTest.java](({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/ActionBarTest.java).
 
 ## ViewAssertions
 
@@ -330,7 +330,7 @@ public void testDataItemNotInAdapter(){
 
 And we have an assertion that will fail if an item that is equal to "item: 168" exists in an adapter view with the id list.
 
-For the full sample look at [AdapterViewTest#testDataItemNotInAdapter](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java).
+For the full sample look at [AdapterViewTest#testDataItemNotInAdapter](({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java).
 
 ## Idling resources
 
@@ -344,10 +344,10 @@ In such cases, the first thing we suggest is to put on your testability hat and 
 
 Here's what you need to do:
 
-* Implement the [IdlingResource](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/idling-resource/src/main/java/android/support/test/espresso/IdlingResource.java) interface and expose it to your test.
-* Register one or more of your IdlingResource(s) with Espresso by calling [Espresso.registerIdlingResource](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/core/src/main/java/android/support/test/espresso/Espresso.java) in test setup.
+* Implement the [IdlingResource](({{ site.sourceUrl }}espresso/idling-resource/src/main/java/android/support/test/espresso/IdlingResource.java) interface and expose it to your test.
+* Register one or more of your IdlingResource(s) with Espresso by calling [Espresso.registerIdlingResource](({{ site.sourceUrl }}core/src/main/java/android/support/test/espresso/Espresso.java) in test setup.
 
-To see how IdlingResource can be used take a look at the [AdvancedSynchronizationTest](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/sample/src/androidTest/java/android/support/test/testapp/AdvancedSynchronizationTest.java) and the [CountingIdlingResource](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/contrib/src/main/java/android/support/test/espresso/contrib/CountingIdlingResource.java) class.
+To see how IdlingResource can be used take a look at the [AdvancedSynchronizationTest](({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/AdvancedSynchronizationTest.java) and the [CountingIdlingResource](({{ site.sourceUrl }}espresso/contrib/src/main/java/android/support/test/espresso/contrib/CountingIdlingResource.java) class.
 
 Note that the IdlingResource interface is implemented in your app under test so you need to add dependencies carefully:
 
@@ -366,7 +366,7 @@ compile 'com.android.support.test.espresso:espresso-contrib:{{ site.espressoVers
 
 Replacing the default FailureHandler of Espresso with a custom one allows for additional (or different) error handling - e.g. taking a screenshot or dumping extra debug information.
 
-The [CustomFailureHandlerTest](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/sample/src/androidTest/java/android/support/test/testapp/CustomFailureHandlerTest.java?autodive=0%2F%2F%2F%2F) example demonstrates how to implement a custom failure handler:
+The [CustomFailureHandlerTest](({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/CustomFailureHandlerTest.java?autodive=0%2F%2F%2F%2F) example demonstrates how to implement a custom failure handler:
 
 {% highlight java %}
 private static class CustomFailureHandler implements FailureHandler {
@@ -398,13 +398,13 @@ public void setUp() throws Exception {
 }
 {% endhighlight %}
 
-For more information see the [FailureHandler](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/core/src/main/java/android/support/test/espresso/FailureHandler.java) interface and [Espresso.setFailureHandler](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/core/src/main/java/android/support/test/espresso/Espresso.java).
+For more information see the [FailureHandler](({{ site.sourceUrl }}espresso/core/src/main/java/android/support/test/espresso/FailureHandler.java) interface and [Espresso.setFailureHandler](({{ site.sourceUrl }}espresso/core/src/main/java/android/support/test/espresso/Espresso.java).
 
 ## inRoot
 
 ### Using inRoot to target non-default windows
 
-Surprising, but true - Android supports multiple [windows](http://developer.android.com/reference/android/view/Window.html). Normally, this is transparent (pun intended) to the users and the app developer, yet in certain cases multiple windows are visible (e.g. an auto-complete window gets drawn over the main application window in the search widget). To simplify your life, by default Espresso uses a heuristic to guess which Window you intend to interact with. This heuristic is almost always "good enough"; however, in rare cases, you'll need to specify which window an interaction should target. You can do this by providing your own root window (aka [Root](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/core/src/main/java/android/support/test/espresso/Root.java)) matcher:
+Surprising, but true - Android supports multiple [windows](http://developer.android.com/reference/android/view/Window.html). Normally, this is transparent (pun intended) to the users and the app developer, yet in certain cases multiple windows are visible (e.g. an auto-complete window gets drawn over the main application window in the search widget). To simplify your life, by default Espresso uses a heuristic to guess which Window you intend to interact with. This heuristic is almost always "good enough"; however, in rare cases, you'll need to specify which window an interaction should target. You can do this by providing your own root window (aka [Root](({{ site.sourceUrl }}espresso/core/src/main/java/android/support/test/espresso/Root.java)) matcher:
 
 {% highlight java %}
 onView(withText("South China Sea"))
@@ -412,6 +412,6 @@ onView(withText("South China Sea"))
   .perform(click());
 {% endhighlight %}
 
-As is the case with [ViewMatchers](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/core/src/main/java/android/support/test/espresso/matcher/ViewMatchers.java), we provide a set of pre-canned [RootMatchers](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/core/src/main/java/android/support/test/espresso/matcher/RootMatchers.java). Of course, you can always implement your own Matcher<Root>.
+As is the case with [ViewMatchers](({{ site.sourceUrl }}espresso/core/src/main/java/android/support/test/espresso/matcher/ViewMatchers.java), we provide a set of pre-canned [RootMatchers](({{ site.sourceUrl }}espresso/core/src/main/java/android/support/test/espresso/matcher/RootMatchers.java). Of course, you can always implement your own Matcher<Root>.
 
-Take a look at the [sample](https://googleplex-android.googlesource.com/platform/frameworks/testing/+/ub-support-test-release/espresso/sample/src/androidTest/java/android/support/test/testapp/MultipleWindowTest.java) or the [sample on GitHub](https://github.com/googlesamples/android-testing/tree/master/ui/espresso/MultiWindowSample).
+Take a look at the [sample](({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/MultipleWindowTest.java) or the [sample on GitHub](https://github.com/googlesamples/android-testing/tree/master/ui/espresso/MultiWindowSample).
