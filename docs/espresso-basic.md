@@ -32,7 +32,7 @@ onView(withId(R.id.my_view))      // withId(R.id.my_view) is a ViewMatcher
 
 ## Finding a view with onView
 
-In the vast majority of cases, the onView method takes a hamcrest matcher that is expected to match one — and only one — view within the current view hierarchy. Matchers are powerful and will be familiar to those who have used them with Mockito or Junit. If you are not familiar with hamcrest matchers, we suggest you start with a quick look at this presentation.
+In the vast majority of cases, the onView method takes a hamcrest matcher that is expected to match one — and only one — view within the current view hierarchy. Matchers are powerful and will be familiar to those who have used them with Mockito or Junit. If you are not familiar with hamcrest matchers, we suggest you start with a quick look at [this presentation](http://www.slideshare.net/shaiyallin/hamcrest-matchers).
 
 Often the desired view has a unique `R.id` and a simple `withId` matcher will narrow down the view search. However, there are many legitimate cases when you cannot determine `R.id` at test development time. For example, the specific view may not have an R.id or the R.id is not unique. This can make normal instrumentation tests brittle and complicated to write because the normal way to access the view (with `findViewById()`) does not work. Thus, you may need to access private members of the Activity or Fragment holding the view or find a container with a known R.id and navigate to its content for the particular view.
 
