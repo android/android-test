@@ -345,7 +345,7 @@ In such cases, the first thing we suggest is to put on your testability hat and 
 Here's what you need to do:
 
 * Implement the [IdlingResource]({{ site.sourceUrl }}espresso/idling-resource/src/main/java/android/support/test/espresso/IdlingResource.java) interface and expose it to your test.
-* Register one or more of your IdlingResource(s) with Espresso by calling [Espresso.registerIdlingResource]({{ site.sourceUrl }}core/src/main/java/android/support/test/espresso/Espresso.java) in test setup.
+* Register one or more of your IdlingResource(s) with Espresso by calling [Espresso.registerIdlingResource]({{ site.sourceUrl }}espresso/core/src/main/java/android/support/test/espresso/Espresso.java) in test setup.
 
 To see how IdlingResource can be used take a look at the [AdvancedSynchronizationTest]({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/AdvancedSynchronizationTest.java) and the [CountingIdlingResource]({{ site.sourceUrl }}espresso/contrib/src/main/java/android/support/test/espresso/contrib/CountingIdlingResource.java) class.
 
