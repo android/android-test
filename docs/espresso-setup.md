@@ -16,6 +16,7 @@ This guide covers installing Espresso using the SDK Manager and building it usin
 ## Setup your test environment
 
 To avoid flakiness, we highly recommend that you *turn off system animations* on the virtual or physical device(s) used for testing.
+
 - On your device, under *Settings*->*Developer options* disable the following 3 settings:
   - Window animation scale
   - Transition animation scale
