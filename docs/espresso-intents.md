@@ -81,7 +81,7 @@ public void activityResult_IsHandledProperly() {
 ## Intent matchers ##
 `intending` and `intended` methods take a hamcrest `Matcher<Intent>` as an argument. Hamcrest is library of matcher objects (also known as constraints or predicates). You have these options:
 
- * Use existing intent matcher: Easiest option, which should almost always be preferred.
+ * Use an existing intent matcher: Easiest option, which should almost always be preferred.
  * Implement your own intent matcher: Most flexible option (see the section entitled "Writing custom matchers" in the [Hamcrest tutorial](http://code.google.com/p/hamcrest/wiki/Tutorial))
 
 An example of intent validation with existing Intent matchers:
