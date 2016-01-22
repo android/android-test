@@ -10,7 +10,7 @@ is_site_nav_category: true
 Contributions to this website and the *Android Testing Support Library* are welcome and appreciated!
 
 ## Contributing to this website
-To contribute to this website, feel free to create a pull requests for small fixes. For bigger contributions we recommend to start an issue on the [ATSL issue tracker](https://github.com/google/android-testing-support-library/issues) first.
+To contribute to this website, feel free to create pull requests for small fixes. For bigger contributions we recommend to start an issue on the [ATSL issue tracker](https://github.com/google/android-testing-support-library/issues) first.
 
 ## Contributing to the Android Testing Support Library
 Contributions to the *Android Testing Support Library* are very important to us. They are a great way for you to work on an actual Android product and have an impact on tens of thousands of Android applications. Contributions will usually be available in the next ATSL release.
