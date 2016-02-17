@@ -105,7 +105,7 @@ onData(withItemContent("item: 60"))
   .perform(click());
 {% endhighlight %}
 
-**Note**: This sample uses the ``withItemContent` matcher from the sample above it! Take a look at [ApdaterViewTest#testClickOnSpecificChildOfRow60]({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java)!
+**Note**: This sample uses the `withItemContent` matcher from the sample above it! Take a look at [ApdaterViewTest#testClickOnSpecificChildOfRow60]({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java)!
 
 ### Matching a view that is a footer/header in a ListView
 
