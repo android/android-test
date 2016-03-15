@@ -11,8 +11,8 @@ sourceUrl: "https://android.googlesource.com/platform/frameworks/testing/+/andro
 markdown: kramdown
 
 # Define version numbers for library artifacts
-atslVersion: 0.4.1
-espressoVersion: 2.2.1
+atslVersion: 0.5
+espressoVersion: 2.2.2
 
 gems:
   - octopress-autoprefixer
