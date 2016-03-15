@@ -7,8 +7,8 @@ is_site_nav_category2: true
 site_nav_category: downloads
 ---
 
-### Espresso 2.2.1, Runner/Rules 0.4 (2015-09-14)
 
+### Espresso 2.2.1, Runner/Rules 0.4 (2015-09-15, [Announcement](https://plus.sandbox.google.com/+AndroidDevelopers/posts/SXVtgnoKcAY))
 --------
 
 #### New Features
@@ -49,7 +49,8 @@ site_nav_category: downloads
   * Javadoc fixes and error message improvements
   * Ignore `suite()`'s and don't ignore init errors when using method filters
 
-### Espresso 2.2 / ATSL 0.3 (2015-05-28)
+
+### Espresso 2.2 / ATSL 0.3 (2015-06-09, [Announcement](https://plus.sandbox.google.com/+AndroidDevelopers/posts/4a51oVb59H6))
 --------
 
 #### espresso-web 2.2
@@ -77,8 +78,8 @@ site_nav_category: downloads
   * Fixed for orphan Activities being stuck in stopped stage
   * Update  `Until.scrollFinished(..) ` to return true if no scroll events were generated. Guard against potential NPE in  `UiObject2#setText(..) `.
 
-### Espresso 2.1, Test Runner/Rules 0.2 and UIAutomator 2.1.0 (2015-04-21)
 
+### Espresso 2.1, Test Runner/Rules 0.2 and UIAutomator 2.1.0 (2015-04-21, [Announcement](https://plus.sandbox.google.com/+AndroidDevelopers/posts/Asi9hzcmCJo))
 --------
 
 #### Breaking Changes
@@ -121,7 +122,13 @@ site_nav_category: downloads
   * Add better error message when we can't typeText with a non-latin string. (related to issue: [49](https://code.google.com/p/android-test-kit/issues/detail?id=49))
 
 
-### Version 2.0 (Released on: 2014.12.19)
+### UIAutomator 2.0 (2015.03.12, [Announcement](https://plus.sandbox.google.com/+AndroidDevelopers/posts/WCWANrPkRxg))
+--------
+
+UI Automator is now based on Android Instrumentation and you can build and run tests with the ‘./gradlew connectedCheck’ command.
+
+
+### Espresso Version 2.0, Test Runne 0.1 (Released on: 2014.12.19, [Announcement](https://plus.sandbox.google.com/+AndroidDevelopers/posts/jHXFkebKjEb))
 --------
 
 #### Breaking Changes
