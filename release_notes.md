@@ -8,6 +8,35 @@ site_nav_category: downloads
 ---
 
 
+### Espresso 2.2.2, Runner/Rules 0.5 (2016-02-22, silent release)
+--------
+
+#### New Features
+  * *espresso*
+    * Issue [194253](https://code.google.com/p/android/issues/detail?id=194253): Add support for NavigationView in android support design library
+    * Added checks for enabled animations and transitions
+    * New ViewMatcher API: withResourceName
+
+#### Bug Fixes
+* *espresso*
+  * Issue [195331](https://code.google.com/p/android/issues/detail?id=195331): espresso-core embeds guava's pom files
+  * Moved counting idling resource out of espresso-contrib
+
+* *rules*
+  * Issue [187249](https://code.google.com/p/android/issues/detail?id=187249): NPE in Intents.release()
+
+* *runner*
+  * Issue [196066](https://code.google.com/p/android/issues/detail?id=196066): AndroidJUnitRunner's "-e log true" argument does not bypass actual test 
+  * Wait for debugger in onCreate() of the runner
+  * Moved all supported test annotation out of platform and into ATSL.
+  * Removed the stack trace dump about no JSBridge
+  * Fixed AndroidAnnotatedBuilder
+
+#### Other notable changes
+  * ActivityTestRule, UiThreadTestRule, IntentsTestRule and ServiceTestRule are out of beta.
+  * Add code style settings file for uniform code formatting.
+
+
 ### Espresso 2.2.1, Runner/Rules 0.4 (2015-09-15, [Announcement](https://plus.sandbox.google.com/+AndroidDevelopers/posts/SXVtgnoKcAY))
 --------
 
