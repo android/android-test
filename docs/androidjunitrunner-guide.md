@@ -23,5 +23,6 @@ Here are some of the most common features:
   * [RunListener](http://junit.sourceforge.net/javadoc/org/junit/runner/notification/RunListener.html) support to hook into the test run life-cycle
   * Activity and Application life-cycle monitoring
   * Intent Monitoring and Stubbing
+  * Intercepting Activity creation
 
 This page only covers advanced AndroidJUnitRunner features. Documentation for basic usage can be found in the [AndroidJUnitRunner](http://developer.android.com/tools/testing-support-library/index.html#AndroidJUnitRunner) section on [developer.android.com](http://developer.android.com/). To learn more about using this test runner, see the [API reference](http://developer.android.com/reference/android/support/test/runner/package-summary.html).
