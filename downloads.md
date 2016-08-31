@@ -34,6 +34,11 @@ androidTestCompile 'com.android.support.test.espresso:espresso-contrib:{{ site.e
 androidTestCompile 'com.android.support.test.espresso:espresso-web:{{ site.espressoVersion }}'
 // Espresso-idling-resource for synchronization with background jobs
 androidTestCompile 'com.android.support.test.espresso:espresso-idling-resource:{{ site.espressoVersion }}'
+// Espresso-intents for validation and stubbing of Intents
+androidTestCompile 'com.android.support.test.espresso:espresso-intents:{{ site.espressoVersion }}'
+
+// UiAutomator
+androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:{{ site.uiautomatorVersion }}'
 
 {% endhighlight %}
 

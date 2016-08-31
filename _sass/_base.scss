@@ -141,9 +141,12 @@ code {
 }
 
 code {
-    color: $color-primary;
+    color: #505050;
     font-size: inherit;
     background: transparent;
+
+    padding: 0px 4px;
+    border: 1px solid $grey-color-light;
 }
 
 pre {

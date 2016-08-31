@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Espresso Advanced Samples
+title: Espresso recipes
 permalink: /docs/espresso/advanced/index.html
 site_nav_category: docs
 site_nav_category2: espresso
@@ -10,8 +10,6 @@ site_nav_category_order: 105
 
 * TOC
 {:toc}
-
-## ViewMatchers
 
 ### Matching a view next to another view
 
@@ -28,126 +26,6 @@ Often, the non-unique view will be paired with some unique label that's located 
 onView(allOf(withText("7"), hasSibling(withText("item: 0"))))
   .perform(click());
 {% endhighlight %}
-
-### Matching data using onData and a custom ViewMatcher
-
-The activity below contains a ListView, which is backed by a [SimpleAdapter](http://developer.android.com/reference/android/widget/SimpleAdapter.html) that holds data for each row in a `Map<String, Object>`. Each map has an entry with key `"STR"` that contains the content (string, "item: x") and a key `"LEN"` that contains an Integer, the length of the content.
-
-![]({{ site.baseurl }}/docs/images/list_activity.png)
-
-The code for a click on the row with "item: 50" looks like this:
-
-{% highlight java %}
-onData(allOf(is(instanceOf(Map.class)), hasEntry(equalTo("STR"), is("item: 50")))
-  .perform(click());
-{% endhighlight %}
-
-Let's take apart the `Matcher<Object>` inside `onData`:
-
-{% highlight java %}
-is(instanceOf(Map.class))
-{% endhighlight %}
-
-narrows the search to any item of the AdapterView, which is a Map.
-
-In our case, this is every row of the list view, but we want to click specifically on "item: 50", so we narrow the search further with:
-
-{% highlight java %}
-hasEntry(equalTo("STR"), is("item: 50"))
-{% endhighlight %}
-
-This Matcher<String, Object> will match any Map that contains an entry with any key and value = "item: 50". As the code to look up this is long and we want to reuse it in other locations - let us write a custom "withItemContent" matcher for that.
-
-{% highlight java %}
-  return new BoundedMatcher<Object, Map>(Map.class) {
-    @Override
-    public boolean matchesSafely(Map map) {
-      return hasEntry(equalTo("STR"), itemTextMatcher).matches(map);
-    }
-
-    @Override
-    public void describeTo(Description description) {
-      description.appendText("with item content: ");
-      itemTextMatcher.describeTo(description);
-    }
-  };
-}
-{% endhighlight %}
-
-We use a `BoundedMatcher` as a base because we want to be able to only match on objects of class `Map`. We override the matchesSafely method, put in the matcher we found earlier and match it against a `Matcher<String>` that can be passed as an argument. This allows us to do `withItemContent(equalTo("foo"))`. For code brevity, we create another matcher that already does the equalTo for us and accepts a String.
-
-{% highlight java %}
-public static Matcher<Object> withItemContent(String expectedText) {
-  checkNotNull(expectedText);
-  return withItemContent(equalTo(expectedText));
-}
-{% endhighlight %}
-
-Now the code to click on the item is simple:
-
-{% highlight java %}
-onData(withItemContent("item: 50")) .perform(click());
-{% endhighlight %}
-
-For the full code of this test, take a look at [AdapterViewTest#testClickOnItem50]({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java) and the [custom matcher]({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/LongListMatchers.java).
-
-### Matching a specific child view of a view
-
-The sample above issues a click in the middle of the entire row of a ListView. But what if we want to operate on a specific child of the row? For example, we would like to click on the second column of the row of the LongListActivity, which displays the `String.length` of the first row (to make this less abstract, you can imagine the G+ app that shows a list of comments and each comment has a +1 button next to it):
-
-![]({{ site.baseurl }}/docs/images/item50.png)
-
-Just add an `onChildView` specification to your `DataInteraction`:
-
-{% highlight java %}
-onData(withItemContent("item: 60"))
-  .onChildView(withId(R.id.item_size))
-  .perform(click());
-{% endhighlight %}
-
-**Note**: This sample uses the `withItemContent` matcher from the sample above it! Take a look at [ApdaterViewTest#testClickOnSpecificChildOfRow60]({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java)!
-
-### Matching a view that is a footer/header in a ListView
-
-Headers and footers are added to ListViews via the addHeaderView/addFooterView APIs. To load them using Espresso.onData, make sure to set the data object (second param) to a preset value. For example:
-
-{% highlight java %}
-public static final String FOOTER = "FOOTER";
-...
-View footerView = layoutInflater.inflate(R.layout.list_item, listView, false);
-((TextView) footerView.findViewById(R.id.item_content)).setText("count:");
-((TextView) footerView.findViewById(R.id.item_size)).setText(String.valueOf(data.size()));
-listView.addFooterView(footerView, FOOTER, true);
-{% endhighlight %}
-
-Then, you can write a matcher that matches this object:
-
-{% highlight java %}
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-
-@SuppressWarnings("unchecked")
-public static Matcher<Object> isFooter() {
-  return allOf(is(instanceOf(String.class)), is(LongListActivity.FOOTER));
-}
-{% endhighlight %}
-
-And loading the view in a test is trivial:
-
-{% highlight java %}
-import static com.google.android.apps.common.testing.ui.espresso.Espresso.onData;
-import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.click;
-import static com.google.android.apps.common.testing.ui.espresso.sample.LongListMatchers.isFooter;
-
-public void testClickFooter() {
-  onData(isFooter())
-    .perform(click());
-  ...
-}
-{% endhighlight %}
-
-Take a look at the full code sample at: [AdapterViewtest#testClickFooter]({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java)
 
 ### Matching a view that is inside an ActionBar
 
@@ -196,8 +74,6 @@ public void testClickActionModeItem() {
 Clicking on items in the overflow menu is a bit trickier for the normal action bar as some devices have a hardware overflow menu button (they will open the overflowing items in an options menu) and some devices have a software overflow menu button (they will open a normal overflow menu). Luckily, Espresso handles that for us.
 
 For the normal action bar:
-
-
 
 {% highlight java %}
 public void testActionBarOverflow() {
@@ -249,8 +125,6 @@ public void testActionModeOverflow() {
 ![]({{ site.baseurl }}/docs/images/actionbar_contextual_hidden.png)
 
 See the full code for these samples: [ActionBarTest.java]({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/ActionBarTest.java).
-
-## ViewAssertions
 
 ### Asserting that a view is not displayed
 
@@ -332,36 +206,6 @@ And we have an assertion that will fail if an item that is equal to "item: 168" 
 
 For the full sample look at [AdapterViewTest#testDataItemNotInAdapter]({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java).
 
-## Idling resources
-
-### Using registerIdlingResource to synchronize with custom resources
-
-The centerpiece of Espresso is its ability to seamlessly synchronize all test operations with the application under test. By default, Espresso waits for UI events in the current message queue to process and default AsyncTasks* to complete before it moves on to the next test operation. This should address the majority of application/test synchronization in your application.
-
-However, there are instances where applications perform background operations (such as communicating with web services) via non-standard means; for example: creation and management of threads directly and the use of custom services.
-
-In such cases, the first thing we suggest is to put on your testability hat and ask whether the user of non-standard background operations is warranted. In some cases, it may have happened due to poor understanding of Android and the application could benefit from refactoring (for example, by converting custom creation of threads to AsyncTasks). However, sometimes refactoring is not possible. The good news? Espresso can still synchronize test operations with your custom resources.
-
-Here's what you need to do:
-
-* Implement the [IdlingResource]({{ site.sourceUrl }}espresso/idling-resource/src/main/java/android/support/test/espresso/IdlingResource.java) interface and expose it to your test.
-* Register one or more of your IdlingResource(s) with Espresso by calling [Espresso.registerIdlingResource]({{ site.sourceUrl }}espresso/core/src/main/java/android/support/test/espresso/Espresso.java) in test setup.
-
-To see how IdlingResource can be used take a look at the [AdvancedSynchronizationTest]({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/AdvancedSynchronizationTest.java) and the [CountingIdlingResource]({{ site.sourceUrl }}espresso/contrib/src/main/java/android/support/test/espresso/contrib/CountingIdlingResource.java) class.
-
-Note that the IdlingResource interface is implemented in your app under test so you need to add dependencies carefully:
-
-{% highlight groovy %}
-// IdlingResource is used in the app under test
-compile 'com.android.support.test.espresso:espresso-idling-resource:{{ site.espressoVersion }}'
-
-// For CountingIdlingResource:
-compile 'com.android.support.test.espresso:espresso-contrib:{{ site.espressoVersion }}'
-{% endhighlight %}
-
-
-## Customization
-
 ### Using a custom failure handler
 
 Replacing the default FailureHandler of Espresso with a custom one allows for additional (or different) error handling - e.g. taking a screenshot or dumping extra debug information.
@@ -400,11 +244,9 @@ public void setUp() throws Exception {
 
 For more information see the [FailureHandler]({{ site.sourceUrl }}espresso/core/src/main/java/android/support/test/espresso/FailureHandler.java) interface and [Espresso.setFailureHandler]({{ site.sourceUrl }}espresso/core/src/main/java/android/support/test/espresso/Espresso.java).
 
-## inRoot
-
 ### Using inRoot to target non-default windows
 
-Surprising, but true - Android supports multiple [windows](http://developer.android.com/reference/android/view/Window.html). Normally, this is transparent (pun intended) to the users and the app developer, yet in certain cases multiple windows are visible (e.g. an auto-complete window gets drawn over the main application window in the search widget). To simplify your life, by default Espresso uses a heuristic to guess which Window you intend to interact with. This heuristic is almost always "good enough"; however, in rare cases, you'll need to specify which window an interaction should target. You can do this by providing your own root window (aka [Root]({{ site.sourceUrl }}espresso/core/src/main/java/android/support/test/espresso/Root.java) matcher:
+Surprising, but true - Android supports multiple [windows](http://developer.android.com/reference/android/view/Window.html). Normally, this is transparent (pun intended) to the users and the app developer, yet in certain cases multiple windows are visible (e.g. an auto-complete window gets drawn over the main application window in the search widget). To simplify your life, by default Espresso uses a heuristic to guess which Window you intend to interact with. This heuristic is almost always "good enough"; however, in rare cases, you'll need to specify which window an interaction should target. You can do this by providing your own root window (aka [Root]({{ site.sourceUrl }}espresso/core/src/main/java/android/support/test/espresso/Root.java)) matcher:
 
 {% highlight java %}
 onView(withText("South China Sea"))
@@ -415,3 +257,45 @@ onView(withText("South China Sea"))
 As is the case with [ViewMatchers]({{ site.sourceUrl }}espresso/core/src/main/java/android/support/test/espresso/matcher/ViewMatchers.java), we provide a set of pre-canned [RootMatchers]({{ site.sourceUrl }}espresso/core/src/main/java/android/support/test/espresso/matcher/RootMatchers.java). Of course, you can always implement your own Matcher<Root>.
 
 Take a look at the [sample]({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/MultipleWindowTest.java) or the [sample on GitHub](https://github.com/googlesamples/android-testing/tree/master/ui/espresso/MultiWindowSample).
+
+### Matching a view that is a footer/header in a ListView
+
+Headers and footers are added to ListViews via the `addHeaderView()`/`addFooterView()` APIs. To ensure `Espresso.onData()` knows what data object to match, make sure to pass a preset data object value as the second parameter to `addHeaderView()`/`addFooterView()`. For example:
+
+{% highlight java %}
+public static final String FOOTER = "FOOTER";
+...
+View footerView = layoutInflater.inflate(R.layout.list_item, listView, false);
+((TextView) footerView.findViewById(R.id.item_content)).setText("count:");
+((TextView) footerView.findViewById(R.id.item_size)).setText(String.valueOf(data.size()));
+listView.addFooterView(footerView, FOOTER, true);
+{% endhighlight %}
+
+Then, you can write a matcher for the footer:
+
+{% highlight java %}
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+
+@SuppressWarnings("unchecked")
+public static Matcher<Object> isFooter() {
+  return allOf(is(instanceOf(String.class)), is(LongListActivity.FOOTER));
+}
+{% endhighlight %}
+
+And loading the view in a test is trivial:
+
+{% highlight java %}
+import static com.google.android.apps.common.testing.ui.espresso.Espresso.onData;
+import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.click;
+import static com.google.android.apps.common.testing.ui.espresso.sample.LongListMatchers.isFooter;
+
+public void testClickFooter() {
+  onData(isFooter())
+    .perform(click());
+  ...
+}
+{% endhighlight %}
+
+Take a look at the full code sample at: [AdapterViewtest#testClickFooter]({{ site.sourceUrl }}espresso/sample/src/androidTest/java/android/support/test/testapp/AdapterViewTest.java)

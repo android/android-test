@@ -112,6 +112,7 @@
 .tac-navigation .mdl-navigation__link--current {
   font-weight: 800;
   color: $color-primary !important;
+  background-color: $tac-grey;
 }
 .tac-navigation {
   flex-direction: column;
@@ -121,8 +122,8 @@
   & .mdl-navigation__link {
     display: block;
     flex-shrink: 0;
-    padding: 16px;
-    padding-left: 20px;
+    padding: 8px;
+    padding-left: 24px;
     margin: 0;
     color: grey;
 

@@ -29,19 +29,12 @@ Espresso tests run optimally fast! It lets you leave your waits, syncs, sleeps, 
 
 Espresso is targeted at developers, who believe that automated testing is an integral part of the development lifecycle. While it can be used for black-box testing, Espresso's full power is unlocked by those who are familiar with the codebase under test.
 
-### Backward Compatibility
+### Packages
 
-Espresso is supported on the following APIs:
+* **espresso-core** - Contains core and basic View matchers, actions, and assertions. See [Basics]({{ site.baseurl }}/docs/espresso/basics/index.html) and [Advanced Samples]({{ site.baseurl }}/docs/espresso/advanced/index.html).
+* **[espresso-web]({{ site.baseurl }}/docs/espresso/web/index.html)** - Contains resources for WebView support.
+* **[espresso-idling-resource]({{ site.baseurl }}/docs/espresso/idling-resource/index.html)** - Espresso's mechanism for synchronization with background jobs.
+* **espresso-contrib** - External contributions that contain DatePicker, [RecyclerView]({{ site.baseurl }}/docs/espresso/lists/index.html#recyclerviews) and Drawer actions, Accessibility checks, and CountingIdlingResource.
+* **[espresso-intents]({{ site.baseurl }}/docs/espresso/intents/index.html)** - Extention to validate and stub Intents, for hermetic testing.
 
-|*Codename*|*API*|
-|Froyo|8|
-|Gingerbread|10|
-|Ice Cream Sandwich|15|
-|Jelly Bean|16, 17 ,18|
-|KitKat|19|
-|Lollipop|21|
-
-#### Notes:
-
-- We use the [platform versions dashboard](http://developer.android.com/about/dashboards/index.html#Platform) to decide which APIs are supported. As the number of users on older API levels falls off, we will deprecate support for those API levels (Froyo is almost there).
-- Future versions of Android will be supported.
+The latest versions and release notes can be found in [Downloads]({{ site.baseurl }}/downloads/index.html).
