@@ -1247,7 +1247,7 @@ class EmulatedDevice(object):
             emu_path, 'lib64/qt/plugins'),
     }
 
-    # disable emulator-XXXX from adb devices on forge.
+    # disable emulator-XXXX from adb devices on .
     if not FLAGS.skip_connect_device:
       target_env['ANDROID_ADB_SERVER_PORT'] = '1'
 
