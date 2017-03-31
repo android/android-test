@@ -1325,7 +1325,9 @@ class EmulatedDevice(object):
       if self._NeedBootGL():
         self._emulator_start_args.extend(['-gpu', 'on'])
 
-    if not self._enable_gps:
+    if (not self._enable_gps and
+        self._metadata_pb.emulator_type ==
+        emulator_meta_data_pb2.EmulatorMetaDataPb.QEMU):
       self._emulator_start_args.extend(['-gps', 'null'])
 
     if not with_audio:
