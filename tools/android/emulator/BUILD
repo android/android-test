@@ -19,14 +19,23 @@ package(default_visibility = ["//visibility:public"])
 
 MOX = "@mox_archive//:mox"
 
-PYGLIB = ["@google_apputils//:apputils", "@gflags_archive//:gflags"]
+PYGLIB = [
+    "@google_apputils//:apputils",
+    "@gflags_archive//:gflags",
+]
 
 PORTPICKER = "@portpicker_archive//:portpicker"
 
-M2CRYPTO = '//third_party/py/M2Crypto'
+M2CRYPTO = "//third_party/py/M2Crypto"
 
 TESTING_PYBASE = ":resources"
 
+genrule(
+    name = "default_sdcard_img",
+    srcs = ["support/default_sdcard.256.img.tar.gz"],
+    outs = ["support/default_sdcard.256.img"],
+    cmd = "tar -xzvf $< -O > $@",
+)
 
 # An implicit dependancy of all android_devices - modify with care!
 filegroup(
@@ -35,10 +44,9 @@ filegroup(
     srcs = [
         "support/adb.turbo",
         "support/cache.img.tar.gz",
-        "support/default_sdcard.256.img",
+        ":default_sdcard.256.img",
     ],
 )
-
 
 # Used for WebView testing.
 filegroup(
@@ -52,7 +60,7 @@ filegroup(
 py_library(
     name = "common",
     srcs = ["common.py"],
-    deps = PYGLIB
+    deps = PYGLIB,
 )
 
 py_test(
@@ -89,25 +97,23 @@ py_library(
         ":emulator_meta_data_pb_py_pb2",
         ":xserver",
         PORTPICKER,
-    ] + PYGLIB
+    ] + PYGLIB,
 )
 
 py_binary(
     name = "unified_launcher_head",
     srcs = ["unified_launcher.py"],
-    main = "unified_launcher.py",
     imports = ["../../.."],
+    main = "unified_launcher.py",
     deps = [
         ":emulated_device",
         ":emulator_meta_data_pb_py_pb2",
         ":resources",
         ":xserver",
         "@protobuf//:protobuf_python",
-        PORTPICKER
+        PORTPICKER,
     ] + PYGLIB,
 )
-
-
 
 py_library(
     name = "xserver",
@@ -123,20 +129,18 @@ py_test(
         ":xres",
     ],
     deps = [
+        ":resources",
         ":xserver",
-        ":resources"
     ],
 )
 
-
-
-
 py_library(
     name = "fake_android_platform_util",
-    srcs = [ "fake_android_platform_util.py" ],
+    srcs = ["fake_android_platform_util.py"],
     deps = [
         ":emulated_device",
-    ] + PYGLIB)
+    ] + PYGLIB,
+)
 
 py_binary(
     name = "xres",
@@ -158,16 +162,16 @@ py_test(
         "--system_image_dir=../androidsdk/system-images/android-10/default/armeabi-v7a",
         "--android_sdk_path=../androidsdk",
     ],
-    imports = ["../../.."],
     data = [
-        "@androidsdk//:android-10_default_armeabi-v7a_files",
         ":android_sdk_repository_emulator_tools",
+        "@androidsdk//:android-10_default_armeabi-v7a_files",
     ],
+    imports = ["../../.."],
     deps = [
         ":emulated_device",
         ":fake_android_platform_util",
         TESTING_PYBASE,
-        MOX
+        MOX,
     ],
 )
 
@@ -179,18 +183,17 @@ py_test(
         "--system_image_dir=../androidsdk/system-images/android-10/default/armeabi-v7a",
         "--android_sdk_path=../androidsdk",
     ],
-    imports = ["../../.."],
     data = [
-        "@androidsdk//:android-10_default_armeabi-v7a_files",
         ":android_sdk_repository_emulator_tools",
+        "@androidsdk//:android-10_default_armeabi-v7a_files",
     ],
+    imports = ["../../.."],
     deps = [
         ":emulated_device",
         ":fake_android_platform_util",
         TESTING_PYBASE,
     ],
 )
-
 
 py_test(
     name = "unified_launcher_test",
@@ -244,20 +247,21 @@ GL_API_LEVELS = [
     for api in GL_API_LEVELS
 ]
 
-
-
-py_library(name="resources",
-  srcs = ["resources.py"])
+py_library(
+    name = "resources",
+    srcs = ["resources.py"],
+)
 
 py_test(
     name = "resources_test",
-    srcs = [ "resources_test.py"],
+    srcs = ["resources_test.py"],
     deps = [
         ":resources",
-    ] + PYGLIB
+    ] + PYGLIB,
 )
 
-py_library(name = "emulator_meta_data_pb_py_pb2",
+py_library(
+    name = "emulator_meta_data_pb_py_pb2",
     srcs = ["emulator_meta_data_pb2.py"],
     deps = ["@protobuf//:protobuf_python"],
 )
@@ -266,11 +270,11 @@ filegroup(
     name = "android_sdk_repository_emulator_tools",
     srcs = [
         "@androidsdk//:adb",
+        "@androidsdk//:empty_snapshot_fs",
         "@androidsdk//:emulator_arm",
+        "@androidsdk//:emulator_shared_libs",
         "@androidsdk//:emulator_x86",
         "@androidsdk//:emulator_x86_bios",
         "@androidsdk//:mksd",
-        "@androidsdk//:empty_snapshot_fs",
-        "@androidsdk//:emulator_shared_libs",
     ],
 )
