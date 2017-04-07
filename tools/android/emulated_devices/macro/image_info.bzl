@@ -1,0 +1,55 @@
+"""Image info contains all well known system image files in android_test_support."""
+load('/tools/android/emulated_devices/macro/image', 'new_image', 'image_api')
+
+_IMG_TEMPLATE = '//third_party/java/android/system_images:emulator_images_%s'
+_GOOGLE = 'google'
+_ANDROID = 'android'
+_WEAR = 'wear'
+_TV = 'tv'
+_SUPPORTS_GMS_CHANNELS = [_GOOGLE, _WEAR, _TV]
+
+
+def _default_images(api_level, flavors):
+  """Helper function to build standard images."""
+  images = []
+  for a in ['arm', 'x86']:
+    for f in flavors:
+      target = '%s_%s_%s' % (f, api_level, a)
+      images.append(
+          new_image(
+              flavor=f,
+              api_level=api_level,
+              arch=a,
+              supports_gms_channels=f in _SUPPORTS_GMS_CHANNELS,
+              files=_IMG_TEMPLATE % target))
+  return images
+
+
+_ALL_IMAGES = (
+    _default_images(10, [_GOOGLE, _ANDROID]) +
+    _default_images( 15, [_GOOGLE, _ANDROID]) +
+    _default_images(16, [_GOOGLE, _ANDROID]) +
+    _default_images(17, [_GOOGLE, _ANDROID]) +
+    _default_images( 18, [_GOOGLE, _ANDROID]) +
+    _default_images( 19, [_GOOGLE, _ANDROID]) +
+    _default_images(20, [_WEAR]) +
+    _default_images(21, [_GOOGLE, _ANDROID, _WEAR, _TV]) +
+    _default_images(22, [_GOOGLE, _ANDROID, _WEAR, _TV]) +
+    _default_images(23, [_GOOGLE, _ANDROID, _WEAR, _TV]) +
+    _default_images(24, [_GOOGLE, _ANDROID, _WEAR, _TV]) +
+    _default_images(25, [_GOOGLE, _ANDROID, _WEAR]) +
+    _default_images(26, [_GOOGLE, _ANDROID])
+    )
+
+
+def _api_to_images():
+  a2i = {}
+  for image in _ALL_IMAGES:
+    api = image_api(image)
+    images = a2i.get(api, [])
+    images.append(image)
+    a2i[api] = images
+  return a2i
+
+
+API_TO_IMAGES = _api_to_images()

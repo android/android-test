@@ -18,7 +18,7 @@
 
 import os
 
-import portpicker
+from net.util.python import portpicker
 import gflags as flags
 from tools.android.emulator import resources
 from google.apputils import basetest as googletest

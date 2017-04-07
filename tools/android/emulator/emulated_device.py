@@ -42,7 +42,7 @@ except ImportError as e:
   X509 = collections.namedtuple('X509', ['FORMAT_PEM', 'FORMAT_DER'])
   print ('If you want to add certificates to the emulator, Please install '
          'MCrypt library using sudo apt-get install python-mcrypt .')
-import portpicker
+from net.util.python import portpicker
 import gflags as flags
 import gflags as flags_validators
 from tools.android.emulator import resources
