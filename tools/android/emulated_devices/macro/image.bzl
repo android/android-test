@@ -1,5 +1,5 @@
 """Image object contains details about a particular set of image files."""
-load('/tools/android/emulated_devices/macro/props', 'new_props')
+load('//tools/android/emulated_devices:macro/props.bzl', 'new_props')
 
 
 def new_image(api_level,

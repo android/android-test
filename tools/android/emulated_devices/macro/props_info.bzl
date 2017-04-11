@@ -1,8 +1,8 @@
 """Knows how to combine property objects from different sources."""
-load('/tools/android/emulated_devices/macro/props', 'props_boot', 'props_avd')
-load('/tools/android/emulated_devices/macro/image', 'image_api', 'image_props')
-load('/tools/android/emulated_devices/macro/hardware', 'hardware_props')
-load('/tools/android/emulated_devices/macro/emulator', 'emulator_props')
+load('//tools/android/emulated_devices:macro/props.bzl', 'props_boot', 'props_avd')
+load('//tools/android/emulated_devices:macro/image.bzl', 'image_api', 'image_props')
+load('//tools/android/emulated_devices:macro/hardware.bzl', 'hardware_props')
+load('//tools/android/emulated_devices:macro/emulator.bzl', 'emulator_props')
 
 _BOOT_PROP_TMPL = '%s=%s\n'
 _AVD_CONFIG_TMPL = 'avd_config_ini.%s=%s\n'

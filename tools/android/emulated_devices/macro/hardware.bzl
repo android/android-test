@@ -1,5 +1,5 @@
 """Hardware object contains hardware specifications we wish to emulator."""
-load('/tools/android/emulated_devices/macro/props', 'new_props')
+load('//tools/android/emulated_devices:macro/props.bzl', 'new_props')
 
 
 def new_hardware(horizontal_resolution,

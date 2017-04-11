@@ -1,13 +1,13 @@
 """Defines the emulators and their supported configs in android_test_support."""
 
 load(
-    "/tools/android/emulated_devices/macro/emulator",
+    "//tools/android/emulated_devices:macro/emulator.bzl",
     "new_emulator",
     "emulator_type",
     "emulator_files",
 )
-load("/tools/android/emulated_devices/macro/image", "image_files")
-load("/tools/android/emulated_devices/macro/props", "new_props")
+load("//tools/android/emulated_devices:macro/image.bzl", "image_files")
+load("//tools/android/emulated_devices:macro/props.bzl", "new_props")
 
 _EMULATOR_TYPE_PROP = "ro.mobile_ninjas.emulator_type"
 

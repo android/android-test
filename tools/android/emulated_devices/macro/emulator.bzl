@@ -1,6 +1,6 @@
 """Emulator object exposes data about a particular emulator."""
-load('/tools/android/emulated_devices/macro/props', 'new_props')
-load('/tools/android/emulated_devices/macro/image', 'image_arch')
+load('//tools/android/emulated_devices:macro/props.bzl', 'new_props')
+load('//tools/android/emulated_devices:macro/image.bzl', 'image_arch')
 
 
 def new_emulator(emu_type,

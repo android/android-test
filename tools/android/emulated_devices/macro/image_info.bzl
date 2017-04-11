@@ -1,5 +1,5 @@
 """Image info contains all well known system image files in android_test_support."""
-load('/tools/android/emulated_devices/macro/image', 'new_image', 'image_api')
+load('//tools/android/emulated_devices:macro/image.bzl', 'new_image', 'image_api')
 
 _IMG_TEMPLATE = '//third_party/java/android/system_images:emulator_images_%s'
 _GOOGLE = 'google'

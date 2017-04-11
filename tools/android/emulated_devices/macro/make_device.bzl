@@ -1,22 +1,22 @@
 load(
-    '/tools/android/emulated_devices/macro/device_config_info',
+    '//tools/android/emulated_devices:macro/device_config_info.bzl',
     'compatible_cheeses',)
 
-load('/tools/android/emulated_devices/macro/image', 'image_flavor', 'image_api',
+load('//tools/android/emulated_devices:macro/image.bzl', 'image_flavor', 'image_api',
      'image_arch', 'image_supports_gms_channels', 'image_version_string',
      'image_device_visibility')
 
-load('/tools/android/emulated_devices/macro/emulator',
+load('//tools/android/emulated_devices:macro/emulator.bzl',
      'supported_arches_for_api', 'emulator_suffix', 'emulator_tags')
 
-load('/tools/android/emulated_devices/macro/hardware', 'new_hardware',
+load('//tools/android/emulated_devices:macro/hardware.bzl', 'new_hardware',
      'hardware_device_attributes')
 
-load('/tools/android/emulated_devices/macro/props', 'new_props')
-load('/tools/android/emulated_devices/macro/image_info', 'API_TO_IMAGES')
-load('/tools/android/emulated_devices/macro/emulator_info', 'TYPE_TO_EMULATOR',
+load('//tools/android/emulated_devices:macro/props.bzl', 'new_props')
+load('//tools/android/emulated_devices:macro/image_info.bzl', 'API_TO_IMAGES')
+load('//tools/android/emulated_devices:macro/emulator_info.bzl', 'TYPE_TO_EMULATOR',
      'UMA', 'QEMU', 'QEMU2', 'extra_system_image_contents')
-load('/tools/android/emulated_devices/macro/props_info',
+load('//tools/android/emulated_devices:macro/props_info.bzl',
      'generate_prop_content')
 
 
