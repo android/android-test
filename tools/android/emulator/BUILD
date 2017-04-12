@@ -164,7 +164,7 @@ py_test(
     ],
     data = [
         ":android_sdk_repository_emulator_tools",
-        "@androidsdk//:android-10_default_armeabi-v7a_files",
+        "@androidsdk//:emulator_images_android_10_arm",
     ],
     imports = ["../../.."],
     deps = [
@@ -185,7 +185,7 @@ py_test(
     ],
     data = [
         ":android_sdk_repository_emulator_tools",
-        "@androidsdk//:android-10_default_armeabi-v7a_files",
+        "@androidsdk//:emulator_images_android_10_arm",
     ],
     imports = ["../../.."],
     deps = [
@@ -228,7 +228,7 @@ GL_API_LEVELS = [
             "--android_sdk_path=../androidsdk",
         ],
         data = [
-            "@androidsdk//:android-%s_default_x86_files" % api,
+            "@androidsdk//:emulator_images_android_%s_x86" % api,
             ":android_sdk_repository_emulator_tools",
             ":xvfb_support",
         ],
