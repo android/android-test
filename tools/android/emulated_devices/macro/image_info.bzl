@@ -1,12 +1,14 @@
-"""Image info contains all well known system image files in android_test_support."""
+"""Image info contains all well known system image files."""
 load('//tools/android/emulated_devices:macro/image.bzl', 'new_image', 'image_api')
 
-_IMG_TEMPLATE = '//third_party/java/android/system_images:emulator_images_%s'
+_IMG_TEMPLATE = (
+    '@androidsdk//:emulator_images_%s'
+)
+
 _GOOGLE = 'google'
 _ANDROID = 'android'
 _WEAR = 'wear'
 _TV = 'tv'
-_SUPPORTS_GMS_CHANNELS = [_GOOGLE, _WEAR, _TV]
 
 
 def _default_images(api_level, flavors):
@@ -20,7 +22,6 @@ def _default_images(api_level, flavors):
               flavor=f,
               api_level=api_level,
               arch=a,
-              supports_gms_channels=f in _SUPPORTS_GMS_CHANNELS,
               files=_IMG_TEMPLATE % target))
   return images
 

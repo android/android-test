@@ -1,10 +1,7 @@
-load(
-    '//tools/android/emulated_devices:macro/device_config_info.bzl',
-    'compatible_cheeses',)
+"""Helper functions for generating android_device rules."""
 
 load('//tools/android/emulated_devices:macro/image.bzl', 'image_flavor', 'image_api',
-     'image_arch', 'image_supports_gms_channels', 'image_version_string',
-     'image_device_visibility')
+     'image_arch', 'image_version_string', 'image_device_visibility')
 
 load('//tools/android/emulated_devices:macro/emulator.bzl',
      'supported_arches_for_api', 'emulator_suffix', 'emulator_tags')
@@ -14,8 +11,8 @@ load('//tools/android/emulated_devices:macro/hardware.bzl', 'new_hardware',
 
 load('//tools/android/emulated_devices:macro/props.bzl', 'new_props')
 load('//tools/android/emulated_devices:macro/image_info.bzl', 'API_TO_IMAGES')
-load('//tools/android/emulated_devices:macro/emulator_info.bzl', 'TYPE_TO_EMULATOR',
-     'UMA', 'QEMU', 'QEMU2', 'extra_system_image_contents')
+load('//tools/android/emulated_devices:macro/emulator_info.bzl',
+     'TYPE_TO_EMULATOR', 'QEMU', 'QEMU2', 'extra_system_image_contents')
 load('//tools/android/emulated_devices:macro/props_info.bzl',
      'generate_prop_content')
 
@@ -51,7 +48,7 @@ def make_device(name,
                 visibility=None,
                 emulator_types=None,
                 archs_override=None,
-                pastries=None):
+               ):
   """Generates a set of android_device targets.
 
   It is recommended to use new_devices() instead.
@@ -73,12 +70,11 @@ def make_device(name,
     boot_apks: [optional] a list of apks to install on the emulator during the
       boot cycle.
     visibility: [optional] visibility to assign the android_device objects.
-    emulator_types: [optional] A list of qemu, qemu2, uma.
+    emulator_types: [optional] A list of emulator types to generate.
     archs_override: [optional] overrides any restrictions a particular emulator
       may define about running a particular architecture. (For example, we do
       not use QEMU to run ARM images after api level 19, but if you want to
       deal with the inheritant issues, feel free!
-    pastries: [optional] a list of images in active development from pastry_info
 
     Returns:
       A set of all types of android_devices that meet the specified
@@ -102,7 +98,7 @@ def make_device(name,
       archs_override=archs_override,
       system_image_flavors=system_image_flavors,
       visibility=visibility,
-      pastries=pastries)
+  )
 
 
 def _make_property_target(name, user_props, emulator, hardware, image):
@@ -133,7 +129,7 @@ def new_devices(name,
                 boot_apks=None,
                 visibility=None,
                 archs_override=None,
-                pastries=None):
+               ):
   """Generates a set of android_device targets.
 
   Arguments:
@@ -147,8 +143,8 @@ def new_devices(name,
     user_props: [optional] A dictionary containing system and avd properties.
       Create with //tools/android/emulated_devices/macro/props:new_props.
       Elements in this dictionary will override any properties defined by the
-      system image or hardware themselves. The emulator (QEMU/UMA/QEMU2) may
-      override certain user specified properties though.
+      system image or hardware themselves. The emulator may override certain
+      user specified properties though.
     emulators: [optional] A list of emulator binaries to run the device on
       use the constants defined in
       //tools/android/emulated_devices/macro/emulator_info
@@ -159,7 +155,6 @@ def new_devices(name,
       may define about running a particular architecture. (For example, we do
       not use QEMU to run ARM images after api level 19, but if you want to
       deal with the inheritant issues, feel free!
-    pastries: [optional] a list of images in active development from pastry_info
 
     Returns:
       A set of all types of android_devices that meet the specified
@@ -167,7 +162,8 @@ def new_devices(name,
   """
 
   user_props = user_props or new_props()
-  emulators = emulators or [UMA, QEMU, QEMU2]
+  if not emulators:
+    emulators = [QEMU, QEMU2]
   visibility = visibility or ['//visibility:public']
   boot_apks = boot_apks or []
   requested_flavors = system_image_flavors or ['google', 'android']
@@ -178,7 +174,6 @@ def new_devices(name,
     if api < min_api:
       continue
     images_to_build.extend(images)
-  images_to_build.extend(pastries or [])
   for image in images_to_build:
     if image_flavor(image) not in requested_flavors:
       continue
@@ -209,40 +204,4 @@ def new_devices(name,
           visibility=image_device_visibility(image) or visibility,
           **hardware_device_attributes(hardware))
 
-      if image_supports_gms_channels(image):
-        for cheese in compatible_cheeses[image_api(image)]:
-          gms_device_name = '%s_gms_%s' % (device_name, cheese)
-
-          cheese_apk = _get_cheese_apk(image, cheese)
-          # once boot_apks is a top level attribute, simplify this.
-          cheese_system_image_target = _make_system_image_target(
-              gms_device_name,
-              system_image_contents + boot_apks + [cheese_apk])
-          native.android_device(
-              name=gms_device_name,
-              default_properties=property_target,
-              system_image=cheese_system_image_target,
-              tags=tags,
-              visibility=image_device_visibility(image) or visibility,
-              **hardware_device_attributes(hardware))
-
-def _get_cheese_apk(image, cheese):
-  """Helper function to get the proper gms core apk."""
-  cheese_filegroup_target = '//third_party/java/android_apps/gcore:gcore_'
-  if image_flavor(image) == 'wear':
-    cheese_filegroup_target += 'wearable_'
-  elif image_flavor(image) == 'tv':
-    cheese_filegroup_target += 'atv_'
-  else:
-    if image_api(image) >= 23:
-      cheese_filegroup_target += 'mnc_'
-    elif image_api(image) >= 21:
-      cheese_filegroup_target += 'lmp_'
-    if image_arch(image) == 'arm':
-      cheese_filegroup_target += 'arm_'
-
-  cheese_filegroup_target += 'apk'
-  if cheese != 'stable':
-    cheese_filegroup_target += '_%s' % cheese
-  return cheese_filegroup_target
 

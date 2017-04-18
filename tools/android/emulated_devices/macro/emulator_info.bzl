@@ -11,27 +11,6 @@ load("//tools/android/emulated_devices:macro/props.bzl", "new_props")
 
 _EMULATOR_TYPE_PROP = "ro.mobile_ninjas.emulator_type"
 
-# UMA is User-Mode-Android. This emulator can run ontop of a standard linux
-# machine without requiring KVM. It runs ~75-80% of the speed of a KVM based
-# emulator. It is useful when you cannot go thru the hoops of getting KVM
-# access.
-UMA = new_emulator(
-    "uma",
-    extra_files = ["//tools/android/emulator/uma"],
-    props = new_props(boot_properties = {_EMULATOR_TYPE_PROP: "uma"}),
-    supports = {"x86": [
-        10,
-        15,
-        16,
-        17,
-        18,
-        19,
-        21,
-        22,
-        23,
-    ]},
-    uses_kvm = False,
-)
 
 # QEMU1 is the legacy emulator. It is also currently our default emulator.
 # Most of android-emulator's team development work focuses on QEMU2, we're
@@ -85,14 +64,16 @@ QEMU2_APIS = [
 # backporting support to older api levels, but it is slow going.
 QEMU2 = new_emulator(
     "qemu2",
-    extra_files = ["//third_party/java/android/android_sdk_linux:qemu2_x86"],
+    extra_files = [
+        "@androidsdk//:qemu2_x86",
+    ],
     props = new_props(boot_properties = {_EMULATOR_TYPE_PROP: "qemu2"}),
     supports = {"x86": QEMU2_APIS},
 )
 
 def _t2e():
   t2e = dict()
-  for e in [UMA, QEMU, QEMU2]:
+  for e in [QEMU, QEMU2]:
     t2e[emulator_type(e)] = e
   return t2e
 
