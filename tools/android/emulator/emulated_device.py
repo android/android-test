@@ -211,19 +211,6 @@ def _CheckCoresFlag(cores):
   return True
 
 
-def _IPv6OnlyEnv():
-  """Check if system only provides IPv6 connectivity."""
-  working = set()
-  for af in [socket.AF_INET, socket.AF_INET6]:
-    try:
-      s = socket.socket(af, socket.SOCK_STREAM)
-      s.close()
-      working.add(af)
-    except socket.error:
-      pass
-  return socket.AF_INET6 in working and socket.AF_INET not in working
-
-
 class AndroidPlatform(object):
   """Used to find all the binaries offered in the android sdk."""
 
@@ -1475,12 +1462,6 @@ class EmulatedDevice(object):
     self.ExecOnDevice(['setprop', 'qemu.host.socket.dir',
                        str(self._sockets_dir)])
     self.ExecOnDevice(['setprop', 'qemu.host.hostname', socket.gethostname()])
-    # Use IPv6 DNS server address in pure IPv6 environment.
-    # fec0::3 is the default IPv6 DNS server address of qemu.
-    # qemu forwards any DNS requests to this address to host DNS servers.
-    if _IPv6OnlyEnv():
-      self.ExecOnDevice(['setprop', 'net.eth0.dns1', 'fec0::3'])
-      self.ExecOnDevice(['setprop', 'net.dns1', 'fec0::3'])
     # set screen off timeout to 30 minutes.
     self._SetDeviceSetting(self.GetApiVersion(), 'system',
                            'screen_off_timeout', '1800000')
