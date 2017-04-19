@@ -4,8 +4,6 @@
 # Description:
 #   Please see the subpackages for android_device targets by brand name.
 
-# For //devtools/bazel/integration:android_test_cc_test:
-package(default_visibility = ["//devtools/bazel/integration:__subpackages__"])
 
 exports_files(
     glob(["macro/*bzl"]),
