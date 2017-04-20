@@ -209,7 +209,7 @@ _ADD_ACCOUNT_BROADCAST_ACTION = ('com.google.android.apps.auth.test.support'
 _ADD_ACCOUNT_BOOLEAN_EXTRAS = {'syncable': True, 'auto_sync': True}
 
 
-@flags.Validator('window_scale')
+@flags.validator('window_scale')
 def _CheckWindowScale(window_scale):
   if window_scale < 10 or window_scale > 300:
     raise flags_validators.Error('Scale factor outside range: 10-300')

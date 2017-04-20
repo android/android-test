@@ -202,7 +202,7 @@ _CONSOLE_TOKEN_DEVICE_PATH = '/data/console_token'
 _MAX_CORES_NUM = 16
 
 
-@flags.Validator('cores')
+@flags.validator('cores')
 def _CheckCoresFlag(cores):
   """Check cores flag value for validity."""
   if cores < 1 or cores > _MAX_CORES_NUM:
