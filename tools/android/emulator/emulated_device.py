@@ -949,6 +949,9 @@ class EmulatedDevice(object):
     if build_time_only_no_op_rendering:
       self._display = None
     else:
+      if self.GetApiVersion() >= 25 and open_gl_driver != SWIFTSHADER_OPEN_GL:
+        logging.warn('Force to use swiftshader for API 25+')
+        open_gl_driver = SWIFTSHADER_OPEN_GL
       open_gl_driver = open_gl_driver or NO_OPEN_GL
       self._SanityCheckOpenGLDriver(open_gl_driver, allow_experimental_open_gl)
       self._display = Display(
