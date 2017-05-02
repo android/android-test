@@ -2741,7 +2741,7 @@ class EmulatedDevice(object):
 
   def BestOpenGL(self):
     """Return best OpenGL option based on API/arch/Emulator."""
-    if (self._metadata_pb.emulator_architecturearch != 'x86' or
+    if (self._metadata_pb.emulator_architecture != 'x86' or
         self.GetApiVersion() < 25):
       return NO_OPEN_GL
     return SWIFTSHADER_OPEN_GL
