@@ -949,10 +949,7 @@ class EmulatedDevice(object):
     if build_time_only_no_op_rendering:
       self._display = None
     else:
-      if self.GetApiVersion() >= 25 and open_gl_driver != SWIFTSHADER_OPEN_GL:
-        logging.warn('Force to use swiftshader for API 25+')
-        open_gl_driver = SWIFTSHADER_OPEN_GL
-      open_gl_driver = open_gl_driver or NO_OPEN_GL
+      open_gl_driver = open_gl_driver or self.BestOpenGL()
       self._SanityCheckOpenGLDriver(open_gl_driver, allow_experimental_open_gl)
       self._display = Display(
           skin=self._metadata_pb.skin,
@@ -2741,6 +2738,14 @@ class EmulatedDevice(object):
         device_path], env=self._AdbEnv())
     if device_path.startswith('/system'):
       self._Remount('/system', 'ro')
+
+  def BestOpenGL(self):
+    """Return best OpenGL option based on API/arch/Emulator."""
+    if self._metadata_pb.emulator_architecturearch != 'x86':
+      return NO_OPEN_GL
+    if self.GetApiVersion() >= 25:
+      return SWIFTSHADER_OPEN_GL
+    return NO_OPEN_GL
 
   def GetApiVersion(self):
     return int(self._metadata_pb.api_name)
