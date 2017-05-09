@@ -48,8 +48,10 @@ import gflags as flags
 import gflags as flags_validators
 from tools.android.emulator import resources
 from google.apputils import stopwatch
+
 from tools.android.emulator import common
 from tools.android.emulator import emulator_meta_data_pb2
+from tools.android.emulator import reporting
 
 from tools.android.emulator import xserver
 
@@ -113,6 +115,24 @@ PERMANENT_INSTALL_ERROR = [
     'INSTALL_FAILED_VERSION_DOWNGRADE',
     'INSTALL_FAILED_PERMISSION_MODEL_DOWNGRADE',
     'INSTALL_PARSE_FAILED_MANIFEST_MALFORMED']
+
+INSTALL_FAILURE_REGEXP = re.compile(r'.*(INSTALL_FAILED_[a-zA-Z_]+).*',
+                                    re.MULTILINE | re.DOTALL)
+
+
+def _InstallFailureType(output):
+  """Attempts to extract an installation failure reason from the output.
+
+  Args:
+    output: output from an installation failure.
+
+  Returns:
+    Either the failure string or UNKNOWN.
+  """
+  m = INSTALL_FAILURE_REGEXP.match(output)
+  if m:
+    return m.groups()[0]
+  return 'UNKNOWN'
 
 # These services are not stopped at shutdown time.
 # We depend on them to communicate with emulated devices.
@@ -270,15 +290,21 @@ default_android_platform = AndroidPlatform()
 class EmulatedDevice(object):
   """An interface to manage emulated android devices."""
 
-  def __init__(self, adb_server_port=None, emulator_telnet_port=None,
-               emulator_adb_port=None, device_serial=None,
-               android_platform=None, qemu_gdb_port=0,
+  def __init__(self,
+               adb_server_port=None,
+               emulator_telnet_port=None,
+               emulator_adb_port=None,
+               device_serial=None,
+               android_platform=None,
+               qemu_gdb_port=0,
                enable_single_step=False,
-               logcat_path=None, logcat_filter='*:D',
+               logcat_path=None,
+               logcat_filter='*:D',
                enable_console_auth=False,
                enable_g3_monitor=True,
                enable_gps=True,
-               add_insecure_cert=False):
+               add_insecure_cert=False,
+               reporter=None):
     self.adb_server_port = adb_server_port
     self.emulator_adb_port = emulator_adb_port
     self.emulator_telnet_port = emulator_telnet_port
@@ -314,8 +340,10 @@ class EmulatedDevice(object):
     # There is a hard coded 10 minutes timeout in bazel side.
     # We use a shorter cut off here to make sure we have chances
     # to print log.
-    self._time_out_time = time.time() + 580
+    self._start_time = time.time()
+    self._time_out_time = self._start_time + 580
     self._use_real_adb = False
+    self._reporter = reporter or reporting.NoOpReporter()
 
   def _IsUserBuild(self, build_prop):
     """Check if a build is user build from build.prop file."""
@@ -1776,6 +1804,12 @@ class EmulatedDevice(object):
       logging.warn('Something is wrong: %s', err)
     if proc.returncode:
       self._ShowEmulatorLog()
+      self._reporter.ReportFailure('tools.android.emulator.adb.ErrorExit', {
+          'command': args,
+          'return': proc.returncode,
+          'out': out,
+          'error': err,
+      })
       raise Exception('Adb command failed, stdout:%s stderr:%s' % (out, err))
     return out
 
@@ -1842,11 +1876,30 @@ class EmulatedDevice(object):
     while not fully_booted:
       if (attempter.total_attempts > max_attempts or
           time.time() > self._time_out_time):
+        self._reporter.ReportFailure(
+            'tools.android.emulator.boot.DeviceNotReady', {
+                'attempts': attempter.total_attempts,
+                'start_time': self._start_time,
+                'time_out_time': self._time_out_time,
+                'system_server_running': system_server_running,
+                'pm_running': pm_running,
+                'adb_listening': adb_listening,
+                'adb_connected': adb_connected,
+                'sd_card_mounted': sd_card_mounted,
+                'external_storage': external_storage,
+                'boot_complete_present': boot_complete_present,
+                'launcher_started': launcher_started,
+                'dpi_ok': dpi_ok,
+            })
+
         self._ShowEmulatorLog()
         if adb_listening:
           log = self.ExecOnDevice(['logcat', '-v', 'threadtime', '-d'])
           logging.info('Android logcat below ' + '=' * 50 + '\n%s', log)
           logging.info('Android logcat end ' + '=' * 50)
+        self._reporter.ReportFailure(
+            'tools.android.emulator.adb.AdbNotListening',
+            {'attempts': attempter.total_attempts})
         raise Exception('Haven\'t been able to connect to device after %s'
                         ' attempts.' % attempter.total_attempts)
 
@@ -1889,6 +1942,8 @@ class EmulatedDevice(object):
         if not pipe_traversal_ready:
           continue
         self.EnableLogcat()
+        self._reporter.ReportDeviceProperties(self._metadata_pb.emulator_type,
+                                              self._Props())
 
       self._DetectFSErrors()
 
@@ -2375,19 +2430,30 @@ class EmulatedDevice(object):
     Returns:
       a dictionary of service name to state.
     """
-    init_prop_header = '[init.svc.'
-    props = self.ExecOnDevice(['getprop'])
+    init_prop_header = 'init.svc.'
+    props = self._Props()
+    return dict([(k[len(init_prop_header):], v) for k, v in props.iteritems()
+                 if k.startswith(init_prop_header)])
+
+  def _Props(self):
+    """Returns the device properties in a map."""
+    props = {}
+    props_out = self.ExecOnDevice(['getprop'])
     # output looks roughly like:
     # [someprop]: [its value]\n
     # [otherprop]: [val 2]\n
     # [init.svc.vold]: [running]\n
     # [anotherprop]: [val 3]\n
-
-    init_svcs = [s.split(':') for s in props.splitlines()
-                 if s.startswith(init_prop_header)]
-    cleaned_key_vals = [(k[len(init_prop_header):-1], v.strip()[1:-1])
-                        for k, v in init_svcs]
-    return dict(cleaned_key_vals)
+    for prop_line in props_out.splitlines():
+      if not prop_line:
+        continue
+      prop_parts = prop_line.split(']:', 1)
+      if len(prop_parts) != 2:
+        continue
+      k = prop_parts[0][1:].strip()
+      v = prop_parts[1].strip()[1:-1]
+      props[k] = v
+    return props
 
   def _DetectFSErrors(self):
     """Detects the rare situation that /data or /cache have become corrupt.
@@ -2620,6 +2686,8 @@ class EmulatedDevice(object):
           attempts += 1
         else:
           raise e
+    self._reporter.ReportFailure('tools.android.emulator.console.CannotConnect',
+                                 {'attempts': attempts})
     raise Exception('Tried %s times to connect to emu console.' % attempts)
 
   def _SnapshotPresent(self):
@@ -2815,14 +2883,35 @@ class EmulatedDevice(object):
           return
         if self._IsPermanentInstallError(install_output):
           logging.warning('install failed: %s %s', apk_path, install_output)
+          self._reporter.ReportFailure(
+              'tools.android.emulator.install.PermanentInstallError', {
+                  'apk': apk_path,
+                  'apk_basename': os.path.basename(apk_path),
+                  'install_output': install_output,
+                  'install_failure_type': _InstallFailureType(install_output),
+              })
           raise Exception('permanent install failure')
         else:
           logging.info('Install failed: %s', install_output)
           logging.info('logcat: %s', self.ExecOnDevice(
               ['logcat -v threadtime -b all -d']))
       except common.SpawnError:
+        self._reporter.ReportFailure(
+            'tools.android.emulator.TimeoutInstallError', {
+                'apk': apk_path,
+                'apk_basename': os.path.basename(apk_path),
+            })
         install_output = 'timeout failure'
       attempts += 1
+      if attempts < max_tries:
+        self._reporter.ReportFailure(
+            'tools.android.emulator.install.ExceededMaxFailures', {
+                'apk': apk_path,
+                'apk_basename': os.path.basename(apk_path),
+                'attempts': attempts,
+                'install_output': install_output,
+                'install_failure_type': _InstallFailureType(install_output),
+            })
       assert attempts < max_tries
       logging.info('%s: attempting install again due to: %s',
                    apk_path, install_output)

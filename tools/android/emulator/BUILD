@@ -95,6 +95,7 @@ py_library(
     deps = [
         ":common",
         ":emulator_meta_data_pb_py_pb2",
+        ":reporting",
         ":xserver",
         PORTPICKER,
     ] + PYGLIB,
@@ -108,6 +109,7 @@ py_binary(
     deps = [
         ":emulated_device",
         ":emulator_meta_data_pb_py_pb2",
+        ":reporting",
         ":resources",
         ":xserver",
         "@protobuf//:protobuf_python",
@@ -132,6 +134,11 @@ py_test(
         ":resources",
         ":xserver",
     ],
+)
+
+py_library(
+    name = "reporting",
+    srcs = ["reporting.py"],
 )
 
 py_library(

@@ -36,6 +36,7 @@ from tools.android.emulator import resources
 from tools.android.emulator import common
 from tools.android.emulator import emulated_device
 from tools.android.emulator import emulator_meta_data_pb2
+from tools.android.emulator import reporting
 
 
 FLAGS = flags.FLAGS
@@ -491,6 +492,7 @@ def _Run(adb_server_port, emulator_port, adb_port, enable_display,
     installing apk on api level > 23.
     accounts: A list of accounts to be added to emulator at launch.
   """
+  reporter = reporting.MakeReporter()
 
   device = emulated_device.EmulatedDevice(
       android_platform=_MakeAndroidPlatform(),
@@ -499,76 +501,84 @@ def _Run(adb_server_port, emulator_port, adb_port, enable_display,
       emulator_adb_port=adb_port,
       qemu_gdb_port=qemu_gdb_port,
       enable_single_step=enable_single_step,
-      logcat_path=logcat_path, logcat_filter=logcat_filter,
+      logcat_path=logcat_path,
+      logcat_filter=logcat_filter,
       enable_console_auth=FLAGS.enable_console_auth,
       enable_g3_monitor=FLAGS.enable_g3_monitor,
       enable_gps=FLAGS.enable_gps,
-      add_insecure_cert=add_insecure_cert)
+      add_insecure_cert=add_insecure_cert,
+      reporter=reporter)
 
-  _RestartDevice(device,
-                 enable_display=enable_display,
-                 start_vnc_on_port=start_vnc_on_port,
-                 net_type=net_type,
-                 system_image_files=system_images,
-                 input_image_file=input_image_file,
-                 proto_filepath=emulator_metadata_path,
-                 new_process_group=new_process_group,
-                 window_scale=window_scale, with_audio=with_audio,
-                 with_boot_anim=with_boot_anim,
-                 emulator_tmp_dir=emulator_tmp_dir,
-                 open_gl_driver=open_gl_driver,
-                 experimental_open_gl=experimental_open_gl)
+  try:
+    _RestartDevice(
+        device,
+        enable_display=enable_display,
+        start_vnc_on_port=start_vnc_on_port,
+        net_type=net_type,
+        system_image_files=system_images,
+        input_image_file=input_image_file,
+        proto_filepath=emulator_metadata_path,
+        new_process_group=new_process_group,
+        window_scale=window_scale,
+        with_audio=with_audio,
+        with_boot_anim=with_boot_anim,
+        emulator_tmp_dir=emulator_tmp_dir,
+        open_gl_driver=open_gl_driver,
+        experimental_open_gl=experimental_open_gl)
 
-  device.SyncTime()
+    device.SyncTime()
 
-  if preverify_apks:
-    device.PreverifyApks()
+    if preverify_apks:
+      device.PreverifyApks()
 
-  if system_apks:
-    device.InstallSystemApks(system_apks)
+    if system_apks:
+      device.InstallSystemApks(system_apks)
 
-  gmscore_apks = None
-  if apks:
-    gmscore_apks = [apk for apk in apks if 'gmscore' in apk.lower()]
-    other_apks = [apk for apk in apks if apk not in gmscore_apks]
-    _TryInstallApks(device, other_apks, grant_runtime_permissions)
+    gmscore_apks = None
+    if apks:
+      gmscore_apks = [apk for apk in apks if 'gmscore' in apk.lower()]
+      other_apks = [apk for apk in apks if apk not in gmscore_apks]
+      _TryInstallApks(device, other_apks, grant_runtime_permissions)
 
-  if export_launch_metadata_path:
-    proto = device.GetEmulatorMetadataProto()
-    with open(export_launch_metadata_path, 'wb') as proto_file:
-      proto_file.write(proto.SerializeToString())
+    if export_launch_metadata_path:
+      proto = device.GetEmulatorMetadataProto()
+      with open(export_launch_metadata_path, 'wb') as proto_file:
+        proto_file.write(proto.SerializeToString())
 
-  if add_insecure_cert:
-    device.InstallCyberVillainsCert()
-  if extra_certs:
-    for cert in extra_certs:
-      device.AddCert(cert)
-  if initial_locale is not None:
-    broadcast_message['initial_locale'] = initial_locale
-  if initial_ime is not None:
-    broadcast_message['initial_ime'] = initial_ime
+    if add_insecure_cert:
+      device.InstallCyberVillainsCert()
+    if extra_certs:
+      for cert in extra_certs:
+        device.AddCert(cert)
+    if initial_locale is not None:
+      broadcast_message['initial_locale'] = initial_locale
+    if initial_ime is not None:
+      broadcast_message['initial_ime'] = initial_ime
 
-  # send broadcast ACTION_MOBILE_NINJAS_START to the device
-  device.BroadcastDeviceReady(broadcast_message)
+    # send broadcast ACTION_MOBILE_NINJAS_START to the device
+    device.BroadcastDeviceReady(broadcast_message)
 
-  if adb_server_port:
-    device.ConnectDevice()
+    if adb_server_port:
+      device.ConnectDevice()
 
-  if lockdown_level:
-    device.Lockdown(lockdown_level)
+    if lockdown_level:
+      device.Lockdown(lockdown_level)
 
-  if accounts:
-    for account in accounts:
-      account_name, password = account.split(':', 1)
-      account_extras = collections.OrderedDict()
-      account_extras['account_name'] = account_name
-      account_extras['password'] = password
-      account_extras.update(_ADD_ACCOUNT_BOOLEAN_EXTRAS)
-      device.BroadcastDeviceReady(account_extras, _ADD_ACCOUNT_BROADCAST_ACTION)
+    if accounts:
+      for account in accounts:
+        account_name, password = account.split(':', 1)
+        account_extras = collections.OrderedDict()
+        account_extras['account_name'] = account_name
+        account_extras['password'] = password
+        account_extras.update(_ADD_ACCOUNT_BOOLEAN_EXTRAS)
+        device.BroadcastDeviceReady(account_extras,
+                                    _ADD_ACCOUNT_BROADCAST_ACTION)
 
 
-  if gmscore_apks:
-    _TryInstallApks(device, gmscore_apks, grant_runtime_permissions)
+    if gmscore_apks:
+      _TryInstallApks(device, gmscore_apks, grant_runtime_permissions)
+  finally:
+    reporter.Emit()
 
 
 def _Kill(adb_server_port, emulator_port, adb_port):

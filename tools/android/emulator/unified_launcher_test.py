@@ -28,6 +28,7 @@ import gflags as flags
 from google.apputils import basetest as googletest
 from tools.android.emulator import emulated_device
 from tools.android.emulator import emulator_meta_data_pb2
+from tools.android.emulator import reporting
 from tools.android.emulator import unified_launcher
 
 FLAGS = flags.FLAGS
@@ -111,7 +112,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_console_auth=False,
         enable_g3_monitor=True,
         enable_gps=True,
-        add_insecure_cert=False)
+        add_insecure_cert=False,
+        reporter=mox.IsA(reporting.Reporter))
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device,
@@ -174,7 +176,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_console_auth=False,
         enable_g3_monitor=True,
         enable_gps=True,
-        add_insecure_cert=True)
+        add_insecure_cert=True,
+        reporter=mox.IsA(reporting.Reporter))
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device,
@@ -233,7 +236,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_console_auth=False,
         enable_g3_monitor=True,
         enable_gps=True,
-        add_insecure_cert=False)
+        add_insecure_cert=False,
+        reporter=mox.IsA(reporting.Reporter))
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device, enable_display=True,
@@ -298,7 +302,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_console_auth=False,
         enable_g3_monitor=True,
         enable_gps=True,
-        add_insecure_cert=False)
+        add_insecure_cert=False,
+        reporter=mox.IsA(reporting.Reporter))
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device, enable_display=True,
