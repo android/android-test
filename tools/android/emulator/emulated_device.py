@@ -119,6 +119,8 @@ PERMANENT_INSTALL_ERROR = [
 INSTALL_FAILURE_REGEXP = re.compile(r'.*(INSTALL_FAILED_[a-zA-Z_]+).*',
                                     re.MULTILINE | re.DOTALL)
 
+DIRECT_BOOT_PROP = 'persist.sys.emulate_fbe'  # Emulate File-Based Encryption
+
 
 def _InstallFailureType(output):
   """Attempts to extract an installation failure reason from the output.
@@ -344,6 +346,7 @@ class EmulatedDevice(object):
     self._time_out_time = self._start_time + 580
     self._use_real_adb = False
     self._reporter = reporter or reporting.NoOpReporter()
+    self._direct_boot = False
 
   def _IsUserBuild(self, build_prop):
     """Check if a build is user build from build.prop file."""
@@ -371,7 +374,8 @@ class EmulatedDevice(object):
       self.ExecOnDevice(['setprop', 'dalvik.vm.dexopt-flags', 'v=a,o=v'])
       self._RestartAndroid()
       self._PollEmulatorStatus()
-      self._UnlockScreen()
+      if not self._direct_boot:
+        self._UnlockScreen()
 
   def _PossibleImgSuffix(self):
     if (self._metadata_pb.emulator_type ==
@@ -804,6 +808,8 @@ class EmulatedDevice(object):
       for prop_name, prop_value in default_properties.items():
         if not prop_name.startswith('avd_config_ini.'):
           self._metadata_pb.boot_property.add(name=prop_name, value=prop_value)
+        if prop_name == DIRECT_BOOT_PROP and prop_value == '1':
+          self._direct_boot = True
 
       # need to allow users to specify device specific sd card sizes in
       # default.properties.
@@ -832,9 +838,10 @@ class EmulatedDevice(object):
         name='ro.setupwizard.mode',  # skip past the intro screens.
         value='DISABLED')
 
-    self._metadata_pb.boot_property.add(
-        name='ro.lockscreen.disable.default',  # disable lockscreen (jb & up)
-        value='1')
+    if not self._direct_boot:
+      self._metadata_pb.boot_property.add(
+          name='ro.lockscreen.disable.default',  # disable lockscreen (jb & up)
+          value='1')
 
     # emulator supports bucketed densities. Map the provided density into
     # the correct bucket.
@@ -1494,8 +1501,9 @@ class EmulatedDevice(object):
     self._SetDeviceSetting(self.GetApiVersion(), 'system',
                            'screen_off_timeout', '1800000')
     # disable lockscreen, this works on most api levels.
-    self._SetDeviceSetting(self.GetApiVersion(), 'secure',
-                           'lockscreen.disabled', '1')
+    if not self._direct_boot:
+      self._SetDeviceSetting(self.GetApiVersion(), 'secure',
+                             'lockscreen.disabled', '1')
     # disable software keyboard when hardware keyboard is there.
     self._SetDeviceSetting(self.GetApiVersion(), 'secure',
                            'show_ime_with_hard_keyboard', '0')
@@ -1995,13 +2003,17 @@ class EmulatedDevice(object):
             _BOOT_COMPLETE_FAIL_SLEEP)
         if not boot_complete_present:
           continue
+        if not self._direct_boot:
+          self._direct_boot = ('1' in
+                               self.ExecOnDevice(['getprop', DIRECT_BOOT_PROP]))
 
       if not dpi_ok:
         if not attempter.step_attempts:
           if not self.IsInstalled(_BOOTSTRAP_PKG):
             self.InstallApk(resources.GetResourceFilename(_BOOTSTRAP_PATH))
 
-        self._UnlockScreen()
+        if not self._direct_boot:
+          self._UnlockScreen()
         dpi_ok = attempter.AttemptStep(self._CheckDpi,
                                        'Checking DPI',
                                        _CHECK_DPI,
@@ -2012,7 +2024,7 @@ class EmulatedDevice(object):
                                  ' in %s attempts.' % attempter.step_attempts)
           continue
 
-      if not launcher_started:
+      if not self._direct_boot and not launcher_started:
         if attempter.step_attempts > 0:
           self._UnlockScreen()
 
@@ -2787,7 +2799,8 @@ class EmulatedDevice(object):
     if self.GetApiVersion() >= 21:
       self._RestartAndroid()
       self._PollEmulatorStatus()
-      self._UnlockScreen()
+      if not self._direct_boot:
+        self._UnlockScreen()
 
   def _Push(self, file_path, device_path):
     """Pushes given file to device."""
