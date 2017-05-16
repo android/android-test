@@ -202,7 +202,6 @@ flags.DEFINE_list('platform_apks', None, '[BOOT ONLY] Platform apks are '
                   'installed once at boot time as opposed to --apks which are '
                   'installed every time the emulator starts.')
 
-
 _METADATA_FILE_NAME = 'emulator-meta-data.pb'
 _USERDATA_IMAGES_NAME = 'userdata_images.dat'
 _ADD_ACCOUNT_BROADCAST_ACTION = ('com.google.android.apps.auth.test.support'
