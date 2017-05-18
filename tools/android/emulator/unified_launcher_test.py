@@ -99,6 +99,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     emulator_port = 3
     vnc_port = 4
     net_type = 'fastnet'
+    reporter = reporting.NoOpReporter()
 
     mock_device = emulated_device.EmulatedDevice(
         android_platform=mox.IsA(emulated_device.AndroidPlatform),
@@ -113,7 +114,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_g3_monitor=True,
         enable_gps=True,
         add_insecure_cert=False,
-        reporter=mox.IsA(reporting.Reporter))
+        reporter=reporter)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device,
@@ -155,7 +156,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
                       system_apks=[],
                       net_type='fastnet',
                       open_gl_driver=emulated_device.NO_OPEN_GL,
-                      new_process_group=False)
+                      new_process_group=False,
+                      reporter=reporter)
 
   def testRun_noInstall(self):
     self.mox.StubOutClassWithMocks(emulated_device, 'EmulatedDevice')
@@ -163,6 +165,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     adb_port = 2
     emulator_port = 3
     vnc_port = 4
+    reporter = reporting.NoOpReporter()
 
     mock_device = emulated_device.EmulatedDevice(
         android_platform=mox.IsA(emulated_device.AndroidPlatform),
@@ -177,7 +180,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_g3_monitor=True,
         enable_gps=True,
         add_insecure_cert=True,
-        reporter=mox.IsA(reporting.Reporter))
+        reporter=reporter)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device,
@@ -215,7 +218,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
                           new_process_group=True,
                           open_gl_driver=emulated_device.NO_OPEN_GL,
                           broadcast_message={'test_message': '1234'},
-                          add_insecure_cert=True)
+                          add_insecure_cert=True,
+                          reporter=reporter)
 
   def testRun_goodInstall(self):
     self.mox.StubOutClassWithMocks(emulated_device, 'EmulatedDevice')
@@ -223,6 +227,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     adb_port = 2
     emulator_port = 3
     vnc_port = 4
+    reporter = reporting.NoOpReporter()
 
     mock_device = emulated_device.EmulatedDevice(
         android_platform=mox.IsA(emulated_device.AndroidPlatform),
@@ -237,7 +242,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_g3_monitor=True,
         enable_gps=True,
         add_insecure_cert=False,
-        reporter=mox.IsA(reporting.Reporter))
+        reporter=reporter)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device, enable_display=True,
@@ -272,7 +277,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
                           apks=['hello_world', 'goodbye'],
                           open_gl_driver=emulated_device.NO_OPEN_GL,
                           system_apks=[],
-                          net_type='fastnet')
+                          net_type='fastnet',
+                          reporter=reporter)
 
   def testRun_addAccounts(self):
     self.mox.StubOutClassWithMocks(emulated_device, 'EmulatedDevice')
@@ -289,6 +295,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     extras2['account_name'] = 'user2'
     extras2['password'] = 'password'
     extras2.update(unified_launcher._ADD_ACCOUNT_BOOLEAN_EXTRAS)
+    reporter = reporting.NoOpReporter()
 
     mock_device = emulated_device.EmulatedDevice(
         android_platform=mox.IsA(emulated_device.AndroidPlatform),
@@ -303,7 +310,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_g3_monitor=True,
         enable_gps=True,
         add_insecure_cert=False,
-        reporter=mox.IsA(reporting.Reporter))
+        reporter=reporter)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device, enable_display=True,
@@ -340,7 +347,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
                           open_gl_driver=emulated_device.NO_OPEN_GL,
                           system_apks=[],
                           net_type='fastnet',
-                          accounts=accounts)
+                          accounts=accounts,
+                          reporter=reporter)
 
   def testPing_live(self):
     self.mox.StubOutClassWithMocks(emulated_device, 'EmulatedDevice')

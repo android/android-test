@@ -2620,6 +2620,9 @@ class EmulatedDevice(object):
       self._TransientDeath('Could not cleanly shutdown emulator', False)
 
   def _TransientDeath(self, msg, needs_kill=True):
+    self._reporter.ReportFailure('tools.android.emulator.TransientDeath',
+                                 {'message': msg})
+
     if needs_kill:
       self.KillEmulator(politely=False)
     self.CleanUp()
@@ -2916,7 +2919,7 @@ class EmulatedDevice(object):
             })
         install_output = 'timeout failure'
       attempts += 1
-      if attempts < max_tries:
+      if attempts >= max_tries:
         self._reporter.ReportFailure(
             'tools.android.emulator.install.ExceededMaxFailures', {
                 'apk': apk_path,

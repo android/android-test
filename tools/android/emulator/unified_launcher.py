@@ -443,7 +443,7 @@ def _Run(adb_server_port, emulator_port, adb_port, enable_display,
          with_boot_anim=False, extra_certs=None, emulator_tmp_dir=None,
          lockdown_level=None, open_gl_driver=None, experimental_open_gl=False,
          add_insecure_cert=False, grant_runtime_permissions=True,
-         accounts=None):
+         accounts=None, reporter=None):
   """Starts a device for use or testing.
 
   Args:
@@ -490,9 +490,8 @@ def _Run(adb_server_port, emulator_port, adb_port, enable_display,
     grant_runtime_permissions: [optional] bool: Grant runtime permissions while
     installing apk on api level > 23.
     accounts: A list of accounts to be added to emulator at launch.
+    reporter: a reporting.Reporter to track the emulator state.
   """
-  reporter = reporting.MakeReporter()
-
   device = emulated_device.EmulatedDevice(
       android_platform=_MakeAndroidPlatform(),
       adb_server_port=adb_server_port,
@@ -508,76 +507,73 @@ def _Run(adb_server_port, emulator_port, adb_port, enable_display,
       add_insecure_cert=add_insecure_cert,
       reporter=reporter)
 
-  try:
-    _RestartDevice(
-        device,
-        enable_display=enable_display,
-        start_vnc_on_port=start_vnc_on_port,
-        net_type=net_type,
-        system_image_files=system_images,
-        input_image_file=input_image_file,
-        proto_filepath=emulator_metadata_path,
-        new_process_group=new_process_group,
-        window_scale=window_scale,
-        with_audio=with_audio,
-        with_boot_anim=with_boot_anim,
-        emulator_tmp_dir=emulator_tmp_dir,
-        open_gl_driver=open_gl_driver,
-        experimental_open_gl=experimental_open_gl)
+  _RestartDevice(
+      device,
+      enable_display=enable_display,
+      start_vnc_on_port=start_vnc_on_port,
+      net_type=net_type,
+      system_image_files=system_images,
+      input_image_file=input_image_file,
+      proto_filepath=emulator_metadata_path,
+      new_process_group=new_process_group,
+      window_scale=window_scale,
+      with_audio=with_audio,
+      with_boot_anim=with_boot_anim,
+      emulator_tmp_dir=emulator_tmp_dir,
+      open_gl_driver=open_gl_driver,
+      experimental_open_gl=experimental_open_gl)
 
-    device.SyncTime()
+  device.SyncTime()
 
-    if preverify_apks:
-      device.PreverifyApks()
+  if preverify_apks:
+    device.PreverifyApks()
 
-    if system_apks:
-      device.InstallSystemApks(system_apks)
+  if system_apks:
+    device.InstallSystemApks(system_apks)
 
-    gmscore_apks = None
-    if apks:
-      gmscore_apks = [apk for apk in apks if 'gmscore' in apk.lower()]
-      other_apks = [apk for apk in apks if apk not in gmscore_apks]
-      _TryInstallApks(device, other_apks, grant_runtime_permissions)
+  gmscore_apks = None
+  if apks:
+    gmscore_apks = [apk for apk in apks if 'gmscore' in apk.lower()]
+    other_apks = [apk for apk in apks if apk not in gmscore_apks]
+    _TryInstallApks(device, other_apks, grant_runtime_permissions)
 
-    if export_launch_metadata_path:
-      proto = device.GetEmulatorMetadataProto()
-      with open(export_launch_metadata_path, 'wb') as proto_file:
-        proto_file.write(proto.SerializeToString())
+  if export_launch_metadata_path:
+    proto = device.GetEmulatorMetadataProto()
+    with open(export_launch_metadata_path, 'wb') as proto_file:
+      proto_file.write(proto.SerializeToString())
 
-    if add_insecure_cert:
-      device.InstallCyberVillainsCert()
-    if extra_certs:
-      for cert in extra_certs:
-        device.AddCert(cert)
-    if initial_locale is not None:
-      broadcast_message['initial_locale'] = initial_locale
-    if initial_ime is not None:
-      broadcast_message['initial_ime'] = initial_ime
+  if add_insecure_cert:
+    device.InstallCyberVillainsCert()
+  if extra_certs:
+    for cert in extra_certs:
+      device.AddCert(cert)
+  if initial_locale is not None:
+    broadcast_message['initial_locale'] = initial_locale
+  if initial_ime is not None:
+    broadcast_message['initial_ime'] = initial_ime
 
-    # send broadcast ACTION_MOBILE_NINJAS_START to the device
-    device.BroadcastDeviceReady(broadcast_message)
+  # send broadcast ACTION_MOBILE_NINJAS_START to the device
+  device.BroadcastDeviceReady(broadcast_message)
 
-    if adb_server_port:
-      device.ConnectDevice()
+  if adb_server_port:
+    device.ConnectDevice()
 
-    if lockdown_level:
-      device.Lockdown(lockdown_level)
+  if lockdown_level:
+    device.Lockdown(lockdown_level)
 
-    if accounts:
-      for account in accounts:
-        account_name, password = account.split(':', 1)
-        account_extras = collections.OrderedDict()
-        account_extras['account_name'] = account_name
-        account_extras['password'] = password
-        account_extras.update(_ADD_ACCOUNT_BOOLEAN_EXTRAS)
-        device.BroadcastDeviceReady(account_extras,
-                                    _ADD_ACCOUNT_BROADCAST_ACTION)
+  if accounts:
+    for account in accounts:
+      account_name, password = account.split(':', 1)
+      account_extras = collections.OrderedDict()
+      account_extras['account_name'] = account_name
+      account_extras['password'] = password
+      account_extras.update(_ADD_ACCOUNT_BOOLEAN_EXTRAS)
+      device.BroadcastDeviceReady(account_extras,
+                                  _ADD_ACCOUNT_BROADCAST_ACTION)
 
 
-    if gmscore_apks:
-      _TryInstallApks(device, gmscore_apks, grant_runtime_permissions)
-  finally:
-    reporter.Emit()
+  if gmscore_apks:
+    _TryInstallApks(device, gmscore_apks, grant_runtime_permissions)
 
 
 def _Kill(adb_server_port, emulator_port, adb_port):
@@ -681,11 +677,14 @@ def _HashFiles(files):
   return hashes_to_files
 
 
-def EntryPoint():
+def EntryPoint(reporter):
   """Determines the action to take based on flags.
 
   This is used both by the main() method and by scripts generated by legacy
   genrules.
+
+  Arguments:
+    reporter: A reporting.Reporter to track the invocation.
 
   Raises:
     Exception: If the action flag value is unknown.
@@ -753,7 +752,7 @@ def EntryPoint():
          FLAGS.enable_single_step, FLAGS.with_boot_anim, FLAGS.extra_certs,
          tmp_dir, FLAGS.lockdown_level, FLAGS.open_gl_driver,
          FLAGS.allow_experimental_open_gl, FLAGS.add_insecure_cacert,
-         FLAGS.grant_runtime_permissions, FLAGS.accounts)
+         FLAGS.grant_runtime_permissions, FLAGS.accounts, reporter)
 
   elif 'kill' == FLAGS.action:
     _Kill(FLAGS.adb_server_port, FLAGS.emulator_port, FLAGS.adb_port)
@@ -898,17 +897,24 @@ def main(unused_argv):
 
   logging.info('args: %s', ' '.join(sys.argv))
   attempts = 0
-  while True:
-    attempts += 1
-    try:
-      EntryPoint()
-      break
-    except emulated_device.TransientEmulatorFailure as e:
-      if attempts < FLAGS.retry_attempts:
-        logging.warning('Transient failure: %s', e)
-      else:
-        logging.error('Tried %s times - failure: %s', attempts, e)
-        raise e
+  reporter = reporting.MakeReporter()
+  try:
+    while True:
+      attempts += 1
+      try:
+        EntryPoint(reporter)
+        break
+      except emulated_device.TransientEmulatorFailure as e:
+        if attempts < FLAGS.retry_attempts:
+          logging.warning('Transient failure: %s', e)
+        else:
+          reporter.ReportFailure('tools.android.emulator.SoMuchDeath',
+                                 {'message': str(e),
+                                  'attempts': attempts})
+          logging.error('Tried %s times - failure: %s', attempts, e)
+          raise e
+  finally:
+    reporter.Emit()
   logging.info('return from main function.')
 
 
