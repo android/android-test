@@ -40,7 +40,8 @@ from tools.android.emulator import reporting
 
 
 FLAGS = flags.FLAGS
-flags.DEFINE_enum('action', None, ['boot', 'start', 'ping', 'kill', 'info'],
+flags.DEFINE_enum('action', None,
+                  ['boot', 'start', 'mini_boot', 'ping', 'kill', 'info'],
                   'The action to perform against the emulator images')
 flags.DEFINE_string('skin', None, '[BOOT ONLY] The skin parameter to pass '
                     'to the emulator')
@@ -443,7 +444,7 @@ def _Run(adb_server_port, emulator_port, adb_port, enable_display,
          with_boot_anim=False, extra_certs=None, emulator_tmp_dir=None,
          lockdown_level=None, open_gl_driver=None, experimental_open_gl=False,
          add_insecure_cert=False, grant_runtime_permissions=True,
-         accounts=None, reporter=None):
+         accounts=None, reporter=None, mini_boot=False):
   """Starts a device for use or testing.
 
   Args:
@@ -491,6 +492,7 @@ def _Run(adb_server_port, emulator_port, adb_port, enable_display,
     installing apk on api level > 23.
     accounts: A list of accounts to be added to emulator at launch.
     reporter: a reporting.Reporter to track the emulator state.
+    mini_boot: should the device be booted up in a minimalistic mode.
   """
   device = emulated_device.EmulatedDevice(
       android_platform=_MakeAndroidPlatform(),
@@ -505,7 +507,8 @@ def _Run(adb_server_port, emulator_port, adb_port, enable_display,
       enable_g3_monitor=FLAGS.enable_g3_monitor,
       enable_gps=FLAGS.enable_gps,
       add_insecure_cert=add_insecure_cert,
-      reporter=reporter)
+      reporter=reporter,
+      mini_boot=mini_boot)
 
   _RestartDevice(
       device,
@@ -524,6 +527,8 @@ def _Run(adb_server_port, emulator_port, adb_port, enable_display,
       experimental_open_gl=experimental_open_gl)
 
   device.SyncTime()
+  if mini_boot:
+    return
 
   if preverify_apks:
     device.PreverifyApks()
@@ -739,7 +744,7 @@ def EntryPoint(reporter):
         FLAGS.enable_single_step,
         tmp_dir,
         boot_time_apks)
-  elif 'start' == FLAGS.action:
+  elif FLAGS.action in ['start', 'mini_boot']:
     _Run(FLAGS.adb_server_port, FLAGS.emulator_port, FLAGS.adb_port,
          FLAGS.enable_display, FLAGS.start_vnc_on_port, FLAGS.logcat_path,
          FLAGS.logcat_filter, filtered_system_images, FLAGS.image_input_file,
@@ -752,8 +757,8 @@ def EntryPoint(reporter):
          FLAGS.enable_single_step, FLAGS.with_boot_anim, FLAGS.extra_certs,
          tmp_dir, FLAGS.lockdown_level, FLAGS.open_gl_driver,
          FLAGS.allow_experimental_open_gl, FLAGS.add_insecure_cacert,
-         FLAGS.grant_runtime_permissions, FLAGS.accounts, reporter)
-
+         FLAGS.grant_runtime_permissions, FLAGS.accounts, reporter,
+         'mini_boot' == FLAGS.action)
   elif 'kill' == FLAGS.action:
     _Kill(FLAGS.adb_server_port, FLAGS.emulator_port, FLAGS.adb_port)
   elif 'ping' == FLAGS.action:

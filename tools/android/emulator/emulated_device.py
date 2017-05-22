@@ -216,7 +216,6 @@ _DEFAULT_QEMU_TELNET_PORT = 52222
 
 _BOOTSTRAP_PKG = 'com.google.android.apps.common.testing.services.bootstrap'
 _BOOTSTRAP_PATH = 'android_test_support/tools/android/emulator/daemon/bootstrap.apk'
-
 _DEFAULT_BROADCAST_ACTION = 'ACTION_MOBILE_NINJAS_START'
 
 _CONSOLE_TOKEN_DEVICE_PATH = '/data/console_token'
@@ -306,7 +305,8 @@ class EmulatedDevice(object):
                enable_g3_monitor=True,
                enable_gps=True,
                add_insecure_cert=False,
-               reporter=None):
+               reporter=None,
+               mini_boot=False):
     self.adb_server_port = adb_server_port
     self.emulator_adb_port = emulator_adb_port
     self.emulator_telnet_port = emulator_telnet_port
@@ -347,6 +347,7 @@ class EmulatedDevice(object):
     self._use_real_adb = False
     self._reporter = reporter or reporting.NoOpReporter()
     self._direct_boot = False
+    self._mini_boot = mini_boot
 
   def _IsUserBuild(self, build_prop):
     """Check if a build is user build from build.prop file."""
@@ -1494,6 +1495,9 @@ class EmulatedDevice(object):
     timer.stop(_SPAWN_EMULATOR)
 
     self._PollEmulatorStatus(timer)
+    if self._mini_boot:
+      return
+
     self.ExecOnDevice(['setprop', 'qemu.host.socket.dir',
                        str(self._sockets_dir)])
     self.ExecOnDevice(['setprop', 'qemu.host.hostname', socket.gethostname()])
@@ -1952,6 +1956,12 @@ class EmulatedDevice(object):
         self.EnableLogcat()
         self._reporter.ReportDeviceProperties(self._metadata_pb.emulator_type,
                                               self._Props())
+
+      # If we are running in dex2oat mode, stop the device once
+      # pipe_traversal is ready.
+      if self._mini_boot:
+        self.ExecOnDevice(['stop'])
+        return
 
       self._DetectFSErrors()
 
