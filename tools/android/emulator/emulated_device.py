@@ -2603,10 +2603,11 @@ class EmulatedDevice(object):
     if politely and self._vm_running:
       idle = IdleStatus(device=self)
       # Wait for system being idle.
-      for _ in range(20):
+      for _ in range(40):
         time.sleep(6)
         load = idle.RecentMaxLoad(15)
         if load < 0.1:
+          logging.info('Emulator is idle now.')
           break
 
       self.ExecOnDevice(['stop'])
