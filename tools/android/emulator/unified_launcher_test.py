@@ -114,7 +114,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_g3_monitor=True,
         enable_gps=True,
         add_insecure_cert=False,
-        reporter=reporter)
+        reporter=reporter,
+        mini_boot=False)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device,
@@ -157,7 +158,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
                       net_type='fastnet',
                       open_gl_driver=emulated_device.NO_OPEN_GL,
                       new_process_group=False,
-                      reporter=reporter)
+                      reporter=reporter,
+                      mini_boot=False)
 
   def testRun_noInstall(self):
     self.mox.StubOutClassWithMocks(emulated_device, 'EmulatedDevice')
@@ -180,7 +182,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_g3_monitor=True,
         enable_gps=True,
         add_insecure_cert=True,
-        reporter=reporter)
+        reporter=reporter,
+        mini_boot=False)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device,
@@ -219,7 +222,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
                           open_gl_driver=emulated_device.NO_OPEN_GL,
                           broadcast_message={'test_message': '1234'},
                           add_insecure_cert=True,
-                          reporter=reporter)
+                          reporter=reporter,
+                          mini_boot=False)
 
   def testRun_goodInstall(self):
     self.mox.StubOutClassWithMocks(emulated_device, 'EmulatedDevice')
@@ -242,7 +246,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_g3_monitor=True,
         enable_gps=True,
         add_insecure_cert=False,
-        reporter=reporter)
+        reporter=reporter,
+        mini_boot=False)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device, enable_display=True,
@@ -278,7 +283,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
                           open_gl_driver=emulated_device.NO_OPEN_GL,
                           system_apks=[],
                           net_type='fastnet',
-                          reporter=reporter)
+                          reporter=reporter,
+                          mini_boot=False)
 
   def testRun_addAccounts(self):
     self.mox.StubOutClassWithMocks(emulated_device, 'EmulatedDevice')
@@ -310,7 +316,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_g3_monitor=True,
         enable_gps=True,
         add_insecure_cert=False,
-        reporter=reporter)
+        reporter=reporter,
+        mini_boot=False)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device, enable_display=True,
@@ -348,7 +355,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
                           system_apks=[],
                           net_type='fastnet',
                           accounts=accounts,
-                          reporter=reporter)
+                          reporter=reporter,
+                          mini_boot=False)
 
   def testPing_live(self):
     self.mox.StubOutClassWithMocks(emulated_device, 'EmulatedDevice')
