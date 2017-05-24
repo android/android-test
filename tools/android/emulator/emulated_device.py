@@ -2269,8 +2269,13 @@ class EmulatedDevice(object):
     return launcher_started
 
   def _AdbListeningStep(self):
+    port = int(self.emulator_adb_port)
+    if FLAGS.skip_connect_device:
+      lsof_out = subprocess.check_output('lsof -ni:%d || true' % port,
+                                         shell=True)
+      return bool(lsof_out)
     try:
-      s = socket.create_connection(('localhost', int(self.emulator_adb_port)))
+      s = socket.create_connection(('localhost', port))
       s.close()
       return True
     except socket.error:
