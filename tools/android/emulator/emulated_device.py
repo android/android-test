@@ -558,12 +558,15 @@ class EmulatedDevice(object):
 
     if not os.path.exists(self._SdcardFile()):
       try:
-        self._SparseCp(
+        sd_name = 'default_sdcard.%s.img' % self._metadata_pb.sdcard_size_mb
+        self._ExtractTarEntry(
             resources.GetResourceFilename(
                 'android_test_support/'
-                'tools/android/emulator/support'
-                '/default_sdcard.%s.img' % self._metadata_pb.sdcard_size_mb),
-            self._SdcardFile())
+                'tools/android/emulator/support/%s' % sd_name),
+            sd_name, os.path.dirname(self._SdcardFile()))
+        shutil.move(os.path.join(os.path.dirname(self._SdcardFile()),
+                                 sd_name),
+                    self._SdcardFile())
         logging.info('using default sd card.')
       except IOError:
         logging.info('trying to make sdcard on the fly.')

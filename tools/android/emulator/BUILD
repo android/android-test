@@ -44,7 +44,7 @@ filegroup(
     srcs = [
         "support/adb.turbo",
         "support/cache.img.tar.gz",
-        ":default_sdcard_img",
+        "support/default_sdcard.256.img.tar.gz",
     ],
 )
 
