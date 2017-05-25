@@ -253,6 +253,9 @@ class AndroidPlatform(object):
     self.bios_files = None
     self.bios_dir = None
     self.real_adb = None
+    # Any screen resolution > 1280 x 800 won't boot without OpenGL.
+    # We consider such size resolution as big screen.
+    self.big_screen = False
 
   def GetEmulator(self, arch_type, emulator_type):
     """Gets the Emulator Launcher based on the architecture."""
@@ -981,6 +984,10 @@ class EmulatedDevice(object):
                   build_time_only_no_op_rendering=False):
     """Launches an emulator process."""
     assert self._metadata_pb, 'Not configured!'
+    skin = self._metadata_pb.skin
+    height = int(skin[skin.index('x') + 1:])
+    width = int(skin[:skin.index('x')])
+    self.big_screen = (height * width > 1280 * 800)
     self._emulator_tmp_dir = emulator_tmp_dir or tempfile.mkdtemp()
     if build_time_only_no_op_rendering:
       self._display = None
@@ -1213,7 +1220,7 @@ class EmulatedDevice(object):
 
   def _NeedBootGL(self):
     """Check if we need OpenGL at boot stage."""
-    return self.GetApiVersion() > 23 and self._display is None
+    return self.big_screen or self.GetApiVersion() > 23
 
   def _MakeEmulatorEnv(self, parent_env):
     """Sets up (most) of the environment vars for the emulator.
@@ -2841,6 +2848,9 @@ class EmulatedDevice(object):
 
   def BestOpenGL(self):
     """Return best OpenGL option based on API/arch/Emulator."""
+
+    if self.big_screen:
+      return SWIFTSHADER_OPEN_GL
     if (self._metadata_pb.emulator_architecture != 'x86' or
         self.GetApiVersion() < 25):
       return NO_OPEN_GL
