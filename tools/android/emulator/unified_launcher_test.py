@@ -487,7 +487,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         source_properties=None,
         default_properties=None,
         kvm_present=mox.IsA(bool),
-        system_image_path=os.path.join(self._tempdir, 'system.img'))
+        system_image_path=os.path.join(self._tempdir, 'system.img'),
+        data_image_path=os.path.join(self._tempdir, 'userdata.img'))
 
     initial_boot_device.StartDevice(enable_display=False,
                                     start_vnc_on_port=0,
@@ -507,7 +508,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     self.mox.ReplayAll()
 
     unified_launcher._FirstBootAtBuildTimeOnly(
-        [os.path.join(self._tempdir, 'system.img')],
+        [os.path.join(self._tempdir, 'system.img'),
+         os.path.join(self._tempdir, 'userdata.img')],
         skin,
         133,
         memory,
@@ -539,7 +541,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         source_properties=None,
         default_properties=None,
         kvm_present=mox.IsA(bool),
-        system_image_path=os.path.join(self._tempdir, 'system.img'))
+        system_image_path=os.path.join(self._tempdir, 'system.img'),
+        data_image_path=os.path.join(self._tempdir, 'userdata.img'))
 
     initial_boot_device.StartDevice(enable_display=False,
                                     start_vnc_on_port=0,
@@ -556,7 +559,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     self.mox.ReplayAll()
 
     unified_launcher._FirstBootAtBuildTimeOnly(
-        [os.path.join(self._tempdir, 'system.img')],
+        [os.path.join(self._tempdir, 'system.img'),
+         os.path.join(self._tempdir, 'userdata.img')],
         skin,
         133,
         memory,

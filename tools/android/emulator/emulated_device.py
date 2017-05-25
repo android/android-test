@@ -447,6 +447,7 @@ class EmulatedDevice(object):
         'tar', '-xzSf', archive, '-C', working_dir, '--no-anchored', entry])
 
   def _StageDataFiles(self, system_image_dir, system_image_path,
+                      data_image_path,
                       userdata_tarball, timer, enable_guest_gl):
     """Stages files for the emulator launch."""
 
@@ -530,12 +531,12 @@ class EmulatedDevice(object):
                      self._SnapshotFile())
 
     if not os.path.exists(self._UserdataQemuFile()):
-      init_data = os.path.join(system_image_dir, 'userdata.img')
-      if os.path.exists(init_data):
+      init_data = data_image_path
+      assert os.path.exists(init_data), '%s: no userdata.img' % data_image_path
+      if init_data.endswith('.img'):
         self._SparseCp(init_data, self._UserdataQemuFile())
       else:
-        init_data = '%s.tar.gz' % init_data
-        assert os.path.exists(init_data), '%s: userdata.img?' % system_image_dir
+        assert init_data.endswith('.img.tar.gz'), 'Not known format'
         self._ExtractTarEntry(
             init_data,
             'userdata.img',
@@ -769,18 +770,28 @@ class EmulatedDevice(object):
         return _BUCKET_DPI[i]
     return _BUCKET_DPI[-1]
 
+  def _GetImagePath(self, image_dir, suffix):
+    """Generate image path from image_dir and suffix."""
+
+    if os.path.exists(os.path.join(image_dir, suffix)):
+      return os.path.join(image_dir, suffix)
+    else:
+      return os.path.join(image_dir, suffix + '.tar.gz')
+
   def Configure(self, system_image_dir, skin, memory,
                 density, vm_heap, net_type='fastnet',
                 source_properties=None, default_properties=None,
-                kvm_present=False, system_image_path=None):
+                kvm_present=False, system_image_path=None,
+                data_image_path=None):
     """Performs pre-start configuration of the emulator."""
     assert os.path.exists(system_image_dir), ('Sysdir doesnt exist: %s' %
                                               system_image_dir)
-    if not system_image_path:
-      if os.path.exists(os.path.join(system_image_dir, 'system.img')):
-        system_image_path = os.path.join(system_image_dir, 'system.img')
-      else:
-        system_image_path = os.path.join(system_image_dir, 'system.img.tar.gz')
+    system_image_path = (system_image_path or
+                         self._GetImagePath(system_image_dir, 'system.img'))
+    data_image_path = (data_image_path or
+                       self._GetImagePath(system_image_dir, 'userdata.img'))
+
+    images_path = system_image_path + ' ' + data_image_path
 
     self._metadata_pb = emulator_meta_data_pb2.EmulatorMetaDataPb(
         system_image_dir=system_image_dir,
@@ -801,7 +812,7 @@ class EmulatedDevice(object):
         supported_open_gl_drivers=self._DetermineSupportedDrivers(
             source_properties),
         sensitive_system_image=self._DetermineSensitiveImage(source_properties),
-        system_image_path=system_image_path
+        system_image_path=images_path
     )
 
     if self._metadata_pb.with_kvm:
@@ -1008,8 +1019,13 @@ class EmulatedDevice(object):
     start_timer = stopwatch.StopWatch()
     start_timer.start()
     start_timer.start(_STAGE_DATA)
+    images = self._metadata_pb.system_image_path.split()
+    assert len(images) == 2, 'We need exact 2 images in system_image_path'
+    (sysimg, dataimg) = images
+
     self._StageDataFiles(self._metadata_pb.system_image_dir,
-                         self._metadata_pb.system_image_path, userdata_tarball,
+                         sysimg, dataimg,
+                         userdata_tarball,
                          start_timer, open_gl_driver == GUEST_OPEN_GL)
     start_timer.stop(_STAGE_DATA)
 

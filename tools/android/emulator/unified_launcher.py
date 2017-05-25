@@ -274,6 +274,8 @@ def _FirstBootAtBuildTimeOnly(
   sysdir = _FindSystemImagesDir(system_images)
   sysimg_path = (_ExtractSuffixFile(system_images, 'system.img.tar.gz') or
                  _ExtractSuffixFile(system_images, 'system.img'))
+  dataimg_path = (_ExtractSuffixFile(system_images, 'userdata.img.tar.gz') or
+                  _ExtractSuffixFile(system_images, 'userdata.img'))
   device = emulated_device.EmulatedDevice(
       android_platform=_MakeAndroidPlatform(),
       qemu_gdb_port=qemu_gdb_port,
@@ -289,7 +291,8 @@ def _FirstBootAtBuildTimeOnly(
       source_properties=source_properties,
       default_properties=default_properties,
       kvm_present=_IsKvmPresent(),
-      system_image_path=sysimg_path)
+      system_image_path=sysimg_path,
+      data_image_path=dataimg_path)
 
   device.StartDevice(enable_display=False,  # Will be ignored.
                      start_vnc_on_port=0,  # Will be ignored.
@@ -403,9 +406,12 @@ def _RestartDevice(device,
     print '=' * 80
 
   proto.system_image_dir = system_images_dir
-  proto.system_image_path = (
-      _ExtractSuffixFile(system_image_files, 'system.img.tar.gz') or
-      _ExtractSuffixFile(system_image_files, 'system.img'))
+  sysimg = (_ExtractSuffixFile(system_image_files, 'system.img.tar.gz') or
+            _ExtractSuffixFile(system_image_files, 'system.img'))
+  dataimg = (_ExtractSuffixFile(system_image_files, 'userdata.img.tar.gz') or
+             _ExtractSuffixFile(system_image_files, 'userdata.img'))
+  # TODO: Move data to another field in the proto.
+  proto.system_image_path = ' '.join([sysimg, dataimg])
 
   device._metadata_pb = proto
   device.StartDevice(enable_display,
