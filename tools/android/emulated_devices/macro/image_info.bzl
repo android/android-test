@@ -8,6 +8,7 @@ _IMG_TEMPLATE = (
 _GOOGLE = 'google'
 _ANDROID = 'android'
 _WEAR = 'wear'
+_WEAR_TESTKEYS = 'wear-testkeys'
 _TV = 'tv'
 
 
@@ -38,7 +39,7 @@ _ALL_IMAGES = (
     _default_images(22, [_GOOGLE, _ANDROID, _WEAR, _TV]) +
     _default_images(23, [_GOOGLE, _ANDROID, _WEAR, _TV]) +
     _default_images(24, [_GOOGLE, _ANDROID, _WEAR, _TV]) +
-    _default_images(25, [_GOOGLE, _ANDROID, _WEAR]) +
+    _default_images(25, [_GOOGLE, _ANDROID, _WEAR, _WEAR_TESTKEYS]) +
     _default_images(26, [_GOOGLE, _ANDROID])
     )
 
