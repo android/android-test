@@ -25,6 +25,7 @@ import re
 import shutil
 import socket
 import stat
+import struct
 import subprocess
 import sys
 import telnetlib
@@ -120,6 +121,9 @@ INSTALL_FAILURE_REGEXP = re.compile(r'.*(INSTALL_FAILED_[a-zA-Z_]+).*',
                                     re.MULTILINE | re.DOTALL)
 
 DIRECT_BOOT_PROP = 'persist.sys.emulate_fbe'  # Emulate File-Based Encryption
+
+# http://android.googlesource.com/platform/sdk/+/master/emulator/mksdcard/src/source/mksdcard.c#150
+SD_CARD_UUID_OFFSET = 0x43
 
 
 def _InstallFailureType(output):
@@ -429,6 +433,13 @@ class EmulatedDevice(object):
   def _SessionImagesDir(self):
     return os.path.join(self._images_dir, 'session')
 
+  def _SetUUID(self, sd, uuid):
+    """Set UUID for sd card image."""
+
+    with open(sd, 'r+b') as f:
+      f.seek(SD_CARD_UUID_OFFSET)
+      f.write(struct.pack('i', uuid))
+
   def _SparseCp(self, src, dst):
     """Copies a file and respects its sparseness.
 
@@ -573,12 +584,12 @@ class EmulatedDevice(object):
         logging.info('trying to make sdcard on the fly.')
         sdcard_args = [
             self.android_platform.mksdcard,
-            '-l',
-            'testSdCard',
             '%sM' % self._metadata_pb.sdcard_size_mb,
             self._SdcardFile()]
         timer.start(_SDCARD_CREATE)
         common.SpawnAndWaitWithRetry(sdcard_args)
+        # 1AEF-1A1E is hard coded in AdbController.java
+        self._SetUUID(self._SdcardFile(), 0x1AEF1A1E)
         timer.stop(_SDCARD_CREATE)
 
     os.chmod(self._SdcardFile(), stat.S_IRWXU)
