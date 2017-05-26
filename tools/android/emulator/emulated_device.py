@@ -1250,7 +1250,8 @@ class EmulatedDevice(object):
 
   def _NeedBootGL(self):
     """Check if we need OpenGL at boot stage."""
-    return self.big_screen or self.GetApiVersion() > 23
+    return self._display is None and (self.big_screen or
+                                      self.GetApiVersion() > 23)
 
   def _MakeEmulatorEnv(self, parent_env):
     """Sets up (most) of the environment vars for the emulator.
