@@ -10,6 +10,9 @@ _SE_LINUX_PROP = 'ro.initial_se_linux_mode'
 _SDK_VERSION_PROP = 'ro.build.version.sdk'
 _PRODUCT_MODEL = 'ro.product.model'
 
+_DEFAULT_BOOT_RPOP = [
+    ('sdcard_size_mb', '512')
+]
 
 def _is_ro(k):
   return k.startswith('ro.')
@@ -33,6 +36,9 @@ def _mutable_props(props):
 def generate_prop_content(user_props, emulator, hardware, image):
   """Creates a properties file that coalesces properties from various sources."""
   content = 'ro.mobile_ninjas.is_emulated=true\n'
+  for k, v in _DEFAULT_BOOT_RPOP:
+    if k not in props_boot(user_props):
+      props_boot(user_props)[k] = v
   if image_api(image) >= 19 and image_api(image) < 24:
     content += _BOOT_PROP_TMPL % (_SE_LINUX_PROP, 'disabled')
   elif image_api(image) >= 24:
