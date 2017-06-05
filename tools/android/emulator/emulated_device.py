@@ -741,6 +741,9 @@ class EmulatedDevice(object):
       config_ini.write('hw.cpu.arch=%s\n' % avd_cpu_arch)
       config_ini.write('hw.cpu.ncore=%d\n' % FLAGS.cores)
 
+      if self._NeedGPU():
+        config_ini.write('hw.gpu.enabled=yes\n')
+
       if not FLAGS.hardware_keyboard:
         config_ini.write('hw.keyboard=no\n')
 
@@ -1248,6 +1251,12 @@ class EmulatedDevice(object):
     find_proc.wait()
   # pylint: enable=too-many-statements
 
+  def _NeedGPU(self):
+    """Check if we need to enable gpu."""
+    return (self._NeedBootGL() or self._display and
+            self._display.open_gl_driver != NO_OPEN_GL and
+            self._display.open_gl_driver != GUEST_OPEN_GL)
+
   def _NeedBootGL(self):
     """Check if we need OpenGL at boot stage."""
     return self._display is None and (self.big_screen or
@@ -1286,9 +1295,7 @@ class EmulatedDevice(object):
           lib_paths.append(os.path.dirname(match.group(1)))
 
     # Use GL translator libraries only if opengl is enabled.
-    if (self._NeedBootGL() or self._display and
-        self._display.open_gl_driver != NO_OPEN_GL and
-        self._display.open_gl_driver != GUEST_OPEN_GL):
+    if self._NeedGPU():
       lib_paths.append(gl_base)
 
     lib_paths.extend([self.android_platform.emulator_support_lib_path,
