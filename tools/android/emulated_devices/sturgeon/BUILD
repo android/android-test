@@ -26,7 +26,10 @@ make_device(
     min_api = 20,
     ram = 512,
     screen_density = 286,
-    system_image_flavors = ["wear"],
+    system_image_flavors = [
+        "wear",
+        "wear-le",
+    ],
     vertical_resolution = 400,
     vm_heap = 48,
 )
