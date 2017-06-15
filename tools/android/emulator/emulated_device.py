@@ -68,6 +68,8 @@ flags.DEFINE_bool('boost_dex2oat', False, 'Decrease dex2oat time. This could '
 flags.DEFINE_integer('cores', 2, 'Cores number for emulated devices, only '
                      'meaningful for qemu2.')
 flags.DEFINE_bool('skip_connect_device', False, 'Skip to connect device.')
+flags.DEFINE_bool('dex2oat_on_cloud_enabled', False,
+                  'Was Dex2oat run in cloud.')
 
 LoadInfo = collections.namedtuple('LoadInfo', 'timestamp up_time idle_time')
 
@@ -219,6 +221,7 @@ _DB_PATH = '/data/data/com.android.providers.settings/databases/settings.db'
 _DEFAULT_QEMU_TELNET_PORT = 52222
 
 _BOOTSTRAP_PKG = 'com.google.android.apps.common.testing.services.bootstrap'
+_DEX2OAT = 'android_test_support/tools/android/emulator/daemon/dex2oat'
 _BOOTSTRAP_PATH = 'android_test_support/tools/android/emulator/daemon/bootstrap.apk'
 _DEFAULT_BROADCAST_ACTION = 'ACTION_MOBILE_NINJAS_START'
 
@@ -1217,6 +1220,16 @@ class EmulatedDevice(object):
     os.chmod(os.path.join(exploded_temp, 'g3_activity_controller.jar'),
              stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
 
+    # Copy the dex2oat jar to the base directory.
+    shutil.copy2(
+        resources.GetResourceFilename(
+            'android_test_support/'
+            'tools/android/emulator/daemon/dex2oat.jar'),
+        os.path.join(exploded_temp, 'dex2oat.jar'))
+
+    os.chmod(os.path.join(exploded_temp, 'dex2oat.jar'),
+             stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
+
     if self._metadata_pb.with_patched_adbd:
       # hrm I wonder how borked ADBD is on this device.
       # oh well!!!
@@ -1542,6 +1555,24 @@ class EmulatedDevice(object):
     self._PollEmulatorStatus(timer)
     if self._mini_boot:
       return
+
+    # Update the dex2oat binary.
+    api_version = self.GetApiVersion()
+    if  FLAGS.dex2oat_on_cloud_enabled and api_version >= 21:
+
+      # Dex2oat our jar file so that we don't end up dex2oat'ing ourselves.
+      self.ExecOnDevice([
+          ('export CLASSPATH=/dex2oat.jar; /system/bin/app_process / '
+           'com.google.android.apps.common.testing.services.dex2oat.Dex2Oat '
+           '--ignore')])
+
+      self._Push(resources.GetResourceFilename(_DEX2OAT), '/data/dex2oat')
+      self.ExecOnDevice(['chmod', '755', '/data/dex2oat'])
+      self.ExecOnDevice(['cp', '/system/bin/dex2oat', '/data/dex2oat_original'])
+      self.ExecOnDevice(['mount', '-o', 'bind', '/data/dex2oat',
+                         '/system/bin/dex2oat'])
+      self.ExecOnDevice(['mkdir', '-p', '/data/local/tmp/dex2oat'])
+      self.ExecOnDevice(['chmod', '777', '/data/local/tmp/dex2oat'])
 
     self.ExecOnDevice(['setprop', 'qemu.host.socket.dir',
                        str(self._sockets_dir)])
