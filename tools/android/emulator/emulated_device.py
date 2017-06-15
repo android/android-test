@@ -2420,6 +2420,7 @@ class EmulatedDevice(object):
     env['ANDROID_ADB_SERVER_PORT'] = str(self.adb_server_port)
     env['ANDROID_ADB'] = self.android_platform.real_adb
     env['ANDROID_SERIAL'] = self.device_serial
+    env['ADB_LIBUSB'] = '0'
     if self._emulator_env and 'HOME' in self._emulator_env:
       env['HOME'] = self._emulator_env['HOME']
     test_output_dir = os.environ.get('TEST_UNDECLARED_OUTPUTS_DIR')
