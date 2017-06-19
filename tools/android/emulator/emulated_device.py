@@ -2922,7 +2922,7 @@ class EmulatedDevice(object):
     if self.big_screen:
       return SWIFTSHADER_OPEN_GL
     if (self._metadata_pb.emulator_architecture != 'x86' or
-        self.GetApiVersion() < 25):
+        self.GetApiVersion() < 24):
       return NO_OPEN_GL
     return SWIFTSHADER_OPEN_GL
 
