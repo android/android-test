@@ -45,6 +45,7 @@ except ImportError as e:
          'MCrypt library using sudo apt-get install python-mcrypt .')
 import portpicker
 
+
 import gflags as flags
 import gflags as flags_validators
 from tools.android.emulator import resources
@@ -2941,6 +2942,7 @@ class EmulatedDevice(object):
         return True
     return False
 
+
   def InstallApk(self, apk_path, max_tries=5, grant_runtime_permissions=False):
     """Installs the given apk onto the device."""
     assert os.path.exists(apk_path), 'apk doesnt exist at: %s' % apk_path
@@ -2974,6 +2976,7 @@ class EmulatedDevice(object):
       # this is especially needed on API >= 21, where presumably art
       # optimization will add an additional time penalty
       install_timeout_secs = 120
+
 
 
     while True:
