@@ -23,6 +23,10 @@ class NoOpReporter(object):
   def ReportFailure(self, unused_component, unused_details):
     pass
 
+  def ReportToolsUsage(self, unused_namespace, unused_tool_name,
+                       unused_runtime_ms, unused_success):
+    pass
+
   def Emit(self):
     pass
 
