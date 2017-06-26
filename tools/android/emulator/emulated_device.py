@@ -2893,11 +2893,11 @@ class EmulatedDevice(object):
         self._Push(apk, '/system/app/%s' % os.path.basename(apk))
       else:
         self._Push(apk, '/system/priv-app/%s' % os.path.basename(apk))
-    if self.GetApiVersion() >= 21:
-      self._RestartAndroid()
-      self._PollEmulatorStatus()
-      if not self._direct_boot:
-        self._UnlockScreen()
+
+    self._RestartAndroid()
+    self._PollEmulatorStatus()
+    if not self._direct_boot:
+      self._UnlockScreen()
 
   def _Push(self, file_path, device_path):
     """Pushes given file to device."""
