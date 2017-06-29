@@ -705,6 +705,20 @@ def _HashFiles(files):
   return hashes_to_files
 
 
+def _GetTmpDir():
+  """Determines the right temporary dir to use and creates it if necessary.
+
+  Returns:
+    path to temporary directory.
+  """
+  tmp_dir = FLAGS.emulator_tmp_dir or os.path.abspath(
+      tempfile.mkdtemp('android-emulator-launch'))
+
+  if not os.path.exists(tmp_dir):
+    os.makedirs(tmp_dir)
+  return tmp_dir
+
+
 def EntryPoint(reporter):
   """Determines the action to take based on flags.
 
@@ -747,12 +761,6 @@ def EntryPoint(reporter):
       FLAGS.default_properties_file,
   ])
 
-  tmp_dir = FLAGS.emulator_tmp_dir or os.path.abspath(
-      tempfile.mkdtemp('android-emulator-launch'))
-
-  if not os.path.exists(tmp_dir):
-    os.makedirs(tmp_dir)
-
   if 'boot' == FLAGS.action:
     _FirstBootAtBuildTimeOnly(
         filtered_system_images,
@@ -765,7 +773,7 @@ def EntryPoint(reporter):
         _ReadDefaultProperties(FLAGS.default_properties_file),
         FLAGS.qemu_gdb_port,
         FLAGS.enable_single_step,
-        tmp_dir,
+        _GetTmpDir(),
         boot_time_apks)
   elif FLAGS.action in ['start', 'mini_boot']:
     _Run(FLAGS.adb_server_port, FLAGS.emulator_port, FLAGS.adb_port,
@@ -778,7 +786,7 @@ def EntryPoint(reporter):
          _ConvertToDict(FLAGS.broadcast_message), FLAGS.initial_locale,
          FLAGS.initial_ime, FLAGS.with_audio, FLAGS.qemu_gdb_port,
          FLAGS.enable_single_step, FLAGS.with_boot_anim, FLAGS.extra_certs,
-         tmp_dir, FLAGS.lockdown_level, FLAGS.open_gl_driver,
+         _GetTmpDir(), FLAGS.lockdown_level, FLAGS.open_gl_driver,
          FLAGS.allow_experimental_open_gl, FLAGS.add_insecure_cacert,
          FLAGS.grant_runtime_permissions, FLAGS.accounts, reporter,
          'mini_boot' == FLAGS.action)
