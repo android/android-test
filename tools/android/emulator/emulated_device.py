@@ -19,6 +19,7 @@
 
 import collections
 import contextlib
+import json
 import logging
 import os
 import re
@@ -410,6 +411,15 @@ class EmulatedDevice(object):
   def _RamdiskFile(self):
     return os.path.join(self._SessionImagesDir(), 'ramdisk.img')
 
+  def _EncryptionKeyImageFile(self):
+    return os.path.join(self._SessionImagesDir(), 'encryptionkey.img')
+
+  def _AdvancedFeaturesFile(self):
+    return os.path.join(self._SessionImagesDir(), 'advancedFeatures.ini')
+
+  def _VendorFile(self):
+    return os.path.join(self._SessionImagesDir(), 'vendor.img')
+
   def _InitSystemFile(self):
     return os.path.join(self._InitImagesDir(), 'system.img')
 
@@ -461,9 +471,11 @@ class EmulatedDevice(object):
     subprocess.check_call([
         'tar', '-xzSf', archive, '-C', working_dir, '--no-anchored', entry])
 
-  def _StageDataFiles(self, system_image_dir, system_image_path,
-                      data_image_path,
-                      userdata_tarball, timer, enable_guest_gl):
+  def _StageDataFiles(self, system_image_dir, userdata_tarball, timer,
+                      enable_guest_gl, system_image_path=None,
+                      data_image_path=None, vendor_img_path=None,
+                      encryptionkey_img_path=None,
+                      advanced_features_ini=None):
     """Stages files for the emulator launch."""
 
     self._images_dir = os.path.abspath(self._TempDir('images'))
@@ -538,12 +550,39 @@ class EmulatedDevice(object):
         subprocess.check_call(['/sbin/resize2fs', '-f',
                                self._UserdataQemuFile(), '%dM' % data_size])
     else:
-      # need to setup:
       #   self._RamdiskFile() - we modify this abit
       #   self._SnapshotFile() - always exists
       self._InitializeRamdisk(system_image_dir)
       self._SparseCp(self.android_platform.empty_snapshot_fs,
                      self._SnapshotFile())
+
+    if vendor_img_path and not os.path.exists(self._VendorFile()):
+      init_data = vendor_img_path
+      assert os.path.exists(init_data), '%s: no vendor.img' % vendor_img_path
+      assert init_data.endswith('.img.tar.gz'), 'Not known format'
+      self._ExtractTarEntry(
+          init_data, 'vendor.img', os.path.dirname(self._VendorFile()))
+      shutil.move(os.path.join(os.path.dirname(self._VendorFile()),
+                               'vendor.img'),
+                  self._VendorFile())
+      os.chmod(self._VendorFile(), stat.S_IRWXU)
+
+    if encryptionkey_img_path and not os.path.exists(
+        self._EncryptionKeyImageFile()):
+
+      init_data = encryptionkey_img_path
+      assert os.path.exists(init_data), (
+          '%s: no encryptionkey.img' % encryptionkey_img_path)
+      assert init_data.endswith('.img'), 'Not known format'
+      shutil.copy(init_data, self._EncryptionKeyImageFile())
+      os.chmod(self._EncryptionKeyImageFile(), stat.S_IRWXU)
+
+    if advanced_features_ini and not os.path.exists(
+        self._AdvancedFeaturesFile()):
+      assert os.path.exists(advanced_features_ini), (
+          'Advanced Features file %s does not exist' % advanced_features_ini)
+      shutil.copy(advanced_features_ini, self._AdvancedFeaturesFile())
+      os.chmod(self._AdvancedFeaturesFile(), stat.S_IRWXU)
 
     if not os.path.exists(self._UserdataQemuFile()):
       init_data = data_image_path
@@ -685,6 +724,16 @@ class EmulatedDevice(object):
       user_cfg.write('window.x = 0\n')
       user_cfg.write('window.y = 0\n')
 
+    if self.GetApiVersion() >= 26 and os.path.exists(
+        self._AdvancedFeaturesFile()):
+      # Copy the advancedFeatures file to multiple locations.
+      advanced_features_file = os.path.join(home_dir, '.android',
+                                            'advancedFeatures.ini')
+      shutil.copy(self._AdvancedFeaturesFile(), advanced_features_file)
+      advanced_features_file = os.path.join(self._InitImagesDir(),
+                                            'advancedFeatures.ini')
+      shutil.copy(self._AdvancedFeaturesFile(), advanced_features_file)
+
     config_ini_file = os.path.join(self._SessionImagesDir(), 'config.ini')
     with open(config_ini_file, 'w+') as config_ini:
       for prop in self._metadata_pb.avd_config_property:
@@ -796,11 +845,31 @@ class EmulatedDevice(object):
     else:
       return os.path.join(image_dir, suffix + '.tar.gz')
 
+  def BuildImagesDict(self, system_image_path, data_image_path,
+                      vendor_img_path, encryptionkey_img_path,
+                      advanced_features_ini):
+    images_dict = {
+        'system_image_path': system_image_path,
+        'data_image_path': data_image_path
+    }
+
+    if vendor_img_path:
+      images_dict['vendor_img_path'] = vendor_img_path
+
+    if encryptionkey_img_path:
+      images_dict['encryptionkey_img_path'] = encryptionkey_img_path
+
+    if advanced_features_ini:
+      images_dict['advanced_features_ini'] = advanced_features_ini
+
+    return images_dict
+
   def Configure(self, system_image_dir, skin, memory,
                 density, vm_heap, net_type='fastnet',
                 source_properties=None, default_properties=None,
                 kvm_present=False, system_image_path=None,
-                data_image_path=None):
+                data_image_path=None, vendor_img_path=None,
+                encryptionkey_img_path=None, advanced_features_ini=None):
     """Performs pre-start configuration of the emulator."""
     assert os.path.exists(system_image_dir), ('Sysdir doesnt exist: %s' %
                                               system_image_dir)
@@ -809,7 +878,9 @@ class EmulatedDevice(object):
     data_image_path = (data_image_path or
                        self._GetImagePath(system_image_dir, 'userdata.img'))
 
-    images_path = system_image_path + ' ' + data_image_path
+    images_dict = self.BuildImagesDict(system_image_path, data_image_path,
+                                       vendor_img_path, encryptionkey_img_path,
+                                       advanced_features_ini)
 
     self._metadata_pb = emulator_meta_data_pb2.EmulatorMetaDataPb(
         system_image_dir=system_image_dir,
@@ -830,7 +901,7 @@ class EmulatedDevice(object):
         supported_open_gl_drivers=self._DetermineSupportedDrivers(
             source_properties),
         sensitive_system_image=self._DetermineSensitiveImage(source_properties),
-        system_image_path=images_path
+        system_image_path=json.dumps(images_dict)
     )
 
     if self._metadata_pb.with_kvm:
@@ -1037,14 +1108,12 @@ class EmulatedDevice(object):
     start_timer = stopwatch.StopWatch()
     start_timer.start()
     start_timer.start(_STAGE_DATA)
-    images = self._metadata_pb.system_image_path.split()
-    assert len(images) == 2, 'We need exact 2 images in system_image_path'
-    (sysimg, dataimg) = images
+
+    images_dict = json.loads(self._metadata_pb.system_image_path)
 
     self._StageDataFiles(self._metadata_pb.system_image_dir,
-                         sysimg, dataimg,
-                         userdata_tarball,
-                         start_timer, open_gl_driver == GUEST_OPEN_GL)
+                         userdata_tarball, start_timer,
+                         open_gl_driver == GUEST_OPEN_GL, **images_dict)
     start_timer.stop(_STAGE_DATA)
 
     start_timer.start(_START_PROCESS)
@@ -1402,6 +1471,13 @@ class EmulatedDevice(object):
     else:
       self._emulator_start_args.extend(['-engine', 'qemu2',
                                         '-kernel', self._KernelFile()])
+
+    if self.GetApiVersion() >= 26 and os.path.exists(self._VendorFile()):
+      self._emulator_start_args.extend(['-vendor', self._VendorFile()])
+
+    if self.GetApiVersion() >= 26 and os.path.exists(
+        self._EncryptionKeyImageFile()):
+      self._emulator_start_args.extend(['-encryption-key', 'encryptionkey.img'])
 
     if not self._display:
       self._emulator_start_args.append('-no-window')
@@ -2738,6 +2814,11 @@ class EmulatedDevice(object):
         self._SdcardFile() + self._PossibleImgSuffix(),
         self._SnapshotFile(),
         self._RamdiskFile()]
+
+    if self.GetApiVersion() >= 26 and os.path.exists(
+        self._EncryptionKeyImageFile()):
+      image_files.append(
+          self._EncryptionKeyImageFile() + self._PossibleImgSuffix())
 
     if (self._metadata_pb.emulator_type ==
         emulator_meta_data_pb2.EmulatorMetaDataPb.QEMU2):

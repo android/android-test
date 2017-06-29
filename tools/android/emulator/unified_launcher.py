@@ -18,6 +18,7 @@
 
 import collections
 import ConfigParser
+import json
 import logging
 import os
 import StringIO
@@ -276,6 +277,12 @@ def _FirstBootAtBuildTimeOnly(
                  _ExtractSuffixFile(system_images, 'system.img'))
   dataimg_path = (_ExtractSuffixFile(system_images, 'userdata.img.tar.gz') or
                   _ExtractSuffixFile(system_images, 'userdata.img'))
+  vendor_img_path = _ExtractSuffixFile(system_images, 'vendor.img.tar.gz')
+  encryptionkey_img_path = _ExtractSuffixFile(system_images,
+                                              'encryptionkey.img')
+  advanced_features_ini = _ExtractSuffixFile(system_images,
+                                             'advancedFeatures.ini')
+
   device = emulated_device.EmulatedDevice(
       android_platform=_MakeAndroidPlatform(),
       qemu_gdb_port=qemu_gdb_port,
@@ -292,7 +299,10 @@ def _FirstBootAtBuildTimeOnly(
       default_properties=default_properties,
       kvm_present=_IsKvmPresent(),
       system_image_path=sysimg_path,
-      data_image_path=dataimg_path)
+      data_image_path=dataimg_path,
+      vendor_img_path=vendor_img_path,
+      encryptionkey_img_path=encryptionkey_img_path,
+      advanced_features_ini=advanced_features_ini)
 
   device.StartDevice(enable_display=False,  # Will be ignored.
                      start_vnc_on_port=0,  # Will be ignored.
@@ -410,9 +420,16 @@ def _RestartDevice(device,
             _ExtractSuffixFile(system_image_files, 'system.img'))
   dataimg = (_ExtractSuffixFile(system_image_files, 'userdata.img.tar.gz') or
              _ExtractSuffixFile(system_image_files, 'userdata.img'))
+  vendorimg_path = _ExtractSuffixFile(system_image_files, 'vendor.img.tar.gz')
+  encryptionkeyimg_path = _ExtractSuffixFile(system_image_files,
+                                             'encryptionkey.img')
+  advanced_features_ini = _ExtractSuffixFile(system_image_files,
+                                             'advancedFeatures.ini')
   # TODO: Move data to another field in the proto.
-  proto.system_image_path = ' '.join([sysimg, dataimg])
-
+  images_dict = device.BuildImagesDict(sysimg, dataimg,
+                                       vendorimg_path, encryptionkeyimg_path,
+                                       advanced_features_ini)
+  proto.system_image_path = json.dumps(images_dict)
   device._metadata_pb = proto
   device.StartDevice(enable_display,
                      start_vnc_on_port=start_vnc_on_port,

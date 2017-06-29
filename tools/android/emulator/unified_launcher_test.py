@@ -488,7 +488,9 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         default_properties=None,
         kvm_present=mox.IsA(bool),
         system_image_path=os.path.join(self._tempdir, 'system.img'),
-        data_image_path=os.path.join(self._tempdir, 'userdata.img'))
+        data_image_path=os.path.join(self._tempdir, 'userdata.img'),
+        vendor_img_path=None, encryptionkey_img_path=None,
+        advanced_features_ini=None)
 
     initial_boot_device.StartDevice(enable_display=False,
                                     start_vnc_on_port=0,
@@ -542,7 +544,9 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         default_properties=None,
         kvm_present=mox.IsA(bool),
         system_image_path=os.path.join(self._tempdir, 'system.img'),
-        data_image_path=os.path.join(self._tempdir, 'userdata.img'))
+        data_image_path=os.path.join(self._tempdir, 'userdata.img'),
+        vendor_img_path=None, encryptionkey_img_path=None,
+        advanced_features_ini=None)
 
     initial_boot_device.StartDevice(enable_display=False,
                                     start_vnc_on_port=0,
