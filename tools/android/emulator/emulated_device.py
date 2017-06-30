@@ -541,7 +541,14 @@ class EmulatedDevice(object):
       #   self._KernelFile()  # handled above
       #   self._SystemFile()  # handled above
       #   self._InitSystemFile() # handled above
-      subprocess.check_call(['tar', '-xzSf', userdata_tarball, '-C',
+      tar_opts = '-xzSf'
+      if (self._metadata_pb.emulator_type ==
+          emulator_meta_data_pb2.EmulatorMetaDataPb.QEMU2):
+        # qemu2's userdata.dat is not gzipped because it is a diff of the
+        # initial userdata partition and thus quite small already. It also
+        # doesn't compress as well as a raw image does.
+        tar_opts = '-xSf'
+      subprocess.check_call(['tar', tar_opts, userdata_tarball, '-C',
                              self._images_dir])
       data_size = FLAGS.data_partition_size
       if (self.GetApiVersion() >= 19 and data_size and
@@ -2827,21 +2834,36 @@ class EmulatedDevice(object):
 
     image_files = ['./%s' % os.path.relpath(f, self._images_dir)
                    for f in image_files]
-
-    with open(location, 'w') as dat_file:
-      tar_proc = subprocess.Popen(
-          ['tar', '-cSp', '-C', self._images_dir] + image_files,
-          stdout=subprocess.PIPE)
-      # consider replacing with pigz
-      gz_proc = subprocess.Popen(
-          ['gzip'],
-          stdin=tar_proc.stdout,
-          stdout=dat_file)
-      tar_proc.stdout.close()  # tar will get a SIGPIPE if gz dies.
-      gz_ret = gz_proc.wait()
-      tar_ret = tar_proc.wait()
-      assert gz_ret == 0 and tar_ret == 0, 'gz: %d tar: %d' % (gz_ret, tar_ret)
+    if (self._metadata_pb.emulator_type ==
+        emulator_meta_data_pb2.EmulatorMetaDataPb.QEMU2):
+      # QEMU2 uses .qcow disk images which are diffs over the original
+      # userdata.img. Therefore they're already quite small and the
+      # format will not compress very well. (roughly 2x vs RAW images which
+      # compress 4x or better).
+      # so running thru gzip is slow and doesn't save much space.
+      subprocess.check_call([
+          'tar',
+          '-cSpf',
+          location,
+          '-C',
+          self._images_dir] + image_files)
       logging.info('Tar/gz pipeline completes.')
+    else:
+      with open(location, 'w') as dat_file:
+        tar_proc = subprocess.Popen(
+            ['tar', '-cSp', '-C', self._images_dir] + image_files,
+            stdout=subprocess.PIPE)
+        # consider replacing with zippy?
+        gz_proc = subprocess.Popen(
+            ['gzip'],
+            stdin=tar_proc.stdout,
+            stdout=dat_file)
+        tar_proc.stdout.close()  # tar will get a SIGPIPE if gz dies.
+        gz_ret = gz_proc.wait()
+        tar_ret = tar_proc.wait()
+        assert gz_ret == 0 and tar_ret == 0, 'gz: %d tar: %d' % (gz_ret,
+                                                                 tar_ret)
+        logging.info('Tar/gz pipeline completes.')
 
   def _GetAuthToken(self, reply):
     match = re.search(r'\'(\S*\.emulator_auth_token)\'', reply)
