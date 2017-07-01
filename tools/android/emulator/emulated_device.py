@@ -973,10 +973,6 @@ class EmulatedDevice(object):
     self._metadata_pb.boot_property.add(
         name='qemu.sf.lcd_density',
         value=str(self._metadata_pb.density))
-    # Also eliminates the race that we lost camera sometimes.
-    # 'back' is the current default value for emulator.
-    self._metadata_pb.boot_property.add(
-        name='qemu.sf.fake_camera', value='back')
 
     self._metadata_pb.boot_property.add(
         name='service.adb.root', value='1')
@@ -1030,6 +1026,30 @@ class EmulatedDevice(object):
     prop = self._metadata_pb.avd_config_property.add(name='hw.mainKeys')
     prop.value = self._GetProperty(prop.name, default_properties,
                                    source_properties, 'yes')
+
+    prop = self._metadata_pb.avd_config_property.add(name='hw.camera.back')
+    prop.value = self._GetProperty(prop.name, default_properties,
+                                   source_properties, 'emulated')
+    back_cam_config = prop.value
+
+    prop = self._metadata_pb.avd_config_property.add(name='hw.camera.front')
+    prop.value = self._GetProperty(prop.name, default_properties,
+                                   source_properties, 'none')
+    front_cam_config = prop.value
+    # Also eliminates the race that we lost camera sometimes.
+    # 'back' is the current default value for emulator.
+    if front_cam_config != 'emulated' and back_cam_config == 'emulated':
+      self._metadata_pb.boot_property.add(name='qemu.sf.fake_camera',
+                                          value='back')
+    elif front_cam_config == 'emulated' and back_cam_config != 'emulated':
+      self._metadata_pb.boot_property.add(name='qemu.sf.fake_camera',
+                                          value='front')
+    elif front_cam_config == 'emulated' and back_cam_config == 'emulated':
+      self._metadata_pb.boot_property.add(name='qemu.sf.fake_camera',
+                                          value='both')
+    else:
+      self._metadata_pb.boot_property.add(name='qemu.sf.fake_camera',
+                                          value='none')
 
     # Keyboard support for real keyboard.
     # emulator bug - documentation says default value is "yes".
