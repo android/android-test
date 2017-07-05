@@ -24,7 +24,8 @@ class NoOpReporter(object):
     pass
 
   def ReportToolsUsage(self, unused_namespace, unused_tool_name,
-                       unused_runtime_ms, unused_success):
+                       unused_runtime_ms, unused_success,
+                       unused_total_runtime):
     pass
 
   def Emit(self):
