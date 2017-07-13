@@ -11,6 +11,7 @@ _WEAR = 'wear'
 _WEAR_TESTKEYS = 'wear-testkeys'
 _WEAR_LE = 'wear-le'
 _TV = 'tv'
+_AUTO = 'auto'
 
 
 def _default_images(api_level, flavors):
@@ -41,7 +42,7 @@ _ALL_IMAGES = (
     _default_images(23, [_GOOGLE, _ANDROID, _WEAR, _TV]) +
     _default_images(24, [_GOOGLE, _ANDROID, _WEAR, _TV]) +
     _default_images(25, [_GOOGLE, _ANDROID, _WEAR, _WEAR_LE, _WEAR_TESTKEYS]) +
-    _default_images(26, [_GOOGLE, _ANDROID, _WEAR])
+    _default_images(26, [_GOOGLE, _ANDROID, _WEAR, _AUTO])
     )
 
 
