@@ -25,7 +25,7 @@ from tools.android.emulator import emulated_device
 FLAGS = flags.FLAGS
 flags.DEFINE_string('system_image_dir',
                     'third_party/java/android/system_images/android_10/armeabi',
-                    ' Relative System image location.')
+                    'Workspace Relative System image location.')
 flags.DEFINE_string('android_sdk_path',
                     'third_party/java/android/android_sdk_linux/',
                     'Path of Android SDK.')

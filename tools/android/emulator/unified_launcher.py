@@ -171,9 +171,8 @@ flags.DEFINE_boolean('enable_display', True, 'False asks not to render into '
 flags.DEFINE_integer('start_vnc_on_port', 0, 'Starts VNC server on specified '
                      'port. Default value 0 asks not to start VNC.')
 flags.DEFINE_enum('open_gl_driver', None, emulated_device.OPEN_GL_DRIVERS,
-                  'The driver that will be used for open gl emulation. Note: '
-                  'only the mesa driver is supported on , but it is '
-                  'only supported for certain api levels.')
+                  'The driver that will be used for open gl emulation. '
+                 )
 flags.DEFINE_boolean('allow_experimental_open_gl', False, 'If true, checks '
                      'that prevent open_gl_driver values with known issues '
                      'are disabled.')

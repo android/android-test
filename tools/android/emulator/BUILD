@@ -48,15 +48,6 @@ filegroup(
     ],
 )
 
-# Used for WebView testing.
-filegroup(
-    name = "daemon_pipe_traversal",
-    srcs = [
-        "daemon/armeabi-v7a/pipe_traversal",
-        "daemon/x86/pipe_traversal",
-    ],
-)
-
 py_library(
     name = "common",
     srcs = ["common.py"],
