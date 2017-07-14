@@ -41,23 +41,9 @@ load(
 )
 
 config_setting(
-    name = "ios_armv7",
-    values = {
-        "ios_cpu": "armv7",
-    },
-)
-
-config_setting(
     name = "ios_armv7s",
     values = {
-        "ios_cpu": "armv7s",
-    },
-)
-
-config_setting(
-    name = "ios_arm64",
-    values = {
-        "ios_cpu": "arm64",
+        "cpu": "ios_armv7s",
     },
 )
 
@@ -101,9 +87,9 @@ cc_library(
     ],
     hdrs = glob(["src/google/protobuf/**/*.h"]),
     copts = select({
-        ":ios_armv7": IOS_ARM_COPTS,
+        "//tools/objc:ios_armv7": IOS_ARM_COPTS,
         ":ios_armv7s": IOS_ARM_COPTS,
-        ":ios_arm64": IOS_ARM_COPTS,
+        "//tools/objc:ios_arm64": IOS_ARM_COPTS,
         "//conditions:default": COPTS,
     }),
     includes = ["src/"],
@@ -171,9 +157,9 @@ cc_library(
     ],
     hdrs = glob(["src/**/*.h"]),
     copts = select({
-        ":ios_armv7": IOS_ARM_COPTS,
+        "//tools/objc:ios_armv7": IOS_ARM_COPTS,
         ":ios_armv7s": IOS_ARM_COPTS,
-        ":ios_arm64": IOS_ARM_COPTS,
+        "//tools/objc:ios_arm64": IOS_ARM_COPTS,
         "//conditions:default": COPTS,
     }),
     includes = ["src/"],
