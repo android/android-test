@@ -14,11 +14,14 @@ make_device(
         "ro.scuba.model": "Android Automotive",
     },
     cache = 32,
+    emulator_types = [
+        "qemu2",
+    ],
     horizontal_resolution = 800,
     min_api = 26,
     ram = 4096,
-    screen_density = 161,
+    screen_density = 120,
     system_image_flavors = ["auto"],
     vertical_resolution = 480,
-    vm_heap = 512,
+    vm_heap = 48,
 )

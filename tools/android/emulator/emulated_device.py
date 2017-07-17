@@ -2696,6 +2696,11 @@ class EmulatedDevice(object):
     """
     self.ExecOnDevice(['sync', '&&', 'sync'])
     self._Remount(mount_point, 'ro')
+
+    # If the mount_point is not present, don't bother trying to umount.
+    if mount_point not in self.ExecOnDevice(['mount']):
+      return True
+
     info = [point for point in self.ExecOnDevice(['mount']).splitlines()
             if mount_point in point.split()]
     umount_attempts = 0
@@ -2806,6 +2811,8 @@ class EmulatedDevice(object):
         self.ExecOnDevice(['stop', svc])
 
       self._CheckLeftProcess()
+      # Umount /data/media first. Otherwise umount of /data will fail.
+      clean_death = self._CleanUmount('/data/media') and clean_death
       clean_death = self._CleanUmount('/data') and clean_death
       clean_death = self._CleanUmount('/cache') and clean_death
     telnet = self._ConnectToEmulatorConsole()
