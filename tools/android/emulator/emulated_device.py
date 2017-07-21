@@ -1178,21 +1178,20 @@ class EmulatedDevice(object):
     extract_cpio_proc.wait()
     gunzip_proc.wait()
 
-    assert os.path.exists(
-        os.path.join(exploded_temp, 'default.prop')
-    ), 'default.prop does not exist in ramdisk.'
-
-    properties = '#\n# MOBILE_NINJAS_PROPERTIES\n#\n'
-    for prop in self._metadata_pb.boot_property:
-      properties += '%s=%s\n' % (prop.name, prop.value)
-    properties += '#\n# MOBILE_NINJAS_RUNTIME_PROPERTIES\n#\n'
-    for prop in self._RuntimeProperties():
-      properties += '%s=%s\n' % (prop.name, prop.value)
-    properties += '#\n# MOBILE_NINJAS_PROPERTIES_END\n#\n\n'
-    with open(os.path.join(exploded_temp, 'default.prop'), 'r+') as prop_file:
-      properties += prop_file.read()
-      prop_file.seek(0)
-      prop_file.write(properties)
+    set_props_in_init = True
+    if os.path.exists(os.path.join(exploded_temp, 'default.prop')):
+      set_props_in_init = False
+      properties = '#\n# MOBILE_NINJAS_PROPERTIES\n#\n'
+      for prop in self._metadata_pb.boot_property:
+        properties += '%s=%s\n' % (prop.name, prop.value)
+      properties += '#\n# MOBILE_NINJAS_RUNTIME_PROPERTIES\n#\n'
+      for prop in self._RuntimeProperties():
+        properties += '%s=%s\n' % (prop.name, prop.value)
+      properties += '#\n# MOBILE_NINJAS_PROPERTIES_END\n#\n\n'
+      with open(os.path.join(exploded_temp, 'default.prop'), 'r+') as prop_file:
+        properties += prop_file.read()
+        prop_file.seek(0)
+        prop_file.write(properties)
 
     with open(os.path.join(exploded_temp, 'init.rc'), 'r+') as init_rc:
       in_adbd = False
@@ -1295,6 +1294,11 @@ class EmulatedDevice(object):
       init_rc.write('on boot\n')
       init_rc.write('   start pipe_traverse\n')
       init_rc.write('   start tn_pipe_traverse\n')
+      if set_props_in_init:
+        for prop in self._metadata_pb.boot_property:
+          init_rc.write('  setprop %s %s\n' % (prop.name, prop.value))
+        for prop in self._RuntimeProperties():
+          init_rc.write('  setprop %s %s\n' % (prop.name, prop.value))
       init_rc.write('\n')
 
     arch = self._metadata_pb.emulator_architecture
