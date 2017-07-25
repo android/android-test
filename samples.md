@@ -5,6 +5,8 @@ permalink: /samples/index.html
 site_nav_category: samples
 is_site_nav_category: true
 site_nav_category_order: 300
+redirect_to:
+ - https://github.com/googlesamples/android-testing
 ---
 In the [android-testing GitHub repository](https://github.com/googlesamples/android-testing) you'll find a collection of samples:
 

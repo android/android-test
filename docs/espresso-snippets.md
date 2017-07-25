@@ -5,6 +5,8 @@ permalink: /docs/espresso/advanced/index.html
 site_nav_category: docs
 site_nav_category2: espresso
 site_nav_category_order: 105
+redirect_to:
+ - https://developer.android.com/training/testing/espresso/recipes.html
 ---
 {::options toc_levels="3"/}
 

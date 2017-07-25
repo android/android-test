@@ -5,6 +5,8 @@ permalink: /docs/espresso/index.html
 site_nav_category_order: 100
 is_site_nav_category2: true
 site_nav_category: docs
+redirect_to:
+ - https://developer.android.com/training/testing/espresso/index.html
 ---
 
 Use Espresso to write concise, beautiful, and reliable Android UI tests like this:

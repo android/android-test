@@ -5,6 +5,8 @@ permalink: /docs/androidjunitrunner-guide/index.html
 site_nav_category: docs
 is_site_nav_category2: true
 site_nav_category_order: 110
+redirect_to:
+ - https://developer.android.com/training/testing/junit-runner.html
 ---
 {::options toc_levels="2"/}
 

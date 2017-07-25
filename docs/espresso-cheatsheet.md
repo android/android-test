@@ -5,6 +5,8 @@ permalink: /docs/espresso/cheatsheet/index.html
 site_nav_category: docs
 site_nav_category2: espresso
 site_nav_category_order: 103
+redirect_to:
+ - https://developer.android.com/training/testing/espresso/cheat-sheet.html
 ---
 
 The *Espresso Cheat Sheet* is a quick reference you can use during development. This cheat sheet contains most available `Matchers`, `ViewActions` and `ViewAssertions`.

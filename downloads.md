@@ -5,6 +5,8 @@ permalink: /downloads/index.html
 site_nav_category_order: 200
 is_site_nav_category: true
 site_nav_category: downloads
+redirect_to:
+ - https://developer.android.com/topic/libraries/testing-support-library/packages.html
 ---
 
 ## Download the Android Support Repository
