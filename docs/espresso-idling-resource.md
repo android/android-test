@@ -5,6 +5,8 @@ permalink: /docs/espresso/idling-resource/index.html
 site_nav_category: docs
 site_nav_category2: espresso
 site_nav_category_order: 107
+redirect_to:
+ - https://developer.android.com/training/testing/espresso/idling-resource.html
 ---
 {::options toc_levels="2"/}
 

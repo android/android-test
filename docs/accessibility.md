@@ -5,6 +5,8 @@ permalink: /docs/accesibility-checking/index.html
 site_nav_category: docs
 is_site_nav_category2: true
 site_nav_category_order: 140
+redirect_to:
+ - https://developer.android.com/training/accessibility/testing.html
 ---
 {::options toc_levels="2"/}
 

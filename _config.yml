@@ -17,3 +17,4 @@ uiautomatorVersion: 2.1.2
 
 gems:
   - octopress-autoprefixer
+  - jekyll-redirect-from

@@ -5,6 +5,8 @@ permalink: /docs/index.html
 site_nav_category: docs
 is_site_nav_category: true
 site_nav_category_order: 10
+redirect_to:
+ - https://developer.android.com/training/testing/index.html
 ---
 {::options toc_levels="2"/}
 

@@ -5,6 +5,8 @@ permalink: /downloads/release-notes/index.html
 site_nav_category_order: 201
 is_site_nav_category2: true
 site_nav_category: downloads
+redirect_to:
+ - https://developer.android.com/topic/libraries/testing-support-library/release-notes.html
 ---
 
 
