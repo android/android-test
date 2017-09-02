@@ -18,7 +18,6 @@ _EMULATOR_TYPE_PROP = "ro.mobile_ninjas.emulator_type"
 QEMU = new_emulator(
     "qemu",
     props = new_props(boot_properties = {_EMULATOR_TYPE_PROP: "qemu"}),
-    suffix = False,
     supports = {
         "x86": [
             10,
@@ -43,6 +42,9 @@ QEMU = new_emulator(
             19,
         ],
     },
+    # We're phasing out qemu1, so only whitelisted projects can depend on
+    # explicit qemu1 device targets.
+    default_visibility = []
 )
 
 QEMU2_APIS = [

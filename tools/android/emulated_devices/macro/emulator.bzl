@@ -7,8 +7,8 @@ def new_emulator(emu_type,
                  extra_files=None,
                  supports=None,
                  uses_kvm=True,
-                 suffix=True,
-                 props=None):
+                 props=None,
+                 default_visibility=['//visibility:public']):
   """Creates a new emulator object.
 
   Args:
@@ -16,8 +16,10 @@ def new_emulator(emu_type,
     extra_files: a list of file groups that must be present in runfiles.
     supports: a dictionary of arch: [api_levels] that are supported.
     uses_kvm: emulator can use kvm for x86 images.
-    suffix: a suffix to add to any target that is dependent on this emulator.
     props: a props object to add to all images started by this emulator.
+    default_visibility: The emulator's visibility, if not overridden by an
+        explicit visibility argument to new_devices. Only applies to targets
+        with an explciit emulator suffix. Defaults to public.
 
   Returns:
     An emulator object.
@@ -27,8 +29,8 @@ def new_emulator(emu_type,
       'supports': supports or {},
       'uses_kvm': uses_kvm,
       'extra_files': extra_files or [],
-      'suffix': suffix,
-      'props': props or new_props()
+      'props': props or new_props(),
+      'default_visibility': default_visibility
   }
 
 
@@ -70,6 +72,9 @@ def emulator_props(emulator):
 
 def emulator_suffix(emulator):
   """A suffix for this emulator."""
-  if emulator['suffix']:
-    return '_%s' % emulator_type(emulator)
-  return ''
+  return '_%s' % emulator_type(emulator)
+
+
+def emulator_default_visibility(emulator):
+  """The default visibility for this emulator."""
+  return emulator['default_visibility']
