@@ -217,7 +217,7 @@ def new_devices(name,
 
     # Add an extra set of devices with no emulator suffix. They will use the
     # default emulator.
-    default_emulator_for_image = default_emulator or _fallback_default_emulator_for_image(image, emulators)
+    default_emulator_for_image = default_emulator or _fallback_default_emulator_for_image(image, emulators, archs_override)
 
     if default_emulator_for_image:
       default_arches = archs_override or supported_arches_for_api(default_emulator_for_image, api)
@@ -272,7 +272,7 @@ def _new_devices_for_image_and_emulator(name,
 
 
 
-def _fallback_default_emulator_for_image(image, emulators):
+def _fallback_default_emulator_for_image(image, emulators, archs_override):
   """The default emulator to fall back to if default_emulator is not specified.
 
   We can modify the logic here in order to rollout QEMU2 as the default
@@ -281,19 +281,50 @@ def _fallback_default_emulator_for_image(image, emulators):
   Args:
     image: the image of this device
     emulators: the list of emulators supported for this device
+    archs_override: optional list of supported architectures
 
   Returns:
     The emulator to use as the default
   """
 
   # Make sure any future Android images use qemu2.
-  if image_api(image) >= 26 and QEMU2 in emulators:
+  if image_api(image) >= 26 and _is_emulator_compatible(QEMU2, image, emulators, archs_override):
     return QEMU2
 
   # Legacy behavior is to default to qemu1, provided it's in the emulator list.
-  if QEMU in emulators:
+  if _is_emulator_compatible(QEMU, image, emulators, archs_override):
     return QEMU
 
   return None
+
+
+def _is_emulator_compatible(emulator, image, emulators, archs_override):
+  """Checks whether a given emulator is compatible with a given image.
+
+  In general, this is based on whether the emulator supports the image's
+  architecture and API level, but there are a couple other factors to consider.
+  If an 'archs_override' parameter was passed to new_devices, we should check
+  for compatibility using that, rather than the supported architectures from
+  the emulator config. Also if an 'emulators' list was passed to new_devices,
+  we must reject the emulator if it's not in that whitelist.
+
+  Args:
+    emulator: The emulator to check for compatibility.
+    image: The image to check against.
+    emulators: The whitelist of supported emulators.
+    archs_override: Optional list of supported architectures.
+
+  Returns:
+    Whether the emulator is compatible
+  """
+
+  if emulator not in emulators:
+    return False
+
+  supported_arches = archs_override or supported_arches_for_api(emulator, image_api(image))
+  if image_arch(image) not in supported_arches:
+    return False
+
+  return True
 
 
