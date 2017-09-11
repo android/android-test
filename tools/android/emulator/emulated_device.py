@@ -1325,11 +1325,12 @@ class EmulatedDevice(object):
     shutil.copy2(
         resources.GetResourceFilename(
             'android_test_support/'
-            'tools/android/emulator/daemon/dex2oat.jar'),
-        os.path.join(exploded_temp, 'dex2oat.jar'))
+            'tools/android/emulator/daemon/dex2oat_parser'),
+        os.path.join(exploded_temp, 'dex2oat_parser'))
 
-    os.chmod(os.path.join(exploded_temp, 'dex2oat.jar'),
-             stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
+    os.chmod(os.path.join(exploded_temp, 'dex2oat_parser'),
+             stat.S_IRUSR | stat.S_IXUSR | stat.S_IRGRP | stat.S_IXGRP |
+             stat.S_IROTH | stat.S_IXOTH)
 
     if self._metadata_pb.with_patched_adbd:
       # hrm I wonder how borked ADBD is on this device.
@@ -1667,13 +1668,6 @@ class EmulatedDevice(object):
     # Update the dex2oat binary.
     api_version = self.GetApiVersion()
     if  FLAGS.dex2oat_on_cloud_enabled and api_version >= 21:
-
-      # Dex2oat our jar file so that we don't end up dex2oat'ing ourselves.
-      self.ExecOnDevice([
-          ('export CLASSPATH=/dex2oat.jar; /system/bin/app_process / '
-           'com.google.android.apps.common.testing.services.dex2oat.Dex2Oat '
-           '--ignore')])
-
       self._Push(resources.GetResourceFilename(_DEX2OAT), '/data/dex2oat')
       self.ExecOnDevice(['chmod', '755', '/data/dex2oat'])
       self.ExecOnDevice(['cp', '/system/bin/dex2oat', '/data/dex2oat_original'])
