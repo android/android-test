@@ -954,4 +954,5 @@ def main(unused_argv):
 
 
 if __name__ == '__main__':
+  FLAGS.set_default('logtostderr', True)
   app.run()
