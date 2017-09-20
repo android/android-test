@@ -3208,8 +3208,12 @@ class EmulatedDevice(object):
         stdout_thread.join()
         return 'after ~30s system idle, system hung? stdout: %s' % (
             stdout[0])
-    logging.info('install [%s]: return code: %s', install_args,
-                 install_proc.poll())
+
+    return_code = install_proc.poll()
+    logging.info('install [%s]: return code: %s', install_args, return_code)
+    if return_code != 0:
+      return 'adb install returned, but return code != 0 return code:%d:%s' % (
+          return_code, stdout[0])
     stdout_thread.join()
     return stdout[0]
 
