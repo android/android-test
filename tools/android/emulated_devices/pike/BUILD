@@ -25,7 +25,9 @@ make_device(
     horizontal_resolution = 240,
     min_api = 20,
     ram = 512,
-    screen_density = 261,
+    # using logical density instead of physical density as physical density (261) doesn't match
+    # actual device rendering.
+    screen_density = 240,
     system_image_flavors = ["wear"],
     vertical_resolution = 240,
     vm_heap = 48,
