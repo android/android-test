@@ -518,7 +518,7 @@ class EmulatedDevice(object):
           debugfs_cmd += ['unlink /vendor/lib/egl']
       elif self._add_insecure_cert:
         debugfs_cmd += self.GetInstallCertCmd()
-      build_prop = os.path.join(self._SessionImagesDir(), 'build.prop')
+      build_prop = os.path.join(self._images_dir, 'build.prop')
       debugfs_cmd += ['dump /build.prop %s' % build_prop]
       self.ExecDebugfsCmd(self._SystemFile(), debugfs_cmd)
       # Pipe service won't work for user build and api level 23+, since
@@ -744,7 +744,7 @@ class EmulatedDevice(object):
     config_ini_file = os.path.join(self._SessionImagesDir(), 'config.ini')
     with open(config_ini_file, 'w+') as config_ini:
       for prop in self._metadata_pb.avd_config_property:
-        config_ini.write('%s=%s\n' % (prop.name, prop.value))
+        config_ini.write('\n%s=%s\n' % (prop.name, prop.value))
 
       # the default size is ~256 megs, which fills up fast on iterative
       # development.
@@ -792,9 +792,6 @@ class EmulatedDevice(object):
       # binary itself, and when we run without any AVD at all, it does. However
       # once we start specifying avds, we need to re-specify this info in the
       # avd, otherwise the emulator will balk.
-
-      config_ini.write(
-          'abi.type=%s\n' % self._metadata_pb.emulator_architecture)
 
       avd_cpu_arch = self._metadata_pb.emulator_architecture
       if avd_cpu_arch.startswith('arm'):
@@ -1299,11 +1296,9 @@ class EmulatedDevice(object):
       init_rc.write('   start tn_pipe_traverse\n')
       if set_props_in_init:
         for prop in self._metadata_pb.boot_property:
-          init_rc.write('   setprop %s %s\n' %
-                        (prop.name, self._EscapeInitToken(prop.value)))
+          init_rc.write('  setprop %s %s\n' % (prop.name, prop.value))
         for prop in self._RuntimeProperties():
-          init_rc.write('   setprop %s %s\n' %
-                        (prop.name, self._EscapeInitToken(prop.value)))
+          init_rc.write('  setprop %s %s\n' % (prop.name, prop.value))
       init_rc.write('\n')
 
     arch = self._metadata_pb.emulator_architecture
@@ -1475,22 +1470,6 @@ class EmulatedDevice(object):
     self._metadata_pb.perf_data.add(
         activity_name=activity_name,
         timing=pb_timings)
-
-  def _EscapeInitToken(self, token):
-    """Escape a token in init.rc so that it will be parsed as a single token.
-
-    Note that Android's Init syntax isn't anything like that of a POSIX shell,
-    so we can't use a method like pipes.quote.
-
-    Android's Init syntax is documented here:
-    https://android.googlesource.com/platform/system/core/+/master/init/README.md
-
-    Args:
-      token: the token to escape
-    Returns:
-      the escaped token
-    """
-    return token.replace(' ', '\\ ')
 
 
   # pylint: disable=too-many-statements
