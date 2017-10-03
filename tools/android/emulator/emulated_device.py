@@ -368,6 +368,12 @@ class EmulatedDevice(object):
       return 'ro.build.type=user\n' in f.read()
     return False
 
+  def _IsBuggyWearBuild(self, build_prop):
+    """Check if this is the buggy wear build described in b/67322170."""
+
+    with open(build_prop, 'r') as f:
+      return 'ro.build.version.incremental=2424746\n' in f.read()
+
   def _IsPipeTraversalRunning(self):
     if self._pipe_traversal_running is None:
       if self._SnapshotPresent().value == 'True':
@@ -518,9 +524,19 @@ class EmulatedDevice(object):
           debugfs_cmd += ['unlink /vendor/lib/egl']
       elif self._add_insecure_cert:
         debugfs_cmd += self.GetInstallCertCmd()
+
       build_prop = os.path.join(self._images_dir, 'build.prop')
       debugfs_cmd += ['dump /build.prop %s' % build_prop]
       self.ExecDebugfsCmd(self._SystemFile(), debugfs_cmd)
+
+      # TODO(b/67322170): Generally we want build.prop in the session dir where
+      # the emulator will see it, but swordfish wear_23 breaks when we do that.
+      # Until we fix that device, we need a special case to avoid breaking it.
+      if not self._IsBuggyWearBuild(build_prop):
+        new_build_prop = os.path.join(self._SessionImagesDir(), 'build.prop')
+        shutil.move(build_prop, new_build_prop)
+        build_prop = new_build_prop
+
       # Pipe service won't work for user build and api level 23+, since
       # pipe_traversal doesn't have a right seclinux policy. In this case,
       # Just use real adb.
@@ -744,7 +760,7 @@ class EmulatedDevice(object):
     config_ini_file = os.path.join(self._SessionImagesDir(), 'config.ini')
     with open(config_ini_file, 'w+') as config_ini:
       for prop in self._metadata_pb.avd_config_property:
-        config_ini.write('\n%s=%s\n' % (prop.name, prop.value))
+        config_ini.write('%s=%s\n' % (prop.name, prop.value))
 
       # the default size is ~256 megs, which fills up fast on iterative
       # development.
@@ -792,6 +808,9 @@ class EmulatedDevice(object):
       # binary itself, and when we run without any AVD at all, it does. However
       # once we start specifying avds, we need to re-specify this info in the
       # avd, otherwise the emulator will balk.
+
+      config_ini.write(
+          'abi.type=%s\n' % self._metadata_pb.emulator_architecture)
 
       avd_cpu_arch = self._metadata_pb.emulator_architecture
       if avd_cpu_arch.startswith('arm'):
@@ -1296,9 +1315,11 @@ class EmulatedDevice(object):
       init_rc.write('   start tn_pipe_traverse\n')
       if set_props_in_init:
         for prop in self._metadata_pb.boot_property:
-          init_rc.write('  setprop %s %s\n' % (prop.name, prop.value))
+          init_rc.write('   setprop %s %s\n' %
+                        (prop.name, self._EscapeInitToken(prop.value)))
         for prop in self._RuntimeProperties():
-          init_rc.write('  setprop %s %s\n' % (prop.name, prop.value))
+          init_rc.write('   setprop %s %s\n' %
+                        (prop.name, self._EscapeInitToken(prop.value)))
       init_rc.write('\n')
 
     arch = self._metadata_pb.emulator_architecture
@@ -1470,6 +1491,22 @@ class EmulatedDevice(object):
     self._metadata_pb.perf_data.add(
         activity_name=activity_name,
         timing=pb_timings)
+
+  def _EscapeInitToken(self, token):
+    """Escape a token in init.rc so that it will be parsed as a single token.
+
+    Note that Android's Init syntax isn't anything like that of a POSIX shell,
+    so we can't use a method like pipes.quote.
+
+    Android's Init syntax is documented here:
+    https://android.googlesource.com/platform/system/core/+/master/init/README.md
+
+    Args:
+      token: the token to escape
+    Returns:
+      the escaped token
+    """
+    return token.replace(' ', '\\ ')
 
 
   # pylint: disable=too-many-statements
