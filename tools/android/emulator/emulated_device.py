@@ -1430,9 +1430,8 @@ class EmulatedDevice(object):
         if match:
           lib_paths.append(os.path.dirname(match.group(1)))
 
-    # Use GL translator libraries only if opengl is enabled.
-    if self._NeedGPU():
-      lib_paths.append(gl_base)
+    # Include GL translator libraries.
+    lib_paths.append(gl_base)
 
     lib_paths.extend([self.android_platform.emulator_support_lib_path,
                       parent_env.get('LD_LIBRARY_PATH')])
