@@ -3248,8 +3248,8 @@ class EmulatedDevice(object):
     return_code = install_proc.poll()
     logging.info('install [%s]: return code: %s', install_args, return_code)
     if return_code != 0:
-      return 'adb install returned, but return code != 0 return code:%d:%s' % (
-          return_code, stdout[0])
+      return 'adb install returned, but return code != 0 return code:%d' % (
+          return_code)
     stdout_thread.join()
     return stdout[0]
 
