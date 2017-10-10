@@ -176,9 +176,11 @@ flags.DEFINE_enum('open_gl_driver', None, emulated_device.OPEN_GL_DRIVERS,
 flags.DEFINE_boolean('allow_experimental_open_gl', False, 'If true, checks '
                      'that prevent open_gl_driver values with known issues '
                      'are disabled.')
-flags.DEFINE_boolean('add_insecure_cacert', True, '[Start Only] If true adds '
-                     'an insecure cacert to the list of trusted certs (The '
-                     'CyberVillians cert.)')
+add_insecure_cacert_default = (
+    False)
+flags.DEFINE_boolean('add_insecure_cacert', add_insecure_cacert_default,
+                     '[Start Only] If true adds an insecure cacert to the list '
+                     'of trusted certs (The CyberVillians cert.)')
 flags.DEFINE_boolean('grant_runtime_permissions', True, 'Grant runtime '
                      'permissions while installing the apps on api level >= 23')
 flags.DEFINE_boolean('ignore_apk_installation_failures', False,
@@ -847,19 +849,18 @@ def _MakeAndroidPlatform():
   if not os.path.exists(root_dir):
     root_dir = runfiles_base
 
-  if FLAGS.android_sdk_path:
-    if os.path.isabs(FLAGS.android_sdk_path):
-      base_emulator_path = os.path.join(FLAGS.android_sdk_path, 'tools')
-    else:
-      base_emulator_path = os.path.join(runfiles_base, FLAGS.android_sdk_path,
-                                        'tools')
-    if not os.path.exists(base_emulator_path):
-      logging.error('ANDROID_SDK path %s does not exist.', base_emulator_path)
-      sys.exit(1)
-    platform.android_sdk = FLAGS.android_sdk_path
+  if FLAGS.emulator_x86:
+    base_emulator_path = os.path.dirname(os.path.join(root_dir,
+                                                      FLAGS.emulator_x86))
   else:
     base_emulator_path = os.path.join(root_dir, (
         'third_party/java/android/android_sdk_linux/tools'))
+
+  if not os.path.exists(base_emulator_path):
+    logging.error('emulator tools dir %s does not exist.', base_emulator_path)
+    sys.exit(1)
+  if FLAGS.android_sdk_path:
+    platform.android_sdk = FLAGS.android_sdk_path
 
   platform.base_emulator_path = base_emulator_path
 
@@ -890,7 +891,7 @@ def _MakeAndroidPlatform():
     platform.bios_files = filter(lambda e: e, FLAGS.bios_files)
 
   platform.emulator_wrapper_launcher = _ExtractSuffixFile(
-      FLAGS.system_images, 'tools/emulator')
+      FLAGS.system_images, '/emulator')
 
   return platform
 
@@ -954,5 +955,4 @@ def main(unused_argv):
 
 
 if __name__ == '__main__':
-  FLAGS.set_default('logtostderr', True)
   app.run()

@@ -636,11 +636,11 @@ class EmulatedDevice(object):
 
     if not os.path.exists(self._SdcardFile()):
       try:
-        sd_name = 'default_sdcard.%s.img' % self._metadata_pb.sdcard_size_mb
+        sd_name = 'default_sdcard.256.img'
         self._ExtractTarEntry(
             resources.GetResourceFilename(
                 'android_test_support/'
-                'tools/android/emulator/support/%s' % sd_name),
+                'tools/android/emulator/support/%s.tar.gz' % sd_name),
             sd_name, os.path.dirname(self._SdcardFile()))
         shutil.move(os.path.join(os.path.dirname(self._SdcardFile()),
                                  sd_name),
@@ -1342,16 +1342,6 @@ class EmulatedDevice(object):
     os.chmod(os.path.join(exploded_temp, 'g3_activity_controller.jar'),
              stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
 
-    # Copy the dex2oat jar to the base directory.
-    shutil.copy2(
-        resources.GetResourceFilename(
-            'android_test_support/'
-            'tools/android/emulator/daemon/dex2oat_parser'),
-        os.path.join(exploded_temp, 'dex2oat_parser'))
-
-    os.chmod(os.path.join(exploded_temp, 'dex2oat_parser'),
-             stat.S_IRUSR | stat.S_IXUSR | stat.S_IRGRP | stat.S_IXGRP |
-             stat.S_IROTH | stat.S_IXOTH)
 
     if self._metadata_pb.with_patched_adbd:
       # hrm I wonder how borked ADBD is on this device.
@@ -1703,14 +1693,6 @@ class EmulatedDevice(object):
 
     # Update the dex2oat binary.
     api_version = self.GetApiVersion()
-    if  FLAGS.dex2oat_on_cloud_enabled and api_version >= 21:
-      self._Push(resources.GetResourceFilename(_DEX2OAT), '/data/dex2oat')
-      self.ExecOnDevice(['chmod', '755', '/data/dex2oat'])
-      self.ExecOnDevice(['cp', '/system/bin/dex2oat', '/data/dex2oat_original'])
-      self.ExecOnDevice(['mount', '-o', 'bind', '/data/dex2oat',
-                         '/system/bin/dex2oat'])
-      self.ExecOnDevice(['mkdir', '-p', '/data/local/tmp/dex2oat'])
-      self.ExecOnDevice(['chmod', '777', '/data/local/tmp/dex2oat'])
 
     self.ExecOnDevice(['setprop', 'qemu.host.socket.dir',
                        str(self._sockets_dir)])
