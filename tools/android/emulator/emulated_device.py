@@ -1537,7 +1537,12 @@ class EmulatedDevice(object):
         self._EncryptionKeyImageFile()):
       self._emulator_start_args.extend(['-encryption-key', 'encryptionkey.img'])
 
-    if not self._display:
+    if self._display:
+      if self._display.open_gl_driver in [NO_OPEN_GL, GUEST_OPEN_GL]:
+        self._emulator_start_args.extend(['-gpu', 'off'])
+      else:
+        self._emulator_start_args.extend(['-no-snapshot-load', '-gpu', 'on'])
+    else:
       self._emulator_start_args.append('-no-window')
       if self._NeedBootGL():
         self._emulator_start_args.extend(['-gpu', 'on'])
@@ -1575,9 +1580,6 @@ class EmulatedDevice(object):
           ['-scale', str(window_scale / 100.0)])
     if not window_scale or window_scale == 100:
       self._emulator_start_args.append('-fixed-scale')
-    if (self._display and self._display.open_gl_driver != NO_OPEN_GL and
-        self._display.open_gl_driver != GUEST_OPEN_GL):
-      self._emulator_start_args.extend(['-no-snapshot-load', '-gpu', 'on'])
 
     if net_type is None or net_type == 'off':
       net_delay = self._metadata_pb.net_delay
