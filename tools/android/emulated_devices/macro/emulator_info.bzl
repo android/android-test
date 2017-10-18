@@ -63,6 +63,7 @@ QEMU = new_emulator(
         "//javatests/com/google/android/apps/calendar/uitest/timelinechipscuba:__subpackages__",
         "//javatests/com/google/android/apps/common/testing/services/location:__subpackages__",
         "//javatests/com/google/android/apps/contacts/integration/uidatatests/mocktests:__subpackages__",
+        "//javatests/com/google/android/apps/inputmethod:__subpackages__",
         "//javatests/com/google/android/apps/nbu/freighter/integration:__subpackages__",
         "//javatests/com/google/android/apps/playconsole/instrumentation:__subpackages__",
         "//javatests/com/google/android/apps/shopping/express/shoppinghistory:__subpackages__",
