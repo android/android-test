@@ -44,7 +44,33 @@ QEMU = new_emulator(
     },
     # We're phasing out qemu1, so only whitelisted projects can depend on
     # explicit qemu1 device targets.
-    default_visibility = []
+    default_visibility = [
+        "//googlex/gcam/hdrplus:__subpackages__",
+        "//gws/fruit:__subpackages__",
+        "//java/com/google/android/apps/auto:__subpackages__",
+        "//java/com/google/corp/android/apps/campus:__subpackages__",
+        "//java/com/google/android/apps/auth/test/support:__subpackages__",
+        "//java/com/google/android/apps/calendar/calendar:__subpackages__",
+        "//java/com/google/android/apps/cardviewer:__subpackages__",
+        "//java/com/google/android/apps/nbu/freighter:__subpackages__",
+        "//java/com/google/android/apps/shopping/express:__subpackages__",
+        "//java/com/google/gws/tools/carddevserver:__subpackages__",
+        "//javatests/com/google/android/apps/auto/launcher/vanagon/scuba:__subpackages__",
+        "//javatests/com/google/android/apps/calendar/uitest/groomcardscuba:__subpackages__",
+        "//javatests/com/google/android/apps/calendar/uitest/timelinechipscuba:__subpackages__",
+        "//javatests/com/google/android/apps/common/testing/services/location:__subpackages__",
+        "//javatests/com/google/android/apps/contacts/integration/uidatatests/mocktests:__subpackages__",
+        "//javatests/com/google/android/apps/nbu/freighter/integration:__subpackages__",
+        "//javatests/com/google/android/apps/playconsole/instrumentation:__subpackages__",
+        "//javatests/com/google/android/apps/shopping/express/shoppinghistory:__subpackages__",
+        "//javatests/com/google/android/apps/youtube/app/functional/fakes/social:__subpackages__",
+        "//javatests/com/google/android/clockwork/home/espresso/quicksettings:__subpackages__",
+        "//javatests/com/google/android/gmscore:__subpackages__",
+        "//javatests/com/google/android/libraries/analytics/testing/seaworld:__subpackages__",
+        "//javatests/com/google/corp/android/apps/campus:__subpackages__",
+        "//javatests/com/google/testing/screendiffing/android/simpleactivity:__subpackages__",
+        "//third_party/java_src/android_libs/aosp_calendar/tests/espresso:__subpackages__",
+    ]
 )
 
 QEMU2_APIS = [

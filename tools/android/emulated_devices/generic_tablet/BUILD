@@ -91,7 +91,7 @@ INTEG_TEST_VISIBILITY = [
 ]
 
 INTEG_TEST_DEVICES = [(api, arch) for api in QEMU2_APIS for arch in [
-    "x86",
+    "x86_qemu",
     "x86_qemu2",
 ]]
 

@@ -287,13 +287,15 @@ def _fallback_default_emulator_for_image(image, emulators, archs_override):
     The emulator to use as the default
   """
 
-  # Make sure any future Android images use qemu2.
-  if image_api(image) >= 26 and _is_emulator_compatible(QEMU2, image, emulators, archs_override):
-    return QEMU2
+  # We're rolling out QEMU2 as the default for certain API levels.
+  if image_api(image) >= 25:
+    preferred_emulators = [QEMU2, QEMU]
+  else:
+    preferred_emulators = [QEMU, QEMU2]
 
-  # Legacy behavior is to default to qemu1, provided it's in the emulator list.
-  if _is_emulator_compatible(QEMU, image, emulators, archs_override):
-    return QEMU
+  for emulator in preferred_emulators:
+    if _is_emulator_compatible(emulator, image, emulators, archs_override):
+      return emulator
 
   return None
 
