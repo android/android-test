@@ -33,6 +33,7 @@ import telnetlib
 import tempfile
 import threading
 import time
+import uuid
 
 
 # pylint: disable=g-import-not-at-top
@@ -453,12 +454,12 @@ class EmulatedDevice(object):
   def _SessionImagesDir(self):
     return os.path.join(self._images_dir, 'session')
 
-  def _SetUUID(self, sd, uuid):
+  def _SetUUID(self, sd, uuid_value):
     """Set UUID for sd card image."""
 
     with open(sd, 'r+b') as f:
       f.seek(SD_CARD_UUID_OFFSET)
-      f.write(struct.pack('i', uuid))
+      f.write(struct.pack('i', uuid_value))
 
   def _SparseCp(self, src, dst):
     """Copies a file and respects its sparseness.
@@ -975,6 +976,11 @@ class EmulatedDevice(object):
       self._metadata_pb.boot_property.add(
           name='ro.lockscreen.disable.default',  # disable lockscreen (jb & up)
           value='1')
+
+    # Add a UUID for this particular device
+    self._metadata_pb.boot_property.add(
+        name='ro.ninjas.device_fingerprint',
+        value=str(uuid.uuid4()))
 
     # emulator supports bucketed densities. Map the provided density into
     # the correct bucket.
