@@ -48,6 +48,7 @@ QEMU = new_emulator(
         "//googlex/gcam/hdrplus:__subpackages__",
         "//gws/fruit:__subpackages__",
         "//java/com/google/android/apps/auto:__subpackages__",
+        "//java/com/google/android/apps/docs/drive:__subpackages__",
         "//java/com/google/corp/android/apps/campus:__subpackages__",
         "//java/com/google/android/apps/auth/test/support:__subpackages__",
         "//java/com/google/android/apps/calendar/calendar:__subpackages__",
