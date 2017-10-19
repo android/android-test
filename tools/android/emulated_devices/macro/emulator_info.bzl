@@ -54,6 +54,8 @@ QEMU = new_emulator(
         "//java/com/google/android/apps/calendar/calendar:__subpackages__",
         "//java/com/google/android/apps/cardviewer:__subpackages__",
         "//java/com/google/android/apps/gsa/binaries/speechservices:__subpackages__",
+        # TODO(b/68015141): The tests are too flaky on qemu2.
+        "//java/com/google/android/apps/inputmethod:__subpackages__",
         "//java/com/google/android/apps/nbu/freighter:__subpackages__",
         "//java/com/google/android/apps/shopping/express:__subpackages__",
         "//java/com/google/android/apps/youtube/app:__subpackages__",
@@ -66,6 +68,7 @@ QEMU = new_emulator(
         "//javatests/com/google/android/apps/common/testing/services/location:__subpackages__",
         "//javatests/com/google/android/apps/contacts/integration/uidatatests/mocktests:__subpackages__",
         "//javatests/com/google/android/apps/gsa:__subpackages__",
+        # TODO(b/68015141): The tests are too flaky on qemu2.
         "//javatests/com/google/android/apps/inputmethod:__subpackages__",
         "//javatests/com/google/android/apps/nbu/freighter/integration:__subpackages__",
         "//javatests/com/google/android/apps/playconsole/instrumentation:__subpackages__",
