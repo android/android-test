@@ -268,11 +268,11 @@ filegroup(
     name = "android_sdk_repository_emulator_tools",
     srcs = [
         "@androidsdk//:adb",
-        "@androidsdk//:empty_snapshot_fs",
         "@androidsdk//:emulator_arm",
         "@androidsdk//:emulator_shared_libs",
         "@androidsdk//:emulator_x86",
         "@androidsdk//:emulator_x86_bios",
         "@androidsdk//:mksd",
+        "@bazel_tools//tools/android/emulator:empty_snapshot_fs",
     ],
 )
