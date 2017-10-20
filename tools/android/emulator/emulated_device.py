@@ -49,7 +49,6 @@ import portpicker
 
 
 import gflags as flags
-import gflags as flags_validators
 from tools.android.emulator import resources
 from google.apputils import stopwatch
 
@@ -237,7 +236,7 @@ _MAX_CORES_NUM = 16
 def _CheckCoresFlag(cores):
   """Check cores flag value for validity."""
   if cores < 1 or cores > _MAX_CORES_NUM:
-    raise flags_validators.Error(
+    raise flags.ValidationError(
         '%d not a valid cores number[1 - %d]' % (cores, _MAX_CORES_NUM))
   return True
 

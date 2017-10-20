@@ -30,7 +30,6 @@ import time
 from google.protobuf import text_format
 from google.apputils import app
 import gflags as flags
-import gflags as flags_validators
 
 from tools.android.emulator import resources
 
@@ -215,7 +214,7 @@ _ADD_ACCOUNT_BOOLEAN_EXTRAS = {'syncable': True, 'auto_sync': True}
 @flags.validator('window_scale')
 def _CheckWindowScale(window_scale):
   if window_scale < 10 or window_scale > 300:
-    raise flags_validators.Error('Scale factor outside range: 10-300')
+    raise flags.ValidationError('Scale factor outside range: 10-300')
   return True
 
 
