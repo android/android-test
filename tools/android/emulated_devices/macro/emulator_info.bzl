@@ -58,6 +58,8 @@ QEMU = new_emulator(
         "//java/com/google/android/apps/inputmethod:__subpackages__",
         "//java/com/google/android/apps/nbu/freighter:__subpackages__",
         "//java/com/google/android/apps/shopping/express:__subpackages__",
+        # TODO(b/68017107): remove this when issue resolved.
+        "//java/com/google/android/apps/xcn/longfei:__subpackages__",
         "//java/com/google/android/apps/youtube/app:__subpackages__",
         "//java/com/google/android/clockwork/home:__subpackages__",
         "//java/com/google/gws/tools/carddevserver:__subpackages__",
@@ -73,6 +75,8 @@ QEMU = new_emulator(
         "//javatests/com/google/android/apps/nbu/freighter/integration:__subpackages__",
         "//javatests/com/google/android/apps/playconsole/instrumentation:__subpackages__",
         "//javatests/com/google/android/apps/shopping/express/shoppinghistory:__subpackages__",
+        # TODO(b/68017107): remove this when issue resolved.
+        "//javatests/com/google/android/apps/xcn/longfei/app/ui:__subpackages__",
         "//javatests/com/google/android/apps/youtube/app/functional/fakes/social:__subpackages__",
         "//javatests/com/google/android/clockwork/home/espresso/quicksettings:__subpackages__",
         "//javatests/com/google/android/gmscore:__subpackages__",
