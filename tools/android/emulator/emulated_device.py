@@ -2336,7 +2336,7 @@ class EmulatedDevice(object):
     return mounted
 
   def _Remount(self, mount_point, permission):
-    mount_cmd = ['mount', '-o', 'remount,%s' % permission, mount_point]
+    mount_cmd = ['mount', '-o', '%s,remount' % permission, mount_point]
     if self.GetApiVersion() <= 10:
       mount_cmd.append(mount_point)
     self.ExecOnDevice(mount_cmd)
