@@ -282,6 +282,7 @@ def _FirstBootAtBuildTimeOnly(
                                               'encryptionkey.img')
   advanced_features_ini = _ExtractSuffixFile(system_images,
                                              'advancedFeatures.ini')
+  build_prop_path = _ExtractSuffixFile(system_images, 'build.prop')
 
   device = emulated_device.EmulatedDevice(
       android_platform=_MakeAndroidPlatform(),
@@ -302,7 +303,8 @@ def _FirstBootAtBuildTimeOnly(
       data_image_path=dataimg_path,
       vendor_img_path=vendor_img_path,
       encryptionkey_img_path=encryptionkey_img_path,
-      advanced_features_ini=advanced_features_ini)
+      advanced_features_ini=advanced_features_ini,
+      build_prop_path=build_prop_path)
 
   device.StartDevice(enable_display=False,  # Will be ignored.
                      start_vnc_on_port=0,  # Will be ignored.
@@ -425,10 +427,11 @@ def _RestartDevice(device,
                                              'encryptionkey.img')
   advanced_features_ini = _ExtractSuffixFile(system_image_files,
                                              'advancedFeatures.ini')
+  build_prop_path = _ExtractSuffixFile(system_image_files, 'build.prop')
   # TODO: Move data to another field in the proto.
-  images_dict = device.BuildImagesDict(sysimg, dataimg,
-                                       vendorimg_path, encryptionkeyimg_path,
-                                       advanced_features_ini)
+  images_dict = device.BuildImagesDict(sysimg, dataimg, vendorimg_path,
+                                       encryptionkeyimg_path,
+                                       advanced_features_ini, build_prop_path)
   proto.system_image_path = json.dumps(images_dict)
   device._metadata_pb = proto
   device.StartDevice(enable_display,

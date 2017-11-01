@@ -233,17 +233,33 @@ class EmulatedDeviceTest(mox.MoxTestBase):
 
   def testStartEmulator_BadSystemDir(self):
     device = emulated_device.EmulatedDevice()
-    self.assertRaises(AssertionError, device.Configure,
-                      'foo/bar/baz/1234', '480x800', '1024', '130', '64',
-                      source_properties={'systemimage.abi': 'x86',
-                                         'androidversion.apilevel': '10'})
+    self.assertRaises(
+        Exception,
+        device.Configure,
+        'foo/bar/baz/1234',
+        '480x800',
+        '1024',
+        '130',
+        '64',
+        source_properties={
+            'systemimage.abi': 'x86',
+            'androidversion.apilevel': '10'
+        })
 
   def testStartEmulator_NoInitialData(self):
     device = emulated_device.EmulatedDevice()
-    device.Configure(tempfile.mkdtemp(), '480x800', '1024', '130', '64',
-                     source_properties={'systemimage.abi': 'x86',
-                                        'androidversion.apilevel': '10'})
-    self.assertRaises(AssertionError, device.StartDevice, False, 0)
+    self.assertRaises(
+        Exception,
+        device.Configure,
+        tempfile.mkdtemp(),
+        '480x800',
+        '1024',
+        '130',
+        '64',
+        source_properties={
+            'systemimage.abi': 'x86',
+            'androidversion.apilevel': '10'
+        })
 
   def testStartEmulator_EmulatorDies(self):
     platform = fake_android_platform_util.BuildAndroidPlatform()

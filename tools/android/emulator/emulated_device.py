@@ -477,16 +477,31 @@ class EmulatedDevice(object):
     subprocess.check_call([
         'tar', '-xzSf', archive, '-C', working_dir, '--no-anchored', entry])
 
-  def _StageDataFiles(self, system_image_dir, userdata_tarball, timer,
-                      enable_guest_gl, system_image_path=None,
-                      data_image_path=None, vendor_img_path=None,
+  def _StageDataFiles(self,
+                      system_image_dir,
+                      userdata_tarball,
+                      timer,
+                      enable_guest_gl,
+                      system_image_path=None,
+                      data_image_path=None,
+                      vendor_img_path=None,
                       encryptionkey_img_path=None,
-                      advanced_features_ini=None):
+                      advanced_features_ini=None,
+                      build_prop_path=None):
     """Stages files for the emulator launch."""
 
     self._images_dir = os.path.abspath(self._TempDir('images'))
     os.makedirs(self._InitImagesDir())
     os.makedirs(self._SessionImagesDir())
+
+    # Copy build.prop into the session dir where the emulator will find it.
+    # TODO(b/67322170): Generally we want build.prop in the session dir where
+    # the emulator will see it, but swordfish wear_23 breaks when we do that.
+    # Until we fix that device, we need a special case to avoid breaking it.
+    if (self.GetApiVersion() > 10 and
+        not self._IsBuggyWearBuild(build_prop_path)):
+      shutil.copy(build_prop_path,
+                  os.path.join(self._SessionImagesDir(), 'build.prop'))
 
     # kernel is never compressed (thank god.)
     init_kernel = os.path.abspath(
@@ -522,28 +537,16 @@ class EmulatedDevice(object):
         if not enable_guest_gl:
           # Delete egl libraries in system image.
           debugfs_cmd += ['unlink /vendor/lib/egl']
-      elif self._add_insecure_cert:
-        debugfs_cmd += self.GetInstallCertCmd()
 
       build_prop = os.path.join(self._images_dir, 'build.prop')
       debugfs_cmd += ['dump /build.prop %s' % build_prop]
       self.ExecDebugfsCmd(self._SystemFile(), debugfs_cmd)
 
-      # TODO(b/67322170): Generally we want build.prop in the session dir where
-      # the emulator will see it, but swordfish wear_23 breaks when we do that.
-      # Until we fix that device, we need a special case to avoid breaking it.
-      if not self._IsBuggyWearBuild(build_prop):
-        new_build_prop = os.path.join(self._SessionImagesDir(), 'build.prop')
-        shutil.move(build_prop, new_build_prop)
-        build_prop = new_build_prop
-
-      # Pipe service won't work for user build and api level 23+, since
-      # pipe_traversal doesn't have a right seclinux policy. In this case,
-      # Just use real adb.
-      self._use_real_adb = (self._IsUserBuild(build_prop)
-                            and self.GetApiVersion() >= 23)
-    else:
-      assert self.GetApiVersion() < 19, 'Yaffs format used in new image'
+    # Pipe service won't work for user build and api level 23+, since
+    # pipe_traversal doesn't have a right seclinux policy. In this case, just
+    # use real adb.
+    self._use_real_adb = (
+        self._IsUserBuild(build_prop_path) and self.GetApiVersion() >= 23)
 
     if userdata_tarball:
       # userdata tarball should contain:
@@ -623,16 +626,11 @@ class EmulatedDevice(object):
                     self._UserdataQemuFile())
 
     if not os.path.exists(self._CacheFile()):
-      if use_ext4:
-        init_cache = resources.GetResourceFilename(
-            'android_test_support/'
-            'tools/android/emulator/support/cache.img.tar.gz')
-        self._ExtractTarEntry(
-            init_cache, 'cache.img', os.path.dirname(self._CacheFile()))
-      else:
-        assert self.GetApiVersion() < 19, 'Yaffs format used in new image'
-        with open(self._CacheFile(), 'wb') as unused_cache_file:
-          pass  # just need to create the file here.
+      init_cache = resources.GetResourceFilename(
+          'android_test_support/'
+          'tools/android/emulator/support/cache.img.tar.gz')
+      self._ExtractTarEntry(init_cache, 'cache.img',
+                            os.path.dirname(self._CacheFile()))
 
     if not os.path.exists(self._SdcardFile()):
       try:
@@ -868,12 +866,14 @@ class EmulatedDevice(object):
 
     if os.path.exists(os.path.join(image_dir, suffix)):
       return os.path.join(image_dir, suffix)
-    else:
+    elif os.path.exists(os.path.join(image_dir, suffix + '.tar.gz')):
       return os.path.join(image_dir, suffix + '.tar.gz')
+    else:
+      raise Exception('%s not found in %s' % (suffix, os.listdir(image_dir)))
 
-  def BuildImagesDict(self, system_image_path, data_image_path,
-                      vendor_img_path, encryptionkey_img_path,
-                      advanced_features_ini):
+  def BuildImagesDict(self, system_image_path, data_image_path, vendor_img_path,
+                      encryptionkey_img_path, advanced_features_ini,
+                      build_prop_path):
     images_dict = {
         'system_image_path': system_image_path,
         'data_image_path': data_image_path
@@ -888,14 +888,27 @@ class EmulatedDevice(object):
     if advanced_features_ini:
       images_dict['advanced_features_ini'] = advanced_features_ini
 
+    if build_prop_path:
+      images_dict['build_prop_path'] = build_prop_path
+
     return images_dict
 
-  def Configure(self, system_image_dir, skin, memory,
-                density, vm_heap, net_type='fastnet',
-                source_properties=None, default_properties=None,
-                kvm_present=False, system_image_path=None,
-                data_image_path=None, vendor_img_path=None,
-                encryptionkey_img_path=None, advanced_features_ini=None):
+  def Configure(self,
+                system_image_dir,
+                skin,
+                memory,
+                density,
+                vm_heap,
+                net_type='fastnet',
+                source_properties=None,
+                default_properties=None,
+                kvm_present=False,
+                system_image_path=None,
+                data_image_path=None,
+                vendor_img_path=None,
+                encryptionkey_img_path=None,
+                advanced_features_ini=None,
+                build_prop_path=None):
     """Performs pre-start configuration of the emulator."""
     assert os.path.exists(system_image_dir), ('Sysdir doesnt exist: %s' %
                                               system_image_dir)
@@ -903,10 +916,12 @@ class EmulatedDevice(object):
                          self._GetImagePath(system_image_dir, 'system.img'))
     data_image_path = (data_image_path or
                        self._GetImagePath(system_image_dir, 'userdata.img'))
+    build_prop_path = (
+        build_prop_path or self._GetImagePath(system_image_dir, 'build.prop'))
 
     images_dict = self.BuildImagesDict(system_image_path, data_image_path,
                                        vendor_img_path, encryptionkey_img_path,
-                                       advanced_features_ini)
+                                       advanced_features_ini, build_prop_path)
 
     self._metadata_pb = emulator_meta_data_pb2.EmulatorMetaDataPb(
         system_image_dir=system_image_dir,
@@ -3017,13 +3032,6 @@ class EmulatedDevice(object):
       dst_name = os.path.basename(dst)
       cmd_list += ['cd %s\nwrite %s %s' % (dst_dir, src, dst_name)]
     return cmd_list
-
-  def GetInstallCertCmd(self):
-    """Installs a cybervillainsCA cert certificate to system image."""
-    cert_file = self._CyberVillainsCert()
-    cert_name = self._GetCertName(cert_file, cert_format=X509.FORMAT_DER)
-    cp_list = [[cert_file, '/etc/security/cacerts/%s' % cert_name]]
-    return self.GetCopyCmd(cp_list)
 
   def ExecDebugfsCmd(self, image_file, cmd_list):
     """Execute debugfs commands from cmd_list on disk image file."""

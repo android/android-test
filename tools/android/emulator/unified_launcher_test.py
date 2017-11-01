@@ -489,8 +489,10 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         kvm_present=mox.IsA(bool),
         system_image_path=os.path.join(self._tempdir, 'system.img'),
         data_image_path=os.path.join(self._tempdir, 'userdata.img'),
-        vendor_img_path=None, encryptionkey_img_path=None,
-        advanced_features_ini=None)
+        vendor_img_path=None,
+        encryptionkey_img_path=None,
+        advanced_features_ini=None,
+        build_prop_path=os.path.join(self._tempdir, 'build.prop'))
 
     initial_boot_device.StartDevice(enable_display=False,
                                     start_vnc_on_port=0,
@@ -510,8 +512,11 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     self.mox.ReplayAll()
 
     unified_launcher._FirstBootAtBuildTimeOnly(
-        [os.path.join(self._tempdir, 'system.img'),
-         os.path.join(self._tempdir, 'userdata.img')],
+        [
+            os.path.join(self._tempdir, 'system.img'),
+            os.path.join(self._tempdir, 'userdata.img'),
+            os.path.join(self._tempdir, 'build.prop')
+        ],
         skin,
         133,
         memory,
@@ -545,8 +550,10 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         kvm_present=mox.IsA(bool),
         system_image_path=os.path.join(self._tempdir, 'system.img'),
         data_image_path=os.path.join(self._tempdir, 'userdata.img'),
-        vendor_img_path=None, encryptionkey_img_path=None,
-        advanced_features_ini=None)
+        vendor_img_path=None,
+        encryptionkey_img_path=None,
+        advanced_features_ini=None,
+        build_prop_path=os.path.join(self._tempdir, 'build.prop'))
 
     initial_boot_device.StartDevice(enable_display=False,
                                     start_vnc_on_port=0,
@@ -563,8 +570,11 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     self.mox.ReplayAll()
 
     unified_launcher._FirstBootAtBuildTimeOnly(
-        [os.path.join(self._tempdir, 'system.img'),
-         os.path.join(self._tempdir, 'userdata.img')],
+        [
+            os.path.join(self._tempdir, 'system.img'),
+            os.path.join(self._tempdir, 'userdata.img'),
+            os.path.join(self._tempdir, 'build.prop')
+        ],
         skin,
         133,
         memory,
