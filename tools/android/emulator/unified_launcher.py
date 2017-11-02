@@ -203,6 +203,9 @@ flags.DEFINE_string('android_sdk_path', None,
 flags.DEFINE_list('platform_apks', None, '[BOOT ONLY] Platform apks are '
                   'installed once at boot time as opposed to --apks which are '
                   'installed every time the emulator starts.')
+flags.DEFINE_string('sim_access_rules_file', None, 'the path to a sim access '
+                    'rules proto file. Used to grant UICC carrier privileges '
+                    'to apps.')
 
 _METADATA_FILE_NAME = 'emulator-meta-data.pb'
 _USERDATA_IMAGES_NAME = 'userdata_images.dat'
@@ -460,17 +463,41 @@ def _TryInstallApks(device, apks, grant_runtime_permissions):
       raise error
 
 
-def _Run(adb_server_port, emulator_port, adb_port, enable_display,
-         start_vnc_on_port, logcat_path, logcat_filter, system_images,
-         input_image_file, emulator_metadata_path, apks, system_apks, net_type,
-         export_launch_metadata_path=None, preverify_apks=False,
-         new_process_group=False, window_scale=None,
-         broadcast_message=None, initial_locale=None, initial_ime=None,
-         with_audio=False, qemu_gdb_port=0, enable_single_step=False,
-         with_boot_anim=False, extra_certs=None, emulator_tmp_dir=None,
-         lockdown_level=None, open_gl_driver=None, experimental_open_gl=False,
-         add_insecure_cert=False, grant_runtime_permissions=True,
-         accounts=None, reporter=None, mini_boot=False):
+def _Run(adb_server_port,
+         emulator_port,
+         adb_port,
+         enable_display,
+         start_vnc_on_port,
+         logcat_path,
+         logcat_filter,
+         system_images,
+         input_image_file,
+         emulator_metadata_path,
+         apks,
+         system_apks,
+         net_type,
+         export_launch_metadata_path=None,
+         preverify_apks=False,
+         new_process_group=False,
+         window_scale=None,
+         broadcast_message=None,
+         initial_locale=None,
+         initial_ime=None,
+         with_audio=False,
+         qemu_gdb_port=0,
+         enable_single_step=False,
+         with_boot_anim=False,
+         extra_certs=None,
+         emulator_tmp_dir=None,
+         lockdown_level=None,
+         open_gl_driver=None,
+         experimental_open_gl=False,
+         add_insecure_cert=False,
+         grant_runtime_permissions=True,
+         accounts=None,
+         reporter=None,
+         mini_boot=False,
+         sim_access_rules_file=None):
   """Starts a device for use or testing.
 
   Args:
@@ -519,6 +546,7 @@ def _Run(adb_server_port, emulator_port, adb_port, enable_display,
     accounts: A list of accounts to be added to emulator at launch.
     reporter: a reporting.Reporter to track the emulator state.
     mini_boot: should the device be booted up in a minimalistic mode.
+    sim_access_rules_file: sim access rules textproto filepath.
   """
   device = emulated_device.EmulatedDevice(
       android_platform=_MakeAndroidPlatform(),
@@ -534,7 +562,8 @@ def _Run(adb_server_port, emulator_port, adb_port, enable_display,
       enable_gps=FLAGS.enable_gps,
       add_insecure_cert=add_insecure_cert,
       reporter=reporter,
-      mini_boot=mini_boot)
+      mini_boot=mini_boot,
+      sim_access_rules_file=sim_access_rules_file)
 
   _RestartDevice(
       device,
@@ -792,7 +821,7 @@ def EntryPoint(reporter):
          _GetTmpDir(), FLAGS.lockdown_level, FLAGS.open_gl_driver,
          FLAGS.allow_experimental_open_gl, FLAGS.add_insecure_cacert,
          FLAGS.grant_runtime_permissions, FLAGS.accounts, reporter,
-         'mini_boot' == FLAGS.action)
+         'mini_boot' == FLAGS.action, FLAGS.sim_access_rules_file)
   elif 'kill' == FLAGS.action:
     _Kill(FLAGS.adb_server_port, FLAGS.emulator_port, FLAGS.adb_port)
   elif 'ping' == FLAGS.action:

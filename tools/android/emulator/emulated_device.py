@@ -318,7 +318,8 @@ class EmulatedDevice(object):
                enable_gps=True,
                add_insecure_cert=False,
                reporter=None,
-               mini_boot=False):
+               mini_boot=False,
+               sim_access_rules_file=None):
     self.adb_server_port = adb_server_port
     self.emulator_adb_port = emulator_adb_port
     self.emulator_telnet_port = emulator_telnet_port
@@ -360,6 +361,7 @@ class EmulatedDevice(object):
     self._reporter = reporter or reporting.NoOpReporter()
     self._direct_boot = False
     self._mini_boot = mini_boot
+    self._sim_access_rules_file = sim_access_rules_file
 
   def _IsUserBuild(self, build_prop):
     """Check if a build is user build from build.prop file."""
@@ -1645,6 +1647,10 @@ class EmulatedDevice(object):
         # See:
         # https://android.googlesource.com/platform/system/core/+/gingerbread/init/init.c#424
         self._emulator_start_args.extend(['-append', 'g3_monitor=0'])
+
+      if self._sim_access_rules_file:
+        self._emulator_start_args.extend(
+            ['-sim-access-rules-file', self._sim_access_rules_file])
 
   # pylint: disable=too-many-statements
   def _StartEmulator(self, timer,

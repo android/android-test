@@ -115,7 +115,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_gps=True,
         add_insecure_cert=False,
         reporter=reporter,
-        mini_boot=False)
+        mini_boot=False,
+        sim_access_rules_file=None)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device,
@@ -183,7 +184,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_gps=True,
         add_insecure_cert=True,
         reporter=reporter,
-        mini_boot=False)
+        mini_boot=False,
+        sim_access_rules_file=None)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device,
@@ -247,7 +249,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_gps=True,
         add_insecure_cert=False,
         reporter=reporter,
-        mini_boot=False)
+        mini_boot=False,
+        sim_access_rules_file=None)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device, enable_display=True,
@@ -317,7 +320,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_gps=True,
         add_insecure_cert=False,
         reporter=reporter,
-        mini_boot=False)
+        mini_boot=False,
+        sim_access_rules_file=None)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device, enable_display=True,
