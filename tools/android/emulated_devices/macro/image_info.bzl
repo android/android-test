@@ -42,7 +42,8 @@ _ALL_IMAGES = (
     _default_images(23, [_GOOGLE, _ANDROID, _WEAR, _TV]) +
     _default_images(24, [_GOOGLE, _ANDROID, _WEAR, _TV]) +
     _default_images(25, [_GOOGLE, _ANDROID, _WEAR, _WEAR_LE, _WEAR_TESTKEYS]) +
-    _default_images(26, [_GOOGLE, _ANDROID, _WEAR, _WEAR_LE, _AUTO])
+    _default_images(26, [_GOOGLE, _ANDROID, _WEAR, _WEAR_LE, _AUTO]) +
+    _default_images(27, [_GOOGLE, _ANDROID])
     )
 
 

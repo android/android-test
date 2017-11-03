@@ -96,6 +96,7 @@ QEMU2_APIS = [
     24,
     25,
     26,
+    27,
 ]
 
 # QEMU2 is the new hotness. It requires a different kernel to work. We're
