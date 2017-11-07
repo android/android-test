@@ -539,6 +539,8 @@ class EmulatedDevice(object):
         if not enable_guest_gl:
           # Delete egl libraries in system image.
           debugfs_cmd += ['unlink /vendor/lib/egl']
+      elif self._add_insecure_cert:
+        debugfs_cmd += self.GetInstallCertCmd()
 
       build_prop = os.path.join(self._images_dir, 'build.prop')
       debugfs_cmd += ['dump /build.prop %s' % build_prop]
@@ -3038,6 +3040,13 @@ class EmulatedDevice(object):
       dst_name = os.path.basename(dst)
       cmd_list += ['cd %s\nwrite %s %s' % (dst_dir, src, dst_name)]
     return cmd_list
+
+  def GetInstallCertCmd(self):
+    """Installs a cybervillainsCA cert certificate to system image."""
+    cert_file = self._CyberVillainsCert()
+    cert_name = self._GetCertName(cert_file, cert_format=X509.FORMAT_DER)
+    cp_list = [[cert_file, '/etc/security/cacerts/%s' % cert_name]]
+    return self.GetCopyCmd(cp_list)
 
   def ExecDebugfsCmd(self, image_file, cmd_list):
     """Execute debugfs commands from cmd_list on disk image file."""
