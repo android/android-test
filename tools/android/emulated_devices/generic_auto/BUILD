@@ -17,11 +17,11 @@ make_device(
     emulator_types = [
         "qemu2",
     ],
-    horizontal_resolution = 800,
+    horizontal_resolution = 1280,
     min_api = 26,
     ram = 4096,
-    screen_density = 120,
+    screen_density = 160,
     system_image_flavors = ["auto"],
-    vertical_resolution = 480,
-    vm_heap = 48,
+    vertical_resolution = 800,
+    vm_heap = 256,
 )
