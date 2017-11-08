@@ -822,8 +822,7 @@ class EmulatedDevice(object):
       config_ini.write('hw.cpu.arch=%s\n' % avd_cpu_arch)
       config_ini.write('hw.cpu.ncore=%d\n' % FLAGS.cores)
 
-      if self._NeedGPU():
-        config_ini.write('hw.gpu.enabled=yes\n')
+      config_ini.write('hw.gpu.enabled=yes\n')
 
       if not FLAGS.hardware_keyboard:
         config_ini.write('hw.keyboard=no\n')
@@ -1401,17 +1400,6 @@ class EmulatedDevice(object):
     find_proc.wait()
   # pylint: enable=too-many-statements
 
-  def _NeedGPU(self):
-    """Check if we need to enable gpu."""
-    return (self._NeedBootGL() or self._display and
-            self._display.open_gl_driver != NO_OPEN_GL and
-            self._display.open_gl_driver != GUEST_OPEN_GL)
-
-  def _NeedBootGL(self):
-    """Check if we need OpenGL at boot stage."""
-    return self._display is None and (self.big_screen or
-                                      self.GetApiVersion() > 23)
-
   def _MakeEmulatorEnv(self, parent_env):
     """Sets up (most) of the environment vars for the emulator.
 
@@ -1468,28 +1456,6 @@ class EmulatedDevice(object):
     # disable emulator-XXXX from adb devices on .
     if not FLAGS.skip_connect_device:
       target_env['ANDROID_ADB_SERVER_PORT'] = '1'
-
-    if self._NeedBootGL() or self._display and self._display.open_gl_driver in (
-        MESA_OPEN_GL, SWIFTSHADER_OPEN_GL):
-      target_env['LIBGL_DEBUG'] = 'verbose'
-      target_env['EGL_LOG_LEVEL'] = 'debug'
-      if (self._NeedBootGL() or
-          self._display.open_gl_driver == SWIFTSHADER_OPEN_GL):
-        sdir = os.path.join(self.android_platform.base_emulator_path,
-                            'lib64/gles_swiftshader')
-        target_env['ANDROID_EGL_LIB'] = os.path.join(sdir, 'libEGL.so')
-        target_env['ANDROID_GLESv1_LIB'] = os.path.join(sdir, 'libGLES_CM.so')
-        target_env['ANDROID_GLESv2_LIB'] = os.path.join(sdir, 'libGLESv2.so')
-      else:
-        # MESA
-        target_env['MESA_DEBUG'] = 'verbose'
-        # emulator binary use these special variables to decide whether to go
-        # some different code path to bypass some bugs. It's set in emulator
-        # launcher. But since we don't use emulator launcher from emulator team
-        # now, we have to set it ourselves.
-        # TODO: change to use emulator launcher and remove this hack.
-        target_env['ANDROID_GL_LIB'] = 'mesa'
-        target_env['ANDROID_GL_SOFTWARE_RENDERER'] = '1'
 
     return {k: str(v) for k, v in target_env.items() if v is not None}
 
@@ -1562,14 +1528,17 @@ class EmulatedDevice(object):
       self._emulator_start_args.extend(['-encryption-key', 'encryptionkey.img'])
 
     if self._display:
-      if self._display.open_gl_driver in [NO_OPEN_GL, GUEST_OPEN_GL]:
-        self._emulator_start_args.extend(['-gpu', 'off'])
-      else:
-        self._emulator_start_args.extend(['-no-snapshot-load', '-gpu', 'on'])
+      open_gl_driver = self._display.open_gl_driver
     else:
+      open_gl_driver = self.BestOpenGL()
       self._emulator_start_args.append('-no-window')
-      if self._NeedBootGL():
-        self._emulator_start_args.extend(['-gpu', 'on'])
+
+    # Most of our open_gl_driver options map directly to a -gpu option of the
+    # emulator, but no_open_gl is weird -- the emulator has no such option, and
+    # all Android devices have some form of OpenGL support. To preserve old
+    # behavior, we map it to -gpu off.
+    gpu = 'off' if open_gl_driver == NO_OPEN_GL else open_gl_driver
+    self._emulator_start_args.extend(['-gpu', gpu])
 
     if (not self._enable_gps and
         self._metadata_pb.emulator_type ==
