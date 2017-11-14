@@ -74,7 +74,7 @@ def load_workspace():
 
   native.new_http_archive(
       name = "six_archive",
-      url = "http://pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz",
+      url = "https://pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz",
       sha256 = "105f8d68616f8248e24bf0e9372ef04d3cc10104f1980f54d57b2ce73a5ad56a",
       strip_prefix = "six-1.10.0",
       build_file = str(Label("//tools/android/emulator:six.BUILD")),
