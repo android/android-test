@@ -1586,6 +1586,10 @@ class EmulatedDevice(object):
     avd_name = self._MakeAvd()
     self._emulator_start_args.extend(['-avd', avd_name])
 
+    if self._sim_access_rules_file:
+      self._emulator_start_args.extend(
+          ['-sim-access-rules-file', self._sim_access_rules_file])
+
     if (self._metadata_pb.qemu_arg or
         self._qemu_gdb_port or
         self._enable_single_step or
@@ -1618,10 +1622,6 @@ class EmulatedDevice(object):
         # See:
         # https://android.googlesource.com/platform/system/core/+/gingerbread/init/init.c#424
         self._emulator_start_args.extend(['-append', 'g3_monitor=0'])
-
-      if self._sim_access_rules_file:
-        self._emulator_start_args.extend(
-            ['-sim-access-rules-file', self._sim_access_rules_file])
 
   # pylint: disable=too-many-statements
   def _StartEmulator(self, timer,
