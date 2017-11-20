@@ -2459,7 +2459,8 @@ class EmulatedDevice(object):
                         'com.google.glass.nowtown' in output or
                         'com.google.android.googlequicksearchbox' in output or
                         'com.google.android.tv' in output or
-                        'com.android.tv' in output)
+                        'com.android.tv' in output or
+                        'com.android.iotlauncher' in output)
     logging.info('launcher running? %s', launcher_started)
     return launcher_started
 
