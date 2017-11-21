@@ -749,16 +749,6 @@ class EmulatedDevice(object):
       user_cfg.write('window.x = 0\n')
       user_cfg.write('window.y = 0\n')
 
-    if self.GetApiVersion() >= 26 and os.path.exists(
-        self._AdvancedFeaturesFile()):
-      # Copy the advancedFeatures file to multiple locations.
-      advanced_features_file = os.path.join(home_dir, '.android',
-                                            'advancedFeatures.ini')
-      shutil.copy(self._AdvancedFeaturesFile(), advanced_features_file)
-      advanced_features_file = os.path.join(self._InitImagesDir(),
-                                            'advancedFeatures.ini')
-      shutil.copy(self._AdvancedFeaturesFile(), advanced_features_file)
-
     config_ini_file = os.path.join(self._SessionImagesDir(), 'config.ini')
     with open(config_ini_file, 'w+') as config_ini:
       for prop in self._metadata_pb.avd_config_property:
