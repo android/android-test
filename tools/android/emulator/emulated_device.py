@@ -2819,6 +2819,9 @@ class EmulatedDevice(object):
       self._CheckLeftProcess()
       # Umount /data/media first. Otherwise umount of /data will fail.
       clean_death = self._CleanUmount('/data/media') and clean_death
+      clean_death = (self._CleanUmount('/data/var/run/netns/router')
+                     and clean_death)
+      clean_death = self._CleanUmount('/data/var/run/netns') and clean_death
       clean_death = self._CleanUmount('/data') and clean_death
       clean_death = self._CleanUmount('/cache') and clean_death
     telnet = self._ConnectToEmulatorConsole()
