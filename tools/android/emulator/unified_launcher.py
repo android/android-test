@@ -45,12 +45,12 @@ flags.DEFINE_enum('action', None,
                   'The action to perform against the emulator images')
 flags.DEFINE_string('skin', None, '[BOOT ONLY] The skin parameter to pass '
                     'to the emulator')
-flags.DEFINE_string('density', None, '[bazel ONLY] Density of the lcd screen')
-flags.DEFINE_string('cache', None, '[bazel ONLY] Size of cache partition in mb '
+flags.DEFINE_string('density', None, '[BLAZE ONLY] Density of the lcd screen')
+flags.DEFINE_string('cache', None, '[BLAZE ONLY] Size of cache partition in mb '
                     '- currently not functioning')
-flags.DEFINE_string('vm_size', None, '[bazel ONLY] VM heap size in mb')
-flags.DEFINE_integer('memory', None, '[bazel ONLY] the memory for the emulator')
-flags.DEFINE_spaceseplist('system_images', None, '[bazel ONLY] the system '
+flags.DEFINE_string('vm_size', None, '[BLAZE ONLY] VM heap size in mb')
+flags.DEFINE_integer('memory', None, '[BLAZE ONLY] the memory for the emulator')
+flags.DEFINE_spaceseplist('system_images', None, '[BLAZE ONLY] the system '
                           'images to boot the emulator with')
 flags.DEFINE_spaceseplist('apks', None, '[START ONLY] the apks to install')
 flags.DEFINE_spaceseplist('system_apks', None, '[START ONLY] system apks to '
@@ -58,7 +58,7 @@ flags.DEFINE_spaceseplist('system_apks', None, '[START ONLY] system apks to '
 flags.DEFINE_boolean('preverify_apks', False, '[START ONLY] if true the apks '
                      'will be preverified upon install (normal production  '
                      'behaviour). It defaults to disabled because some of the '
-                     'verification failures are overkill in the bazel '
+                     'verification failures are overkill in the blaze '
                      'environment. For example it is very easy to have '
                      'both a test apk and app apk contain a ref to the '
                      'same class file (eg Maps from the guava jars) and '
@@ -71,11 +71,11 @@ flags.DEFINE_boolean('preverify_apks', False, '[START ONLY] if true the apks '
                      'deployment tool (Speedy) by its very nature needs '
                      'to have this turned off as well. If you need it turned '
                      'on, simply enable this flag')
-flags.DEFINE_string('generate_output_dir', None, '[bazel ONLY] the '
+flags.DEFINE_string('generate_output_dir', None, '[BLAZE ONLY] the '
                     'location to store generated images to.')
-flags.DEFINE_boolean('single_image_file', True, '[bazel ONLY] deprecated '
+flags.DEFINE_boolean('single_image_file', True, '[BLAZE ONLY] deprecated '
                      'always true.')
-flags.DEFINE_string('image_input_file', None, '[bazel ONLY] causes '
+flags.DEFINE_string('image_input_file', None, '[BLAZE ONLY] causes '
                     'the emulator to be started from a tarred and compressed '
                     'file with userdata images in it. (Use in conjuction with '
                     'single_image_file')
@@ -88,54 +88,54 @@ flags.DEFINE_integer('adb_port', None, '[START/KILL ONLY] the port the '
 flags.DEFINE_string('logcat_path', None, '[START ONLY] Store logcat files '
                     'here.')
 flags.DEFINE_string('logcat_filter', None, '[START ONLY] Filter for logcat')
-flags.DEFINE_boolean('take_snapshots', True, '[bazel ONLY] deprecated - always'
+flags.DEFINE_boolean('take_snapshots', True, '[BLAZE ONLY] deprecated - always'
                      'true. generate a snapshot after manipulating the device.')
 flags.DEFINE_enum('net_type', 'fastnet', ['edge', 'fastnet', 'gprs', 'gsm',
                                           'hscsd', 'hsdpa', 'umts', 'off'],
                   'The network type to use. Network speeds/delay depend '
                   'on network type')
-flags.DEFINE_boolean('copy_system_images', False, '[bazel ONLY] deprecated'
+flags.DEFINE_boolean('copy_system_images', False, '[BLAZE ONLY] deprecated'
                      'always false')
-flags.DEFINE_boolean('flag_configured_android_tools', True, '[bazel ONLY] - '
+flags.DEFINE_boolean('flag_configured_android_tools', True, '[BLAZE ONLY] - '
                      'deprecated always true')
-flags.DEFINE_string('android_launcher_tool', None, '[bazel ONLY] the path '
+flags.DEFINE_string('android_launcher_tool', None, '[BLAZE ONLY] the path '
                     'to the android_launcher_tool.')
-flags.DEFINE_string('android_corp_libs', None, '[bazel ONLY] deprecated '
+flags.DEFINE_string('android_corp_libs', None, '[BLAZE ONLY] deprecated '
                     'no longer used.')
-flags.DEFINE_string('source_properties_file', None, '[bazel ONLY] the path to '
+flags.DEFINE_string('source_properties_file', None, '[BLAZE ONLY] the path to '
                     'a source.properties file for this system image')
 flags.DEFINE_string('adb', None, 'The path to ADB')
-flags.DEFINE_string('emulator_x86', None, '[bazel ONLY] the path to '
+flags.DEFINE_string('emulator_x86', None, '[BLAZE ONLY] the path to '
                     'emulator_x86')
-flags.DEFINE_string('emulator_arm', None, '[bazel ONLY] the path to '
+flags.DEFINE_string('emulator_arm', None, '[BLAZE ONLY] the path to '
                     'emulator_arm')
 flags.DEFINE_string('adb_static', None, 'OBSOLETE: the path to adb.static')
 flags.DEFINE_string('adb_turbo', None, 'The path to turbo adb')
 flags.DEFINE_string('emulator_x86_static', None, 'Deprecated. NO-OP.')
 flags.DEFINE_string('emulator_arm_static', None, 'Deprecated. NO-OP.')
-flags.DEFINE_string('empty_snapshot_fs', None, '[bazel ONLY] the path to '
+flags.DEFINE_string('empty_snapshot_fs', None, '[BLAZE ONLY] the path to '
                     'a snapshot fs image')
-flags.DEFINE_string('mksdcard', None, '[bazel ONLY] the path to '
+flags.DEFINE_string('mksdcard', None, '[BLAZE ONLY] the path to '
                     'mksdcard')
-flags.DEFINE_list('bios_files', None, '[bazel ONLY] a list of bios files for '
+flags.DEFINE_list('bios_files', None, '[BLAZE ONLY] a list of bios files for '
                   'the emulator.')
 flags.DEFINE_list('broadcast_message', None, '[START ONLY] a list of strings '
                   'in the format key=value. These will be broadcast as extras '
                   'when the emulator is fully booted and after all apks have '
                   'been installed. They will be broadcast under the action '
                   'ACTION_MOBILE_NINJAS_START')
-flags.DEFINE_string('emulator_metadata_path', None, '[bazel ONLY] the path to '
+flags.DEFINE_string('emulator_metadata_path', None, '[BLAZE ONLY] the path to '
                     'a metadata protobuffer to start the emulator with.')
 flags.DEFINE_string('export_launch_metadata_path', None, '[START ONLY] writes '
                     'emulator metadata after launch to this path')
 flags.DEFINE_string('emulator_tmp_dir', None, 'Temporary directory where the '
                     'emulator sockets/system_images/ramdisk etc are placed when'
                     ' emulator is launched.')
-flags.DEFINE_string('default_properties_file', None, '[bazel ONLY] the path to '
+flags.DEFINE_string('default_properties_file', None, '[BLAZE ONLY] the path to '
                     'device boot properties.')
 flags.DEFINE_boolean('launch_in_seperate_session', True, '[START ONLY] causes '
                      'the launcher to start the emulator in a seperate '
-                     'process group. Necessary for bazel run invocations '
+                     'process group. Necessary for blaze run invocations '
                      'the emulator runs in the background and will be killed '
                      'otherwise. Test runners should always set this to FALSE')
 flags.DEFINE_integer('window_scale', 100, 'Scale factor of emulator window in'
@@ -250,7 +250,7 @@ def _FirstBootAtBuildTimeOnly(
   "runtime". Network and all other services are functional after second boot.
 
   ONLY in this mode we ignore all display and openGL related flags passed to
-  unified_launcher (assumption is the bazel will never actually pass them:
+  unified_launcher (assumption is the blaze will never actually pass them:
   and ONLY in this mode we use the no-op rendering mode "emulator -no-window"
   because 1) it is enough for building the disk images and 2) we want to make
   buildtime action as lightweight and non-flaky as possible (which Xvfb is not)
@@ -408,7 +408,7 @@ def _RestartDevice(device,
     elif not proto.with_kvm:
       print ''
       print '=' * 80
-      print ('= Please add --no to your bazel command line, to create '
+      print ('= Please add --no to your blaze command line, to create '
              'snapshot images   =')
       print ('= local with KVM support. This will increase the speed of the '
              'emulator.        =')
@@ -508,12 +508,12 @@ def _Run(adb_server_port,
     start_vnc_on_port: if a port is specified, starts vnc server at that port.
     logcat_path: the directory to store logcat data to (None implies no logcat)
     logcat_filter: the filter to apply to logcat (None implies no logcat)
-    system_images: system images to restart with (only valid for bazel created
+    system_images: system images to restart with (only valid for blaze created
       start scripts).
     input_image_file: a compressed file containing userdata files. (only valid
-      for bazel start scripts)
+      for blaze start scripts)
     emulator_metadata_path: the path to the emulator_metadata_pb. (Only valid
-      for bazel start scripts)
+      for blaze start scripts)
     apks: extra apks to install on the started device.
     system_apks: apks to install onto the /system partition.
     net_type: The type of network to use.

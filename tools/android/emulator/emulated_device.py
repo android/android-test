@@ -129,6 +129,9 @@ DIRECT_BOOT_PROP = 'persist.sys.emulate_fbe'  # Emulate File-Based Encryption
 # http://android.googlesource.com/platform/sdk/+/master/emulator/mksdcard/src/source/mksdcard.c#150
 SD_CARD_UUID_OFFSET = 0x43
 
+# The maximum time that near-zero before we give up on an install
+INSTALL_IDLE_TIMEOUT_SECONDS = 120
+
 
 def _InstallFailureType(output):
   """Attempts to extract an installation failure reason from the output.
@@ -352,7 +355,7 @@ class EmulatedDevice(object):
     self._enable_g3_monitor = enable_g3_monitor
     self._enable_gps = enable_gps
     self._add_insecure_cert = add_insecure_cert
-    # There is a hard coded 10 minutes timeout in bazel side.
+    # There is a hard coded 10 minutes timeout in blaze side.
     # We use a shorter cut off here to make sure we have chances
     # to print log.
     self._start_time = time.time()
@@ -1040,7 +1043,7 @@ class EmulatedDevice(object):
     # contain the same class. With preverification turned on, this situation
     # will result in a dalvik failure (because verification was done at
     # installation time and the verified expected the app apk to be completely
-    # self contained). Since bazel will ensure that app and test apk are using
+    # self contained). Since blaze will ensure that app and test apk are using
     # the same dependencies this check is superflous in our case.
     if self.GetApiVersion() <= 20:
       # no longer applicable in ART world.
@@ -3207,18 +3210,19 @@ class EmulatedDevice(object):
       poll_checks += 1
       if (poll_checks % 16) != 0:
         continue
-      load = idle.RecentMaxLoad(20)
+      load = idle.RecentMaxLoad(INSTALL_IDLE_TIMEOUT_SECONDS)
       if load > 0.1:
         logging.info('system load is %f, still busy', load)
       else:
-        logging.info('system load is %f for more than 30 seconds', load)
+        logging.info('system load is %f for more than %d seconds',
+                     load, INSTALL_IDLE_TIMEOUT_SECONDS)
         # system is idle now, give it one last shot to tell us the
         # install has completed.
         install_proc.kill()
         install_proc.wait()
         stdout_thread.join()
-        return 'after ~30s system idle, system hung? stdout: %s' % (
-            stdout[0])
+        return 'after ~%ss system idle, system hung? stdout: %s' % (
+            INSTALL_IDLE_TIMEOUT_SECONDS, stdout[0])
 
     return_code = install_proc.poll()
     logging.info('install [%s]: return code: %s', install_args, return_code)
