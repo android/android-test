@@ -77,8 +77,6 @@ LoadInfo = collections.namedtuple('LoadInfo', 'timestamp up_time idle_time')
 
 Properties = collections.namedtuple('Properties', 'name value')
 
-READ_BUFFER_SIZE = 1024 * 1024  # 1MB.
-
 # speeds from:
 # http://developer.android.com/guide/developing/devices/emulator.html#netspeed
 # and
