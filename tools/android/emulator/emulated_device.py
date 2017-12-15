@@ -149,13 +149,14 @@ def _InstallFailureType(output):
 # We depend on them to communicate with emulated devices.
 SHUTDOWN_PROTECTED_SERVICES = ['pipe_traverse', 'adbd']
 
+AUTO_OPEN_GL = 'auto'
 GUEST_OPEN_GL = 'guest'
 HOST_OPEN_GL = 'host'
 MESA_OPEN_GL = 'mesa'
 NO_OPEN_GL = 'no_open_gl'
 SWIFTSHADER_OPEN_GL = 'swiftshader'
-OPEN_GL_DRIVERS = [MESA_OPEN_GL, HOST_OPEN_GL, NO_OPEN_GL, GUEST_OPEN_GL,
-                   SWIFTSHADER_OPEN_GL]
+OPEN_GL_DRIVERS = [AUTO_OPEN_GL, MESA_OPEN_GL, HOST_OPEN_GL, NO_OPEN_GL,
+                   GUEST_OPEN_GL, SWIFTSHADER_OPEN_GL]
 
 SDCARD_SIZE_KEY = 'sdcard_size_mb'
 
@@ -2336,6 +2337,7 @@ class EmulatedDevice(object):
     drivers = [NO_OPEN_GL]
     if self._SupportsGPU(source_properties):
       drivers.append(HOST_OPEN_GL)
+      drivers.append(AUTO_OPEN_GL)
       drivers.append(MESA_OPEN_GL)
       drivers.append(SWIFTSHADER_OPEN_GL)
     api_level = int(source_properties[API_LEVEL_KEY])
