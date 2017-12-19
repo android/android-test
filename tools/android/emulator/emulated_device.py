@@ -544,8 +544,6 @@ class EmulatedDevice(object):
       elif self._add_insecure_cert:
         debugfs_cmd += self.GetInstallCertCmd()
 
-      build_prop = os.path.join(self._images_dir, 'build.prop')
-      debugfs_cmd += ['dump /build.prop %s' % build_prop]
       self.ExecDebugfsCmd(self._SystemFile(), debugfs_cmd)
 
     # Pipe service won't work for user build and api level 23+, since
