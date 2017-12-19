@@ -275,9 +275,6 @@ def _new_devices_for_image_and_emulator(name,
 def _fallback_default_emulator_for_image(image, emulators, archs_override):
   """The default emulator to fall back to if default_emulator is not specified.
 
-  We can modify the logic here in order to rollout QEMU2 as the default
-  separately for each API level.
-
   Args:
     image: the image of this device
     emulators: the list of emulators supported for this device
@@ -287,16 +284,16 @@ def _fallback_default_emulator_for_image(image, emulators, archs_override):
     The emulator to use as the default
   """
 
-  # We're rolling out QEMU2 as the default for certain API levels.
-  if image_api(image) >= 25:
-    preferred_emulators = [QEMU2, QEMU]
-  else:
+  # We normally default to qemu2, but we make an exception for wear 20-23,
+  # which don't have ranchu support yet.
+  if image_flavor(image) == 'wear' and image_api(image) <= 23:
     preferred_emulators = [QEMU, QEMU2]
+  else:
+    preferred_emulators = [QEMU2, QEMU]
 
   for emulator in preferred_emulators:
     if _is_emulator_compatible(emulator, image, emulators, archs_override):
       return emulator
-
   return None
 
 
