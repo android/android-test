@@ -67,7 +67,7 @@ QEMU = new_emulator(
         "//java/com/google/android/instantapps:wh_group",
         "//java/com/google/gws/tools/carddevserver:__subpackages__",
         "//java/com/google/testing/screendiffing/android/simpleactivity:__subpackages__",
-        "//javatests/com/google/android/apps/auto/launcher/vanagon/scuba:__subpackages__",
+        "//javatests/com/google/android/apps/auto/launcher:__subpackages__",
         "//javatests/com/google/android/apps/calendar/uitest/groomcardscuba:__subpackages__",
         "//javatests/com/google/android/apps/calendar/uitest/timelinechipscuba:__subpackages__",
         "//javatests/com/google/android/apps/common/testing/services/location:__subpackages__",
