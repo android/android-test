@@ -3,7 +3,10 @@
 
 load("//tools/android/emulated_devices:macro/make_device.bzl", "make_device")
 
-package(default_visibility = ["//visibility:public"])
+# The Go image is not ready for prime time; see b/36686000 for updates. In the
+# mean time, you can test against low_memory_phone if you want to ensure that
+# your app works on a low memory device.
+package(default_visibility = ["//visibility:private"])
 
 make_device(
     name = "generic_go_phone",
