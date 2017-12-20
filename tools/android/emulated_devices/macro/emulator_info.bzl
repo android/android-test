@@ -53,6 +53,7 @@ QEMU = new_emulator(
         "//java/com/google/android/apps/auth/test/support:__subpackages__",
         "//java/com/google/android/apps/calendar/calendar:__subpackages__",
         "//java/com/google/android/apps/cardviewer:__subpackages__",
+        "//java/com/google/android/apps/gmail:__subpackages__",
         "//java/com/google/android/apps/gsa/binaries/speechservices:__subpackages__",
         "//java/com/google/android/apps/mymaps:__subpackages__",
         "//java/com/google/android/apps/nbu/freighter:__subpackages__",
@@ -69,6 +70,7 @@ QEMU = new_emulator(
         "//javatests/com/google/android/apps/calendar/uitest/timelinechipscuba:__subpackages__",
         "//javatests/com/google/android/apps/common/testing/services/location:__subpackages__",
         "//javatests/com/google/android/apps/contacts/integration/uidatatests/mocktests:__subpackages__",
+        "//javatests/com/google/android/apps/gmail:__subpackages__",
         "//javatests/com/google/android/apps/gsa:__subpackages__",
         "//javatests/com/google/android/apps/mymaps:__subpackages__",
         "//javatests/com/google/android/apps/nbu/freighter/integration:__subpackages__",
@@ -83,6 +85,7 @@ QEMU = new_emulator(
         "//javatests/com/google/corp/android/apps/campus:__subpackages__",
         "//javatests/com/google/testing/screendiffing/android/simpleactivity:__subpackages__",
         "//third_party/java_src/android_libs/aosp_calendar/tests/espresso:__subpackages__",
+        "//third_party/java/android_apps/exchange/testing/utilities:__subpackages__",
     ]
 )
 
