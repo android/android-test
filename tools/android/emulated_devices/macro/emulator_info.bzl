@@ -92,6 +92,7 @@ QEMU = new_emulator(
         "//javatests/com/google/testing/screendiffing/android/simpleactivity:__subpackages__",
         "//third_party/java_src/android_libs/aosp_calendar/tests/espresso:__subpackages__",
         "//third_party/java/android_apps/exchange/testing/utilities:__subpackages__",
+        "//tools/android/python:__subpackages__",
     ]
 )
 
