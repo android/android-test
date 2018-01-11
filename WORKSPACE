@@ -1,3 +1,11 @@
+git_repository(
+    name = 'gmaven_rules',
+    remote = 'https://github.com/aj-michael/gmaven_rules',
+    commit = '5e89b7cdc94d002c13576fad3b28b0ae30296e55',
+)
+load('@gmaven_rules//:gmaven.bzl', 'gmaven_rules')
+gmaven_rules()
+
 android_sdk_repository(name = "androidsdk")
 
 maven_jar(
@@ -12,7 +20,7 @@ maven_jar(
 
 maven_jar(
     name = "guava",
-    artifact = "com.google.guava:guava:23.0",
+    artifact = "com.google.guava:guava:23.5-android",
 )
 
 maven_jar(
@@ -45,6 +53,11 @@ http_archive(
 maven_jar(
     name = "auto_value_value",
     artifact = "com.google.auto.value:auto-value:1.5.1",
+)
+
+maven_jar(
+    name = "kxml",
+    artifact = "net.sf.kxml:kxml2:jar:2.3.0",
 )
 
 local_repository(
