@@ -33,13 +33,13 @@ maven_jar(
 http_archive(
     name = "com_google_protobuf",
     strip_prefix = "protobuf-3.5.0",
-    urls = ["https://github.com/google/protobuf/archive/v3.4.1.tar.gz"],
+    urls = ["https://github.com/google/protobuf/archive/v3.5.0.tar.gz"],
 )
 
 http_archive(
     name = "com_google_protobuf_java",
-    strip_prefix = "protobuf-3.4.1",
-    urls = ["https://github.com/google/protobuf/releases/download/v3.4.1/protobuf-java-3.4.1.tar.gz"],
+    strip_prefix = "protobuf-3.5.0",
+    urls = ["https://github.com/google/protobuf/releases/download/v3.5.0/protobuf-java-3.5.0.tar.gz"],
 )
 
 maven_jar(
