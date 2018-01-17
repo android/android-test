@@ -87,3 +87,23 @@ java_import(
 )""",
     url = "https://github.com/javax-inject/javax-inject/releases/download/1/javax.inject.zip",
 )
+
+# Open source version of the google python flags library.
+http_archive(
+    name = "absl_py",
+    urls = ["https://github.com/abseil/abseil-py/archive/b347ba6022370f895d3133241ed96965b95ecb40.tar.gz"],
+    strip_prefix = "abseil-py-b347ba6022370f895d3133241ed96965b95ecb40",
+    sha256 = "980ce58c34dfa75a9d20d45c355658191c166557f1de41ab52f208bd00604c2b",
+)
+
+# Six provides simple utilities for wrapping over differences between Python 2 and Python 3.
+new_http_archive(
+    name = "six_archive",
+    urls = [
+        "http://mirror.bazel.build/pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz",
+        "https://pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz",
+    ],
+    sha256 = "105f8d68616f8248e24bf0e9372ef04d3cc10104f1980f54d57b2ce73a5ad56a",
+    strip_prefix = "six-1.10.0",
+    build_file = "six.BUILD",
+)
