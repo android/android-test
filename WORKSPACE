@@ -3,7 +3,9 @@ git_repository(
     remote = 'https://github.com/aj-michael/gmaven_rules',
     commit = '5e89b7cdc94d002c13576fad3b28b0ae30296e55',
 )
-load('@gmaven_rules//:gmaven.bzl', 'gmaven_rules')
+
+load("@gmaven_rules//:gmaven.bzl", "gmaven_rules")
+
 gmaven_rules()
 
 android_sdk_repository(name = "androidsdk")
@@ -38,6 +40,11 @@ maven_jar(
     artifact = "com.google.code.findbugs:jsr305:3.0.2",
 )
 
+maven_jar(
+    name = "javax_inject",
+    artifact = "javax.inject:javax.inject:1",
+)
+
 http_archive(
     name = "com_google_protobuf",
     strip_prefix = "protobuf-3.5.0",
@@ -58,6 +65,11 @@ maven_jar(
 maven_jar(
     name = "kxml",
     artifact = "net.sf.kxml:kxml2:jar:2.3.0",
+)
+
+maven_jar(
+    name = "aop_alliance",
+    artifact = "aopalliance:aopalliance:1.0",
 )
 
 local_repository(

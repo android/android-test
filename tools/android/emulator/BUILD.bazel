@@ -1,0 +1,16 @@
+# Copyright 2017 Google Inc. All Rights Reserved.
+#
+# Description:
+#   Build rules to help with launching the android emulator.
+
+package(default_visibility = ["//visibility:public"])
+
+proto_library(
+    name = "emulator_meta_data_pb",
+    srcs = ["emulator_meta_data.proto"],
+)
+
+java_proto_library(
+    name = "emulator_meta_data_pb_java_proto",
+    deps = [":emulator_meta_data_pb"],
+)
