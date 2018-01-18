@@ -1,7 +1,8 @@
 """Helper functions for generating android_device rules."""
 
-load('//tools/android/emulated_devices:macro/image.bzl', 'image_flavor', 'image_api',
-     'image_arch', 'image_version_string', 'image_device_visibility')
+load('//tools/android/emulated_devices:macro/image.bzl', 'image_flavor',
+     'image_api', 'image_arch', 'image_version_string',
+     'image_device_visibility', 'image_compressed_suffix')
 
 load('//tools/android/emulated_devices:macro/emulator.bzl',
      'supported_arches_for_api', 'emulator_suffix', 'emulator_tags',
@@ -119,9 +120,10 @@ def _make_property_target(name, user_props, emulator, emu_suffix, hardware,
 
 
 def _get_property_target_name(name, emu_suffix, image):
-  return '%s_%s_%s_%s%s_props' % (name, image_flavor(image),
-                                  image_version_string(image), image_arch(image),
-                                  emu_suffix)
+  return '%s_%s_%s_%s%s%s_props' % (name, image_flavor(image),
+                                    image_version_string(image),
+                                    image_arch(image), emu_suffix,
+                                    image_compressed_suffix(image))
 
 
 def _make_system_image_target(name, contents):
@@ -252,9 +254,10 @@ def _new_devices_for_image_and_emulator(name,
   tags = emulator_tags(emulator, image)
   property_target = ':' + _get_property_target_name(name, emu_suffix, image)
   system_image_contents = extra_system_image_contents(emulator, image)
-  device_name = '%s_%s_%s%s' % (image_flavor(image),
-                                image_version_string(image), image_arch(image),
-                                emu_suffix)
+  device_name = '%s_%s_%s%s%s' % (image_flavor(image),
+                                  image_version_string(image),
+                                  image_arch(image), emu_suffix,
+                                  image_compressed_suffix(image))
 
   if name:
     device_name = '%s_%s' % (name, device_name)

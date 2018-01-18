@@ -2,6 +2,24 @@
 load('//tools/android/emulated_devices:macro/props.bzl', 'new_props')
 
 
+# Whitelist of packages which can use compressed images. Compressed images slow
+# down builds, and we plan to get rid of entirely in the near future, so this
+# list should be kept minimal.
+_COMPRESSED_IMAGE_WHITELIST = [
+    '//java/com/google/android/apps/auth/test/support:__subpackages__',
+    '//java/com/google/android/apps/dynamite:__subpackages__',
+    '//java/com/google/android/apps/internal/admobsdk/mediumtest:__subpackages__',
+    '//java/com/google/android/apps/play/store:__subpackages__',
+    '//java/com/google/android/libraries/internal/growth:__subpackages__',
+    '//javatests/com/google/android/apps/dynamite:__subpackages__',
+    '//javatests/com/google/android/apps/internal/admobsdk/mediumtest:__subpackages__',
+    '//javatests/com/google/android/apps/play/store:__subpackages__',
+    '//javatests/com/google/android/libraries/internal/growth:__subpackages__',
+    '//tools/android/tab/worker:__subpackages__',
+]
+
+
+# TODO: Get rid of compressed images once the whitelist is empty.
 def new_image(api_level,
               flavor,
               files,
@@ -9,7 +27,8 @@ def new_image(api_level,
               device_visibility=None,
               version_string=None,
               props=None,
-              supports_gms_channels=False):
+              supports_gms_channels=False,
+              compressed=False):
   """Creates an image object."""
   return {
       'api_level': api_level,
@@ -20,6 +39,7 @@ def new_image(api_level,
       'version_string': version_string or str(api_level),
       'supports_gms_channels': supports_gms_channels,
       'props': props or new_props(),
+      'compressed': compressed,
   }
 
 
@@ -40,6 +60,8 @@ def image_files(image):
 
 
 def image_device_visibility(image):
+  if image_compressed(image):
+    return _COMPRESSED_IMAGE_WHITELIST
   return image['device_visibility']
 
 
@@ -53,3 +75,14 @@ def image_arch(image):
 
 def image_props(image):
   return image['props']
+
+
+def image_compressed(image):
+  return image['compressed']
+
+
+def image_compressed_suffix(image):
+  if image_compressed(image):
+    return '_compressed'
+  else:
+    return ''

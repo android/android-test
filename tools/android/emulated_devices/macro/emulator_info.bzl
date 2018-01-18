@@ -6,7 +6,7 @@ load(
     "emulator_type",
     "emulator_files",
 )
-load("//tools/android/emulated_devices:macro/image.bzl", "image_files")
+load("//tools/android/emulated_devices:macro/image.bzl", "image_files", "image_compressed_suffix")
 load("//tools/android/emulated_devices:macro/props.bzl", "new_props")
 
 _EMULATOR_TYPE_PROP = "ro.mobile_ninjas.emulator_type"
@@ -145,7 +145,7 @@ def extra_system_image_contents(emulator, image):
   Returns:
     a list of srcs to put in the file system image filegroup.
   """
-  contents = [image_files(image)]
+  contents = [image_files(image) + image_compressed_suffix(image)]
   contents += emulator_files(emulator)
   if emulator_type(emulator) == emulator_type(QEMU2):
     maybe_extra_kernel_target = "%s_qemu2_extra" % image_files(image)

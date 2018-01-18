@@ -22,13 +22,15 @@ def _default_images(api_level, flavors):
   images = []
   for a in ['arm', 'x86']:
     for f in flavors:
-      target = '%s_%s_%s' % (f, api_level, a)
-      images.append(
-          new_image(
-              flavor=f,
-              api_level=api_level,
-              arch=a,
-              files=_IMG_TEMPLATE % target))
+      for compressed in (True, False):
+        target = '%s_%s_%s' % (f, api_level, a)
+        images.append(
+            new_image(
+                flavor=f,
+                api_level=api_level,
+                arch=a,
+                files=_IMG_TEMPLATE % target,
+                compressed=compressed))
   return images
 
 
