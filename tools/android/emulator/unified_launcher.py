@@ -223,7 +223,7 @@ def _CheckWindowScale(window_scale):
 
 def _FindSystemImagesDir(system_image_files):
   for f in system_image_files:
-    if os.path.basename(f) == 'kernel-qemu':
+    if os.path.basename(f) in ('kernel-qemu', 'kernel-ranchu'):
       return os.path.dirname(f)
   # Fall back to directory of 1st file.
   return os.path.dirname(system_image_files[0])
