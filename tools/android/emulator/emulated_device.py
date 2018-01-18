@@ -1449,17 +1449,7 @@ class EmulatedDevice(object):
 
     return {k: str(v) for k, v in target_env.items() if v is not None}
 
-  def _AddTimerResults(self, activity_name, timer):
-    pb_timings = []
-    for name, acc_time, starts in timer.results(verbose=True):
-      pb_timings.append(emulator_meta_data_pb2.TimerPb(
-          name=name,
-          accumulated_time=long(acc_time * 1000),
-          number_of_starts=starts))
-
-    self._metadata_pb.perf_data.add(
-        activity_name=activity_name,
-        timing=pb_timings)
+  def _AddTimerResults(self, unused_activity_name, timer):
 
   def _EscapeInitToken(self, token):
     """Escape a token in init.rc so that it will be parsed as a single token.
