@@ -45,6 +45,16 @@ maven_jar(
     artifact = "javax.inject:javax.inject:1",
 )
 
+maven_jar(
+    name = "javax_annotation",
+    artifact = "javax.annotation:javax.annotation-api:1.3.1",
+)
+
+maven_jar(
+    name = "tagsoup",
+    artifact = "org.ccil/cowan.tagsoup:tagsoup:1.2",
+)
+
 http_archive(
     name = "com_google_protobuf",
     strip_prefix = "protobuf-3.5.0",
@@ -55,6 +65,14 @@ http_archive(
     name = "com_google_protobuf_java",
     strip_prefix = "protobuf-3.5.0",
     urls = ["https://github.com/google/protobuf/releases/download/v3.5.0/protobuf-java-3.5.0.tar.gz"],
+)
+
+# java_lite_proto_library rules implicitly depend on @com_google_protobuf_javalite//:javalite_toolchain,
+# which is the JavaLite proto runtime (base classes and common utilities).
+http_archive(
+    name = "com_google_protobuf_javalite",
+    strip_prefix = "protobuf-javalite",
+    urls = ["https://github.com/google/protobuf/archive/javalite.zip"],
 )
 
 maven_jar(
@@ -107,3 +125,39 @@ new_http_archive(
     strip_prefix = "six-1.10.0",
     build_file = "six.BUILD",
 )
+
+maven_jar(
+    name = "dagger_api",
+    artifact = "com.google.dagger:dagger:2.10",
+)
+
+maven_jar(
+    name = "dagger_compiler",
+    artifact = "com.google.dagger:dagger-compiler:2.11",
+)
+
+maven_jar(
+    name = "dagger_producers",
+    artifact = "com.google.dagger:dagger-producers:2.11",
+)
+
+maven_jar(
+    name = "googlejavaformat",
+    artifact = "com.google.googlejavaformat:google-java-format:1.4",
+)
+
+maven_jar(
+    name = "errorprone_javac_shaded",
+    artifact = "com.google.errorprone:javac-shaded:9-dev-r4023-3",
+)
+
+maven_jar(
+    name = "javapoet",
+    artifact = "com.squareup:javapoet:1.9.0",
+)
+
+maven_jar(
+    name = "hamcrest",
+    artifact = "org.hamcrest:hamcrest-all:1.3",
+)
+
