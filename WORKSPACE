@@ -16,6 +16,11 @@ maven_jar(
 )
 
 maven_jar(
+    name = "accessibility",
+    artifact = "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.0"
+)
+
+maven_jar(
     name = "jcommander",
     artifact = "com.beust:jcommander:1.72",
 )
@@ -161,3 +166,7 @@ maven_jar(
     artifact = "org.hamcrest:hamcrest-all:1.3",
 )
 
+maven_jar(
+    name = "jarjar",
+    artifact = "com.googlecode.jarjar:jarjar:1.3",
+)
