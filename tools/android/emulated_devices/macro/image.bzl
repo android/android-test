@@ -17,6 +17,7 @@ _COMPRESSED_IMAGE_WHITELIST = [
     '//javatests/com/google/android/libraries/internal/growth:__subpackages__',
     '//testing/web/browsers:__subpackages__',
     '//tools/android/tab/worker:__subpackages__',
+    '//third_party/java_src/android_app/carrierservices/javatests/com/google/android/ims/mobly/snippets:__subpackages__',
 ]
 
 
