@@ -1450,6 +1450,9 @@ class EmulatedDevice(object):
     return {k: str(v) for k, v in target_env.items() if v is not None}
 
   def _AddTimerResults(self, unused_activity_name, timer):
+    # pylint: disable=unnecessary-pass
+    pass
+    # pylint: enable=unnecessary-pass
 
   def _EscapeInitToken(self, token):
     """Escape a token in init.rc so that it will be parsed as a single token.

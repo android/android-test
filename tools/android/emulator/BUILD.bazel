@@ -3,6 +3,18 @@
 # Description:
 #   Build rules to help with launching the android emulator.
 
+# Some of the py_* rules in this file set `imports = ["../../.."]`. This is due
+# to the fact that some of these rules depend on targets in external
+# repositories and Bazel does not guarantee that the main repository shows up
+# in the Python path before the external repositories. This causes conflicts
+# with any external repositories that contain Python or native code that contain
+# a top-level directory called "tools". In particular @androidsdk contains one.
+#
+# The imports attribute adds the given directory, relative to the target, to the
+# front of the Python path. As such "../../.." resolves to the root of this
+# repository. So any Python code that contains "import tools.something" will
+# find //tools before @androidsdk//:tools.
+
 package(default_visibility = ["//visibility:public"])
 
 proto_library(
@@ -13,4 +25,264 @@ proto_library(
 java_proto_library(
     name = "emulator_meta_data_pb_java_proto",
     deps = [":emulator_meta_data_pb"],
+)
+
+py_library(
+    name = "emulator_meta_data_pb_py_pb2",
+    srcs = ["emulator_meta_data_pb2.py"],
+    deps = ["@protobuf//:protobuf_python"],
+)
+
+MOX = "@mox_archive//:mox"
+
+PYGLIB = [
+    "@google_apputils//:apputils",
+    "@gflags_archive//:gflags",
+]
+
+PORTPICKER = "@portpicker_archive//:portpicker"
+
+M2CRYPTO = "//third_party/py/M2Crypto"
+
+TESTING_PYBASE = ":resources"
+
+genrule(
+    name = "default_sdcard_img",
+    srcs = ["support/default_sdcard.256.img.tar.gz"],
+    outs = ["support/default_sdcard.256.img"],
+    cmd = "tar -xzvf $< -O > $@",
+)
+
+# An implicit dependancy of all android_devices - modify with care!
+filegroup(
+    name = "xvfb_support",
+    # support dependencies for using the emulator (eg - xvfb, polite adb.)
+    srcs = [
+        "support/adb.turbo",
+        "support/cache.img.tar.gz",
+        "support/default_sdcard.256.img.tar.gz",
+    ],
+)
+
+py_library(
+    name = "common",
+    srcs = ["common.py"],
+    deps = PYGLIB,
+)
+
+py_test(
+    name = "common_test",
+    srcs = ["common_test.py"],
+    deps = [
+        ":common",
+        MOX,
+    ],
+)
+
+py_test(
+    name = "common_subprocess_test",
+    srcs = ["common_subprocess_test.py"],
+    deps = [
+        ":common",
+    ],
+)
+
+filegroup(
+    name = "daemon",
+    srcs = glob(["daemon/**"]),
+)
+
+py_library(
+    name = "emulated_device",
+    srcs = ["emulated_device.py"],
+    data = [
+        ":daemon",
+        ":xvfb_support",
+    ],
+    deps = [
+        ":common",
+        ":emulator_meta_data_pb_py_pb2",
+        ":reporting",
+        ":xserver",
+        PORTPICKER,
+    ] + PYGLIB,
+)
+
+py_binary(
+    name = "unified_launcher_head",
+    srcs = ["unified_launcher.py"],
+    imports = ["../../.."],
+    main = "unified_launcher.py",
+    deps = [
+        ":emulated_device",
+        ":emulator_meta_data_pb_py_pb2",
+        ":reporting",
+        ":resources",
+        ":xserver",
+        "@protobuf//:protobuf_python",
+        PORTPICKER,
+    ] + PYGLIB,
+)
+
+py_library(
+    name = "xserver",
+    srcs = ["xserver.py"],
+    deps = PYGLIB,
+)
+
+py_test(
+    name = "xserver_test",
+    size = "medium",
+    srcs = ["xserver_test.py"],
+    data = [
+        ":xres",
+    ],
+    deps = [
+        ":resources",
+        ":xserver",
+    ],
+)
+
+py_library(
+    name = "reporting",
+    srcs = ["reporting.py"],
+)
+
+py_library(
+    name = "fake_android_platform_util",
+    srcs = ["fake_android_platform_util.py"],
+    deps = [
+        ":emulated_device",
+    ] + PYGLIB,
+)
+
+py_binary(
+    name = "xres",
+    testonly = 1,
+    srcs = ["xres.py"],
+    visibility = ["//visibility:private"],
+)
+
+py_test(
+    name = "emulated_device_test",
+    srcs = ["emulated_device_test.py"],
+    args = [
+        # The "../" in these paths is how Bazel arranges external repositories
+        # in the runfiles tree. The tests are run in
+        # <runfiles base>/android_test_support because the name of the current
+        # repository is android_test_support. Since these dependencies come from
+        # the androidsdk repository, they are located in
+        # <runfiles base>/androidsdk.
+        "--system_image_dir=../androidsdk/system-images/android-10/default/armeabi-v7a",
+        "--android_sdk_path=../androidsdk",
+    ],
+    data = [
+        ":android_sdk_repository_emulator_tools",
+        "@androidsdk//:emulator_images_android_10_arm",
+    ],
+    imports = ["../../.."],
+    deps = [
+        ":emulated_device",
+        ":fake_android_platform_util",
+        TESTING_PYBASE,
+        MOX,
+    ],
+)
+
+py_test(
+    name = "emulated_device_integration_test_arm",
+    size = "large",
+    srcs = ["emulated_device_integration_test_arm.py"],
+    args = [
+        "--system_image_dir=../androidsdk/system-images/android-10/default/armeabi-v7a",
+        "--android_sdk_path=../androidsdk",
+    ],
+    data = [
+        ":android_sdk_repository_emulator_tools",
+        "@androidsdk//:emulator_images_android_10_arm",
+    ],
+    imports = ["../../.."],
+    deps = [
+        ":emulated_device",
+        ":fake_android_platform_util",
+        TESTING_PYBASE,
+    ],
+)
+
+py_test(
+    name = "unified_launcher_test",
+    srcs = ["unified_launcher_test.py"],
+    data = [
+        ":xvfb_support",
+    ],
+    deps = [
+        ":unified_launcher_head",
+        TESTING_PYBASE,
+        MOX,
+    ],
+)
+
+GL_API_LEVELS = [
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "21",
+]
+
+[
+    py_test(
+        name = "emulated_device_software_open_gl_integration_test_%s" % api,
+        size = "large",
+        srcs = ["emulated_device_software_open_gl_integration_test.py"],
+        args = [
+            "--api_level=%s" % api,
+            "--system_image_dir=../androidsdk/system-images/android-%s/default/x86" % api,
+            "--android_sdk_path=../androidsdk",
+        ],
+        data = [
+            "@androidsdk//:emulator_images_android_%s_x86" % api,
+            ":android_sdk_repository_emulator_tools",
+            ":xvfb_support",
+        ],
+        main = "emulated_device_software_open_gl_integration_test.py",
+        tags = [
+            "opengl",
+            "requires-kvm",
+        ],
+        deps = [
+            ":emulated_device",
+            ":fake_android_platform_util",
+            ":xserver",
+            TESTING_PYBASE,
+        ],
+    )
+    for api in GL_API_LEVELS
+]
+
+py_library(
+    name = "resources",
+    srcs = ["resources.py"],
+)
+
+py_test(
+    name = "resources_test",
+    srcs = ["resources_test.py"],
+    deps = [
+        ":resources",
+    ] + PYGLIB,
+)
+
+filegroup(
+    name = "android_sdk_repository_emulator_tools",
+    srcs = [
+        "@androidsdk//:adb",
+        "@androidsdk//:emulator_arm",
+        "@androidsdk//:emulator_shared_libs",
+        "@androidsdk//:emulator_x86",
+        "@androidsdk//:emulator_x86_bios",
+        "@androidsdk//:mksd",
+        "@bazel_tools//tools/android/emulator:empty_snapshot_fs",
+    ],
 )
