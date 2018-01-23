@@ -265,6 +265,8 @@ def _new_devices_for_image_and_emulator(name,
   system_image_target = _make_system_image_target(
       device_name, system_image_contents + boot_apks)
 
+
+
   native.android_device(
       name=device_name,
       default_properties=property_target,
