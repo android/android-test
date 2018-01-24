@@ -3067,8 +3067,12 @@ class EmulatedDevice(object):
   def HasNativeMultiDex(self):
     return self.GetApiVersion() >= 21
 
-  def IsInstalled(self, app_id):
-    return app_id in self.ExecOnDevice(['pm', 'list', 'packages', app_id])
+  def IsInstalled(self, app_id, pm_list_output=None):
+    search_expr = re.compile('^package:%s$' % re.escape(app_id),
+                             re.DOTALL|re.MULTILINE)
+    if not pm_list_output:
+      pm_list_output = self.ExecOnDevice(['pm', 'list', 'packages', app_id])
+    return search_expr.search(pm_list_output)
 
   def _IsPermanentInstallError(self, info):
     for error in PERMANENT_INSTALL_ERROR:
