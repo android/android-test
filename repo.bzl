@@ -234,3 +234,8 @@ java_import(
       artifact = "com.googlecode.jarjar:jarjar:1.3",
   )
 
+  native.maven_jar(
+      name = "accessibility",
+      artifact = "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.0"
+  )
+
