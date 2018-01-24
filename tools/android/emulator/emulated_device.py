@@ -2212,6 +2212,7 @@ class EmulatedDevice(object):
                                  ' in %s attempts.' % attempter.step_attempts)
           continue
 
+
       if not self._direct_boot and not launcher_started:
         if attempter.step_attempts > 0:
           self._UnlockScreen()
