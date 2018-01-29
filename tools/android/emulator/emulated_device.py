@@ -2445,7 +2445,9 @@ class EmulatedDevice(object):
                         'com.google.android.googlequicksearchbox' in output or
                         'com.google.android.tv' in output or
                         'com.android.tv' in output or
-                        'com.android.iotlauncher' in output)
+                        'com.android.iotlauncher' in output or
+                        'com.android.car' in output or
+                        'com.google.android.car' in output)
     logging.info('launcher running? %s', launcher_started)
     return launcher_started
 
