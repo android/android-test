@@ -15,6 +15,7 @@ _AUTO = 'auto'
 _GO = 'go'
 _JASPER = 'jasper'
 _DAYDREAM = 'daydream'
+_AXON = 'axon'
 
 
 def _default_images(api_level, flavors):
@@ -46,7 +47,7 @@ _ALL_IMAGES = (
     _default_images(22, [_GOOGLE, _ANDROID, _WEAR, _TV]) +
     _default_images(23, [_GOOGLE, _ANDROID, _WEAR, _TV]) +
     _default_images(24, [_GOOGLE, _ANDROID, _WEAR, _TV, _JASPER]) +
-    _default_images(25, [_GOOGLE, _ANDROID, _WEAR, _WEAR_LE, _WEAR_TESTKEYS]) +
+    _default_images(25, [_GOOGLE, _ANDROID, _WEAR, _WEAR_LE, _WEAR_TESTKEYS, _AXON]) +
     _default_images(26,
                     [_GOOGLE, _ANDROID, _WEAR, _WEAR_LE, _AUTO, _DAYDREAM]) +
     _default_images(27, [_GOOGLE, _ANDROID, _GO, _AUTO, _DAYDREAM])
