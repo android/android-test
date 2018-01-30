@@ -2198,7 +2198,9 @@ class EmulatedDevice(object):
       if not dpi_ok:
         if not attempter.step_attempts:
           if not self.IsInstalled(_BOOTSTRAP_PKG):
-            self.InstallApk(resources.GetResourceFilename(_BOOTSTRAP_PATH))
+            self.InstallApk(
+                resources.GetResourceFilename(_BOOTSTRAP_PATH),
+                grant_runtime_permissions=True)
 
         if not self._direct_boot:
           self._UnlockScreen()
