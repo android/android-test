@@ -985,5 +985,18 @@ def main(unused_argv):
   logging.info('return from main function.')
 
 
+def AddFileLogHandler():
+  """Adds a handler to the root logger which writes to a temp file."""
+  with tempfile.NamedTemporaryFile(
+      prefix='unified_launcher_',
+      suffix='.log',
+      delete=False) as f:
+    log_filename = f.name
+  file_handler = logging.FileHandler(log_filename)
+  root_logger = logging.getLogger()
+  root_logger.addHandler(file_handler)
+
+
 if __name__ == '__main__':
+  AddFileLogHandler()
   app.run()

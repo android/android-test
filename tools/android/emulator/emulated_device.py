@@ -2502,8 +2502,8 @@ class EmulatedDevice(object):
   def _EmulatorLogFile(self, mode):
     if not self._emulator_log_file:
       with tempfile.NamedTemporaryFile(
-          prefix='emulator_log',
-          suffix='.txt',
+          prefix='emulator_',
+          suffix='.log',
           dir=os.environ.get('TEST_UNDECLARED_OUTPUTS_DIR'),
           delete=False) as f:
         self._emulator_log_file = f.name
