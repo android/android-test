@@ -23,6 +23,7 @@ make_device(
         "ro.product.manufacturer": "google",
         "ro.product.model": "Pixel",
         "ro.opa.eligible_device": "true",
+        "ro.scuba.model": "Pixel",
     },
     cache = 32,
     horizontal_resolution = 540,  # 1080,

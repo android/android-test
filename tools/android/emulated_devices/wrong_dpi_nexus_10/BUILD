@@ -24,6 +24,7 @@ make_device(
         "ro.product.manufacturer": "samsung",
         "ro.product.model": "Nexus 10",
         "ro.build.id": "JDQ39",
+        "ro.scuba.model": "Nexus 10",
     },
     cache = 32,
     horizontal_resolution = 1280,  # 2560
