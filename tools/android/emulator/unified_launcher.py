@@ -280,7 +280,9 @@ def _FirstBootAtBuildTimeOnly(
                  _ExtractSuffixFile(system_images, 'system.img'))
   dataimg_path = (_ExtractSuffixFile(system_images, 'userdata.img.tar.gz') or
                   _ExtractSuffixFile(system_images, 'userdata.img'))
-  vendor_img_path = _ExtractSuffixFile(system_images, 'vendor.img.tar.gz')
+  vendor_img_path = (_ExtractSuffixFile(system_images, 'vendor.img.tar.gz') or
+                     _ExtractSuffixFile(system_images, 'vendor.img'))
+
   encryptionkey_img_path = _ExtractSuffixFile(system_images,
                                               'encryptionkey.img')
   advanced_features_ini = _ExtractSuffixFile(system_images,
@@ -425,7 +427,8 @@ def _RestartDevice(device,
             _ExtractSuffixFile(system_image_files, 'system.img'))
   dataimg = (_ExtractSuffixFile(system_image_files, 'userdata.img.tar.gz') or
              _ExtractSuffixFile(system_image_files, 'userdata.img'))
-  vendorimg_path = _ExtractSuffixFile(system_image_files, 'vendor.img.tar.gz')
+  vendorimg_path = (_ExtractSuffixFile(system_image_files, 'vendor.img.tar.gz')
+                    or _ExtractSuffixFile(system_image_files, 'vendor.img'))
   encryptionkeyimg_path = _ExtractSuffixFile(system_image_files,
                                              'encryptionkey.img')
   advanced_features_ini = _ExtractSuffixFile(system_image_files,

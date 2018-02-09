@@ -589,12 +589,16 @@ class EmulatedDevice(object):
     if vendor_img_path and not os.path.exists(self._VendorFile()):
       init_data = vendor_img_path
       assert os.path.exists(init_data), '%s: no vendor.img' % vendor_img_path
-      assert init_data.endswith('.img.tar.gz'), 'Not known format'
-      self._ExtractTarEntry(
-          init_data, 'vendor.img', os.path.dirname(self._VendorFile()))
-      shutil.move(os.path.join(os.path.dirname(self._VendorFile()),
-                               'vendor.img'),
-                  self._VendorFile())
+      if init_data.endswith('.img.tar.gz'):
+        self._ExtractTarEntry(
+            init_data, 'vendor.img', os.path.dirname(self._VendorFile()))
+        shutil.move(os.path.join(os.path.dirname(self._VendorFile()),
+                                 'vendor.img'),
+                    self._VendorFile())
+      elif init_data.endswith('.img'):
+        self._SparseCp(init_data, self._VendorFile())
+      else:
+        raise Exception('Unknown vendor image type %s', vendor_img_path)
       os.chmod(self._VendorFile(), stat.S_IRWXU)
 
     if encryptionkey_img_path and not os.path.exists(
