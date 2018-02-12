@@ -24,7 +24,7 @@ make_device(
         "ro.product.manufacturer": "lge",
         "ro.product.model": "Nexus 5",
         "ro.build.id": "KRT16M",
-        HEAP_GROWTH_LIMIT: "192m",
+        HEAP_GROWTH_LIMIT: "128m",
     },
     cache = 32,
     horizontal_resolution = 540,  # 1080
