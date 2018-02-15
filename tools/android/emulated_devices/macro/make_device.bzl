@@ -265,34 +265,16 @@ def _new_devices_for_image_and_emulator(name,
   system_image_target = _make_system_image_target(
       device_name, system_image_contents + boot_apks)
 
-  make_android_device(device_name,
-                      property_target,
-                      system_image_target,
-                      tags,
-                      image,
-                      visibility,
-                      hardware)
 
 
-def make_android_device(name,
-                        default_properties,
-                        system_image,
-                        tags,
-                        image,
-                        visibility,
-                        hardware):
-        tags=tags,
-        visibility=image_device_visibility(image) or visibility,
-        **hardware_device_attributes(hardware))
-    return
-  # END-INTERNAL
   native.android_device(
-      name=name,
-      default_properties=default_properties,
-      system_image=system_image,
+      name=device_name,
+      default_properties=property_target,
+      system_image=system_image_target,
       tags=tags,
       visibility=image_device_visibility(image) or visibility,
       **hardware_device_attributes(hardware))
+
 
 
 def _fallback_default_emulator_for_image(image, emulators, archs_override):
