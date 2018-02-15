@@ -1764,8 +1764,14 @@ class EmulatedDevice(object):
     pipe_service_processes = self._StartPipeServices(pipe_dir)
     tn_pipe_service_process = self._StartTelnetPipeServices(pipe_dir)
     if self._display:
-      self._display.Start()
-      emu_env.update(self._display.environment)
+      # Try starting the Xserver three times before giving up.
+      for _ in range(3):
+        try:
+          self._display.Start()
+          emu_env.update(self._display.environment)
+          break
+        except (xserver.ProcessCrashedError, xserver.TimeoutError) as e:
+          logging.error('Failed to start XServer..Retrying.. %s', e)
 
     emu_process = common.Spawn(emu_args,
                                exec_env=emu_env,

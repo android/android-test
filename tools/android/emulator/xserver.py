@@ -68,8 +68,10 @@ class X11Server(object):
       ProcessCrashedError: if Xvfb process started and unexpectedly exited.
     """
     if self._x11_process and self._x11_process.poll() is not None:
+      return_code = self._x11_process.returncode
+      self._x11_process = None
       raise ProcessCrashedError('Xvfb crashed unexpectedly, exit code %s' %
-                                self._x11_process.returncode)
+                                return_code)
     if (not self._x11_process
         or self._x11_process.poll() is not None
         or not hasattr(self._x11_process, 'display')):
