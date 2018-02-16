@@ -1,5 +1,6 @@
 """Image info contains all well known system image files."""
 load('//tools/android/emulated_devices:macro/image.bzl', 'new_image', 'image_api')
+load('//tools/android/emulated_devices:macro/props.bzl', 'new_props')
 
 _IMG_TEMPLATE = (
     '@androidsdk//:emulator_images_%s'
@@ -18,7 +19,7 @@ _DAYDREAM = 'daydream'
 _AXON = 'axon'
 
 
-def _default_images(api_level, flavors):
+def _default_images(api_level, flavors, props=None):
   """Helper function to build standard images."""
   images = []
   for a in ['arm', 'x86']:
@@ -31,13 +32,21 @@ def _default_images(api_level, flavors):
                 api_level=api_level,
                 arch=a,
                 files=_IMG_TEMPLATE % target,
-                compressed=compressed))
+                compressed=compressed,
+                props=props))
   return images
 
+_NUM_CORES_PROP = 'hw.cpu.ncore'
 
 _ALL_IMAGES = (
     _default_images(10, [_GOOGLE, _ANDROID]) +
-    _default_images( 15, [_GOOGLE, _ANDROID]) +
+    _default_images(15, [_GOOGLE, _ANDROID],
+                    props=new_props(
+                        avd_properties={
+                          _NUM_CORES_PROP: '1', # b/73511483
+                        }
+                    )
+                   ) +
     _default_images(16, [_GOOGLE, _ANDROID]) +
     _default_images(17, [_GOOGLE, _ANDROID]) +
     _default_images( 18, [_GOOGLE, _ANDROID]) +
