@@ -122,6 +122,7 @@ PERMANENT_INSTALL_ERROR = [
 INSTALL_FAILURE_REGEXP = re.compile(r'.*(INSTALL_FAILED_[a-zA-Z_]+).*',
                                     re.MULTILINE | re.DOTALL)
 
+_CORES_PROP = 'hw.cpu.ncore'
 DIRECT_BOOT_PROP = 'persist.sys.emulate_fbe'  # Emulate File-Based Encryption
 
 # http://android.googlesource.com/platform/sdk/+/master/emulator/mksdcard/src/source/mksdcard.c#150
@@ -755,8 +756,10 @@ class EmulatedDevice(object):
 
     config_ini_file = os.path.join(self._SessionImagesDir(), 'config.ini')
     with open(config_ini_file, 'w+') as config_ini:
+      wrote_cores = False
       for prop in self._metadata_pb.avd_config_property:
         config_ini.write('%s=%s\n' % (prop.name, prop.value))
+        wrote_cores |= prop.name == _CORES_PROP
 
       # the default size is ~256 megs, which fills up fast on iterative
       # development.
@@ -814,7 +817,11 @@ class EmulatedDevice(object):
       # else hopefully source properties matches. sigh!
 
       config_ini.write('hw.cpu.arch=%s\n' % avd_cpu_arch)
-      config_ini.write('hw.cpu.ncore=%d\n' % FLAGS.cores)
+
+      # allow the user to override from the launch command any core values
+      # the system image may set by default.
+      if FLAGS['cores'].present or not wrote_cores:
+        config_ini.write('%s=%d\n' % (_CORES_PROP, FLAGS.cores))
 
       config_ini.write('hw.gpu.enabled=yes\n')
 
@@ -1058,6 +1065,12 @@ class EmulatedDevice(object):
     self._metadata_pb.boot_property.add(
         name='persist.sys.timezone',
         value='America/Los_Angeles')
+
+    default_cores = self._GetProperty(_CORES_PROP, default_properties,
+                                      source_properties, None)
+    if default_cores:
+      self._metadata_pb.avd_config_property.add(
+          name=_CORES_PROP, value=default_cores)
 
     prop = self._metadata_pb.avd_config_property.add(name='hw.mainKeys')
     prop.value = self._GetProperty(prop.name, default_properties,
