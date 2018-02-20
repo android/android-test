@@ -17,8 +17,10 @@ make_device(
         "ro.product.name": "nemo",
     },
     cache = 32,
-    # TODO(b/30588599): Remove this once uma emulators can be built.
-    emulator_types = ["qemu"],
+    emulator_types = [
+        "qemu",
+        "qemu2",
+    ],
     horizontal_resolution = 480,
     max_api = 25,
     min_api = 20,
