@@ -15,6 +15,8 @@ _COMPRESSED_IMAGE_WHITELIST = [
     '//javatests/com/google/android/apps/dynamite:__subpackages__',
     '//javatests/com/google/android/apps/internal/admobsdk/mediumtest:__subpackages__',
     '//javatests/com/google/android/apps/play/store:__subpackages__',
+    "//javatests/com/google/android/gmscore/dev/modules/measurement:__subpackages__",
+    "//javatests/com/google/android/gmscore/integ/modules/measurement:__subpackages__",
     '//javatests/com/google/android/libraries/internal/growth:__subpackages__',
     '//testing/web/browsers:__subpackages__',
     '//tools/android/tab/worker:__subpackages__',
