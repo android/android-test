@@ -6,6 +6,7 @@
 
 load("//tools/android/emulated_devices:macro/make_device.bzl", "make_device")
 
+
 package(default_visibility = ["//visibility:public"])
 
 make_device(
