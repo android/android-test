@@ -4,7 +4,6 @@
 # Description:
 #   Please see the subpackages for android_device targets by brand name.
 
-
 exports_files(
     glob(["macro/*bzl"]),
 )
