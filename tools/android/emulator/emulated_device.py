@@ -2743,6 +2743,10 @@ class EmulatedDevice(object):
     if not umounted:
       err = self.ExecOnDevice(['umount', mount_point])
       logging.warn('%s: Could not be umounted. Error: %s', mount_point, err)
+      logging.warn('Mounts:\n%s', self.ExecOnDevice(['mount']))
+      for f in self.ExecOnDevice(['lsof']).splitlines():
+        if mount_point in f:
+          logging.warn('Open file: %s', f)
 
     # e2fsck is not present on API < 21
     if self.GetApiVersion() < 21:
