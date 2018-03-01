@@ -106,6 +106,36 @@ def android_test_repositories():
   )
 
   native.maven_jar(
+      name = "hamcrest",
+      artifact = "org.hamcrest:hamcrest-all:1.3",
+  )
+
+  native.maven_jar(
+      name = "mockito",
+      artifact = "org.mockito:mockito-core:1.9.5",
+  )
+
+  native.maven_jar(
+      name = "objenesis",
+      artifact = "org.objenesis:objenesis:2.1",
+  )
+
+  native.maven_jar(
+      name = "dexmaker",
+      artifact = "com.google.dexmaker:dexmaker:1.2",
+  )
+
+  native.maven_jar(
+      name = "dexmaker_mockito",
+      artifact = "com.google.dexmaker:dexmaker-mockito:jar:1.2",
+  )
+
+  native.maven_jar(
+      name = "truth",
+      artifact = "com.google.truth:truth:0.27",
+  )
+
+  native.maven_jar(
       name = "guava",
       artifact = "com.google.guava:guava:23.5-android",
   )
@@ -225,11 +255,6 @@ java_import(
   )
 
   native.maven_jar(
-      name = "hamcrest",
-      artifact = "org.hamcrest:hamcrest-all:1.3",
-  )
-
-  native.maven_jar(
       name = "jarjar",
       artifact = "com.googlecode.jarjar:jarjar:1.3",
   )
@@ -238,4 +263,3 @@ java_import(
       name = "accessibility",
       artifact = "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.0"
   )
-
