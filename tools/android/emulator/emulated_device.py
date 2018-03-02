@@ -1497,6 +1497,7 @@ class EmulatedDevice(object):
         '-ports', '%s,%s' % (self.emulator_telnet_port,
                              self.emulator_adb_port),
         '-skin', self._metadata_pb.skin,
+        '-timezone', 'America/Los_Angeles',
         '-cache', 'cache.img',  # only respected via cmdline flag.
         '-data', 'userdata-qemu.img',  # only respected via cmdline flag.
         '-memory', str(self._metadata_pb.memory_mb),
@@ -1513,10 +1514,7 @@ class EmulatedDevice(object):
         '-show-kernel']
 
     if (self._metadata_pb.emulator_type ==
-        emulator_meta_data_pb2.EmulatorMetaDataPb.QEMU):
-      # TODO(b/31431334): fix -timezone in qemu2
-      self._emulator_start_args.extend(['-timezone', 'America/Los_Angeles'])
-    else:
+        emulator_meta_data_pb2.EmulatorMetaDataPb.QEMU2):
       self._emulator_start_args.extend(['-engine', 'qemu2',
                                         '-kernel', self._KernelFile()])
 
