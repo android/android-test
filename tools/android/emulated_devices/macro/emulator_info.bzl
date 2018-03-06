@@ -55,7 +55,6 @@ QEMU = new_emulator(
         "//java/com/google/android/apps/gmail:__subpackages__",
         "//java/com/google/android/apps/gsa/binaries/speechservices:__subpackages__",
         "//java/com/google/android/apps/mymaps:__subpackages__",
-        "//java/com/google/android/apps/nbu/freighter:__subpackages__",
         # TODO(b/70903098): remove this when issue resolved.
         "//java/com/google/android/apps/play/games:__subpackages__",
         "//java/com/google/android/apps/shopping/express:__subpackages__",
@@ -76,6 +75,7 @@ QEMU = new_emulator(
         "//javatests/com/google/android/apps/gmail:__subpackages__",
         "//javatests/com/google/android/apps/gsa:__subpackages__",
         "//javatests/com/google/android/apps/mymaps:__subpackages__",
+        "//javatests/com/google/android/apps/nbu/freighter:__subpackages__",
         "//javatests/com/google/android/apps/nbu/freighter/integration:__subpackages__",
         "//javatests/com/google/android/apps/playconsole/instrumentation:__subpackages__",
         # TODO(b/70903098): remove this when issue resolved.
