@@ -281,11 +281,6 @@ def make_android_device(name,
                         image,
                         visibility,
                         hardware):
-        tags=tags,
-        visibility=image_device_visibility(image) or visibility,
-        **hardware_device_attributes(hardware))
-    return
-  # END-INTERNAL
   native.android_device(
       name=name,
       default_properties=default_properties,
