@@ -1488,6 +1488,13 @@ class EmulatedDevice(object):
     return token.replace(' ', '\\ ')
 
 
+  def _MemoryMb(self):
+    mem = self._metadata_pb.memory_mb
+    if (self._metadata_pb.emulator_architecture == 'x86' and self._mini_boot
+        and mem < 4096):
+      mem = 4096
+    return mem
+
   # pylint: disable=too-many-statements
   def _PrepareQemuArgs(self, binary, net_type, window_scale, with_audio,
                        with_boot_anim):
@@ -1500,7 +1507,7 @@ class EmulatedDevice(object):
         '-timezone', 'America/Los_Angeles',
         '-cache', 'cache.img',  # only respected via cmdline flag.
         '-data', 'userdata-qemu.img',  # only respected via cmdline flag.
-        '-memory', str(self._metadata_pb.memory_mb),
+        '-memory', str(self._MemoryMb()),
         '-sdcard', 'sdcard.img',
         '-partition-size', '2047',
         '-no-snapshot-save',
