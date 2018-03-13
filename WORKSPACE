@@ -14,4 +14,5 @@ android_sdk_repository(name = "androidsdk")
 
 load("//:repo.bzl", "android_test_repositories")
 
-android_test_repositories()
+android_test_repositories(with_dev_repositories = True)
+
