@@ -264,7 +264,7 @@ def android_test_repositories(with_dev_repositories = False):
   native.bind(name = "six", actual = "@six_archive//:six")
 
   native.new_http_archive(
-      name = "protobuf",
+      name = "protobuf_archive",
       url = "https://github.com/google/protobuf/releases/download/v3.4.1/protobuf-python-3.4.1.tar.gz",
       sha256 = "1faa722cf475c8e4c43ddb393d6f1477f1a56c93be38a1c8e367c358db476b5f",
       strip_prefix = "protobuf-3.4.1",
