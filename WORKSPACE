@@ -16,3 +16,6 @@ load("//:repo.bzl", "android_test_repositories")
 
 android_test_repositories(with_dev_repositories = True)
 
+load("@robolectric//bazel:setup_robolectric.bzl", "setup_robolectric")
+setup_robolectric()
+

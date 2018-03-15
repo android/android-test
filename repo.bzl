@@ -89,6 +89,13 @@ def _development_repositories():
       urls = ["https://github.com/google/protobuf/releases/download/v3.5.0/protobuf-java-3.5.0.tar.gz"],
   )
 
+  native.http_archive(
+      name = "robolectric",
+      urls = ["https://github.com/robolectric/robolectric/archive/robolectric-3.7.1.tar.gz"],
+      strip_prefix = "robolectric-robolectric-3.7.1",
+      sha256 = "72c61b9fd9e63adcd991fa5b6403af74b5744d7436a7223cddcb2c70736d6643",
+  )
+
   # java_lite_proto_library rules implicitly depend on @com_google_protobuf_javalite//:javalite_toolchain,
   # which is the JavaLite proto runtime (base classes and common utilities).
   native.http_archive(
