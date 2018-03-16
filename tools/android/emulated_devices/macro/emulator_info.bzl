@@ -66,7 +66,7 @@ QEMU = new_emulator(
         "//java/com/google/android/gmscore:__subpackages__",
         # TODO(b/70864545): remove this when issue resolved.
         "//java/com/google/android/instantapps:wh_group",
-        "//java/com/google/gws/tools/carddevserver:__subpackages__",
+        "//java/com/google/gws/tools/renderingdevserver:__subpackages__",
         "//java/com/google/testing/screendiffing/android/simpleactivity:__subpackages__",
         "//javatests/com/google/android/apps/auto/launcher:__subpackages__",
         "//javatests/com/google/android/apps/calendar/uitest/groomcardscuba:__subpackages__",
