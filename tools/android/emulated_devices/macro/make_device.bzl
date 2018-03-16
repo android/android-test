@@ -281,7 +281,7 @@ def make_android_device(name,
                         image,
                         visibility,
                         hardware):
-  android_device(
+  native.android_device(
       name=name,
       default_properties=default_properties,
       system_image=system_image,
