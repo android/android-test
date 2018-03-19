@@ -42,56 +42,6 @@ QEMU = new_emulator(
             19,
         ],
     },
-    # We're phasing out qemu1, so only whitelisted projects can depend on
-    # explicit qemu1 device targets.
-    default_visibility = [
-        "//googlex/gcam/hdrplus:__subpackages__",
-        "//gws/fruit:__subpackages__",
-        "//java/com/google/android/apps/auto:__subpackages__",
-        "//java/com/google/android/apps/docs/drive:__subpackages__",
-        "//java/com/google/android/apps/auth/test/support:__subpackages__",
-        "//java/com/google/android/apps/calendar/calendar:__subpackages__",
-        "//java/com/google/android/apps/cardviewer:__subpackages__",
-        "//java/com/google/android/apps/gmail:__subpackages__",
-        "//java/com/google/android/apps/gsa/binaries/speechservices:__subpackages__",
-        "//java/com/google/android/apps/mymaps:__subpackages__",
-        "//java/com/google/android/apps/nbu/freighter:__subpackages__",
-        # TODO(b/70903098): remove this when issue resolved.
-        "//java/com/google/android/apps/play/games:__subpackages__",
-        "//java/com/google/android/apps/shopping/express:__subpackages__",
-        # TODO(b/68017107): remove this when issue resolved.
-        "//java/com/google/android/apps/xcn/longfei:__subpackages__",
-        "//java/com/google/android/apps/youtube/app:__subpackages__",
-        "//java/com/google/android/clockwork/home:__subpackages__",
-        "//java/com/google/android/gmscore:__subpackages__",
-        # TODO(b/70864545): remove this when issue resolved.
-        "//java/com/google/android/instantapps:wh_group",
-        "//java/com/google/gws/tools/renderingdevserver:__subpackages__",
-        "//java/com/google/testing/screendiffing/android/simpleactivity:__subpackages__",
-        "//javatests/com/google/android/apps/auto/launcher:__subpackages__",
-        "//javatests/com/google/android/apps/calendar/uitest/groomcardscuba:__subpackages__",
-        "//javatests/com/google/android/apps/calendar/uitest/timelinechipscuba:__subpackages__",
-        "//javatests/com/google/android/apps/common/testing/services/location:__subpackages__",
-        "//javatests/com/google/android/apps/contacts/integration/uidatatests/mocktests:__subpackages__",
-        "//javatests/com/google/android/apps/gmail:__subpackages__",
-        "//javatests/com/google/android/apps/gsa:__subpackages__",
-        "//javatests/com/google/android/apps/mymaps:__subpackages__",
-        "//javatests/com/google/android/apps/nbu/freighter/integration:__subpackages__",
-        "//javatests/com/google/android/apps/playconsole/instrumentation:__subpackages__",
-        # TODO(b/70903098): remove this when issue resolved.
-        "//javatests/com/google/android/apps/play/games:__subpackages__",
-        "//javatests/com/google/android/apps/shopping/express:__subpackages__",
-        # TODO(b/68017107): remove this when issue resolved.
-        "//javatests/com/google/android/apps/xcn/longfei/app/ui:__subpackages__",
-        "//javatests/com/google/android/apps/youtube/app/functional/fakes/social:__subpackages__",
-        "//javatests/com/google/android/clockwork/home/espresso/quicksettings:__subpackages__",
-        "//javatests/com/google/android/gmscore:__subpackages__",
-        "//javatests/com/google/android/libraries/analytics/testing/seaworld:__subpackages__",
-        "//javatests/com/google/testing/screendiffing/android/simpleactivity:__subpackages__",
-        "//third_party/java_src/android_libs/aosp_calendar/tests/espresso:__subpackages__",
-        "//third_party/java/android_apps/exchange/testing/utilities:__subpackages__",
-        "//tools/android/python:__subpackages__",
-    ]
 )
 
 QEMU2_APIS = [
