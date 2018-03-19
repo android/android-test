@@ -355,7 +355,7 @@ class EmulatedDevice(object):
     self._enable_g3_monitor = enable_g3_monitor
     self._enable_gps = enable_gps
     self._add_insecure_cert = add_insecure_cert
-    # There is a hard coded 10 minutes timeout in blaze side.
+    # There is a hard coded 10 minutes timeout in bazel side.
     # We use a shorter cut off here to make sure we have chances
     # to print log.
     self._start_time = time.time()
@@ -1051,7 +1051,7 @@ class EmulatedDevice(object):
     # contain the same class. With preverification turned on, this situation
     # will result in a dalvik failure (because verification was done at
     # installation time and the verified expected the app apk to be completely
-    # self contained). Since blaze will ensure that app and test apk are using
+    # self contained). Since bazel will ensure that app and test apk are using
     # the same dependencies this check is superflous in our case.
     if self.GetApiVersion() <= 20:
       # no longer applicable in ART world.
@@ -1407,7 +1407,7 @@ class EmulatedDevice(object):
     find_proc.wait()
   # pylint: enable=too-many-statements
 
-  def _MakeEmulatorEnv(self, parent_env):
+  def _MakeEmulatorEnv(self, parent_env, with_audio):
     """Sets up (most) of the environment vars for the emulator.
 
     General rule of thumbs-
@@ -1417,6 +1417,7 @@ class EmulatedDevice(object):
 
     Args:
       parent_env: typically os.environ
+      with_audio: workaround for b/64555657
 
     Returns:
       The basis of the emulator's environment vars.
@@ -1459,6 +1460,7 @@ class EmulatedDevice(object):
         'ANDROID_QT_QPA_PLATFORM_PLUGIN_PATH': os.path.join(
             emu_path, 'lib64/qt/plugins'),
     }
+
 
     # disable emulator-XXXX from adb devices on .
     if not FLAGS.skip_connect_device:
@@ -1648,7 +1650,7 @@ class EmulatedDevice(object):
 
     pipe_dir = self._TempDir('pipe_trav')
     exec_dir = self._SessionImagesDir()
-    self._emulator_env = self._MakeEmulatorEnv(os.environ)
+    self._emulator_env = self._MakeEmulatorEnv(os.environ, with_audio)
 
     if (self._metadata_pb.emulator_type in
         [emulator_meta_data_pb2.EmulatorMetaDataPb.QEMU,

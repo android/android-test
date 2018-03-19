@@ -94,7 +94,7 @@ CommandLogFile.count = 0
 def EnsureFileCached(path):
   """Makes sure a file is cached on the local machine.
 
-  Files on objfs / blaze-out cache can be accessed like standard
+  Files on objfs / bazel-out cache can be accessed like standard
   files by regular unix tools. However reading from them can cause long
   blocks. Some programs (emulator, adb, etc) do not behave well in this case.
 

@@ -6,7 +6,7 @@ load('//tools/android/emulated_devices:macro/props.bzl', 'new_props')
 # down builds, and we plan to get rid of entirely in the near future, so this
 # list should be kept minimal.
 _COMPRESSED_IMAGE_WHITELIST = [
-    '//devtools/blaze/integration:__subpackages__',
+    '//devtools/bazel/integration:__subpackages__',
     '//java/com/google/android/apps/auth/test/support:__subpackages__',
     '//java/com/google/android/apps/dynamite:__subpackages__',
     '//java/com/google/android/apps/internal/admobsdk/mediumtest:__subpackages__',
