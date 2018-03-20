@@ -2081,6 +2081,8 @@ class EmulatedDevice(object):
     pm_running = False
     adb_listening = False
     adb_connected = False
+    # Setting service.adb.root=1 no longer works on 26+.
+    adb_as_root = self.GetApiVersion() < 26
     sd_card_mounted = False
     external_storage = None
     boot_complete_present = False
@@ -2145,8 +2147,25 @@ class EmulatedDevice(object):
         if not adb_listening:
           continue
 
+      if not adb_as_root:
+        if not self.ConnectDevice():
+          raise Exception('Unable to connect to adbd')
+
+        wait_args = [self.android_platform.real_adb, '-s',
+                     'localhost:%s' % self.emulator_adb_port, 'wait-for-device']
+        common.SpawnAndWaitWithRetry(wait_args, retries=0, timeout_seconds=30,
+                                     exec_env=self._AdbEnv())
+
+        root_args = [self.android_platform.real_adb, '-s',
+                     'localhost:%s' % self.emulator_adb_port, 'root']
+        common.SpawnAndWaitWithRetry(root_args, retries=0, timeout_seconds=30,
+                                     exec_env=self._AdbEnv())
+
+        adb_as_root = True
+
       if not adb_connected and self._use_real_adb:
-        self.ConnectDevice()
+        if not self.ConnectDevice():
+          raise Exception('Unable to connect to adbd')
         wait_args = [self.android_platform.real_adb, '-s',
                      'localhost:%s' % self.emulator_adb_port, 'wait-for-device']
         common.SpawnAndWaitWithRetry(wait_args, retries=0, timeout_seconds=30,
