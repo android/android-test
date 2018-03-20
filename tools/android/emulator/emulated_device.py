@@ -2768,7 +2768,7 @@ class EmulatedDevice(object):
 
     if not umounted:
       err = self.ExecOnDevice(['umount', mount_point])
-      logging.warn('%s: Could not be umounted. Error: %s', mount_point, err)
+      logging.warn('%s could not be umounted: %s', mount_point, err)
       logging.warn('Mounts:\n%s', self.ExecOnDevice(['mount']))
       for f in self.ExecOnDevice(['lsof']).splitlines():
         if mount_point in f:
@@ -2793,6 +2793,7 @@ class EmulatedDevice(object):
     else:
       logging.warn('%s: Could not retrieve mount info - cannot fsck.',
                    mount_point)
+
     return clean and umounted
 
   def _CheckLeftProcess(self):
@@ -2828,7 +2829,7 @@ class EmulatedDevice(object):
         continue
       processes.append(proc)
 
-    suspicous = False
+    suspicious = False
     for proc in processes:
       # Kill crashed "pm install" body. Its parent
       # process should be pipe_traversal.
@@ -2836,9 +2837,9 @@ class EmulatedDevice(object):
           proc['NAME'] == 'app_process'):
         self.ExecOnDevice(['kill', '-9', proc['PID']])
         continue
-      suspicous = True
+      suspicious = True
 
-    if suspicous:
+    if suspicious:
       logging.warning('Some process is still running: %s\n', ps_out)
 
   def KillEmulator(self, politely=False):
@@ -3470,8 +3471,7 @@ class EmulatedDevice(object):
   def _CanConnect(self):
     if not self.device_serial:
       self.device_serial = 'localhost:%s' % self.emulator_adb_port
-    return (self.emulator_adb_port and
-            self.emulator_telnet_port)
+    return self.emulator_adb_port and self.emulator_telnet_port
 
   def _LogFileContent(self, tag, f):
     logging.info('%s below ' + '=' * 50 + '\n%s', tag, f.read())
