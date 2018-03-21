@@ -527,25 +527,7 @@ class EmulatedDevice(object):
                                'system.img'),
                   self._SystemFile())
 
-    use_ext4 = 'ext4' in subprocess.check_output(['file', self._SystemFile()])
-    if use_ext4:
-      # We can only alter ext2|3|4 image now.
-      # hwcomposer caused some issues for us in the past. So we disabled it.
-      # But new API level image can't work without this.
-      # TODO: remove this hack for all API levels after we fix issues
-      # on all API levels.
-      debugfs_cmd = []
-      if self.GetApiVersion() < 25:
-        debugfs_cmd += ['rm /lib/hw/hwcomposer.goldfish.so',
-                        'rm /lib/hw/hwcomposer.ranchu.so']
-      if self.GetApiVersion() < 24:
-        if not enable_guest_gl:
-          # Delete egl libraries in system image.
-          debugfs_cmd += ['unlink /vendor/lib/egl']
-      elif self._add_insecure_cert:
-        debugfs_cmd += self.GetInstallCertCmd()
-
-      self.ExecDebugfsCmd(self._SystemFile(), debugfs_cmd)
+    self._ModifySystemImage(enable_guest_gl)
 
     # Pipe service won't work for user build and api level 23+, since
     # pipe_traversal doesn't have a right seclinux policy. In this case, just
@@ -3064,7 +3046,73 @@ class EmulatedDevice(object):
     cp_list = [[cert_file, '/etc/security/cacerts/%s' % cert_name]]
     return self.GetCopyCmd(cp_list)
 
-  def ExecDebugfsCmd(self, image_file, cmd_list):
+  # TODO: This slows down most builds by several seconds. We should
+  # either move this to a build action, so that the modified image can be
+  # cached, or make cybervillains CA opt-in so that most tests don't need the
+  # modified image.
+  def _ModifySystemImage(self, enable_guest_gl):
+    """Makes some modifications to the system image if possible.
+
+    If the image is ext4 formatted, we can easily modify it with debugfs. If
+    it's ext4 with a partition table, we can still modify it, but we need to
+    chop off the first megabyte, run debugfs, and reattach the chunk that we
+    chopped off.
+
+    Args:
+      enable_guest_gl: whether guest rendering is enabled
+
+    Raises:
+      Exception: if the image format is unexpected
+    """
+    one_megabyte = 1 << 20
+    if 'ext4' in subprocess.check_output(['file', self._SystemFile()]):
+      # It's plain ext4, so we can run debugfs directly on the system image.
+      image_to_modify = self._SystemFile()
+    elif self.GetApiVersion() >= 26:
+      # It's not plain ext4, but let's try chopping off the first megabyte and
+      # see if the rest of the image is ext4.
+      with open(self._SystemFile(), 'rb') as f:
+        prefix = f.read(one_megabyte)
+        with tempfile.NamedTemporaryFile(mode='wb', delete=False) as f_chopped:
+          f_chopped_name = f_chopped.name
+          for chunk in iter(lambda: f.read(one_megabyte), ''):
+            f_chopped.write(chunk)
+      if 'ext4' not in subprocess.check_output(['file', f_chopped_name]):
+        # Still not ext4; give up.
+        raise Exception('All API 26+ expected to be ext4 or ext4 with prefix')
+      image_to_modify = f_chopped_name
+    else:
+      # It's an old non-ext4 image. We can't modify it with debugfs.
+      return
+
+    # hwcomposer caused some issues for us in the past. So we disabled it.
+    # But new API level image can't work without this.
+    # TODO: remove this hack for all API levels after we fix issues
+    # on all API levels.
+    debugfs_cmd = []
+    if self.GetApiVersion() < 25:
+      debugfs_cmd += ['rm /lib/hw/hwcomposer.goldfish.so',
+                      'rm /lib/hw/hwcomposer.ranchu.so']
+    if self.GetApiVersion() < 24:
+      if not enable_guest_gl:
+        # Delete EGL libraries in system image.
+        debugfs_cmd += ['unlink /vendor/lib/egl']
+    elif self._add_insecure_cert:
+      debugfs_cmd += self.GetInstallCertCmd()
+
+    self._ExecDebugfsCmd(image_to_modify, debugfs_cmd)
+
+    if image_to_modify != self._SystemFile():
+      # We chopped off the first megabyte earlier. Now reattach it.
+      os.remove(self._SystemFile())
+      with open(self._SystemFile(), 'wb') as f:
+        f.write(prefix)
+        with open(f_chopped_name, 'rb') as f_chopped:
+          for chunk in iter(lambda: f_chopped.read(one_megabyte), ''):
+            f.write(chunk)
+      os.remove(f_chopped_name)
+
+  def _ExecDebugfsCmd(self, image_file, cmd_list):
     """Execute debugfs commands from cmd_list on disk image file."""
     assert not self._emu_process_pid, 'Emulator is running!'
     assert 'ext4' in subprocess.check_output(['file', image_file]), (
