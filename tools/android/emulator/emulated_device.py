@@ -2135,12 +2135,12 @@ class EmulatedDevice(object):
 
         wait_args = [self.android_platform.real_adb, '-s',
                      'localhost:%s' % self.emulator_adb_port, 'wait-for-device']
-        common.SpawnAndWaitWithRetry(wait_args, retries=0, timeout_seconds=30,
+        common.SpawnAndWaitWithRetry(wait_args, retries=2, timeout_seconds=30,
                                      exec_env=self._AdbEnv())
 
         root_args = [self.android_platform.real_adb, '-s',
                      'localhost:%s' % self.emulator_adb_port, 'root']
-        common.SpawnAndWaitWithRetry(root_args, retries=0, timeout_seconds=30,
+        common.SpawnAndWaitWithRetry(root_args, retries=2, timeout_seconds=30,
                                      exec_env=self._AdbEnv())
 
         adb_as_root = True
@@ -2150,7 +2150,7 @@ class EmulatedDevice(object):
           raise Exception('Unable to connect to adbd')
         wait_args = [self.android_platform.real_adb, '-s',
                      'localhost:%s' % self.emulator_adb_port, 'wait-for-device']
-        common.SpawnAndWaitWithRetry(wait_args, retries=0, timeout_seconds=30,
+        common.SpawnAndWaitWithRetry(wait_args, retries=2, timeout_seconds=30,
                                      exec_env=self._AdbEnv())
         adb_connected = True
 
