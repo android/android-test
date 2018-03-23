@@ -68,8 +68,17 @@ class X11Server(object):
       ProcessCrashedError: if Xvfb process started and unexpectedly exited.
     """
     if self._x11_process and self._x11_process.poll() is not None:
+      existing_pid = self._x11_process.pid
       return_code = self._x11_process.returncode
       self._x11_process = None
+      # Delete the file it already exists.
+      x11_tmp_file = (os.path.join('/tmp/.X11-unix/X%s' % existing_pid)
+                      if existing_pid else None)
+      if x11_tmp_file and os.path.exists(x11_tmp_file):
+        try:
+          os.remove(x11_tmp_file)
+        except OSError:
+          pass
       raise ProcessCrashedError('Xvfb crashed unexpectedly, exit code %s' %
                                 return_code)
     if (not self._x11_process
