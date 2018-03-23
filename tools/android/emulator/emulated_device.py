@@ -1323,14 +1323,19 @@ class EmulatedDevice(object):
       init_rc.write('on boot\n')
       init_rc.write('   start pipe_traverse\n')
       init_rc.write('   start tn_pipe_traverse\n')
+      init_rc.write('\n')
+
       if set_props_in_init:
+        # System properties are loaded in post-fs. We want our read-only
+        # properties to be set first (see e.g. b/70277971), so use early-fs.
+        init_rc.write('on early-fs\n')
         for prop in self._metadata_pb.boot_property:
           init_rc.write('   setprop %s %s\n' %
                         (prop.name, self._EscapeInitToken(prop.value)))
         for prop in self._RuntimeProperties():
           init_rc.write('   setprop %s %s\n' %
                         (prop.name, self._EscapeInitToken(prop.value)))
-      init_rc.write('\n')
+        init_rc.write('\n')
 
     arch = self._metadata_pb.emulator_architecture
     pipe_traversal_path = os.path.join(exploded_temp, 'sbin', 'pipe_traversal')
@@ -2066,8 +2071,6 @@ class EmulatedDevice(object):
     pm_running = False
     adb_listening = False
     adb_connected = False
-    # Setting service.adb.root=1 no longer works on 26+.
-    adb_as_root = self.GetApiVersion() < 26
     sd_card_mounted = False
     external_storage = None
     boot_complete_present = False
@@ -2131,22 +2134,6 @@ class EmulatedDevice(object):
                                               _ADB_LISTENING_CHECK_FAIL_SLEEP)
         if not adb_listening:
           continue
-
-      if not adb_as_root:
-        if not self.ConnectDevice():
-          raise Exception('Unable to connect to adbd')
-
-        wait_args = [self.android_platform.real_adb, '-s',
-                     'localhost:%s' % self.emulator_adb_port, 'wait-for-device']
-        common.SpawnAndWaitWithRetry(wait_args, retries=2, timeout_seconds=30,
-                                     exec_env=self._AdbEnv())
-
-        root_args = [self.android_platform.real_adb, '-s',
-                     'localhost:%s' % self.emulator_adb_port, 'root']
-        common.SpawnAndWaitWithRetry(root_args, retries=2, timeout_seconds=30,
-                                     exec_env=self._AdbEnv())
-
-        adb_as_root = True
 
       if not adb_connected and self._use_real_adb:
         if not self.ConnectDevice():
