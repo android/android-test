@@ -72,6 +72,8 @@ flags.DEFINE_integer('cores', 2, 'Cores number for emulated devices, only '
 flags.DEFINE_bool('skip_connect_device', False, 'Skip to connect device.')
 flags.DEFINE_bool('dex2oat_on_cloud_enabled', False,
                   'Was Dex2oat run in cloud.')
+flags.DEFINE_bool('enable_test_harness', True, 'Whether device should run in '
+                  'test_harness mode: ro.test_harness=1')
 
 LoadInfo = collections.namedtuple('LoadInfo', 'timestamp up_time idle_time')
 
@@ -961,10 +963,6 @@ class EmulatedDevice(object):
         value='1')
 
     self._metadata_pb.boot_property.add(
-        name='ro.test_harness',  # allows for bypassing permission screens
-        value='1')
-
-    self._metadata_pb.boot_property.add(
         name='ro.monkey',  # allows for bypassing permission screens pre ICS
         value='1')
 
@@ -1681,6 +1679,11 @@ class EmulatedDevice(object):
 
     # Update the dex2oat binary.
     api_version = self.GetApiVersion()
+
+    if FLAGS.enable_test_harness:
+      self.ExecOnDevice(['setprop', 'ro.test_harness', '1'])
+    else:
+      self.ExecOnDevice(['setprop', 'ro.test_harness', '0'])
 
     self.ExecOnDevice(['setprop', 'qemu.host.socket.dir',
                        str(self._sockets_dir)])
