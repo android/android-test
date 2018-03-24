@@ -963,6 +963,10 @@ class EmulatedDevice(object):
         value='1')
 
     self._metadata_pb.boot_property.add(
+        name='ro.test_harness',  # allows for bypassing permission screens
+        value='1' if FLAGS.enable_test_harness else '0')
+
+    self._metadata_pb.boot_property.add(
         name='ro.monkey',  # allows for bypassing permission screens pre ICS
         value='1')
 
@@ -1684,11 +1688,6 @@ class EmulatedDevice(object):
 
     # Update the dex2oat binary.
     api_version = self.GetApiVersion()
-
-    if FLAGS.enable_test_harness:
-      self.ExecOnDevice(['setprop', 'ro.test_harness', '1'])
-    else:
-      self.ExecOnDevice(['setprop', 'ro.test_harness', '0'])
 
     self.ExecOnDevice(['setprop', 'qemu.host.socket.dir',
                        str(self._sockets_dir)])
