@@ -1,9 +1,12 @@
 workspace(name = "android_test_support")
 
-git_repository(
-    name = 'gmaven_rules',
-    remote = 'https://github.com/aj-michael/gmaven_rules',
-    commit = '5e89b7cdc94d002c13576fad3b28b0ae30296e55',
+# Google Maven Repository
+GMAVEN_COMMIT = "44d75d3e7bdfa8ff0b30ceb048b0f09bc6b72c70"
+
+http_archive(
+    name = "gmaven_rules",
+    strip_prefix = "gmaven_rules-%s" % GMAVEN_COMMIT,
+    urls = ["https://github.com/aj-michael/gmaven_rules/archive/%s.tar.gz" % GMAVEN_COMMIT],
 )
 
 load("@gmaven_rules//:gmaven.bzl", "gmaven_rules")
