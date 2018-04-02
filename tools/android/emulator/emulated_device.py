@@ -459,7 +459,7 @@ class EmulatedDevice(object):
     return 'kernel-qemu'
 
   def _KernelFile(self):
-    return os.path.join(self._InitImagesDir(), self._KernelFileName())
+    return os.path.join(self._SessionImagesDir(), self._KernelFileName())
 
   def _InitImagesDir(self):
     return os.path.join(self._images_dir, 'init')
@@ -522,10 +522,6 @@ class EmulatedDevice(object):
         os.path.join(system_image_dir, self._KernelFileName()))
     assert os.path.exists(init_kernel)
     os.symlink(init_kernel, self._KernelFile())
-    # TODO: Remove the symlinks and always write kernel in the same
-    # directory where the images are.
-    os.symlink(init_kernel,
-               os.path.join(self._SessionImagesDir(), self._KernelFileName()))
 
     init_sys = os.path.abspath(system_image_path)
     assert os.path.exists(init_sys), '%s: no system.img' % system_image_path
