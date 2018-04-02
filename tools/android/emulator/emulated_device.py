@@ -158,13 +158,15 @@ HOST_OPEN_GL = 'host'
 MESA_OPEN_GL = 'mesa'
 NO_OPEN_GL = 'no_open_gl'
 SWIFTSHADER_OPEN_GL = 'swiftshader'
+SWIFTSHADER_INDIRECT = 'swiftshader_indirect'
 OPEN_GL_DRIVERS = [AUTO_OPEN_GL, MESA_OPEN_GL, HOST_OPEN_GL, NO_OPEN_GL,
-                   GUEST_OPEN_GL, SWIFTSHADER_OPEN_GL]
+                   GUEST_OPEN_GL, SWIFTSHADER_OPEN_GL, SWIFTSHADER_INDIRECT]
 
 SDCARD_SIZE_KEY = 'sdcard_size_mb'
 
 SYSTEM_ABI_KEY = 'systemimage.abi'
 API_LEVEL_KEY = 'androidversion.apilevel'
+API_CODE_NAME = 'androidversion.codename'
 HEAP_GROWTH_LIMIT_KEY = 'dalvik.vm.heapgrowthlimit'
 
 EMULATOR_TYPE_KEY = 'ro.mobile_ninjas.emulator_type'
@@ -324,7 +326,8 @@ class EmulatedDevice(object):
                add_insecure_cert=False,
                reporter=None,
                mini_boot=False,
-               sim_access_rules_file=None):
+               sim_access_rules_file=None,
+               source_properties=None):
     self.adb_server_port = adb_server_port
     self.emulator_adb_port = emulator_adb_port
     self.emulator_telnet_port = emulator_telnet_port
@@ -367,6 +370,7 @@ class EmulatedDevice(object):
     self._direct_boot = False
     self._mini_boot = mini_boot
     self._sim_access_rules_file = sim_access_rules_file
+    self._source_properties = source_properties
 
   def _IsUserBuild(self, build_prop):
     """Check if a build is user build from build.prop file."""
@@ -448,7 +452,10 @@ class EmulatedDevice(object):
   def _KernelFileName(self):
     if (self._metadata_pb.emulator_type ==
         emulator_meta_data_pb2.EmulatorMetaDataPb.QEMU2):
-      return 'kernel-ranchu'
+      if self.GetApiCodeName() == 'P':
+        return 'kernel-ranchu-64'
+      else:
+        return 'kernel-ranchu'
     return 'kernel-qemu'
 
   def _KernelFile(self):
@@ -515,6 +522,10 @@ class EmulatedDevice(object):
         os.path.join(system_image_dir, self._KernelFileName()))
     assert os.path.exists(init_kernel)
     os.symlink(init_kernel, self._KernelFile())
+    # TODO: Remove the symlinks and always write kernel in the same
+    # directory where the images are.
+    os.symlink(init_kernel,
+               os.path.join(self._SessionImagesDir(), self._KernelFileName()))
 
     init_sys = os.path.abspath(system_image_path)
     assert os.path.exists(init_sys), '%s: no system.img' % system_image_path
@@ -1375,7 +1386,6 @@ class EmulatedDevice(object):
           adbd_bytes = resource_adbd.read()
           ramdisk_adbd.write(adbd_bytes)
           ramdisk_adbd.flush()
-
     find_proc = subprocess.Popen(
         ['find', '.', '-mindepth', '1', '-printf', '%P\n'],
         cwd=exploded_temp,
@@ -2354,6 +2364,7 @@ class EmulatedDevice(object):
       drivers.append(AUTO_OPEN_GL)
       drivers.append(MESA_OPEN_GL)
       drivers.append(SWIFTSHADER_OPEN_GL)
+      drivers.append(SWIFTSHADER_INDIRECT)
     api_level = int(source_properties[API_LEVEL_KEY])
     # Currently only api 19+ has guest mode GL support.
     if api_level >= 19:
@@ -2843,8 +2854,11 @@ class EmulatedDevice(object):
       self._CheckLeftProcess()
       # Umount /data/media first. Otherwise umount of /data will fail.
       clean_death = self._CleanUmount('/data/media') and clean_death
-      clean_death = (self._CleanUmount('/data/var/run/netns/router')
-                     and clean_death)
+      if self.GetApiCodeName() == 'P':
+        netns_router = '/data/vendor/var/run/netns/router'
+      else:
+        netns_router = '/data/var/run/netns/router'
+      clean_death = self._CleanUmount(netns_router) and clean_death
       clean_death = self._CleanUmount('/data/var/run/netns') and clean_death
       clean_death = self._CleanUmount('/data') and clean_death
       clean_death = self._CleanUmount('/cache') and clean_death
@@ -3149,15 +3163,27 @@ class EmulatedDevice(object):
   def BestOpenGL(self):
     """Return best OpenGL option based on API/arch/Emulator."""
 
-    if self.big_screen:
+    api_code_name = self.GetApiCodeName()
+    if self.big_screen and api_code_name == 'P':
+      return SWIFTSHADER_INDIRECT
+    elif self.big_screen:
       return SWIFTSHADER_OPEN_GL
     if (self._metadata_pb.emulator_architecture != 'x86' or
         self.GetApiVersion() < 23):
       return NO_OPEN_GL
+    if api_code_name == 'P':
+      return SWIFTSHADER_INDIRECT
     return SWIFTSHADER_OPEN_GL
 
   def GetApiVersion(self):
     return int(self._metadata_pb.api_name)
+
+  def GetApiCodeName(self):
+    """Returns the codename of the image if it exists in source.properties."""
+    if self._source_properties and self._source_properties.has_key(
+        API_CODE_NAME):
+      return self._source_properties[API_CODE_NAME]
+    return ''
 
   def HasNativeMultiDex(self):
     return self.GetApiVersion() >= 21

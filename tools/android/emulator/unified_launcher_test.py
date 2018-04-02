@@ -116,7 +116,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         add_insecure_cert=False,
         reporter=reporter,
         mini_boot=False,
-        sim_access_rules_file=None)
+        sim_access_rules_file=None,
+        source_properties=None)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device,
@@ -185,7 +186,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         add_insecure_cert=True,
         reporter=reporter,
         mini_boot=False,
-        sim_access_rules_file=None)
+        sim_access_rules_file=None,
+        source_properties=None)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device,
@@ -250,7 +252,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         add_insecure_cert=False,
         reporter=reporter,
         mini_boot=False,
-        sim_access_rules_file=None)
+        sim_access_rules_file=None,
+        source_properties=None)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device, enable_display=True,
@@ -321,7 +324,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         add_insecure_cert=False,
         reporter=reporter,
         mini_boot=False,
-        sim_access_rules_file=None)
+        sim_access_rules_file=None,
+        source_properties=None)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device, enable_display=True,
@@ -477,7 +481,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     initial_boot_device = emulated_device.EmulatedDevice(
         android_platform=mox.IsA(emulated_device.AndroidPlatform),
         qemu_gdb_port=0,
-        enable_single_step=False)
+        enable_single_step=False,
+        source_properties=None)
     self.mox.StubOutWithMock(initial_boot_device, 'Configure')
     self.mox.StubOutWithMock(initial_boot_device, 'StartDevice')
     skin = 'rabbit_fur'
@@ -538,7 +543,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     initial_boot_device = emulated_device.EmulatedDevice(
         android_platform=mox.IsA(emulated_device.AndroidPlatform),
         qemu_gdb_port=0,
-        enable_single_step=False)
+        enable_single_step=False,
+        source_properties=None)
     self.mox.StubOutWithMock(initial_boot_device, 'Configure')
     self.mox.StubOutWithMock(initial_boot_device, 'StartDevice')
     skin = 'rabbit_fur'

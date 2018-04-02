@@ -223,7 +223,8 @@ def _CheckWindowScale(window_scale):
 
 def _FindSystemImagesDir(system_image_files):
   for f in system_image_files:
-    if os.path.basename(f) in ('kernel-qemu', 'kernel-ranchu'):
+    if os.path.basename(f) in ('kernel-qemu', 'kernel-ranchu',
+                               'kernel-ranchu-64'):
       return os.path.dirname(f)
   # Fall back to directory of 1st file.
   return os.path.dirname(system_image_files[0])
@@ -292,7 +293,8 @@ def _FirstBootAtBuildTimeOnly(
   device = emulated_device.EmulatedDevice(
       android_platform=_MakeAndroidPlatform(),
       qemu_gdb_port=qemu_gdb_port,
-      enable_single_step=enable_single_step)
+      enable_single_step=enable_single_step,
+      source_properties=source_properties)
   device.delete_temp_on_exit = False  # we will do it ourselves.
 
   device.Configure(
@@ -566,7 +568,8 @@ def _Run(adb_server_port,
       add_insecure_cert=add_insecure_cert,
       reporter=reporter,
       mini_boot=mini_boot,
-      sim_access_rules_file=sim_access_rules_file)
+      sim_access_rules_file=sim_access_rules_file,
+      source_properties=_ReadSourceProperties(FLAGS.source_properties_file))
 
   _RestartDevice(
       device,
