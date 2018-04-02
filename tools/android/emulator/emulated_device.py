@@ -3542,6 +3542,8 @@ class EmulatedDevice(object):
       if os.path.exists(name):
         with open(name) as f:
           self._LogFileContent(log, f)
+      else:
+        logging.info('cannot show log %s: file does not exist', log)
 
   def _EnsureEmuRunning(self):
     assert self._emu_process_pid, 'No emu process pid!'
