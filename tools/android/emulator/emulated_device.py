@@ -644,8 +644,9 @@ class EmulatedDevice(object):
                                  sd_name),
                     self._SdcardFile())
         logging.info('using default sd card.')
-      except IOError:
-        logging.info('trying to make sdcard on the fly.')
+      except IOError as e:
+        logging.warning(
+            'Error copying sdcard: %s. Trying to make sdcard on the fly.', e)
         sdcard_args = [
             self.android_platform.mksdcard,
             '%sM' % self._metadata_pb.sdcard_size_mb,
