@@ -3064,6 +3064,11 @@ class EmulatedDevice(object):
     Raises:
       Exception: if the image format is unexpected
     """
+    if (26 <= self.GetApiVersion() and self.GetApiVersion() <= 27 and
+        not self._add_insecure_cert):
+      # Nothing to modify
+      return
+
     one_megabyte = 1 << 20
     if 'ext4' in subprocess.check_output(['file', self._SystemFile()]):
       # It's plain ext4, so we can run debugfs directly on the system image.
