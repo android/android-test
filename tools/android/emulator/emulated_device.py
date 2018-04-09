@@ -526,17 +526,25 @@ class EmulatedDevice(object):
     init_sys = os.path.abspath(system_image_path)
     assert os.path.exists(init_sys), '%s: no system.img' % system_image_path
     if system_image_path.endswith('.img'):
+      logging.info('Copying system image to %s', self._SystemFile())
+      timer.start('COPY_SYSTEM_IMAGE')
       os.symlink(init_sys, self._InitSystemFile())
       self._SparseCp(self._InitSystemFile(), self._SystemFile())
+      timer.stop('COPY_SYSTEM_IMAGE')
     else:
       assert system_image_path.endswith('.img.tar.gz'), 'Not known format'
+      logging.info('Extracting system image from tar.gz')
+      timer.start('EXTRACT_SYSTEM_IMAGE')
       self._ExtractTarEntry(
           init_sys, 'system.img', os.path.dirname(self._SystemFile()))
       shutil.move(os.path.join(os.path.dirname(self._SystemFile()),
                                'system.img'),
                   self._SystemFile())
+      timer.stop('EXTRACT_SYSTEM_IMAGE')
 
+    timer.start('MODIFY_SYSTEM_IMAGE')
     self._ModifySystemImage(enable_guest_gl)
+    timer.stop('MODIFY_SYSTEM_IMAGE')
 
     # Pipe service won't work for user build and api level 23+, since
     # pipe_traversal doesn't have a right seclinux policy. In this case, just
@@ -1169,23 +1177,21 @@ class EmulatedDevice(object):
           open_gl_driver=open_gl_driver,
           env=os.environ)
 
-    start_timer = stopwatch.StopWatch()
-    start_timer.start()
-    start_timer.start(_STAGE_DATA)
+    timer = stopwatch.StopWatch()
+    timer.start(_STAGE_DATA)
 
     images_dict = json.loads(self._metadata_pb.system_image_path)
 
     self._StageDataFiles(self._metadata_pb.system_image_dir,
-                         userdata_tarball, start_timer,
+                         userdata_tarball, timer,
                          open_gl_driver == GUEST_OPEN_GL, **images_dict)
-    start_timer.stop(_STAGE_DATA)
+    timer.stop(_STAGE_DATA)
 
-    start_timer.start(_START_PROCESS)
-    self._StartEmulator(start_timer, net_type, new_process_group, window_scale,
+    timer.start(_START_PROCESS)
+    self._StartEmulator(timer, net_type, new_process_group, window_scale,
                         with_audio, with_boot_anim)
-    start_timer.stop(_START_PROCESS)
-    start_timer.stop()
-    self._AddTimerResults('start_device', start_timer)
+    timer.stop(_START_PROCESS)
+    self._AddTimerResults(timer)
 
   def _RuntimeProperties(self):
     """Return properties which could be tune at run time with flags."""
@@ -1464,7 +1470,7 @@ class EmulatedDevice(object):
 
     return {k: str(v) for k, v in target_env.items() if v is not None}
 
-  def _AddTimerResults(self, unused_activity_name, timer):
+  def _AddTimerResults(self, timer):
     # pylint: disable=unnecessary-pass
     pass
     # pylint: enable=unnecessary-pass
@@ -3083,6 +3089,7 @@ class EmulatedDevice(object):
     elif self.GetApiVersion() >= 26:
       # It's not plain ext4, but let's try chopping off the first megabyte and
       # see if the rest of the image is ext4.
+      logging.info('Chopping off system image prefix')
       with open(self._SystemFile(), 'rb') as f:
         prefix = f.read(one_megabyte)
         with tempfile.NamedTemporaryFile(mode='wb', delete=False) as f_chopped:
@@ -3112,10 +3119,12 @@ class EmulatedDevice(object):
     elif self._add_insecure_cert:
       debugfs_cmd += self.GetInstallCertCmd()
 
+    logging.info('Running debugfs commands: %s', debugfs_cmd)
     self._ExecDebugfsCmd(image_to_modify, debugfs_cmd)
 
     if image_to_modify != self._SystemFile():
       # We chopped off the first megabyte earlier. Now reattach it.
+      logging.info('Reattaching system image prefix')
       os.remove(self._SystemFile())
       with open(self._SystemFile(), 'wb') as f:
         f.write(prefix)
