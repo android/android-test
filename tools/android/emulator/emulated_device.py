@@ -971,10 +971,6 @@ class EmulatedDevice(object):
         value='1')
 
     self._metadata_pb.boot_property.add(
-        name='ro.test_harness',  # allows for bypassing permission screens
-        value='1' if FLAGS.enable_test_harness else '0')
-
-    self._metadata_pb.boot_property.add(
         name='ro.monkey',  # allows for bypassing permission screens pre ICS
         value='1')
 
@@ -1335,6 +1331,10 @@ class EmulatedDevice(object):
       init_rc.write('on boot\n')
       init_rc.write('   start pipe_traverse\n')
       init_rc.write('   start tn_pipe_traverse\n')
+      init_rc.write('   setprop ro.test_harness '
+                    '${ro.kernel.enable_test_harness}\n')
+      # if ro.kernel.enable_test_harness is not set, default to 1
+      init_rc.write('   setprop ro.test_harness 1\n')
       init_rc.write('\n')
 
       if set_props_in_init:
@@ -1619,12 +1619,19 @@ class EmulatedDevice(object):
         self._emulator_start_args.extend(['-drop-tcp', '-drop-udp',
                                           '-allow-tcp', '10.0.2.2:[1-65534]'])
 
+      # init process of Android will set a system property begin with
+      # 'ro.kernel' for every key=value pair added here.
+      # See:
+      # https://android.googlesource.com/platform/system/core/+/gingerbread/init/init.c#424
+      kernel_args = []
+
       if not self._enable_g3_monitor:
-        # init process of Android will set a system property begin with
-        # 'ro.kernel' for every key=value pair added here.
-        # See:
-        # https://android.googlesource.com/platform/system/core/+/gingerbread/init/init.c#424
-        self._emulator_start_args.extend(['-append', 'g3_monitor=0'])
+        kernel_args.append('g3_monitor=0')
+
+      kernel_args.append('enable_test_harness=%d' %
+                         (1 if FLAGS.enable_test_harness else 0))
+      if kernel_args:
+        self._emulator_start_args.extend(['-append', ' '.join(kernel_args)])
 
   # pylint: disable=too-many-statements
   def _StartEmulator(self, timer,
