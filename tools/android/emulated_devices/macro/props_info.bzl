@@ -11,7 +11,7 @@ _SDK_VERSION_PROP = 'ro.build.version.sdk'
 _PRODUCT_MODEL = 'ro.product.model'
 
 _DEFAULT_BOOT_RPOP = [
-    ('sdcard_size_mb', '512')
+    ('sdcard_size_mb', '256')
 ]
 
 def _is_ro(k):

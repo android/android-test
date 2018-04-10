@@ -641,7 +641,8 @@ class EmulatedDevice(object):
                             os.path.dirname(self._CacheFile()))
 
     if not os.path.exists(self._SdcardFile()):
-      try:
+      sdcard_size_mb = self._metadata_pb.sdcard_size_mb
+      if sdcard_size_mb == 256:
         sd_name = 'default_sdcard.256.img'
         self._ExtractTarEntry(
             resources.GetResourceFilename(
@@ -651,13 +652,12 @@ class EmulatedDevice(object):
         shutil.move(os.path.join(os.path.dirname(self._SdcardFile()),
                                  sd_name),
                     self._SdcardFile())
-        logging.info('using default sd card.')
-      except IOError as e:
-        logging.warning(
-            'Error copying sdcard: %s. Trying to make sdcard on the fly.', e)
+        logging.info('Using default sd card.')
+      else:
+        logging.info('Making sdcard on the fly due to a nonstandard size')
         sdcard_args = [
             self.android_platform.mksdcard,
-            '%sM' % self._metadata_pb.sdcard_size_mb,
+            '%sM' % sdcard_size_mb,
             self._SdcardFile()]
         timer.start(_SDCARD_CREATE)
         common.SpawnAndWaitWithRetry(sdcard_args)
