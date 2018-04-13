@@ -452,11 +452,15 @@ class EmulatedDevice(object):
   def _KernelFileName(self):
     if (self._metadata_pb.emulator_type ==
         emulator_meta_data_pb2.EmulatorMetaDataPb.QEMU2):
-      if self.GetApiCodeName() == 'P':
-        return 'kernel-ranchu-64'
-      else:
-        return 'kernel-ranchu'
-    return 'kernel-qemu'
+      possible_kernels = ['kernel-ranchu-64', 'kernel-ranchu']
+    else:
+      possible_kernels = ['kernel-qemu']
+
+    system_image_dir = self._metadata_pb.system_image_dir
+    for name in possible_kernels:
+      if os.path.isfile(os.path.join(system_image_dir, name)):
+        return name
+    raise Exception('No kernel file found in %s' % system_image_dir)
 
   def _KernelFile(self):
     return os.path.join(self._SessionImagesDir(), self._KernelFileName())
