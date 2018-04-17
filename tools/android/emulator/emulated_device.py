@@ -530,11 +530,19 @@ class EmulatedDevice(object):
     init_sys = os.path.abspath(system_image_path)
     assert os.path.exists(init_sys), '%s: no system.img' % system_image_path
     if system_image_path.endswith('.img'):
-      logging.info('Copying system image to %s', self._SystemFile())
-      timer.start('COPY_SYSTEM_IMAGE')
       os.symlink(init_sys, self._InitSystemFile())
-      self._SparseCp(self._InitSystemFile(), self._SystemFile())
-      timer.stop('COPY_SYSTEM_IMAGE')
+      if (self._metadata_pb.emulator_type ==
+          emulator_meta_data_pb2.EmulatorMetaDataPb.QEMU2 and
+          not self._ShouldModifySystemImage(enable_guest_gl)):
+        # Qemu2 does not need a writable system.img file, so we symlink to
+        # ObjFS to avoid a copy.
+        os.symlink(init_sys, self._SystemFile())
+      else:
+        logging.info('Copying system image to %s', self._SystemFile())
+        timer.start('COPY_SYSTEM_IMAGE')
+        self._SparseCp(self._InitSystemFile(), self._SystemFile())
+        timer.stop('COPY_SYSTEM_IMAGE')
+        os.chmod(self._SystemFile(), stat.S_IRWXU)
     else:
       assert system_image_path.endswith('.img.tar.gz'), 'Not known format'
       logging.info('Extracting system image from tar.gz')
@@ -545,6 +553,7 @@ class EmulatedDevice(object):
                                'system.img'),
                   self._SystemFile())
       timer.stop('EXTRACT_SYSTEM_IMAGE')
+      os.chmod(self._SystemFile(), stat.S_IRWXU)
 
     timer.start('MODIFY_SYSTEM_IMAGE')
     self._ModifySystemImage(enable_guest_gl)
@@ -673,7 +682,6 @@ class EmulatedDevice(object):
     os.chmod(self._UserdataQemuFile(), stat.S_IRWXU)
     os.chmod(self._CacheFile(), stat.S_IRWXU)
     os.chmod(self._SnapshotFile(), stat.S_IRWXU)
-    os.chmod(self._SystemFile(), stat.S_IRWXU)
 
   # pylint: disable=too-many-statements
   def _MakeAvd(self):
@@ -3063,6 +3071,27 @@ class EmulatedDevice(object):
     cp_list = [[cert_file, '/etc/security/cacerts/%s' % cert_name]]
     return self.GetCopyCmd(cp_list)
 
+  def _GetDebugfsCmd(self, enable_guest_gl):
+    # hwcomposer caused some issues for us in the past. So we disabled it.
+    # But new API level image can't work without this.
+    # TODO: remove this hack for all API levels after we fix issues
+    # on all API levels.
+    debugfs_cmd = []
+    if self.GetApiVersion() < 25:
+      debugfs_cmd += ['rm /lib/hw/hwcomposer.goldfish.so',
+                      'rm /lib/hw/hwcomposer.ranchu.so']
+    if self.GetApiVersion() < 24:
+      if not enable_guest_gl:
+        # Delete EGL libraries in system image.
+        debugfs_cmd += ['unlink /vendor/lib/egl']
+    elif self._add_insecure_cert:
+      debugfs_cmd += self.GetInstallCertCmd()
+
+    return debugfs_cmd
+
+  def _ShouldModifySystemImage(self, enable_guest_gl):
+    return not self._GetDebugfsCmd(enable_guest_gl)
+
   # TODO: This slows down most builds by several seconds. We should
   # either move this to a build action, so that the modified image can be
   # cached, or make cybervillains CA opt-in so that most tests don't need the
@@ -3081,9 +3110,7 @@ class EmulatedDevice(object):
     Raises:
       Exception: if the image format is unexpected
     """
-    if (26 <= self.GetApiVersion() and self.GetApiVersion() <= 27 and
-        not self._add_insecure_cert):
-      # Nothing to modify
+    if not self._ShouldModifySystemImage(enable_guest_gl):
       return
 
     one_megabyte = 1 << 20
@@ -3108,21 +3135,7 @@ class EmulatedDevice(object):
       # It's an old non-ext4 image. We can't modify it with debugfs.
       return
 
-    # hwcomposer caused some issues for us in the past. So we disabled it.
-    # But new API level image can't work without this.
-    # TODO: remove this hack for all API levels after we fix issues
-    # on all API levels.
-    debugfs_cmd = []
-    if self.GetApiVersion() < 25:
-      debugfs_cmd += ['rm /lib/hw/hwcomposer.goldfish.so',
-                      'rm /lib/hw/hwcomposer.ranchu.so']
-    if self.GetApiVersion() < 24:
-      if not enable_guest_gl:
-        # Delete EGL libraries in system image.
-        debugfs_cmd += ['unlink /vendor/lib/egl']
-    elif self._add_insecure_cert:
-      debugfs_cmd += self.GetInstallCertCmd()
-
+    debugfs_cmd = self._GetDebugfsCmd(enable_guest_gl)
     logging.info('Running debugfs commands: %s', debugfs_cmd)
     self._ExecDebugfsCmd(image_to_modify, debugfs_cmd)
 
