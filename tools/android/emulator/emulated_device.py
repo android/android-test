@@ -3090,7 +3090,7 @@ class EmulatedDevice(object):
     return debugfs_cmd
 
   def _ShouldModifySystemImage(self, enable_guest_gl):
-    return not self._GetDebugfsCmd(enable_guest_gl)
+    return bool(self._GetDebugfsCmd(enable_guest_gl))
 
   # TODO: This slows down most builds by several seconds. We should
   # either move this to a build action, so that the modified image can be
