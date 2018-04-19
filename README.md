@@ -10,7 +10,7 @@ The ATSL documentation page is hosted on GitHub Pages and contributions are welc
 
 ## ATSL Source code
 
-The ATSL is part of AOSP and can be found in the [platform/frameworks/testing](https://android.googlesource.com/platform/frameworks/testing/+/android-support-test) directory.
+The ATSL source code is stored in piper and perodically open-sourced to (http://github.com/android/android-test)
 
 ## Issues
 Use the issue tracker for problems with the **ATSL documentation page** only. See the [Help section](http://google.github.io/android-testing-support-library/support/index.html) to figure out how to report a problem.
