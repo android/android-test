@@ -2,15 +2,28 @@
 
 ## 1. Running on Work Station:
 
-### Running within android_test_support client(with bazel):
+### Running within android_test_support client (with bazel):
 
 To start the emulator: `bazel run
-tools/android/emulated_devices/amber:jasper_24_x86_qemu2` \
-**jasper_24_x86** refer to the image
-here:android_test_support/third_party/java/android/system_images/jasper_24/x86/ \
-**qemu2** refer to the supported emualtor. \
-**amber** refer to the device specification. (other options are: blueberry,
+tools/android/emulated_devices/amber:jasper_24_x86_qemu2`
+
+-  **jasper_24_x86** refer to the image here:
+android_test_support/third_party/java/android/system_images/jasper_24/x86/
+-  **qemu2** refer to the supported emualtor.
+-  **amber** refer to the device specification. (other options are: blueberry,
 coral and daffodil)
+
+When starting the emulator with `bazel run`, it may not be visible in the `adb
+devices` list, even though it is visibly running on your workstation. You can
+use the device id in the title bar of the emulator window to make it visible to
+`adb`. The device id will be formatted something like
+**mobile_ninjas.adb.\<first port number\>:\<second port number\>**. Use the `adb
+connect` command to connect to the running emulator:
+
+```shell
+$ adb connect localhost:<first port number in title bar>
+connected to localhost:<first port number in title bar>
+```
 
 ### Running outside android_test_support client(with crow):
 
