@@ -2653,7 +2653,7 @@ class EmulatedDevice(object):
 
   def _RemoveSettingsControl(self):
     """Remove SettingsControl App from system."""
-    self._Remount('/system', 'rw')
+    self._Remount(self._GetSystemMountPoint(), 'rw')
 
     if self.GetApiVersion() < 19:
       app_dir = '/system/app'
@@ -2670,7 +2670,21 @@ class EmulatedDevice(object):
 
     self.ExecOnDevice(['rm', os.path.join(app_dir, 'Settings.apk')])
     self.ExecOnDevice(['rm', os.path.join(odex_dir, 'Settings.odex')])
-    self._Remount('/system', 'ro')
+    self._Remount(self._GetSystemMountPoint(), 'ro')
+
+  def _GetSystemMountPoint(self):
+    """Get the mount point of the filesystem which includes /system.
+
+    Until P, the system image was a separate filesystem, mounted at /system. In
+    P, the system image was merged with the ramdisk, so / is the mount point.
+
+    Returns:
+      The mount point
+    """
+    if self.GetApiCodeName() == 'P':
+      return '/'
+    else:
+      return '/system'
 
   def _RemoveAdbd(self):
     self._Remount('/', 'rw')
@@ -3187,7 +3201,7 @@ class EmulatedDevice(object):
     file_path = os.path.abspath(file_path)
 
     if device_path.startswith('/system'):
-      self._Remount('/system', 'rw')
+      self._Remount(self._GetSystemMountPoint(), 'rw')
     logging.info('pushing: %s to %s', file_path, device_path)
     subprocess.check_call([
         self.android_platform.adb,
@@ -3196,7 +3210,7 @@ class EmulatedDevice(object):
         file_path,
         device_path], env=self._AdbEnv())
     if device_path.startswith('/system'):
-      self._Remount('/system', 'ro')
+      self._Remount(self._GetSystemMountPoint(), 'ro')
 
   def BestOpenGL(self):
     """Return best OpenGL option based on API/arch/Emulator."""
