@@ -1539,13 +1539,13 @@ class EmulatedDevice(object):
     if (self._metadata_pb.emulator_type ==
         emulator_meta_data_pb2.EmulatorMetaDataPb.QEMU2):
       self._emulator_start_args.extend(['-engine', 'qemu2',
-                                        '-kernel', self._KernelFile()])
+                                        '-kernel', self._KernelFileName()])
+      self._emulator_start_args.extend(['-system', 'system.img'])
 
-    if self.GetApiVersion() >= 26 and os.path.exists(self._VendorFile()):
-      self._emulator_start_args.extend(['-vendor', self._VendorFile()])
+    if os.path.exists(self._VendorFile()):
+      self._emulator_start_args.extend(['-vendor', 'vendor.img'])
 
-    if self.GetApiVersion() >= 26 and os.path.exists(
-        self._EncryptionKeyImageFile()):
+    if os.path.exists(self._EncryptionKeyImageFile()):
       self._emulator_start_args.extend(['-encryption-key', 'encryptionkey.img'])
 
     if self._display:
@@ -2918,15 +2918,18 @@ class EmulatedDevice(object):
         self._SnapshotFile(),
         self._RamdiskFile()]
 
-    if self.GetApiVersion() >= 26 and os.path.exists(
-        self._EncryptionKeyImageFile()):
+    if os.path.exists(self._EncryptionKeyImageFile()):
       image_files.append(
           self._EncryptionKeyImageFile() + self._PossibleImgSuffix())
+
+    if os.path.exists(self._VendorFile()):
+      image_files.append(self._VendorFile() + self._PossibleImgSuffix())
 
     if (self._metadata_pb.emulator_type ==
         emulator_meta_data_pb2.EmulatorMetaDataPb.QEMU2):
       image_files.append(
           os.path.join(self._SessionImagesDir(), 'version_num.cache'))
+      image_files.append(self._SystemFile() + self._PossibleImgSuffix())
 
     image_files = ['./%s' % os.path.relpath(f, self._images_dir)
                    for f in image_files]
