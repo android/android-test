@@ -68,17 +68,10 @@ class X11Server(object):
       ProcessCrashedError: if Xvfb process started and unexpectedly exited.
     """
     if self._x11_process and self._x11_process.poll() is not None:
-      existing_pid = self._x11_process.pid
       return_code = self._x11_process.returncode
+      self._Cleanup(self.x11_pid)
+
       self._x11_process = None
-      # Delete the file it already exists.
-      x11_tmp_file = (os.path.join('/tmp/.X11-unix/X%s' % existing_pid)
-                      if existing_pid else None)
-      if x11_tmp_file and os.path.exists(x11_tmp_file):
-        try:
-          os.remove(x11_tmp_file)
-        except OSError:
-          pass
       raise ProcessCrashedError('Xvfb crashed unexpectedly, exit code %s' %
                                 return_code)
     if (not self._x11_process
@@ -102,12 +95,14 @@ class X11Server(object):
     old_x_proc = self._x11_process
     self._x11_process = None
     if old_x_proc:
+      old_pid = old_x_proc.pid
       if old_x_proc.poll() is None:
         old_x_proc.terminate()
         if old_x_proc.poll() is None:
           time.sleep(2)
           if old_x_proc.poll() is None:
             old_x_proc.kill()
+      self._Cleanup(old_pid)
       return old_x_proc.wait()
     else:
       return 0
@@ -161,6 +156,22 @@ class X11Server(object):
         stdin=open(os.devnull),
         env=x11_env)
     self._x11_process.display = ':%s' % self._x11_process.pid
+
+  # Clean up leftover X server files in the tmp directory
+  def _Cleanup(self, pid):
+    # Try to remove the socket file if it exists
+    x11_tmp_file = '/tmp/.X11-unix/X%s' % pid
+    try:
+      os.remove(x11_tmp_file)
+    except OSError:
+      pass
+
+    # Try to remove the /tmp/.X$DISPLAY-lock lockfile if it exists
+    lockfile = '/tmp/.X%s-lock' % pid
+    try:
+      os.remove(lockfile)
+    except OSError:
+      pass
 
 
 class TimeoutError(Exception):
