@@ -12,7 +12,7 @@ java_test(
     testonly = 1,
     tags = ["manual"],
     test_class = "com.google.android.apps.common.testing.suite.AndroidDeviceTestSuite",
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
     runtime_deps = [
         "//opensource:entry_point_import",
     ],

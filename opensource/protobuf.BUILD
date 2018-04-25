@@ -129,7 +129,7 @@ cc_library(
     }) + COPTS,
     includes = ["src/"],
     linkopts = LINK_OPTS,
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
 )
 
 cc_library(
@@ -201,7 +201,7 @@ cc_library(
     }) + COPTS,
     includes = ["src/"],
     linkopts = LINK_OPTS,
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
     deps = [":protobuf_lite"],
 )
 
@@ -213,7 +213,7 @@ cc_library(
     name = "protobuf_headers",
     hdrs = glob(["src/**/*.h"]),
     includes = ["src/"],
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
 )
 
 objc_library(
@@ -221,7 +221,7 @@ objc_library(
     hdrs = ["objectivec/GPBProtocolBuffers.h"],
     includes = ["objectivec"],
     non_arc_srcs = ["objectivec/GPBProtocolBuffers.m"],
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
 )
 
 RELATIVE_WELL_KNOWN_PROTOS = [
@@ -245,7 +245,7 @@ WELL_KNOWN_PROTOS = ["src/" + s for s in RELATIVE_WELL_KNOWN_PROTOS]
 filegroup(
     name = "well_known_protos",
     srcs = WELL_KNOWN_PROTOS,
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
 )
 
 cc_proto_library(
@@ -255,7 +255,7 @@ cc_proto_library(
     default_runtime = ":protobuf",
     internal_bootstrap_hack = 1,
     protoc = ":protoc",
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
 )
 
 ################################################################################
@@ -265,7 +265,7 @@ cc_proto_library(
 cc_binary(
     name = "js_embed",
     srcs = ["src/google/protobuf/compiler/js/embed.cc"],
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
 )
 
 genrule(
@@ -381,7 +381,7 @@ cc_library(
     copts = COPTS,
     includes = ["src/"],
     linkopts = LINK_OPTS,
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
     deps = [":protobuf"],
 )
 
@@ -389,7 +389,7 @@ cc_binary(
     name = "protoc",
     srcs = ["src/google/protobuf/compiler/main.cc"],
     linkopts = LINK_OPTS,
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
     deps = [":protoc_lib"],
 )
 
@@ -614,7 +614,7 @@ java_library(
         ":gen_well_known_protos_java",
     ],
     javacopts = ["-source 6", "-target 6"],
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
 )
 
 java_library(
@@ -623,7 +623,7 @@ java_library(
         "java/util/src/main/java/com/google/protobuf/util/*.java",
     ]),
     javacopts = ["-source 6", "-target 6"],
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
     deps = [
         "protobuf_java",
         "//external:gson",
@@ -742,7 +742,7 @@ py_proto_library(
         "//external:six",
     ],
     srcs_version = "PY2AND3",
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
 )
 
 # Copy the test proto files from src/google/protobuf to
@@ -833,14 +833,14 @@ proto_lang_toolchain(
     name = "cc_toolchain",
     command_line = "--cpp_out=$(OUT)",
     runtime = ":protobuf",
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
 )
 
 proto_lang_toolchain(
     name = "java_toolchain",
     command_line = "--java_out=$(OUT)",
     runtime = ":protobuf_java",
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
 )
 
 OBJC_HDRS = [
@@ -921,5 +921,5 @@ objc_library(
         "objectivec",
     ],
     non_arc_srcs = OBJC_SRCS,
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
 )

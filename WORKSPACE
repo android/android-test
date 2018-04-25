@@ -1,4 +1,4 @@
-workspace(name = "android_test_support")
+workspace(name = "androidx_test")
 
 # Google Maven Repository
 GMAVEN_COMMIT = "44d75d3e7bdfa8ff0b30ceb048b0f09bc6b72c70"

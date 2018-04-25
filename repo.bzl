@@ -122,7 +122,7 @@ def _development_repositories():
   native.new_http_archive(
       name = "jsr330",
       build_file_content = """
-package(default_visibility = ["//visibility:public"])
+package(default_visibility = ["//third_party/android/androidx_test:__subpackages__"])
 java_import(
     name = "jsr330",
     jars = ["javax.inject.jar"],
@@ -179,7 +179,7 @@ java_import(
   )
 
 # These dependencies are for *users* of the Android Test repo,
-# i.e. specifying this repository as @android_test_support in their
+# i.e. specifying this repository as @androidx_test in their
 # WORKSPACE using a repository_rule like git_repository or http_archive.
 # Use parameter `with_dev_repositories = True` to download the dev
 # repositories as well.

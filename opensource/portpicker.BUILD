@@ -5,12 +5,12 @@ py_library(
     name = "portpicker",
     srcs = ["portpicker.py"],
     srcs_version = "PY2AND3",
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
 )
 
 py_library(
     name = "portserver",
     srcs = ["portserver.py"],
     srcs_version = "PY2AND3",
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
 )

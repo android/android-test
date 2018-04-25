@@ -3,5 +3,5 @@ py_library(
     srcs = glob(["google/apputils/*.py", "**/__init__.py"]),
     srcs_version = "PY2AND3",
     deps = ["@gflags_archive//:gflags"],
-    visibility = ["//visibility:public"],
+    visibility = ["//third_party/android/androidx_test:__subpackages__"],
 )
