@@ -8,5 +8,9 @@ Continue to the [AXT documentation page](https://google.github.com/android-testi
 
 The AXT documentation page is hosted on GitHub Pages and contributions are welcome. Check out the [gh-pages branch](https://github.com/google/android-testing-support-library/tree/gh-pages).
 
+## AXT Source code
+
+The AXT source code is stored in piper and perodically open-sourced to (http://github.com/android/android-test)
+
 ## Issues
 Use the issue tracker for problems with the **AXT documentation page** only. See the [Help section](http://google.github.io/android-testing-support-library/support/index.html) to figure out how to report a problem.
