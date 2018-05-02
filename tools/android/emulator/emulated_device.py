@@ -3081,6 +3081,13 @@ class EmulatedDevice(object):
       cmd_list += ['cd %s\nwrite %s %s' % (dst_dir, src, dst_name)]
     return cmd_list
 
+  def GetInstallCertCmd(self):
+    """Installs a cybervillainsCA cert certificate to system image."""
+    cert_file = self._CyberVillainsCert()
+    cert_name = self._GetCertName(cert_file, cert_format=X509.FORMAT_DER)
+    cp_list = [[cert_file, '/etc/security/cacerts/%s' % cert_name]]
+    return self.GetCopyCmd(cp_list)
+
   def _GetDebugfsCmd(self, enable_guest_gl):
     # hwcomposer caused some issues for us in the past. So we disabled it.
     # But new API level image can't work without this.
@@ -3094,6 +3101,8 @@ class EmulatedDevice(object):
       if not enable_guest_gl:
         # Delete EGL libraries in system image.
         debugfs_cmd += ['unlink /vendor/lib/egl']
+    elif self._add_insecure_cert:
+      debugfs_cmd += self.GetInstallCertCmd()
 
     return debugfs_cmd
 

@@ -277,9 +277,8 @@ def _FirstBootAtBuildTimeOnly(
   """
 
   sysdir = _FindSystemImagesDir(system_images)
-  sysimg_path = (
-      _ExtractSuffixFile(system_images, 'modified_system.img.tar.gz') or
-      _ExtractSuffixFile(system_images, 'system.img'))
+  sysimg_path = (_ExtractSuffixFile(system_images, 'system.img.tar.gz') or
+                 _ExtractSuffixFile(system_images, 'system.img'))
   dataimg_path = (_ExtractSuffixFile(system_images, 'userdata.img.tar.gz') or
                   _ExtractSuffixFile(system_images, 'userdata.img'))
   vendor_img_path = (_ExtractSuffixFile(system_images, 'vendor.img.tar.gz') or
@@ -426,9 +425,8 @@ def _RestartDevice(device,
     print '=' * 80
 
   proto.system_image_dir = system_images_dir
-  sysimg = (
-      _ExtractSuffixFile(system_image_files, 'modified_system.img.tar.gz') or
-      _ExtractSuffixFile(system_image_files, 'system.img'))
+  sysimg = (_ExtractSuffixFile(system_image_files, 'system.img.tar.gz') or
+            _ExtractSuffixFile(system_image_files, 'system.img'))
   dataimg = (_ExtractSuffixFile(system_image_files, 'userdata.img.tar.gz') or
              _ExtractSuffixFile(system_image_files, 'userdata.img'))
   vendorimg_path = (_ExtractSuffixFile(system_image_files, 'vendor.img.tar.gz')
