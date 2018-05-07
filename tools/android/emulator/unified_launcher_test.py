@@ -22,9 +22,9 @@ import StringIO
 import tempfile
 
 
+import gflags as flags
 import mox
 
-import gflags as flags
 from google.apputils import basetest as googletest
 from tools.android.emulator import emulated_device
 from tools.android.emulator import emulator_meta_data_pb2

@@ -19,9 +19,9 @@
 import os
 
 
+import gflags as flags
 import portpicker
 
-import gflags as flags
 from tools.android.emulator import resources
 from google.apputils import basetest as googletest
 from tools.android.emulator import emulated_device
