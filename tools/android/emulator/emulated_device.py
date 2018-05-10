@@ -3082,14 +3082,7 @@ class EmulatedDevice(object):
     return cmd_list
 
   def _GetDebugfsCmd(self, enable_guest_gl):
-    # hwcomposer caused some issues for us in the past. So we disabled it.
-    # But new API level image can't work without this.
-    # TODO: remove this hack for all API levels after we fix issues
-    # on all API levels.
     debugfs_cmd = []
-    if self.GetApiVersion() < 25:
-      debugfs_cmd += ['rm /lib/hw/hwcomposer.goldfish.so',
-                      'rm /lib/hw/hwcomposer.ranchu.so']
     if self.GetApiVersion() < 24:
       if not enable_guest_gl:
         # Delete EGL libraries in system image.
