@@ -3275,16 +3275,18 @@ class EmulatedDevice(object):
       install_output = ''
       try:
         if uses_art:
-          install_output = self._Dex2OatCheckingInstall(install_args)
+          exit_status, install_output = self._Dex2OatCheckingInstall(
+              install_args)
         else:
           install_task = common.SpawnAndWaitWithRetry(
               install_args,
               timeout_seconds=install_timeout_secs,
               exec_env=self._AdbEnv(),
               proc_output=True)
+          exit_status = install_task.returncode
           install_output = install_task.borg_out
 
-        if 'Success' in install_output:
+        if exit_status == 0 and 'Success' in install_output:
           logging.info('install done: %s', apk_path)
           return
         if self._IsPermanentInstallError(install_output):
@@ -3333,7 +3335,7 @@ class EmulatedDevice(object):
       install_args: the installation args to pass to adb.
 
     Returns:
-      the output of the install command (string)
+      (exit_status, stdout)
     """
     install_proc = subprocess.Popen(
         install_args,
@@ -3370,16 +3372,14 @@ class EmulatedDevice(object):
         install_proc.kill()
         install_proc.wait()
         stdout_thread.join()
-        return 'after ~%ss system idle, system hung? stdout: %s' % (
-            INSTALL_IDLE_TIMEOUT_SECONDS, stdout[0])
+        logging.warning('System idle after ~%ss, system hung?',
+                        INSTALL_IDLE_TIMEOUT_SECONDS)
+        return (-1, stdout[0])
 
     return_code = install_proc.poll()
     logging.info('install [%s]: return code: %s', install_args, return_code)
-    if return_code != 0:
-      return 'adb install returned, but return code != 0 return code:%d' % (
-          return_code)
     stdout_thread.join()
-    return stdout[0]
+    return return_code, stdout[0]
 
   def SyncTime(self):
     """Sync time of the emulator with host time."""
