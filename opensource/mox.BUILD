@@ -5,5 +5,5 @@ py_library(
     name = "mox",
     srcs = glob(["*.py"]),
     srcs_version = "PY2AND3",
-    visibility = ["//third_party/android/androidx_test:__subpackages__"],
+    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
 )
