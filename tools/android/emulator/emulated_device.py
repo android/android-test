@@ -2681,7 +2681,7 @@ class EmulatedDevice(object):
     Returns:
       The mount point
     """
-    if self.GetApiCodeName() == 'P':
+    if self.GetApiVersion() >= 28:
       return '/'
     else:
       return '/system'
@@ -2890,7 +2890,7 @@ class EmulatedDevice(object):
       self._CheckLeftProcess()
       # Umount /data/media first. Otherwise umount of /data will fail.
       clean_death = self._CleanUmount('/data/media') and clean_death
-      if self.GetApiCodeName() == 'P':
+      if self.GetApiVersion() >= 28:
         netns_router = '/data/vendor/var/run/netns/router'
       else:
         netns_router = '/data/var/run/netns/router'
@@ -3198,7 +3198,7 @@ class EmulatedDevice(object):
 
   def BestOpenGL(self):
     """Return best OpenGL option based on API/arch/Emulator."""
-    if self.GetApiCodeName() == 'P':
+    if self.GetApiVersion() >= 28:
       return SWIFTSHADER_INDIRECT
     elif self.big_screen:
       return SWIFTSHADER_OPEN_GL
