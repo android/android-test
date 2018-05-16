@@ -10,10 +10,10 @@ site_nav_category: support
 ### How do I? I got this error, why?
 Search or ask in [StackOverflow](http://stackoverflow.com/). Use [android-espresso](http://stackoverflow.com/questions/tagged/android-espresso) or [android-testing](http://stackoverflow.com/questions/tagged/android-testing) tags.
 
-### I got this error and I'm sure it's a bug in the ATSL
+### I got this error and I'm sure it's a bug in the Android Test library
 Search for a similar issue on the [issue tracker](https://code.google.com/p/android/issues/list?can=1&q=label%3AComponent-Test-Support-Libraries&colspec=ID+Type+Status+Owner+Summary+Stars&cells=tiles) and potentially star it or file a new [issue](https://code.google.com/p/android/issues/entry?template=Test%20Support%20Library%20bug).
 
-### I have an idea or request for the ATSL
+### I have an idea or request for the Android Test library
 File a [feature request](https://code.google.com/p/android/issues/entry?template=Test%20Support%20Library%20feature)!
 
 ### I have a Gradle-related problem
