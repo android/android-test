@@ -23,4 +23,4 @@ Post to the [adt-dev mailing list](https://groups.google.com/forum/#!forum/adt-d
 Ask in the [mailing list](https://groups.google.com/forum/#!forum/android-testing-support-library).
 
 ### I found an issue with this site.
-File it in the [issue tracker](https://github.com/google/android-testing-support-library/issues) or send a [pull request](https://github.com/google/android-testing-support-library/pulls).
+File it in the [issue tracker](https://github.com/android/android-test/issues) or send a [pull request](https://github.com/android/android-test/pulls).
