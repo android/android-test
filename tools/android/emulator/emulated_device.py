@@ -351,7 +351,6 @@ class EmulatedDevice(object):
     self._child_will_delete_tmp = True
     self._sockets_dir = None
     self._pipe_traversal_log_dir = None
-    self._pipe_traversal_running = None
     self._vm_running = True
     self._logcat_path = logcat_path
     self._logcat_filter = logcat_filter
@@ -384,16 +383,6 @@ class EmulatedDevice(object):
 
     with open(build_prop, 'r') as f:
       return 'ro.build.version.incremental=2424746\n' in f.read()
-
-  def _IsPipeTraversalRunning(self):
-    if self._pipe_traversal_running is None:
-      if self._SnapshotPresent().value == 'True':
-        # snapshot restore - it must be started explicitly.
-        self._pipe_traversal_running = False
-      else:
-        # fresh boot - of course it's running.
-        self._pipe_traversal_running = True
-    return self._pipe_traversal_running
 
   def PreverifyApks(self):
     """Causes APKs to be verified upon installation."""
@@ -471,6 +460,10 @@ class EmulatedDevice(object):
   def _SessionImagesDir(self):
     return os.path.join(self._images_dir, 'session')
 
+  def _SnapshotRamBinFile(self):
+    return os.path.join(self._SessionImagesDir(), 'snapshots', 'default_boot',
+                        'ram.bin')
+
   def _SetUUID(self, sd, uuid_value):
     """Set UUID for sd card image."""
 
@@ -500,6 +493,7 @@ class EmulatedDevice(object):
                       userdata_tarball,
                       timer,
                       enable_guest_gl,
+                      snapshot_file,
                       system_image_path=None,
                       data_image_path=None,
                       vendor_img_path=None,
@@ -592,6 +586,11 @@ class EmulatedDevice(object):
         logging.info('Resize data partition to %dM', data_size)
         subprocess.check_call(['/sbin/resize2fs', '-f',
                                self._UserdataQemuFile(), '%dM' % data_size])
+
+      # Symlink the snapshot file to the actual location.
+      if (snapshot_file and self._metadata_pb.emulator_architecture == 'x86' and
+          os.path.exists(snapshot_file)):
+        os.symlink(snapshot_file, self._SnapshotRamBinFile())
     else:
       #   self._RamdiskFile() - we modify this abit
       #   self._SnapshotFile() - always exists
@@ -1168,7 +1167,8 @@ class EmulatedDevice(object):
                   with_boot_anim=False, emulator_tmp_dir=None,
                   open_gl_driver=None,
                   allow_experimental_open_gl=False,
-                  build_time_only_no_op_rendering=False):
+                  save_snapshots=None,
+                  snapshot_file=None):
     """Launches an emulator process."""
     assert self._metadata_pb, 'Not configured!'
     skin = self._metadata_pb.skin
@@ -1176,18 +1176,19 @@ class EmulatedDevice(object):
     width = int(skin[:skin.index('x')])
     self.big_screen = (height * width > 1280 * 800)
     self._emulator_tmp_dir = emulator_tmp_dir or tempfile.mkdtemp()
-    if build_time_only_no_op_rendering:
-      self._display = None
-    else:
-      open_gl_driver = open_gl_driver or self.BestOpenGL()
-      self._SanityCheckOpenGLDriver(open_gl_driver, allow_experimental_open_gl)
-      self._display = Display(
-          skin=self._metadata_pb.skin,
-          tmp_dir=self._emulator_tmp_dir,
-          enable_display=enable_display,
-          start_vnc_on_port=start_vnc_on_port,
-          open_gl_driver=open_gl_driver,
-          env=os.environ)
+    open_gl_driver = open_gl_driver or self.BestOpenGL()
+    if save_snapshots or snapshot_file:
+      # Force to use SWIFTSHADER_INDIRECT if we use save_snapshots.
+      logging.info('Forcing swiftshader_indirect as snapshots was requested')
+      open_gl_driver = SWIFTSHADER_INDIRECT
+    self._SanityCheckOpenGLDriver(open_gl_driver, allow_experimental_open_gl)
+    self._display = Display(
+        skin=self._metadata_pb.skin,
+        tmp_dir=self._emulator_tmp_dir,
+        enable_display=enable_display,
+        start_vnc_on_port=start_vnc_on_port,
+        open_gl_driver=open_gl_driver,
+        env=os.environ)
 
     timer = stopwatch.StopWatch()
     timer.start(_STAGE_DATA)
@@ -1196,7 +1197,9 @@ class EmulatedDevice(object):
 
     self._StageDataFiles(self._metadata_pb.system_image_dir,
                          userdata_tarball, timer,
-                         open_gl_driver == GUEST_OPEN_GL, **images_dict)
+                         open_gl_driver == GUEST_OPEN_GL,
+                         snapshot_file,
+                         **images_dict)
     timer.stop(_STAGE_DATA)
 
     timer.start(_START_PROCESS)
@@ -1525,6 +1528,7 @@ class EmulatedDevice(object):
         '-data', 'userdata-qemu.img',  # only respected via cmdline flag.
         '-memory', str(self._MemoryMb()),
         '-sdcard', 'sdcard.img',
+        '-ramdisk', 'ramdisk.img',
         '-partition-size', '2047',
         '-no-snapshot-save',
         '-verbose',
@@ -1534,6 +1538,7 @@ class EmulatedDevice(object):
         '-unix-pipe', 'sockets/exec-server',
         '-unix-pipe', 'sockets/tar-push-server',
         '-writable-system',
+        '-feature', 'AllowSnapshotMigration',
         '-show-kernel']
 
     if (self._metadata_pb.emulator_type ==
@@ -1877,50 +1882,6 @@ class EmulatedDevice(object):
         except OSError as e:
           logging.info('Failed to restart telnet daemon. %s', e)
 
-  def _TogglePipeServices(self, on_off):
-    """When we take snapshots we shut down pipe services.
-
-    If we restore from snapshots we need to turn them back on.
-
-    This uses standard adb to toggle them.
-
-    Args:
-      on_off: bool to turn on or off.
-    Returns:
-      True on success - false otherwise.
-    """
-    #  "No Gimli, I would not take the road through Moria unless I had no other
-    #  choice.".replace('Moria', 'adb') - Gandalf
-    if not self.ConnectDevice():
-      return False
-    action = on_off and 'start' or 'stop'
-    services = ['pipe_traverse', 'tn_pipe_traverse']
-    for service in services:
-      try:
-        common.SpawnAndWaitWithRetry(
-            [self.android_platform.real_adb,
-             '-s', self.device_serial,
-             'wait-for-device',
-             'shell', action, service],
-            timeout_seconds=10,
-            exec_env=self._AdbEnv())
-      except common.SpawnError:
-        return False
-
-    self._pipe_traversal_running = on_off
-
-    if not on_off:
-      try:
-        common.SpawnAndWaitWithRetry(
-            [self.android_platform.real_adb,
-             '-s', self.device_serial,
-             'disconnect'],
-            timeout_seconds=10,
-            exec_env=self._AdbEnv())
-      except common.SpawnError:
-        return False
-    return True
-
   def _StartPipeServices(self, pipe_dir):
     """Starts pipe_traversal services for the host.
 
@@ -2024,7 +1985,6 @@ class EmulatedDevice(object):
   def ExecOnDevice(self, args, stdin=_DEV_NULL):
     """Execute commands on device with adb."""
 
-    assert self._IsPipeTraversalRunning()
     assert self._CanConnect(), 'missing details to connect to adb.'
     emu_commandline = ' '.join(args)
     # Some version of adb just exit with error if the shell command
@@ -2175,17 +2135,9 @@ class EmulatedDevice(object):
                                      exec_env=self._AdbEnv())
         adb_connected = True
 
-      if not pipe_traversal_ready:
-        pipe_traversal_ready = attempter.AttemptStep(
-            self._PipeTraversalRestoreStep,
-            'Checking Pipe Traversal.',
-            _PIPE_TRAVERSAL_CHECK,
-            _PIPE_TRAVERSAL_CHECK_FAIL_SLEEP)
-        if not pipe_traversal_ready:
-          continue
-        self.EnableLogcat()
-        self._reporter.ReportDeviceProperties(self._metadata_pb.emulator_type,
-                                              self._Props())
+      self.EnableLogcat()
+      self._reporter.ReportDeviceProperties(self._metadata_pb.emulator_type,
+                                            self._Props())
 
       # If we are running in dex2oat mode, stop the device once
       # pipe_traversal is ready.
@@ -2518,12 +2470,6 @@ class EmulatedDevice(object):
       return True
     except socket.error:
       return False
-
-  def _PipeTraversalRestoreStep(self):
-    if self._IsPipeTraversalRunning():
-      return True
-    else:
-      return self._TogglePipeServices(True)
 
   def _KickLauncher(self):
     """Kicks off launcher start."""
@@ -2900,7 +2846,7 @@ class EmulatedDevice(object):
       clean_death = self._CleanUmount('/cache') and clean_death
     telnet = self._ConnectToEmulatorConsole()
     telnet.write('kill\n')
-    telnet.read_all()
+    telnet.read_until('OK', 2.0)
     self._running = False
 
     if politely and not clean_death:
@@ -2915,7 +2861,7 @@ class EmulatedDevice(object):
     self.CleanUp()
     raise TransientEmulatorFailure(msg)
 
-  def StoreAndCompressUserdata(self, location):
+  def StoreAndCompressUserdata(self, location, ram_binary_location=None):
     """Stores the emulator's userdata files."""
     assert not self._running, 'Emulator is still running.'
     assert self._images_dir, 'Emulator never started.'
@@ -2944,6 +2890,38 @@ class EmulatedDevice(object):
       image_files.append(
           os.path.join(self._SessionImagesDir(), 'version_num.cache'))
       image_files.append(self._SystemFile() + self._PossibleImgSuffix())
+
+    # The snapshots directory if it is successfully generated is of the
+    # following directory structure
+    # |- snapshots
+    # |   |- default_boot
+    # |   |   |- hardware.ini
+    # |   |   |- ram.bin
+    # |   |   |- snapshot.pb
+    # |   |   |- textures.bin
+    # |   |- snapshot_deps.pb
+    # Of all the files the snapshot feature creates, ram.bin is the file that's
+    # the largest and instead of wrapping up ram.bin within the userdata.tar
+    # file, we explicitly emit out a separate file so that we don't waste
+    # cycles in untarring the huge file and using tmpfs space during the start
+    # cycle. ram.bin is symlinked to the file path that are passed as 
+    # inputs. So all the other files are tarred up in the userdata.tar.gz file
+    # and ram.bin is explicitly copied over as a output file.
+    snapshot_file_found = False
+    for r, _, f in os.walk(os.path.join(self._SessionImagesDir(), 'snapshots')):
+      for each_file in f:
+        if each_file == 'ram.bin' and ram_binary_location:
+          shutil.copy(os.path.join(r, each_file), ram_binary_location)
+          snapshot_file_found = True
+          continue
+        image_files.append(os.path.join(r, each_file))
+
+    # TODO: Instead of failing and causing BUILD failures, I think we
+    # should probably return back a empty file and subsequent loads would just
+    # do regular boots since they don't get build failures. We should record
+    # it and find out how often that happens though.
+    if ram_binary_location and not snapshot_file_found:
+      raise Exception('Requested to save snapshots but didnt find ram.bin')
 
     image_files = ['./%s' % os.path.relpath(f, self._images_dir)
                    for f in image_files]
@@ -3015,23 +2993,11 @@ class EmulatedDevice(object):
                                  {'attempts': attempts})
     raise Exception('Tried %s times to connect to emu console.' % attempts)
 
-  def _SnapshotPresent(self):
-    """Returns the avd config property snapshot.present."""
-    for prop in self._metadata_pb.avd_config_property:
-      if prop.name == 'snapshot.present':
-        return prop
-    return self._metadata_pb.avd_config_property.add(
-        name='snapshot.present',
-        value='no')
-
-  def TakeSnapshot(self, name='default-boot'):
+  def TakeSnapshot(self, name='default_boot'):
     """Take a avd snapshot."""
-    self._SnapshotPresent().value = 'True'
-    if not self._TogglePipeServices(False):
-      time.sleep(1)
-      if not self._TogglePipeServices(False):
-        logging.error('Could not toggle pipe services - snapshot maybe broken.')
-
+    # Save the snapshot property and this should exist if we were successful
+    # in re-loading it back from snapshot.
+    self.ExecOnDevice(['setprop', 'mobile_ninjas.snapshot_saved', 'true'])
     telnet = self._ConnectToEmulatorConsole()
     telnet.write('avd stop\n')
     telnet.write('avd snapshot save %s\n' % name)
@@ -3093,63 +3059,22 @@ class EmulatedDevice(object):
   def _ShouldModifySystemImage(self, enable_guest_gl):
     return bool(self._GetDebugfsCmd(enable_guest_gl))
 
-  # TODO: This slows down most builds by several seconds. We should
-  # either move this to a build action, so that the modified image can be
-  # cached, or make cybervillains CA opt-in so that most tests don't need the
-  # modified image.
   def _ModifySystemImage(self, enable_guest_gl):
     """Makes some modifications to the system image if possible.
 
-    If the image is ext4 formatted, we can easily modify it with debugfs. If
-    it's ext4 with a partition table, we can still modify it, but we need to
-    chop off the first megabyte, run debugfs, and reattach the chunk that we
-    chopped off.
+    If the image is ext4 formatted, we modify it with debugfs.
 
     Args:
       enable_guest_gl: whether guest rendering is enabled
-
-    Raises:
-      Exception: if the image format is unexpected
     """
     if not self._ShouldModifySystemImage(enable_guest_gl):
       return
 
-    one_megabyte = 1 << 20
     if 'ext4' in subprocess.check_output(['file', self._SystemFile()]):
-      # It's plain ext4, so we can run debugfs directly on the system image.
-      image_to_modify = self._SystemFile()
-    elif self.GetApiVersion() >= 26:
-      # It's not plain ext4, but let's try chopping off the first megabyte and
-      # see if the rest of the image is ext4.
-      logging.info('Chopping off system image prefix')
-      with open(self._SystemFile(), 'rb') as f:
-        prefix = f.read(one_megabyte)
-        with tempfile.NamedTemporaryFile(mode='wb', delete=False) as f_chopped:
-          f_chopped_name = f_chopped.name
-          for chunk in iter(lambda: f.read(one_megabyte), ''):
-            f_chopped.write(chunk)
-      if 'ext4' not in subprocess.check_output(['file', f_chopped_name]):
-        # Still not ext4; give up.
-        raise Exception('All API 26+ expected to be ext4 or ext4 with prefix')
-      image_to_modify = f_chopped_name
-    else:
-      # It's an old non-ext4 image. We can't modify it with debugfs.
-      return
-
-    debugfs_cmd = self._GetDebugfsCmd(enable_guest_gl)
-    logging.info('Running debugfs commands: %s', debugfs_cmd)
-    self._ExecDebugfsCmd(image_to_modify, debugfs_cmd)
-
-    if image_to_modify != self._SystemFile():
-      # We chopped off the first megabyte earlier. Now reattach it.
-      logging.info('Reattaching system image prefix')
-      os.remove(self._SystemFile())
-      with open(self._SystemFile(), 'wb') as f:
-        f.write(prefix)
-        with open(f_chopped_name, 'rb') as f_chopped:
-          for chunk in iter(lambda: f_chopped.read(one_megabyte), ''):
-            f.write(chunk)
-      os.remove(f_chopped_name)
+      debugfs_cmd = self._GetDebugfsCmd(enable_guest_gl)
+      if debugfs_cmd:
+        logging.info('Running debugfs commands: %s', debugfs_cmd)
+        self._ExecDebugfsCmd(self._SystemFile(), debugfs_cmd)
 
   def _ExecDebugfsCmd(self, image_file, cmd_list):
     """Execute debugfs commands from cmd_list on disk image file."""
@@ -3692,7 +3617,7 @@ class Display(object):
     os.makedirs(x11_tmp_dir)
 
     return xserver.X11Server(
-        self._env['TEST_SRCDIR'],
+        resources.GetRunfilesDir(),
         x11_tmp_dir,
         width,
         height)
