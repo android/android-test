@@ -60,7 +60,7 @@ _ALL_IMAGES = (
     _default_images(26,
                     [_GOOGLE, _ANDROID, _WEAR, _WEAR_LE, _AUTO, _DAYDREAM, _TV]) +
     _default_images(27, [_GOOGLE, _ANDROID, _GO, _AUTO, _DAYDREAM, _TV]) +
-    _default_images(28, [_GOOGLE, _AUTO])
+    _default_images(28, [_GOOGLE, _AUTO, _DAYDREAM])
     )
 
 
