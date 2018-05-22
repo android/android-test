@@ -1167,7 +1167,7 @@ class EmulatedDevice(object):
                   with_boot_anim=False, emulator_tmp_dir=None,
                   open_gl_driver=None,
                   allow_experimental_open_gl=False,
-                  save_snapshots=None,
+                  save_snapshot=None,
                   snapshot_file=None):
     """Launches an emulator process."""
     assert self._metadata_pb, 'Not configured!'
@@ -1177,8 +1177,8 @@ class EmulatedDevice(object):
     self.big_screen = (height * width > 1280 * 800)
     self._emulator_tmp_dir = emulator_tmp_dir or tempfile.mkdtemp()
     open_gl_driver = open_gl_driver or self.BestOpenGL()
-    if save_snapshots or snapshot_file:
-      # Force to use SWIFTSHADER_INDIRECT if we use save_snapshots.
+    if save_snapshot or snapshot_file:
+      # Force to use SWIFTSHADER_INDIRECT if we use save_snapshot.
       logging.info('Forcing swiftshader_indirect as snapshots was requested')
       open_gl_driver = SWIFTSHADER_INDIRECT
     self._SanityCheckOpenGLDriver(open_gl_driver, allow_experimental_open_gl)
@@ -2846,7 +2846,7 @@ class EmulatedDevice(object):
       clean_death = self._CleanUmount('/cache') and clean_death
     telnet = self._ConnectToEmulatorConsole()
     telnet.write('kill\n')
-    telnet.read_until('OK', 2.0)
+    telnet.read_all()
     self._running = False
 
     if politely and not clean_death:
@@ -2923,8 +2923,36 @@ class EmulatedDevice(object):
     if ram_binary_location and not snapshot_file_found:
       raise Exception('Requested to save snapshots but didnt find ram.bin')
 
+    # Before compressing make sure none of the files are being modified since
+    # the Kill command is not really synchronous. The best way to deal with that
+    # sitation is either wait for the Emulator process to die and since we use
+    # os.fork, we might have to pass around the emulator pid back to the parent
+    # process. The easiest thing to do would be to lsof all the files that we
+    # are tarring and that'll guarantee that no other process is writing to
+    # those files before we are really shutdown.
+    # Hopefully with v2 design, we don't have to fork.
+    all_files_closed = False
+    lsof_command = ['/usr/bin/lsof'] + image_files
+    # Wait for 10 seconds before giving up.
+    for _ in range(10):
+      try:
+        output = subprocess.check_output(lsof_command)
+        logging.info('lsof output :%s', output)
+      except subprocess.CalledProcessError as err:
+        # If no processes are writing to it, then we are done and it will throw
+        # a exception.
+        if err.returncode == 1:
+          all_files_closed = True
+          break
+      time.sleep(1)
+
     image_files = ['./%s' % os.path.relpath(f, self._images_dir)
                    for f in image_files]
+
+    if not all_files_closed:
+      raise Exception('Emulator still not dead after issuing KILL and waiting '
+                      '10 seconds')
+
     if (self._metadata_pb.emulator_type ==
         emulator_meta_data_pb2.EmulatorMetaDataPb.QEMU2):
       # QEMU2 uses .qcow disk images which are diffs over the original

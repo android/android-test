@@ -206,7 +206,7 @@ flags.DEFINE_list('platform_apks', None, '[BOOT ONLY] Platform apks are '
 flags.DEFINE_string('sim_access_rules_file', None, 'the path to a sim access '
                     'rules proto file. Used to grant UICC carrier privileges '
                     'to apps.')
-flags.DEFINE_boolean('save_snapshots', False, 'If true, saves the device  '
+flags.DEFINE_boolean('save_snapshot', False, 'If true, saves the device  '
                      'snapshots in BOOT phase and reloads them during START '
                      ' phase.')
 flags.DEFINE_string('snapshot_file', None, '[bazel ONLY] The path to the '
@@ -326,7 +326,7 @@ def _FirstBootAtBuildTimeOnly(
   device.StartDevice(enable_display=False,  # Will be ignored.
                      start_vnc_on_port=0,  # Will be ignored.
                      emulator_tmp_dir=emulator_tmp_dir,
-                     save_snapshots=FLAGS.save_snapshots)
+                     save_snapshot=FLAGS.save_snapshot)
 
   try:
     device.LogToDevice('Device booted.')
@@ -354,7 +354,7 @@ def _StopDeviceAndOutputState(device, output_dir):
   """
   proto = device.GetEmulatorMetadataProto()
   ram_bin = None
-  if FLAGS.save_snapshots:
+  if FLAGS.save_snapshot:
     ram_bin = os.path.join(output_dir, _RAM_BIN)
     device.TakeSnapshot()
   device.KillEmulator(politely=True)
@@ -468,7 +468,7 @@ def _RestartDevice(device,
                      emulator_tmp_dir=emulator_tmp_dir,
                      open_gl_driver=open_gl_driver,
                      allow_experimental_open_gl=experimental_open_gl,
-                     save_snapshots=FLAGS.save_snapshots,
+                     save_snapshot=FLAGS.save_snapshot,
                      snapshot_file=snapshot_file)
 
 

@@ -511,7 +511,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     initial_boot_device.StartDevice(enable_display=False,
                                     start_vnc_on_port=0,
                                     emulator_tmp_dir=None,
-                                    save_snapshots=False)
+                                    save_snapshot=False)
 
     self.mox.StubOutWithMock(initial_boot_device, 'InstallApk')
     self.mox.StubOutWithMock(initial_boot_device, 'KillEmulator')
@@ -573,7 +573,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     initial_boot_device.StartDevice(enable_display=False,
                                     start_vnc_on_port=0,
                                     emulator_tmp_dir=None,
-                                    save_snapshots=False)
+                                    save_snapshot=False)
 
     self.mox.StubOutWithMock(initial_boot_device, 'KillEmulator')
     self.mox.StubOutWithMock(unified_launcher, '_StopDeviceAndOutputState')
