@@ -1537,6 +1537,7 @@ class EmulatedDevice(object):
         '-unix-pipe', 'sockets/tar-pull-server',
         '-unix-pipe', 'sockets/exec-server',
         '-unix-pipe', 'sockets/tar-push-server',
+        '-unix-pipe', 'sockets/h2o',
         '-writable-system',
         '-feature', 'AllowSnapshotMigration',
         '-show-kernel']
