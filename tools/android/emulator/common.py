@@ -115,7 +115,7 @@ def EnsureFileCached(path):
 
 
 def Spawn(args, proc_input=None, proc_output=None, exec_dir=None,
-          exec_env=None, preexec_fn=None, logfile=None):
+          exec_env=None, preexec_fn=None, logfile=None, **kwargs):
   """Execs a subprocess using Popen.
 
   Task output will be logged to file.
@@ -130,6 +130,7 @@ def Spawn(args, proc_input=None, proc_output=None, exec_dir=None,
     exec_env: the environment the subprocess will use.
     preexec_fn: a function to call after fork but before exec.
     logfile: an optional filename to log stdout/stderr.
+    **kwargs: passed to subprocess.Popen as is.
 
   Returns:
     An object supporting Popen.wait(), Popen.stdout and Popen.stdin
@@ -180,7 +181,8 @@ def Spawn(args, proc_input=None, proc_output=None, exec_dir=None,
 
     task = subprocess.Popen(args, stdout=subprocess.PIPE, stdin=proc_input,
                             env=exec_env, cwd=exec_dir, stderr=subprocess.PIPE,
-                            close_fds=True, preexec_fn=main_process_preexec_fn)
+                            close_fds=True, preexec_fn=main_process_preexec_fn,
+                            **kwargs)
     log_out_task = subprocess.Popen(_GetLogCommand(logfile),
                                     stdin=task.stdout, stdout=proc_output,
                                     stderr=open('/dev/null'),
