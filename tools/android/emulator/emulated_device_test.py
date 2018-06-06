@@ -78,6 +78,30 @@ class EmulatedDeviceTest(mox.MoxTestBase):
     super(EmulatedDeviceTest, self).tearDown()
     common.SpawnAndWaitWithRetry = self._common_spawn
 
+  def testExecOnEmulator_ToggledOff(self):
+    self.mox.ReplayAll()
+    mock_device = emulated_device.EmulatedDevice(
+        android_platform=fake_android_platform_util.BuildAndroidPlatform(),
+        emulator_adb_port=1234,
+        emulator_telnet_port=4567,
+        device_serial='localhost:1234')
+    mock_device._metadata_pb = emulator_meta_data_pb2.EmulatorMetaDataPb()
+    mock_device._pipe_traversal_running = False
+
+    self.assertRaises(AssertionError, mock_device.ExecOnDevice, ['ls'])
+
+  def testExecOnEmulator_RestoreFromSnapshot(self):
+    self.mox.ReplayAll()
+    mock_device = emulated_device.EmulatedDevice(
+        android_platform=fake_android_platform_util.BuildAndroidPlatform(),
+        emulator_adb_port=1234,
+        emulator_telnet_port=4567,
+        device_serial='localhost:1234')
+    mock_device._metadata_pb = emulator_meta_data_pb2.EmulatorMetaDataPb()
+    mock_device._SnapshotPresent().value = 'True'
+
+    self.assertRaises(AssertionError, mock_device.ExecOnDevice, ['ls'])
+
   def testExecOnEmulator_ToggledOn(self):
     self.mox.ReplayAll()
     test_plat = emulated_device.AndroidPlatform()
@@ -89,6 +113,7 @@ class EmulatedDeviceTest(mox.MoxTestBase):
         emulator_telnet_port=4567,
         device_serial='localhost:1234')
     mock_device._metadata_pb = emulator_meta_data_pb2.EmulatorMetaDataPb()
+    mock_device._pipe_traversal_running = True
 
     self.assertEquals('-s localhost:1234 shell echo hello\n',
                       mock_device.ExecOnDevice(['echo', 'hello']))

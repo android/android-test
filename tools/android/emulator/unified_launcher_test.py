@@ -74,8 +74,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     output_dir = tempfile.mkdtemp()
 
     mock_device.StoreAndCompressUserdata(os.path.join(output_dir,
-                                                      'userdata_images.dat'),
-                                         None)
+                                                      'userdata_images.dat'))
     mock_device.GetEmulatorMetadataProto().AndReturn(self._test_proto)
 
     self.mox.ReplayAll()
@@ -134,8 +133,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
                                     window_scale=None,
                                     with_boot_anim=False,
                                     emulator_tmp_dir=None,
-                                    experimental_open_gl=False,
-                                    snapshot_file=None)
+                                    experimental_open_gl=False)
     self.mox.StubOutWithMock(mock_device, 'InstallApk')
     self.mox.StubOutWithMock(mock_device, 'KillEmulator')
     self.mox.StubOutWithMock(mock_device, 'CleanUp')
@@ -205,8 +203,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
                                     window_scale=None,
                                     with_boot_anim=False,
                                     emulator_tmp_dir=None,
-                                    experimental_open_gl=False,
-                                    snapshot_file=None)
+                                    experimental_open_gl=False)
     self.mox.StubOutWithMock(mock_device, 'InstallApk')
     self.mox.StubOutWithMock(mock_device, 'InstallCyberVillainsCert')
     mock_device.SyncTime()
@@ -271,8 +268,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
                                     window_scale=None,
                                     with_boot_anim=False,
                                     emulator_tmp_dir=None,
-                                    experimental_open_gl=False,
-                                    snapshot_file=None)
+                                    experimental_open_gl=False)
 
     self.mox.StubOutWithMock(mock_device, 'InstallApk')
     mock_device.InstallApk('hello_world', grant_runtime_permissions=True)
@@ -344,8 +340,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
                                     window_scale=None,
                                     with_boot_anim=False,
                                     emulator_tmp_dir=None,
-                                    experimental_open_gl=False,
-                                    snapshot_file=None)
+                                    experimental_open_gl=False)
 
     mock_device.SyncTime()
     mock_device.BroadcastDeviceReady(None)
@@ -511,7 +506,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     initial_boot_device.StartDevice(enable_display=False,
                                     start_vnc_on_port=0,
                                     emulator_tmp_dir=None,
-                                    save_snapshot=False)
+                                    build_time_only_no_op_rendering=True)
 
     self.mox.StubOutWithMock(initial_boot_device, 'InstallApk')
     self.mox.StubOutWithMock(initial_boot_device, 'KillEmulator')
@@ -573,7 +568,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     initial_boot_device.StartDevice(enable_display=False,
                                     start_vnc_on_port=0,
                                     emulator_tmp_dir=None,
-                                    save_snapshot=False)
+                                    build_time_only_no_op_rendering=True)
 
     self.mox.StubOutWithMock(initial_boot_device, 'KillEmulator')
     self.mox.StubOutWithMock(unified_launcher, '_StopDeviceAndOutputState')
