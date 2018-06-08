@@ -493,7 +493,7 @@ class EmulatedDevice(object):
   def _ExtractTarEntry(self, archive, entry, working_dir):
     """Extracts a single entry from a compressed tar archive."""
     subprocess.check_call([
-        'tar', '-xzSf', archive, '-C', '--no-same-owner',
+        'tar', '-xzSf', archive, '--no-same-owner', '-C',
         working_dir, '--no-anchored', entry])
 
   def _StageDataFiles(self,
