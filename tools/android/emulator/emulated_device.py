@@ -493,7 +493,8 @@ class EmulatedDevice(object):
   def _ExtractTarEntry(self, archive, entry, working_dir):
     """Extracts a single entry from a compressed tar archive."""
     subprocess.check_call([
-        'tar', '-xzSf', archive, '-C', working_dir, '--no-anchored', entry])
+        'tar', '-xzSf', archive, '-C', '--no-same-owner',
+        working_dir, '--no-anchored', entry])
 
   def _StageDataFiles(self,
                       system_image_dir,
@@ -1533,6 +1534,7 @@ class EmulatedDevice(object):
         '-unix-pipe', 'sockets/tar-pull-server',
         '-unix-pipe', 'sockets/exec-server',
         '-unix-pipe', 'sockets/tar-push-server',
+        '-unix-pipe', 'sockets/h2o',
         '-writable-system',
         '-show-kernel']
 
