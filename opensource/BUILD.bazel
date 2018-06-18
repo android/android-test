@@ -1,5 +1,5 @@
 java_import(
     name = "entry_point_import",
     jars = ["entry_point_deploy.jar"],
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
 )
