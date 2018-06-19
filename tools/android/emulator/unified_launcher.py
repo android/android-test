@@ -206,9 +206,18 @@ flags.DEFINE_list('platform_apks', None, '[BOOT ONLY] Platform apks are '
 flags.DEFINE_string('sim_access_rules_file', None, 'the path to a sim access '
                     'rules proto file. Used to grant UICC carrier privileges '
                     'to apps.')
+flags.DEFINE_boolean('save_snapshot', False, 'If true, saves the device  '
+                     'snapshots in BOOT phase and reloads them during START '
+                     ' phase.')
+flags.DEFINE_string('snapshot_file', None, '[bazel ONLY] The path to the '
+                    'snapshot file that was saved in BOOT cycle and is used '
+                    'during START cycle.')
+
 
 _METADATA_FILE_NAME = 'emulator-meta-data.pb'
 _USERDATA_IMAGES_NAME = 'userdata_images.dat'
+_RAM_BIN = 'ram.bin'
+
 _ADD_ACCOUNT_BROADCAST_ACTION = ('com.google.android.apps.auth.test.support'
                                  '.action.ADD_ACCOUNT_WITH_PASSWORD')
 _ADD_ACCOUNT_BOOLEAN_EXTRAS = {'syncable': True, 'auto_sync': True}
@@ -317,7 +326,7 @@ def _FirstBootAtBuildTimeOnly(
   device.StartDevice(enable_display=False,  # Will be ignored.
                      start_vnc_on_port=0,  # Will be ignored.
                      emulator_tmp_dir=emulator_tmp_dir,
-                     build_time_only_no_op_rendering=True)
+                     save_snapshot=FLAGS.save_snapshot)
 
   try:
     device.LogToDevice('Device booted.')
@@ -344,12 +353,14 @@ def _StopDeviceAndOutputState(device, output_dir):
     output_dir: the directory to write images to.
   """
   proto = device.GetEmulatorMetadataProto()
-  # we'd normally call TakeSnapshot() here if the device doesn't use
-  # kvm. But we've disabled this because of b/17322306
-
+  ram_bin = None
+  if FLAGS.save_snapshot:
+    ram_bin = os.path.join(output_dir, _RAM_BIN)
+    device.TakeSnapshot()
   device.KillEmulator(politely=True)
   device.StoreAndCompressUserdata(os.path.join(output_dir,
-                                               _USERDATA_IMAGES_NAME))
+                                               _USERDATA_IMAGES_NAME),
+                                  ram_bin)
   proto_file = open(os.path.join(output_dir, _METADATA_FILE_NAME), 'wb')
   proto_file.write(proto.SerializeToString())
   proto_file.flush()
@@ -369,7 +380,8 @@ def _RestartDevice(device,
                    with_boot_anim=False,
                    emulator_tmp_dir=None,
                    open_gl_driver=None,
-                   experimental_open_gl=False):
+                   experimental_open_gl=False,
+                   snapshot_file=None):
   """Restarts a emulated device from persisted images and snapshots.
 
   Args:
@@ -388,6 +400,7 @@ def _RestartDevice(device,
       files are placed while starting the emulator
     open_gl_driver: (optional) name of opengl driver to use.
     experimental_open_gl: (optional) if true - disables many opengl checks
+    snapshot_file: The path of snapshot file generated in boot phase.
   Raises:
     Exception: if the emulated device cannot be started.
   """
@@ -454,7 +467,9 @@ def _RestartDevice(device,
                      with_boot_anim=with_boot_anim,
                      emulator_tmp_dir=emulator_tmp_dir,
                      open_gl_driver=open_gl_driver,
-                     allow_experimental_open_gl=experimental_open_gl)
+                     allow_experimental_open_gl=experimental_open_gl,
+                     save_snapshot=FLAGS.save_snapshot,
+                     snapshot_file=snapshot_file)
 
 
 def _TryInstallApks(device, apks, grant_runtime_permissions):
@@ -587,7 +602,8 @@ def _Run(adb_server_port,
       with_boot_anim=with_boot_anim,
       emulator_tmp_dir=emulator_tmp_dir,
       open_gl_driver=open_gl_driver,
-      experimental_open_gl=experimental_open_gl)
+      experimental_open_gl=experimental_open_gl,
+      snapshot_file=FLAGS.snapshot_file)
 
   device.SyncTime()
   if mini_boot:
