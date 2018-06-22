@@ -15,7 +15,7 @@ make_device(
     boot_properties = {
         "ro.product.brand": "google",
         "ro.product.manufacturer": "google",
-        "ro.product.model": "Pixel 2",
+        "ro.product.model": "Pixel 2 XL",
         "ro.opa.eligible_device": "true",
     },
     cache = 32,
