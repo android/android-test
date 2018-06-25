@@ -642,7 +642,7 @@ class EmulatedDevice(object):
       shutil.copy(advanced_features_ini, self._AdvancedFeaturesFile())
       os.chmod(self._AdvancedFeaturesFile(), stat.S_IRWXU)
 
-    if not os.path.exists(self._UserdataQemuFile()):
+    if data_image_path and not os.path.exists(self._UserdataQemuFile()):
       init_data = data_image_path
       assert os.path.exists(init_data), '%s: no userdata.img' % data_image_path
       if init_data.endswith('.img'):
@@ -690,7 +690,8 @@ class EmulatedDevice(object):
         timer.stop(_SDCARD_CREATE)
 
     os.chmod(self._SdcardFile(), stat.S_IRWXU)
-    os.chmod(self._UserdataQemuFile(), stat.S_IRWXU)
+    if os.path.exists(self._UserdataQemuFile()):
+      os.chmod(self._UserdataQemuFile(), stat.S_IRWXU)
     os.chmod(self._CacheFile(), stat.S_IRWXU)
     os.chmod(self._SnapshotFile(), stat.S_IRWXU)
 
@@ -888,15 +889,19 @@ class EmulatedDevice(object):
         return _BUCKET_DPI[i]
     return _BUCKET_DPI[-1]
 
-  def _GetImagePath(self, image_dir, suffix):
+  def _GetImagePath(self, image_dir, suffix, ignore_non_existent_file=False):
     """Generate image path from image_dir and suffix."""
-
-    if os.path.exists(os.path.join(image_dir, suffix)):
-      return os.path.join(image_dir, suffix)
-    elif os.path.exists(os.path.join(image_dir, suffix + '.tar.gz')):
-      return os.path.join(image_dir, suffix + '.tar.gz')
+    file_path = os.path.join(image_dir, suffix)
+    if os.path.exists(file_path):
+      return file_path
+    elif os.path.exists(file_path + '.tar.gz'):
+      return file_path + '.tar.gz'
     else:
-      raise Exception('%s not found in %s' % (suffix, os.listdir(image_dir)))
+      if ignore_non_existent_file:
+        logging.info('%s file does not exist', file_path)
+        return None
+      else:
+        raise Exception('%s not found in %s' % (suffix, os.listdir(image_dir)))
 
   def BuildImagesDict(self, system_image_path, data_image_path, vendor_img_path,
                       encryptionkey_img_path, advanced_features_ini,
@@ -942,7 +947,8 @@ class EmulatedDevice(object):
     system_image_path = (system_image_path or
                          self._GetImagePath(system_image_dir, 'system.img'))
     data_image_path = (data_image_path or
-                       self._GetImagePath(system_image_dir, 'userdata.img'))
+                       self._GetImagePath(system_image_dir, 'userdata.img',
+                                          ignore_non_existent_file=True))
     build_prop_path = (
         build_prop_path or self._GetImagePath(system_image_dir, 'build.prop'))
 
@@ -1537,7 +1543,6 @@ class EmulatedDevice(object):
         '-skin', self._metadata_pb.skin,
         '-timezone', 'America/Los_Angeles',
         '-cache', 'cache.img',  # only respected via cmdline flag.
-        '-data', 'userdata-qemu.img',  # only respected via cmdline flag.
         '-memory', str(self._MemoryMb()),
         '-sdcard', 'sdcard.img',
         '-ramdisk', 'ramdisk.img',
@@ -1564,6 +1569,9 @@ class EmulatedDevice(object):
 
     if os.path.exists(self._VendorFile()):
       self._emulator_start_args.extend(['-vendor', 'vendor.img'])
+
+    if os.path.exists(self._UserdataQemuFile()):
+      self._emulator_start_args.extend(['-data', 'userdata-qemu.img'])
 
     if os.path.exists(self._EncryptionKeyImageFile()):
       self._emulator_start_args.extend(['-encryption-key', 'encryptionkey.img'])
@@ -2958,6 +2966,9 @@ class EmulatedDevice(object):
 
     if os.path.exists(self._VendorFile()):
       image_files.append(self._VendorFile() + self._PossibleImgSuffix())
+
+    if self.GetApiVersion() >= 28:
+      image_files.append(self._UserdataQemuFile())
 
     if (self._metadata_pb.emulator_type ==
         emulator_meta_data_pb2.EmulatorMetaDataPb.QEMU2):
