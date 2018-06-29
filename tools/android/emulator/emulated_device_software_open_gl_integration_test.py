@@ -52,7 +52,10 @@ class EmulatedDeviceSoftwareOpenGlIntegrationTest(googletest.TestCase):
         attempts += 1
         device = emulated_device.EmulatedDevice(
             android_platform=fake_android_platform_util.BuildAndroidPlatform())
-        default_props = {'ro.product.model': 'SuperAwesomePhone 3000'}
+        default_props = {
+            'ro.product.model': 'SuperAwesomePhone 3000',
+            'ro.mobile_ninjas.emulator_type': 'qemu2',
+        }
         if int(FLAGS.api_level) > 19:
           default_props['ro.initial_se_linux_mode'] = 'disabled'
 

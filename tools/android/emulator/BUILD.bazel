@@ -243,6 +243,7 @@ GL_API_LEVELS = [
         ],
         data = [
             "@androidsdk//:emulator_images_android_%s_x86" % api,
+            "@androidsdk//:emulator_images_android_%s_x86_qemu2_extra" % api,
             ":android_sdk_repository_emulator_tools",
             ":xvfb_support",
         ],

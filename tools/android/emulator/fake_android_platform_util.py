@@ -45,6 +45,7 @@ def BuildAndroidPlatform():
                               'tools/android/emulator/support/adb.turbo')
   platform.emulator_x86 = os.path.join(sdk_root, 'tools/emulator64-x86')
   platform.emulator_arm = os.path.join(sdk_root, 'tools/emulator64-arm')
+  platform.emulator_wrapper_launcher = os.path.join(sdk_root, 'tools/emulator')
   platform.real_adb = os.path.join(sdk_root, 'platform-tools/adb')
   platform.mksdcard = os.path.join(sdk_root, 'tools/mksdcard')
   platform.empty_snapshot_fs = os.path.join(
