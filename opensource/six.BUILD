@@ -6,5 +6,5 @@ py_library(
     name = "six",
     srcs = ["six.py"],
     srcs_version = "PY2AND3",
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
 )

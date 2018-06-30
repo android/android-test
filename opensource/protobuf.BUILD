@@ -129,7 +129,7 @@ cc_library(
     }) + COPTS,
     includes = ["src/"],
     linkopts = LINK_OPTS,
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
 )
 
 cc_library(
@@ -201,7 +201,7 @@ cc_library(
     }) + COPTS,
     includes = ["src/"],
     linkopts = LINK_OPTS,
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
     deps = [":protobuf_lite"],
 )
 
@@ -213,7 +213,7 @@ cc_library(
     name = "protobuf_headers",
     hdrs = glob(["src/**/*.h"]),
     includes = ["src/"],
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
 )
 
 objc_library(
@@ -221,7 +221,7 @@ objc_library(
     hdrs = ["objectivec/GPBProtocolBuffers.h"],
     includes = ["objectivec"],
     non_arc_srcs = ["objectivec/GPBProtocolBuffers.m"],
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
 )
 
 RELATIVE_WELL_KNOWN_PROTOS = [
@@ -245,7 +245,7 @@ WELL_KNOWN_PROTOS = ["src/" + s for s in RELATIVE_WELL_KNOWN_PROTOS]
 filegroup(
     name = "well_known_protos",
     srcs = WELL_KNOWN_PROTOS,
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
 )
 
 cc_proto_library(
@@ -255,7 +255,7 @@ cc_proto_library(
     default_runtime = ":protobuf",
     internal_bootstrap_hack = 1,
     protoc = ":protoc",
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
 )
 
 ################################################################################
@@ -265,7 +265,7 @@ cc_proto_library(
 cc_binary(
     name = "js_embed",
     srcs = ["src/google/protobuf/compiler/js/embed.cc"],
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
 )
 
 genrule(
@@ -381,7 +381,7 @@ cc_library(
     copts = COPTS,
     includes = ["src/"],
     linkopts = LINK_OPTS,
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
     deps = [":protobuf"],
 )
 
@@ -389,7 +389,7 @@ cc_binary(
     name = "protoc",
     srcs = ["src/google/protobuf/compiler/main.cc"],
     linkopts = LINK_OPTS,
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
     deps = [":protoc_lib"],
 )
 
@@ -614,7 +614,7 @@ java_library(
         ":gen_well_known_protos_java",
     ],
     javacopts = ["-source 6", "-target 6"],
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
 )
 
 java_library(
@@ -623,7 +623,7 @@ java_library(
         "java/util/src/main/java/com/google/protobuf/util/*.java",
     ]),
     javacopts = ["-source 6", "-target 6"],
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
     deps = [
         "protobuf_java",
         "//external:gson",
@@ -742,7 +742,7 @@ py_proto_library(
         "//external:six",
     ],
     srcs_version = "PY2AND3",
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
 )
 
 # Copy the test proto files from src/google/protobuf to
@@ -833,14 +833,14 @@ proto_lang_toolchain(
     name = "cc_toolchain",
     command_line = "--cpp_out=$(OUT)",
     runtime = ":protobuf",
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
 )
 
 proto_lang_toolchain(
     name = "java_toolchain",
     command_line = "--java_out=$(OUT)",
     runtime = ":protobuf_java",
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
 )
 
 OBJC_HDRS = [
@@ -921,5 +921,5 @@ objc_library(
         "objectivec",
     ],
     non_arc_srcs = OBJC_SRCS,
-    visibility = ["//third_party/android/androidx_test:future_public_visibility"],
+    visibility = ["//visibility:public"],
 )

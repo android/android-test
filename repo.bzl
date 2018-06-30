@@ -122,7 +122,7 @@ def _development_repositories():
   native.new_http_archive(
       name = "jsr330",
       build_file_content = """
-package(default_visibility = ["//third_party/android/androidx_test:future_public_visibility"])
+package(default_visibility = ["//visibility:public"])
 java_import(
     name = "jsr330",
     jars = ["javax.inject.jar"],
