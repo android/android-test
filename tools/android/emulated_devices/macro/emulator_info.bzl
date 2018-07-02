@@ -2,11 +2,11 @@
 
 load(
     "//tools/android/emulated_devices:macro/emulator.bzl",
-    "new_emulator",
-    "emulator_type",
     "emulator_files",
+    "emulator_type",
+    "new_emulator",
 )
-load("//tools/android/emulated_devices:macro/image.bzl", "image_files", "image_compressed_suffix")
+load("//tools/android/emulated_devices:macro/image.bzl", "image_compressed_suffix", "image_files")
 load("//tools/android/emulated_devices:macro/props.bzl", "new_props")
 
 _EMULATOR_TYPE_PROP = "ro.mobile_ninjas.emulator_type"
@@ -73,30 +73,31 @@ QEMU2 = new_emulator(
 )
 
 def _t2e():
-  t2e = dict()
-  for e in [QEMU, QEMU2]:
-    t2e[emulator_type(e)] = e
-  return t2e
+    t2e = dict()
+    for e in [QEMU, QEMU2]:
+        t2e[emulator_type(e)] = e
+
+    return t2e
 
 TYPE_TO_EMULATOR = _t2e()
 
 def extra_system_image_contents(emulator, image):
-  """Returns a list of targets to include the the system image filegroup.
+    """Returns a list of targets to include the the system image filegroup.
 
-  Mostly this is figured out by information stored in the emulator and image
-  objects.
+    Mostly this is figured out by information stored in the emulator and image
+    objects.
 
-  For QEMU2 we have to add an extra target to get the ranchu kernel.
+    For QEMU2 we have to add an extra target to get the ranchu kernel.
 
-  Arguments:
-    emulator: an emulator
-    image: an image
-  Returns:
-    a list of srcs to put in the file system image filegroup.
-  """
-  contents = [image_files(image) + image_compressed_suffix(image)]
-  contents += emulator_files(emulator)
-  if emulator_type(emulator) == emulator_type(QEMU2):
-    maybe_extra_kernel_target = "%s_qemu2_extra" % image_files(image)
-    contents.append(maybe_extra_kernel_target)
-  return contents
+    Arguments:
+      emulator: an emulator
+      image: an image
+    Returns:
+      a list of srcs to put in the file system image filegroup.
+    """
+    contents = [image_files(image) + image_compressed_suffix(image)]
+    contents += emulator_files(emulator)
+    if emulator_type(emulator) == emulator_type(QEMU2):
+        maybe_extra_kernel_target = "%s_qemu2_extra" % image_files(image)
+        contents.append(maybe_extra_kernel_target)
+    return contents
