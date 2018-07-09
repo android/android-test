@@ -986,7 +986,7 @@ def main(unused_argv):
               '%(message)s'),
       datefmt='%m%d %H:%M:%S')
 
-  logging.info('args: %s', ' '.join(sys.argv))
+  logging.debug('args: %s', ' '.join(sys.argv))
   attempts = 0
   reporter = reporting.MakeReporter()
   try:
@@ -1006,7 +1006,7 @@ def main(unused_argv):
           raise e
   finally:
     reporter.Emit()
-  logging.info('return from main function.')
+  logging.debug('return from main function.')
 
 
 def AddFileLogHandler():

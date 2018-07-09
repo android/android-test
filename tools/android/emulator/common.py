@@ -107,8 +107,8 @@ def EnsureFileCached(path):
   """
   assert os.path.exists(path), 'Path doesn\'t exist: %s' % path
   with open('/dev/null', mode='w') as dev_null:
-    logging.info('Ensuring we have cache hit (first attempt might take some '
-                 'time) for file: %s', path)
+    logging.debug('Ensuring we have cache hit (first attempt might take some '
+                  'time) for file: %s', path)
     subprocess.check_call(['/usr/bin/head', '-c1', path],
                           stdout=dev_null,
                           stderr=dev_null)
