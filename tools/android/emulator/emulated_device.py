@@ -1905,50 +1905,6 @@ class EmulatedDevice(object):
         except OSError as e:
           logging.info('Failed to restart telnet daemon. %s', e)
 
-  def _TogglePipeServices(self, on_off):
-    """When we take snapshots we shut down pipe services.
-
-    If we restore from snapshots we need to turn them back on.
-
-    This uses standard adb to toggle them.
-
-    Args:
-      on_off: bool to turn on or off.
-    Returns:
-      True on success - false otherwise.
-    """
-    #  "No Gimli, I would not take the road through Moria unless I had no other
-    #  choice.".replace('Moria', 'adb') - Gandalf
-    if not self.ConnectDevice():
-      return False
-    action = on_off and 'start' or 'stop'
-    services = ['pipe_traverse', 'tn_pipe_traverse']
-    for service in services:
-      try:
-        common.SpawnAndWaitWithRetry(
-            [self.android_platform.real_adb,
-             '-s', self.device_serial,
-             'wait-for-device',
-             'shell', action, service],
-            timeout_seconds=10,
-            exec_env=self._AdbEnv())
-      except common.SpawnError:
-        return False
-
-    self._pipe_traversal_running = on_off
-
-    if not on_off:
-      try:
-        common.SpawnAndWaitWithRetry(
-            [self.android_platform.real_adb,
-             '-s', self.device_serial,
-             'disconnect'],
-            timeout_seconds=10,
-            exec_env=self._AdbEnv())
-      except common.SpawnError:
-        return False
-    return True
-
   def _StartPipeServices(self, pipe_dir):
     """Starts pipe_traversal services for the host.
 
@@ -2548,10 +2504,10 @@ class EmulatedDevice(object):
       return False
 
   def _PipeTraversalRestoreStep(self):
-    if self._IsPipeTraversalRunning():
-      return True
-    else:
-      return self._TogglePipeServices(True)
+    # We don't shutdown pipe services anymore during shutdown, so there's
+    # no restore step anymore. This will be cleaned up with the re-write.
+    self._pipe_traversal_running = True
+    return True
 
   def _KickLauncher(self):
     """Kicks off launcher start."""
