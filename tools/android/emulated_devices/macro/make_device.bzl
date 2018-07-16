@@ -326,6 +326,7 @@ def _new_devices_for_image_and_emulator(
         image,
         visibility,
         hardware,
+        emu_suffix,
     )
 
 
@@ -336,7 +337,8 @@ def make_android_device(
         tags,
         image,
         visibility,
-        hardware):
+        hardware,
+        emu_suffix):
     native.android_device(
         name = name,
         default_properties = default_properties,
