@@ -56,8 +56,10 @@ def BuildAndroidPlatform():
   return platform
 
 
-def GetSystemImageDir():
+def GetSystemImageDir(sys_dir=None):
   """Gets the path of the System Image Directory."""
+  if sys_dir:
+    return _GetFilePath(sys_dir)
   return _GetFilePath(FLAGS.system_image_dir)
 
 

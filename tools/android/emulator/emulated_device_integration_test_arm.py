@@ -25,6 +25,7 @@ from tools.android.emulator import fake_android_platform_util
 
 root_dir = os.path.abspath(os.path.join(resources.GetRunfilesDir(),
                                         'android_test_support'))
+SYSTEM_IMG_DIR = 'third_party/java/android/system_images/android_19/armeabi'
 
 
 class EmulatedDeviceIntegrationTest(googletest.TestCase):
@@ -38,13 +39,13 @@ class EmulatedDeviceIntegrationTest(googletest.TestCase):
         device = emulated_device.EmulatedDevice(
             android_platform=fake_android_platform_util.BuildAndroidPlatform())
         device.Configure(
-            fake_android_platform_util.GetSystemImageDir(),
+            fake_android_platform_util.GetSystemImageDir(SYSTEM_IMG_DIR),
             '800x480',
             '512',
             233,
             36,
             source_properties={'systemimage.abi': 'armeabi',
-                               'androidversion.apilevel': '10'})
+                               'androidversion.apilevel': '19'})
         device.StartDevice(False, 0)
         device.KillEmulator(politely=True)
         return
