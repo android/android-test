@@ -1566,6 +1566,7 @@ class EmulatedDevice(object):
 
     if self._metadata_pb.emulator_architecture == 'x86':
       self._emulator_start_args.extend(['-feature', 'AllowSnapshotMigration'])
+      self._emulator_start_args.extend(['-feature', '-GLDMA'])
 
     if os.path.exists(self._VendorFile()):
       self._emulator_start_args.extend(['-vendor', 'vendor.img'])
