@@ -471,6 +471,7 @@ class EmulatedDevice(object):
   def _SessionImagesDir(self):
     return os.path.join(self._images_dir, 'session')
 
+
   def _SnapshotRamBinFile(self):
     return os.path.join(self._SessionImagesDir(), 'snapshots', 'default_boot',
                         'ram.bin')
@@ -688,6 +689,7 @@ class EmulatedDevice(object):
         # 1AEF-1A1E is hard coded in AdbController.java
         self._SetUUID(self._SdcardFile(), 0x1AEF1A1E)
         timer.stop(_SDCARD_CREATE)
+
 
     os.chmod(self._SdcardFile(), stat.S_IRWXU)
     if os.path.exists(self._UserdataQemuFile()):
@@ -1457,6 +1459,7 @@ class EmulatedDevice(object):
     gles_mesa = os.path.join(gl_base, 'gles_mesa')
     qt_lib = os.path.join(gl_base, 'qt/lib')
     lib_paths.append(qt_lib)
+    lib_paths.append(self._SessionImagesDir())
     # Make sure we always have GL library in search path.
     # Either is mesa GL or host GL.
     if not self._display or self._display.open_gl_driver != HOST_OPEN_GL:
