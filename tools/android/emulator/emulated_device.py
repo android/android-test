@@ -1045,11 +1045,6 @@ class EmulatedDevice(object):
     self._metadata_pb.boot_property.add(
         name='service.adb.root', value='1')
 
-    if self.GetApiVersion() == 19:
-      # Work around for one opengl bug (b/32765858) in kitkat.
-      self._metadata_pb.boot_property.add(
-          name='debug.hwui.render_dirty_regions', value='false')
-
     # If the user has not specified heapgrowth limit in default properties,
     # default it to either 64 of vm_heap, whichever is lower.
     if not [kv for kv in self._metadata_pb.boot_property
