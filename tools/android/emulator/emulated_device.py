@@ -1218,8 +1218,10 @@ class EmulatedDevice(object):
     timer.stop(_STAGE_DATA)
 
     timer.start(_START_PROCESS)
+    loading_from_snapshot = True if snapshot_file else False
     self._StartEmulator(timer, net_type, new_process_group, window_scale,
-                        with_audio, with_boot_anim)
+                        with_audio, with_boot_anim,
+                        loading_from_snapshot=loading_from_snapshot)
     timer.stop(_START_PROCESS)
     self._AddTimerResults(timer)
 
@@ -1681,7 +1683,8 @@ class EmulatedDevice(object):
   # pylint: disable=too-many-statements
   def _StartEmulator(self, timer,
                      net_type, new_process_group, window_scale,
-                     with_audio, with_boot_anim):
+                     with_audio, with_boot_anim,
+                     loading_from_snapshot=False):
     """Start emulator or user mode android."""
 
     if not self.emulator_adb_port:
@@ -1741,39 +1744,41 @@ class EmulatedDevice(object):
 
     timer.stop(_SPAWN_EMULATOR)
 
-    self._PollEmulatorStatus(timer)
+    self._PollEmulatorStatus(timer, loading_from_snapshot=loading_from_snapshot)
     if self._mini_boot:
       return
 
     # Update the dex2oat binary.
     api_version = self.GetApiVersion()
 
+
     self.ExecOnDevice(['setprop', 'qemu.host.socket.dir',
                        str(self._sockets_dir)])
     self.ExecOnDevice(['setprop', 'qemu.host.hostname', socket.gethostname()])
-    # set screen off timeout to 30 minutes.
-    self._SetDeviceSetting(self.GetApiVersion(), 'system',
-                           'screen_off_timeout', '1800000')
-    # disable lockscreen, this works on most api levels.
-    if not self._direct_boot:
-      self._SetDeviceSetting(self.GetApiVersion(), 'secure',
-                             'lockscreen.disabled', '1')
-    # disable software keyboard when hardware keyboard is there.
-    self._SetDeviceSetting(self.GetApiVersion(), 'secure',
-                           'show_ime_with_hard_keyboard', '0')
-
-    if FLAGS.long_press_timeout:
-      if self.GetApiVersion() == 10:
-        logging.warn('long_press_timeout doesn\'t work on api 10.')
-      else:
+    if not loading_from_snapshot:
+      # set screen off timeout to 30 minutes.
+      self._SetDeviceSetting(self.GetApiVersion(), 'system',
+                             'screen_off_timeout', '1800000')
+      # disable lockscreen, this works on most api levels.
+      if not self._direct_boot:
         self._SetDeviceSetting(self.GetApiVersion(), 'secure',
-                               'long_press_timeout',
-                               str(FLAGS.long_press_timeout))
-    # fix possible stuck keyguardscrim window.
-    self._DismissStuckKeyguardScrim()
-    # ensure that processes that hang can write to /data/anr/traces.txt
-    self.ExecOnDevice(['mkdir -p /data/anr && chmod -R 777 /data/anr'])
-    logging.info(self.ExecOnDevice(['getprop']))
+                               'lockscreen.disabled', '1')
+      # disable software keyboard when hardware keyboard is there.
+      self._SetDeviceSetting(self.GetApiVersion(), 'secure',
+                             'show_ime_with_hard_keyboard', '0')
+
+      if FLAGS.long_press_timeout:
+        if self.GetApiVersion() == 10:
+          logging.warn('long_press_timeout doesn\'t work on api 10.')
+        else:
+          self._SetDeviceSetting(self.GetApiVersion(), 'secure',
+                                 'long_press_timeout',
+                                 str(FLAGS.long_press_timeout))
+      # fix possible stuck keyguardscrim window.
+      self._DismissStuckKeyguardScrim()
+      # ensure that processes that hang can write to /data/anr/traces.txt
+      self.ExecOnDevice(['mkdir -p /data/anr && chmod -R 777 /data/anr'])
+      logging.info(self.ExecOnDevice(['getprop']))
   # pylint: enable=too-many-statements
 
   def _ForkWatchdog(self, new_process_group, emu_args, emu_env, emu_wd,
@@ -2067,11 +2072,12 @@ class EmulatedDevice(object):
     logging.info(self.ExecOnDevice(args))
 
   # pylint: disable=too-many-statements
-  def _PollEmulatorStatus(self, timer=None):
+  def _PollEmulatorStatus(self, timer=None, loading_from_snapshot=False):
     """Blocks until the emulator is fully launched.
 
     Args:
       timer: stopwatch to measure how long each check takes
+      loading_from_snapshot: Is the emulator loaded from a snapshot
 
     Raises:
       Exception: if the emulator dies or doesn't become lively in a reasonable
@@ -2230,24 +2236,26 @@ class EmulatedDevice(object):
           self._direct_boot = ('1' in
                                self.ExecOnDevice(['getprop', DIRECT_BOOT_PROP]))
 
-      if not dpi_ok:
-        if not attempter.step_attempts:
-          if not self.IsInstalled(_BOOTSTRAP_PKG):
-            self.InstallApk(
-                resources.GetResourceFilename(_BOOTSTRAP_PATH),
-                grant_runtime_permissions=True)
-
-        if not self._direct_boot:
-          self._UnlockScreen()
-        dpi_ok = attempter.AttemptStep(self._CheckDpi,
-                                       'Checking DPI',
-                                       _CHECK_DPI,
-                                       _CHECK_DPI_FAIL_SLEEP)
+      if not loading_from_snapshot:
         if not dpi_ok:
-          if attempter.step_attempts > 4:
-            self._TransientDeath('Haven\'t been able to read correct DPI values'
-                                 ' in %s attempts.' % attempter.step_attempts)
-          continue
+          if not attempter.step_attempts:
+            if not self.IsInstalled(_BOOTSTRAP_PKG):
+              self.InstallApk(
+                  resources.GetResourceFilename(_BOOTSTRAP_PATH),
+                  grant_runtime_permissions=True)
+
+          if not self._direct_boot:
+            self._UnlockScreen()
+          dpi_ok = attempter.AttemptStep(self._CheckDpi,
+                                         'Checking DPI',
+                                         _CHECK_DPI,
+                                         _CHECK_DPI_FAIL_SLEEP)
+          if not dpi_ok:
+            if attempter.step_attempts > 4:
+              self._TransientDeath('Haven\'t been able to read  '
+                                   'correct DPI values in '
+                                   ' %s attempts.' % attempter.step_attempts)
+            continue
 
 
       if not self._direct_boot and not launcher_started:
