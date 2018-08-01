@@ -67,7 +67,7 @@ def make_device(
         visibility = None,
         emulator_types = None,
         default_emulator_type = None,
-        archs_override = None,
+        archs_override = None):
     """Generates a set of android_device targets.
 
     It is recommended to use new_devices() instead.
@@ -177,7 +177,7 @@ def new_devices(
         default_emulator = None,
         boot_apks = None,
         visibility = None,
-        archs_override = None,
+        archs_override = None):
     """Generates a set of android_device targets.
 
     Arguments:
@@ -297,7 +297,7 @@ def _new_devices_for_image_and_emulator(
         visibility,
         image,
         emulator,
-        emu_suffix,
+        emu_suffix):
     tags = emulator_tags(emulator, image)
     property_target = ":" + _get_property_target_name(name, emu_suffix, image)
     system_image_contents = extra_system_image_contents(emulator, image)
