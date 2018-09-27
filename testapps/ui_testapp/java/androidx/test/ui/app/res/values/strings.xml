@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2015 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+
+  <string name="button_send">Send</string>
+  <string name="button_send_bottom">Send Bottom</string>
+  <string name="button_call">Call</string>
+  <string name="button_to_message">SMS</string>
+  <string name="button_to_browser">Go To Browser</string>
+  <string name="button_pick">Pick</string>
+  <string name="button_market">Goto Market</string>
+  <string name="button_gesture">Go To Gesture Activity</string>
+  <string name="button_simple">Click Me!</string>
+  <string name="display_data"/>
+  <string name="display_title">Data from sender</string>
+  <string name="dialog_title">An emergency alert</string>
+  <string name="dialog_message">A really important message</string>
+  <string name="enter_hint">Type text and press Enter</string>
+  <string name="launch_list_activity">Launch list_activity</string>
+  <string name="launch_scroll_activity">Launch scroll_activity</string>
+  <string name="send_data_to_message_edit_text">send_data_to_message_edit_text</string>
+  <string name="send_hint">Enter text here</string>
+  <string name="send_hint_for_call">Enter number here</string>
+  <string name="send_title">Send internal intent with data</string>
+  <string name="send_intent_to_call">Enter Number To Call</string>
+  <string name="send_intent_to_market">Enter App Id From Market</string>
+  <string name="send_intent_to_browser">Enter URL you wanted to go.</string>
+  <string name="send_hint_to_market">Enter App id</string>
+  <string name="send_message">Enter Message</string>
+  <string name="pick_title">Pick a Contact</string>
+  <string name="item_1_text">Menu Item 1</string>
+  <string name="item_2_text">Goodbye</string>
+  <string name="make_alert_dialog_button">Make an alert dialog</string>
+  <string name="make_popup_menu_button">Make a Popup Window</string>
+  <string name="make_popup_view_button">Make a Popup Window</string>
+  <string name="popup_window_text">I am in a popup window</string>
+  <string name="popup_title">A popup window</string>
+  <string name="gesture_title">Show Gesture Activity</string>
+  <string name="text_click">Click</string>
+  <string name="text_long_click">Long Click</string>
+  <string name="text_swipe">Swipe</string>
+  <string name="text_double_click">Double Click</string>
+  <string name="text_empty"></string>
+  <string name="text_show">Show context actionbar</string>
+  <string name="text_hide">Hide context actionbar</string>
+  <string name="text_simple">Message</string>
+  <string name="popup_item_1_text">Popup Item 1</string>
+  <string name="popup_item_2_text">Popup Item 2</string>
+  <string name="popup_item_3_text">Popup Item 3</string>
+  <string name="context_item_1_text">Context Item 1</string>
+  <string name="context_item_2_text">Context Item 2</string>
+  <string name="context_item_3_text">Context Item 3</string>
+  <string name="options_item_1_text">Options Item 1</string>
+  <string name="options_item_2_text">Options Item 2</string>
+  <string name="options_item_3_text">Options Item 3</string>
+  <string name="searching_for_label">Searching for:</string>
+  <string name="row_label">clicked on row:</string>
+  <string name="column_label">clicked on column:</string>
+  <string name="hello_world">hello world!</string>
+  <string name="request_hello_world">Request hello world</string>
+  <string name="nav_drawer_open">Open navigation drawer</string>
+  <string name="pick_water">Pick a body of water</string>
+  <string name="nav_drawer_close">Close navigation drawer</string>
+  <string name="button_pick_date">Pick a date</string>
+  <string name="button_pick_time">Pick a time</string>
+  <string name="textWithLinks">Before www.google.com there was altavista.com. How did we survive
+        without www.google.com?
+    </string>
+  <string name="selected_item">Clicked on:</string>
+  <string name="selected_item_default_text">No item selected</string>
+  <string name="selected_item_text">Selected: %1$s</string>
+  <string name="type_something">type something...</string>
+  <string name="button_change_text">Change text</string>
+  <string name="camel_case_text">Camel Case Text</string>
+  <string-array name="spinner_array">
+    <item>Espresso</item>
+    <item>Doppio</item>
+    <item>Macchiato</item>
+    <item>Cappuccino</item>
+    <item>Americano</item>
+    <item>Mocha</item>
+    <item>Late</item>
+  </string-array>
+  <string name="bacon_ipsum">
+        Bacon ipsum dolor sit amet venison shankle pork chop meatball tri-tip beef ribs turducken.
+        Strip steak ball tip boudin shank, turducken leberkas pork chop beef ribs ham hock sausage
+        frankfurter prosciutto doner ham. Bacon landjaeger ball tip, andouille chuck beef ribs jowl
+        kevin tri-tip turkey biltong frankfurter sausage. Boudin pork belly meatloaf chicken cow
+        tri-tip kielbasa shoulder. Pork loin pig boudin hamburger pastrami short ribs. Sirloin
+        tongue pork loin chicken spare ribs bresaola pastrami.\n\n
+        Tenderloin turducken pork chop, pork belly beef ribs brisket ham. Turducken landjaeger short
+        loin capicola pancetta pork chop strip steak rump meatloaf brisket kevin doner short ribs
+        salami. Beef prosciutto flank leberkas landjaeger swine. Fatback prosciutto sausage, jerky
+        tail tongue hamburger jowl biltong shank pork belly swine filet mignon chicken ground round.
+        Pork chop porchetta ground round tri-tip tail t-bone.\n\n
+        Landjaeger rump bacon salami sausage pork loin pig brisket strip steak corned beef. Biltong
+        sirloin meatloaf ribeye, bresaola cow chicken t-bone frankfurter andouille strip steak jerky
+        capicola. Ribeye porchetta strip steak boudin. Kielbasa cow brisket pastrami ball tip
+        tenderloin bresaola ham. Biltong andouille chuck ham hock jerky beef chicken, flank shankle
+        ball tip venison porchetta kevin fatback kielbasa. Boudin tongue ground round, turkey pork
+        belly salami corned beef pork tri-tip meatloaf sausage andouille strip steak pig. Spare ribs
+        beef meatloaf rump sausage doner frankfurter.\n\n
+        Fatback porchetta pork loin meatball, turducken pork chop drumstick boudin. Kevin tri-tip
+        ground round corned beef, ribeye swine filet mignon salami pork spare ribs pork chop
+        brisket. Filet mignon shankle t-bone bacon. Turducken capicola turkey porchetta kielbasa
+        shank pork loin jerky venison tenderloin boudin ham hock ground round.</string>
+
+  <string name="image_header">%1$s by %2$s</string>
+  <string name="no_menu_item_selected">No menu item selected</string>
+  <string name="navigation_view_header_title">NavigationViewActions</string>
+  <string name="navigation_view_item1">Nav Item 1</string>
+  <string name="navigation_view_item2">Nav Item 2</string>
+  <string name="navigation_view_item3">Nav Item 3</string>
+  <string name="navigation_view_item4">Nav Item 4</string>
+  <string name="navigation_view_item5">Nav Item 5</string>
+  <string name="navigation_view_item6">Nav Item 6</string>
+  <string name="navigation_view_item7">Nav Item 7</string>
+  <string name="navigation_view_item8">Nav Item 8</string>
+  <string name="navigation_view_item9">Nav Item 9</string>
+  <string name="request_phone_state_permission">Request Phone State</string>
+  <string name="request_get_accounts_permission">Request Get Accounts</string>
+  <string name="permissionGranted">Permission Granted</string>
+  <string name="permissionRevoked">Permission Revoked</string>
+
+  <string name="create_chat_head_button">Create Chat Head</string>
+  <string name="destroy_chat_head_button">Destroy Chat Head</string>
+  <string name="show_dialog_delayed">Show Dialog Delayed</string>
+  <string name="dialog_delayed_btn_text_espresso">Espresso</string>
+  <string name="dialog_delayed_btn_text_latte">Latte</string>
+  <string name="dialog_delayed_title">Delayed Dialog</string>
+
+  <string name="btn_send_broadcast_text">Send Broadcast</string>
+  <string name="button_pick_number">Pick number 7</string>
+  <string name="button_set_number">Set result number 10</string>
+  <string name="pick_number_title">Choose a number:</string>
+
+  <!-- resources referenced by tests -->
+  <string name="something">Hello World</string>
+  <string name="other_string">Goodbye!!</string>
+</resources>

@@ -1,0 +1,29 @@
+# Essential dagger libraries for AXT in Bazel
+
+package(default_visibility = ["//visibility:public"])
+
+java_library(
+    name = "dagger",
+    exported_plugins = [":dagger_plugin"],
+    exports = [
+        "@dagger_api//jar",
+        "@javax_inject//jar",
+    ],
+)
+
+java_plugin(
+    name = "dagger_plugin",
+    generates_api = 1,
+    processor_class = "dagger.internal.codegen.ComponentProcessor",
+    deps = [
+        "@dagger_api//jar",
+        "@dagger_compiler//jar",
+        "@dagger_producers//jar",
+        "@errorprone_javac_shaded//jar",
+        "@googlejavaformat//jar",
+        "@guava//jar",
+        "@javapoet//jar",
+        "@javax_annotation//jar",
+        "@javax_inject//jar",
+    ],
+)

@@ -1,0 +1,23 @@
+# Protocol buffer definitions for remote web model atoms
+
+licenses(["notice"])  # Apache License 2.0
+
+package(
+    default_visibility = [
+        "//espresso/core/java/androidx/test/espresso:espresso_pkg",
+        "//espresso/web/java/androidx/test/espresso/web/model:__pkg__",
+    ],
+)
+
+proto_library(
+    name = "remote_web_model_atoms_proto",
+    srcs = ["web_model_atoms.proto"],
+    deps = [
+        "@com_google_protobuf//:any_proto",
+    ],
+)
+
+java_lite_proto_library(
+    name = "remote_web_model_atoms_proto_android_pb3",
+    deps = [":remote_web_model_atoms_proto"],
+)

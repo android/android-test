@@ -1,0 +1,92 @@
+# Description:
+#   Light weight module represents a resources of an application under test which can cause
+#   asynchronous background work to happen during test execution.
+
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+licenses(["notice"])  # Apache License 2.0
+
+IDLING_INTERFACE = [
+    "IdlingResource.java",
+    "IdlingRegistry.java",
+    "CountingIdlingResource.java",
+]
+
+android_library(
+    name = "idling_resource_internal",
+    srcs = IDLING_INTERFACE,
+    visibility = [
+        "//visibility:public",
+    ],
+)
+
+android_library(
+    name = "idling_resource",
+    srcs = IDLING_INTERFACE,
+    visibility = ["//visibility:public"],
+)
+
+android_library(
+    name = "counting_idling_resource",
+    srcs = ["CountingIdlingResource.java"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":idling_resource",
+    ],
+)
+
+alias(
+    name = "scheduled_thread_pool_idling_resource",
+    actual = "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:scheduled_thread_pool_idling_resource",
+)
+
+alias(
+    name = "thread_pool_idling_resource",
+    actual = "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:thread_pool_idling_resource",
+)
+
+load("//build_extensions:release.bzl", "axt_release_lib")
+
+# rule for outputting externally released binary. Produces
+# espresso_idling_resource_release_no_deps.jar and espresso_idling_resource_release.aar
+axt_release_lib(
+    name = "espresso_idling_resource_release",
+    remove_specs = [
+        # remove META-INF directory to avoid duplicate clashes with imports from the support library.
+        "META-INF",
+    ],
+    deps = [
+        ":idling_resource",
+    ],
+)
+
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
+filegroup(
+    name = "idling_resource_src",
+    srcs = [
+        #     ":libcounting_idling_resource-src.jar",
+        ":libidling_resource_internal-src.jar",
+    ],
+)
+
+combine_jars(
+    name = "idling_resource_src_jars",
+    srcs = [
+        ":idling_resource_src",
+    ],
+)
+
+maven_artifact(
+    name = "espresso_idling_resource_maven_artifact",
+    src = ":espresso_idling_resource_release.aar",
+    artifact_id = "espresso-idling-resource",
+    group_id = "androidx.test.espresso",
+    last_updated = "20170622000000",
+    src_jar = ":idling_resource_src_jars.jar",
+    version = "%s" % ESPRESSO_VERSION,
+)

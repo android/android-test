@@ -1,0 +1,13 @@
+licenses(["notice"])  # Apache 2.0
+
+java_library(
+    name = "shell",
+    srcs = glob(["*.java"]),
+    visibility = [
+        "//tools/device_broker/java/com/google/android/apps/common/testing/broker:__pkg__",
+        "//tools/device_broker/javatests/com/google/android/apps/common/testing/broker/shell:__pkg__",
+    ],
+    deps = [
+        "@guava//jar",
+    ],
+)

@@ -1,0 +1,44 @@
+# Description: Test App used for multiprocess testing lib integration tests.
+licenses(["notice"])  # Apache License 2.0
+
+package(default_visibility = [
+    "//espresso/core/java/androidx/test/espresso:espresso_pkg",
+    "//testapps/multiprocess_testapp/javatests/androidx/test/multiprocess/app:__pkg__",
+])
+
+android_library(
+    name = "multiprocess_lib",
+    testonly = 1,
+    srcs = glob(
+        ["**/*.java"],
+    ),
+    assets = glob(["assets/**"]),
+    assets_dir = "assets",
+    manifest = "AndroidManifest.xml",
+    resource_files = glob(["res/**"]),
+    visibility = ["//visibility:private"],
+    deps = [
+        "//:com_android_support_support_annotations",
+        "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
+    ],
+)
+
+android_library(
+    name = "multiprocess_neverlink_lib",
+    testonly = 1,
+    # No other libraries should depend on this one
+    neverlink = 1,
+    exports = [":multiprocess_lib"],
+)
+
+android_binary(
+    name = "multiprocess_testapp",
+    testonly = 1,
+    assets = glob(["assets/**"]),
+    assets_dir = "assets",
+    manifest = "AndroidManifest.xml",
+    resource_files = glob(["res/**"]),
+    deps = [
+        ":multiprocess_lib",
+    ],
+)

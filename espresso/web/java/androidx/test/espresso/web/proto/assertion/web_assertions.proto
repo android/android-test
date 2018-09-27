@@ -1,0 +1,37 @@
+// LINT: LEGACY_NAMES
+syntax = "proto3";
+
+package google.test.remote.web.assertion;
+
+option java_package = "androidx.test.espresso.web.proto.assertion";
+
+import "google/protobuf/any.proto";
+
+message CheckResultAssertionProto {
+  string id = 1;
+  oneof result {
+    bytes serialisableResult = 2;
+    bytes documentResult = 3;
+    google.protobuf.Any anyResult = 4;
+  }
+  google.protobuf.Any webAssertion = 5;
+}
+
+message ResultCheckingWebAssertionProto {
+  string id = 1;
+  google.protobuf.Any atom = 2;
+  google.protobuf.Any resultMatcher = 3;
+  google.protobuf.Any resultDescriber = 4;
+}
+
+message ToStringResultDescriberProto {
+  string id = 1;
+}
+
+message WebContentResultDescriberProto {
+  string id = 1;
+}
+
+message DocumentParserAtomProto {
+  string id = 1;
+}

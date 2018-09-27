@@ -1,0 +1,20 @@
+# -*- mode: python; -*-
+#
+# Description:
+#   Utility classes for TestSuitePb manipulation
+#
+licenses(["notice"])  # Apache 2.0
+
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+java_library(
+    name = "testsuitepbutil",
+    testonly = 1,
+    srcs = glob(["*.java"]),
+    deps = [
+        "//tools/device_broker/proto:test_info_pb_java_proto",
+        "@guava//jar",
+    ],
+)

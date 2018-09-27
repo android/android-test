@@ -1,0 +1,65 @@
+# Description: Build rules for building androidx.test.core from source
+licenses(["notice"])  # Apache License 2.0
+
+package(
+    default_visibility = [
+        "//visibility:public",
+    ],
+)
+
+android_library(
+    name = "core",
+    srcs = glob(
+        ["**/*.java"],
+    ),
+    exports_manifest = 1,
+    manifest = ":AndroidManifest.xml",
+    resource_files = glob(["res/**/*"]),
+    deps = [
+        "//:android_arch_lifecycle_common",
+        "//:com_android_support_support_annotations",
+        "//runner/monitor",
+    ],
+)
+
+load("//build_extensions:release.bzl", "axt_release_lib")
+
+# group of targets to use to produce release binary + docs
+android_library(
+    name = "core_release_lib",
+    exports = [
+        ":core",
+    ],
+)
+
+# Generate rules for the release artifacts. This generates three targets
+# genrule output: core_release_no_deps.jar and core_release.aar
+# a java_library target libcore_release_no_deps
+axt_release_lib(
+    name = "core_release",
+    remove_specs = [
+        "com.google*",
+        "difflib*",
+    ],
+    deps = [
+        ":core_release_lib",
+    ],
+)
+
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "CORE_VERSION", "ANDROIDX_VERSION", "RUNNER_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
+maven_artifact(
+    name = "core_maven_artifact",
+    src = ":core_release.aar",
+    artifact_deps = [
+        "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
+        "androidx.test:monitor:%s" % RUNNER_VERSION,
+    ],
+    artifact_id = "core",
+    group_id = "androidx.test",
+    last_updated = "20180403000000",
+    src_jar = ":libcore-src.jar",
+    version = "%s" % CORE_VERSION,
+)

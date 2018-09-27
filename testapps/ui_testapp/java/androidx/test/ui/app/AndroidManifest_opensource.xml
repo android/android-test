@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2018 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="androidx.test.ui.app">
+
+  <uses-sdk
+      android:minSdkVersion="14"
+      android:targetSdkVersion="23"/>
+
+  <uses-permission android:name="android.permission.CALL_PHONE"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <!-- Runtime permission APIs -->
+  <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+  <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+  <application
+      android:icon="@drawable/ic_launcher"
+      android:label="UI Test App">
+    <activity
+        android:label="UI Test App"
+        android:name=".MainActivity">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+
+        <data
+            android:host="test_intent_filter.google.com"
+            android:scheme="http"/>
+      </intent-filter>
+    </activity>
+    <activity
+        android:label="actionbar test activity"
+        android:name=".ActionBarTestActivity"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+    <activity
+        android:label="simple activity"
+        android:name=".SimpleActivity"/>
+    <activity
+        android:label="send activity"
+        android:name=".SendActivity"/>
+    <activity
+        android:label="pick activity"
+        android:name=".PickActivity"/>
+    <activity
+        android:label="pickers activity"
+        android:name=".PickersActivity"/>
+    <activity
+        android:label="display activity"
+        android:name=".DisplayActivity"/>
+    <activity
+        android:label="drawer activity"
+        android:name=".DrawerActivity"
+        android:theme="@style/Theme.AppCompat.Light"/>
+    <activity
+        android:exported="true"
+        android:label="gesture activity"
+        android:name=".GestureActivity"/>
+    <activity
+        android:exported="true"
+        android:label="scroll activity"
+        android:name=".ScrollActivity"/>
+    <activity
+        android:exported="true"
+        android:label="list activity"
+        android:name=".LongListActivity"/>
+    <activity
+        android:label="very long list activity"
+        android:name=".VeryLongListViewActivity"/>
+    <activity
+        android:label="cursor adapter activity"
+        android:name=".CursorAdapterActivity"/>
+    <activity
+        android:label="menu activity"
+        android:name=".MenuActivity"/>
+    <activity
+        android:label="fragment stack activity"
+        android:name=".FragmentStack"/>
+    <activity
+        android:label="sync activity"
+        android:name=".SyncActivity"/>
+    <activity
+        android:label="web view"
+        android:name=".SimpleWebViewActivity"/>
+    <activity
+        android:label="web form"
+        android:name=".WebFormActivity"/>
+    <activity
+        android:label="swipe activity"
+        android:name=".SwipeActivity"/>
+    <activity
+        android:label="view pager activity"
+        android:name=".ViewPagerActivity"/>
+    <activity
+        android:label="recyclerview activity"
+        android:name=".RecyclerViewActivity"/>
+    <activity
+        android:label="vertical view pager activity"
+        android:name=".VerticalViewPagerActivity"/>
+    <activity
+        android:label="large view activity"
+        android:name=".LargeViewActivity"/>
+    <activity
+        android:label="padding activity"
+        android:name=".PaddingActivity"/>
+    <activity
+        android:label="action bar with v7 search"
+        android:name=".ActionBarSearchActivity"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+    <activity
+        android:label="layout issues activity"
+        android:name=".LayoutIssuesActivity"/>
+    <activity
+        android:label="tool bar activity"
+        android:name=".ToolbarActivity"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+    <activity
+        android:label="task stack activity"
+        android:name=".TaskStackActivity"/>
+    <activity
+        android:label="transition activity"
+        android:name=".TransitionActivityMain"/>
+    <activity android:name=".TransitionDetailActivity"/>
+    <activity
+        android:label="Keyboard Test Activity"
+        android:name=".KeyboardTestActivity"/>
+    <activity
+        android:label="NavigationViewActivity"
+        android:name=".NavigationViewActivity"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+    <activity
+        android:label="Test Activity for InterceptingActivityFactory"
+        android:name=".InterceptingActivity"/>
+    <activity
+        android:label="Runtime Permissions"
+        android:name=".RuntimePermissionsActivity"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+    <activity
+        android:label="Chat Head Activity"
+        android:name=".ChatHeadActivity"/>
+    <activity
+        android:label="Delayed Dialog Activity"
+        android:name=".DelayedDialogActivity"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+    <activity
+        android:label="Scaled View Activity"
+        android:name=".ScaledViewActivity"/>
+    <activity
+        android:label="Idling UI Activity"
+        android:name=".IdlingUIActivity" />
+
+    <service android:name=".ChatHeadService"/>
+    <provider
+        android:authorities="androidx.test.ui.app.flights"
+        android:exported="false"
+        android:name=".provider.FlightsContentProvider"/>
+  </application>
+
+</manifest>

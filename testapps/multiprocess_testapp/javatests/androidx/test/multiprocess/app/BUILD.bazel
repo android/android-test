@@ -1,0 +1,59 @@
+# Description:
+#   Sample multi-process tests.
+
+licenses(["notice"])  # Apache License 2.0
+
+MPE_ALL_DEPS = [
+    "//espresso/core/java/androidx/test/espresso",
+    "//espresso/core/java/androidx/test/espresso/remote",
+    "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+    "//testapps/multiprocess_testapp/java/androidx/test/multiprocess/app:multiprocess_neverlink_lib",
+    "//espresso/core/java/androidx/test/espresso/action",
+    "//espresso/core/java/androidx/test/espresso/assertion",
+    "//espresso/core/java/androidx/test/espresso/matcher",
+    "//runner/android_junit_runner/java/androidx/test:runner",
+    "//runner/rules/java/androidx/test:rules",
+    "@junit//jar",
+    "@hamcrest//jar",
+]
+
+# Tests
+# =========================================================
+
+# Currently only API level 26+ is supported for multi process espresso tests
+DEVICE_TARGETS = [
+    ("26_x86", "MESA"),
+]
+
+TEST_SRCS = [
+    "DefaultProcessActivityTest.java",
+]
+
+java_library(
+    name = "test_deps",
+    testonly = 1,
+    visibility = ["//visibility:public"],
+    exports = MPE_ALL_DEPS,
+)
+
+android_binary(
+    name = "espresso_mpe_tests",
+    testonly = 1,
+    srcs = TEST_SRCS,
+    instruments = "//testapps/multiprocess_testapp/java/androidx/test/multiprocess/app:multiprocess_testapp",
+    manifest = "AndroidManifest_opensource.xml",
+    deps = [":test_deps"],
+)
+
+[android_instrumentation_test(
+    name = "espresso_mpe_tests_generic_phone_google_%s" % device_target[0],
+    size = "large",
+    args = [
+        "--open_gl_driver=%s" % device_target[1],
+        "--clear_package_data",
+        # Install test services, this is required as the services are not part of the image
+        "--install_test_services=True",  # Required for Bazel 0.11, can be removed in 0.12
+    ],
+    target_device = "//tools/android/emulated_devices/generic_phone:google_%s_qemu2" % device_target[0],
+    test_app = ":espresso_mpe_tests",
+) for device_target in DEVICE_TARGETS]

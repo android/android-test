@@ -1,0 +1,34 @@
+# Description: Build rules for speak easy tests
+
+licenses(["notice"])  # Apache License 2.0
+
+package(
+    default_visibility = [
+        "//services/speakeasy/javatests/androidx/test/services/speakeasy:__subpackages__",
+    ],
+)
+
+## Robolectric tests
+SE_DEPS = [
+    "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
+]
+
+EXTERNAL_DEPS = [
+    "@junit//jar",
+    "@truth//jar",
+    "@robolectric//bazel:robolectric",
+]
+
+java_library(
+    name = "test_deps",
+    testonly = 1,
+    visibility = ["//visibility:public"],
+    exports = EXTERNAL_DEPS + SE_DEPS,
+)
+
+android_local_test(
+    name = "SpeakEasyProtocolTest",
+    size = "small",
+    srcs = ["SpeakEasyProtocolTest.java"],
+    deps = [":test_deps"],
+)

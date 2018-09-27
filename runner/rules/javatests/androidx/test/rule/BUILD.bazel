@@ -1,0 +1,62 @@
+# Description: Tests for Rules.
+licenses(["notice"])  # Apache License 2.0
+
+RULES_TEST_SRCS = glob(["**/*.java"])
+
+RULES_DEPS = [
+    "//runner/android_junit_runner",
+    "//runner/rules",
+    "//runner/monitor",
+]
+
+EXTERNAL_DEPS = [
+    "//:com_android_support_support_annotations",
+    "@hamcrest//jar",
+    "@junit//jar",
+    "@mockito//jar",
+    "@dexmaker//jar",
+    "@dexmaker_mockito//jar",
+    "@objenesis//jar",
+]
+
+java_library(
+    name = "test_deps",
+    exports = RULES_DEPS + EXTERNAL_DEPS,
+)
+
+android_library(
+    name = "rules_test_lib",
+    srcs = RULES_TEST_SRCS,
+    manifest = "AndroidManifest_opensource.xml",
+    deps = [":test_deps"],
+)
+
+android_binary(
+    name = "rules_stub_binary",
+    manifest = "AndroidManifest_opensource_stub.xml",
+)
+
+android_binary(
+    name = "runner_test_binary",
+    instruments = ":rules_stub_binary",
+    manifest = "AndroidManifest_opensource.xml",
+    deps = [":rules_test_lib"],
+)
+
+API_LEVELS = [
+    "19_x86",
+    "21_x86",
+    "22_x86",
+    "23_x86",
+]
+
+[android_instrumentation_test(
+    name = "rules_tests_%s" % api_level,
+    size = "large",
+    args = [
+        "--clear_package_data",
+        "--install_test_services=True",  # required for Bazel 0.11, can be removed in 0.12
+    ],
+    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
+    test_app = ":runner_test_binary",
+) for api_level in API_LEVELS]

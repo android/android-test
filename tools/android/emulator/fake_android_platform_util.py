@@ -17,7 +17,7 @@
 import os
 
 
-import gflags as flags
+from absl import flags
 from tools.android.emulator import resources
 from tools.android.emulator import emulated_device
 

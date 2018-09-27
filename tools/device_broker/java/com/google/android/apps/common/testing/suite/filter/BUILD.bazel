@@ -1,0 +1,18 @@
+# Description:
+#   Classes related to filter test cases to run.
+licenses(["notice"])  # Apache 2.0
+
+java_library(
+    name = "filter",
+    testonly = 1,
+    srcs = glob(["*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//tools/device_broker/java/com/google/android/apps/common/testing/broker:broker_intf",
+        "//tools/device_broker/java/com/google/android/apps/common/testing/suite:exceptions",
+        "//tools/device_broker/proto:test_info_pb_java_proto",
+        "@guava//jar",
+        "@jcommander//jar",
+        "@junit//jar",
+    ],
+)

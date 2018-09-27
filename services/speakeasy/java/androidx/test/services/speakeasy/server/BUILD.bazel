@@ -1,0 +1,42 @@
+package(
+    default_visibility = [
+        "//services:__subpackages__",
+        "//services/speakeasy/javatests/androidx/test/services/speakeasy/server:__pkg__",
+    ],
+)
+
+licenses(["notice"])  # Apache 2.0
+
+android_library(
+    name = "speak_easy_core",
+    srcs = ["SpeakEasy.java"],
+    deps = [
+        "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
+        "@guava//jar",
+    ],
+)
+
+android_library(
+    name = "speak_easy_service",
+    srcs = [
+        "SpeakEasyContentProvider.java",
+        "SpeakEasyService.java",
+    ],
+    manifest = "AndroidManifest.xml",
+    resource_files = glob(["res/**"]),
+    visibility = [
+        "//services:__subpackages__",
+        "//services/speakeasy/javatests/androidx/test/services/speakeasy:__subpackages__",
+    ],
+    deps = [
+        ":speak_easy_core",
+        "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
+        "@androidsdk//com.android.support:support-compat-25.0.1",
+        "@guava//jar",
+    ],
+)
+
+android_library(
+    name = "server",
+    exports = [":speak_easy_service"],
+)

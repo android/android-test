@@ -1,0 +1,25 @@
+# Description:
+#   On Device Orchestrator, to run instrumentation tests sequentially from a single adb command.
+
+licenses(["notice"])
+
+android_library(
+    name = "android_test_orchestrator",
+    visibility = [":odo"],
+    exports = ["//runner/android_test_orchestrator/java/androidx/test/orchestrator"],
+)
+
+package_group(
+    name = "odo",
+    packages = [
+        "//runner/android_test_orchestrator/java/androidx/test/orchestrator",
+        "//runner/android_test_orchestrator/java/androidx/test/orchestrator/instrumentationlistener",
+        "//runner/android_test_orchestrator/java/androidx/test/orchestrator/junit",
+        "//runner/android_test_orchestrator/java/androidx/test/orchestrator/listeners",
+        "//runner/android_test_orchestrator/javatests/androidx/test/orchestrator",
+        "//runner/android_test_orchestrator/javatests/androidx/test/orchestrator/instrumentationlistener",
+        "//runner/android_test_orchestrator/javatests/androidx/test/orchestrator/junit",
+        "//runner/android_test_orchestrator/javatests/androidx/test/orchestrator/listeners",
+        "//runner/android_test_orchestrator/stubapp",
+    ],
+)

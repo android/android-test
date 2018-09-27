@@ -1,0 +1,76 @@
+# View Actions for espresso.
+
+licenses(["notice"])
+
+package(default_visibility = ["//visibility:public"])
+
+ADAPTER_VIEW_PROTOCOL = [
+    "AdapterViewProtocols.java",
+    "AdapterViewProtocol.java",
+]
+
+android_library(
+    name = "adapter_view_protocol",
+    srcs = ADAPTER_VIEW_PROTOCOL,
+    deps = [
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/util",
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@guava//jar",
+        "@jsr305//jar",
+    ],
+)
+
+REMOTE_VIEW_ACTIONS = [
+    "RemoteViewActions.java",
+    # TODO(b/33047831): rename all RemoteMessages to *RemoteMsg
+    "*RemoteMessage.java",
+    "*RemoteMsg.java",
+]
+
+android_library(
+    name = "action",
+    srcs = glob(
+        ["*.java"],
+        exclude = ADAPTER_VIEW_PROTOCOL + REMOTE_VIEW_ACTIONS,
+    ),
+    deps = [
+        ":adapter_view_protocol",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/base:idling_resource_registry",
+        "//espresso/core/java/androidx/test/espresso/base:idling_uicontroller_interface",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//espresso/core/java/androidx/test/espresso/util",
+        "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
+        "//runner/android_junit_runner",
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@guava//jar",
+        "@hamcrest//jar",
+        "@jsr305//jar",
+    ],
+)
+
+android_library(
+    name = "remote_view_actions",
+    srcs = glob(
+        REMOTE_VIEW_ACTIONS,
+    ),
+    deps = [
+        ":action",
+        ":adapter_view_protocol",
+        "//:com_android_support_support_annotations",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso/proto/action:ui_interaction_view_actions_android_pb3",
+        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
+        "//espresso/core/java/androidx/test/espresso/remote:registry",
+        "//espresso/core/java/androidx/test/espresso/util",
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@guava//jar",
+        "@hamcrest//jar",
+    ],
+)

@@ -1,0 +1,94 @@
+# Description:
+#  Base package for espresso.
+
+licenses(["notice"])
+
+package(default_visibility = ["//espresso/core/java/androidx/test/espresso:espresso_pkg"])
+
+android_library(
+    name = "base",
+    srcs = glob(
+        ["*.java"],
+        exclude = [
+            "DefaultFailureHandler.java",
+            "IdlingUiController.java",
+            "IdlingResourceRegistry.java",
+            "LooperIdlingResourceInterrogationHandler.java",
+        ],
+    ),
+    plugins = ["//opensource/dagger:dagger_plugin"],
+    deps = [
+        ":default_failure_handler",
+        ":idling_resource_registry",
+        ":idling_uicontroller_interface",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/util",
+        "//espresso/idling_resource/java/androidx/test/espresso:idling_resource",
+        "//runner/android_junit_runner",
+        "@dagger_api//jar",
+        "@guava//jar",
+        "@hamcrest//jar",
+        "@javax_inject//jar",
+    ],
+)
+
+android_library(
+    name = "active_root_lister",
+    srcs = ["ActiveRootLister.java"],
+    deps = [
+        "//espresso/core/java/androidx/test/espresso:interface",
+    ],
+)
+
+android_library(
+    name = "idling_resource_registry",
+    srcs = [
+        "IdleNotifier.java",
+        "IdlingResourceRegistry.java",
+        "Interrogator.java",
+        "LooperIdlingResourceInterrogationHandler.java",
+    ],
+    deps = [
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/idling_resource/java/androidx/test/espresso:idling_resource",
+        "@dagger_api//jar",
+        "@guava//jar",
+        "@javax_annotation//jar",
+        "@javax_inject//jar",
+    ],
+)
+
+android_library(
+    name = "idling_uicontroller_interface",
+    srcs = ["IdlingUiController.java"],
+    deps = [
+        ":idling_resource_registry",
+        "//espresso/core/java/androidx/test/espresso:interface",
+    ],
+)
+
+android_library(
+    name = "default_failure_handler",
+    srcs = ["DefaultFailureHandler.java"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "@dagger_api//jar",
+        "@guava//jar",
+        "@hamcrest//jar",
+        "@javax_annotation//jar",
+        "@javax_inject//jar",
+    ],
+)
+
+filegroup(
+    name = "espresso_base_src",
+    srcs = [
+        ":libactive_root_lister-src.jar",
+        ":libbase-src.jar",
+        ":libdefault_failure_handler-src.jar",
+        ":libidling_resource_registry-src.jar",
+        ":libidling_uicontroller_interface-src.jar",
+    ],
+)

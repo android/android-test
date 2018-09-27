@@ -1,0 +1,52 @@
+# Description:
+#   Top level apk for services required for full orchestrated testing.
+licenses(["notice"])
+
+package(
+    default_visibility = [
+        "//visibility:public",
+    ],
+)
+
+exports_files(["AndroidManifest.xml"])
+
+# Standard test services that can be installed on any device.
+android_binary(
+    name = "test_services",
+    custom_package = "androidx.test.services",
+    licenses = ["permissive"],
+    manifest = "AndroidManifest.xml",
+    proguard_specs = [
+        "//:proguard_binary.cfg",
+        "proguard_library.cfg",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//services/shellexecutor:exec_server",
+        "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
+        "//services/speakeasy/java/androidx/test/services/speakeasy/server",
+    ],
+)
+
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
+combine_jars(
+    name = "test_services_jars",
+    srcs = [
+        "//services/shellexecutor:shellexecuter_src",
+        "//services/speakeasy/java/androidx/test/services/speakeasy:libprotocol-src.jar",
+        "//services/speakeasy/java/androidx/test/services/speakeasy/server:libspeak_easy_service-src.jar",
+    ],
+)
+
+maven_artifact(
+    name = "test_services_maven_artifact",
+    src = ":test_services.apk",
+    artifact_id = "test-services",
+    group_id = "androidx.test.services",
+    last_updated = "20170622000000",
+    src_jar = ":test_services_jars.jar",
+    version = "%s" % RUNNER_VERSION,
+)

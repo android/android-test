@@ -1,0 +1,55 @@
+# Espresso Web Actions
+
+licenses(["notice"])  # Apache License 2.0
+
+package(default_visibility = ["//visibility:public"])
+
+REMOTE_WEB_ACTIONS = [
+    "RemoteWebActions.java",
+    "*RemoteMessage.java",
+]
+
+android_library(
+    name = "action",
+    srcs = glob(
+        ["*.java"],
+        exclude = REMOTE_WEB_ACTIONS,
+    ),
+    custom_package = "androidx.test.espresso.web.action",
+    idl_import_root = "idls",
+    idl_srcs = glob(["idls/**"]),
+    deps = [
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/remote:bindable",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//espresso/core/java/androidx/test/espresso/util",
+        "//espresso/web/java/androidx/test/espresso/web/model",
+        "//opensource/java_lib:EvaluationAtom",
+        "//opensource/java_lib:webbridge",
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@guava//jar",
+        "@hamcrest//jar",
+        "@jsr305//jar",
+    ],
+)
+
+android_library(
+    name = "remote_web_actions",
+    srcs = glob(
+        REMOTE_WEB_ACTIONS,
+    ),
+    deps = [
+        ":action",
+        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
+        "//espresso/core/java/androidx/test/espresso/remote:registry",
+        "//espresso/web/java/androidx/test/espresso/web/model",
+        "//espresso/web/java/androidx/test/espresso/web/proto/action:web_actions_proto_android_pb3",
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
+    ],
+)

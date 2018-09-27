@@ -1,0 +1,15 @@
+# Description:
+# JUnit4 Rules for Intents
+
+licenses(["notice"])  # Apache License 2.0
+
+package(default_visibility = ["//visibility:public"])
+
+android_library(
+    name = "rule",
+    srcs = glob(["*.java"]),
+    deps = [
+        "//espresso/intents/java/androidx/test/espresso/intent:intents",
+        "//runner/rules",
+    ],
+)

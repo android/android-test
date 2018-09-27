@@ -1,0 +1,38 @@
+# Description:
+#   Tests for espresso concurrent idling resrouces
+
+licenses(["notice"])  # Apache License 2.0
+
+## Robolectric tests
+
+IDLING_CONCURRENT_SHARED_DEPS = [
+    "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
+]
+
+EXTERNAL_DEPS = [
+    "@junit//jar",
+    "@mockito//jar",
+    "@truth//jar",
+    "@objenesis//jar",
+    "@robolectric//bazel:robolectric",
+] + IDLING_CONCURRENT_SHARED_DEPS
+
+ALL_DEPS = EXTERNAL_DEPS
+
+android_local_test(
+    name = "IdlingScheduledThreadPoolExecutorTest",
+    size = "small",
+    srcs = ["IdlingScheduledThreadPoolExecutorTest.java"],
+    deps = ALL_DEPS + [
+        "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:scheduled_thread_pool_idling_resource",
+    ],
+)
+
+android_local_test(
+    name = "IdlingThreadPoolExecutorTest",
+    size = "small",
+    srcs = ["IdlingThreadPoolExecutorTest.java"],
+    deps = ALL_DEPS + [
+        "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:thread_pool_idling_resource",
+    ],
+)

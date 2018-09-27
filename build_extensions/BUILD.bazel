@@ -1,0 +1,37 @@
+licenses(["notice"])  # Apache License 2.0
+
+package(default_visibility = [
+    "//visibility:public",
+])
+
+filegroup(
+    name = "bzl",
+    srcs = [
+        "add_or_update_file_in_zip.bzl",
+        "combine_jars.bzl",
+        "maven_repo.bzl",
+        "release.bzl",
+        "remove_from_jar.bzl",
+    ],
+)
+
+# Used to generate a maven repository.
+py_binary(
+    name = "maven_repository",
+    srcs = ["maven_repository.py"],
+    deps = [
+        "@absl_py//absl:app",
+        "@absl_py//absl/flags",
+    ],
+)
+
+# Used to generate a maven artifact.
+sh_binary(
+    name = "maven_artifact",
+    srcs = ["maven_artifact.sh"],
+)
+
+exports_files([
+    "noJarJarRules.txt",
+    "atslToAxtJarJarRules.txt",
+])

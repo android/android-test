@@ -1,0 +1,28 @@
+// LINT: LEGACY_NAMES
+syntax = "proto3";
+
+package google.test.remote.ui.action;
+
+option java_package = "androidx.test.espresso.proto.assertion";
+
+import "google/protobuf/any.proto";
+
+message MatchesViewAssertionProto {
+  string id = 1;
+  google.protobuf.Any viewMatcher = 2;
+}
+
+message DoesNotExistViewAssertionProto {
+  string id = 1;
+}
+
+message SelectedDescendantsMatchViewAssertionProto {
+  string id = 1;
+  google.protobuf.Any selector = 2;
+  google.protobuf.Any matcher = 3;
+}
+
+message NoOverlapsViewAssertionProto {
+  string id = 1;
+  google.protobuf.Any selector = 2;
+}

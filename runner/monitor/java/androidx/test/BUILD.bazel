@@ -1,0 +1,79 @@
+# Description: Build rules for building androidx.test from source
+licenses(["notice"])  # Apache License 2.0
+
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+android_library(
+    name = "monitor",
+    srcs = glob(
+        ["**/*.java"],
+        exclude = [
+            "internal/runner/runtime/ExposedInstrumentationApi.java",
+            "internal/runner/hidden/ExposedInstrumentationApi.java",
+        ],
+    ),
+    deps = [
+        ":compiletime_hidden_apis",
+        ":runtime_hidden_apis",
+        "//:com_android_support_support_annotations",
+    ],
+)
+
+android_library(
+    name = "runtime_hidden_apis",
+    srcs = [
+        "internal/runner/runtime/ExposedInstrumentationApi.java",
+    ],
+)
+
+android_library(
+    name = "compiletime_hidden_apis",
+    srcs = [
+        "internal/runner/hidden/ExposedInstrumentationApi.java",
+    ],
+    neverlink = 1,
+)
+
+load("//build_extensions:release.bzl", "axt_release_lib")
+
+# group of targets to use to produce release binary + docs
+android_library(
+    name = "monitor_release_lib",
+    exports = [
+        ":monitor",
+    ],
+)
+
+# Generate rules for the release artifacts. This generates three targets
+# genrule output: monitor_release_no_deps.jar and monitor_release.aar
+# a java_library target librunner_release_no_deps
+axt_release_lib(
+    name = "monitor_release",
+    jarjar_rules = "release_jarjar_rules.txt",
+    proguard_library = ":proguard_library.cfg",
+    remove_specs = [
+        "android.support.annotation*",
+    ],
+    deps = [
+        ":monitor_release_lib",
+    ],
+)
+
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION", "ANDROIDX_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
+maven_artifact(
+    name = "monitor_maven_artifact",
+    src = ":monitor_release.aar",
+    artifact_deps = [
+        "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
+    ],
+    artifact_id = "monitor",
+    group_id = "androidx.test",
+    last_updated = "20170622000000",
+    src_jar = ":libmonitor-src.jar",
+    version = "%s" % RUNNER_VERSION,
+)

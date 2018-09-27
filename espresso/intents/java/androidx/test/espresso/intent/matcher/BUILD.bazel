@@ -1,0 +1,17 @@
+# Description:
+#  Matchers for Intents and Intent-related objects
+
+licenses(["notice"])  # Apache License 2.0
+
+package(default_visibility = ["//visibility:public"])
+
+android_library(
+    name = "matcher",
+    srcs = glob(["*.java"]),
+    deps = [
+        "//espresso/intents/java/androidx/test/espresso/intent:precondition_checks",
+        "//espresso/intents/java/androidx/test/espresso/intent:resolved_intent_interface",
+        "//runner/android_junit_runner",
+        "@hamcrest//jar",
+    ],
+)

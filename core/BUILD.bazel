@@ -1,0 +1,9 @@
+# Publicly visible truth extensions for Android
+
+licenses(["notice"])  # Apache License 2.0
+
+android_library(
+    name = "core",
+    visibility = ["//visibility:public"],
+    exports = ["//core/java/androidx/test/core"],
+)

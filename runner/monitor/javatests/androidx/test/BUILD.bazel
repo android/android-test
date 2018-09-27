@@ -1,0 +1,92 @@
+# Description: Tests for Monitor
+licenses(["notice"])  # Apache License 2.0
+
+MONITOR_DEPS = [
+    "//runner/android_junit_runner",
+    "//runner/monitor",
+    "//ext/junit",
+]
+
+ROBOLECTRIC_DEPS = [
+    "@junit//jar",
+    "@mockito//jar",
+    "@truth//jar",
+    "@objenesis//jar",
+    "@robolectric//bazel:robolectric",
+]
+
+ROBOLECTRIC_TEST_SRCS = glob(["**/LogUtilsTest.java"])
+
+java_library(
+    name = "robolectric_test_deps",
+    exports = MONITOR_DEPS + ROBOLECTRIC_DEPS,
+)
+
+#Robolectric tests
+android_local_test(
+    name = "LogUtilsTest",
+    size = "small",
+    srcs = ROBOLECTRIC_TEST_SRCS,
+    deps = [":robolectric_test_deps"],
+)
+
+#Instrumentation tests
+MONITOR_TEST_SRCS = glob(
+    ["**/*.java"],
+    exclude = ROBOLECTRIC_TEST_SRCS,
+)
+
+EXTERNAL_DEPS = [
+    "//:com_android_support_support_annotations",
+    "@hamcrest//jar",
+    "@javax_inject//jar",
+    "@junit//jar",
+    "@dexmaker//jar",
+    "@dexmaker_mockito//jar",
+    "@mockito//jar",
+    "@objenesis//jar",
+    "@truth//jar",
+    "@guava//jar",
+]
+
+java_library(
+    name = "test_deps",
+    exports = MONITOR_DEPS + EXTERNAL_DEPS,
+)
+
+android_library(
+    name = "monitor_test_lib",
+    srcs = MONITOR_TEST_SRCS,
+    manifest = "AndroidManifest_opensource.xml",
+    deps = [":test_deps"],
+)
+
+android_binary(
+    name = "monitor_stub_binary",
+    manifest = "AndroidManifest_opensource_stub.xml",
+)
+
+android_binary(
+    name = "monitor_test_binary",
+    instruments = ":monitor_stub_binary",
+    manifest = "AndroidManifest_opensource.xml",
+    deps = [":monitor_test_lib"],
+)
+
+API_LEVELS = [
+    "19_x86",
+    "21_x86",
+    "22_x86",
+    "23_x86",
+]
+
+[android_instrumentation_test(
+    name = "monitor_tests_%s" % api_level,
+    size = "large",
+    args = [
+        "--clear_package_data",
+        "--install_test_services=True",  # required for Bazel 0.11, can be removed in 0.12
+    ],
+    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
+    test_app = ":monitor_test_binary",
+) for api_level in API_LEVELS]

@@ -24,6 +24,7 @@ import logging
 import os
 import re
 import shutil
+import signal
 import socket
 import stat
 import struct
@@ -45,10 +46,11 @@ except ImportError as e:
   X509 = collections.namedtuple('X509', ['FORMAT_PEM', 'FORMAT_DER'])
   print ('If you want to add certificates to the emulator, Please install '
          'MCrypt library using sudo apt-get install python-mcrypt .')
+
+from absl import flags
 import portpicker
 
 
-import gflags as flags
 from tools.android.emulator import resources
 from google.apputils import stopwatch
 
@@ -205,6 +207,7 @@ _SD_CARD_MOUNT_CHECK_FAIL_SLEEP = 'SD_CARD_MOUNT_CHECK_FAIL_SLEEP'
 _RAMDISK_MOD = 'RAMDISK_MOD'
 _CHECK_DPI = 'CHECK_DPI'
 _CHECK_DPI_FAIL_SLEEP = 'CHECK_DPI_FAIL_SLEEP'
+EMULATOR_PID = 'emulator_process.pid'
 
 _ANR_RE = re.compile(r'\w\/(am_(?:crash|anr|proc_died)).*\[(\w.*)\]')
 _DEV_NULL = open('/dev/null')
@@ -512,7 +515,9 @@ class EmulatedDevice(object):
                       vendor_img_path=None,
                       encryptionkey_img_path=None,
                       advanced_features_ini=None,
-                      build_prop_path=None):
+                      build_prop_path=None,
+                      modified_ramdisk_path=None,
+                      data_files=None):
     """Stages files for the emulator launch."""
 
     self._images_dir = os.path.abspath(self._TempDir('images'))
@@ -566,6 +571,21 @@ class EmulatedDevice(object):
     self._ModifySystemImage(enable_guest_gl)
     timer.stop('MODIFY_SYSTEM_IMAGE')
 
+    # Folders created are data/misc/*
+    # Folders created are data/nativetest/**/* and so on.
+    # If we don't place the files in the right location, we end up
+    # getting weird exceptions in logcat since emulator requires those files
+    # to be present.
+    if data_files:
+      for each_file in data_files:
+        fn = each_file.split('data/')[1]
+        dn = os.path.join(self._SessionImagesDir(), 'data', os.path.dirname(fn))
+        # Create if this dir does not exist.
+        if not os.path.exists(dn):
+          os.makedirs(dn)
+        bn = os.path.basename(fn)
+        shutil.copy(each_file, os.path.join(dn, bn))
+
     # Pipe service won't work for user build and api level 23+, since
     # pipe_traversal doesn't have a right seclinux policy. In this case, just
     # use real adb.
@@ -607,7 +627,7 @@ class EmulatedDevice(object):
     else:
       #   self._RamdiskFile() - we modify this abit
       #   self._SnapshotFile() - always exists
-      self._InitializeRamdisk(system_image_dir)
+      self._InitializeRamdisk(system_image_dir, modified_ramdisk_path)
       self._SparseCp(self.android_platform.empty_snapshot_fs,
                      self._SnapshotFile())
 
@@ -907,7 +927,7 @@ class EmulatedDevice(object):
 
   def BuildImagesDict(self, system_image_path, data_image_path, vendor_img_path,
                       encryptionkey_img_path, advanced_features_ini,
-                      build_prop_path):
+                      build_prop_path, data_files):
     images_dict = {
         'system_image_path': system_image_path,
         'data_image_path': data_image_path
@@ -925,6 +945,8 @@ class EmulatedDevice(object):
     if build_prop_path:
       images_dict['build_prop_path'] = build_prop_path
 
+    if data_files:
+      images_dict['data_files'] = data_files
     return images_dict
 
   def Configure(self,
@@ -942,7 +964,8 @@ class EmulatedDevice(object):
                 vendor_img_path=None,
                 encryptionkey_img_path=None,
                 advanced_features_ini=None,
-                build_prop_path=None):
+                build_prop_path=None,
+                data_files=None):
     """Performs pre-start configuration of the emulator."""
     assert os.path.exists(system_image_dir), ('Sysdir doesnt exist: %s' %
                                               system_image_dir)
@@ -956,7 +979,8 @@ class EmulatedDevice(object):
 
     images_dict = self.BuildImagesDict(system_image_path, data_image_path,
                                        vendor_img_path, encryptionkey_img_path,
-                                       advanced_features_ini, build_prop_path)
+                                       advanced_features_ini, build_prop_path,
+                                       data_files)
 
     self._metadata_pb = emulator_meta_data_pb2.EmulatorMetaDataPb(
         system_image_dir=system_image_dir,
@@ -1183,7 +1207,8 @@ class EmulatedDevice(object):
                   open_gl_driver=None,
                   allow_experimental_open_gl=False,
                   save_snapshot=None,
-                  snapshot_file=None):
+                  snapshot_file=None,
+                  modified_ramdisk_path=None):
     """Launches an emulator process."""
     assert self._metadata_pb, 'Not configured!'
     skin = self._metadata_pb.skin
@@ -1209,6 +1234,8 @@ class EmulatedDevice(object):
     timer.start(_STAGE_DATA)
 
     images_dict = json.loads(self._metadata_pb.system_image_path)
+    if modified_ramdisk_path:
+      images_dict['modified_ramdisk_path'] = modified_ramdisk_path
 
     self._StageDataFiles(self._metadata_pb.system_image_dir,
                          userdata_tarball, timer,
@@ -1234,8 +1261,16 @@ class EmulatedDevice(object):
     return ret
 
   # pylint: disable=too-many-statements
-  def _InitializeRamdisk(self, system_image_dir):
+  def _InitializeRamdisk(self, system_image_dir, modified_ramdisk_path):
     """Pushes the boot properties to RAM Disk."""
+
+    if modified_ramdisk_path:
+      # Ramdisk is already initialized. Jus copy the file.
+      logging.info(
+          'Using pre initialized ramdisk.img: %s', modified_ramdisk_path)
+      shutil.copy2(modified_ramdisk_path, self._RamdiskFile())
+      return
+
     base_ramdisk = os.path.join(system_image_dir, 'ramdisk.img')
     ramdisk_dir = self._TempDir('ramdisk_repack')
     exploded_temp = os.path.join(ramdisk_dir, 'tmp')
@@ -1567,6 +1602,7 @@ class EmulatedDevice(object):
     if self._metadata_pb.emulator_architecture == 'x86':
       self._emulator_start_args.extend(['-feature', 'AllowSnapshotMigration'])
       self._emulator_start_args.extend(['-feature', '-GLDMA'])
+      self._emulator_start_args.extend(['-feature', '-OnDemandSnapshotLoad'])
 
     if os.path.exists(self._VendorFile()):
       self._emulator_start_args.extend(['-vendor', 'vendor.img'])
@@ -1767,13 +1803,13 @@ class EmulatedDevice(object):
       self._SetDeviceSetting(self.GetApiVersion(), 'secure',
                              'show_ime_with_hard_keyboard', '0')
 
-      if FLAGS.long_press_timeout:
-        if self.GetApiVersion() == 10:
-          logging.warn('long_press_timeout doesn\'t work on api 10.')
-        else:
-          self._SetDeviceSetting(self.GetApiVersion(), 'secure',
-                                 'long_press_timeout',
-                                 str(FLAGS.long_press_timeout))
+    if FLAGS.long_press_timeout:
+      if self.GetApiVersion() == 10:
+        logging.warn('long_press_timeout doesn\'t work on api 10.')
+      else:
+        self._SetDeviceSetting(self.GetApiVersion(), 'secure',
+                               'long_press_timeout',
+                               str(FLAGS.long_press_timeout))
       # fix possible stuck keyguardscrim window.
       self._DismissStuckKeyguardScrim()
       # ensure that processes that hang can write to /data/anr/traces.txt
@@ -1851,6 +1887,9 @@ class EmulatedDevice(object):
                                exec_dir=emu_wd,
                                proc_input=True,
                                proc_output=self._EmulatorLogFile('wb+'))
+
+    with open(os.path.join(self._images_dir, EMULATOR_PID), 'w') as f:
+      f.write('%s' % emu_process.pid)
 
     while True:
       logging.info('Processes launched - babysitting!')
@@ -2009,7 +2048,7 @@ class EmulatedDevice(object):
         cwd=self._sockets_dir,
         close_fds=True)
 
-  def ExecOnDevice(self, args, stdin=_DEV_NULL):
+  def ExecOnDevice(self, args):
     """Execute commands on device with adb."""
 
     assert self._IsPipeTraversalRunning()
@@ -2025,22 +2064,43 @@ class EmulatedDevice(object):
             '-s', self.device_serial,
             'shell', emu_commandline]
     logging.info('Executing on emulator: %s', args)
-    proc = subprocess.Popen(args, stdin=stdin, env=self._AdbEnv(),
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE)
-    out, err = proc.communicate()
-    if err:
-      logging.warn('Something is wrong: %s', err)
-    if proc.returncode:
+    try:
+      output = common.SpawnAndWaitWithRetry(
+          args,
+          proc_output=True,
+          exec_env=self._AdbEnv(),
+          timeout_seconds=60)
+          # Most of the commands should be done in a few seconds, but in some
+          # weird cases,we've seen it taking a longer time. So instead of
+          # failing early and retring, we chose a timeout of 60 seconds.
+      return output.borg_out
+    except common.SpawnError, e:
       self._ShowEmulatorLog()
       self._reporter.ReportFailure('tools.android.emulator.adb.ErrorExit', {
           'command': args,
-          'return': proc.returncode,
-          'out': out,
-          'error': err,
+          'error': e.message,
       })
-      raise Exception('Adb command failed, stdout:%s stderr:%s' % (out, err))
-    return out
+      # Since we failed with ADB, let's just kill all the processes and retry
+      self._TransientDeath(
+          'Adb command failed, error:%s' % (e.message))
+
+  def _KillProcess(self, pid):
+    if pid and pid.isdigit():
+      try:
+        logging.info('Killing PID %s', pid)
+        os.kill(int(pid), signal.SIGTERM)
+        time.sleep(2)
+        os.kill(int(pid), signal.SIGKILL)
+      except:  # pylint: disable=bare-except
+        pass
+    else:
+      logging.info('Not a valid pid %s', pid)
+
+  def _StopAllProcesses(self):
+    emu_pid_file = os.path.join(self._images_dir, EMULATOR_PID)
+    if os.path.exists(emu_pid_file):
+      with open(emu_pid_file, 'r') as f:
+        self._KillProcess(f.read())
 
   def BroadcastDeviceReady(self, extras=None, action=_DEFAULT_BROADCAST_ACTION):
     """Sends a broadcast message to the device."""
@@ -2173,8 +2233,9 @@ class EmulatedDevice(object):
         if not pipe_traversal_ready:
           continue
         self.EnableLogcat()
-        self._reporter.ReportDeviceProperties(self._metadata_pb.emulator_type,
-                                              self._Props())
+
+        emu_type = self._metadata_pb.emulator_type
+        self._reporter.ReportDeviceProperties(emu_type, self._Props())
 
       # If we are running in dex2oat mode, stop the device once
       # pipe_traversal is ready.
@@ -2851,12 +2912,14 @@ class EmulatedDevice(object):
     if suspicious:
       logging.warning('Some process is still running: %s\n', ps_out)
 
-  def KillEmulator(self, politely=False):
+  def KillEmulator(self, politely=False, kill_over_telnet=True):
     """Stops the emulator.
 
     Args:
       politely: [optional] if true we do our best to ensure the emulator exits
         cleanly.
+      kill_over_telnet: [optional] if true sends kill command over telnet
+        otherwise just kills the emu process using os.kill
     """
     clean_death = True
     if politely and self._vm_running:
@@ -2889,10 +2952,15 @@ class EmulatedDevice(object):
       clean_death = self._CleanUmount('/data/var/run/netns') and clean_death
       clean_death = self._CleanUmount('/data') and clean_death
       clean_death = self._CleanUmount('/cache') and clean_death
-    telnet = self._ConnectToEmulatorConsole()
-    telnet.write('kill\n')
-    telnet.read_all()
-    self._running = False
+
+    if kill_over_telnet:
+      telnet = self._ConnectToEmulatorConsole()
+      telnet.write('kill\n')
+      telnet.read_all()
+      self._running = False
+    else:
+      self._StopAllProcesses()
+      self._running = False
 
     if politely and not clean_death:
       self._TransientDeath('Could not cleanly shutdown emulator', False)
@@ -2900,9 +2968,8 @@ class EmulatedDevice(object):
   def _TransientDeath(self, msg, needs_kill=True):
     self._reporter.ReportFailure('tools.android.emulator.TransientDeath',
                                  {'message': msg})
-
     if needs_kill:
-      self.KillEmulator(politely=False)
+      self.KillEmulator(politely=False, kill_over_telnet=False)
     self.CleanUp()
     raise TransientEmulatorFailure(msg)
 
@@ -3067,7 +3134,10 @@ class EmulatedDevice(object):
           raise e
     self._reporter.ReportFailure('tools.android.emulator.console.CannotConnect',
                                  {'attempts': attempts})
-    raise Exception('Tried %s times to connect to emu console.' % attempts)
+    # Since we failed connecting to the console, let's kill all processes and
+    # retry.
+    self._TransientDeath(
+        'Tried %s times to connect to emu console.' % attempts)
 
   def _SnapshotPresent(self):
     """Returns the avd config property snapshot.present."""

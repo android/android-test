@@ -1,0 +1,44 @@
+# Description:
+#  View Assertions for New UI Test API.
+licenses(["notice"])
+
+package(default_visibility = ["//visibility:public"])
+
+REMOTE_VIEW_ASSERTIONS = [
+    "RemoteViewAssertions.java",
+    "*RemoteMessage.java",
+]
+
+android_library(
+    name = "assertion",
+    srcs = glob(
+        ["*.java"],
+        exclude = REMOTE_VIEW_ASSERTIONS,
+    ),
+    deps = [
+        "//:com_android_support_support_annotations",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//espresso/core/java/androidx/test/espresso/util",
+        "@guava//jar",
+        "@hamcrest//jar",
+    ],
+)
+
+android_library(
+    name = "remote_view_assertions",
+    srcs = glob(
+        REMOTE_VIEW_ASSERTIONS,
+    ),
+    deps = [
+        ":assertion",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso/proto/assertion:ui_interaction_view_assertions_android_pb3",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/core/java/androidx/test/espresso/remote:registry",
+        "@guava//jar",
+    ],
+)

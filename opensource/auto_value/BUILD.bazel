@@ -1,0 +1,15 @@
+java_plugin(
+    name = "auto_value_plugin",
+    processor_class = "com.google.auto.value.processor.AutoValueProcessor",
+    deps = [
+        "@auto_value_value//jar",
+        "@guava//jar",
+    ],
+)
+
+java_library(
+    name = "auto_value",
+    exported_plugins = [":auto_value_plugin"],
+    visibility = ["//visibility:public"],
+    exports = ["@auto_value_value//jar"],
+)

@@ -1,0 +1,52 @@
+# Description: Test App used for UI Testing Lib integration tests.
+licenses(["notice"])  # Apache License 2.0
+
+package(default_visibility = [
+    "//espresso/core/java/androidx/test/espresso:espresso_pkg",
+    "//testapps/ui_testapp/javatests/androidx/test/ui/app:__pkg__",
+])
+
+android_library(
+    name = "lib",
+    srcs = glob(
+        ["**/*.java"],
+    ),
+    assets = glob(["assets/**"]),
+    assets_dir = "assets",
+    manifest = "AndroidManifest_opensource.xml",
+    resource_files = glob(["res/**"]),
+    visibility = ["//visibility:private"],
+    deps = [
+        "//:com_android_support_appcompat_v7",
+        "//:com_android_support_design",
+        "//:com_android_support_recyclerview_v7",
+        "//:com_android_support_support_annotations",
+        "//:com_android_support_support_compat",
+        "//:com_android_support_support_core_ui",
+        "//:com_android_support_support_core_utils",
+        "//:com_android_support_support_fragment",
+        "@guava//jar",
+    ],
+)
+
+android_library(
+    name = "lib_neverlink",
+    testonly = 1,
+    # No other libraries should depend on this one
+    neverlink = 1,
+    exports = [":lib"],
+)
+
+android_binary(
+    name = "testapp",
+    testonly = 1,
+    assets = glob(["assets/**"]),
+    assets_dir = "assets",
+    manifest = "AndroidManifest_opensource.xml",
+    multidex = "legacy",
+    resource_files = glob(["res/**"]),
+    deps = [
+        ":lib",
+        "//:com_android_support_multidex",
+    ],
+)

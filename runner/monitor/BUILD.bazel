@@ -1,0 +1,9 @@
+# Publicly visible alias to the monitor target
+
+licenses(["notice"])  # Apache License 2.0
+
+android_library(
+    name = "monitor",
+    visibility = ["//visibility:public"],
+    exports = ["//runner/monitor/java/androidx/test:monitor"],
+)

@@ -20,6 +20,8 @@ load(
 load(
     "//tools/android/emulated_devices:macro/hardware.bzl",
     "hardware_device_attributes",
+    "hardware_screen_density",
+    "hardware_vm_heap",
     "new_hardware",
 )
 load("//tools/android/emulated_devices:macro/props.bzl", "new_props")
@@ -49,6 +51,24 @@ _property_writer = rule(
 )
 
 HEAP_GROWTH_LIMIT = "dalvik.vm.heapgrowthlimit"
+
+G3_ACTIVITY_CONTROLLER = "//tools/android/emulator:daemon/g3_activity_controller.jar"
+
+DEX2OAT_PARSER = "//tools/android/emulator:daemon/dex2oat_parser"
+
+TRAVERSAL_BINARIES = [
+    "//tools/android/emulator:daemon/x86/pipe_traversal",
+    "//tools/android/emulator:daemon/armeabi/pipe_traversal",
+    "//tools/android/emulator:daemon/armeabi-v7a/pipe_traversal",
+]
+
+WATERFALL_BINARIES = [
+    "//third_party/h2o/waterfall/prebuilt/x86:waterfall",
+    "//third_party/h2o/waterfall/prebuilt/arm:waterfall",
+]
+
+_ENABLE_SNAPSHOT = True
+_DISABLE_SNAPSHOT = False
 
 def make_device(
         name,
@@ -339,6 +359,8 @@ def make_android_device(
         visibility,
         hardware,
         emu_suffix):
+    """Builds android_device targets."""
+
     native.android_device(
         name = name,
         default_properties = default_properties,

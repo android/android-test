@@ -1,0 +1,22 @@
+package(default_visibility = ["//visibility:public"])
+
+java_import(
+    name = "webbridge",
+    jars = [
+        "libbridge.jar",
+    ],
+)
+
+java_import(
+    name = "EvaluationAtom",
+    jars = [
+        "libEvaluationAtom.jar",
+    ],
+)
+
+java_import(
+    name = "WebDriverScripts",
+    jars = [
+        "libWebDriverScripts.jar",
+    ],
+)

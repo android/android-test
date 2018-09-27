@@ -1,0 +1,205 @@
+// LINT: LEGACY_NAMES
+syntax = "proto3";
+
+package google.test.remote.ui.matcher;
+
+option java_package = "androidx.test.espresso.proto.matcher";
+
+import "google/protobuf/any.proto";
+
+// Note: the proto field name must match the parameter name, if used in
+// combination with GenericRemoteMessage
+
+message WithIdMatcherProto {
+  string id = 1;
+  google.protobuf.Any viewIdMatcher = 2;
+}
+
+message WithResourceNameMatcherProto {
+  string id = 1;
+  google.protobuf.Any stringMatcher = 2;
+}
+
+message WithTagKeyMatcherProto {
+  string id = 1;
+  bytes key = 2;
+  google.protobuf.Any objectMatcher = 3;
+}
+
+message WithTextMatcherProto {
+  string id = 1;
+  google.protobuf.Any stringMatcher = 2;
+}
+
+message IsAssignableFromMatcherProto {
+  string id = 1;
+  bytes clazz = 2;
+}
+
+message DisplayDataMatcherProto {
+  string id = 1;
+  google.protobuf.Any adapterMatcher = 2;
+  google.protobuf.Any dataMatcher = 3;
+  bytes adapterViewProtocolClass = 4;
+  google.protobuf.Any adapterDataLoaderAction = 5;
+}
+
+message WithClassNameMatcherProto {
+  string id = 1;
+  google.protobuf.Any classNameMatcher = 2;
+}
+
+message IsDisplayedMatcherProto {
+  string id = 1;
+}
+
+message IsDisplayingAtLeastMatcherProto {
+  string id = 1;
+  bytes areaPercentage = 2;
+}
+
+message IsEnabledMatcherProto {
+  string id = 1;
+}
+
+message IsFocusableMatcherProto {
+  string id = 1;
+}
+
+message HasFocusMatcherProto {
+  string id = 1;
+}
+
+message IsSelectedMatcherProto {
+  string id = 1;
+}
+
+message HasSiblingMatcherProto {
+  string id = 1;
+  google.protobuf.Any siblingMatcher = 2;
+}
+
+message WithContentDescriptionFromIdMatcherProto {
+  string id = 1;
+  bytes resourceId = 2;
+}
+
+message WithContentDescriptionMatcherProto {
+  string id = 1;
+  google.protobuf.Any charSequenceMatcher = 2;
+}
+
+message WithTagValueMatcherProto {
+  string id = 1;
+  google.protobuf.Any tagValueMatcher = 2;
+}
+
+message WithCharSequenceMatcherProto {
+  string id = 1;
+  bytes resourceId = 2;
+  bytes method = 3;
+}
+
+message WithHintMatcherProto {
+  string id = 1;
+  google.protobuf.Any stringMatcher = 2;
+}
+
+message WithCheckBoxStateMatcherProto {
+  string id = 1;
+  google.protobuf.Any checkStateMatcher = 2;
+}
+
+message HasContentDescriptionMatcherProto {
+  string id = 1;
+}
+
+message HasDescendantMatcherProto {
+  string id = 1;
+  google.protobuf.Any descendantMatcher = 2;
+}
+
+message IsClickableMatcherProto {
+  string id = 1;
+}
+
+message IsDescendantOfAMatcherProto {
+  string id = 1;
+  google.protobuf.Any ancestorMatcher = 2;
+}
+
+message WithEffectiveVisibilityMatcherProto {
+  string id = 1;
+  bytes visibility = 2;
+}
+
+message WithAlphaMatcherProto {
+  string id = 1;
+  bytes alpha = 2;
+}
+
+message WithParentMatcherProto {
+  string id = 1;
+  google.protobuf.Any parentMatcher = 2;
+}
+
+message WithChildMatcherProto {
+  string id = 1;
+  google.protobuf.Any childMatcher = 2;
+}
+
+message HasChildCountMatcherProto {
+  string id = 1;
+  bytes childCount = 2;
+}
+
+message HasMinimumChildCountMatcherProto {
+  string id = 1;
+  bytes minChildCount = 2;
+}
+
+message IsRootMatcherProto {
+  string id = 1;
+}
+
+message SupportsInputMethodsMatcherProto {
+  string id = 1;
+}
+
+message HasImeActionMatcherProto {
+  string id = 1;
+  google.protobuf.Any imeActionMatcher = 2;
+}
+
+message HasLinksMatcherProto {
+  string id = 1;
+}
+
+message WithSpinnerTextIdMatcherProto {
+  string id = 1;
+  bytes resourceId = 2;
+}
+
+message WithSpinnerTextMatcherProto {
+  string id = 1;
+  google.protobuf.Any stringMatcher = 2;
+}
+
+message IsJavascriptEnabledMatcherProto {
+  string id = 1;
+}
+
+message HasErrorTextMatcherProto {
+  string id = 1;
+  google.protobuf.Any stringMatcher = 2;
+}
+
+message WithInputTypeMatcherProto {
+  string id = 1;
+  bytes inputType = 2;
+}
+
+message WithParentIndexMatcherProto {
+  string id = 1;
+  bytes index = 2;
+}

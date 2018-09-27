@@ -2,15 +2,11 @@
 
 The AndroidX Test Library provides an extensive framework for testing Android apps. This library provides a set of APIs that allow you to quickly build and run test code for your apps, including JUnit 4 and functional user interface (UI) tests. You can run tests created using these APIs from the Android Studio IDE or from the command line.
 
-Continue to the [AXT documentation page](https://google.github.com/android-testing-support-library).
+For more details see [developers.android.com/testing](https://developers.android.com/testing)
 
-## Contributing to the AXT documentation page
+## Contributing
 
-The AXT documentation page is hosted on GitHub Pages and contributions are welcome. Check out the [gh-pages branch](https://github.com/google/android-testing-support-library/tree/gh-pages).
-
-## AXT Source code
-
-The AXT source code is stored in piper and perodically open-sourced to (http://github.com/android/android-test)
+See CONTRIBUTING.md
 
 ## Issues
-Use the issue tracker for problems with the **AXT documentation page** only. See the [Help section](http://google.github.io/android-testing-support-library/support/index.html) to figure out how to report a problem.
+Use the [Android issue tracker](https://b./issues/new?component=192735). See [Reporting Bugs](https://source.android.com/setup/contribute/report-bugs) for more information.

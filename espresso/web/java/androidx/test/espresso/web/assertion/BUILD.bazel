@@ -1,0 +1,56 @@
+# Espresso Web Assertion
+
+licenses(["notice"])  # Apache License 2.0
+
+package(default_visibility = ["//visibility:public"])
+
+REMOTE_WEB_ASSERTIONS = [
+    "RemoteWebViewAssertions.java",
+    "CheckResultWebAssertionRemoteMessage.java",
+    "DocumentProtoConverters.java",
+    "DocumentToByteStringConverter.java",
+    "ByteStringToDocumentConverter.java",
+    "DocumentToByteStringConverter.java",
+    "CompressorDecompressor.java",
+]
+
+android_library(
+    name = "assertion",
+    srcs = glob(
+        ["*.java"],
+        exclude = REMOTE_WEB_ASSERTIONS,
+    ),
+    deps = [
+        "//:com_android_support_support_annotations",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//espresso/web/java/androidx/test/espresso/web/action",
+        "//espresso/web/java/androidx/test/espresso/web/model",
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@guava//jar",
+        "@hamcrest//jar",
+        "@tagsoup//jar",
+    ],
+)
+
+android_library(
+    name = "remote_web_assertions",
+    srcs = glob(
+        REMOTE_WEB_ASSERTIONS,
+    ),
+    deps = [
+        ":assertion",
+        "//:com_android_support_support_annotations",
+        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
+        "//espresso/core/java/androidx/test/espresso/remote:registry",
+        "//espresso/web/java/androidx/test/espresso/web/proto/assertion:web_assertions_proto_android_pb3",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@guava//jar",
+    ],
+)

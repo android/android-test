@@ -1,0 +1,87 @@
+# Description: Runs all test runner tests
+package(
+    default_testonly = 1,
+    default_visibility = [
+        "//visibility:public",
+    ],
+)
+
+licenses(["notice"])  # Apache License 2.0
+
+ANDROID_TEST_SRCS = glob(
+    ["**/*.java"],
+    exclude = [
+        # Tests currently not supported by android_instrumentation_test
+        "JUnitTestSuiteTest.java",
+        "MyTestSuiteBuilder.java",
+        # performance/profiling test
+        "JUnit3HogTest.java",
+        "JUnit4HogTest.java",
+        # empty tests not supported
+        "MyEmptyTest.java",
+        # parameterized tests not supported in Google
+        "MyParameterizedTest.java",
+        "AndroidLogOnlyBuilderTest.java",
+        "**/**/AndroidLogOnlyBuilder*Test.java",
+        "**/**/TestLoader*Test.java",
+        # suppressed
+        "TheoriesAndTestsTogether.java",
+    ],
+)
+
+java_library(
+    name = "test_deps",
+    visibility = ["//visibility:public"],
+    exports = [
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@dexmaker//jar",
+        "@dexmaker_mockito//jar",
+        "@hamcrest//jar",
+        "@junit//jar",
+        "@mockito//jar",
+        "@objenesis//jar",
+    ],
+)
+
+android_library(
+    name = "runner_test_lib",
+    srcs = ANDROID_TEST_SRCS,
+    manifest = "AndroidManifest_opensource.xml",
+    deps = [":test_deps"],
+)
+
+android_binary(
+    name = "runner_apk",
+    manifest = "AndroidManifest_opensource_stub.xml",
+)
+
+android_binary(
+    name = "runner_test_apk",
+    instruments = ":runner_apk",
+    manifest = "AndroidManifest_opensource.xml",
+    deps = [":runner_test_lib"],
+)
+
+FILTER_INNER_TEST_CLASS_NAMES = "androidx.test.TimeoutTest$$JUnit3StyleClass,androidx.test.internal.runner.AndroidLogOnlyBuilderTest$$JUnit4Class,androidx.test.internal.runner.AndroidLogOnlyBuilderTest$$JUnit4ParameterizedTest,androidx.test.internal.runner.AndroidLogOnlyBuilderTest$$JUnit3Test,androidx.test.internal.runner.TestRequestBuilderTest$$JUnit3SuiteWithTest,androidx.test.internal.runner.TestRequestBuilderTest$$RunWithJUnit4Failing,androidx.test.internal.runner.TestRequestBuilderTest$$JUnit3FailingTestCase,androidx.test.internal.runner.TestRequestBuilderTest$$RunWithAndroidJUnit4Failing"
+
+API_LEVELS = [
+    "19_x86",
+    "21_x86",
+    "22_x86",
+    "23_x86",
+]
+
+[android_instrumentation_test(
+    name = "runner_tests_%s" % api_level,
+    size = "large",
+    args = [
+        "--clear_package_data",
+        "--install_test_services=True",
+        "--test_filter_spec",
+        "-TEST_NAME",
+        "--test_class_names",
+        FILTER_INNER_TEST_CLASS_NAMES,
+    ],
+    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
+    test_app = ":runner_test_apk",
+) for api_level in API_LEVELS]

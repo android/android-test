@@ -129,7 +129,6 @@ class CommonTest(mox.MoxTestBase):
         env=exec_env,
         close_fds=True,
         stdin=None,
-        preexec_fn=common._ResetSigPipeHandling,
         cwd=exec_dir).AndReturn(Waitable())
 
     self.mox.ReplayAll()
@@ -160,22 +159,19 @@ class CommonTest(mox.MoxTestBase):
         stderr=subprocess.PIPE,
         env=exec_env,
         close_fds=True,
-        cwd=exec_dir,
-        preexec_fn=common._ResetSigPipeHandling).AndReturn(main_task)
+        cwd=exec_dir).AndReturn(main_task)
     subprocess.Popen(
         ['/usr/bin/tee', '-a', logfile_name],
         stdin=main_task.stdout,
         stdout=21,
         stderr=mox.Func(lambda f: f.name == '/dev/null'),
-        close_fds=True,
-        preexec_fn=common._ResetSigPipeHandling).AndReturn(tee_out_task)
+        close_fds=True).AndReturn(tee_out_task)
     subprocess.Popen(
         ['/usr/bin/tee', '-a', logfile_name],
         stdin=main_task.stderr,
         stdout=21,
         stderr=mox.Func(lambda f: f.name == '/dev/null'),
-        close_fds=True,
-        preexec_fn=common._ResetSigPipeHandling).AndReturn(tee_err_task)
+        close_fds=True).AndReturn(tee_err_task)
 
     self.mox.ReplayAll()
 

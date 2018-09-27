@@ -27,10 +27,10 @@ import sys
 import tempfile
 import time
 
-from google.protobuf import text_format
-from google.apputils import app
-import gflags as flags
+from absl import app
+from absl import flags
 
+from google.protobuf import text_format
 from tools.android.emulator import resources
 
 from tools.android.emulator import common
@@ -300,6 +300,12 @@ def _FirstBootAtBuildTimeOnly(
                                              'advancedFeatures.ini')
   build_prop_path = _ExtractSuffixFile(system_images, 'build.prop')
 
+  data_files = _ExtractDataFiles(system_images)
+
+  # If this file is present, then the ramdisk was patched as part of a previous
+  # build action and we can just use it as is.
+  modified_ramdisk_path = _ExtractPrefixFile(system_images, 'modified_ramdisk_')
+
   device = emulated_device.EmulatedDevice(
       android_platform=_MakeAndroidPlatform(),
       qemu_gdb_port=qemu_gdb_port,
@@ -321,12 +327,14 @@ def _FirstBootAtBuildTimeOnly(
       vendor_img_path=vendor_img_path,
       encryptionkey_img_path=encryptionkey_img_path,
       advanced_features_ini=advanced_features_ini,
-      build_prop_path=build_prop_path)
+      build_prop_path=build_prop_path,
+      data_files=data_files)
 
   device.StartDevice(enable_display=False,  # Will be ignored.
                      start_vnc_on_port=0,  # Will be ignored.
                      emulator_tmp_dir=emulator_tmp_dir,
-                     save_snapshot=FLAGS.save_snapshot)
+                     save_snapshot=FLAGS.save_snapshot,
+                     modified_ramdisk_path=modified_ramdisk_path)
 
   try:
     device.LogToDevice('Device booted.')
@@ -336,6 +344,15 @@ def _FirstBootAtBuildTimeOnly(
       except Exception as error:
         device.KillEmulator()
         raise error
+    # Wait for system being idle for 4 minutes before shutting down.
+    if FLAGS.save_snapshot:
+      idle = emulated_device.IdleStatus(device=device)
+      for _ in range(40):
+        time.sleep(6)
+        load = idle.RecentMaxLoad(15)
+        if load < 0.1:
+          logging.info('Emulator is idle now.')
+          break
     _StopDeviceAndOutputState(device, output_dir)
   finally:
     device.CleanUp()
@@ -451,10 +468,14 @@ def _RestartDevice(device,
   advanced_features_ini = _ExtractSuffixFile(system_image_files,
                                              'advancedFeatures.ini')
   build_prop_path = _ExtractSuffixFile(system_image_files, 'build.prop')
+
+  data_files = _ExtractDataFiles(system_image_files)
+
   # TODO: Move data to another field in the proto.
   images_dict = device.BuildImagesDict(sysimg, dataimg, vendorimg_path,
                                        encryptionkeyimg_path,
-                                       advanced_features_ini, build_prop_path)
+                                       advanced_features_ini, build_prop_path,
+                                       data_files)
   proto.system_image_path = json.dumps(images_dict)
   device._metadata_pb = proto
   device.StartDevice(enable_display,
@@ -723,6 +744,22 @@ def _ExtractSuffixFile(overloaded_flag, suffix):
   if overloaded_flag:
     for f in overloaded_flag:
       if f.endswith(suffix):
+        return f
+  return None
+
+
+def _ExtractDataFiles(files):
+  output = []
+  for f in files:
+    if 'data/' in f:
+      output.append(f)
+  return output
+
+
+def _ExtractPrefixFile(overloaded_flag, prefix):
+  if overloaded_flag:
+    for f in overloaded_flag:
+      if os.path.basename(f).startswith(prefix):
         return f
   return None
 
@@ -998,6 +1035,10 @@ def main(unused_argv):
       except emulated_device.TransientEmulatorFailure as e:
         if attempts < FLAGS.retry_attempts:
           logging.warning('Transient failure: %s', e)
+          if FLAGS.snapshot_file:
+            # If we loaded from Snapshot and at times, we've seen adb calls
+            # hanging. In those cases, retry without snapshot(ram.bin) file.
+            FLAGS.snapshot_file = None
         else:
           reporter.ReportFailure('tools.android.emulator.SoMuchDeath',
                                  {'message': str(e),
@@ -1023,4 +1064,4 @@ def AddFileLogHandler():
 
 if __name__ == '__main__':
   AddFileLogHandler()
-  app.run()
+  app.run(main)
