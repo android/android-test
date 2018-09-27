@@ -6,7 +6,7 @@ For more details see [developers.android.com/testing](https://developers.android
 
 ## Contributing
 
-See CONTRIBUTING.md
+See [CONTRIBUTING.md]
 
 ## Issues
 Use the [Android issue tracker](https://b./issues/new?component=192735). See [Reporting Bugs](https://source.android.com/setup/contribute/report-bugs) for more information.
