@@ -1,0 +1,23 @@
+# Protocol buffer definitions for any proto transformers. Only used in tests!
+
+licenses(["notice"])  # Apache License 2.0
+
+package(
+    default_visibility = ["//espresso/core/java/androidx/test/espresso:espresso_pkg"],
+)
+
+proto_library(
+    name = "test_protos",
+    srcs = ["test_protos.proto"],
+    deps = [
+        "@com_google_protobuf//:any_proto",
+    ],
+)
+
+java_lite_proto_library(
+    name = "test_protos_android_pb3",
+    strict_deps = 0,
+    deps = [
+        ":test_protos",
+    ],
+)

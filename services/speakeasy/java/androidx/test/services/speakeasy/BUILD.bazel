@@ -1,0 +1,9 @@
+licenses(["notice"])  # Apache 2.0
+
+android_library(
+    name = "protocol",
+    srcs = ["SpeakEasyProtocol.java"],
+    visibility = [
+        "//services:__subpackages__",
+    ],
+)

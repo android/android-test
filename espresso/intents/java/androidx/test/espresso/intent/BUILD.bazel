@@ -1,0 +1,114 @@
+# Description:
+#   Common library for testing inter and intra app communication via intents.
+licenses(["notice"])  # Apache License 2.0
+
+package(
+    default_visibility = ["//:__subpackages__"],
+)
+
+INTERFACE_FILES = [
+    "ResolvedIntent.java",
+]
+
+android_library(
+    name = "intents",
+    srcs = glob(
+        ["*.java"],
+        exclude = INTERFACE_FILES + ["GmsAuthTestHelper.java"],
+    ),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":resolved_intent_interface",
+        "//:com_android_support_support_annotations",
+        "//espresso/core/java/androidx/test/espresso",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/intents/java/androidx/test/espresso/intent/matcher",
+        "//runner/android_junit_runner",
+        "@hamcrest//jar",
+    ],
+)
+
+android_library(
+    name = "precondition_checks",
+    srcs = [
+        "Checks.java",
+    ],
+)
+
+android_library(
+    name = "resolved_intent_interface",
+    srcs = INTERFACE_FILES,
+)
+
+# ** Generate the release artifacts **
+
+load("//build_extensions:release.bzl", "axt_release_lib")
+
+android_library(
+    name = "espresso_intents_release_lib",
+    exports = [
+        ":intents",
+        "//espresso/intents/java/androidx/test/espresso/intent/rule",
+    ],
+)
+
+axt_release_lib(
+    name = "espresso_intents_release",
+    overlapping_jars = [
+        "//runner/android_junit_runner/java/androidx/test:runner_release_no_deps.jar",
+        "//runner/rules/java/androidx/test:rules_release_no_deps.jar",
+        "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
+        "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_release_no_deps.jar",
+        "//espresso/core/java/androidx/test/espresso:espresso_core_release_no_deps.jar",
+        "@junit//jar",
+    ],
+    remove_specs = [
+        "android.support.annotation*",
+        "androidx.test.services*",
+        "androidx.test.internal.runner.hidden.*",
+        # remove META-INF directory to avoid duplicate clashes with imports from the support library.
+        "META-INF",
+        "androidx.test.espresso.intents.Intento",
+        "androidx.test.espresso.intents.rule.IntentoTestRule",
+    ],
+    deps = [
+        ":espresso_intents_release_lib",
+    ],
+)
+
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION", "RUNNER_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
+filegroup(
+    name = "intents_src",
+    srcs = [
+        ":libintents-src.jar",
+        ":libresolved_intent_interface-src.jar",
+        "//espresso/intents/java/androidx/test/espresso/intent/matcher:libmatcher-src.jar",
+        "//espresso/intents/java/androidx/test/espresso/intent/rule:librule-src.jar",
+    ],
+)
+
+combine_jars(
+    name = "intents_src_jars",
+    srcs = [
+        ":intents_src",
+    ],
+)
+
+maven_artifact(
+    name = "espresso_intents_maven_artifact",
+    src = ":espresso_intents_release.aar",
+    artifact_deps = [
+        "androidx.test.espresso:espresso-core:%s" % ESPRESSO_VERSION,
+        "androidx.test:rules:%s" % RUNNER_VERSION,
+    ],
+    artifact_id = "espresso-intents",
+    group_id = "androidx.test.espresso",
+    last_updated = "20170622000000",
+    src_jar = ":intents_src_jars.jar",
+    version = "%s" % ESPRESSO_VERSION,
+)

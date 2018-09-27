@@ -1,0 +1,82 @@
+# Description:
+# Espresso Accessibility APIs
+licenses(["notice"])
+
+package(
+    default_visibility = ["//:__subpackages__"],
+)
+
+android_library(
+    name = "accessibility_checks",
+    testonly = 1,
+    srcs = [
+        "AccessibilityChecks.java",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//espresso/core/java/androidx/test/espresso",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@accessibility//jar",
+        "@guava//jar",
+        "@hamcrest//jar",
+    ],
+)
+
+load("//build_extensions:release.bzl", "axt_release_lib")
+
+axt_release_lib(
+    name = "accessibility_checks_release",
+    # use a custom package so the unnecessary generated R class containing support lib resources
+    # gets removed
+    custom_package = "com.removeme",
+    overlapping_jars = [
+        "//runner/android_junit_runner/java/androidx/test:runner_release_no_deps.jar",
+        "//espresso/core/java/androidx/test/espresso:espresso_core_release_no_deps.jar",
+        "@junit//jar",
+    ],
+    remove_specs = [
+        # remove all com.google.android.apps.common.testing.accessibility.framework classes
+        "com.google.android.apps.common.testing.accessibility.framework",
+        # remove all android classes except androidx.test.espresso.accessibility
+        "android.*|^androidx.test.espresso.accessibility",
+        # remove META-INF directory to avoid duplicate clashes with imports from the support library.
+        "META-INF",
+        # remove android.arch classes that get pulled in from the support library.
+        "android.arch.*",
+    ],
+    deps = [
+        ":accessibility_checks",
+    ],
+)
+
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
+filegroup(
+    name = "accessibility_checks_src",
+    srcs = [
+        ":libaccessibility_checks-src.jar",
+    ],
+)
+
+combine_jars(
+    name = "accessibility_checks_src_jars",
+    srcs = [
+        ":accessibility_checks_src",
+    ],
+)
+
+maven_artifact(
+    name = "accessibility_checks_maven_artifact",
+    src = ":accessibility_checks_release.aar",
+    artifact_deps = [
+        "androidx.test.espresso:espresso-core:%s" % ESPRESSO_VERSION,
+        "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.0",
+    ],
+    artifact_id = "espresso-accessibility",
+    group_id = "androidx.test.espresso",
+    last_updated = "20170622000000",
+    src_jar = ":accessibility_checks_src_jars.jar",
+    version = "%s" % ESPRESSO_VERSION,
+)

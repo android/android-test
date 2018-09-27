@@ -1,0 +1,41 @@
+# Description:
+#   On Device Orchestrator, to run instrumentation tests sequentially from a single adb command
+licenses(["notice"])
+
+android_library(
+    name = "orchestrator",
+    srcs = glob(["**/*.java"]),
+    idl_srcs = glob(["**/*.aidl"]),
+    visibility = [
+        ":export",
+    ],
+    deps = [
+        "//:com_android_support_support_annotations",
+        "//:com_android_support_support_compat",
+        "//:com_android_support_support_v4",
+        "//runner/android_junit_runner",
+        "//services/shellexecutor:exec_client",
+        "@guava//jar",
+        "@junit//jar",
+        "@kxml//jar",
+    ],
+)
+
+# Do not link to these targets directly, rely on exporting target instead
+package_group(
+    name = "export",
+    packages = [
+        "//runner/android_test_orchestrator",
+        "//runner/android_test_orchestrator/stubapp",
+    ],
+)
+
+filegroup(
+    name = "orchestrator_src",
+    srcs = [
+        ":liborchestrator-src.jar",
+    ],
+    visibility = [
+        ":export",
+    ],
+)

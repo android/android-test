@@ -1,5 +1,7 @@
 """Skylark rules to setup the WORKSPACE in the opensource bazel world."""
 
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 # These dependencies are required for *developing* this project.
 def _development_repositories():
     native.maven_jar(
@@ -39,12 +41,12 @@ def _development_repositories():
 
     native.maven_jar(
         name = "truth",
-        artifact = "com.google.truth:truth:0.27",
+        artifact = "com.google.truth:truth:0.42",
     )
 
     native.maven_jar(
         name = "guava",
-        artifact = "com.google.guava:guava:23.5-android",
+        artifact = "com.google.guava:guava:25.1-android",
     )
 
     native.maven_jar(
@@ -89,11 +91,11 @@ def _development_repositories():
         urls = ["https://github.com/google/protobuf/releases/download/v3.5.0/protobuf-java-3.5.0.tar.gz"],
     )
 
-    native.http_archive(
+    http_archive(
         name = "robolectric",
-        urls = ["https://github.com/robolectric/robolectric/archive/robolectric-3.7.1.tar.gz"],
-        strip_prefix = "robolectric-robolectric-3.7.1",
-        sha256 = "72c61b9fd9e63adcd991fa5b6403af74b5744d7436a7223cddcb2c70736d6643",
+        urls = ["https://github.com/robolectric/robolectric-bazel/archive/4.0-alpha-3.tar.gz"],
+        strip_prefix = "robolectric-bazel-4.0-alpha-3",
+        sha256 = "7730b46281c2f8c23f6c045ddfe449bf077328f0128200043a5ac57210643f22",
     )
 
     # java_lite_proto_library rules implicitly depend on @com_google_protobuf_javalite//:javalite_toolchain,
@@ -128,14 +130,6 @@ java_import(
     jars = ["javax.inject.jar"],
 )""",
         url = "https://github.com/javax-inject/javax-inject/releases/download/1/javax.inject.zip",
-    )
-
-    # Open source version of the google python flags library.
-    native.http_archive(
-        name = "absl_py",
-        urls = ["https://github.com/abseil/abseil-py/archive/b347ba6022370f895d3133241ed96965b95ecb40.tar.gz"],
-        strip_prefix = "abseil-py-b347ba6022370f895d3133241ed96965b95ecb40",
-        sha256 = "980ce58c34dfa75a9d20d45c355658191c166557f1de41ab52f208bd00604c2b",
     )
 
     native.maven_jar(
@@ -279,4 +273,12 @@ def android_test_repositories(with_dev_repositories = False):
         # and make this rule native.http_archive. This will also require updating
         # the URL to be a newer protobuf release.
         build_file = str(Label("//opensource:protobuf.BUILD")),
+    )
+
+    # Open source version of the google python flags library.
+    native.http_archive(
+        name = "absl_py",
+        urls = ["https://github.com/abseil/abseil-py/archive/b347ba6022370f895d3133241ed96965b95ecb40.tar.gz"],
+        strip_prefix = "abseil-py-b347ba6022370f895d3133241ed96965b95ecb40",
+        sha256 = "980ce58c34dfa75a9d20d45c355658191c166557f1de41ab52f208bd00604c2b",
     )

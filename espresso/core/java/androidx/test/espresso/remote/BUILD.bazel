@@ -1,0 +1,200 @@
+# Remote package for espresso.
+
+licenses(["notice"])  # Apache License 2.0
+
+package(
+    default_visibility = [
+        "//espresso/core/java/androidx/test/espresso:espresso_pkg",
+        "//espresso/web/java/androidx/test/espresso/web/action:__pkg__",
+        "//testapps/multiprocess_testapp/java/androidx/test/multiprocess/app:__pkg__",
+        "//testapps/multiprocess_testapp/javatests/androidx/test/multiprocess/app:__pkg__",
+    ],
+)
+
+REMOTE_INTERFACES = [
+    "NoopRemoteInteraction.java",
+    "RemoteInteraction.java",
+    "RemoteInteractionRegistry.java",
+    "EspressoRemoteMessage.java",
+]
+
+REMOTE_REGISTRY = [
+    "RemoteDescriptorRegistry.java",
+    "RemoteDescriptor.java",
+    "FieldDescriptor.java",
+]
+
+android_library(
+    name = "registry",
+    srcs = REMOTE_REGISTRY,
+    visibility = ["//visibility:public"],
+    deps = [
+        ":exceptions",
+        ":reflectionUtils",
+        "//:com_android_support_support_annotations",
+        "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@guava//jar",
+    ],
+)
+
+android_library(
+    name = "interface",
+    srcs = REMOTE_INTERFACES,
+    visibility = ["//visibility:public"],
+    deps = [
+        ":exceptions",
+        ":reflectionUtils",
+        "//:com_android_support_support_annotations",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@guava//jar",
+        "@hamcrest//jar",
+    ],
+)
+
+REFLECTION_UTILS = [
+    "MethodInvocation.java",
+    "ConstructorInvocation.java",
+]
+
+android_library(
+    name = "reflectionUtils",
+    srcs = REFLECTION_UTILS,
+    visibility = ["//visibility:public"],
+    deps = [
+        ":exceptions",
+        "//:com_android_support_support_annotations",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@guava//jar",
+    ],
+)
+
+PROTO_UTILS = [
+    "Converter.java",
+    "AnyToTypeConverter.java",
+    "TypeToAnyConverter.java",
+    "ByteStringToTypeConverter.java",
+    "TypeToByteStringConverter.java",
+    "ParcelableToByteStringConverter.java",
+    "ByteStringToParcelableConverter.java",
+    "TypeProtoConverters.java",
+    "ProtoUtils.java",
+    "InteractionRequest.java",
+    "GenericRemoteMessage.java",
+    "RemoteMessageSerializer.java",
+    "RemoteMessageDeserializer.java",
+    "BuilderReflector.java",
+    "ProtoReflector.java",
+]
+
+android_library(
+    name = "aidls",
+    custom_package = "androidx.test.espresso.remote",
+    idl_import_root = "idls",
+    idl_srcs = glob(["idls/**"]),
+    visibility = ["//visibility:public"],
+    deps = ["@com_google_protobuf_javalite//:protobuf_java_lite"],
+)
+
+android_library(
+    name = "protoUtils",
+    srcs = PROTO_UTILS,
+    visibility = ["//visibility:public"],
+    deps = [
+        ":aidls",
+        ":exceptions",
+        ":interface",
+        ":reflectionUtils",
+        ":registry",
+        "//:com_android_support_support_annotations",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@guava//jar",
+        "@hamcrest//jar",
+    ],
+)
+
+REMOTE_EXCEPTIONS = [
+    "RemoteEspressoException.java",
+    "RemoteProtocolException.java",
+    "NoRemoteEspressoInstanceException.java",
+]
+
+android_library(
+    name = "exceptions",
+    srcs = REMOTE_EXCEPTIONS,
+    visibility = ["//visibility:public"],
+    deps = [
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
+    ],
+)
+
+BINDABLE = [
+    "Bindable.java",
+]
+
+android_library(
+    name = "bindable",
+    srcs = BINDABLE,
+    deps = ["@com_google_protobuf_javalite//:protobuf_java_lite"],
+)
+
+android_library(
+    name = "remote",
+    srcs = glob(
+        ["*.java"],
+        exclude = REMOTE_INTERFACES + PROTO_UTILS + REMOTE_EXCEPTIONS + BINDABLE,
+    ),
+    deps = [
+        ":aidls",
+        ":exceptions",
+        ":interface",
+        ":protoUtils",
+        "//:com_android_support_support_annotations",
+        "//espresso/core/java/androidx/test/espresso",
+        "//espresso/core/java/androidx/test/espresso:data-interaction-remote",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/action:remote_view_actions",
+        "//espresso/core/java/androidx/test/espresso/assertion:remote_view_assertions",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/matcher:remote_hamcrest_v1_3_core_matchers",
+        "//espresso/core/java/androidx/test/espresso/matcher:remote_view_matchers",
+        "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
+        "//espresso/core/java/androidx/test/espresso/proto/matcher:ui_interaction_view_matchers_android_pb3",
+        "//espresso/core/java/androidx/test/espresso/remote:bindable",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//espresso/web/java/androidx/test/espresso/web/action:remote_web_actions",
+        "//espresso/web/java/androidx/test/espresso/web/assertion:remote_web_assertions",
+        "//espresso/web/java/androidx/test/espresso/web/matcher:remote_web_matchers",
+        "//espresso/web/java/androidx/test/espresso/web/model:remote_web_model_atoms",
+        "//espresso/web/java/androidx/test/espresso/web/sugar:remote_sugar",
+        "//espresso/web/java/androidx/test/espresso/web/webdriver:remote_webdriver_atoms",
+        "//runner/android_junit_runner",
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@guava//jar",
+        "@hamcrest//jar",
+    ],
+)
+
+filegroup(
+    name = "espresso_remote_src",
+    srcs = [
+        ":libbindable-src.jar",
+        ":libexceptions-src.jar",
+        ":libinterface-src.jar",
+        ":libprotoUtils-src.jar",
+        ":libreflectionUtils-src.jar",
+        ":libregistry-src.jar",
+        ":libremote-src.jar",
+    ],
+)

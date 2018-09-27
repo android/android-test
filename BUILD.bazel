@@ -1,11 +1,37 @@
-# Top level BUILD file for GitHub
-
 package(default_visibility = ["//:__subpackages__"])
 
+load("//build_extensions:maven_repo.bzl", "maven_repository")
+load("//build_extensions:axt_versions.bzl", "ANDROID_SUPPORT_LIBRARY_VERSION")
+load("@gmaven_rules//:defs.bzl", "gmaven_artifact")
+
 exports_files([
+    "proguard_binary.cfg",
     "LICENSE",
     "repo.bzl",
 ])
+
+# Creates maven repository release repository
+maven_repository(
+    name = "axt_m2repository",
+    srcs = [
+        "//core/java/androidx/test/core:core_maven_artifact",
+        "//espresso/accessibility/java/androidx/test/espresso/accessibility:accessibility_checks_maven_artifact",
+        "//espresso/contrib/java/androidx/test/espresso/contrib:espresso_contrib_maven_artifact",
+        "//espresso/core/java/androidx/test/espresso:espresso_core_maven_artifact",
+        "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:idling_concurrent_maven_artifact",
+        "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_maven_artifact",
+        "//espresso/idling_resource/net/java/androidx/test/espresso/idling/net:idling_net_maven_artifact",
+        "//espresso/intents/java/androidx/test/espresso/intent:espresso_intents_maven_artifact",
+        "//espresso/web/java/androidx/test/espresso/web:espresso_web_maven_artifact",
+        "//ext/junit/java/androidx/test/ext/junit:junit_maven_artifact",
+        "//ext/truth/java/androidx/test/ext/truth:truth_maven_artifact",
+        "//runner/android_junit_runner/java/androidx/test:runner_maven_artifact",
+        "//runner/android_test_orchestrator/stubapp:orchestrator_release_maven_artifact",
+        "//runner/monitor/java/androidx/test:monitor_maven_artifact",
+        "//runner/rules/java/androidx/test:rules_maven_artifact",
+        "//services:test_services_maven_artifact",
+    ],
+)
 
 java_test(
     name = "instrumentation_test_runner",
@@ -16,4 +42,66 @@ java_test(
     runtime_deps = [
         "//opensource:entry_point_import",
     ],
+)
+
+alias(
+    name = "third_party/java/jdk/jar",
+    actual = "@local_jdk//:jar",
+)
+
+# Support library aliases
+
+alias(
+    name = "com_android_support_appcompat_v7",
+    actual = gmaven_artifact("com.android.support:appcompat-v7:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+)
+
+alias(
+    name = "com_android_support_design",
+    actual = gmaven_artifact("com.android.support:design:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+)
+
+alias(
+    name = "com_android_support_multidex",
+    actual = gmaven_artifact("com.android.support:multidex:aar:1.0.2"),
+)
+
+alias(
+    name = "com_android_support_support_annotations",
+    actual = gmaven_artifact("com.android.support:support-annotations:jar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+)
+
+alias(
+    name = "android_arch_lifecycle_common",
+    actual = gmaven_artifact("android.arch.lifecycle:common:jar:1.1.1"),
+)
+
+alias(
+    name = "com_android_support_support_compat",
+    actual = gmaven_artifact("com.android.support:support-compat:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+)
+
+alias(
+    name = "com_android_support_support_core_ui",
+    actual = gmaven_artifact("com.android.support:support-core-ui:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+)
+
+alias(
+    name = "com_android_support_support_core_utils",
+    actual = gmaven_artifact("com.android.support:support-core-utils:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+)
+
+alias(
+    name = "com_android_support_support_fragment",
+    actual = gmaven_artifact("com.android.support:support-fragment:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+)
+
+alias(
+    name = "com_android_support_support_v4",
+    actual = gmaven_artifact("com.android.support:support-v4:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+)
+
+alias(
+    name = "com_android_support_recyclerview_v7",
+    actual = gmaven_artifact("com.android.support:recyclerview-v7:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
 )

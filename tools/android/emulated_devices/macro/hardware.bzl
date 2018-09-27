@@ -30,3 +30,9 @@ def hardware_device_attributes(hardware):
 def hardware_props(hardware):
     """Props which should be added to the device running the hardware."""
     return hardware["props"]
+
+def hardware_screen_density(hardware):
+    return hardware["screen_density"]
+
+def hardware_vm_heap(hardware):
+    return hardware["vm_heap"]

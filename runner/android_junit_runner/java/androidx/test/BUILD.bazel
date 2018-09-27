@@ -1,0 +1,79 @@
+# Description: Build rules for building androidx.test from source
+licenses(["notice"])  # Apache License 2.0
+
+package(
+    default_visibility = [
+        "//visibility:public",
+    ],
+)
+
+android_library(
+    name = "runner",
+    srcs = glob(
+        ["**/*.java"],
+    ),
+    idl_srcs = glob(["**/*.aidl"]),
+    proguard_specs = [
+        "proguard_library.cfg",
+    ],
+    visibility = ["//visibility:public"],
+    exports = [
+        "//runner/monitor",
+    ],
+    deps = [
+        "//:com_android_support_support_annotations",
+        "//runner/monitor",
+        "@junit//jar",
+    ],
+)
+
+load("//build_extensions:release.bzl", "axt_release_lib")
+
+# group of targets to use to produce release binary + docs
+android_library(
+    name = "runner_release_lib",
+    visibility = ["//visibility:public"],
+    exports = [
+        ":runner",
+    ],
+)
+
+# Generate rules for the release artifacts. This generates three targets
+# genrule output: runner_release_no_deps.jar and runner_release.aar
+# a java_library target librunner_release_no_deps
+axt_release_lib(
+    name = "runner_release",
+    jarjar_rules = "release_jarjar_rules.txt",
+    overlapping_jars = [
+        "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
+        "@junit//jar",
+    ],
+    proguard_library = ":proguard_library.cfg",
+    remove_specs = [
+        "android.support.annotation*",
+    ],
+    deps = [
+        ":runner_release_lib",
+    ],
+)
+
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION", "ANDROIDX_VERSION", "JUNIT_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+load("//build_extensions:droiddoc.bzl", "droiddoc")
+
+maven_artifact(
+    name = "runner_maven_artifact",
+    src = ":runner_release.aar",
+    artifact_deps = [
+        "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
+        "androidx.test:monitor:%s" % RUNNER_VERSION,
+        "junit:junit:%s" % JUNIT_VERSION,
+        "net.sf.kxml:kxml2:2.3.0",
+    ],
+    artifact_id = "runner",
+    group_id = "androidx.test",
+    last_updated = "20170622000000",
+    src_jar = ":librunner-src.jar",
+    version = "%s" % RUNNER_VERSION,
+)

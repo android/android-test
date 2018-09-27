@@ -1,0 +1,65 @@
+# Description: Build rules for building androidx.test.truth from source
+licenses(["notice"])  # Apache License 2.0
+
+package(
+    default_visibility = [
+        "//visibility:public",
+    ],
+)
+
+android_library(
+    name = "truth",
+    srcs = glob(
+        ["**/*.java"],
+    ),
+    manifest = "AndroidManifest.xml",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:com_android_support_support_annotations",
+        "//core",
+        "@guava//jar",
+        "@truth//jar",
+    ],
+)
+
+load("//build_extensions:release.bzl", "axt_release_lib")
+
+# group of targets to use to produce release binary + docs
+android_library(
+    name = "truth_release_lib",
+    testonly = 1,
+    exports = [
+        ":truth",
+    ],
+)
+
+# Generate rules for the release artifacts. This generates three targets
+# genrule output: truth_release_no_deps.jar and truth_release.aar
+# a java_library target libtruth_release_no_deps
+axt_release_lib(
+    name = "truth_release",
+    remove_specs = [
+        "com.google*",
+        "difflib",
+    ],
+    deps = [
+        ":truth_release_lib",
+    ],
+)
+
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "TRUTH_VERSION", "ANDROIDX_TRUTH_VERSION", "ANDROIDX_VERSION")
+
+maven_artifact(
+    name = "truth_maven_artifact",
+    src = ":truth_release.aar",
+    artifact_deps = [
+        "com.google.truth:truth:%s" % TRUTH_VERSION,
+        "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
+    ],
+    artifact_id = "truth",
+    group_id = "androidx.test.ext",
+    last_updated = "20180321000000",
+    src_jar = ":libtruth-src.jar",
+    version = "%s" % ANDROIDX_TRUTH_VERSION,
+)

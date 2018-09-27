@@ -22,7 +22,7 @@ import StringIO
 import tempfile
 
 
-import gflags as flags
+from absl import flags
 import mox
 
 from google.apputils import basetest as googletest
@@ -506,12 +506,14 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         vendor_img_path=None,
         encryptionkey_img_path=None,
         advanced_features_ini=None,
-        build_prop_path=os.path.join(self._tempdir, 'build.prop'))
+        build_prop_path=os.path.join(self._tempdir, 'build.prop'),
+        data_files=[])
 
     initial_boot_device.StartDevice(enable_display=False,
                                     start_vnc_on_port=0,
                                     emulator_tmp_dir=None,
-                                    save_snapshot=False)
+                                    save_snapshot=False,
+                                    modified_ramdisk_path=None)
 
     self.mox.StubOutWithMock(initial_boot_device, 'InstallApk')
     self.mox.StubOutWithMock(initial_boot_device, 'KillEmulator')
@@ -568,12 +570,14 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         vendor_img_path=None,
         encryptionkey_img_path=None,
         advanced_features_ini=None,
-        build_prop_path=os.path.join(self._tempdir, 'build.prop'))
+        build_prop_path=os.path.join(self._tempdir, 'build.prop'),
+        data_files=[])
 
     initial_boot_device.StartDevice(enable_display=False,
                                     start_vnc_on_port=0,
                                     emulator_tmp_dir=None,
-                                    save_snapshot=False)
+                                    save_snapshot=False,
+                                    modified_ramdisk_path=None)
 
     self.mox.StubOutWithMock(initial_boot_device, 'KillEmulator')
     self.mox.StubOutWithMock(unified_launcher, '_StopDeviceAndOutputState')

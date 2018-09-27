@@ -1,0 +1,34 @@
+# Helper artifacts for espresso remote tests
+
+licenses(["notice"])  # Apache License 2.0
+
+package(default_visibility = ["//espresso/core/java/androidx/test/espresso:espresso_pkg"])
+
+UTIL_SRCS = [
+    "RemoteDescriptorRegistryInitializer.java",
+    "StubRootMatcher.java",
+    "TestTypes.java",
+    "TestTypeRemoteMessage.java",
+]
+
+EXTERNAL_DEPS = [
+    "@com_google_protobuf_javalite//:protobuf_java_lite",
+    "@guava//jar",
+    "@hamcrest//jar",
+    "@junit//jar",
+]
+
+android_library(
+    name = "util",
+    srcs = UTIL_SRCS,
+    deps = [
+        "//espresso/core/java/androidx/test/espresso",
+        "//espresso/core/java/androidx/test/espresso/remote",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/core/java/androidx/test/espresso/remote:registry",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//espresso/core/javatests/androidx/test/espresso/proto:test_protos_android_pb3",
+        "//espresso/web/java/androidx/test/espresso/web/model",
+    ] + EXTERNAL_DEPS,
+)

@@ -1,0 +1,69 @@
+# Description:
+# Network Idling Resources
+licenses(["notice"])  # Apache License 2.0
+
+package(
+    default_visibility = ["//:__subpackages__"],
+)
+
+android_library(
+    name = "uri_idling_resource",
+    srcs = ["UriIdlingResource.java"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:com_android_support_support_annotations",
+        "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
+    ],
+)
+
+load("//build_extensions:release.bzl", "axt_release_lib")
+
+# rule for outputting externally released binary. Produces
+# idling_net_release_no_deps.jar and idling_net_release.aar
+axt_release_lib(
+    name = "idling_net_release",
+    overlapping_jars = [
+        "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_release_no_deps.jar",
+    ],
+    remove_specs = [
+        # remove all android.support.annotation
+        "android.support.annotation",
+        # remove META-INF directory to avoid duplicate clashes with imports from the support library.
+        "META-INF",
+    ],
+    deps = [
+        ":uri_idling_resource",
+    ],
+)
+
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "ESPRESSO_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
+filegroup(
+    name = "idling_net_src",
+    srcs = [
+        ":liburi_idling_resource-src.jar",
+    ],
+)
+
+combine_jars(
+    name = "idling_net_src_jars",
+    srcs = [
+        ":idling_net_src",
+    ],
+)
+
+maven_artifact(
+    name = "idling_net_maven_artifact",
+    src = ":idling_net_release.aar",
+    artifact_deps = [
+        "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
+        "androidx.test.espresso:espresso-idling-resource:%s" % ESPRESSO_VERSION,
+    ],
+    artifact_id = "idling-net",
+    group_id = "androidx.test.espresso.idling",
+    last_updated = "20170622000000",
+    src_jar = ":idling_net_src_jars.jar",
+    version = "%s" % ESPRESSO_VERSION,
+)

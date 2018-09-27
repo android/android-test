@@ -1,0 +1,16 @@
+# Description:
+#   Testsapp for speak easy client
+licenses(["notice"])  # Apache License 2.0
+
+package(
+    default_visibility = [
+        "//services/speakeasy/javatests/androidx/test/services/speakeasy:__subpackages__",
+    ],
+)
+
+android_binary(
+    name = "testapp",
+    testonly = 1,
+    manifest = "AndroidManifest.xml",
+    deps = ["//services/speakeasy/java/androidx/test/services/speakeasy/server:speak_easy_service"],
+)

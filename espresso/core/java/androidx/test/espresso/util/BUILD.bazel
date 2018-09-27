@@ -1,0 +1,15 @@
+# Description:
+#  Utility classes
+
+licenses(["notice"])
+
+package(default_visibility = ["//visibility:public"])
+
+android_library(
+    name = "util",
+    srcs = glob(["*.java"]),
+    deps = [
+        "//runner/android_junit_runner",
+        "@guava//jar",
+    ],
+)

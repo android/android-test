@@ -1,0 +1,83 @@
+licenses(["notice"])  # Apache License 2.0
+
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+# ** Generate the release artifacts **
+load("//build_extensions:release.bzl", "axt_release_lib")
+
+android_library(
+    name = "espresso_web_release_lib",
+    exports = [
+        "//espresso/web/java/androidx/test/espresso/web/action",
+        "//espresso/web/java/androidx/test/espresso/web/assertion",
+        "//espresso/web/java/androidx/test/espresso/web/matcher",
+        "//espresso/web/java/androidx/test/espresso/web/model",
+        "//espresso/web/java/androidx/test/espresso/web/sugar",
+        "//espresso/web/java/androidx/test/espresso/web/webdriver",
+    ],
+)
+
+axt_release_lib(
+    name = "espresso_web_release",
+    jarjar_rules = "release_jarjar_rules.txt",
+    overlapping_jars = [
+        "//runner/android_junit_runner/java/androidx/test:runner_release_no_deps.jar",
+        "//runner/rules/java/androidx/test:rules_release_no_deps.jar",
+        "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_release_no_deps.jar",
+        "//espresso/core/java/androidx/test/espresso:espresso_core_release_no_deps.jar",
+        "@junit//jar",
+    ],
+    proguard_specs = [
+        "//:proguard_binary.cfg",
+        "//espresso:proguard_binary.cfg",
+    ],
+    remove_specs = [
+        # remove all android.support classes except androidx.test.espresso.web
+        "android.*|^androidx.test.espresso.web",
+        # remove META-INF directory to avoid duplicate clashes with imports from the support library.
+        "META-INF",
+    ],
+    deps = [
+        ":espresso_web_release_lib",
+    ],
+)
+
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION", "ANDROIDX_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
+filegroup(
+    name = "web_src",
+    srcs = [
+        "//espresso/web/java/androidx/test/espresso/web/action:libaction-src.jar",
+        "//espresso/web/java/androidx/test/espresso/web/assertion:libassertion-src.jar",
+        "//espresso/web/java/androidx/test/espresso/web/matcher:libmatcher-src.jar",
+        "//espresso/web/java/androidx/test/espresso/web/model:libmodel-src.jar",
+        "//espresso/web/java/androidx/test/espresso/web/sugar:libsugar-src.jar",
+        "//espresso/web/java/androidx/test/espresso/web/webdriver:libwebdriver-src.jar",
+    ],
+)
+
+combine_jars(
+    name = "web_src_jars",
+    srcs = [
+        ":web_src",
+    ],
+)
+
+maven_artifact(
+    name = "espresso_web_maven_artifact",
+    src = ":espresso_web_release.aar",
+    artifact_deps = [
+        "androidx.test.espresso:espresso-core:%s" % ESPRESSO_VERSION,
+        "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
+        "org.ccil.cowan.tagsoup:tagsoup:1.2",
+    ],
+    artifact_id = "espresso-web",
+    group_id = "androidx.test.espresso",
+    last_updated = "20170622000000",
+    src_jar = ":web_src_jars.jar",
+    version = "%s" % ESPRESSO_VERSION,
+)

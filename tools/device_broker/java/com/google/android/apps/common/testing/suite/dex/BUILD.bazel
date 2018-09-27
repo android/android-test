@@ -1,0 +1,15 @@
+licenses(["notice"])  # Apache 2.0
+
+java_library(
+    name = "dex",
+    srcs = glob(["*.java"]),
+    visibility = [
+        "//tools/device_broker/java/com/google/android/apps/common/testing:__subpackages__",
+    ],
+    deps = [
+        "//opensource/auto_value",
+        "//tools/device_broker/proto:test_info_pb_java_proto",
+        "@guava//jar",
+        "@jsr305//jar",
+    ],
+)

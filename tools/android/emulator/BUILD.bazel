@@ -36,8 +36,10 @@ py_library(
 MOX = "@mox_archive//:mox"
 
 PYGLIB = [
+    "@absl_py//absl:app",
+    "@absl_py//absl/flags",
+    "@absl_py//absl/logging",
     "@google_apputils//:apputils",
-    "@gflags_archive//:gflags",
 ]
 
 PORTPICKER = "@portpicker_archive//:portpicker"
@@ -67,7 +69,11 @@ filegroup(
 py_library(
     name = "common",
     srcs = ["common.py"],
-    deps = PYGLIB,
+    deps = [
+        "@absl_py//absl:app",
+        "@absl_py//absl/flags",
+        "@absl_py//absl/logging",
+    ],
 )
 
 py_test(

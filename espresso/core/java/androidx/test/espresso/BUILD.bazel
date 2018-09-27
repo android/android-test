@@ -1,0 +1,295 @@
+# Description:
+#   Espresso - the new UI Test API for Android.
+licenses(["notice"])  # Apache License 2.0
+
+# Add only espresso packages here.
+package_group(
+    name = "espresso_pkg",
+    packages = [
+        "//espresso/...",
+    ],
+)
+
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+exports_files(["AndroidManifest.xml"])
+
+PUBLIC_FRAMEWORK_LAYER = [
+    "ViewAction.java",
+    "ViewAssertion.java",
+    "ViewFinder.java",
+]
+
+BASE_LAYER_INTERFACES = [
+    "AmbiguousViewMatcherException.java",
+    "AppNotIdleException.java",
+    "NoActivityResumedException.java",
+    "NoMatchingRootException.java",
+    "NoMatchingViewException.java",
+    "EspressoException.java",
+    "FailureHandler.java",
+    "IdlingPolicies.java",
+    "IdlingPolicy.java",
+    "IdlingResourceTimeoutException.java",
+    "InjectEventSecurityException.java",
+    "PerformException.java",
+    "Root.java",
+    "ViewFinder.java",
+    "UiController.java",
+]
+
+VIEW_INTERACTION = [
+    "ViewInteraction.java",
+    "ViewInteractionComponent.java",
+    "ViewInteractionModule.java",
+    "InteractionResultsHandler.java",
+]
+
+REMOTE = [
+    "DataInteractionRemote.java",
+]
+
+android_library(
+    name = "data-interaction-remote",
+    srcs = REMOTE,
+    deps = [
+        ":espresso",
+        "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
+        "//espresso/core/java/androidx/test/espresso/proto/matcher:ui_interaction_view_matchers_android_pb3",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:registry",
+        "@guava//jar",
+    ],
+)
+
+android_library(
+    name = "view-interaction",
+    srcs = VIEW_INTERACTION,
+    plugins = ["//opensource/dagger:dagger_plugin"],  # Add programmatically
+    visibility = [":espresso_pkg"],
+    deps = [
+        ":framework",
+        ":interface",
+        "//:com_android_support_support_annotations",
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//espresso/core/java/androidx/test/espresso/base",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/remote:aidls",
+        "//espresso/core/java/androidx/test/espresso/remote:bindable",
+        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/util",
+        "//opensource/dagger",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@guava//jar",
+        "@hamcrest//jar",
+        "@jsr305//jar",
+    ],
+)
+
+ESPRESSO_GRAPH = [
+    "GraphHolder.java",
+    "BaseLayerComponent.java",
+]
+
+android_library(
+    name = "espresso-graph",
+    srcs = ESPRESSO_GRAPH,
+    deps = [
+        ":interface",
+        ":view-interaction",
+        "//espresso/core/java/androidx/test/espresso/base",
+        "//espresso/core/java/androidx/test/espresso/base:default_failure_handler",
+        "//espresso/core/java/androidx/test/espresso/base:idling_resource_registry",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//opensource/dagger",
+        "//runner/android_junit_runner",
+        "@guava//jar",
+        "@hamcrest//jar",
+    ],
+)
+
+android_library(
+    name = "espresso",
+    srcs = glob(
+        ["*.java"],
+        exclude = BASE_LAYER_INTERFACES + PUBLIC_FRAMEWORK_LAYER + ESPRESSO_GRAPH + VIEW_INTERACTION + REMOTE,
+    ),
+    exports = [
+        # Anything listed here is instantly available to targets that
+        # depend on :espresso.
+        #
+        # Only list items here which are required to have a 'useful'
+        # cut of espresso.
+        #
+        # For example: //j/c/g/a/a/c/testing/ui/espresso/action
+        # sure you can use espresso without this dependency, but 98% of users
+        # will include it because its such a key piece of functionality.
+        ":framework",
+        ":interface",
+        ":view-interaction",
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//espresso/core/java/androidx/test/espresso/action:adapter_view_protocol",
+        "//espresso/core/java/androidx/test/espresso/assertion",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/util",
+        "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
+    ],
+    deps = [
+        ":espresso-graph",
+        ":framework",
+        ":interface",
+        ":view-interaction",
+        "//:com_android_support_support_annotations",
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//espresso/core/java/androidx/test/espresso/action:adapter_view_protocol",
+        "//espresso/core/java/androidx/test/espresso/base:idling_resource_registry",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//espresso/core/java/androidx/test/espresso/util",
+        "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
+        "@guava//jar",
+        "@hamcrest//jar",
+        "@jsr305//jar",
+    ],
+)
+
+android_library(
+    name = "framework",
+    srcs = PUBLIC_FRAMEWORK_LAYER,
+    deps = [
+        ":interface",
+        "//espresso/core/java/androidx/test/espresso/util",
+        "@hamcrest//jar",
+    ],
+)
+
+android_library(
+    name = "interface",
+    srcs = BASE_LAYER_INTERFACES,
+    manifest = "AndroidManifest.xml",
+    deps = [
+        "//espresso/core/java/androidx/test/espresso/util",
+        "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
+        "//runner/monitor",
+        "@guava//jar",
+        "@hamcrest//jar",
+        "@junit//jar",
+    ],
+)
+
+# Compile-time library is used by tests, to avoid including the project code into test apk.
+# By doing this we significantly reduce test apk filesize.
+# Test code classpath is overlayed with project classpath on Android.
+android_library(
+    name = "espresso_compiletime",
+    testonly = 1,
+    neverlink = 1,
+    exports = [":espresso"],
+)
+
+# Android binary for the UI framework lib, used to generate eclipse dependencies.
+android_binary(
+    name = "espresso_binary",
+    testonly = 1,
+    manifest = "AndroidManifest.xml",
+    deps = [
+        ":espresso",
+        "//:com_android_support_recyclerview_v7",
+        "//:com_android_support_support_compat",
+        "//opensource/java_lib:webbridge",
+        "@tagsoup//jar",
+    ],
+)
+
+load("//build_extensions:release.bzl", "axt_release_lib")
+
+axt_release_lib(
+    name = "espresso_core_release",
+    jarjar_rules = "release_jarjar_rules.txt",
+    overlapping_jars = [
+        "//runner/android_junit_runner/java/androidx/test:runner_release_no_deps.jar",
+        "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_release_no_deps.jar",
+        "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
+        "@junit//jar",
+    ],
+    proguard_library = ":proguard_library.cfg",
+    proguard_specs = [
+        "//:proguard_binary.cfg",
+        "//espresso:proguard_binary.cfg",
+    ],
+    remove_specs = [
+        "android.support*",
+        "androidx.test.services*",
+        "androidx.test.espresso.contrib*",
+        "androidx.test.internal.runner.hidden.*",
+        # remove META-INF directory to avoid duplicate clashes with imports from the support library.
+        "META-INF",
+    ],
+    deps = [
+        ":espresso",
+        "//espresso/core/java/androidx/test/espresso/remote",
+    ],
+)
+
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION", "ESPRESSO_VERSION", "HAMCREST_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+load("//build_extensions:remove_from_jar.bzl", "remove_from_jar")
+
+filegroup(
+    name = "espresso_src",
+    srcs = [
+        ":libespresso-src.jar",
+        ":libframework-src.jar",
+        ":libinterface-src.jar",
+        ":libview-interaction-src.jar",
+        "//espresso/core/java/androidx/test/espresso/action:libaction-src.jar",
+        "//espresso/core/java/androidx/test/espresso/action:libadapter_view_protocol-src.jar",
+        "//espresso/core/java/androidx/test/espresso/assertion:libassertion-src.jar",
+        "//espresso/core/java/androidx/test/espresso/base:espresso_base_src",
+        "//espresso/core/java/androidx/test/espresso/matcher:libmatcher-src.jar",
+        "//espresso/core/java/androidx/test/espresso/remote:espresso_remote_src",
+        "//espresso/core/java/androidx/test/espresso/util:libutil-src.jar",
+    ],
+)
+
+combine_jars(
+    name = "espresso_src_all_jars",
+    srcs = [
+        ":espresso_src",
+    ],
+)
+
+remove_from_jar(
+    name = "espresso_src_jars",
+    jar = ":espresso_src_all_jars.jar",
+    # Remove generated dagger classes from source jar
+    removes = [
+        ".*_Provide.*",
+        ".*_Factory.*",
+    ],
+)
+
+maven_artifact(
+    name = "espresso_core_maven_artifact",
+    src = ":espresso_core_release.aar",
+    artifact_deps = [
+        "androidx.test:runner:%s" % RUNNER_VERSION,
+        "androidx.test.espresso:espresso-idling-resource:%s" % ESPRESSO_VERSION,
+        "com.squareup:javawriter:2.1.1",
+        "javax.inject:javax.inject:1",
+        "org.hamcrest:hamcrest-library:%s" % HAMCREST_VERSION,
+        "org.hamcrest:hamcrest-integration:%s" % HAMCREST_VERSION,
+        "com.google.code.findbugs:jsr305:2.0.1",
+    ],
+    artifact_id = "espresso-core",
+    group_id = "androidx.test.espresso",
+    last_updated = "20170622000000",
+    src_jar = ":espresso_src_jars.jar",
+    version = "%s" % ESPRESSO_VERSION,
+)

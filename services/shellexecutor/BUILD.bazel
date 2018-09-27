@@ -1,0 +1,35 @@
+# A shell command execution server to allow shell commands to be run at elevated permissions
+
+licenses(["notice"])
+
+android_library(
+    name = "exec_server",
+    visibility = [":server_access"],
+    exports = ["//services/shellexecutor/java/androidx/test/services/shellexecutor:exec_server"],
+)
+
+android_library(
+    name = "exec_client",
+    visibility = ["//visibility:public"],
+    exports = ["//services/shellexecutor/java/androidx/test/services/shellexecutor:exec_client"],
+)
+
+# Whitelist packages allowed to access to server exec server.
+# Rather than adding to this whitelist, please invoke via AndroidTestUtil.executeShellCommand()
+package_group(
+    name = "server_access",
+    packages = [
+        # "//java/com/google/android/apps/common/testing/services",
+        "//services",
+        "//services/shellexecutor/javatests/androidx/test/services/shellexecutor",
+    ],
+)
+
+filegroup(
+    name = "shellexecuter_src",
+    srcs = [
+        "//services/shellexecutor/java/androidx/test/services/shellexecutor:libexec_client-src.jar",
+        "//services/shellexecutor/java/androidx/test/services/shellexecutor:libexec_server-src.jar",
+    ],
+    visibility = [":server_access"],
+)

@@ -1,0 +1,74 @@
+# Description: Build rules for building androidx.test from source
+licenses(["notice"])  # Apache License 2.0
+
+package(
+    default_visibility = [
+        "//visibility:public",
+    ],
+)
+
+# test rules
+android_library(
+    name = "rules",
+    srcs = glob(["**/*.java"]),
+    proguard_specs = [
+        "proguard.cfg",
+    ],
+    deps = [
+        "//:com_android_support_support_annotations",
+        "//runner/android_junit_runner",
+        "@junit//jar",
+    ],
+)
+
+load("//build_extensions:release.bzl", "axt_release_lib")
+
+# Generate rules for the release artifacts. This generates two file: runner_release_no_dep.jar
+# and runner_release.aar
+axt_release_lib(
+    name = "rules_release",
+    overlapping_jars = [
+        "//runner/android_junit_runner/java/androidx/test:runner_release_no_deps.jar",
+        "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
+        "@junit//jar",
+    ],
+    proguard_library = "proguard.cfg",
+    remove_specs = [
+        "android.support.annotation*",
+        "androidx.test.internal.runner.hidden.*",
+    ],
+    deps = [
+        ":rules",
+    ],
+)
+
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
+filegroup(
+    name = "rules_src",
+    srcs = [
+        ":librules-src.jar",
+    ],
+)
+
+combine_jars(
+    name = "rules_src_jars",
+    srcs = [
+        ":rules_src",
+    ],
+)
+
+maven_artifact(
+    name = "rules_maven_artifact",
+    src = ":rules_release.aar",
+    artifact_deps = [
+        "androidx.test:runner:%s" % RUNNER_VERSION,
+    ],
+    artifact_id = "rules",
+    group_id = "androidx.test",
+    last_updated = "20170622000000",
+    src_jar = ":rules_src_jars.jar",
+    version = "%s" % RUNNER_VERSION,
+)

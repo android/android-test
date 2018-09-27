@@ -1,0 +1,7 @@
+licenses(["notice"])  # Apache License 2.0
+
+java_library(
+    name = "robolectric_config",
+    resources = ["robolectric.properties"],
+    visibility = ["//visibility:public"],
+)

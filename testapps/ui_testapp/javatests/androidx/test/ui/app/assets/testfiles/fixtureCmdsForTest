@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS flights (_id INTEGER PRIMARY KEY, time INTEGER, airline TEXT, number INTEGER, customer TEXT, src TEXT, dest TEXT);
+INSERT INTO flights(time, airline, number, customer, src, dest) VALUES (1469502629418, 'United', 12, 'Y', 'DCA', 'ORD');
+INSERT INTO flights(time, airline, number, customer, src, dest) VALUES (1469502629418, 'American', 42, 'S', 'ORD', 'SFO');
+INSERT INTO flights(time, airline, number, customer, src, dest) VALUES (1469502629418, 'United', 380, 'Y', 'SFO', 'IAD')

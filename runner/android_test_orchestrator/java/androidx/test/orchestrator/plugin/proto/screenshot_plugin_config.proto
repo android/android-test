@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package androidx.test.orchestrator.plugin.proto;
+
+option java_package = 'androidx.test.orchestrator.plugin.proto';
+option java_outer_classname = 'ScreenshotPluginConfigProto';
+
+// Configs for params of ScreenshotPlugin.
+message ScreenshotPluginConfig {
+  // Optional.
+  // Only take screenshot for a non-passing test by default.
+  // If it's set to true, always take screenshot, including a passing test.
+  bool screenshot_on_pass = 1;
+
+  // The directory to save screenshot image file.
+  string screenshot_dir = 2;
+}

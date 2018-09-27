@@ -19,7 +19,7 @@
 import os
 
 
-import gflags as flags
+from absl import flags
 import portpicker
 
 from tools.android.emulator import resources

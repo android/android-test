@@ -10,7 +10,7 @@ make_device(
     name = "tv",
     cache = 64,
     horizontal_resolution = 1280,
-    max_api = 27,
+    max_api = 28,
     min_api = 21,
     ram = 2048,
     screen_density = 96,

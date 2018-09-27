@@ -1,0 +1,73 @@
+# Description: Ato tests.
+licenses(["notice"])
+
+ATO_SHARED_DEPS = [
+    "//runner/android_test_orchestrator",
+    "//runner/android_junit_runner",
+]
+
+ATO_SHARED_EXTERNAL_DEPS = [
+    "@hamcrest//jar",
+    "@junit//jar",
+]
+
+# Robolectric tests
+ROBOLECTRIC_TEST_SRCS = [
+    ("TestRunnableTest", "TestRunnableTest.java"),
+    ("AndroidTestOrchestratorTest", "AndroidTestOrchestratorTest.java"),
+    ("OrchestrationXmlTestRunListenerTest", "**/OrchestrationXmlTestRunListenerTest.java"),
+    ("TestCoverageTest", "TestCoverageTest.java"),
+]
+
+ROBOLECTRIC_DEPS = [
+    "@guava//jar",
+    "@robolectric//bazel:robolectric",
+]
+
+java_library(
+    name = "robolectric_test_deps",
+    exports = ATO_SHARED_DEPS + ATO_SHARED_EXTERNAL_DEPS + ROBOLECTRIC_DEPS,
+)
+
+[android_local_test(
+    name = test_class[0],
+    size = "small",
+    srcs = glob([test_class[1]]),
+    deps = [
+        ":robolectric_test_deps",
+    ],
+) for test_class in ROBOLECTRIC_TEST_SRCS]
+
+# Instrumentation tests
+ATO_INSTR_TEST_SRCS = [
+    "RuntimePermissionsIntegrationTest.java",
+]
+
+java_library(
+    name = "instr_test_deps",
+    testonly = 1,
+    exports = ATO_SHARED_DEPS + ATO_SHARED_EXTERNAL_DEPS,
+)
+
+android_library(
+    name = "ato_test_lib",
+    testonly = 1,
+    srcs = ATO_INSTR_TEST_SRCS,
+    manifest = "AndroidManifest.xml",
+    deps = [":instr_test_deps"],
+)
+
+android_binary(
+    name = "ato_stub_binary",
+    testonly = 1,
+    manifest = "AndroidManifest_opensource_stub.xml",
+)
+
+android_binary(
+    name = "ato_tests",
+    testonly = 1,
+    instruments = ":ato_stub_binary",
+    manifest = "AndroidManifest.xml",
+    deps = [":ato_test_lib"],
+)
+

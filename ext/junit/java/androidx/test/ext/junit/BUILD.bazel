@@ -1,0 +1,56 @@
+# Description: Build rules for building androidx.test.truth from source
+licenses(["notice"])  # Apache License 2.0
+
+package(
+    default_visibility = [
+        "//visibility:public",
+    ],
+)
+
+android_library(
+    name = "junit",
+    srcs = glob(
+        ["**/*.java"],
+    ),
+    manifest = "AndroidManifest.xml",
+    deps = [
+        "@junit//jar",
+    ],
+)
+
+load("//build_extensions:release.bzl", "axt_release_lib")
+
+# group of targets to use to produce release binary + docs
+android_library(
+    name = "junit_release_lib",
+    testonly = 1,
+    exports = [
+        ":junit",
+    ],
+)
+
+# Generate rules for the release artifacts. This generates three targets
+# genrule output: junit_release_no_deps.jar and junit_release.aar
+# a java_library target libjunit_release_no_deps
+axt_release_lib(
+    name = "junit_release",
+    deps = [
+        ":junit_release_lib",
+    ],
+)
+
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "JUNIT_VERSION", "ANDROIDX_JUNIT_VERSION")
+
+maven_artifact(
+    name = "junit_maven_artifact",
+    src = ":junit_release.aar",
+    artifact_deps = [
+        "org.junit:junit:%s" % JUNIT_VERSION,
+    ],
+    artifact_id = "junit",
+    group_id = "androidx.test.ext",
+    last_updated = "20180723000000",
+    src_jar = ":libjunit-src.jar",
+    version = "%s" % ANDROIDX_JUNIT_VERSION,
+)

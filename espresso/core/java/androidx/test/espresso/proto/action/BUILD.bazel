@@ -1,0 +1,20 @@
+# Protocol buffer definitions for remote UI interactions view matchers
+
+licenses(["notice"])
+
+package(
+    default_visibility = ["//espresso/core/java/androidx/test/espresso:espresso_pkg"],
+)
+
+proto_library(
+    name = "view_actions_proto",
+    srcs = ["view_actions.proto"],
+    deps = [
+        "@com_google_protobuf//:any_proto",
+    ],
+)
+
+java_lite_proto_library(
+    name = "ui_interaction_view_actions_android_pb3",
+    deps = [":view_actions_proto"],
+)

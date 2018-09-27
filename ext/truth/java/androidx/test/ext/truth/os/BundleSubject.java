@@ -1,0 +1,77 @@
+/*
+ * Copyright (C) 2018 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package androidx.test.ext.truth.os;
+
+import static com.google.common.truth.Fact.simpleFact;
+
+import android.os.Bundle;
+import com.google.common.truth.FailureMetadata;
+import com.google.common.truth.IntegerSubject;
+import com.google.common.truth.StringSubject;
+import com.google.common.truth.Subject;
+import com.google.common.truth.Truth;
+
+/** Subject for making assertions about {@link Bundle}s. */
+public final class BundleSubject extends Subject<BundleSubject, Bundle> {
+
+  public static BundleSubject assertThat(Bundle bundle) {
+    return Truth.assertAbout(bundles()).that(bundle);
+  }
+
+  public static Subject.Factory<BundleSubject, Bundle> bundles() {
+    return BundleSubject::new;
+  }
+
+  BundleSubject(FailureMetadata failureMetadata, Bundle subject) {
+    super(failureMetadata, subject);
+  }
+
+  public void hasSize(int size) {
+    check("size()").that(actual().size()).isEqualTo(size);
+  }
+
+  public void isEmpty() {
+    if (!actual().isEmpty()) {
+      failWithActual(simpleFact("expected to be empty"));
+    }
+  }
+
+  public void isNotEmpty() {
+    if (actual().isEmpty()) {
+      failWithActual(simpleFact("expected to be non-empty"));
+    }
+  }
+
+  public StringSubject string(String key) {
+    return check("getString(%s)", key).that(actual().getString(key));
+  }
+
+  public IntegerSubject integer(String key) {
+    return check("getInt(%s)", key).that(actual().getInt(key));
+  }
+
+  public void containsKey(String key) {
+    if (!actual().containsKey(key)) {
+      failWithActual(simpleFact("expected to contain key " + key));
+    }
+  }
+
+  public void doesNotContainKey(String key) {
+    if (actual().containsKey(key)) {
+      failWithActual(simpleFact("expected to not contain key " + key));
+    }
+  }
+}

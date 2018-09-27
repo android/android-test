@@ -1,0 +1,49 @@
+# Description: ATO listeners tests
+
+licenses(["notice"])  # Apache License 2.0
+
+package(default_visibility = ["//:__subpackages__"])
+
+java_library(
+    name = "shared_test_deps",
+    testonly = 1,
+    srcs = ["SampleJUnitTest.java"],
+    deps = [
+        "@junit//jar",
+    ],
+)
+
+# Robolectric tests
+ROBOLECTRIC_TEST_SRCS = [
+    ("OrchestratedInstrumentationListenerTest", "**/OrchestratedInstrumentationListenerTest.java"),
+    ("BundleJUnitUtilsTest", "**/BundleJUnitUtilsTest.java"),
+    ("OrchestrationListenerManagerTest", "**/OrchestrationListenerManagerTest.java"),
+]
+
+ROBOLECTRIC_DEPS = [
+    "//runner/android_junit_runner",
+    ":shared_test_deps",
+]
+
+ROBOLECTRIC_EXTERNAL_DEPS = [
+    "@guava//jar",
+    "@hamcrest//jar",
+    "@mockito//jar",
+    "@objenesis//jar",
+    "@robolectric//bazel:robolectric",
+]
+
+java_library(
+    name = "robolectric_test_deps",
+    testonly = 1,
+    exports = ROBOLECTRIC_DEPS + ROBOLECTRIC_EXTERNAL_DEPS,
+)
+
+[android_local_test(
+    name = test_class[0],
+    size = "small",
+    srcs = glob([test_class[1]]),
+    deps = [
+        ":robolectric_test_deps",
+    ],
+) for test_class in ROBOLECTRIC_TEST_SRCS]

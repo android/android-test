@@ -1,0 +1,20 @@
+;; Leak checking dictionary for AndroidX Test Library.
+;;
+;; Format:
+;; TERM;3;EXCEPTIONS
+;;
+;; TERM - the term that is forbidden.
+;; 3 - error out if this term is seen. This should always be 3 in this file,
+;;   although leakr supports other levels (e.g., warning, info, etc.).
+;; EXCEPTIONS - comma-separated list of terms that can contain the forbidden
+;;   term, but are allowed. E.g,. go/ aren't allowed, but links to the Go rules
+;;   are, so rules/go/ is allowed.
+;;
+;; See //depot/android_test_support/testing/leakr/common/dictionary/README.md for more on
+;; Leakr format.
+
+;3;
+;3;
+$RE:\s[f|F]orge\s;3;
+;3;
+;3;

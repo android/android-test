@@ -25,8 +25,8 @@ import signal
 import subprocess
 import threading
 
-import gflags as flags
-import logging
+from absl import flags
+from absl import logging
 
 FLAGS = flags.FLAGS
 flags.DEFINE_string('subprocess_log_dir',
@@ -70,14 +70,18 @@ def CommandLogFile(args, exec_dir, extra_env):
   Returns:
     A path to the logfile or None if logging is disabled.
   """
-  if not FLAGS.subprocess_log_dir:
+  if 'subprocess_log_dir' in extra_env:
+    subprocess_log_dir = extra_env['subprocess_log_dir']
+  else:
+    subprocess_log_dir = FLAGS.subprocess_log_dir
+  if not subprocess_log_dir:
     return None
   CommandLogFile.count += 1
   command_name = args[0]
   if command_name.rfind('/') > -1:
     command_name = command_name[command_name.rindex('/') + 1:]
 
-  logfile_name = '%s/%s-%s.txt' % (FLAGS.subprocess_log_dir, command_name,
+  logfile_name = '%s/%s-%s.txt' % (subprocess_log_dir, command_name,
                                    CommandLogFile.count)
   logfile = open(logfile_name, 'w')
   logfile.writelines(['Executing: %s\n' % ' '.join(args),
@@ -115,7 +119,7 @@ def EnsureFileCached(path):
 
 
 def Spawn(args, proc_input=None, proc_output=None, exec_dir=None,
-          exec_env=None, preexec_fn=None, logfile=None, **kwargs):
+          exec_env=None, logfile=None, **kwargs):
   """Execs a subprocess using Popen.
 
   Task output will be logged to file.
@@ -128,7 +132,6 @@ def Spawn(args, proc_input=None, proc_output=None, exec_dir=None,
       file.
     exec_dir: the directory the subprocess will run from.
     exec_env: the environment the subprocess will use.
-    preexec_fn: a function to call after fork but before exec.
     logfile: an optional filename to log stdout/stderr.
     **kwargs: passed to subprocess.Popen as is.
 
@@ -170,29 +173,18 @@ def Spawn(args, proc_input=None, proc_output=None, exec_dir=None,
   if not logged_to_file:
     # launch the task and tee tasks to write the stdout/stderr to file and then
     # pass it along to the caller's pipes or files.
-    main_process_preexec_fn = _ResetSigPipeHandling
-    if preexec_fn:
-
-      def WrappingFn():
-        preexec_fn()
-        _ResetSigPipeHandling()
-
-      main_process_preexec_fn = WrappingFn
-
     task = subprocess.Popen(args, stdout=subprocess.PIPE, stdin=proc_input,
                             env=exec_env, cwd=exec_dir, stderr=subprocess.PIPE,
-                            close_fds=True, preexec_fn=main_process_preexec_fn,
+                            close_fds=True,
                             **kwargs)
     log_out_task = subprocess.Popen(_GetLogCommand(logfile),
                                     stdin=task.stdout, stdout=proc_output,
                                     stderr=open('/dev/null'),
-                                    close_fds=True,
-                                    preexec_fn=_ResetSigPipeHandling)
+                                    close_fds=True)
     log_err_task = subprocess.Popen(_GetLogCommand(logfile, is_stderr=True),
                                     stdin=task.stderr, stdout=proc_err,
                                     stderr=open('/dev/null'),
-                                    close_fds=True,
-                                    preexec_fn=_ResetSigPipeHandling)
+                                    close_fds=True)
 
     task.stdout = log_out_task.stdout
     task.stderr = log_err_task.stdout
@@ -202,7 +194,7 @@ def Spawn(args, proc_input=None, proc_output=None, exec_dir=None,
     # proc_output and proc_error are already pointing to the logfiles.
     task = subprocess.Popen(args, stdout=proc_output, stdin=proc_input,
                             env=exec_env, cwd=exec_dir, stderr=proc_err,
-                            close_fds=True, preexec_fn=_ResetSigPipeHandling)
+                            close_fds=True)
     task.logfile_handle = logfile_handle
 
   task.logged_stdout = ''

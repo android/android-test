@@ -1,0 +1,47 @@
+// LINT: LEGACY_NAMES
+syntax = "proto3";
+
+package google.test.remote.hamcrest.matcher13;
+
+option java_package = "androidx.test.espresso.proto.matcher13";
+
+import "google/protobuf/any.proto";
+
+message IsEqualProto {
+  string id = 1;
+  bytes expectedValue = 2;
+}
+
+message IsProto {
+  string id = 1;
+  google.protobuf.Any matcher = 2;
+}
+
+message AnyOfProto {
+  string id = 1;
+  repeated google.protobuf.Any matchers = 2;
+}
+
+message AllOfProto {
+  string id = 1;
+  repeated google.protobuf.Any matchers = 2;
+}
+
+message IsInstanceOfProto {
+  string id = 1;
+  bytes expectedClass = 2;
+}
+
+message IsNullProto {
+  string id = 1;
+}
+
+message IsNotProto {
+  string id = 1;
+  google.protobuf.Any matcher = 2;
+}
+
+message StringContainsProto {
+  string id = 1;
+  bytes substring = 2;
+}

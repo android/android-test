@@ -1,0 +1,99 @@
+// Copyright 2012 Google Inc. All Rights Reserved.
+// Author: thomaswk@google.com (Thomas Knych)
+// LINT.IfChange
+
+syntax = "proto2";
+
+package tools.android.emulator;
+
+option java_package = 'com.google.android.apps.common.testing.proto';
+option java_outer_classname = 'EmulatorProtos';
+
+// Stores information used when starting an emulator
+// instance. Some information is required to restart the
+// emulator properly from snapshots, other information is
+// used for performance tracking and debugging.
+// next tag: 27
+message EmulatorMetaDataPb {
+  optional int64 memory_mb = 1;
+  optional string skin = 2;
+  optional int64 density = 3;
+
+  // soon to be deprecated.
+  optional string api_name = 4;
+
+  optional int64 vm_heap = 5;
+  optional string system_image_dir = 6;
+  repeated PropertyPb boot_property = 7;
+  repeated string qemu_arg = 8;
+  optional string unused_emulator_version = 9;
+  optional string net_type = 10;
+  optional string net_delay = 11;
+  optional string net_speed = 12;
+  optional string emulator_architecture = 13;
+  optional bool unused_local_execution = 14;
+  optional bool with_display = 15;
+
+  // note - purposefully cleared on boot to prevent
+  // cache poisoning.
+  repeated PerformanceDataPb perf_data = 16;
+
+  optional int32 sdcard_size_mb = 17;
+
+  optional bool with_kvm = 18;
+
+  // Properties to pass to avd's config.ini file.
+  repeated PropertyPb avd_config_property = 19;
+
+  optional bool with_adbd_pipe = 20;
+  optional bool with_patched_adbd = 21;
+
+  // indicates this system image can use opengl
+  optional bool supports_gpu = 22;
+
+  // lists the backend opengl drivers this image is
+  // known to work for.
+  repeated string supported_open_gl_drivers = 23;
+
+  // indicates whether the build is sensitive and whether it
+  // can/cannot be accessed by everyone yet.
+  optional bool sensitive_system_image = 24;
+
+  // Next tag 4.
+  enum EmulatorType {
+    // QEMU based emulator.
+    QEMU = 0;
+    // User Mode Linux.
+    UMA = 1;
+    // QEMU2 based emulator.
+    QEMU2 = 2;
+    // QEMU2 emulator with snapshots.
+    QEMU2_SNAPSHOT = 3;
+  }
+  optional EmulatorType emulator_type = 25;
+  optional string system_image_path = 26;
+}
+
+// Simple key value pair to hold boot properties.
+// next tag: 3
+message PropertyPb {
+  optional string name = 1;
+  optional string value = 2;
+}
+
+// holds performance data
+// next tag: 3
+message PerformanceDataPb {
+  optional string activity_name = 1;
+  repeated TimerPb timing = 2;
+}
+
+// holds timer information
+// next tag: 4
+message TimerPb {
+  optional string name = 1;
+  optional int32 number_of_starts = 2;
+  optional int64 accumulated_time = 3;
+}
+// LINT.ThenChange(//depot/android_test_support/\
+//                 tools/android/emulator/emulator_meta_data_pb2.py)

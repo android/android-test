@@ -1,0 +1,44 @@
+# Description:
+#   Exposes webdriver automation js fragments as atoms.
+licenses(["notice"])  # Apache License 2.0
+
+package(default_visibility = ["//visibility:public"])
+
+REMOTE_WEB_DRIVER_ATOMS = [
+    "RemoteWebDriverAtoms.java",
+    "*RemoteMessage.java",
+]
+
+android_library(
+    name = "webdriver",
+    srcs = glob(
+        ["*java"],
+        exclude = REMOTE_WEB_DRIVER_ATOMS,
+    ),
+    deps = [
+        "//:com_android_support_support_annotations",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//espresso/web/java/androidx/test/espresso/web/model",
+        "//opensource/java_lib:WebDriverScripts",
+        "@guava//jar",
+    ],
+)
+
+android_library(
+    name = "remote_webdriver_atoms",
+    srcs = glob(
+        REMOTE_WEB_DRIVER_ATOMS,
+    ),
+    deps = [
+        ":webdriver",
+        "//:com_android_support_support_annotations",
+        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
+        "//espresso/core/java/androidx/test/espresso/remote:registry",
+        "//espresso/web/java/androidx/test/espresso/web/proto/webdriver:web_driver_atoms_proto_android_pb3",
+        "@guava//jar",
+    ],
+)

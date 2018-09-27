@@ -1,0 +1,63 @@
+# Description:
+# Tests for Network Idling Resources
+licenses(["notice"])  # Apache License 2.0
+
+IDLING_NET_TEST_SRCS = glob(["*.java"])
+
+IDLING_NET_DEPS = [
+    "//runner/android_junit_runner/java/androidx/test:runner",
+    "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
+    "//espresso/idling_resource/net/java/androidx/test/espresso/idling/net:uri_idling_resource",
+]
+
+EXTERNAL_DEPS = [
+    "@hamcrest//jar",
+    "@junit//jar",
+    "@dexmaker//jar",
+    "@dexmaker_mockito//jar",
+    "@mockito//jar",
+    "@objenesis//jar",
+]
+
+ALL_DEPS = EXTERNAL_DEPS + IDLING_NET_DEPS
+
+java_library(
+    name = "test_deps",
+    testonly = 1,
+    visibility = ["//visibility:public"],
+    exports = ALL_DEPS,
+)
+
+android_library(
+    name = "espresso_idling_net_test_lib",
+    testonly = 1,
+    srcs = IDLING_NET_TEST_SRCS,
+    manifest = "AndroidManifest_opensource.xml",
+    deps = [":test_deps"],
+)
+
+android_binary(
+    name = "espresso_idling_net_tests",
+    testonly = 1,
+    instruments = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+    manifest = "AndroidManifest_opensource.xml",
+    deps = [":espresso_idling_net_test_lib"],
+)
+
+API_LEVELS = [
+    "19_x86",
+    "21_x86",
+    "22_x86",
+    "23_x86",
+]
+
+[android_instrumentation_test(
+    name = "espresso_idling_net_tests_%s" % api_level,
+    size = "large",
+    args = [
+        "--clear_package_data",
+        "--install_test_services=True",  # Required for Bazel 0.11, can be removed in 0.12
+    ],
+    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
+    test_app = ":espresso_idling_net_tests",
+) for api_level in API_LEVELS]

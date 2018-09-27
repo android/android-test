@@ -1,0 +1,88 @@
+# Description:
+#   Ui testapp tests.
+
+licenses(["notice"])  # Apache License 2.0
+
+TESTAPP_TEST_SRCS = glob(
+    ["**/*.java"],
+)
+
+TESTAPP_DEPS = [
+    "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+    "//espresso/contrib/java/androidx/test/espresso/contrib:accessibility_checks",
+    "//espresso/contrib/java/androidx/test/espresso/contrib:activity_result_matchers",
+    "//espresso/contrib/java/androidx/test/espresso/contrib:drawer_actions",
+    "//espresso/contrib/java/androidx/test/espresso/contrib:picker_actions",
+    "//espresso/core/java/androidx/test/espresso",
+    "//espresso/idling_resource/java/androidx/test/espresso:counting_idling_resource",
+    "//espresso/idling_resource/net/java/androidx/test/espresso/idling/net:uri_idling_resource",
+    "//espresso/intents/java/androidx/test/espresso/intent:intents",
+    "//espresso/intents/java/androidx/test/espresso/intent/matcher",
+    "//espresso/web/java/androidx/test/espresso/web/action",
+    "//espresso/web/java/androidx/test/espresso/web/assertion",
+    "//espresso/web/java/androidx/test/espresso/web/matcher",
+    "//espresso/web/java/androidx/test/espresso/web/model",
+    "//espresso/web/java/androidx/test/espresso/web/sugar",
+    "//espresso/web/java/androidx/test/espresso/web/webdriver",
+    "//runner/android_junit_runner",
+    "//runner/rules",
+]
+
+EXTERNAL_DEPS = [
+    "@accessibility//jar",
+    "//:com_android_support_support_annotations",
+    "@javax_inject//jar",
+    "@hamcrest//jar",
+    "@jsr305//jar",
+    "@guava//jar",
+    "@junit//jar",
+]
+
+ALL_DEPS = EXTERNAL_DEPS + TESTAPP_DEPS
+
+java_library(
+    name = "test_deps",
+    testonly = 1,
+    visibility = ["//visibility:public"],
+    exports = ALL_DEPS,
+)
+
+android_library(
+    name = "espresso_ui_testapp_test_lib",
+    testonly = 1,
+    srcs = TESTAPP_TEST_SRCS,
+    assets = glob(["assets/**"]),
+    assets_dir = "assets",
+    manifest = "AndroidManifest_opensource.xml",
+    deps = [":test_deps"],
+)
+
+android_binary(
+    name = "espresso_ui_testapp_tests",
+    testonly = 1,
+    instruments = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+    manifest = "AndroidManifest_opensource.xml",
+    deps = [":espresso_ui_testapp_test_lib"],
+)
+
+API_LEVELS = [
+    "19_x86",
+    "21_x86",
+    "22_x86",
+    "23_x86",
+]
+
+[android_instrumentation_test(
+    name = "espresso_ui_testapp_tests_%s" % api_level,
+    size = "large",
+    # Increase timeout, as all tests run in one test target, see:
+    # https://docs.bazel.build/versions/master/test-encyclopedia.html#role-of-the-test-runner
+    timeout = "eternal",
+    args = [
+        "--clear_package_data",
+        # Install test services, this is required as the services are not part of the image
+        "--install_test_services=True",  # Required for Bazel 0.11, can be removed in 0.12
+    ],
+    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
+    test_app = ":espresso_ui_testapp_tests",
+) for api_level in API_LEVELS]
