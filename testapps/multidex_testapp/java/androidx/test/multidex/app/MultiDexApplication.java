@@ -14,16 +14,27 @@
  * limitations under the License.
  */
 
-package androidx.test.orchestrator.plugin
+package androidx.test.multidex.app;
 
-import com.google.common.truth.Truth.assertThat
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
+import android.util.Log;
 
-@RunWith(JUnit4::class)
-class AndroidLogcatPluginTest {
+/** MultiDexApplication is necessary to install / extract additional dex files */
+public class MultiDexApplication extends Application {
 
-  @Test
-  fun trueIsTrue() = assertThat(true).isTrue()
+  private static final String TAG = MultiDexApplication.class.getSimpleName();
+
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    Log.i(TAG, ("MultiDex TestApp created"));
+  }
+
+  @Override
+  protected void attachBaseContext(Context base) {
+    super.attachBaseContext(base);
+    MultiDex.install(this);
+  }
 }
