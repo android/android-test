@@ -69,7 +69,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * After:
  *   ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class);
- *   scenario.runOnActivity(activity -> {
+ *   scenario.onActivity(activity -> {
  *     assertThat(activity.getSomething()).isEqualTo("something");
  *   });
  *
@@ -82,11 +82,11 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * After:
  *   ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class);
- *   scenario.runOnActivity(activity -> {});  // Your activity is resumed.
+ *   scenario.onActivity(activity -> {});  // Your activity is resumed.
  *   scenario.moveTo(State.STARTED);
- *   scenario.runOnActivity(activity -> {});  // Your activity is paused.
+ *   scenario.onActivity(activity -> {});  // Your activity is paused.
  *   scenario.moveTo(State.CREATED);
- *   scenario.runOnActivity(activity -> {});  // Your activity is stopped.
+ *   scenario.onActivity(activity -> {});  // Your activity is stopped.
  * </pre>
  *
  * BEGIN GOOGLE-INTERNAL Android API Council Review: go/activity-controller-unified-api-rev4-review
@@ -374,20 +374,20 @@ public final class ActivityScenario<A extends Activity> {
   }
 
   /**
-   * The RunOnActivity interface should be implemented by any class whose instances are intended to
-   * be executed by the main thread. An Activity that is instrumented by the ActivityScenario is
-   * passed to {@link RunOnActivity#run} method.
+   * ActivityAction interface should be implemented by any class whose instances are intended to be
+   * executed by the main thread. An Activity that is instrumented by the ActivityScenario is passed
+   * to {@link ActivityAction#perform} method.
    *
    * <pre>
    * Example:
    *   ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class);
-   *   scenario.runOnActivity(activity -> {
+   *   scenario.onActivity(activity -> {
    *     assertThat(activity.getSomething()).isEqualTo("something");
    *   });
    * </pre>
    *
    * <p>You should never keep the Activity reference. It should only be accessed in {@link
-   * RunOnActivity#run} scope for two reasons: 1) Android framework may re-create the Activity
+   * ActivityAction#perform} scope for two reasons: 1) Android framework may re-create the Activity
    * during lifecycle changes, your holding reference might be stale. 2) It increases the reference
    * counter and it may affect to the framework behavior, especially after you finish the Activity.
    *
@@ -395,35 +395,35 @@ public final class ActivityScenario<A extends Activity> {
    * Bad Example:
    *   ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class);
    *   final MyActivity[] myActivityHolder = new MyActivity[1];
-   *   scenario.runOnActivity(activity -> {
+   *   scenario.onActivity(activity -> {
    *     myActivityHolder[0] = activity;
    *   });
    *   assertThat(myActivityHolder[0].getSomething()).isEqualTo("something");
    * </pre>
    */
-  public interface RunOnActivity<A extends Activity> {
+  public interface ActivityAction<A extends Activity> {
     /**
      * This method is invoked on the main thread with the reference to the Activity.
      *
      * @param activity an Activity instrumented by the {@link ActivityScenario}. It never be null.
      */
-    void run(A activity);
+    void perform(A activity);
   }
 
   /**
-   * Runs a given {@code runOnActivity} on the current Activity's main thread.
+   * Runs a given {@code action} on the current Activity's main thread.
    *
-   * <p>Note that you should never keep Activity reference passed into your {@code runOnActivity}
-   * because it can be recreated at anytime during state transitions.
+   * <p>Note that you should never keep Activity reference passed into your {@code action} because
+   * it can be recreated at anytime during state transitions.
    *
-   * <p>Throwing an exception from {@code runOnActivity} makes the Activity to crash. You can
-   * inspect the exception in logcat outputs.
+   * <p>Throwing an exception from {@code action} makes the Activity to crash. You can inspect the
+   * exception in logcat outputs.
    *
    * <p>This method cannot be called from the main thread except in Robolectric tests.
    *
    * @throws IllegalStateException if Activity is destroyed, finished or finishing
    */
-  public ActivityScenario<A> runOnActivity(final RunOnActivity<A> runOnActivity) {
+  public ActivityScenario<A> onActivity(final ActivityAction<A> action) {
     checkNotMainThread();
     getInstrumentation().waitForIdleSync();
     getInstrumentation()
@@ -433,8 +433,8 @@ public final class ActivityScenario<A extends Activity> {
               try {
                 checkNotNull(
                     currentActivity,
-                    "Cannot run runOnActivity since Activity has been destroyed already");
-                runOnActivity.run(currentActivity);
+                    "Cannot run onActivity since Activity has been destroyed already");
+                action.perform(currentActivity);
               } finally {
                 lock.unlock();
               }

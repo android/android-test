@@ -67,7 +67,8 @@ _ALL_IMAGES = (
         [_GOOGLE, _ANDROID, _WEAR, _WEAR_LE, _AUTO, _DAYDREAM, _TV],
     ) +
     _default_images(27, [_GOOGLE, _ANDROID, _GO, _AUTO, _DAYDREAM, _TV, _JASPER]) +
-    _default_images(28, [_GOOGLE, _AUTO, _DAYDREAM, _TV])
+    _default_images(28, [_GOOGLE, _AUTO, _DAYDREAM, _TV]) +
+    _default_images(29, [_GOOGLE])
 )
 
 def _api_to_images():

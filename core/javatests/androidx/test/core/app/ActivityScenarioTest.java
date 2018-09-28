@@ -38,7 +38,7 @@ public final class ActivityScenarioTest {
   public void launchedActivityShouldBeResumed() throws Exception {
     ActivityScenario<RecreationRecordingActivity> scenario =
         ActivityScenario.launch(RecreationRecordingActivity.class);
-    scenario.runOnActivity(
+    scenario.onActivity(
         activity -> {
           assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
           assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
@@ -50,7 +50,7 @@ public final class ActivityScenarioTest {
     ActivityScenario<RecreationRecordingActivity> scenario =
         ActivityScenario.launch(RecreationRecordingActivity.class);
     scenario.moveToState(State.CREATED);
-    scenario.runOnActivity(
+    scenario.onActivity(
         activity -> {
           assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.STOPPED);
           assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
@@ -62,7 +62,7 @@ public final class ActivityScenarioTest {
     ActivityScenario<RecreationRecordingActivity> scenario =
         ActivityScenario.launch(RecreationRecordingActivity.class);
     scenario.moveToState(State.STARTED);
-    scenario.runOnActivity(
+    scenario.onActivity(
         activity -> {
           assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.PAUSED);
           assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
@@ -74,7 +74,7 @@ public final class ActivityScenarioTest {
     ActivityScenario<RecreationRecordingActivity> scenario =
         ActivityScenario.launch(RecreationRecordingActivity.class);
     scenario.moveToState(State.RESUMED);
-    scenario.runOnActivity(
+    scenario.onActivity(
         activity -> {
           assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
           assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
@@ -87,7 +87,7 @@ public final class ActivityScenarioTest {
         ActivityScenario.launch(RecreationRecordingActivity.class);
     scenario.moveToState(State.CREATED);
     scenario.moveToState(State.CREATED);
-    scenario.runOnActivity(
+    scenario.onActivity(
         activity -> {
           assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.STOPPED);
           assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
@@ -100,7 +100,7 @@ public final class ActivityScenarioTest {
         ActivityScenario.launch(RecreationRecordingActivity.class);
     scenario.moveToState(State.CREATED);
     scenario.moveToState(State.STARTED);
-    scenario.runOnActivity(
+    scenario.onActivity(
         activity -> {
           assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.PAUSED);
           assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
@@ -113,7 +113,7 @@ public final class ActivityScenarioTest {
         ActivityScenario.launch(RecreationRecordingActivity.class);
     scenario.moveToState(State.CREATED);
     scenario.moveToState(State.RESUMED);
-    scenario.runOnActivity(
+    scenario.onActivity(
         activity -> {
           assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
           assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
@@ -126,7 +126,7 @@ public final class ActivityScenarioTest {
         ActivityScenario.launch(RecreationRecordingActivity.class);
     scenario.moveToState(State.STARTED);
     scenario.moveToState(State.CREATED);
-    scenario.runOnActivity(
+    scenario.onActivity(
         activity -> {
           assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.STOPPED);
           assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
@@ -139,7 +139,7 @@ public final class ActivityScenarioTest {
         ActivityScenario.launch(RecreationRecordingActivity.class);
     scenario.moveToState(State.STARTED);
     scenario.moveToState(State.STARTED);
-    scenario.runOnActivity(
+    scenario.onActivity(
         activity -> {
           assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.PAUSED);
           assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
@@ -152,7 +152,7 @@ public final class ActivityScenarioTest {
         ActivityScenario.launch(RecreationRecordingActivity.class);
     scenario.moveToState(State.STARTED);
     scenario.moveToState(State.RESUMED);
-    scenario.runOnActivity(
+    scenario.onActivity(
         activity -> {
           assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
           assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
@@ -165,7 +165,7 @@ public final class ActivityScenarioTest {
         ActivityScenario.launch(RecreationRecordingActivity.class);
     scenario.moveToState(State.CREATED);
     scenario.recreate();
-    scenario.runOnActivity(
+    scenario.onActivity(
         activity -> {
           assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.STOPPED);
           assertThat(activity.getNumberOfRecreations()).isEqualTo(1);
@@ -181,7 +181,7 @@ public final class ActivityScenarioTest {
         ActivityScenario.launch(RecreationRecordingActivity.class);
     scenario.moveToState(State.STARTED);
     scenario.recreate();
-    scenario.runOnActivity(
+    scenario.onActivity(
         activity -> {
           assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.PAUSED);
           assertThat(activity.getNumberOfRecreations()).isEqualTo(1);
@@ -193,7 +193,7 @@ public final class ActivityScenarioTest {
     ActivityScenario<RecreationRecordingActivity> scenario =
         ActivityScenario.launch(RecreationRecordingActivity.class);
     scenario.recreate();
-    scenario.runOnActivity(
+    scenario.onActivity(
         activity -> {
           assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
           assertThat(activity.getNumberOfRecreations()).isEqualTo(1);
