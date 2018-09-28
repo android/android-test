@@ -38,25 +38,25 @@ class ActivityScenarioKotlinTest {
   @Test
   fun testMainActivityLifecycle_withActivityScenario() {
     val scenario = ActivityScenario.launch(RecreationRecordingActivity::class.java)
-    scenario.runOnActivity {
+    scenario.onActivity {
       assertThat(it.getNumberOfRecreations()).isEqualTo(0)
       assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
     }
 
     scenario.recreate()
-    scenario.runOnActivity {
+    scenario.onActivity {
       assertThat(it.getNumberOfRecreations()).isEqualTo(1)
       assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
     }
 
     scenario.moveToState(State.STARTED)
-    scenario.runOnActivity {
+    scenario.onActivity {
       assertThat(it.getNumberOfRecreations()).isEqualTo(1)
       assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.PAUSED)
     }
 
     scenario.moveToState(State.CREATED)
-    scenario.runOnActivity {
+    scenario.onActivity {
       assertThat(it.getNumberOfRecreations()).isEqualTo(1)
       assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.STOPPED)
     }

@@ -1,1 +1,0 @@
-../wrong_dpi_nexus_5/BUILD

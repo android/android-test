@@ -17,7 +17,7 @@ again.
 
 ## Building and Testing
 
-AndroidX Test uses the (bazel build system)[https://bazel.build/].
+AndroidX Test uses the [bazel](https://bazel.build/) build system.
 
 ### One time setup
 
@@ -25,31 +25,31 @@ AndroidX Test uses the (bazel build system)[https://bazel.build/].
  * Install [bazel](https://docs.bazel.build/versions/master/install.html). Version 0.17.2 is recommended
  * Install [maven](http://maven.apache.org/install.html) and make it available on PATH.
  * Install the [Android SDK](https://developer.android.com/studio/install) and set the ANDROID_HOME environment variable to point to its install location. eg
-{% highlight java %}
+```
  export ANDROID_HOME=/home/$USER/Android/Sdk
-{% endhighlight %}
+```
 
 ### Building
 
-{% highlight java %}
+```
 bazel build <target path>
-{% endhighlight %}
+```
 
 For example, to build the AndroidX Test maven repository:
-{% highlight java %}
+```
 bazel build :axt_m2repository
-{% endhighlight %}
+```
 
 ### Testing
 
-{% highlight java %}
+```
 bazel test <target path> --spawn_strategy=local
-{% endhighlight %}
+```
 
 eg to run the androidx-test-core tests
-{% highlight java %}
+```
 bazel test //core/javatests/… --spawn_strategy=local
-{% endhighlight %}
+```
 
 ## Code reviews
 

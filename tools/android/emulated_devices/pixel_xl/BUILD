@@ -1,1 +1,0 @@
-../wrong_dpi_pixel_xl/BUILD
