@@ -1,3 +1,3 @@
 steps:
-- name 'gcr.io/cloud-builders/bazel'
-args: ['build', '//opensource/auto_value:auto_value']
+  - name 'gcr.io/cloud-builders/bazel'
+    args: ['build', '//opensource/auto_value:auto_value']
