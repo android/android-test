@@ -4,5 +4,7 @@ steps:
   args: ['build', '--tag=gcr.io/$PROJECT_ID/bazel-android', '.']
 # build the bazel targets using above docker image  
 - name: gcr.io/$PROJECT_ID/bazel-android
-  args: ['build', '//core']
+  args: ['build', '//:axt_m2repository']
 timeout: '1200s'
+options:
+  machineType: "N1_HIGHCPU_8"
