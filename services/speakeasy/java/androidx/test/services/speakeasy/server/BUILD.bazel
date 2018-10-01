@@ -31,7 +31,7 @@ android_library(
     deps = [
         ":speak_easy_core",
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
-        "@androidsdk//com.android.support:support-compat-25.0.1",
+	"//:com_android_support_support_compat",
         "@guava//jar",
     ],
 )
