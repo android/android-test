@@ -24,6 +24,7 @@ android_library(
         "//:com_android_support_support_annotations",
         "//runner/monitor",
         "@junit//jar",
+        "@androidsdk//:legacy_test-28",
     ],
 )
 

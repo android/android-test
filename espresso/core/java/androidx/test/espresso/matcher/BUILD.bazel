@@ -29,6 +29,7 @@ android_library(
         "//runner/android_junit_runner",
         "@guava//jar",
         "@hamcrest//jar",
+        "@junit//jar",
     ],
 )
 

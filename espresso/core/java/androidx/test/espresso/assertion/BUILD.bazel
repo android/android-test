@@ -24,6 +24,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "@guava//jar",
         "@hamcrest//jar",
+        "@junit//jar",
     ],
 )
 
