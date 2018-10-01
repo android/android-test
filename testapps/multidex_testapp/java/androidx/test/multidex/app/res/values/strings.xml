@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2017 The Android Open Source Project
+  ~ Copyright (C) 2018 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -13,21 +13,9 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
+  ~
   -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="androidx.test.ui.service">
-
-  <uses-sdk
-      android:minSdkVersion="9"
-      android:targetSdkVersion="26"/>
-
-  <application android:label="binderRemoteService">
-    <service
-        android:exported="true"
-        android:name=".BinderAsyncAIDLServer">
-      <intent-filter>
-        <action android:name="START_SERVICE"></action>
-      </intent-filter>
-    </service>
-  </application>
-</manifest>
+<resources>
+  <string name="app_name">MultiDex Test App</string>
+  <string name="activity_name">AndroidX MultiDex</string>
+</resources>

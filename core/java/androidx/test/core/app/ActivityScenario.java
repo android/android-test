@@ -88,9 +88,6 @@ import java.util.concurrent.locks.ReentrantLock;
  *   scenario.moveTo(State.CREATED);
  *   scenario.onActivity(activity -> {});  // Your activity is stopped.
  * </pre>
- *
- * BEGIN GOOGLE-INTERNAL Android API Council Review: go/activity-controller-unified-api-rev4-review
- * Design Doc: go/activityscenario-impl END GOOGLE-INTERNAL
  */
 @Beta
 public final class ActivityScenario<A extends Activity> {
@@ -204,9 +201,6 @@ public final class ActivityScenario<A extends Activity> {
       }
 
       // Spurious wakeups may happen so we wrap await() with while-loop.
-      // BEGIN GOOGLE-INTERNAL
-      // go/errorprone/bugpattern/WaitNotInLoop
-      // END GOOGLE-INTERNAL
       long now = System.currentTimeMillis();
       long deadline = now + TIMEOUT_MILLISECONDS;
       while (now < deadline && state != SUPPORTED_STAGE_TO_STATE.get(currentActivityStage)) {
