@@ -14,7 +14,7 @@ load("@gmaven_rules//:gmaven.bzl", "gmaven_rules")
 
 gmaven_rules()
 
-android_sdk_repository(name = "androidsdk")
+android_sdk_repository(name = "androidsdk", api_level=27)
 
 load("//:repo.bzl", "android_test_repositories")
 

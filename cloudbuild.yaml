@@ -1,0 +1,11 @@
+steps:
+# build the docker image that contains bazel + android SDK
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '--tag=gcr.io/$PROJECT_ID/bazel-android', '.']
+# build the bazel targets using above docker image
+- name: gcr.io/$PROJECT_ID/bazel-android
+  args: ['build', '//:axt_m2repository']
+timeout: '1200s'
+# use a high cpu, otherwise builds timeout
+options:
+  machineType: "N1_HIGHCPU_8"

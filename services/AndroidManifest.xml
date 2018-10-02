@@ -20,7 +20,7 @@
   package="androidx.test.services">
 
   <uses-sdk
-    android:minSdkVersion="9"
+    android:minSdkVersion="14"
     tools:overrideLibrary="android.support.graphics.drawable, android.support.graphics.drawable.animated, androidx.test.services.speakeasy.server" />
 
     <application android:label="TestServices" android:directBootAware="true" tools:replace="android:label">
