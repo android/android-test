@@ -17,7 +17,7 @@ gmaven_rules()
 android_sdk_repository(
     name = "androidsdk",
     api_level = 28,
-    build_tools_version = "26.0.2")
+    build_tools_version = "28.0.3")
 
 load("//:repo.bzl", "android_test_repositories")
 

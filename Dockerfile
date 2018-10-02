@@ -15,4 +15,4 @@ RUN \
     # download and extract sdk
     wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip && \
     unzip sdk-tools-linux-4333796.zip -d $ANDROID_HOME && \
-    yes | sdkmanager --install 'build-tools;26.0.2' 'platforms;android-28'
+    yes | sdkmanager --install 'build-tools;28.0.3' 'platforms;android-28'
