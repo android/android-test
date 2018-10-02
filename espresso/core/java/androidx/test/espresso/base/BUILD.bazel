@@ -30,6 +30,7 @@ android_library(
         "@guava//jar",
         "@hamcrest//jar",
         "@javax_inject//jar",
+        "@junit//jar",
     ],
 )
 
