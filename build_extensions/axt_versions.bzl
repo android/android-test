@@ -4,19 +4,19 @@ Ensure UsageTrackerRegistry is updated accordingly when incrementing version num
 """
 
 # AXT versions
-RUNNER_VERSION = "1.1.0-alpha4"
-ESPRESSO_VERSION = "3.1.0-alpha4"
-CORE_VERSION = "1.0.0-alpha4"
+RUNNER_VERSION = "1.1.0-beta01"
+ESPRESSO_VERSION = "3.1.0-beta01"
+CORE_VERSION = "1.0.0-beta01"
 ANDROIDX_JUNIT_VERSION = CORE_VERSION
 ANDROIDX_TRUTH_VERSION = CORE_VERSION
-UIAUTOMATOR_VERSION = "2.2.0-alpha4"
-JANK_VERSION = "1.0.1-alpha4"
+UIAUTOMATOR_VERSION = "2.2.0-beta01"
+JANK_VERSION = "1.0.1-beta01"
 
 # Maven dependency versions
-ANDROIDX_VERSION = "1.0.0-alpha1"
-ANDROIDX_VERSION_PATH = "1.0.0-alpha1"
-GOOGLE_MATERIAL_VERSION = "1.0.0-alpha1"
-ANDROIDX_ARCH_COMPONENTS_VERSION = "2.0.0-alpha1"
+ANDROIDX_VERSION = "1.0.0"
+ANDROIDX_VERSION_PATH = "1.0.0"
+GOOGLE_MATERIAL_VERSION = "1.0.0"
+ANDROIDX_ARCH_COMPONENTS_VERSION = "2.0.0"
 
 # TODO(b/114419674): Currently bazel can not find newer versions. Ideally androidx would be used
 # instead
