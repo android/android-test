@@ -27,6 +27,7 @@ android_library(
         "//espresso/intents/java/androidx/test/espresso/intent/matcher",
         "//runner/android_junit_runner",
         "@hamcrest//jar",
+        "@junit//jar",
     ],
 )
 
