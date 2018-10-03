@@ -27,7 +27,7 @@ public class PointerPropertiesBuilder {
     return pointerProperties;
   }
 
-  public static PointerPropertiesBuilder buildPointerProperties() {
+  public static PointerPropertiesBuilder newBuilder() {
     return new PointerPropertiesBuilder();
   }
 }

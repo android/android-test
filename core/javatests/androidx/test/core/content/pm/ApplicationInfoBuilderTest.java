@@ -33,10 +33,7 @@ public final class ApplicationInfoBuilderTest {
     String packageName = "test.package.name";
 
     ApplicationInfo applicationInfo =
-        ApplicationInfoBuilder.buildApplicationInfo()
-            .setName(name)
-            .setPackageName(packageName)
-            .build();
+        ApplicationInfoBuilder.newBuilder().setName(name).setPackageName(packageName).build();
 
     assertThat(applicationInfo.name).isEqualTo(name);
     assertThat(applicationInfo.packageName).isEqualTo(packageName);
@@ -45,7 +42,7 @@ public final class ApplicationInfoBuilderTest {
   @Test
   public void build_throwsException_whenPackageNameMissing() {
     try {
-      ApplicationInfoBuilder.buildApplicationInfo().build();
+      ApplicationInfoBuilder.newBuilder().build();
       fail();
     } catch (NullPointerException e) {
       assertThat(e).hasMessageThat().isEqualTo("Mandatory field 'packageName' missing.");

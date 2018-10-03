@@ -17,7 +17,7 @@ public class PointerCoordsBuilder {
 
   private PointerCoordsBuilder() {}
 
-  public static PointerCoordsBuilder buildPointerCoords() {
+  public static PointerCoordsBuilder newBuilder() {
     return new PointerCoordsBuilder();
   }
 

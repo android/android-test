@@ -33,12 +33,10 @@ public final class PackageInfoBuilderTest {
   @Test
   public void buildAllFields() {
     PackageInfo packageInfo =
-        PackageInfoBuilder.buildPackageInfo()
+        PackageInfoBuilder.newBuilder()
             .setPackageName(TEST_PACKAGE_NAME)
             .setApplicationInfo(
-                ApplicationInfoBuilder.buildApplicationInfo()
-                    .setPackageName(TEST_PACKAGE_NAME)
-                    .build())
+                ApplicationInfoBuilder.newBuilder().setPackageName(TEST_PACKAGE_NAME).build())
             .build();
 
     assertThat(packageInfo.packageName).isEqualTo(TEST_PACKAGE_NAME);
@@ -47,8 +45,7 @@ public final class PackageInfoBuilderTest {
 
   @Test
   public void defaultApplicationInfoIsValid() {
-    PackageInfoBuilder builder =
-        PackageInfoBuilder.buildPackageInfo().setPackageName(TEST_PACKAGE_NAME);
+    PackageInfoBuilder builder = PackageInfoBuilder.newBuilder().setPackageName(TEST_PACKAGE_NAME);
 
     PackageInfo packageInfo = builder.build();
 
@@ -59,7 +56,7 @@ public final class PackageInfoBuilderTest {
   @Test
   public void build_throwsException_whenPackageNameMissing() throws Exception {
     try {
-      PackageInfoBuilder.buildPackageInfo().build();
+      PackageInfoBuilder.newBuilder().build();
       fail();
     } catch (NullPointerException e) {
       assertThat(e).hasMessageThat().isEqualTo("Mandatory field 'packageName' missing.");
@@ -69,10 +66,10 @@ public final class PackageInfoBuilderTest {
   @Test
   public void build_throwsException_whenPackageNameMismatched() {
     PackageInfoBuilder builder =
-        PackageInfoBuilder.buildPackageInfo()
+        PackageInfoBuilder.newBuilder()
             .setPackageName(TEST_PACKAGE_NAME)
             .setApplicationInfo(
-                ApplicationInfoBuilder.buildApplicationInfo()
+                ApplicationInfoBuilder.newBuilder()
                     .setPackageName(SECOND_TEST_PACKAGE_NAME)
                     .build());
 
