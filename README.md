@@ -9,4 +9,4 @@ For more details see [developers.android.com/testing](https://developers.android
 See [CONTRIBUTING.md](https://github.com/android/android-test/blob/master/CONTRIBUTING.md)
 
 ## Issues
-Use the [Android issue tracker](https://b/issues/new?component=192735). See [Reporting Bugs](https://source.android.com/setup/contribute/report-bugs) for more information.
+Use the [Android issue tracker](http://issuetracker.google.com/issues?q=componentid:192735%2B). See [Reporting Bugs](https://source.android.com/setup/contribute/report-bugs) for more information.
