@@ -34,7 +34,7 @@ public final class PackageInfoBuilder {
    *
    * @return a new instance of {@link PackageInfoBuilder}.
    */
-  public static PackageInfoBuilder buildPackageInfo() {
+  public static PackageInfoBuilder newBuilder() {
     return new PackageInfoBuilder();
   }
 
@@ -71,8 +71,7 @@ public final class PackageInfoBuilder {
     packageInfo.packageName = packageName;
 
     if (applicationInfo == null) {
-      applicationInfo =
-          ApplicationInfoBuilder.buildApplicationInfo().setPackageName(packageName).build();
+      applicationInfo = ApplicationInfoBuilder.newBuilder().setPackageName(packageName).build();
     }
     packageInfo.applicationInfo = applicationInfo;
 

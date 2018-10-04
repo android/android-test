@@ -27,6 +27,7 @@ android_library(
         "//espresso/intents/java/androidx/test/espresso/intent/matcher",
         "//runner/android_junit_runner",
         "@hamcrest//jar",
+        "@junit//jar",
     ],
 )
 
@@ -70,8 +71,6 @@ axt_release_lib(
         "androidx.test.internal.runner.hidden.*",
         # remove META-INF directory to avoid duplicate clashes with imports from the support library.
         "META-INF",
-        "androidx.test.espresso.intents.Intento",
-        "androidx.test.espresso.intents.rule.IntentoTestRule",
     ],
     deps = [
         ":espresso_intents_release_lib",

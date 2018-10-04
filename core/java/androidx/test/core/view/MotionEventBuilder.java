@@ -47,11 +47,20 @@ public class MotionEventBuilder {
   private MotionEventBuilder() {}
 
   /**
+   * @deprecated use {@link #newBuilder()}
+   * @hide
+   */
+  @Deprecated
+  public static MotionEventBuilder buildMotionEvent() {
+    return newBuilder();
+  }
+
+  /**
    * Start building a new MotionEvent.
    *
    * @return a new MotionEventBuilder.
    */
-  public static MotionEventBuilder buildMotionEvent() {
+  public static MotionEventBuilder newBuilder() {
     return new MotionEventBuilder();
   }
 

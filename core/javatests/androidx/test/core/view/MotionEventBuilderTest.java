@@ -1,6 +1,6 @@
 package androidx.test.core.view;
 
-import static androidx.test.core.view.MotionEventBuilder.buildMotionEvent;
+import static androidx.test.core.view.MotionEventBuilder.newBuilder;
 import static com.google.common.truth.Truth.assertThat;
 
 import android.os.SystemClock;
@@ -16,7 +16,7 @@ public final class MotionEventBuilderTest {
 
   @Test
   public void emptyBuilder() throws Exception {
-    MotionEvent event = buildMotionEvent().build();
+    MotionEvent event = newBuilder().build();
     assertThat(event.getDownTime()).isEqualTo(0);
     assertThat(event.getEventTime())
         .isIn(Range.closed(SystemClock.uptimeMillis() - 100, SystemClock.uptimeMillis()));
@@ -37,7 +37,7 @@ public final class MotionEventBuilderTest {
   @Test
   public void buildAllFields() {
     MotionEvent event =
-        buildMotionEvent()
+        newBuilder()
             .setDownTime(1)
             .setEventTime(2)
             .setAction(MotionEvent.ACTION_CANCEL)
@@ -73,11 +73,11 @@ public final class MotionEventBuilderTest {
 
   @Test
   public void withActionIndex() throws Exception {
-    MotionEvent event = buildMotionEvent().setAction(MotionEvent.ACTION_POINTER_UP).build();
+    MotionEvent event = newBuilder().setAction(MotionEvent.ACTION_POINTER_UP).build();
     assertThat(event.getActionMasked()).isEqualTo(MotionEvent.ACTION_POINTER_UP);
     assertThat(event.getActionIndex()).isEqualTo(0);
 
-    event = buildMotionEvent().setAction(MotionEvent.ACTION_POINTER_UP).setActionIndex(1).build();
+    event = newBuilder().setAction(MotionEvent.ACTION_POINTER_UP).setActionIndex(1).build();
     assertThat(event.getActionMasked()).isEqualTo(MotionEvent.ACTION_POINTER_UP);
     assertThat(event.getActionIndex()).isEqualTo(1);
   }

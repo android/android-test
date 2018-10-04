@@ -23,6 +23,7 @@ android_library(
     deps = [
         "//:com_android_support_support_annotations",
         "//runner/monitor",
+        "@androidsdk//:legacy_test-28",
         "@junit//jar",
     ],
 )

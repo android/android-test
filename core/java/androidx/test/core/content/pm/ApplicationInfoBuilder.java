@@ -32,7 +32,7 @@ public final class ApplicationInfoBuilder {
    *
    * @return a new instance of {@link ApplicationInfoBuilder}.
    */
-  public static ApplicationInfoBuilder buildApplicationInfo() {
+  public static ApplicationInfoBuilder newBuilder() {
     return new ApplicationInfoBuilder();
   }
 
