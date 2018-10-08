@@ -24,9 +24,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import android.test.suitebuilder.annotation.SmallTest;
 import androidx.test.espresso.remote.InteractionResponse.RemoteError;
 import androidx.test.espresso.remote.InteractionResponse.Status;
+import androidx.test.filters.SmallTest;
 import androidx.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;

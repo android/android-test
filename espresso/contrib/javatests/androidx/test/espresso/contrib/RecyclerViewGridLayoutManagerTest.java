@@ -23,7 +23,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import android.test.suitebuilder.annotation.LargeTest;
+import androidx.test.filters.LargeTest;
 import androidx.test.ui.app.RecyclerViewFragment.LayoutManagerType;
 
 /**

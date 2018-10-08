@@ -25,8 +25,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import android.Manifest;
 import android.Manifest.permission;
-import android.test.suitebuilder.annotation.MediumTest;
 import androidx.test.espresso.intent.ResettingStubberImpl;
+import androidx.test.filters.MediumTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.runner.AndroidJUnit4;

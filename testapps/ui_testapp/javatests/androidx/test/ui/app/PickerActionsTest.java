@@ -28,9 +28,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
+import androidx.test.filters.LargeTest;
 
 /**
  * Integration tests for {@link PickerActions}.

@@ -24,7 +24,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import android.os.Build;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.URLSpan;
@@ -34,6 +33,7 @@ import android.widget.TextView;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
+import androidx.test.filters.LargeTest;
 import androidx.test.ui.app.LargeViewActivity;
 import androidx.test.ui.app.R;
 import com.google.android.apps.common.testing.accessibility.framework.integrations.AccessibilityViewCheckException;

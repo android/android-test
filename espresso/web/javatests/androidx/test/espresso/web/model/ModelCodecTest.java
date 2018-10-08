@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.web.model;
 
-import android.test.suitebuilder.annotation.SmallTest;
+import androidx.test.filters.SmallTest;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.List;

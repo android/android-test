@@ -24,12 +24,12 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import android.test.suitebuilder.annotation.SmallTest;
 import androidx.test.espresso.proto.TestProtos.RemoteMsgFieldAnnotatedFieldsClassProto;
 import androidx.test.espresso.proto.TestProtos.TestProto;
 import androidx.test.espresso.remote.RemoteDescriptor.Builder;
 import androidx.test.espresso.remote.TestTypes.RemoteMsgFieldAnnotatedFieldsClass;
 import androidx.test.espresso.remote.TestTypes.TestType;
+import androidx.test.filters.SmallTest;
 import androidx.test.runner.AndroidJUnit4;
 import com.google.protobuf.Parser;
 import org.junit.Test;

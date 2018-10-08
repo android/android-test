@@ -25,9 +25,9 @@ import static androidx.test.espresso.web.matcher.DomMatchers.withTextContent;
 import static androidx.test.espresso.web.sugar.Web.onWebView;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.webkit.WebView;
 import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.filters.LargeTest;
 import androidx.test.ui.app.WebFormActivity;
 import junit.framework.AssertionFailedError;
 

@@ -24,7 +24,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import android.app.Activity;
-import android.test.suitebuilder.annotation.SmallTest;
+import androidx.test.filters.SmallTest;
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
 import androidx.test.runner.lifecycle.Stage;
 import java.util.ArrayList;

@@ -16,8 +16,8 @@
 package androidx.test;
 
 import android.app.Instrumentation;
-import android.test.suitebuilder.annotation.SmallTest;
-import android.test.suitebuilder.annotation.Suppress;
+import androidx.test.filters.SmallTest;
+import androidx.test.filters.Suppress;
 import java.util.Arrays;
 import java.util.Collection;
 import org.junit.Assert;

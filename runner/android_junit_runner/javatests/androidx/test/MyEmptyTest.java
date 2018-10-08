@@ -15,8 +15,8 @@
  */
 package androidx.test;
 
-import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
+import androidx.test.filters.SmallTest;
 import junit.framework.TestCase;
 
 /** Placeholder test to verify empty TestCase's are skipped */

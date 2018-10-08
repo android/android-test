@@ -25,7 +25,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.test.suitebuilder.annotation.LargeTest;
+import androidx.test.filters.LargeTest;
 import androidx.test.ui.app.RecyclerViewFragment.LayoutManagerType;
 
 /**

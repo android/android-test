@@ -28,12 +28,12 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.webkit.WebView;
 import androidx.test.espresso.IdlingResourceTimeoutException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
+import androidx.test.filters.LargeTest;
 import androidx.test.ui.app.WebFormActivity;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;

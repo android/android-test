@@ -25,8 +25,8 @@ import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import android.test.suitebuilder.annotation.SmallTest;
 import androidx.test.espresso.proto.TestProtos.GenericTestProto;
+import androidx.test.filters.SmallTest;
 import androidx.test.runner.AndroidJUnit4;
 import com.google.common.collect.Lists;
 import com.google.protobuf.Any;

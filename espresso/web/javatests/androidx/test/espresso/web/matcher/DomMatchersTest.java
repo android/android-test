@@ -26,8 +26,8 @@ import static androidx.test.espresso.web.matcher.DomMatchers.withTextContent;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
-import android.test.suitebuilder.annotation.SmallTest;
 import androidx.test.espresso.web.assertion.TagSoupDocumentParser;
+import androidx.test.filters.SmallTest;
 import java.io.StringBufferInputStream;
 import javax.xml.parsers.DocumentBuilderFactory;
 import junit.framework.TestCase;

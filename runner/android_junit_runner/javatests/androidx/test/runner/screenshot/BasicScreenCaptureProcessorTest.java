@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.test.suitebuilder.annotation.MediumTest;
+import androidx.test.filters.MediumTest;
 import java.io.File;
 import org.junit.Before;
 import org.junit.Rule;
