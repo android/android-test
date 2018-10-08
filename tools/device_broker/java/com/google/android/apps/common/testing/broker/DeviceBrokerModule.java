@@ -321,7 +321,7 @@ class DeviceBrokerModule extends AbstractModule {
       List<File> launcherScriptFiles =
           new DirectorySearcher(
                   new File(env.getRunfilesDir()),
-                  "^((android|google)_\\d+_(arm|arm_v7a|x86))|(.*_(usb|wifi))$")
+                  "^((android|google|jasper)_\\d+_(arm|arm_v7a|x86))|(.*_(usb|wifi))$")
               .findMatches();
       checkState(1 == launcherScriptFiles.size(),
           "Must find 1 launcher script matching. Found: %s", launcherScriptFiles);

@@ -82,6 +82,7 @@ py_test(
     deps = [
         ":common",
         MOX,
+        "@six",
     ],
 )
 

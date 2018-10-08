@@ -1,4 +1,5 @@
 # Description: Tests for androidx.test.ext.truth.content
+load("//build_extensions:android_multidevice_instrumentation_test.bzl", "android_multidevice_instrumentation_test", "DEVICES")
 
 package(
     default_testonly = 1,
@@ -35,8 +36,8 @@ android_binary(
     ],
 )
 
-android_instrumentation_test(
+android_multidevice_instrumentation_test(
     name = "AndroidJUnit4Test_android",
-    target_device = "//tools/android/emulated_devices/generic_phone:android_19_x86_qemu2",
+    target_devices = DEVICES,
     test_app = ":AndroidJUnit4Test_test_apk",
 )

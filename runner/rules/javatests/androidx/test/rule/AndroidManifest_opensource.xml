@@ -19,7 +19,7 @@
     package="androidx.test.rule.tests"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="25"/>
+    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="28"/>
 
     <application android:label="AndroidJUnitRunner" >
 

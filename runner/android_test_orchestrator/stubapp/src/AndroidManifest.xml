@@ -24,7 +24,7 @@
 
   <uses-sdk
       android:minSdkVersion="14"
-      android:targetSdkVersion="25" />
+      android:targetSdkVersion="28" />
 
   <application android:directBootAware="true">
     <uses-library android:name="android.test.runner" />
