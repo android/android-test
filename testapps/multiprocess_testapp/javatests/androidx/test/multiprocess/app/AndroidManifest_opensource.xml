@@ -19,7 +19,7 @@
 
   <uses-sdk
     android:minSdkVersion="26"
-    android:targetSdkVersion="26"/>
+    android:targetSdkVersion="28"/>
 
   <instrumentation
       android:name="androidx.test.runner.AndroidJUnitRunner"

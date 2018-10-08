@@ -4,7 +4,7 @@ steps:
   args: ['build', '--tag=gcr.io/$PROJECT_ID/bazel-android', '.']
 # build the bazel targets using above docker image
 - name: gcr.io/$PROJECT_ID/bazel-android
-  args: ['build', '//:axt_m2repository']
+  args: ['test', '//:axt_m2repository', '//core/javatests/androidx/test/core/view:MotionEventBuilderTest']
 timeout: '1200s'
 # use a high cpu, otherwise builds timeout
 options:
