@@ -22,11 +22,8 @@ import com.google.common.collect.Lists;
 import com.google.common.io.LineProcessor;
 import java.util.List;
 
-/**
- * Parses the output of "adb devices" command.
- *
- */
-class AdbDevicesLineProcessor implements LineProcessor<List<String>> {
+/** Parses the output of "adb devices" command. */
+public class AdbDevicesLineProcessor implements LineProcessor<List<String>> {
 
   private static final String SUFFIX = "device";
   private final List<String> deviceSerialIds = Lists.newArrayList();
