@@ -19,7 +19,7 @@
 
   <uses-sdk
     android:minSdkVersion="23"
-    android:targetSdkVersion="25"/>
+    android:targetSdkVersion="28"/>
 
   <instrumentation
     android:name="com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"

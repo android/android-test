@@ -21,7 +21,11 @@ import com.google.common.truth.StringSubject;
 import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
 
-/** Subject for making assertions about {@link android.app.Notification.Action}s. */
+/**
+ * Subject for making assertions about {@link android.app.Notification.Action}s.
+ *
+ * <p>Only supports on Android APIs >= 16
+ */
 public class NotificationActionSubject extends Subject<NotificationActionSubject, Action> {
 
   public static NotificationActionSubject assertThat(Action action) {

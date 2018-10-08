@@ -18,6 +18,7 @@ package androidx.test.ext.truth.os;
 import static com.google.common.truth.Fact.simpleFact;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.IntegerSubject;
 import com.google.common.truth.StringSubject;
@@ -62,6 +63,7 @@ public final class BundleSubject extends Subject<BundleSubject, Bundle> {
   public IntegerSubject integer(String key) {
     return check("getInt(%s)", key).that(actual().getInt(key));
   }
+
 
   public void containsKey(String key) {
     if (!actual().containsKey(key)) {

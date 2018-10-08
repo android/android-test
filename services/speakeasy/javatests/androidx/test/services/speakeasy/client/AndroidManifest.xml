@@ -19,8 +19,8 @@
     package="androidx.test.services.speakeasy.client" >
 
     <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="25" />
+        android:minSdkVersion="14"
+        android:targetSdkVersion="28" />
 
     <application>
     </application>

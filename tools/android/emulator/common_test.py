@@ -17,12 +17,12 @@
 
 
 
-import __builtin__
 import subprocess
 
 
 
 import mox
+import six
 
 from google.apputils import basetest as googletest
 from tools.android.emulator import common
@@ -117,7 +117,7 @@ class CommonTest(mox.MoxTestBase):
     self.mox.StubOutWithMock(common, 'CommandLogFile')
     common.CommandLogFile(args, exec_dir, exec_env).AndReturn(logfile_name)
 
-    self.mox.StubOutWithMock(__builtin__, 'open')
+    self.mox.StubOutWithMock(six.moves.builtins, 'open')
     file_handle = 1
     open(logfile_name, 'a').AndReturn(file_handle)
 
