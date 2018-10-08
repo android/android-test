@@ -17,7 +17,10 @@ package androidx.test.ext.truth.os;
 
 import static androidx.test.ext.truth.os.BundleSubject.assertThat;
 
+import android.accounts.Account;
+import android.content.Intent;
 import android.os.Bundle;
+import androidx.test.ext.truth.content.IntentSubject;
 import androidx.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,4 +64,5 @@ public class BundleSubjectTest {
     bundle.putInt("foo", 1);
     assertThat(bundle).integer("foo").isEqualTo(1);
   }
+
 }

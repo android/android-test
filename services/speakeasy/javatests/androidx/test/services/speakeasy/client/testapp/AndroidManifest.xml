@@ -20,8 +20,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="androidx.test.services.speakeasy.server.testapp">
     <uses-sdk
-      android:minSdkVersion="10"
-      android:targetSdkVersion="25" />
+      android:minSdkVersion="14"
+      android:targetSdkVersion="28" />
 
     <application>
         <service

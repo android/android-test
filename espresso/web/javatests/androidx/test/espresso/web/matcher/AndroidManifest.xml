@@ -18,8 +18,8 @@
     package="androidx.test.espresso.web.matcher.tests" >
 
     <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="25" />
+        android:minSdkVersion="14"
+        android:targetSdkVersion="28" />
 
     <application>
         <uses-library android:name="android.test.runner" />

@@ -17,7 +17,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.google.android.apps.common.testing.ui.testsapp.tests" >
 
-    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="25"/>
+    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="28"/>
 
     <application android:label="GoogleInstrumentationTestRunnerTest" >
         <uses-library android:name="android.test.runner" />

@@ -18,7 +18,7 @@
     package="androidx.test.ext.truth.os" >
 
     <uses-sdk
-        android:minSdkVersion="16"
+        android:minSdkVersion="14"
         android:targetSdkVersion="28" />
 
   <application />
