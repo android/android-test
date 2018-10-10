@@ -11,6 +11,8 @@ ACCESSIBILITY_DEPS = [
     "//espresso/core/java/androidx/test/espresso:interface",
     "//espresso/accessibility/java/androidx/test/espresso/accessibility:accessibility_checks",
     "//runner/android_junit_runner",
+    "//ext/junit",
+    "//core",
 ]
 
 EXTERNAL_DEPS = [

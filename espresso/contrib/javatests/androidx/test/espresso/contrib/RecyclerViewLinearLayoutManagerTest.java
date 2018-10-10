@@ -25,18 +25,24 @@ import static com.google.common.truth.Truth.assertThat;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.ui.app.RecyclerViewFragment.LayoutManagerType;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * {@link RecyclerViewIntegrationTest}s for {@link android.support.v7.widget.RecyclerView} using a
  * {@link android.support.v7.widget.LinearLayoutManager}
  */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
 public class RecyclerViewLinearLayoutManagerTest extends RecyclerViewIntegrationTest {
 
+  @Before
   @Override
-  protected void setUp() throws Exception {
+  public void setUp() throws Exception {
     super.setUp();
     onView(withId(getRVLayoutId())).check(matches(isDisplayed()));
   }
@@ -51,12 +57,16 @@ public class RecyclerViewLinearLayoutManagerTest extends RecyclerViewIntegration
     return LayoutManagerType.LINEAR.getSelectedItemId();
   }
 
+  @Test
   public void testScrolling_scrollToPosition() {
     onView(withId(getRVLayoutId())).perform(scrollToPosition(50));
-    RecyclerView appList = (RecyclerView) getActivity().findViewById(getRVLayoutId());
-    LinearLayoutManager layoutManager = (LinearLayoutManager) appList.getLayoutManager();
-    // If scrollToPosition does not wait for the main thread to be idle then this is 0.
-    int scrollPosition = layoutManager.findFirstVisibleItemPosition();
-    assertThat(scrollPosition).isNotEqualTo(0);
+    recyclerViewActivityScenario.onActivity(
+        activity -> {
+          RecyclerView appList = (RecyclerView) activity.findViewById(getRVLayoutId());
+          LinearLayoutManager layoutManager = (LinearLayoutManager) appList.getLayoutManager();
+          // If scrollToPosition does not wait for the main thread to be idle then this is 0.
+          int scrollPosition = layoutManager.findFirstVisibleItemPosition();
+          assertThat(scrollPosition).isNotEqualTo(0);
+        });
   }
 }

@@ -16,44 +16,44 @@
 
 package androidx.test.espresso.accessibility;
 
+
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.accessibility.AccessibilityChecks.accessibilityAssertion;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import android.os.Build;
-import android.test.ActivityInstrumentationTestCase2;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.view.View;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.ui.app.LargeViewActivity;
 import androidx.test.ui.app.R;
 import com.google.android.apps.common.testing.accessibility.framework.integrations.AccessibilityViewCheckException;
 import org.hamcrest.Matcher;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /** {@link androidx.test.espresso.accessibility.AccessibilityChecks} integration tests. */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class AccessibilityChecksIntegrationTest
-    extends ActivityInstrumentationTestCase2<LargeViewActivity> {
+public class AccessibilityChecksIntegrationTest {
 
-  @SuppressWarnings("deprecation")
-  public AccessibilityChecksIntegrationTest() {
-    // Supporting froyo.
-    super("com.google.android.apps.common.testing.ui.testapp", LargeViewActivity.class);
-  }
-
-  @Override
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
-    getActivity();
+    ActivityScenario.launch(LargeViewActivity.class);
     // ViewAction to set the height, width to be too small, which will cause an a11y exception
     onView(withId(R.id.large_view))
         .perform(
@@ -75,6 +75,7 @@ public class AccessibilityChecksIntegrationTest
             });
   }
 
+  @Test
   public void testRunAccessibilityChecks_viewWithOneError() {
     try {
       onView(withId(R.id.large_view)).check(accessibilityAssertion());
@@ -85,6 +86,7 @@ public class AccessibilityChecksIntegrationTest
     fail("Should have thrown an AccessibilityViewCheckException for a small touch target.");
   }
 
+  @Test
   public void testRunAccessibilityChecks_viewWithTwoErrors() {
     // ViewAction to give view a URLSpan with an empty URL, the second accessibility error
     onView(withId(R.id.large_view))
@@ -121,6 +123,7 @@ public class AccessibilityChecksIntegrationTest
     fail("Should have thrown an AccessibilityViewCheckException for a small touch target.");
   }
 
+  @Test
   public void testCheckWithNonNullMatchingViewException_throwsNoMatchingViewException() {
     try {
       onView(withText("There is no view with this text!")).check(accessibilityAssertion());

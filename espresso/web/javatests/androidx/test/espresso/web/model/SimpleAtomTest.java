@@ -16,15 +16,23 @@
 
 package androidx.test.espresso.web.model;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import com.google.common.collect.Lists;
 import java.util.List;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /** Unit tests for {@link SimpleAtom}. */
+@RunWith(AndroidJUnit4.class)
 @SmallTest
-public class SimpleAtomTest extends TestCase {
+public class SimpleAtomTest {
 
+  @Test
   public void testArgumentOrdering_noArgs() {
     SimpleAtom atom = new SimpleAtom("return 1;");
     assertTrue(atom.getArguments(null).isEmpty());
@@ -33,6 +41,7 @@ public class SimpleAtomTest extends TestCase {
     assertEquals(elementReference, atom.getArguments(elementReference).get(0));
   }
 
+  @Test
   public void testArgumentOrdering_nonContextualArgsSupplied() {
     final List<Object> vals = Lists.newArrayList(1, 2, 3, 4, 5);
     SimpleAtom atom =
@@ -51,6 +60,7 @@ public class SimpleAtomTest extends TestCase {
     assertEquals(expected, withElement);
   }
 
+  @Test
   public void testArgumentOrdering_lastPlacement() {
     final List<Object> vals = Lists.newArrayList(1, 2, 3, 4, 5);
     SimpleAtom atom =
@@ -69,6 +79,7 @@ public class SimpleAtomTest extends TestCase {
     assertEquals(expected, withElement);
   }
 
+  @Test
   public void testContract_handleBadEvalution() {
     final boolean[] called = new boolean[1];
     called[0] = false;
@@ -92,6 +103,7 @@ public class SimpleAtomTest extends TestCase {
     assertFalse(called[0]);
   }
 
+  @Test
   public void testContract_getNonContextualArguments() {
     final boolean[] called = new boolean[1];
     called[0] = false;
@@ -105,6 +117,7 @@ public class SimpleAtomTest extends TestCase {
     assertTrue(called[0]);
   }
 
+  @Test
   public void testContract_noElementReference() {
     final boolean[] called = new boolean[1];
     called[0] = false;

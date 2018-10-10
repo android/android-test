@@ -35,11 +35,13 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.startsWith;
+import static org.junit.Assert.fail;
 
 import android.support.v7.widget.RecyclerView;
-import android.test.ActivityInstrumentationTestCase2;
 import android.text.TextUtils;
 import android.view.View;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.core.app.ActivityScenario.ActivityAction;
 import androidx.test.espresso.PerformException;
 import androidx.test.filters.Suppress;
 import androidx.test.ui.app.ItemListAdapter.CustomViewHolder;
@@ -48,9 +50,10 @@ import androidx.test.ui.app.RecyclerViewActivity;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
+import org.junit.Test;
 
-public abstract class RecyclerViewIntegrationTest
-    extends ActivityInstrumentationTestCase2<RecyclerViewActivity> {
+public abstract class RecyclerViewIntegrationTest {
 
   private static final String ITEM_0 = "Item: 0";
   private static final String ITEM_16 = "Item: 16";
@@ -66,26 +69,23 @@ public abstract class RecyclerViewIntegrationTest
   private int rvLayoutId;
   private int selectedItemId;
 
-  private RecyclerViewActivity recyclerViewActivity;
+  protected ActivityScenario<RecyclerViewActivity> recyclerViewActivityScenario;
 
-  public RecyclerViewIntegrationTest() {
-    super(RecyclerViewActivity.class);
-  }
-
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
+  @Before
+  public void setUp() throws Exception {
     rvLayoutId = getRVLayoutId();
     selectedItemId = getSelectedItemId();
-    recyclerViewActivity = getActivity();
+    recyclerViewActivityScenario = ActivityScenario.launch(RecyclerViewActivity.class);
   }
 
+  @Test
   public void testScrolling_scrollToView() {
     onView(withItemText(ITEM_64)).check(doesNotExist());
     onView((withId(rvLayoutId))).perform(scrollTo(hasDescendant(withText(ITEM_64))));
     onView(withItemText(ITEM_64)).check(matches(isDisplayed()));
   }
 
+  @Test
   public void testScrolling_scrollToViewWithViewHolderMatcher() {
     onView(withText(ITEM_100)).check(doesNotExist());
     onView((withId(rvLayoutId)))
@@ -95,6 +95,7 @@ public abstract class RecyclerViewIntegrationTest
     onView(withText(ITEM_100)).check(matches(isDisplayed()));
   }
 
+  @Test
   public void testScrolling_scrollToViewWithViewHolderMatcherWithAmbiguousViewError() {
     try {
       onView((withId(rvLayoutId))).perform(scrollToHolder(new CustomViewHolderMatcher()));
@@ -103,6 +104,7 @@ public abstract class RecyclerViewIntegrationTest
     }
   }
 
+  @Test
   public void testScrolling_scrollToViewWithViewHolderMatcherWithPositionOutOfRange() {
     try {
       onView((withId(rvLayoutId)))
@@ -112,6 +114,7 @@ public abstract class RecyclerViewIntegrationTest
     }
   }
 
+  @Test
   public void testScrolling_scrollToViewWithViewHolderMatcherWithPosition() {
     onView(withText(ITEM_200)).check(doesNotExist());
     onView((withId(rvLayoutId)))
@@ -119,6 +122,7 @@ public abstract class RecyclerViewIntegrationTest
     onView(withText(ITEM_200)).check(matches(isDisplayed()));
   }
 
+  @Test
   public void testScrolling_scrollToMultipleViews() {
     onView(withId(rvLayoutId)).perform(scrollTo(hasDescendant(withText(ITEM_64))));
     onView(withItemText(ITEM_64)).check(matches(isDisplayed()));
@@ -137,6 +141,7 @@ public abstract class RecyclerViewIntegrationTest
     onView(withItemText(ITEM_0)).check(matches(isDisplayed()));
   }
 
+  @Test
   public void testScrolling_scrollToLastScrollToFirst() {
     String firstItem = ITEM_0;
     String lastItem = ITEM_998;
@@ -146,6 +151,7 @@ public abstract class RecyclerViewIntegrationTest
     onView(withItemText(ITEM_0)).check(matches(isDisplayed()));
   }
 
+  @Test
   public void testErrorMessages_onNonRecyclerViewThrows() {
     String targetViewText = "Scrolling a non RV should throw";
     try {
@@ -155,6 +161,7 @@ public abstract class RecyclerViewIntegrationTest
     }
   }
 
+  @Test
   public void testErrorMessages_viewNotInHierarchyThrows() {
     String targetViewText = "Not in hierarchy";
     try {
@@ -164,6 +171,7 @@ public abstract class RecyclerViewIntegrationTest
     }
   }
 
+  @Test
   public void testErrorMessages_duplicateViewsInHierarchyThrows() throws Throwable {
     final String targetViewText = ITEM_64;
     initWithDuplicateItems(targetViewText, 5);
@@ -174,6 +182,7 @@ public abstract class RecyclerViewIntegrationTest
     }
   }
 
+  @Test
   public void testScrolling_scrollToItemAndClick() {
     onView(withId(rvLayoutId)).perform(scrollTo(hasDescendant(withText(ITEM_64))));
     onView(withItemText(ITEM_64)).perform(click());
@@ -183,6 +192,7 @@ public abstract class RecyclerViewIntegrationTest
 
   // TODO(b/68003948): flaky
   @Suppress
+  @Test
   public void testScrolling_scrollToMultipleViewsAndClick() {
     onView(withId(rvLayoutId)).perform(scrollTo(hasDescendant(withText(ITEM_16))));
     onView(withItemText(ITEM_16)).perform(click());
@@ -216,12 +226,14 @@ public abstract class RecyclerViewIntegrationTest
     onView(withId(selectedItemId)).check(matches(withText(expectedItem0Text)));
   }
 
+  @Test
   public void testScrolling_scrollToViewAtPosition() {
     onView(withItemText(ITEM_64)).check(doesNotExist());
     onView((withId(rvLayoutId))).perform(scrollToPosition(64));
     onView(withItemText(ITEM_64)).check(matches(isDisplayed()));
   }
 
+  @Test
   public void testScrolling_scrollToMultiplePositions() {
     onView(withItemText(ITEM_64)).check(doesNotExist());
     onView(withId(rvLayoutId)).perform(scrollToPosition(64));
@@ -244,17 +256,20 @@ public abstract class RecyclerViewIntegrationTest
     onView(withItemText(ITEM_0)).check(matches(isDisplayed()));
   }
 
+  @Test
   public void testScrolling_scrollToLastScrollToFirstPosition() {
     onView(withId(rvLayoutId)).perform(scrollToPosition(998));
     onView(withId(rvLayoutId)).perform(scrollToPosition(0));
   }
 
+  @Test
   public void testActionOnItem_clickOnItem() {
     onView(withId(rvLayoutId)).perform(actionOnItem(hasDescendant(withText(ITEM_256)), click()));
     String expectedItemText = "Selected: " + ITEM_256;
     onView(withId(selectedItemId)).check(matches(withText(expectedItemText)));
   }
 
+  @Test
   public void testActionOnItem_clickOnItemWithViewHolderMatcher() {
     onView(withId(rvLayoutId))
         .perform(
@@ -265,6 +280,7 @@ public abstract class RecyclerViewIntegrationTest
     onView(withId(selectedItemId)).check(matches(withText(expectedItemText)));
   }
 
+  @Test
   public void testActionOnItem_clickOnItemWithViewHolderMatcherWithAmbiguousViewError() {
     try {
       onView((withId(rvLayoutId)))
@@ -274,6 +290,7 @@ public abstract class RecyclerViewIntegrationTest
     }
   }
 
+  @Test
   public void testActionOnItem_clickOnItemWithViewHolderMatcherWithPositionOutOfRange() {
     try {
       onView((withId(rvLayoutId)))
@@ -283,6 +300,7 @@ public abstract class RecyclerViewIntegrationTest
     }
   }
 
+  @Test
   public void testActionOnItem_clickOnItemWithViewHolderMatcherWithPosition() {
     onView(withId(rvLayoutId))
         .perform(actionOnHolderItem(new CustomViewHolderMatcher(), click()).atPosition(1));
@@ -290,6 +308,7 @@ public abstract class RecyclerViewIntegrationTest
     onView(withId(selectedItemId)).check(matches(withText(expectedItemText)));
   }
 
+  @Test
   public void testActionOnItem_clickOnLastAndFirstItem() {
     onView(withId(rvLayoutId)).perform(actionOnItem(hasDescendant(withText(ITEM_998)), click()));
     String expectedItem998Text = "Selected: " + ITEM_998;
@@ -300,12 +319,14 @@ public abstract class RecyclerViewIntegrationTest
     onView(withId(selectedItemId)).check(matches(withText(expectedItem0Text)));
   }
 
+  @Test
   public void testActionOnItemAtPosition_clickOnItem() {
     onView(withId(rvLayoutId)).perform(actionOnItemAtPosition(256, click()));
     String expectedItemText = "Selected: " + ITEM_256;
     onView(withId(selectedItemId)).check(matches(withText(expectedItemText)));
   }
 
+  @Test
   public void testActionOnItemAtPosition_clickOnLastAndFirstItem() {
     onView(withId(rvLayoutId)).perform(actionOnItemAtPosition(998, click()));
     String expectedItem998Text = "Selected: " + ITEM_998;
@@ -318,6 +339,7 @@ public abstract class RecyclerViewIntegrationTest
 
   // TODO(b/68003948): flaky
   @Suppress
+  @Test
   public void testActionsOnItem_clickMultipleItems() throws InterruptedException {
     onView(withItemText(ITEM_64)).check(doesNotExist());
     onView(withId(rvLayoutId)).perform(actionOnItem(hasDescendant(withText(ITEM_64)), click()));
@@ -348,10 +370,10 @@ public abstract class RecyclerViewIntegrationTest
 
   private void initWithDuplicateItems(final String targetViewText, final int numberOfDuplicates)
       throws Throwable {
-    runTestOnUiThread(
-        new Runnable() {
+    recyclerViewActivityScenario.onActivity(
+        new ActivityAction<RecyclerViewActivity>() {
           @Override
-          public void run() {
+          public void perform(RecyclerViewActivity recyclerViewActivity) {
             for (int i = 0; i < numberOfDuplicates; i++) {
               recyclerViewActivity.addItems(targetViewText);
             }

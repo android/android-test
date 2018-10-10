@@ -16,36 +16,46 @@
 
 package androidx.test.espresso.idling;
 
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import android.test.InstrumentationTestCase;
 import androidx.test.espresso.IdlingResource.ResourceCallback;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 /** Unit tests for {@link CountingIdlingResource}. */
-public class CountingIdlingResourceTest extends InstrumentationTestCase {
+@RunWith(AndroidJUnit4.class)
+public class CountingIdlingResourceTest {
 
   private static final String RESOURCE_NAME = "test_resource";
   private CountingIdlingResource resource;
 
   @Mock private ResourceCallback mockCallback;
 
-  @Override
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
     initMocks(this);
     resource = new CountingIdlingResource(RESOURCE_NAME, true);
   }
 
+  @Test
   public void testResourceName() {
     assertEquals(RESOURCE_NAME, resource.getName());
   }
 
+  @Test
   public void testInvalidStateDetected() throws Exception {
     resource.increment();
     resource.decrement();
@@ -56,6 +66,7 @@ public class CountingIdlingResourceTest extends InstrumentationTestCase {
     }
   }
 
+  @Test
   public void testIsIdle() throws Exception {
     assertTrue(callIsIdle());
     resource.increment();
@@ -64,6 +75,7 @@ public class CountingIdlingResourceTest extends InstrumentationTestCase {
     assertTrue(callIsIdle());
   }
 
+  @Test
   public void testIdleNotification() throws Exception {
     registerIdleCallback();
     assertTrue(callIsIdle());

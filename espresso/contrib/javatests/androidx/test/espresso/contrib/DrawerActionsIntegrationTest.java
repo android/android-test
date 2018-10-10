@@ -16,6 +16,7 @@
 
 package androidx.test.espresso.contrib;
 
+import static androidx.test.core.app.ActivityScenario.launch;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
@@ -27,33 +28,36 @@ import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.test.ActivityInstrumentationTestCase2;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.ui.app.DrawerActivity;
 import androidx.test.ui.app.R;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /** Integration tests for {@link DrawerActions}. */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class DrawerActionsIntegrationTest extends ActivityInstrumentationTestCase2<DrawerActivity> {
+public class DrawerActionsIntegrationTest {
 
   static final String EXTRA_DATA = "androidx.test.ui.app.DATA";
+  private ActivityScenario<DrawerActivity> activityScenario;
 
-  public DrawerActionsIntegrationTest() {
-    super(DrawerActivity.class);
+  @Before
+  public void setUp() throws Exception {
+    activityScenario = launch(DrawerActivity.class);
   }
 
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
-    getActivity();
-  }
-
+  @Test
   public void testOpenAndCloseDrawer() {
     onView(withId(R.id.drawer_layout))
         .check(matches(isClosed())) // Drawer should not be open to start.
@@ -63,6 +67,7 @@ public class DrawerActionsIntegrationTest extends ActivityInstrumentationTestCas
         .check(matches(isClosed())); // Drawer should be closed again.
   }
 
+  @Test
   public void testOpenAndCloseDrawer_idempotent() {
     onView(withId(R.id.drawer_layout))
         .check(matches(isClosed())) // Drawer should not be open to start.
@@ -76,6 +81,7 @@ public class DrawerActionsIntegrationTest extends ActivityInstrumentationTestCas
         .check(matches(isClosed())); // Drawer should be closed.
   }
 
+  @Test
   @SuppressWarnings("unchecked")
   public void testOpenDrawer_clickItem() {
     onView(withId(R.id.drawer_layout)).perform(open());
@@ -103,6 +109,7 @@ public class DrawerActionsIntegrationTest extends ActivityInstrumentationTestCas
   //        .check(matches(isClosed()) // Drawer should be closed.
   //  }
 
+  @Test
   public void testOpenDrawer_startNewActivity() {
     onView(withId(R.id.drawer_layout)).perform(open());
 
@@ -124,6 +131,7 @@ public class DrawerActionsIntegrationTest extends ActivityInstrumentationTestCas
     onView(withId(R.id.drawer_layout)).check(matches(isOpen()));
   }
 
+  @Test
   public void testOpenDrawer_rotateScreen() {
     onView(withId(R.id.drawer_layout)).perform(open());
 
@@ -141,13 +149,6 @@ public class DrawerActionsIntegrationTest extends ActivityInstrumentationTestCas
   }
 
   private void setOrientation(final int orientation) {
-    getInstrumentation()
-        .runOnMainSync(
-            new Runnable() {
-              @Override
-              public void run() {
-                getActivity().setRequestedOrientation(orientation);
-              }
-            });
+    activityScenario.onActivity(activity -> activity.setRequestedOrientation(orientation));
   }
 }
