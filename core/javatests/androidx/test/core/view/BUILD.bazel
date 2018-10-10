@@ -10,6 +10,7 @@ android_local_test(
     name = "MotionEventBuilderTest",
     srcs = ["MotionEventBuilderTest.java"],
     manifest = "AndroidManifest_target.xml",
+    tags = ["robolectric"],
     deps = [
         "//core",
         "//runner/android_junit_runner",

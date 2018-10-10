@@ -31,6 +31,7 @@ java_library(
 android_local_test(
     name = "ServiceLoaderWrapperTest",
     srcs = ["ServiceLoaderWrapperTest.java"],
+    tags = ["robolectric"],
     deps = [
         ":robolectric_config",
         ":service_fixture",

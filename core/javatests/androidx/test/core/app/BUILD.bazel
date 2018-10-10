@@ -29,6 +29,7 @@ android_local_test(
     name = "ApplicationProviderTest",
     srcs = ["ApplicationProviderTest.java"],
     manifest = "AndroidManifest_target.xml",
+    tags = ["robolectric"],
     deps = [
         ":robolectric_config",
         "//core",

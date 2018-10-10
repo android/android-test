@@ -43,6 +43,7 @@ java_library(
     name = test_class[0],
     size = "small",
     srcs = glob([test_class[1]]),
+    tags = ["robolectric"],
     deps = [
         ":robolectric_test_deps",
     ],

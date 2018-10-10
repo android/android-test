@@ -30,5 +30,6 @@ android_local_test(
     name = "SpeakEasyProtocolTest",
     size = "small",
     srcs = ["SpeakEasyProtocolTest.java"],
+    tags = ["robolectric"],
     deps = [":test_deps"],
 )

@@ -12,6 +12,7 @@ android_local_test(
     srcs = ["AndroidJUnit4Test.java"],
     # TODO: have android_local_test provide this natively?
     jvm_flags = ["-Dandroid.junit.runner=org.robolectric.RobolectricTestRunner"],
+    tags = ["robolectric"],
     deps = [
         "//ext/junit",
         "//ext/junit/javatests/androidx/test/ext/junit:robolectric_config",
