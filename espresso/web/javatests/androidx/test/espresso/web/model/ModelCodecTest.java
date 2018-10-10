@@ -16,46 +16,58 @@
 
 package androidx.test.espresso.web.model;
 
-import android.test.suitebuilder.annotation.SmallTest;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SmallTest;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
-import junit.framework.TestCase;
 import org.json.JSONObject;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /** Unit tests for {@link ModelCodec}. */
+@RunWith(AndroidJUnit4.class)
 @SmallTest
-public class ModelCodecTest extends TestCase {
+public class ModelCodecTest {
 
+  @Test
   public void testEncodeDecodeWindowReference() {
     WindowReference ref = new WindowReference("fuzzy_cat");
     assertEquals(ref, ModelCodec.decode(ModelCodec.encode(ref)));
   }
 
+  @Test
   public void testEncodeDecodeElementReference() {
     ElementReference ref = new ElementReference("little_dog");
     assertEquals(ref, ModelCodec.decode(ModelCodec.encode(ref)));
   }
 
+  @Test
   public void testEncodeDecodeEvaluation_withValue() {
     Evaluation eval = new Evaluation.Builder().setValue("Hello World").setStatus(0).build();
     assertEquals(eval, ModelCodec.decode(ModelCodec.encode(eval)));
     assertEquals(eval, ModelCodec.decodeEvaluation(ModelCodec.encode(eval)));
   }
 
+  @Test
   public void testEncodeDecodeEvaluation_withBool() {
     Evaluation eval = new Evaluation.Builder().setValue(true).setStatus(0).build();
     assertEquals(eval, ModelCodec.decode(ModelCodec.encode(eval)));
     assertEquals(eval, ModelCodec.decodeEvaluation(ModelCodec.encode(eval)));
   }
 
+  @Test
   public void testEncodeDecodeEvaluation_withNumber() {
     Evaluation eval = new Evaluation.Builder().setValue(Integer.MAX_VALUE).setStatus(0).build();
     assertEquals(eval, ModelCodec.decode(ModelCodec.encode(eval)));
     assertEquals(eval, ModelCodec.decodeEvaluation(ModelCodec.encode(eval)));
   }
 
+  @Test
   public void testEncodeDecodeEvaluation_withList() {
     List<Object> results = Lists.newArrayList();
     results.add(1);
@@ -68,6 +80,7 @@ public class ModelCodecTest extends TestCase {
     assertEquals(eval, ModelCodec.decodeEvaluation(ModelCodec.encode(eval)));
   }
 
+  @Test
   public void testEncodeDecodeEvaluation_withJSONAbleValue() {
     ModelCodec.addDeJSONFactory(GoodJSONAble.DeJSONizer);
     Evaluation eval =
@@ -77,6 +90,7 @@ public class ModelCodecTest extends TestCase {
     ModelCodec.removeDeJSONFactory(GoodJSONAble.DeJSONizer);
   }
 
+  @Test
   public void testEncodeDecodeEvaluation_withMapValue() {
     Map<String, Object> mapResult = Maps.newHashMap();
     mapResult.put("foo", "bar");
@@ -87,6 +101,7 @@ public class ModelCodecTest extends TestCase {
     assertEquals(eval, ModelCodec.decodeEvaluation(ModelCodec.encode(eval)));
   }
 
+  @Test
   public void testEncodeDecodeEvaluation_withMessage() {
     Map<String, Object> payload = Maps.newHashMap();
     payload.put("message", "Error!");
@@ -96,6 +111,7 @@ public class ModelCodecTest extends TestCase {
     assertEquals(eval, ModelCodec.decodeEvaluation(ModelCodec.encode(eval)));
   }
 
+  @Test
   public void testEncodeDecodeJSONAble() {
     ModelCodec.addDeJSONFactory(GoodJSONAble.DeJSONizer);
     GoodJSONAble foo = new GoodJSONAble("bear-claws");
@@ -103,6 +119,7 @@ public class ModelCodecTest extends TestCase {
     ModelCodec.removeDeJSONFactory(GoodJSONAble.DeJSONizer);
   }
 
+  @Test
   public void testEncodeDecodeJSONAble_withNull() {
     ModelCodec.addDeJSONFactory(GoodJSONAble.DeJSONizer);
     GoodJSONAble bar = new GoodJSONAble(null);
@@ -110,6 +127,7 @@ public class ModelCodecTest extends TestCase {
     ModelCodec.removeDeJSONFactory(GoodJSONAble.DeJSONizer);
   }
 
+  @Test
   public void testEncodeDecode_map() {
     Map<String, Object> adhoc = Maps.newHashMap();
     adhoc.put("yellow", 1234);
@@ -122,6 +140,7 @@ public class ModelCodecTest extends TestCase {
     assertEquals(adhoc, ModelCodec.decode(ModelCodec.encode(adhoc)));
   }
 
+  @Test
   public void testEncodeDecoded_array() {
     Object[] array = new Object[5];
     array[0] = Boolean.TRUE;
@@ -132,6 +151,7 @@ public class ModelCodecTest extends TestCase {
     assertEquals(Lists.newArrayList(array), ModelCodec.decode(ModelCodec.encode(array)));
   }
 
+  @Test
   public void testEncodeDecoded_list() {
     ModelCodec.addDeJSONFactory(GoodJSONAble.DeJSONizer);
     Map<String, Object> adhoc = Maps.newHashMap();
@@ -154,6 +174,7 @@ public class ModelCodecTest extends TestCase {
     ModelCodec.removeDeJSONFactory(GoodJSONAble.DeJSONizer);
   }
 
+  @Test
   public void testInvalidTopLevelEncodings() {
     try {
       ModelCodec.encode(1);
@@ -177,6 +198,7 @@ public class ModelCodecTest extends TestCase {
     }
   }
 
+  @Test
   public void testBadJSONAble() {
     try {
       ModelCodec.encode(

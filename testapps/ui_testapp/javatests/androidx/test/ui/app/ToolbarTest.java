@@ -30,8 +30,8 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.endsWith;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
+import androidx.test.filters.LargeTest;
 import org.hamcrest.Matcher;
 
 /**

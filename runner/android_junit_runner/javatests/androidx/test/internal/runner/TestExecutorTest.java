@@ -19,7 +19,7 @@ package androidx.test.internal.runner;
 import static androidx.test.InstrumentationRegistry.getInstrumentation;
 
 import android.os.Bundle;
-import android.test.suitebuilder.annotation.SmallTest;
+import androidx.test.filters.SmallTest;
 import androidx.test.internal.runner.listener.InstrumentationRunListener;
 import androidx.test.runner.AndroidJUnit4;
 import java.io.PrintStream;

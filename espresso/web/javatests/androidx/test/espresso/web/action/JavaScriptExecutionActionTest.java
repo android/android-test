@@ -16,6 +16,7 @@
 
 package androidx.test.espresso.web.action;
 
+
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.web.assertion.WebViewAssertions.webContent;
@@ -26,23 +27,28 @@ import static androidx.test.espresso.web.sugar.Web.onWebView;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.fail;
 
-import android.test.ActivityInstrumentationTestCase2;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.webkit.WebView;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.IdlingResourceTimeoutException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
 import androidx.test.ui.app.WebFormActivity;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import org.hamcrest.Matcher;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /** Test case for {@link JavaScriptExecutionAction}. */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class JavaScriptExecutionActionTest
-    extends ActivityInstrumentationTestCase2<WebFormActivity> {
+public class JavaScriptExecutionActionTest {
 
   /**
    * View action that loads data into a WebView using loadDataFromBaseUrl setting both baseUrl and
@@ -95,16 +101,12 @@ public class JavaScriptExecutionActionTest
     }
   }
 
-  public JavaScriptExecutionActionTest() {
-    super(WebFormActivity.class);
-  }
-
-  @Override
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
-    getActivity();
+    ActivityScenario.launch(WebFormActivity.class);
   }
 
+  @Test
   public void testJavaScriptExecution() {
     onWebView(isAssignableFrom(WebView.class))
         .perform(script("document.getElementById('input').value = 'stuff'"))
@@ -112,6 +114,7 @@ public class JavaScriptExecutionActionTest
         .check(webContent(elementById("info", withTextContent(containsString("stuff")))));
   }
 
+  @Test
   public void testJavaScriptExecution_BadCommand() {
     try {
       onWebView(isAssignableFrom(WebView.class)).perform(script("rubbish"));
@@ -121,6 +124,7 @@ public class JavaScriptExecutionActionTest
     }
   }
 
+  @Test
   public void testJavaScriptExecution_Timeout() {
     try {
       onWebView(isAssignableFrom(WebView.class))
@@ -137,6 +141,7 @@ public class JavaScriptExecutionActionTest
     }
   }
 
+  @Test
   public void testJavascriptExectionWithDataFromBaseUrl() {
     // Load the data using loadDataFromBaseUrl instead to test what happens when
     // both baseUrl and historyUrl are null.

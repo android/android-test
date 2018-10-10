@@ -28,8 +28,8 @@ import static org.mockito.Mockito.when;
 
 import android.content.Context;
 import android.os.Build;
-import android.test.suitebuilder.annotation.SmallTest;
 import androidx.test.filters.SdkSuppress;
+import androidx.test.filters.SmallTest;
 import androidx.test.runner.AndroidJUnit4;
 import androidx.test.runner.permission.RequestPermissionCallable.Result;
 import org.junit.Before;

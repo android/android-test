@@ -11,6 +11,8 @@ IDLING_TEST_SRCS = [
 IDLING_DEPS = [
     "//runner/android_junit_runner/java/androidx/test:runner",
     "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
+    "//ext/junit",
+    "//core",
 ]
 
 EXTERNAL_DEPS = [

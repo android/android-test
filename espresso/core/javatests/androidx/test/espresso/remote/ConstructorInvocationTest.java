@@ -20,9 +20,9 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
 
-import android.test.suitebuilder.annotation.SmallTest;
 import androidx.test.espresso.remote.TestTypes.TestAnnotation;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
+import androidx.test.filters.SmallTest;
 import androidx.test.runner.AndroidJUnit4;
 import org.junit.Before;
 import org.junit.Test;

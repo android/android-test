@@ -32,8 +32,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.not;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.widget.Button;
+import androidx.test.filters.LargeTest;
 
 /**
  * Sample accessibility and Layout PositionAssertions tests.

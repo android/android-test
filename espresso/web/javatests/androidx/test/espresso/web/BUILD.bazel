@@ -41,6 +41,8 @@ ESPRESSO_WEB_DEPS = [
     "//espresso/web/java/androidx/test/espresso/web/webdriver",
     "//runner/android_junit_runner",
     "//runner/rules",
+    "//core",
+    "//ext/junit",
 ] + ESPRESSO_REMOTE_DEPS
 
 EXTERNAL_DEPS = [

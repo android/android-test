@@ -22,8 +22,8 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeThat;
 
-import android.test.suitebuilder.annotation.SmallTest;
-import android.test.suitebuilder.annotation.Suppress;
+import androidx.test.filters.SmallTest;
+import androidx.test.filters.Suppress;
 import org.junit.Assume;
 import org.junit.Test;
 import org.junit.experimental.theories.DataPoint;

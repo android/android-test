@@ -26,8 +26,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.suitebuilder.annotation.LargeTest;
 import androidx.test.espresso.idling.CountingIdlingResource;
+import androidx.test.filters.LargeTest;
 import androidx.test.ui.app.SyncActivity.HelloWorldServer;
 
 /**

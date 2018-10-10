@@ -21,9 +21,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import android.test.suitebuilder.annotation.SmallTest;
 import androidx.test.espresso.proto.TestProtos.TestProto;
 import androidx.test.espresso.remote.TestTypes.TestType;
+import androidx.test.filters.SmallTest;
 import androidx.test.runner.AndroidJUnit4;
 import java.util.Arrays;
 import org.hamcrest.CoreMatchers;

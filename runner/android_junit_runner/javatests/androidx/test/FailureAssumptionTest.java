@@ -19,7 +19,7 @@ package androidx.test;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
-import android.test.suitebuilder.annotation.SmallTest;
+import androidx.test.filters.SmallTest;
 import androidx.test.runner.AndroidJUnit4;
 import org.junit.Ignore;
 import org.junit.Test;

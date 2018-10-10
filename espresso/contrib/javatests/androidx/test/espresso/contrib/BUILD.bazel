@@ -18,6 +18,8 @@ ESPRESSO_CONTRIB_DEPS = [
     "//espresso/core/java/androidx/test/espresso/matcher",
     "//runner/android_junit_runner",
     "//runner/rules",
+    "//ext/junit",
+    "//core",
 ]
 
 EXTERNAL_DEPS = [

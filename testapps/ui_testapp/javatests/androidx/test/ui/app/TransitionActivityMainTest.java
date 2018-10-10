@@ -27,7 +27,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.containsString;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.suitebuilder.annotation.LargeTest;
+import androidx.test.filters.LargeTest;
 import androidx.test.filters.SdkSuppress;
 import org.hamcrest.Matchers;
 

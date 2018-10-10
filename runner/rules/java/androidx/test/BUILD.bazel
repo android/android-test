@@ -15,10 +15,18 @@ android_library(
         "proguard.cfg",
     ],
     deps = [
+        ":legacy-test-neverlink",
         "//:com_android_support_support_annotations",
         "//runner/android_junit_runner",
-        "@androidsdk//:legacy_test-28",
         "@junit//jar",
+    ],
+)
+
+java_library(
+    name = "legacy-test-neverlink",
+    neverlink = 1,
+    exports = [
+        "@androidsdk//:legacy_test-28",
     ],
 )
 

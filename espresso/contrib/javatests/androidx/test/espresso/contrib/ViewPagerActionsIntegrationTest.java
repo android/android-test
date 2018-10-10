@@ -24,10 +24,10 @@ import static androidx.test.espresso.contrib.ViewPagerActions.scrollToFirst;
 import static androidx.test.espresso.contrib.ViewPagerActions.scrollToLast;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
-import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 import androidx.test.ui.app.R;

@@ -27,8 +27,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.suitebuilder.annotation.LargeTest;
 import androidx.test.espresso.PerformException;
+import androidx.test.filters.LargeTest;
 
 @LargeTest
 public class CursorAdapterTest extends ActivityInstrumentationTestCase2<CursorAdapterActivity> {

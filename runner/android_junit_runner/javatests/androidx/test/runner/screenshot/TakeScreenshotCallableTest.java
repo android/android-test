@@ -22,8 +22,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 import android.graphics.Bitmap;
-import android.test.suitebuilder.annotation.MediumTest;
 import android.view.View;
+import androidx.test.filters.MediumTest;
 import androidx.test.runner.AndroidJUnit4;
 import java.util.concurrent.Callable;
 import org.junit.Before;

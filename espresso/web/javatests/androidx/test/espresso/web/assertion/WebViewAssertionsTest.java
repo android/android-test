@@ -23,28 +23,30 @@ import static androidx.test.espresso.web.assertion.WebViewAssertions.webContent;
 import static androidx.test.espresso.web.matcher.DomMatchers.elementById;
 import static androidx.test.espresso.web.matcher.DomMatchers.withTextContent;
 import static androidx.test.espresso.web.sugar.Web.onWebView;
+import static org.junit.Assert.fail;
 
-import android.test.ActivityInstrumentationTestCase2;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.webkit.WebView;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
 import androidx.test.ui.app.WebFormActivity;
 import junit.framework.AssertionFailedError;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /** Test case for Espresso web assertions. */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class WebViewAssertionsTest extends ActivityInstrumentationTestCase2<WebFormActivity> {
+public class WebViewAssertionsTest {
 
-  public WebViewAssertionsTest() {
-    super(WebFormActivity.class);
-  }
-
-  @Override
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
-    getActivity();
+    ActivityScenario.launch(WebFormActivity.class);
   }
 
+  @Test
   public void testWebContent_legitAssertion() {
     onWebView(isAssignableFrom(WebView.class))
         .check(
@@ -52,6 +54,7 @@ public class WebViewAssertionsTest extends ActivityInstrumentationTestCase2<WebF
                 elementById("info", withTextContent("Enter input and click the Submit button."))));
   }
 
+  @Test
   public void testWebContent_NotWebView() {
     try {
       onWebView(isRoot())
@@ -64,6 +67,7 @@ public class WebViewAssertionsTest extends ActivityInstrumentationTestCase2<WebF
     }
   }
 
+  @Test
   public void testWebContent_NoViewFound() {
     try {
       onWebView(withText("not there"))
@@ -76,6 +80,7 @@ public class WebViewAssertionsTest extends ActivityInstrumentationTestCase2<WebF
     }
   }
 
+  @Test
   public void testWebContent_validAssertion_fails() {
     try {
       onWebView(isAssignableFrom(WebView.class))

@@ -17,8 +17,8 @@ package androidx.test;
 
 import android.content.Context;
 import android.test.AndroidTestCase;
-import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
+import androidx.test.filters.SmallTest;
 
 /** Placeholder test to verify {@link Context} gets injected to {@link AndroidTestCase}. */
 @SmallTest

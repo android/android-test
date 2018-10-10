@@ -25,12 +25,12 @@ import static com.google.android.apps.common.testing.accessibility.framework.Acc
 
 import android.os.Build;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.widget.LinearLayout.LayoutParams;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.contrib.AccessibilityChecks;
+import androidx.test.filters.LargeTest;
 import com.google.android.apps.common.testing.accessibility.framework.integrations.AccessibilityViewCheckException;
 import org.hamcrest.Matcher;
 

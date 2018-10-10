@@ -21,7 +21,7 @@ import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import android.test.suitebuilder.annotation.LargeTest;
+import androidx.test.filters.LargeTest;
 import androidx.test.internal.runner.TestRequestBuilder;
 import androidx.test.runner.AndroidJUnit4;
 import java.util.List;

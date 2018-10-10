@@ -22,7 +22,7 @@
         android:targetSdkVersion="28" />
 
     <application>
-        <uses-library android:name="android.test.runner" />
+
     </application>
 
 

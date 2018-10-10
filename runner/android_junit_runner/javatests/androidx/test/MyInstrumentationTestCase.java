@@ -17,8 +17,8 @@ package androidx.test;
 
 import android.app.Instrumentation;
 import android.test.InstrumentationTestCase;
-import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
+import androidx.test.filters.SmallTest;
 
 /**
  * Placeholder test to verify {@link Instrumentation} gets injected to {@link

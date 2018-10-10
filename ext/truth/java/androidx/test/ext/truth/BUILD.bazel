@@ -38,9 +38,16 @@ android_library(
 # a java_library target libtruth_release_no_deps
 axt_release_lib(
     name = "truth_release",
+    overlapping_jars = [
+        "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
+        "//core/java/androidx/test/core:core_release_no_deps.jar",
+    ],
     remove_specs = [
-        "com.google*",
-        "difflib",
+        "androidx.test.core.R.*",
+        "androidx.test.ext.truth.R.*",
+        "android.support.*",
+        "android.arch.*",
+        "difflib.*",
     ],
     deps = [
         ":truth_release_lib",
@@ -48,12 +55,14 @@ axt_release_lib(
 )
 
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "TRUTH_VERSION", "ANDROIDX_TRUTH_VERSION", "ANDROIDX_VERSION")
+load("//build_extensions:axt_versions.bzl", "TRUTH_VERSION", "ANDROIDX_TRUTH_VERSION", "ANDROIDX_VERSION", "CORE_VERSION", "GUAVA_VERSION")
 
 maven_artifact(
     name = "truth_maven_artifact",
     src = ":truth_release.aar",
     artifact_deps = [
+        "androidx.test:core:%s" % CORE_VERSION,
+        "com.google.guava:guava:%s" % GUAVA_VERSION,
         "com.google.truth:truth:%s" % TRUTH_VERSION,
         "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
     ],

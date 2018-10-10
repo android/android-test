@@ -19,8 +19,8 @@ package androidx.test.internal.runner.junit4;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
-import android.test.suitebuilder.annotation.SmallTest;
-import android.test.suitebuilder.annotation.Suppress;
+import androidx.test.filters.SmallTest;
+import androidx.test.filters.Suppress;
 import androidx.test.internal.util.AndroidRunnerParams;
 import androidx.test.runner.AndroidJUnit4;
 import java.lang.reflect.InvocationTargetException;
