@@ -10,6 +10,7 @@ android_local_test(
     name = "PackageInfoBuilderTest",
     srcs = ["PackageInfoBuilderTest.java"],
     manifest = "AndroidManifest_target.xml",
+    tags = ["robolectric"],
     deps = [
         "//core",
         "//runner/android_junit_runner",
@@ -24,6 +25,7 @@ android_local_test(
     name = "ApplicationInfoBuilderTest",
     srcs = ["ApplicationInfoBuilderTest.java"],
     manifest = "AndroidManifest_target.xml",
+    tags = ["robolectric"],
     deps = [
         "//core",
         "//runner/android_junit_runner",

@@ -27,6 +27,7 @@ android_local_test(
     name = "LogUtilsTest",
     size = "small",
     srcs = ROBOLECTRIC_TEST_SRCS,
+    tags = ["robolectric"],
     deps = [":robolectric_test_deps"],
 )
 

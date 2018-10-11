@@ -11,6 +11,7 @@ licenses(["notice"])  # Apache License 2.0
 android_local_test(
     name = "BundleSubjectTest",
     srcs = ["BundleSubjectTest.java"],
+    tags = ["robolectric"],
     deps = [
         "//ext/truth",
         "//ext/truth/javatests/androidx/test/ext/truth:robolectric_config",
