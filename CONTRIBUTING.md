@@ -22,9 +22,13 @@ AndroidX Test uses the [bazel](https://bazel.build/) build system.
 ### One time setup
 
  * [Fork](https://help.github.com/articles/fork-a-repo/) and [clone](https://help.github.com/articles/cloning-a-repository/) the [AndroidX Test repo](https://github.com/android/android-test)
- * Install [bazel](https://docs.bazel.build/versions/master/install.html). Version 0.17.2 is recommended
+ * Install [bazel](https://docs.bazel.build/versions/master/install.html). Version 0.17.2 is recommended. Ensure your environment meets the following [prerequisites](https://docs.bazel.build/versions/master/android-instrumentation-test.html#prerequisites)
  * Install [maven](http://maven.apache.org/install.html) and make it available on PATH.
- * Install the [Android SDK](https://developer.android.com/studio/install) and set the ANDROID_HOME environment variable to point to its install location. eg
+ * Install the [Android SDK](https://developer.android.com/studio/install) and run the following command to ensure you have the necessary components:
+ ```
+ ./tools/bin/sdkmanager --install 'build-tools;28.0.3' 'platforms;android-28' 'emulator' 'platform-tools' 'system-images;android-19;default;x86' 'system-images;android-21;default;x86' 'system-images;android-22;default;x86' 'system-images;android-23;default;x86'
+ ```
+ * Set the ANDROID_HOME environment variable to point to the SDK install location. eg
 ```
  export ANDROID_HOME=/home/$USER/Android/Sdk
 ```
