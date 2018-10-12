@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public final class ActivityLifecycleMonitorRegistry {
 
-  private static final AtomicReference<ActivityLifecycleMonitor> sLifecycleMonitor =
+  private static final AtomicReference<ActivityLifecycleMonitor> lifecycleMonitor =
       new AtomicReference<ActivityLifecycleMonitor>(null);
 
   // singleton - disallow creation
@@ -39,7 +39,7 @@ public final class ActivityLifecycleMonitorRegistry {
    * @throws IllegalStateException if no monitor has been registered.
    */
   public static ActivityLifecycleMonitor getInstance() {
-    ActivityLifecycleMonitor instance = sLifecycleMonitor.get();
+    ActivityLifecycleMonitor instance = lifecycleMonitor.get();
     if (null == instance) {
       throw new IllegalStateException(
           "No lifecycle monitor registered! Are you running "
@@ -56,6 +56,6 @@ public final class ActivityLifecycleMonitorRegistry {
    * @param monitor the monitor for this application. Null deregisters any existing monitor.
    */
   public static void registerInstance(ActivityLifecycleMonitor monitor) {
-    sLifecycleMonitor.set(monitor);
+    lifecycleMonitor.set(monitor);
   }
 }

@@ -227,7 +227,7 @@ public class RunnerArgsTest {
   }
 
   /** Temp file used for testing */
-  @Rule public TemporaryFolder mTmpFolder = new TemporaryFolder();
+  @Rule public TemporaryFolder tmpFolder = new TemporaryFolder();
 
   /**
    * Test parsing bundle when package names, class names, and method names are provided within a
@@ -235,7 +235,7 @@ public class RunnerArgsTest {
    */
   @Test
   public void testFromBundle_testFile() throws Exception {
-    final File file = mTmpFolder.newFile("myTestFile.txt");
+    final File file = tmpFolder.newFile("myTestFile.txt");
     writeFiltersToFile(file, Arrays.asList("ClassName3", "ClassName4#method2", "pkg.number.two"));
     Bundle b = new Bundle();
     b.putString(RunnerArgs.ARGUMENT_TEST_FILE, file.getPath());
@@ -274,7 +274,7 @@ public class RunnerArgsTest {
    */
   @Test
   public void testFromBundle_testNotFile() throws Exception {
-    final File file = mTmpFolder.newFile("myNotTestFile.txt");
+    final File file = tmpFolder.newFile("myNotTestFile.txt");
     writeFiltersToFile(file, Arrays.asList("ClassName3", "ClassName4#method2", "pkg.number.two"));
     Bundle b = new Bundle();
     b.putString(RunnerArgs.ARGUMENT_NOT_TEST_FILE, file.getPath());

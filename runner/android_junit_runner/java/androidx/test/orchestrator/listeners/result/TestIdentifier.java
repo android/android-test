@@ -23,8 +23,8 @@ package androidx.test.orchestrator.listeners.result;
  */
 public class TestIdentifier {
 
-  private final String mClassName;
-  private final String mTestName;
+  private final String className;
+  private final String testName;
 
   /**
    * Creates a test identifier.
@@ -36,26 +36,26 @@ public class TestIdentifier {
     if (className == null || testName == null) {
       throw new IllegalArgumentException("className and testName must " + "be non-null");
     }
-    mClassName = className;
-    mTestName = testName;
+    this.className = className;
+    this.testName = testName;
   }
 
   /** Returns the fully qualified class name of the test. */
   public String getClassName() {
-    return mClassName;
+    return className;
   }
 
   /** Returns the name of the test. */
   public String getTestName() {
-    return mTestName;
+    return testName;
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((mClassName == null) ? 0 : mClassName.hashCode());
-    result = prime * result + ((mTestName == null) ? 0 : mTestName.hashCode());
+    result = prime * result + ((className == null) ? 0 : className.hashCode());
+    result = prime * result + ((testName == null) ? 0 : testName.hashCode());
     return result;
   }
 
@@ -71,18 +71,18 @@ public class TestIdentifier {
       return false;
     }
     TestIdentifier other = (TestIdentifier) obj;
-    if (mClassName == null) {
-      if (other.mClassName != null) {
+    if (className == null) {
+      if (other.className != null) {
         return false;
       }
-    } else if (!mClassName.equals(other.mClassName)) {
+    } else if (!className.equals(other.className)) {
       return false;
     }
-    if (mTestName == null) {
-      if (other.mTestName != null) {
+    if (testName == null) {
+      if (other.testName != null) {
         return false;
       }
-    } else if (!mTestName.equals(other.mTestName)) {
+    } else if (!testName.equals(other.testName)) {
       return false;
     }
     return true;

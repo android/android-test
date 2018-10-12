@@ -33,7 +33,7 @@ import java.util.List;
 /** The lifecycle monitor implementation. */
 public final class ActivityLifecycleMonitorImpl implements ActivityLifecycleMonitor {
   private static final String TAG = "LifecycleMonitor";
-  private final boolean mDeclawThreadCheck;
+  private final boolean declawThreadCheck;
 
   public ActivityLifecycleMonitorImpl() {
     this(false);
@@ -41,14 +41,14 @@ public final class ActivityLifecycleMonitorImpl implements ActivityLifecycleMoni
 
   // For Testing
   public ActivityLifecycleMonitorImpl(boolean declawThreadCheck) {
-    this.mDeclawThreadCheck = declawThreadCheck;
+    this.declawThreadCheck = declawThreadCheck;
   }
 
   // Accessed from any thread.
-  private final List<WeakReference<ActivityLifecycleCallback>> mCallbacks = new ArrayList<>();
+  private final List<WeakReference<ActivityLifecycleCallback>> callbacks = new ArrayList<>();
 
   // Only accessed on main thread.
-  private List<ActivityStatus> mActivityStatuses = new ArrayList<ActivityStatus>();
+  private List<ActivityStatus> activityStatuses = new ArrayList<ActivityStatus>();
 
   @Override
   public void addLifecycleCallback(ActivityLifecycleCallback callback) {
@@ -56,9 +56,9 @@ public final class ActivityLifecycleMonitorImpl implements ActivityLifecycleMoni
     // be faster then the constant time costs of setting up and maintaining a map.
     checkNotNull(callback);
 
-    synchronized (mCallbacks) {
+    synchronized (callbacks) {
       boolean needsAdd = true;
-      Iterator<WeakReference<ActivityLifecycleCallback>> refIter = mCallbacks.iterator();
+      Iterator<WeakReference<ActivityLifecycleCallback>> refIter = callbacks.iterator();
       while (refIter.hasNext()) {
         ActivityLifecycleCallback storedCallback = refIter.next().get();
         if (null == storedCallback) {
@@ -68,7 +68,7 @@ public final class ActivityLifecycleMonitorImpl implements ActivityLifecycleMoni
         }
       }
       if (needsAdd) {
-        mCallbacks.add(new WeakReference<>(callback));
+        callbacks.add(new WeakReference<>(callback));
       }
     }
   }
@@ -77,8 +77,8 @@ public final class ActivityLifecycleMonitorImpl implements ActivityLifecycleMoni
   public void removeLifecycleCallback(ActivityLifecycleCallback callback) {
     checkNotNull(callback);
 
-    synchronized (mCallbacks) {
-      Iterator<WeakReference<ActivityLifecycleCallback>> refIter = mCallbacks.iterator();
+    synchronized (callbacks) {
+      Iterator<WeakReference<ActivityLifecycleCallback>> refIter = callbacks.iterator();
       while (refIter.hasNext()) {
         ActivityLifecycleCallback storedCallback = refIter.next().get();
         if (null == storedCallback) {
@@ -94,14 +94,14 @@ public final class ActivityLifecycleMonitorImpl implements ActivityLifecycleMoni
   public Stage getLifecycleStageOf(Activity activity) {
     checkMainThread();
     checkNotNull(activity);
-    Iterator<ActivityStatus> statusIterator = mActivityStatuses.iterator();
+    Iterator<ActivityStatus> statusIterator = activityStatuses.iterator();
     while (statusIterator.hasNext()) {
       ActivityStatus status = statusIterator.next();
-      Activity statusActivity = status.mActivityRef.get();
+      Activity statusActivity = status.activityRef.get();
       if (null == statusActivity) {
         statusIterator.remove();
       } else if (activity == statusActivity) {
-        return status.mLifecycleStage;
+        return status.lifecycleStage;
       }
     }
     throw new IllegalArgumentException("Unknown activity: " + activity);
@@ -113,13 +113,13 @@ public final class ActivityLifecycleMonitorImpl implements ActivityLifecycleMoni
     checkNotNull(stage);
 
     List<Activity> activities = new ArrayList<Activity>();
-    Iterator<ActivityStatus> statusIterator = mActivityStatuses.iterator();
+    Iterator<ActivityStatus> statusIterator = activityStatuses.iterator();
     while (statusIterator.hasNext()) {
       ActivityStatus status = statusIterator.next();
-      Activity statusActivity = status.mActivityRef.get();
+      Activity statusActivity = status.activityRef.get();
       if (null == statusActivity) {
         statusIterator.remove();
-      } else if (stage == status.mLifecycleStage) {
+      } else if (stage == status.lifecycleStage) {
         activities.add(statusActivity);
       }
     }
@@ -137,24 +137,24 @@ public final class ActivityLifecycleMonitorImpl implements ActivityLifecycleMoni
     Log.d(TAG, "Lifecycle status change: " + activity + " in: " + stage);
 
     boolean needsAdd = true;
-    Iterator<ActivityStatus> statusIterator = mActivityStatuses.iterator();
+    Iterator<ActivityStatus> statusIterator = activityStatuses.iterator();
     while (statusIterator.hasNext()) {
       ActivityStatus status = statusIterator.next();
-      Activity statusActivity = status.mActivityRef.get();
+      Activity statusActivity = status.activityRef.get();
       if (null == statusActivity) {
         statusIterator.remove();
       } else if (activity == statusActivity) {
         needsAdd = false;
-        status.mLifecycleStage = stage;
+        status.lifecycleStage = stage;
       }
     }
 
     if (needsAdd) {
-      mActivityStatuses.add(new ActivityStatus(activity, stage));
+      activityStatuses.add(new ActivityStatus(activity, stage));
     }
 
-    synchronized (mCallbacks) {
-      Iterator<WeakReference<ActivityLifecycleCallback>> refIter = mCallbacks.iterator();
+    synchronized (callbacks) {
+      Iterator<WeakReference<ActivityLifecycleCallback>> refIter = callbacks.iterator();
       while (refIter.hasNext()) {
         ActivityLifecycleCallback callback = refIter.next().get();
         if (null == callback) {
@@ -178,7 +178,7 @@ public final class ActivityLifecycleMonitorImpl implements ActivityLifecycleMoni
   }
 
   private void checkMainThread() {
-    if (mDeclawThreadCheck) {
+    if (declawThreadCheck) {
       return;
     }
 
@@ -188,12 +188,12 @@ public final class ActivityLifecycleMonitorImpl implements ActivityLifecycleMoni
   }
 
   private static class ActivityStatus {
-    private final WeakReference<Activity> mActivityRef;
-    private Stage mLifecycleStage;
+    private final WeakReference<Activity> activityRef;
+    private Stage lifecycleStage;
 
     ActivityStatus(Activity activity, Stage stage) {
-      this.mActivityRef = new WeakReference<Activity>(checkNotNull(activity));
-      this.mLifecycleStage = checkNotNull(stage);
+      this.activityRef = new WeakReference<Activity>(checkNotNull(activity));
+      this.lifecycleStage = checkNotNull(stage);
     }
   }
 }

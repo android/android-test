@@ -24,20 +24,20 @@ import org.junit.runner.Result;
 
 /** Parcelable imitation of a JUnit ParcelableResult */
 public final class ParcelableResult implements Parcelable {
-  private final List<ParcelableFailure> mFailures;
+  private final List<ParcelableFailure> failures;
 
   public ParcelableResult(Result result) {
-    mFailures = new ArrayList<>();
+    failures = new ArrayList<>();
     for (org.junit.runner.notification.Failure failure : result.getFailures()) {
-      mFailures.add(new ParcelableFailure(failure));
+      failures.add(new ParcelableFailure(failure));
     }
   }
 
   private ParcelableResult(Parcel in) {
-    mFailures = new ArrayList<>();
+    this.failures = new ArrayList<>();
     Object[] failures = in.readArray(ParcelableFailure[].class.getClassLoader());
     for (Object failure : failures) {
-      mFailures.add((ParcelableFailure) failure);
+      this.failures.add((ParcelableFailure) failure);
     }
   }
 
@@ -48,7 +48,7 @@ public final class ParcelableResult implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel out, int flags) {
-    out.writeArray(mFailures.toArray());
+    out.writeArray(failures.toArray());
   }
 
   public static final Creator<ParcelableResult> CREATOR =
@@ -65,14 +65,14 @@ public final class ParcelableResult implements Parcelable {
       };
 
   public boolean wasSuccessful() {
-    return mFailures.isEmpty();
+    return failures.isEmpty();
   }
 
   public List<ParcelableFailure> getFailures() {
-    return mFailures;
+    return failures;
   }
 
   public int getFailureCount() {
-    return mFailures.size();
+    return failures.size();
   }
 }

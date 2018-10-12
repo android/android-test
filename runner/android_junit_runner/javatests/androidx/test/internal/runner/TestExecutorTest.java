@@ -37,23 +37,22 @@ import org.mockito.MockitoAnnotations;
 @SmallTest
 public class TestExecutorTest {
 
-  @Mock private Request mMockRequest;
-  @Mock private InstrumentationRunListener mMockListener;
+  @Mock private Request mockRequest;
+  @Mock private InstrumentationRunListener mockListener;
 
-  private TestExecutor mExecutor;
+  private TestExecutor executor;
 
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    mExecutor =
-        new TestExecutor.Builder(getInstrumentation()).addRunListener(mMockListener).build();
+    executor = new TestExecutor.Builder(getInstrumentation()).addRunListener(mockListener).build();
   }
 
   /** Simple normal case execution */
   @Test
   public void testExecute() {
-    mExecutor.execute(mMockRequest);
-    Mockito.verify(mMockListener)
+    executor.execute(mockRequest);
+    Mockito.verify(mockListener)
         .instrumentationRunFinished(
             (PrintStream) Mockito.anyObject(),
             (Bundle) Mockito.anyObject(),

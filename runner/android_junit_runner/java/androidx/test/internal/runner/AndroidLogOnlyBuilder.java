@@ -39,14 +39,14 @@ import org.junit.runners.model.RunnerBuilder;
  */
 class AndroidLogOnlyBuilder extends RunnerBuilder {
 
-  private final AndroidRunnerBuilder mBuilder;
+  private final AndroidRunnerBuilder builder;
 
-  private final AndroidRunnerParams mRunnerParams;
+  private final AndroidRunnerParams runnerParams;
 
-  private final boolean mScanningPath;
+  private final boolean scanningPath;
 
   // The number of Runners created
-  private int mRunnerCount = 0;
+  private int runnerCount = 0;
 
   /**
    * @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters
@@ -57,32 +57,32 @@ class AndroidLogOnlyBuilder extends RunnerBuilder {
       AndroidRunnerParams runnerParams,
       boolean scanningPath,
       List<Class<? extends RunnerBuilder>> customRunnerBuilderClasses) {
-    this.mRunnerParams = checkNotNull(runnerParams, "runnerParams cannot be null!");
-    this.mScanningPath = scanningPath;
+    this.runnerParams = checkNotNull(runnerParams, "runnerParams cannot be null!");
+    this.scanningPath = scanningPath;
 
     // Create a builder for creating the executable Runner instances to wrap. Pass in this
     // builder as the suiteBuilder so that this will be called to create Runners for nested
     // classes, e.g. in Suite or Enclosed.
-    mBuilder =
+    builder =
         new AndroidRunnerBuilder(this, runnerParams, scanningPath, customRunnerBuilderClasses);
   }
 
   @Override
   public Runner runnerForClass(Class<?> testClass) throws Throwable {
     // Increment the number of runners created.
-    ++mRunnerCount;
+    ++runnerCount;
 
     // Build non executing runners for JUnit3 test classes
     if (isJUnit3Test(testClass)) {
       // If scanning the path then make sure that it has at least one test method before
       // trying to run it.
-      if (mScanningPath && !hasJUnit3TestMethod(testClass)) {
+      if (scanningPath && !hasJUnit3TestMethod(testClass)) {
         return null;
       }
 
       return new JUnit38ClassRunner(new NonExecutingTestSuite(testClass));
     } else if (hasSuiteMethod(testClass)) {
-      if (mRunnerParams.isIgnoreSuiteMethods()) {
+      if (runnerParams.isIgnoreSuiteMethods()) {
         return null;
       }
 
@@ -96,8 +96,8 @@ class AndroidLogOnlyBuilder extends RunnerBuilder {
     } else {
       // Reset the count of the number of Runners created for the supplied testClass. Save
       // away the number created for the parent testClass.
-      int oldRunnerCount = mRunnerCount;
-      Runner runner = mBuilder.runnerForClass(testClass);
+      int oldRunnerCount = runnerCount;
+      Runner runner = builder.runnerForClass(testClass);
       if (null == runner) {
         // If the runner could not be created then do not wrap it.
         return null;
@@ -106,7 +106,7 @@ class AndroidLogOnlyBuilder extends RunnerBuilder {
         // even while in logOnly mode, by simply returning the runner rather than
         // wrapping it.
         return runner;
-      } else if (mRunnerCount > oldRunnerCount) {
+      } else if (runnerCount > oldRunnerCount) {
         // If constructing the testClass caused us to reenter here to build Runner
         // instances, e.g. for Suite or Enclosed, then this must not wrap runner in a
         // NonExecutingRunner as that would cause problems if any of the nested classes

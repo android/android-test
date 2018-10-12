@@ -32,9 +32,9 @@ import java.util.concurrent.atomic.AtomicReference;
 @Deprecated
 public final class InstrumentationRegistry {
 
-  private static final AtomicReference<Instrumentation> sInstrumentationRef =
+  private static final AtomicReference<Instrumentation> instrumentationRef =
       new AtomicReference<Instrumentation>(null);
-  private static final AtomicReference<Bundle> sArguments = new AtomicReference<Bundle>(null);
+  private static final AtomicReference<Bundle> arguments = new AtomicReference<Bundle>(null);
 
   /**
    * Returns the instrumentation currently running. Use this to get an {@link Instrumentation} into
@@ -45,7 +45,7 @@ public final class InstrumentationRegistry {
    */
   @Deprecated
   public static Instrumentation getInstrumentation() {
-    Instrumentation instance = sInstrumentationRef.get();
+    Instrumentation instance = instrumentationRef.get();
     if (null == instance) {
       throw new IllegalStateException(
           "No instrumentation registered! " + "Must run under a registering instrumentation.");
@@ -65,7 +65,7 @@ public final class InstrumentationRegistry {
    */
   @Deprecated
   public static Bundle getArguments() {
-    Bundle instance = sArguments.get();
+    Bundle instance = arguments.get();
     if (null == instance) {
       throw new IllegalStateException(
           "No instrumentation arguments registered! "
@@ -113,8 +113,8 @@ public final class InstrumentationRegistry {
    */
   @Deprecated
   public static void registerInstance(Instrumentation instrumentation, Bundle arguments) {
-    sInstrumentationRef.set(instrumentation);
-    sArguments.set(new Bundle(arguments));
+    instrumentationRef.set(instrumentation);
+    InstrumentationRegistry.arguments.set(new Bundle(arguments));
   }
 
   private InstrumentationRegistry() {}

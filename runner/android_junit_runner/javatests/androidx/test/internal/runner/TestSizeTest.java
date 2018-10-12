@@ -82,11 +82,11 @@ public class TestSizeTest {
     public void testMethod() {}
   }
 
-  private TestSize mTestSize;
+  private TestSize testSize;
 
   @Before
   public void setUp() {
-    mTestSize = TestSize.SMALL;
+    testSize = TestSize.SMALL;
   }
 
   @Test
@@ -99,7 +99,7 @@ public class TestSizeTest {
                 .getMethod("runnerFilterSmallSize")
                 .getAnnotations());
     assertThat(
-        mTestSize.testMethodIsAnnotatedWithTestSize(runnerFilterSmallSizeTestDescription),
+        testSize.testMethodIsAnnotatedWithTestSize(runnerFilterSmallSizeTestDescription),
         equalTo(true));
 
     Description platformSmallSizeTestDescription =
@@ -110,7 +110,7 @@ public class TestSizeTest {
                 .getMethod("platformFilterSmallSize")
                 .getAnnotations());
     assertThat(
-        mTestSize.testMethodIsAnnotatedWithTestSize(platformSmallSizeTestDescription),
+        testSize.testMethodIsAnnotatedWithTestSize(platformSmallSizeTestDescription),
         equalTo(true));
   }
 
@@ -124,7 +124,7 @@ public class TestSizeTest {
                 .getMethod("notSizeAnnotatedTestMethod")
                 .getAnnotations());
     assertThat(
-        mTestSize.testMethodIsAnnotatedWithTestSize(runnerFilterSmallSizeTestDescription),
+        testSize.testMethodIsAnnotatedWithTestSize(runnerFilterSmallSizeTestDescription),
         equalTo(false));
   }
 
@@ -134,13 +134,13 @@ public class TestSizeTest {
         Description.createTestDescription(
             SampleTestRunnerFilterSizeAnnotatedClass.class, "testMethod");
     assertThat(
-        mTestSize.testClassIsAnnotatedWithTestSize(testClassRunnerFilterSmallSizeTestDescription),
+        testSize.testClassIsAnnotatedWithTestSize(testClassRunnerFilterSmallSizeTestDescription),
         equalTo(true));
 
     Description testClassPlatformSmallSizeTestDescription =
         Description.createTestDescription(SampleTestPlatformSizeAnnotatedClass.class, "testMethod");
     assertThat(
-        mTestSize.testClassIsAnnotatedWithTestSize(testClassPlatformSmallSizeTestDescription),
+        testSize.testClassIsAnnotatedWithTestSize(testClassPlatformSmallSizeTestDescription),
         equalTo(true));
   }
 
@@ -150,7 +150,7 @@ public class TestSizeTest {
         Description.createTestDescription(
             SampleTestClassNoSizeAnnotations.class, "notSizeAnnotatedTestMethod");
     assertThat(
-        mTestSize.testClassIsAnnotatedWithTestSize(testClassNoSmallSizeTestDescription),
+        testSize.testClassIsAnnotatedWithTestSize(testClassNoSmallSizeTestDescription),
         equalTo(false));
   }
 

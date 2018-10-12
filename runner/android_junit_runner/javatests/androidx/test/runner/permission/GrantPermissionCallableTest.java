@@ -40,9 +40,9 @@ public class GrantPermissionCallableTest {
 
   private static final String RUNTIME_PERMISSION1 = "android.permission.PERMISSION1";
 
-  @Mock public Context mTargetContext;
+  @Mock public Context targetContext;
 
-  @Mock public ShellCommand mShellCommand;
+  @Mock public ShellCommand shellCommand;
 
   @Before
   public void initMocks() {
@@ -53,7 +53,7 @@ public class GrantPermissionCallableTest {
   @Test
   public void grantingSuccess() throws Exception {
     RequestPermissionCallable grantCallable = withGrantPermissionCallable(RUNTIME_PERMISSION1);
-    when(mTargetContext.checkCallingOrSelfPermission(RUNTIME_PERMISSION1))
+    when(targetContext.checkCallingOrSelfPermission(RUNTIME_PERMISSION1))
         .thenReturn(PackageManager.PERMISSION_GRANTED);
 
     assertThat(grantCallable.call(), equalTo(Result.SUCCESS));
@@ -62,17 +62,17 @@ public class GrantPermissionCallableTest {
   @Test
   public void grantPermissionCallable_grantingFailure() throws Exception {
     RequestPermissionCallable grantCallable = withGrantPermissionCallable(RUNTIME_PERMISSION1);
-    when(mTargetContext.checkCallingOrSelfPermission(RUNTIME_PERMISSION1))
+    when(targetContext.checkCallingOrSelfPermission(RUNTIME_PERMISSION1))
         .thenReturn(PackageManager.PERMISSION_DENIED);
 
     assertThat(grantCallable.call(), equalTo(Result.FAILURE));
   }
 
   private RequestPermissionCallable withGrantPermissionCallable(String permission) {
-    return new GrantPermissionCallable(mShellCommand, mTargetContext, permission);
+    return new GrantPermissionCallable(shellCommand, targetContext, permission);
   }
 
   private void withStubbedTargetPackage() {
-    when(mTargetContext.getPackageName()).thenReturn(TARGET_PACKAGE);
+    when(targetContext.getPackageName()).thenReturn(TARGET_PACKAGE);
   }
 }

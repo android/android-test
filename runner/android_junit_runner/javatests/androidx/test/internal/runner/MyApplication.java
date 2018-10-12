@@ -24,15 +24,15 @@ import androidx.test.runner.lifecycle.ApplicationStage;
  * androidx.test.runner.lifecycle.ApplicationLifecycleCallback}
  */
 public class MyApplication extends Application {
-  private static volatile ApplicationStage sStage = ApplicationStage.PRE_ON_CREATE;
+  private static volatile ApplicationStage stage = ApplicationStage.PRE_ON_CREATE;
 
   @Override
   public void onCreate() {
     super.onCreate();
-    sStage = ApplicationStage.CREATED;
+    stage = ApplicationStage.CREATED;
   }
 
   public static ApplicationStage getStage() {
-    return sStage;
+    return stage;
   }
 }

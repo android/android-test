@@ -82,7 +82,7 @@ public abstract class TestLoaderTest {
     public void run(TestResult testResult) {}
   }
 
-  private TestLoader mLoader;
+  private TestLoader loader;
 
   public boolean scanningPath;
 
@@ -101,13 +101,13 @@ public abstract class TestLoaderTest {
     AndroidRunnerBuilder runnerBuilder =
         new AndroidRunnerBuilder(
             runnerParams, scanningPath, Collections.<Class<? extends RunnerBuilder>>emptyList());
-    mLoader = TestLoader.testLoader(null, runnerBuilder, scanningPath);
+    loader = TestLoader.testLoader(null, runnerBuilder, scanningPath);
   }
 
   private void assertScanningLoadsAnyClass(
       Class<?> testClass, Class<? extends Runner> expectedRunnerClass) {
     Collection<String> classNames = Collections.singleton(testClass.getName());
-    List<Runner> runners = mLoader.getRunnersFor(classNames, true);
+    List<Runner> runners = loader.getRunnersFor(classNames, true);
     int expectedClassCount = scanningPath ? 0 : 1;
     assertEquals(expectedClassCount, runners.size());
     if (expectedClassCount == 1) {
@@ -118,7 +118,7 @@ public abstract class TestLoaderTest {
 
   private void assertLoadTestSuccess(Class<?> clazz, Class<? extends Runner> expectedRunnerClass) {
     Collection<String> classNames = Collections.singleton(clazz.getName());
-    List<Runner> runners = mLoader.getRunnersFor(classNames, true);
+    List<Runner> runners = loader.getRunnersFor(classNames, true);
     assertEquals(1, runners.size());
     Runner runner = runners.get(0);
     assertEquals(expectedRunnerClass, runner.getClass());
@@ -161,7 +161,7 @@ public abstract class TestLoaderTest {
             SubClassJUnit4Test.class.getName(),
             SubClassAbstractTest.class.getName());
 
-    List<Runner> runners = mLoader.getRunnersFor(classNames, false);
+    List<Runner> runners = loader.getRunnersFor(classNames, false);
     List<Class<? extends Runner>> runnerClasses = new ArrayList<>();
     for (Runner runner : runners) {
       runnerClasses.add(runner == null ? null : runner.getClass());
@@ -208,7 +208,7 @@ public abstract class TestLoaderTest {
   @Test
   public void testLoadTests_notExist() {
     Collection<String> classNames = Collections.singleton("notexist");
-    List<Runner> runners = mLoader.getRunnersFor(classNames, /* isScanningPath */ false);
+    List<Runner> runners = loader.getRunnersFor(classNames, /* isScanningPath */ false);
     assertEquals(1, runners.size());
     Runner runner = runners.get(0);
     // only when users pass in a specific class via -e class should it be treated as a runner

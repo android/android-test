@@ -34,25 +34,25 @@ import androidx.test.internal.runner.tracker.UsageTrackerRegistry;
 public class UsageTrackerFacilitator implements UsageTracker {
   private static final String TAG = "UsageTrackerFacilitator";
 
-  private final boolean mShouldTrackUsage;
+  private final boolean shouldTrackUsage;
 
   public UsageTrackerFacilitator(@NonNull RunnerArgs runnerArgs) {
     checkNotNull(runnerArgs, "runnerArgs cannot be null!");
 
     // If we are being orchestrated, only report for test collection, not subsequent runs.
     if (runnerArgs.orchestratorService != null) {
-      mShouldTrackUsage = !runnerArgs.disableAnalytics && runnerArgs.listTestsForOrchestrator;
+      shouldTrackUsage = !runnerArgs.disableAnalytics && runnerArgs.listTestsForOrchestrator;
     } else {
-      mShouldTrackUsage = !runnerArgs.disableAnalytics;
+      shouldTrackUsage = !runnerArgs.disableAnalytics;
     }
   }
 
   public UsageTrackerFacilitator(boolean shouldTrackUsage) {
-    mShouldTrackUsage = shouldTrackUsage;
+    this.shouldTrackUsage = shouldTrackUsage;
   }
 
   public boolean shouldTrackUsage() {
-    return mShouldTrackUsage;
+    return shouldTrackUsage;
   }
 
   public void registerUsageTracker(@Nullable UsageTracker usageTracker) {

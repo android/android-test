@@ -45,37 +45,37 @@ import java.util.Set;
 public final class ScreenCapture {
   private static final Bitmap.CompressFormat DEFAULT_FORMAT = PNG;
 
-  private final Bitmap mBitmap;
+  private final Bitmap bitmap;
 
-  private ScreenCaptureProcessor mDefaultProcessor = new BasicScreenCaptureProcessor();
-  private String mFilename;
-  private CompressFormat mFormat;
-  private Set<ScreenCaptureProcessor> mProcessorSet = new HashSet<>();
+  private ScreenCaptureProcessor defaultProcessor = new BasicScreenCaptureProcessor();
+  private String filename;
+  private CompressFormat format;
+  private Set<ScreenCaptureProcessor> processorSet = new HashSet<>();
 
   ScreenCapture(Bitmap bitmap) {
-    this.mBitmap = bitmap;
-    this.mFormat = DEFAULT_FORMAT;
+    this.bitmap = bitmap;
+    this.format = DEFAULT_FORMAT;
   }
 
   ScreenCapture(Bitmap bitmap, ScreenCaptureProcessor defaultProcessor) {
-    this.mBitmap = bitmap;
-    this.mFormat = DEFAULT_FORMAT;
-    this.mDefaultProcessor = defaultProcessor;
+    this.bitmap = bitmap;
+    this.format = DEFAULT_FORMAT;
+    this.defaultProcessor = defaultProcessor;
   }
 
   /** Returns the {@link Bitmap} that was set when the {@link ScreenCapture} was created. */
   public Bitmap getBitmap() {
-    return mBitmap;
+    return bitmap;
   }
 
   /** Returns the filename to save the bitmap as or null if none has been set. */
   public String getName() {
-    return mFilename;
+    return filename;
   }
 
   /** Returns the format to save the bitmap as or PNG if none has been set. */
   public CompressFormat getFormat() {
-    return mFormat;
+    return format;
   }
 
   /**
@@ -85,7 +85,7 @@ public final class ScreenCapture {
    * @return a fluent interface
    */
   public ScreenCapture setName(String filename) {
-    this.mFilename = filename;
+    this.filename = filename;
     return this;
   }
 
@@ -96,7 +96,7 @@ public final class ScreenCapture {
    * @return a fluent interface
    */
   public ScreenCapture setFormat(CompressFormat format) {
-    this.mFormat = format;
+    this.format = format;
     return this;
   }
 
@@ -106,13 +106,13 @@ public final class ScreenCapture {
    * @param processorSet the set of processor to set.
    */
   ScreenCapture setProcessors(@NonNull Set<ScreenCaptureProcessor> processorSet) {
-    this.mProcessorSet = checkNotNull(processorSet);
+    this.processorSet = checkNotNull(processorSet);
     return this;
   }
 
   /** Returns the set of processors that belong to this {@link ScreenCapture}. */
   Set<ScreenCaptureProcessor> getProcessors() {
-    return mProcessorSet;
+    return processorSet;
   }
 
   /**
@@ -123,7 +123,7 @@ public final class ScreenCapture {
    *     ScreenCapture
    */
   public void process() throws IOException {
-    process(mProcessorSet);
+    process(processorSet);
   }
 
   /**
@@ -137,7 +137,7 @@ public final class ScreenCapture {
   public void process(@NonNull Set<ScreenCaptureProcessor> processorSet) throws IOException {
     checkNotNull(processorSet);
     if (processorSet.isEmpty()) {
-      mDefaultProcessor.process(this);
+      defaultProcessor.process(this);
       return;
     }
     for (ScreenCaptureProcessor processor : processorSet) {
@@ -149,17 +149,17 @@ public final class ScreenCapture {
   public int hashCode() {
     final int prime = 37;
     int result = 1;
-    if (mBitmap != null) {
-      result = prime * result + mBitmap.hashCode();
+    if (bitmap != null) {
+      result = prime * result + bitmap.hashCode();
     }
-    if (mFormat != null) {
-      result = prime * result + mFormat.hashCode();
+    if (format != null) {
+      result = prime * result + format.hashCode();
     }
-    if (mFilename != null) {
-      result = prime * result + mFilename.hashCode();
+    if (filename != null) {
+      result = prime * result + filename.hashCode();
     }
-    if (!mProcessorSet.isEmpty()) {
-      result = prime * result + mProcessorSet.hashCode();
+    if (!processorSet.isEmpty()) {
+      result = prime * result + processorSet.hashCode();
     }
     return result;
   }
@@ -178,28 +178,28 @@ public final class ScreenCapture {
 
     ScreenCapture other = (ScreenCapture) obj;
     boolean bitmapsEqual;
-    if (mBitmap == null) {
+    if (bitmap == null) {
       bitmapsEqual = (other.getBitmap() == null) ? true : false;
     } else {
       bitmapsEqual = getBitmap().sameAs(other.getBitmap());
     }
 
     boolean nameEqual;
-    if (mFilename == null) {
+    if (filename == null) {
       nameEqual = (other.getName() == null) ? true : false;
     } else {
-      nameEqual = mFilename.equals(other.getName());
+      nameEqual = filename.equals(other.getName());
     }
     boolean formatEqual;
-    if (mFormat == null) {
+    if (format == null) {
       formatEqual = (other.getFormat() == null) ? true : false;
     } else {
-      formatEqual = mFormat.equals(other.getFormat());
+      formatEqual = format.equals(other.getFormat());
     }
     return bitmapsEqual
         && nameEqual
         && formatEqual
-        && mProcessorSet.containsAll(other.getProcessors())
-        && other.getProcessors().containsAll(mProcessorSet);
+        && processorSet.containsAll(other.getProcessors())
+        && other.getProcessors().containsAll(processorSet);
   }
 }

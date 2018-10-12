@@ -26,16 +26,16 @@ import org.junit.Ignore;
 @Ignore
 class DelegatingTestSuite extends TestSuite {
 
-  private TestSuite mWrappedSuite;
+  private TestSuite wrappedSuite;
 
   public DelegatingTestSuite(TestSuite suiteDelegate) {
     super();
-    mWrappedSuite = suiteDelegate;
+    wrappedSuite = suiteDelegate;
   }
 
   /** Return the suite to delegate to */
   public TestSuite getDelegateSuite() {
-    return mWrappedSuite;
+    return wrappedSuite;
   }
 
   /**
@@ -44,56 +44,56 @@ class DelegatingTestSuite extends TestSuite {
    * @param newSuiteDelegate
    */
   public void setDelegateSuite(TestSuite newSuiteDelegate) {
-    mWrappedSuite = newSuiteDelegate;
+    wrappedSuite = newSuiteDelegate;
   }
 
   @Override
   public void addTest(Test test) {
-    mWrappedSuite.addTest(test);
+    wrappedSuite.addTest(test);
   }
 
   @Override
   public int countTestCases() {
-    return mWrappedSuite.countTestCases();
+    return wrappedSuite.countTestCases();
   }
 
   @Override
   public String getName() {
-    return mWrappedSuite.getName();
+    return wrappedSuite.getName();
   }
 
   @Override
   public void runTest(Test test, TestResult result) {
-    mWrappedSuite.runTest(test, result);
+    wrappedSuite.runTest(test, result);
   }
 
   @Override
   public void setName(String name) {
-    mWrappedSuite.setName(name);
+    wrappedSuite.setName(name);
   }
 
   @Override
   public Test testAt(int index) {
-    return mWrappedSuite.testAt(index);
+    return wrappedSuite.testAt(index);
   }
 
   @Override
   public int testCount() {
-    return mWrappedSuite.testCount();
+    return wrappedSuite.testCount();
   }
 
   @Override
   public Enumeration<Test> tests() {
-    return mWrappedSuite.tests();
+    return wrappedSuite.tests();
   }
 
   @Override
   public String toString() {
-    return mWrappedSuite.toString();
+    return wrappedSuite.toString();
   }
 
   @Override
   public void run(TestResult result) {
-    mWrappedSuite.run(result);
+    wrappedSuite.run(result);
   }
 }

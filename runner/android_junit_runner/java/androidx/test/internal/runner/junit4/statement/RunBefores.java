@@ -25,11 +25,11 @@ import org.junit.runners.model.Statement;
 
 /** <code>@UiThreadTest</code> aware implementation of {@link RunBefores}. */
 public class RunBefores extends UiThreadStatement {
-  private final Statement mNext;
+  private final Statement next;
 
-  private final Object mTarget;
+  private final Object target;
 
-  private final List<FrameworkMethod> mBefores;
+  private final List<FrameworkMethod> befores;
 
   /**
    * Run all non-overridden {@code @Before} methods on this class and superclasses before running
@@ -45,22 +45,22 @@ public class RunBefores extends UiThreadStatement {
   public RunBefores(
       FrameworkMethod method, Statement next, List<FrameworkMethod> befores, Object target) {
     super(next, shouldRunOnUiThread(method));
-    this.mNext = next;
-    this.mBefores = befores;
-    this.mTarget = target;
+    this.next = next;
+    this.befores = befores;
+    this.target = target;
   }
 
   @Override
   public void evaluate() throws Throwable {
     final AtomicReference<Throwable> exceptionRef = new AtomicReference<>();
-    for (final FrameworkMethod before : mBefores) {
+    for (final FrameworkMethod before : befores) {
       if (shouldRunOnUiThread(before)) {
         runOnUiThread(
             new Runnable() {
               @Override
               public void run() {
                 try {
-                  before.invokeExplosively(mTarget);
+                  before.invokeExplosively(target);
                 } catch (Throwable throwable) {
                   exceptionRef.set(throwable);
                 }
@@ -73,10 +73,10 @@ public class RunBefores extends UiThreadStatement {
           throw throwable;
         }
       } else {
-        before.invokeExplosively(mTarget);
+        before.invokeExplosively(target);
       }
     }
 
-    mNext.evaluate();
+    next.evaluate();
   }
 }

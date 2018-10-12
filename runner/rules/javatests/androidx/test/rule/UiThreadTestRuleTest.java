@@ -37,7 +37,7 @@ import org.junit.runner.RunWith;
 @SmallTest
 public class UiThreadTestRuleTest {
 
-  @Rule public UiThreadTestRule mUiThreadRule = new UiThreadTestRule();
+  @Rule public UiThreadTestRule uiThreadRule = new UiThreadTestRule();
 
   private static void verifyRunsOnUiThread() {
     assertTrue(
@@ -67,7 +67,7 @@ public class UiThreadTestRuleTest {
   public void verifyRunTestOnUiThreadMethod() throws Throwable {
     // verify not on UI thread
     verifyRunsNotOnUiThread();
-    mUiThreadRule.runOnUiThread(
+    uiThreadRule.runOnUiThread(
         new Runnable() {
           @Override
           public void run() {
@@ -83,7 +83,7 @@ public class UiThreadTestRuleTest {
     // verify on UI thread
     verifyRunsOnUiThread();
 
-    mUiThreadRule.runOnUiThread(
+    uiThreadRule.runOnUiThread(
         new Runnable() {
           @Override
           public void run() {
@@ -97,7 +97,7 @@ public class UiThreadTestRuleTest {
   public void verifyExceptionPropagate() throws Throwable {
     final String exceptionMessage = "Don't try this at home";
     try {
-      mUiThreadRule.runOnUiThread(
+      uiThreadRule.runOnUiThread(
           new Runnable() {
             @Override
             public void run() {
@@ -111,7 +111,7 @@ public class UiThreadTestRuleTest {
   }
 
   public static class CheckBeforeAndAfterRunOnUiThread {
-    @Rule public UiThreadTestRule mUiThreadRule = new UiThreadTestRule();
+    @Rule public UiThreadTestRule uiThreadRule = new UiThreadTestRule();
 
     @Before
     public void verifyBeforeOnUiThread() {
@@ -137,7 +137,7 @@ public class UiThreadTestRuleTest {
   }
 
   public static class CheckBeforeAndAfterRunNotOnUiThread {
-    @Rule public UiThreadTestRule mUiThreadRule = new UiThreadTestRule();
+    @Rule public UiThreadTestRule uiThreadRule = new UiThreadTestRule();
 
     @Before
     public void verifyBeforeNotOnUiThread() {
@@ -148,7 +148,7 @@ public class UiThreadTestRuleTest {
     public void verifyRunTestOnUiThreadMethod() throws Throwable {
       // verify not on UI thread
       verifyRunsNotOnUiThread();
-      mUiThreadRule.runOnUiThread(
+      uiThreadRule.runOnUiThread(
           new Runnable() {
             @Override
             public void run() {
@@ -199,7 +199,7 @@ public class UiThreadTestRuleTest {
   public void verifyRunTestOnUiThreadMethodWhenTimeoutIsUsed() throws Throwable {
     // verify not on UI thread
     verifyRunsNotOnUiThread();
-    mUiThreadRule.runOnUiThread(
+    uiThreadRule.runOnUiThread(
         new Runnable() {
           @Override
           public void run() {

@@ -56,7 +56,7 @@ import org.junit.runners.model.Statement;
  */
 // NOTE The docs and API of this class is copied from JUnit 4.12. The implementation is not.
 public class DisableOnAndroidDebug implements TestRule {
-  private final TestRule mRule;
+  private final TestRule rule;
 
   /**
    * Wrap another {@link TestRule} and conditionally disable it when a debugger is attached.
@@ -64,7 +64,7 @@ public class DisableOnAndroidDebug implements TestRule {
    * @param rule to disable during debugging
    */
   public DisableOnAndroidDebug(TestRule rule) {
-    mRule = rule;
+    this.rule = rule;
   }
 
   /** {@inheritDoc} */
@@ -73,7 +73,7 @@ public class DisableOnAndroidDebug implements TestRule {
     if (isDebugging()) {
       return base;
     }
-    return mRule.apply(base, description);
+    return rule.apply(base, description);
   }
 
   /**

@@ -44,17 +44,17 @@ public class AtraceLogger {
   private static final String ATRACEHELPER_TAG = "AtraceLogger";
   private static final String CATEGORY_SEPARATOR = " ";
   private static final int BUFFER_SIZE = 8192;
-  private static volatile AtraceLogger mLoggerInstance;
-  private UiAutomation mUiAutomation;
-  private String mTraceFileName;
-  private List<ByteArrayOutputStream> mAtraceDataList;
-  private Thread mDumpThread;
-  private File mDestAtraceDirectory;
-  private boolean mAtraceRunning = false;
-  private IOException mDumpIOException;
+  private static volatile AtraceLogger loggerInstance;
+  private UiAutomation uiAutomation;
+  private String traceFileName;
+  private List<ByteArrayOutputStream> atraceDataList;
+  private Thread dumpThread;
+  private File destAtraceDirectory;
+  private boolean atraceRunning = false;
+  private IOException dumpIOException;
 
   private AtraceLogger(Instrumentation instrumentation) {
-    mUiAutomation = instrumentation.getUiAutomation();
+    uiAutomation = instrumentation.getUiAutomation();
   }
 
   /**
@@ -65,14 +65,14 @@ public class AtraceLogger {
    * @return instance of the AtraceLogger
    */
   public static AtraceLogger getAtraceLoggerInstance(Instrumentation instrumentation) {
-    if (mLoggerInstance == null) {
+    if (loggerInstance == null) {
       synchronized (AtraceLogger.class) {
-        if (mLoggerInstance == null) {
-          mLoggerInstance = new AtraceLogger(instrumentation);
+        if (loggerInstance == null) {
+          loggerInstance = new AtraceLogger(instrumentation);
         }
       }
     }
-    return mLoggerInstance;
+    return loggerInstance;
   }
 
   /**
@@ -96,7 +96,7 @@ public class AtraceLogger {
       File destDirectory,
       String traceFileName)
       throws IOException {
-    if (mAtraceRunning) {
+    if (atraceRunning) {
       throw new IllegalStateException("Attempted multiple atrace start");
     }
     if (traceCategoriesSet.isEmpty()) {
@@ -108,14 +108,14 @@ public class AtraceLogger {
     if (!destDirectory.exists() && !destDirectory.mkdirs()) {
       throw new IOException("Unable to create the destination directory");
     }
-    mDestAtraceDirectory = destDirectory;
+    destAtraceDirectory = destDirectory;
 
     StringBuffer traceCategoriesList = new StringBuffer();
     for (String traceCategory : traceCategoriesSet) {
       traceCategoriesList.append(traceCategory).append(CATEGORY_SEPARATOR);
     }
     if (traceFileName != null && !traceFileName.isEmpty()) {
-      mTraceFileName = traceFileName;
+      this.traceFileName = traceFileName;
     }
 
     String startCommand =
@@ -128,18 +128,18 @@ public class AtraceLogger {
      */
     ByteArrayOutputStream outStream = new ByteArrayOutputStream();
     try {
-      writeDataToByteStream(mUiAutomation.executeShellCommand(startCommand), outStream);
+      writeDataToByteStream(uiAutomation.executeShellCommand(startCommand), outStream);
     } finally {
       outStream.close();
     }
-    mAtraceRunning = true;
-    mDumpIOException = null;
-    mAtraceDataList = new ArrayList<ByteArrayOutputStream>();
-    mDumpThread =
+    atraceRunning = true;
+    dumpIOException = null;
+    atraceDataList = new ArrayList<ByteArrayOutputStream>();
+    dumpThread =
         new Thread(
             new DumpTraceRunnable(
                 traceCategoriesList.toString(), atraceBufferSize, dumpIntervalSecs));
-    mDumpThread.start();
+    dumpThread.start();
   }
 
   /**
@@ -170,23 +170,23 @@ public class AtraceLogger {
    * @throws InterruptedException
    */
   public void atraceStop() throws IOException, InterruptedException {
-    if (!mAtraceRunning) {
+    if (!atraceRunning) {
       throw new IllegalStateException(
           "ATrace is not running currently. Start atrace before" + "stopping.");
     }
     try {
-      mDumpThread.interrupt();
-      mDumpThread.join();
-      if (mDumpIOException != null) {
-        throw mDumpIOException;
+      dumpThread.interrupt();
+      dumpThread.join();
+      if (dumpIOException != null) {
+        throw dumpIOException;
       }
       atraceWrite();
     } finally {
-      for (ByteArrayOutputStream outStream : mAtraceDataList) {
+      for (ByteArrayOutputStream outStream : atraceDataList) {
         outStream.close();
       }
-      mAtraceRunning = false;
-      mTraceFileName = null;
+      atraceRunning = false;
+      traceFileName = null;
     }
   }
 
@@ -197,15 +197,14 @@ public class AtraceLogger {
    */
   private void atraceWrite() throws IOException {
     int count = 0;
-    for (ByteArrayOutputStream outStream : mAtraceDataList) {
-      // Indexing the files from 0..(mAtraceDataList.size)-1 based on number of dumps
+    for (ByteArrayOutputStream outStream : atraceDataList) {
+      // Indexing the files from 0..(atraceDataList.size)-1 based on number of dumps
       File file = null;
-      if (mTraceFileName != null) {
+      if (traceFileName != null) {
         file =
-            new File(
-                mDestAtraceDirectory, String.format("%s-atrace-%d.txt", mTraceFileName, count));
+            new File(destAtraceDirectory, String.format("%s-atrace-%d.txt", traceFileName, count));
       } else {
-        file = new File(mDestAtraceDirectory, String.format("atrace-%d.txt", count));
+        file = new File(destAtraceDirectory, String.format("atrace-%d.txt", count));
       }
       OutputStream fileOutputStream = new FileOutputStream(file);
       try {
@@ -221,14 +220,14 @@ public class AtraceLogger {
    * Thread class periodically dumps the atrace data into byte stream
    */
   private class DumpTraceRunnable implements Runnable {
-    private String mTraceCategories;
-    private int mBufferSize;
-    private int mDumpIntervalInSecs;
+    private String traceCategories;
+    private int bufferSize;
+    private int dumpIntervalInSecs;
 
     DumpTraceRunnable(String traceCategories, int bufferSize, int dumpIntervalInSecs) {
-      mTraceCategories = traceCategories;
-      mBufferSize = bufferSize;
-      mDumpIntervalInSecs = dumpIntervalInSecs;
+      this.traceCategories = traceCategories;
+      this.bufferSize = bufferSize;
+      this.dumpIntervalInSecs = dumpIntervalInSecs;
     }
 
     @Override
@@ -236,25 +235,25 @@ public class AtraceLogger {
       try {
         while (!Thread.currentThread().isInterrupted()) {
           try {
-            Thread.sleep(mDumpIntervalInSecs * 1000);
+            Thread.sleep(dumpIntervalInSecs * 1000);
           } catch (InterruptedException e) {
             break;
           }
-          String dumpCommand = String.format(ATRACE_DUMP, mBufferSize, mTraceCategories);
+          String dumpCommand = String.format(ATRACE_DUMP, bufferSize, traceCategories);
           // Dump into byte array and maintain in the list
           long startTime = System.currentTimeMillis();
           ByteArrayOutputStream byteArrayOutStream = new ByteArrayOutputStream();
-          writeDataToByteStream(mUiAutomation.executeShellCommand(dumpCommand), byteArrayOutStream);
-          mAtraceDataList.add(byteArrayOutStream);
+          writeDataToByteStream(uiAutomation.executeShellCommand(dumpCommand), byteArrayOutStream);
+          atraceDataList.add(byteArrayOutStream);
           long endTime = System.currentTimeMillis();
           Log.i(ATRACEHELPER_TAG, "Time taken by - DumpTraceRunnable " + (endTime - startTime));
         }
-        String stopCommand = String.format(ATRACE_STOP, mBufferSize, mTraceCategories);
+        String stopCommand = String.format(ATRACE_STOP, bufferSize, traceCategories);
         ByteArrayOutputStream byteArrayOutStream = new ByteArrayOutputStream();
-        writeDataToByteStream(mUiAutomation.executeShellCommand(stopCommand), byteArrayOutStream);
-        mAtraceDataList.add(byteArrayOutStream);
+        writeDataToByteStream(uiAutomation.executeShellCommand(stopCommand), byteArrayOutStream);
+        atraceDataList.add(byteArrayOutStream);
       } catch (IOException ioe) {
-        mDumpIOException = ioe;
+        dumpIOException = ioe;
       }
     }
   }

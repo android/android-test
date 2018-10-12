@@ -31,8 +31,8 @@ public class AndroidJUnit4Builder extends JUnit4Builder {
 
   private static final String TAG = "AndroidJUnit4Builder";
 
-  private final AndroidRunnerParams mAndroidRunnerParams;
-  private final boolean mScanningPath;
+  private final AndroidRunnerParams androidRunnerParams;
+  private final boolean scanningPath;
 
   /**
    * @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters
@@ -40,8 +40,8 @@ public class AndroidJUnit4Builder extends JUnit4Builder {
    *     scanning the path; requires extra checks to avoid unnecessary errors.
    */
   public AndroidJUnit4Builder(AndroidRunnerParams runnerParams, boolean scanningPath) {
-    mAndroidRunnerParams = runnerParams;
-    mScanningPath = scanningPath;
+    androidRunnerParams = runnerParams;
+    this.scanningPath = scanningPath;
   }
 
   /**
@@ -58,11 +58,11 @@ public class AndroidJUnit4Builder extends JUnit4Builder {
     try {
       // If scanning the path then make sure that it has at least one test method before
       // trying to run it.
-      if (mScanningPath && !hasTestMethods(testClass)) {
+      if (scanningPath && !hasTestMethods(testClass)) {
         return null;
       }
 
-      return new AndroidJUnit4ClassRunner(testClass, mAndroidRunnerParams);
+      return new AndroidJUnit4ClassRunner(testClass, androidRunnerParams);
     } catch (Throwable e) {
       // log error message including stack trace before throwing to help with debugging.
       Log.e(TAG, "Error constructing runner", e);

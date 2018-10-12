@@ -63,7 +63,7 @@ import org.junit.runners.model.Statement;
 @Beta
 public class GrantPermissionRule implements TestRule {
 
-  private PermissionRequester mPermissionRequester;
+  private PermissionRequester permissionRequester;
 
   private GrantPermissionRule() {
     this(new PermissionRequester());
@@ -92,7 +92,7 @@ public class GrantPermissionRule implements TestRule {
 
   private void grantPermissions(String... permissions) {
     Set<String> permissionSet = satisfyPermissionDependencies(permissions);
-    mPermissionRequester.addPermissions(permissionSet.toArray(new String[permissionSet.size()]));
+    permissionRequester.addPermissions(permissionSet.toArray(new String[permissionSet.size()]));
   }
 
   @VisibleForTesting
@@ -112,21 +112,22 @@ public class GrantPermissionRule implements TestRule {
 
   @VisibleForTesting
   void setPermissionRequester(PermissionRequester permissionRequester) {
-    mPermissionRequester = checkNotNull(permissionRequester, "permissionRequester cannot be null!");
+    this.permissionRequester =
+        checkNotNull(permissionRequester, "permissionRequester cannot be null!");
   }
 
   private class RequestPermissionStatement extends Statement {
 
-    private final Statement mBase;
+    private final Statement base;
 
     public RequestPermissionStatement(Statement base) {
-      mBase = base;
+      this.base = base;
     }
 
     @Override
     public void evaluate() throws Throwable {
-      mPermissionRequester.requestPermissions();
-      mBase.evaluate();
+      permissionRequester.requestPermissions();
+      base.evaluate();
     }
   }
 }

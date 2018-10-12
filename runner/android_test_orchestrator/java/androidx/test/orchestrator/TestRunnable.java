@@ -38,13 +38,13 @@ public class TestRunnable implements Runnable {
 
   private static final String TAG = "TestRunnable";
 
-  private final Bundle mArguments;
-  private final RunFinishedListener mListener;
-  private final OutputStream mOutputStream;
-  private final String mTest;
-  private final boolean mCollectTests;
-  private final Context mContext;
-  private final String mSecret;
+  private final Bundle arguments;
+  private final RunFinishedListener listener;
+  private final OutputStream outputStream;
+  private final String test;
+  private final boolean collectTests;
+  private final Context context;
+  private final String secret;
 
   /**
    * Constructs a TestRunnable executes all tests in arguments.
@@ -112,13 +112,13 @@ public class TestRunnable implements Runnable {
       RunFinishedListener listener,
       String test,
       boolean collectTests) {
-    mContext = context;
-    mSecret = secret;
-    mArguments = new Bundle(arguments);
-    mOutputStream = outputStream;
-    mListener = listener;
-    mTest = test;
-    mCollectTests = collectTests;
+    this.context = context;
+    this.secret = secret;
+    this.arguments = new Bundle(arguments);
+    this.outputStream = outputStream;
+    this.listener = listener;
+    this.test = test;
+    this.collectTests = collectTests;
   }
 
   /** Called at the end of a test run. */
@@ -134,12 +134,12 @@ public class TestRunnable implements Runnable {
       byte[] read = new byte[1024];
       try {
         while (inputStream.read(read) != -1) {
-          mOutputStream.write(read);
+          outputStream.write(read);
         }
       } finally {
         if (inputStream != null) {
           inputStream.close();
-          mOutputStream.close();
+          outputStream.close();
         } else {
           Log.e(TAG, "InputStream returned from shell command is null");
         }
@@ -154,20 +154,20 @@ public class TestRunnable implements Runnable {
       Log.e(TAG, "ShellCommandClient remote execution, unable to run remote test", e);
     }
 
-    mListener.runFinished();
+    listener.runFinished();
   }
 
   private String getTargetInstrumentation() {
-    return mArguments.getString(TARGET_INSTRUMENTATION_ARGUMENT);
+    return arguments.getString(TARGET_INSTRUMENTATION_ARGUMENT);
   }
 
   private Bundle getTargetInstrumentationArguments() {
-    Bundle targetArgs = new Bundle(mArguments);
+    Bundle targetArgs = new Bundle(arguments);
     // Filter out the only argument intended specifically for Listener
     targetArgs.remove(TARGET_INSTRUMENTATION_ARGUMENT);
     targetArgs.remove(ISOLATED_ARGUMENT);
 
-    if (mCollectTests) {
+    if (collectTests) {
       targetArgs.putString(AJUR_LIST_TESTS_ARGUMENT, "true");
     } else {
       // If we aren't engaging in test collection, then we should have a specific test target, and
@@ -179,8 +179,8 @@ public class TestRunnable implements Runnable {
     }
 
     // Override the class parameter with the current test target.
-    if (mTest != null) {
-      targetArgs.putString(AJUR_CLASS_ARGUMENT, mTest);
+    if (test != null) {
+      targetArgs.putString(AJUR_CLASS_ARGUMENT, test);
     }
 
     return targetArgs;
@@ -204,6 +204,6 @@ public class TestRunnable implements Runnable {
 
   InputStream runShellCommand(List<String> params)
       throws IOException, ClientNotConnected, InterruptedException, RemoteException {
-    return new ShellExecutorImpl(mContext, mSecret).executeShellCommand("am", params, null, false);
+    return new ShellExecutorImpl(context, secret).executeShellCommand("am", params, null, false);
   }
 }

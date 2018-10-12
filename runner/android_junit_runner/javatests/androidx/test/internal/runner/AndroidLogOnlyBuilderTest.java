@@ -54,9 +54,9 @@ import org.mockito.MockitoAnnotations;
 @SmallTest
 public abstract class AndroidLogOnlyBuilderTest {
 
-  @Mock private AndroidRunnerParams mMockAndroidRunnerParams;
+  @Mock private AndroidRunnerParams mockAndroidRunnerParams;
 
-  private AndroidLogOnlyBuilder mAndroidLogOnlyBuilder;
+  private AndroidLogOnlyBuilder androidLogOnlyBuilder;
 
   @Parameter public boolean scanningPath;
 
@@ -138,16 +138,16 @@ public abstract class AndroidLogOnlyBuilderTest {
   @Before
   public void initBuilder() {
     MockitoAnnotations.initMocks(this);
-    mAndroidLogOnlyBuilder =
+    androidLogOnlyBuilder =
         new AndroidLogOnlyBuilder(
-            mMockAndroidRunnerParams,
+            mockAndroidRunnerParams,
             scanningPath,
             Collections.<Class<? extends RunnerBuilder>>emptyList());
   }
 
   @Test
   public void builderHandlesNotATest() throws Throwable {
-    Runner selectedRunner = mAndroidLogOnlyBuilder.runnerForClass(NotATest.class);
+    Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(NotATest.class);
     if (scanningPath) {
       assertThat(selectedRunner, nullValue());
     } else {
@@ -159,7 +159,7 @@ public abstract class AndroidLogOnlyBuilderTest {
 
   @Test
   public void builderHandlesJUnit3Tests() throws Throwable {
-    Runner selectedRunner = mAndroidLogOnlyBuilder.runnerForClass(JUnit3Test.class);
+    Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit3Test.class);
     assertThat(selectedRunner, notNullValue());
     assertThat(selectedRunner.getClass(), typeCompatibleWith(JUnit38ClassRunner.class));
     runWithRunner(selectedRunner, 1, 0);
@@ -167,7 +167,7 @@ public abstract class AndroidLogOnlyBuilderTest {
 
   @Test
   public void builderHandlesJUnit3TestSuites() throws Throwable {
-    Runner selectedRunner = mAndroidLogOnlyBuilder.runnerForClass(JUnit3Suite.class);
+    Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit3Suite.class);
     assertThat(selectedRunner, notNullValue());
     assertThat(selectedRunner.getClass(), typeCompatibleWith(JUnit38ClassRunner.class));
     runWithRunner(selectedRunner, 1, 0);
@@ -175,7 +175,7 @@ public abstract class AndroidLogOnlyBuilderTest {
 
   @Test
   public void builderHandlesJUnit4Tests() throws Throwable {
-    Runner selectedRunner = mAndroidLogOnlyBuilder.runnerForClass(JUnit4Test.class);
+    Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit4Test.class);
     assertThat(selectedRunner, notNullValue());
     assertThat(selectedRunner.getClass(), typeCompatibleWith(NonExecutingRunner.class));
     runWithRunner(selectedRunner, 1, 0);
@@ -183,7 +183,7 @@ public abstract class AndroidLogOnlyBuilderTest {
 
   @Test
   public void builderHandlesParameterizedRunnerTests() throws Throwable {
-    Runner selectedRunner = mAndroidLogOnlyBuilder.runnerForClass(JUnit4ParameterizedTest.class);
+    Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit4ParameterizedTest.class);
     assertThat(selectedRunner, notNullValue());
     assertThat(selectedRunner.getClass(), typeCompatibleWith(NonExecutingRunner.class));
     runWithRunner(selectedRunner, 3, 0);
@@ -191,7 +191,7 @@ public abstract class AndroidLogOnlyBuilderTest {
 
   @Test
   public void builderHandlesJunit4SuitesTests() throws Throwable {
-    Runner selectedRunner = mAndroidLogOnlyBuilder.runnerForClass(JUnit4TestSuite.class);
+    Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit4TestSuite.class);
     assertThat(selectedRunner, notNullValue());
     // Although this returns a Suite all the nested Runner implementations will be
     // NonExecutingRunner otherwise there will be failures when run.
@@ -201,7 +201,7 @@ public abstract class AndroidLogOnlyBuilderTest {
 
   @Test
   public void builderHandlesJunit4EnclosedRunnerTests() throws Throwable {
-    Runner selectedRunner = mAndroidLogOnlyBuilder.runnerForClass(JUnit4EnclosedTest.class);
+    Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit4EnclosedTest.class);
     assertThat(selectedRunner, notNullValue());
     // Although this returns an Enclosed all the nested Runner implementations will be
     // NonExecutingRunner otherwise there will be failures when run.
