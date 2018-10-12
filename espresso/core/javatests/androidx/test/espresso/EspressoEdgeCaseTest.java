@@ -30,9 +30,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.view.View;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SendActivity;
 import java.util.concurrent.Callable;
@@ -50,8 +50,7 @@ import org.junit.runner.RunWith;
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class EspressoEdgeCaseTest {
-  @Rule
-  public ActivityScenarioRule<SendActivity> rule = new ActivityScenarioRule<>(SendActivity.class);
+  @Rule public ActivityTestRule<SendActivity> rule = new ActivityTestRule<>(SendActivity.class);
 
   private static final Callable<Void> NO_OP =
       new Callable<Void>() {

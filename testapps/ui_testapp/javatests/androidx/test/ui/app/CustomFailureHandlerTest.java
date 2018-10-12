@@ -20,35 +20,33 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.setFailureHandler;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.fail;
 
-import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 import android.view.View;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.FailureHandler;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import org.hamcrest.Matcher;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- * A sample of how to set a non-default {@link FailureHandler}.
- */
+/** A sample of how to set a non-default {@link FailureHandler}. */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class CustomFailureHandlerTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class CustomFailureHandlerTest {
 
   private static final String TAG = "CustomFailureHandlerTes";
 
-  @SuppressWarnings("deprecation")
-  public CustomFailureHandlerTest() {
-    // This constructor was deprecated - but we want to support lower API levels.
-    super("androidx.test.ui.app", MainActivity.class);
-  }
-
-  @Override
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
-    getActivity();
+    ActivityScenario.launch(MainActivity.class);
     setFailureHandler(new CustomFailureHandler());
   }
 
+  @Test
   public void testWithCustomFailureHandler() {
     try {
       onView(withText("does not exist")).perform(click());

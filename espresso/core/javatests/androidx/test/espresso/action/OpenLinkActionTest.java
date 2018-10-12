@@ -35,9 +35,9 @@ import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.intent.Intents;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SendActivity;
 import org.hamcrest.CustomTypeSafeMatcher;
@@ -53,8 +53,7 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class OpenLinkActionTest {
 
-  @Rule
-  public ActivityScenarioRule<SendActivity> rule = new ActivityScenarioRule<>(SendActivity.class);
+  @Rule public ActivityTestRule<SendActivity> rule = new ActivityTestRule<>(SendActivity.class);
 
   @Rule public ExpectedException expectedException = none();
 

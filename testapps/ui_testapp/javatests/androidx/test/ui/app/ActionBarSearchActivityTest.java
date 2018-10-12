@@ -21,29 +21,25 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
-import android.test.ActivityInstrumentationTestCase2;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- * Demonstrates Espresso with action bar and app compat searchview widget
- */
+/** Demonstrates Espresso with action bar and app compat searchview widget */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ActionBarSearchActivityTest extends
-  ActivityInstrumentationTestCase2<ActionBarSearchActivity> {
+public class ActionBarSearchActivityTest {
 
-  @SuppressWarnings("deprecation")
-  public ActionBarSearchActivityTest() {
-    // This constructor was deprecated - but we want to support lower API levels.
-    super("androidx.test.ui.app", ActionBarSearchActivity.class);
-  }
-
-  @Override
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
-    // Espresso will not launch our activity for us, we must launch it via getActivity().
-    getActivity();
+    // Espresso will not launch our activity for us, we must launch it via ActivityScenario.launch.
+    ActivityScenario.launch(ActionBarSearchActivity.class);
   }
 
+  @Test
   @SuppressWarnings("unchecked")
   public void testAppCompatSearchViewFromActionBar() {
     onView(withId(R.id.menu_search))

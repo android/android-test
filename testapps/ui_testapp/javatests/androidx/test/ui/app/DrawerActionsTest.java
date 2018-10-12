@@ -30,27 +30,26 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
-import android.test.ActivityInstrumentationTestCase2;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.SdkSuppress;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- * Demonstrates use of {@link DrawerActions}.
- */
+/** Demonstrates use of {@link DrawerActions}. */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class DrawerActionsTest extends ActivityInstrumentationTestCase2<DrawerActivity> {
+public class DrawerActionsTest {
 
-  public DrawerActionsTest() {
-    super(DrawerActivity.class);
+  @Before
+  public void setUp() throws Exception {
+    ActivityScenario.launch(DrawerActivity.class);
   }
 
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
-    getActivity();
-  }
-
+  @Test
   @SdkSuppress(minSdkVersion = 20) // b/26957451
   public void testOpenAndCloseDrawer() {
     // Drawer should not be open to start.
@@ -67,6 +66,7 @@ public class DrawerActionsTest extends ActivityInstrumentationTestCase2<DrawerAc
     onView(withId(R.id.drawer_layout)).check(matches(isClosed()));
   }
 
+  @Test
   @SdkSuppress(minSdkVersion = 20) // b/26957451
   public void testDrawerOpenAndClick() {
     openDrawer(R.id.drawer_layout);

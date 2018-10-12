@@ -23,9 +23,9 @@ import static org.junit.Assert.fail;
 
 import android.os.Handler;
 import android.os.Looper;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SyncActivity;
 import java.util.concurrent.FutureTask;
@@ -42,8 +42,7 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class AppNotIdleExceptionTest {
 
-  @Rule
-  public ActivityScenarioRule<SyncActivity> rule = new ActivityScenarioRule<>(SyncActivity.class);
+  @Rule public ActivityTestRule<SyncActivity> rule = new ActivityTestRule<>(SyncActivity.class);
 
   @Before
   public void setUp() throws Exception {

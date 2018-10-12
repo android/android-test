@@ -26,6 +26,8 @@ TESTAPP_DEPS = [
     "//espresso/web/java/androidx/test/espresso/web/webdriver",
     "//runner/android_junit_runner",
     "//runner/rules",
+    "//core",
+    "//ext/junit",
 ]
 
 EXTERNAL_DEPS = [

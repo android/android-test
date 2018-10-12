@@ -26,9 +26,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SendActivity;
 import org.junit.Rule;
@@ -39,8 +39,7 @@ import org.junit.runner.RunWith;
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class ReplaceTextActionIntegrationTest {
-  @Rule
-  public ActivityScenarioRule<SendActivity> rule = new ActivityScenarioRule<>(SendActivity.class);
+  @Rule public ActivityTestRule<SendActivity> rule = new ActivityTestRule<>(SendActivity.class);
 
   @Test
   public void replaceTextActionPerform() {

@@ -26,9 +26,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import androidx.core.view.GravityCompat;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
 import androidx.test.ui.app.NavigationViewActivity;
 import androidx.test.ui.app.R;
 import org.junit.Rule;
@@ -43,8 +43,8 @@ public class NavigationViewActionsIntegrationTest {
   private static final int NUM_NAVIGATION_ITEMS = 9;
 
   @Rule
-  public ActivityScenarioRule<NavigationViewActivity> activityTestRule =
-      new ActivityScenarioRule<NavigationViewActivity>(NavigationViewActivity.class);
+  public ActivityTestRule<NavigationViewActivity> activityTestRule =
+      new ActivityTestRule<NavigationViewActivity>(NavigationViewActivity.class);
 
   @Test
   public void clickOnAllNavigationItems_DisplaysCorrespondingItemText() {

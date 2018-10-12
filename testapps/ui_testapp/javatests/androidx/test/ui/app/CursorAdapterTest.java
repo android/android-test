@@ -25,29 +25,28 @@ import static androidx.test.espresso.matcher.CursorMatchers.withRowString;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.junit.Assert.fail;
 
-import android.test.ActivityInstrumentationTestCase2;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.PerformException;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class CursorAdapterTest extends ActivityInstrumentationTestCase2<CursorAdapterActivity> {
+public class CursorAdapterTest {
 
-  @SuppressWarnings("deprecation")
-  public CursorAdapterTest() {
-    // This constructor was deprecated - but we want to support lower API
-    // levels.
-    super("androidx.test.ui.app", CursorAdapterActivity.class);
-  }
-
-  @Override
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
     // Espresso will not launch our activity for us, we must launch it via
-    // getActivity().
-    getActivity();
+    // ActivityScenario.launch
+    ActivityScenario.launch(CursorAdapterActivity.class);
   }
 
+  @Test
   @SuppressWarnings("unchecked")
   public void testClickOnFirstCursorItem() {
     final String expectedRowString = "item: 0";
@@ -66,6 +65,7 @@ public class CursorAdapterTest extends ActivityInstrumentationTestCase2<CursorAd
     onView(withId(R.id.selected_item_value)).check(matches(withText(expectedRowString)));
   }
 
+  @Test
   public void testClickOnFirstAndLastItemWithLength7() {
     final String expectedFirstItemString = "item: 0";
     onData(withRowInt(CursorAdapterListFragment.COLUMN_LEN, 7).withStrictColumnChecks(false))
@@ -81,12 +81,14 @@ public class CursorAdapterTest extends ActivityInstrumentationTestCase2<CursorAd
     onView(withId(R.id.selected_item_value)).check(matches(withText(expectedLastItemString)));
   }
 
+  @Test
   public void testClickOnDifferentColumnName() {
     // You can also refer to colums by name. Note, names in each row don't have to be the same.
     onData(withRowInt("surprise!", 1).withStrictColumnChecks(false)).perform(click());
     onView(withId(R.id.selected_item_value)).check(matches(withText("item: 20")));
   }
 
+  @Test
   public void testClickOnColumnNameNotFound() {
     try {
       onData(withRowInt("not_there", 1).withStrictColumnChecks(false)).perform(click());

@@ -22,44 +22,43 @@ import static androidx.test.ui.app.LongListMatchers.withItemSize;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertFalse;
 
-import android.content.Intent;
-import android.test.ActivityUnitTestCase;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- * UnitTests for LongListMatchers matcher factory.
- */
-public final class LongListMatchersTest extends ActivityUnitTestCase<LongListActivity> {
+/** UnitTests for LongListMatchers matcher factory. */
+@RunWith(AndroidJUnit4.class)
+public final class LongListMatchersTest {
 
-  public LongListMatchersTest() {
-    super(LongListActivity.class);
-  }
+  private ActivityScenario<LongListActivity> activityScenario;
 
-  @Override
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
-    // AndroidJUnitRunner does not call Looper.prepare anymore. Hence Instrumentation thread is no
-    // longer a Looper! To not run into an exception, we need to ensure that the Handler is created
-    // on the Ui thread.
-    getInstrumentation().runOnMainSync(new Runnable() {
-      @Override
-      public void run() {
-        startActivity(new Intent(getInstrumentation().getTargetContext(), LongListActivity.class),
-            null, null);
-      }
-    });
+    activityScenario = ActivityScenario.launch(LongListActivity.class);
   }
 
+  @Test
   public void testWithContent() {
-    assertThat(getActivity().makeItem(54), withItemContent("item: 54"));
-    assertThat(getActivity().makeItem(54), withItemContent(endsWith("54")));
-    assertFalse(withItemContent("hello world").matches(getActivity().makeItem(54)));
+    activityScenario.onActivity(
+        activity -> {
+          assertThat(activity.makeItem(54), withItemContent("item: 54"));
+          assertThat(activity.makeItem(54), withItemContent(endsWith("54")));
+          assertFalse(withItemContent("hello world").matches(activity.makeItem(54)));
+        });
   }
 
+  @Test
   @SuppressWarnings("unchecked")
   public void testWithItemSize() {
-    assertThat(getActivity().makeItem(54), withItemSize(8));
-    assertThat(getActivity().makeItem(54), withItemSize(anyOf(equalTo(8), equalTo(7))));
-    assertFalse(withItemSize(7).matches(getActivity().makeItem(54)));
+    activityScenario.onActivity(
+        activity -> {
+          assertThat(activity.makeItem(54), withItemSize(8));
+          assertThat(activity.makeItem(54), withItemSize(anyOf(equalTo(8), equalTo(7))));
+          assertFalse(withItemSize(7).matches(activity.makeItem(54)));
+        });
   }
 }

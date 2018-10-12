@@ -24,18 +24,25 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.junit.Assert.assertTrue;
 
-import android.test.ActivityInstrumentationTestCase2;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.idling.CountingIdlingResource;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.ui.app.SyncActivity.HelloWorldServer;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * Example for {@link CountingIdlingResource}. Demonstrates how to wait on a delayed response from
  * request before continuing with a test.
  */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class AdvancedSynchronizationTest extends ActivityInstrumentationTestCase2<SyncActivity> {
+public class AdvancedSynchronizationTest {
   private CountingIdlingResource countingResource;
 
   private class DecoratedHelloWorldServer implements HelloWorldServer {
@@ -62,30 +69,29 @@ public class AdvancedSynchronizationTest extends ActivityInstrumentationTestCase
     }
   }
 
-  @SuppressWarnings("deprecation")
-  public AdvancedSynchronizationTest() {
-    // This constructor was deprecated - but we want to support lower API levels.
-    super("androidx.test.ui.app", SyncActivity.class);
-  }
-
-  @Override
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
-    SyncActivity activity = getActivity();
-    HelloWorldServer realServer = activity.getHelloWorldServer();
-    // Here, we use CountingIdlingResource - a common convenience class - to track the idle state of
-    // the server. You could also do this yourself, by implementing the IdlingResource interface.
-    countingResource = new CountingIdlingResource("HelloWorldServerCalls");
-    activity.setHelloWorldServer(new DecoratedHelloWorldServer(realServer, countingResource));
-    assertTrue(registerIdlingResources(countingResource));
+    ActivityScenario<SyncActivity> activityScenario = ActivityScenario.launch(SyncActivity.class);
+    activityScenario.onActivity(
+        activity -> {
+          HelloWorldServer realServer = activity.getHelloWorldServer();
+          // Here, we use CountingIdlingResource - a common convenience class - to track the idle
+          // state of
+          // the server. You could also do this yourself, by implementing the IdlingResource
+          // interface.
+          countingResource = new CountingIdlingResource("HelloWorldServerCalls");
+
+          activity.setHelloWorldServer(new DecoratedHelloWorldServer(realServer, countingResource));
+          assertTrue(registerIdlingResources(countingResource));
+        });
   }
 
-  @Override
+  @After
   public void tearDown() throws Exception {
     assertTrue(unregisterIdlingResources(countingResource));
-    super.tearDown();
   }
 
+  @Test
   public void testCountingIdlingResource() {
     // Request the "hello world!" text by clicking on the request button.
     onView(withId(R.id.request_button)).perform(click());
