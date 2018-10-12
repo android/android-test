@@ -23,5 +23,4 @@ timeout: '1200s'
 options:
   machineType: "N1_HIGHCPU_32"
 
-# push the built docker image to google cloud storage
 images: ['gcr.io/$PROJECT_ID/bazel-android:latest']
