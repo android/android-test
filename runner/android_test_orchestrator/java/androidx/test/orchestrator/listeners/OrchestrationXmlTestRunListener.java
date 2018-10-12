@@ -96,28 +96,28 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
   /** the XML namespace */
   private static final String ns = null;
 
-  private String mHostName = "localhost";
+  private String hostName = "localhost";
 
   public static final String REPORT_DIRECTORY_NAME = "odo";
 
-  private File mReportDir =
+  private File reportDir =
       new File(Environment.getExternalStorageDirectory(), REPORT_DIRECTORY_NAME);
 
-  private String mReportPath = "";
+  private String reportPath = "";
 
-  private TestRunResult mRunResult = new TestRunResult();
+  private TestRunResult runResult = new TestRunResult();
 
-  private int mNumTests = 0;
+  private int numTests = 0;
   private long startTime;
   private long finishTime;
 
   /** Sets the report file to use. */
   public void setReportDir(File file) {
-    mReportDir = file;
+    reportDir = file;
   }
 
   public void setHostName(String hostName) {
-    mHostName = hostName;
+    this.hostName = hostName;
   }
 
   /**
@@ -126,15 +126,15 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
    * @return the test run results.
    */
   public TestRunResult getRunResult() {
-    return mRunResult;
+    return runResult;
   }
 
   @Override
   public void orchestrationRunStarted(int testCount) {
     startTime = System.currentTimeMillis();
-    mRunResult = new androidx.test.orchestrator.listeners.result.TestRunResult();
-    mNumTests = testCount;
-    mRunResult.testRunStarted("", mNumTests);
+    runResult = new androidx.test.orchestrator.listeners.result.TestRunResult();
+    numTests = testCount;
+    runResult.testRunStarted("", numTests);
   }
 
   @Override
@@ -142,28 +142,27 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
 
   @Override
   public void testStarted(ParcelableDescription description) {
-    mRunResult.testStarted(toTestIdentifier(description));
+    runResult.testStarted(toTestIdentifier(description));
   }
 
   @Override
   public void testFinished(ParcelableDescription description) {
-    mRunResult.testEnded(toTestIdentifier(description), new HashMap<String, String>());
+    runResult.testEnded(toTestIdentifier(description), new HashMap<String, String>());
   }
 
   @Override
   public void testFailure(ParcelableFailure failure) {
-    mRunResult.testFailed(toTestIdentifier(failure.getDescription()), failure.getTrace());
+    runResult.testFailed(toTestIdentifier(failure.getDescription()), failure.getTrace());
   }
 
   @Override
   public void testAssumptionFailure(ParcelableFailure failure) {
-    mRunResult.testAssumptionFailure(
-        toTestIdentifier(failure.getDescription()), failure.getTrace());
+    runResult.testAssumptionFailure(toTestIdentifier(failure.getDescription()), failure.getTrace());
   }
 
   @Override
   public void testIgnored(ParcelableDescription description) {
-    mRunResult.testIgnored(toTestIdentifier(description));
+    runResult.testIgnored(toTestIdentifier(description));
   }
 
   @Override
@@ -175,8 +174,8 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
   public void orchestrationRunFinished() {
     finishTime = System.currentTimeMillis();
     long elapsedTime = finishTime - startTime;
-    mRunResult.testRunEnded(elapsedTime, new HashMap<String, String>());
-    generateDocument(mReportDir, elapsedTime);
+    runResult.testRunEnded(elapsedTime, new HashMap<String, String>());
+    generateDocument(reportDir, elapsedTime);
   }
 
   private static TestIdentifier toTestIdentifier(ParcelableDescription description) {
@@ -200,7 +199,7 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
       String msg =
           String.format(
               "XML test result file generated at %s. %s",
-              getAbsoluteReportPath(), mRunResult.getTextSummary());
+              getAbsoluteReportPath(), runResult.getTextSummary());
       Log.i(LOG_TAG, msg);
     } catch (IOException e) {
       Log.e(LOG_TAG, "Failed to generate report data", e);
@@ -216,7 +215,7 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
   }
 
   private String getAbsoluteReportPath() {
-    return mReportPath;
+    return reportPath;
   }
 
   /** Return the current timestamp as a {@link String}. */
@@ -260,12 +259,12 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
       throw new IOException("Failed to prepare report directory.");
     }
     File reportFile = getResultFile(reportDir);
-    mReportPath = reportFile.getAbsolutePath();
+    reportPath = reportFile.getAbsolutePath();
     return new BufferedOutputStream(new FileOutputStream(reportFile));
   }
 
   protected String getTestSuiteName() {
-    return mRunResult.getName();
+    return runResult.getName();
   }
 
   void printTestResults(KXmlSerializer serializer, String timestamp, long elapsedTime)
@@ -275,21 +274,21 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
     if (name != null) {
       serializer.attribute(ns, ATTR_NAME, name);
     }
-    serializer.attribute(ns, ATTR_TESTS, Integer.toString(mRunResult.getNumTests()));
-    serializer.attribute(ns, ATTR_FAILURES, Integer.toString(mRunResult.getNumAllFailedTests()));
+    serializer.attribute(ns, ATTR_TESTS, Integer.toString(runResult.getNumTests()));
+    serializer.attribute(ns, ATTR_FAILURES, Integer.toString(runResult.getNumAllFailedTests()));
     // legacy - there are no errors in JUnit4
     serializer.attribute(ns, ATTR_ERRORS, "0");
     serializer.attribute(
-        ns, ATTR_SKIPPED, Integer.toString(mRunResult.getNumTestsInState(TestStatus.IGNORED)));
+        ns, ATTR_SKIPPED, Integer.toString(runResult.getNumTestsInState(TestStatus.IGNORED)));
 
     serializer.attribute(ns, ATTR_TIME, Double.toString((double) elapsedTime / 1000.f));
     serializer.attribute(ns, TIMESTAMP, timestamp);
-    serializer.attribute(ns, HOSTNAME, mHostName);
+    serializer.attribute(ns, HOSTNAME, hostName);
 
     serializer.startTag(ns, PROPERTIES);
     serializer.endTag(ns, PROPERTIES);
 
-    Map<TestIdentifier, TestResult> testResults = mRunResult.getTestResults();
+    Map<TestIdentifier, TestResult> testResults = runResult.getTestResults();
     for (Map.Entry<TestIdentifier, TestResult> testEntry : testResults.entrySet()) {
       print(serializer, testEntry.getKey(), testEntry.getValue());
     }

@@ -21,11 +21,11 @@ import android.os.Bundle;
 
 /** Helper class to store frequently passed test parameters between the different classes */
 public class AndroidRunnerParams {
-  private final Instrumentation mInstrumentation;
-  private final Bundle mBundle;
-  private final boolean mSkipExecution;
-  private final long mPerTestTimeout;
-  private final boolean mIgnoreSuiteMethods;
+  private final Instrumentation instrumentation;
+  private final Bundle bundle;
+  private final boolean skipExecution;
+  private final long perTestTimeout;
+  private final boolean ignoreSuiteMethods;
 
   /**
    * @param instrumentation the {@link Instrumentation} to inject into any tests that require it
@@ -42,11 +42,11 @@ public class AndroidRunnerParams {
       boolean skipExecution,
       long perTestTimeout,
       boolean ignoreSuiteMethods) {
-    this.mInstrumentation = instrumentation;
-    this.mBundle = bundle;
-    this.mSkipExecution = skipExecution;
-    this.mPerTestTimeout = perTestTimeout;
-    this.mIgnoreSuiteMethods = ignoreSuiteMethods;
+    this.instrumentation = instrumentation;
+    this.bundle = bundle;
+    this.skipExecution = skipExecution;
+    this.perTestTimeout = perTestTimeout;
+    this.ignoreSuiteMethods = ignoreSuiteMethods;
   }
 
   /**
@@ -60,19 +60,19 @@ public class AndroidRunnerParams {
       Bundle bundle,
       long perTestTimeout,
       boolean ignoreSuiteMethods) {
-    this.mInstrumentation = instrumentation;
-    this.mBundle = bundle;
-    this.mSkipExecution = false;
-    this.mPerTestTimeout = perTestTimeout;
-    this.mIgnoreSuiteMethods = ignoreSuiteMethods;
+    this.instrumentation = instrumentation;
+    this.bundle = bundle;
+    this.skipExecution = false;
+    this.perTestTimeout = perTestTimeout;
+    this.ignoreSuiteMethods = ignoreSuiteMethods;
   }
 
   public Instrumentation getInstrumentation() {
-    return mInstrumentation;
+    return instrumentation;
   }
 
   public Bundle getBundle() {
-    return mBundle;
+    return bundle;
   }
 
   /**
@@ -81,14 +81,14 @@ public class AndroidRunnerParams {
    */
   @Deprecated
   public boolean isSkipExecution() {
-    return mSkipExecution;
+    return skipExecution;
   }
 
   public long getPerTestTimeout() {
-    return mPerTestTimeout;
+    return perTestTimeout;
   }
 
   public boolean isIgnoreSuiteMethods() {
-    return mIgnoreSuiteMethods;
+    return ignoreSuiteMethods;
   }
 }

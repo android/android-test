@@ -35,40 +35,40 @@ import junit.framework.TestCase;
 @SmallTest
 public class ActivityLifecycleMonitorImplTest extends TestCase {
 
-  private final Activity mMockActivity = mock(Activity.class);
+  private final Activity mockActivity = mock(Activity.class);
 
-  private final ActivityLifecycleMonitorImpl mMonitor = new ActivityLifecycleMonitorImpl(true);
+  private final ActivityLifecycleMonitorImpl monitor = new ActivityLifecycleMonitorImpl(true);
 
   public void testAddRemoveListener() {
     ActivityLifecycleCallback callback = mock(ActivityLifecycleCallback.class);
 
     // multiple adds should only register once.
-    mMonitor.addLifecycleCallback(callback);
-    mMonitor.addLifecycleCallback(callback);
-    mMonitor.addLifecycleCallback(callback);
+    monitor.addLifecycleCallback(callback);
+    monitor.addLifecycleCallback(callback);
+    monitor.addLifecycleCallback(callback);
 
-    mMonitor.signalLifecycleChange(Stage.CREATED, mMockActivity);
-    mMonitor.signalLifecycleChange(Stage.STARTED, mMockActivity);
+    monitor.signalLifecycleChange(Stage.CREATED, mockActivity);
+    monitor.signalLifecycleChange(Stage.STARTED, mockActivity);
 
     // multiple removes should no-op.
-    mMonitor.removeLifecycleCallback(callback);
-    mMonitor.removeLifecycleCallback(callback);
+    monitor.removeLifecycleCallback(callback);
+    monitor.removeLifecycleCallback(callback);
 
-    mMonitor.signalLifecycleChange(Stage.DESTROYED, mMockActivity);
+    monitor.signalLifecycleChange(Stage.DESTROYED, mockActivity);
 
-    verify(callback).onActivityLifecycleChanged(mMockActivity, Stage.CREATED);
-    verify(callback).onActivityLifecycleChanged(mMockActivity, Stage.STARTED);
-    verify(callback, never()).onActivityLifecycleChanged(mMockActivity, Stage.DESTROYED);
+    verify(callback).onActivityLifecycleChanged(mockActivity, Stage.CREATED);
+    verify(callback).onActivityLifecycleChanged(mockActivity, Stage.STARTED);
+    verify(callback, never()).onActivityLifecycleChanged(mockActivity, Stage.DESTROYED);
   }
 
   public void testCallbackConsistancy() {
     ConsistancyCheckingCallback callback = new ConsistancyCheckingCallback();
-    mMonitor.addLifecycleCallback(callback);
+    monitor.addLifecycleCallback(callback);
 
     for (Stage stage : Stage.values()) {
-      mMonitor.signalLifecycleChange(stage, mMockActivity);
-      if (null != callback.mError) {
-        throw callback.mError;
+      monitor.signalLifecycleChange(stage, mockActivity);
+      if (null != callback.error) {
+        throw callback.error;
       }
     }
   }
@@ -78,44 +78,44 @@ public class ActivityLifecycleMonitorImplTest extends TestCase {
     Activity mock2 = mock(Activity.class);
     Activity mock3 = mock(Activity.class);
 
-    mMonitor.signalLifecycleChange(Stage.CREATED, mock1);
-    mMonitor.signalLifecycleChange(Stage.CREATED, mock2);
-    mMonitor.signalLifecycleChange(Stage.CREATED, mock3);
+    monitor.signalLifecycleChange(Stage.CREATED, mock1);
+    monitor.signalLifecycleChange(Stage.CREATED, mock2);
+    monitor.signalLifecycleChange(Stage.CREATED, mock3);
 
-    assertThat(mMonitor.getLifecycleStageOf(mock1), is(Stage.CREATED));
-    assertThat(mMonitor.getLifecycleStageOf(mock2), is(Stage.CREATED));
-    assertThat(mMonitor.getLifecycleStageOf(mock3), is(Stage.CREATED));
+    assertThat(monitor.getLifecycleStageOf(mock1), is(Stage.CREATED));
+    assertThat(monitor.getLifecycleStageOf(mock2), is(Stage.CREATED));
+    assertThat(monitor.getLifecycleStageOf(mock3), is(Stage.CREATED));
 
     List<Activity> expectedActivities = new ArrayList<Activity>();
     expectedActivities.add(mock1);
     expectedActivities.add(mock2);
     expectedActivities.add(mock3);
 
-    assertTrue(expectedActivities.containsAll(mMonitor.getActivitiesInStage(Stage.CREATED)));
+    assertTrue(expectedActivities.containsAll(monitor.getActivitiesInStage(Stage.CREATED)));
 
-    mMonitor.signalLifecycleChange(Stage.DESTROYED, mock1);
-    mMonitor.signalLifecycleChange(Stage.PAUSED, mock2);
-    mMonitor.signalLifecycleChange(Stage.PAUSED, mock3);
-    assertThat(mMonitor.getLifecycleStageOf(mock1), is(Stage.DESTROYED));
-    assertThat(mMonitor.getLifecycleStageOf(mock2), is(Stage.PAUSED));
-    assertThat(mMonitor.getLifecycleStageOf(mock3), is(Stage.PAUSED));
+    monitor.signalLifecycleChange(Stage.DESTROYED, mock1);
+    monitor.signalLifecycleChange(Stage.PAUSED, mock2);
+    monitor.signalLifecycleChange(Stage.PAUSED, mock3);
+    assertThat(monitor.getLifecycleStageOf(mock1), is(Stage.DESTROYED));
+    assertThat(monitor.getLifecycleStageOf(mock2), is(Stage.PAUSED));
+    assertThat(monitor.getLifecycleStageOf(mock3), is(Stage.PAUSED));
 
-    assertThat(mMonitor.getActivitiesInStage(Stage.CREATED).isEmpty(), is(true));
-    assertThat(mock1, isIn(mMonitor.getActivitiesInStage(Stage.DESTROYED)));
-    assertThat(mock2, isIn(mMonitor.getActivitiesInStage(Stage.PAUSED)));
-    assertThat(mock3, isIn(mMonitor.getActivitiesInStage(Stage.PAUSED)));
+    assertThat(monitor.getActivitiesInStage(Stage.CREATED).isEmpty(), is(true));
+    assertThat(mock1, isIn(monitor.getActivitiesInStage(Stage.DESTROYED)));
+    assertThat(mock2, isIn(monitor.getActivitiesInStage(Stage.PAUSED)));
+    assertThat(mock3, isIn(monitor.getActivitiesInStage(Stage.PAUSED)));
   }
 
   private class ConsistancyCheckingCallback implements ActivityLifecycleCallback {
-    private RuntimeException mError = null;
+    private RuntimeException error = null;
 
     @Override
     public void onActivityLifecycleChanged(Activity activity, Stage stage) {
       try {
-        assertThat(activity, isIn(mMonitor.getActivitiesInStage(stage)));
-        assertThat(mMonitor.getLifecycleStageOf(activity), is(stage));
+        assertThat(activity, isIn(monitor.getActivitiesInStage(stage)));
+        assertThat(monitor.getLifecycleStageOf(activity), is(stage));
       } catch (RuntimeException re) {
-        mError = re;
+        error = re;
       }
     }
   }

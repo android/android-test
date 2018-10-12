@@ -46,16 +46,16 @@ public final class DisableOnAndroidDebugTest {
   }
 
   private static class ToggleableDisableOnAndroidDebug extends DisableOnAndroidDebug {
-    private final boolean mIsDebugging;
+    private final boolean isDebugging;
 
     ToggleableDisableOnAndroidDebug(TestRule delegate, boolean isDebugging) {
       super(delegate);
-      mIsDebugging = isDebugging;
+      this.isDebugging = isDebugging;
     }
 
     @Override
     public boolean isDebugging() {
-      return mIsDebugging;
+      return isDebugging;
     }
   }
 

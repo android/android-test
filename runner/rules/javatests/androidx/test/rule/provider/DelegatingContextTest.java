@@ -52,88 +52,88 @@ public class DelegatingContextTest {
   private static final String DUMMY_TEST_DIR_NAME = "dummy";
   private static final String DUMMY_TEST_FILE_NAME = "dummy.file";
   private static final String DUMMY_TEST_DB_NAME = "dummy.db";
-  private static final Context mContext = InstrumentationRegistry.getContext();
-  private DelegatingContext mDelegatingContext;
+  private static final Context context = InstrumentationRegistry.getContext();
+  private DelegatingContext delegatingContext;
 
-  @Mock private ContentResolver mMockResolver;
+  @Mock private ContentResolver mockResolver;
 
   @Before
   public void setUpMocksAndDelegatingContext() {
     MockitoAnnotations.initMocks(this);
-    mDelegatingContext = new DelegatingContext(mContext, TEST_PREFIX, mMockResolver);
+    delegatingContext = new DelegatingContext(context, TEST_PREFIX, mockResolver);
   }
 
   @After
   public void cleanUpFiles() {
-    delete(mContext.getDir(DUMMY_TEST_DIR_NAME, MODE_PRIVATE));
-    delete(mDelegatingContext.getDir(DUMMY_TEST_DIR_NAME, MODE_PRIVATE));
-    delete(mContext.getFileStreamPath(DUMMY_TEST_FILE_NAME));
-    delete(mDelegatingContext.getFileStreamPath(DUMMY_TEST_FILE_NAME));
-    delete(mContext.getDatabasePath(DUMMY_TEST_DB_NAME));
-    delete(mDelegatingContext.getDatabasePath(DUMMY_TEST_DB_NAME));
+    delete(context.getDir(DUMMY_TEST_DIR_NAME, MODE_PRIVATE));
+    delete(delegatingContext.getDir(DUMMY_TEST_DIR_NAME, MODE_PRIVATE));
+    delete(context.getFileStreamPath(DUMMY_TEST_FILE_NAME));
+    delete(delegatingContext.getFileStreamPath(DUMMY_TEST_FILE_NAME));
+    delete(context.getDatabasePath(DUMMY_TEST_DB_NAME));
+    delete(delegatingContext.getDatabasePath(DUMMY_TEST_DB_NAME));
   }
 
   @Test
   public void verifyDirIsRenamed() {
-    File testDir = mContext.getDir(DUMMY_TEST_DIR_NAME, MODE_PRIVATE);
-    File renamedDir = mDelegatingContext.getDir(DUMMY_TEST_DIR_NAME, MODE_PRIVATE);
+    File testDir = context.getDir(DUMMY_TEST_DIR_NAME, MODE_PRIVATE);
+    File renamedDir = delegatingContext.getDir(DUMMY_TEST_DIR_NAME, MODE_PRIVATE);
     assertIsRenamed(testDir, renamedDir);
   }
 
   @Test
   public void verifyFileIsRenamed() {
-    File testFile = mContext.getFileStreamPath(DUMMY_TEST_FILE_NAME);
-    File renamedFile = mDelegatingContext.getFileStreamPath(DUMMY_TEST_FILE_NAME);
+    File testFile = context.getFileStreamPath(DUMMY_TEST_FILE_NAME);
+    File renamedFile = delegatingContext.getFileStreamPath(DUMMY_TEST_FILE_NAME);
     assertIsRenamed(testFile, renamedFile);
   }
 
   @Test
   public void verifyDatabaseIsRenamed() {
-    File testDatabase = mContext.getDatabasePath(DUMMY_TEST_DB_NAME);
-    File renamedDatabase = mDelegatingContext.getDatabasePath(DUMMY_TEST_DB_NAME);
+    File testDatabase = context.getDatabasePath(DUMMY_TEST_DB_NAME);
+    File renamedDatabase = delegatingContext.getDatabasePath(DUMMY_TEST_DB_NAME);
     assertIsRenamed(testDatabase, renamedDatabase);
   }
 
   @Test
   public void openFilesAndDelete() throws FileNotFoundException {
     // No file in context in the beginning
-    assertEquals(mDelegatingContext.fileList().length, 0);
+    assertEquals(delegatingContext.fileList().length, 0);
 
-    // Open a file not visible in mDelegatingContext throws exception
+    // Open a file not visible in delegatingContext throws exception
     try {
-      mDelegatingContext.openFileInput(DUMMY_TEST_FILE_NAME);
+      delegatingContext.openFileInput(DUMMY_TEST_FILE_NAME);
       fail("expected FileNotFoundException");
     } catch (FileNotFoundException expected) {
       // expected, do nothing
     }
 
-    // openFileOutput will create file and add to mDelegatingContext
-    mDelegatingContext.openFileOutput(DUMMY_TEST_FILE_NAME, MODE_PRIVATE);
-    assertThat(Arrays.asList(mDelegatingContext.fileList()), hasItem(DUMMY_TEST_FILE_NAME));
+    // openFileOutput will create file and add to delegatingContext
+    delegatingContext.openFileOutput(DUMMY_TEST_FILE_NAME, MODE_PRIVATE);
+    assertThat(Arrays.asList(delegatingContext.fileList()), hasItem(DUMMY_TEST_FILE_NAME));
 
     // Delete file will also remove it from context
-    assertTrue(mDelegatingContext.deleteFile(DUMMY_TEST_FILE_NAME));
-    assertEquals(mDelegatingContext.fileList().length, 0);
+    assertTrue(delegatingContext.deleteFile(DUMMY_TEST_FILE_NAME));
+    assertEquals(delegatingContext.fileList().length, 0);
   }
 
   @Test
   public void openOrCreateDatabaseWithoutHandler() {
     // No db in context in the beginning
-    assertEquals(mDelegatingContext.databaseList().length, 0);
+    assertEquals(delegatingContext.databaseList().length, 0);
     SQLiteDatabase testDatabase =
-        mContext.openOrCreateDatabase(DUMMY_TEST_DB_NAME, MODE_PRIVATE, null);
-    // openOrCreateDatabase will create database and add to mDelegatingContext
+        context.openOrCreateDatabase(DUMMY_TEST_DB_NAME, MODE_PRIVATE, null);
+    // openOrCreateDatabase will create database and add to delegatingContext
     SQLiteDatabase renamedDatabase =
-        mDelegatingContext.openOrCreateDatabase(DUMMY_TEST_DB_NAME, MODE_PRIVATE, null);
+        delegatingContext.openOrCreateDatabase(DUMMY_TEST_DB_NAME, MODE_PRIVATE, null);
 
-    assertThat(Arrays.asList(mDelegatingContext.databaseList()), hasItem(DUMMY_TEST_DB_NAME));
+    assertThat(Arrays.asList(delegatingContext.databaseList()), hasItem(DUMMY_TEST_DB_NAME));
     assertIsRenamed(new File(testDatabase.getPath()), new File(renamedDatabase.getPath()));
 
     testDatabase.close();
     renamedDatabase.close();
 
-    mDelegatingContext.deleteDatabase(DUMMY_TEST_DB_NAME);
-    assertEquals(mDelegatingContext.databaseList().length, 0);
+    delegatingContext.deleteDatabase(DUMMY_TEST_DB_NAME);
+    assertEquals(delegatingContext.databaseList().length, 0);
   }
 
   /**
@@ -143,13 +143,13 @@ public class DelegatingContextTest {
   @Test
   @SdkSuppress(minSdkVersion = 11)
   public void openOrCreateDatabaseWithHandler() {
-    assertEquals(mDelegatingContext.databaseList().length, 0);
+    assertEquals(delegatingContext.databaseList().length, 0);
     SQLiteDatabase testDatabase =
-        mContext.openOrCreateDatabase(DUMMY_TEST_DB_NAME, MODE_PRIVATE, null, null);
+        context.openOrCreateDatabase(DUMMY_TEST_DB_NAME, MODE_PRIVATE, null, null);
     SQLiteDatabase renamedDatabase =
-        mDelegatingContext.openOrCreateDatabase(DUMMY_TEST_DB_NAME, MODE_PRIVATE, null, null);
+        delegatingContext.openOrCreateDatabase(DUMMY_TEST_DB_NAME, MODE_PRIVATE, null, null);
 
-    assertThat(Arrays.asList(mDelegatingContext.databaseList()), hasItem(DUMMY_TEST_DB_NAME));
+    assertThat(Arrays.asList(delegatingContext.databaseList()), hasItem(DUMMY_TEST_DB_NAME));
     assertIsRenamed(new File(testDatabase.getPath()), new File(renamedDatabase.getPath()));
 
     testDatabase.close();
@@ -160,13 +160,13 @@ public class DelegatingContextTest {
   public void verifyRevokePermissionEffectively() {
     String permission = "TEST.DUMMY.PERMISSION";
     assertEquals(
-        PackageManager.PERMISSION_GRANTED, mDelegatingContext.checkSelfPermission(permission));
-    mDelegatingContext.addRevokedPermission(permission);
+        PackageManager.PERMISSION_GRANTED, delegatingContext.checkSelfPermission(permission));
+    delegatingContext.addRevokedPermission(permission);
     assertEquals(
-        PackageManager.PERMISSION_DENIED, mDelegatingContext.checkSelfPermission(permission));
+        PackageManager.PERMISSION_DENIED, delegatingContext.checkSelfPermission(permission));
 
     try {
-      mDelegatingContext.enforceCallingPermission(permission, "have no permission" + permission);
+      delegatingContext.enforceCallingPermission(permission, "have no permission" + permission);
       fail("expected SecurityException with permission revoked");
     } catch (SecurityException expected) {
       // expected, do nothing

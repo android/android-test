@@ -33,11 +33,11 @@ public class AppLifecycleListener implements ApplicationLifecycleCallback {
    * List of ApplicationStage received from ApplicationLifecycleCallback, vs ApplicationStage via
    * MyApplication. They should always match.
    */
-  public static List<Pair<ApplicationStage, ApplicationStage>> sStages =
+  public static List<Pair<ApplicationStage, ApplicationStage>> stages =
       new ArrayList<Pair<ApplicationStage, ApplicationStage>>();
 
   @Override
   public void onApplicationLifecycleChanged(Application app, ApplicationStage stage) {
-    sStages.add(new Pair(stage, MyApplication.getStage()));
+    stages.add(new Pair(stage, MyApplication.getStage()));
   }
 }

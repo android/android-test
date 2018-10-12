@@ -40,7 +40,7 @@ import org.junit.Ignore;
 class AndroidTestSuite extends DelegatingFilterableTestSuite {
   private static final String TAG = "AndroidTestSuite";
 
-  private final AndroidRunnerParams mAndroidRunnerParams;
+  private final AndroidRunnerParams androidRunnerParams;
 
   public AndroidTestSuite(Class<?> testClass, AndroidRunnerParams runnerParams) {
     this(new NonLeakyTestSuite(testClass), runnerParams);
@@ -48,7 +48,7 @@ class AndroidTestSuite extends DelegatingFilterableTestSuite {
 
   public AndroidTestSuite(TestSuite s, AndroidRunnerParams runnerParams) {
     super(s);
-    mAndroidRunnerParams = runnerParams;
+    androidRunnerParams = runnerParams;
   }
 
   @Override
@@ -56,9 +56,9 @@ class AndroidTestSuite extends DelegatingFilterableTestSuite {
     // wrap the result in a new AndroidTestResult to do the bundle and instrumentation injection
     AndroidTestResult androidTestResult =
         new AndroidTestResult(
-            mAndroidRunnerParams.getBundle(), mAndroidRunnerParams.getInstrumentation(), result);
+            androidRunnerParams.getBundle(), androidRunnerParams.getInstrumentation(), result);
 
-    long timeout = mAndroidRunnerParams.getPerTestTimeout();
+    long timeout = androidRunnerParams.getPerTestTimeout();
     if (timeout > 0) {
       runTestsWithTimeout(timeout, androidTestResult);
     } else {

@@ -72,25 +72,25 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
   private static final String FIELD_RESULT_CODE = "mResultCode";
   private static final String FIELD_RESULT_DATA = "mResultData";
 
-  private final Class<T> mActivityClass;
+  private final Class<T> activityClass;
 
-  private final String mTargetPackage;
+  private final String targetPackage;
 
-  private final int mLaunchFlags;
+  private final int launchFlags;
 
-  private final ActivityLifecycleCallback mLifecycleCallback = new LifecycleCallback();
+  private final ActivityLifecycleCallback lifecycleCallback = new LifecycleCallback();
 
-  private Instrumentation mInstrumentation;
+  private Instrumentation instrumentation;
 
-  private boolean mInitialTouchMode = false;
+  private boolean initialTouchMode = false;
 
-  private boolean mLaunchActivity = false;
+  private boolean launchActivity = false;
 
-  private SingleActivityFactory<T> mActivityFactory;
+  private SingleActivityFactory<T> activityFactory;
 
-  @VisibleForTesting volatile WeakReference<T> mActivity = makeWeakReference(null);
+  @VisibleForTesting volatile WeakReference<T> activity = makeWeakReference(null);
 
-  private volatile ActivityResult mActivityResult;
+  private volatile ActivityResult activityResult;
 
   /**
    * Similar to {@link #ActivityTestRule(Class, boolean)} but with "touch mode" disabled.
@@ -163,7 +163,7 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
   public ActivityTestRule(
       SingleActivityFactory<T> activityFactory, boolean initialTouchMode, boolean launchActivity) {
     this(activityFactory.getActivityClassToIntercept(), initialTouchMode, launchActivity);
-    mActivityFactory = activityFactory;
+    this.activityFactory = activityFactory;
   }
 
   /**
@@ -190,12 +190,12 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
       int launchFlags,
       boolean initialTouchMode,
       boolean launchActivity) {
-    mInstrumentation = InstrumentationRegistry.getInstrumentation();
-    mActivityClass = activityClass;
-    mTargetPackage = checkNotNull(targetPackage, "targetPackage cannot be null!");
-    mLaunchFlags = launchFlags;
-    mInitialTouchMode = initialTouchMode;
-    mLaunchActivity = launchActivity;
+    instrumentation = InstrumentationRegistry.getInstrumentation();
+    this.activityClass = activityClass;
+    this.targetPackage = checkNotNull(targetPackage, "targetPackage cannot be null!");
+    this.launchFlags = launchFlags;
+    this.initialTouchMode = initialTouchMode;
+    this.launchActivity = launchActivity;
   }
 
   /**
@@ -284,7 +284,7 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
    * strong reference to the acitivty and this refernce may get garbage collected.
    */
   public T getActivity() {
-    T hardActivityRef = mActivity.get();
+    T hardActivityRef = activity.get();
     if (hardActivityRef == null) {
       Log.w(TAG, "Activity wasn't created yet or already stopped");
     }
@@ -309,7 +309,7 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
    *    &#064;Test
    *    public void customIntentToStartActivity() {
    *        Intent intent = new Intent(Intent.ACTION_PICK);
-   *        mActivity = mActivityRule.launchActivity(intent);
+   *        activity = mActivityRule.launchActivity(intent);
    *    }
    * </pre>
    *
@@ -325,7 +325,7 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
    */
   public T launchActivity(@Nullable Intent startIntent) {
     // set initial touch mode
-    mInstrumentation.setInTouchMode(mInitialTouchMode);
+    instrumentation.setInTouchMode(initialTouchMode);
 
     // inject custom intent, if provided
     if (null == startIntent) {
@@ -340,25 +340,25 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
 
     // Set target component if not set Intent
     if (null == startIntent.getComponent()) {
-      startIntent.setClassName(mTargetPackage, mActivityClass.getName());
+      startIntent.setClassName(targetPackage, activityClass.getName());
     }
 
     // Set launch flags where if not set Intent
     if (NO_FLAGS_SET == startIntent.getFlags()) {
-      startIntent.addFlags(mLaunchFlags);
+      startIntent.addFlags(launchFlags);
     }
 
     beforeActivityLaunched();
     // The following cast is correct because the activity we're creating is of the same type as
     // the one passed in
-    T hardActivityRef = mActivityClass.cast(mInstrumentation.startActivitySync(startIntent));
-    mActivity = makeWeakReference(hardActivityRef);
+    T hardActivityRef = activityClass.cast(instrumentation.startActivitySync(startIntent));
+    activity = makeWeakReference(hardActivityRef);
 
-    mInstrumentation.waitForIdleSync();
+    instrumentation.waitForIdleSync();
 
     if (hardActivityRef != null) {
       // Notify that Activity was successfully launched
-      ActivityLifecycleMonitorRegistry.getInstance().addLifecycleCallback(mLifecycleCallback);
+      ActivityLifecycleMonitorRegistry.getInstance().addLifecycleCallback(lifecycleCallback);
       afterActivityLaunched();
     } else {
       // Log an error message to logcat/instrumentation, that the Activity failed to launch
@@ -366,7 +366,7 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
           String.format("Activity %s, failed to launch", startIntent.getComponent());
       Bundle bundle = new Bundle();
       bundle.putString(Instrumentation.REPORT_KEY_STREAMRESULT, TAG + " " + errorMessage);
-      mInstrumentation.sendStatus(0, bundle);
+      instrumentation.sendStatus(0, bundle);
       Log.e(TAG, errorMessage);
     }
 
@@ -375,7 +375,7 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
 
   @VisibleForTesting
   void setInstrumentation(Instrumentation instrumentation) {
-    mInstrumentation = checkNotNull(instrumentation, "instrumentation cannot be null!");
+    this.instrumentation = checkNotNull(instrumentation, "instrumentation cannot be null!");
   }
 
   /**
@@ -385,11 +385,11 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
    */
   public void finishActivity() {
     try {
-      if (mActivity.get() != null) {
+      if (activity.get() != null) {
         callFinishOnMainSync();
       }
     } finally {
-      mActivity = makeWeakReference(null);
+      activity = makeWeakReference(null);
       afterActivityFinished(); // TODO(b/72327935) move down to evaluate
     }
   }
@@ -397,7 +397,7 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
   @VisibleForTesting
   void callFinishOnMainSync() {
     try {
-      final T hardActivityRef = mActivity.get();
+      final T hardActivityRef = activity.get();
       runOnUiThread(
           new Runnable() {
             @Override
@@ -411,7 +411,7 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
               setActivityResultForActivity(hardActivityRef);
             }
           });
-      mInstrumentation.waitForIdleSync();
+      instrumentation.waitForIdleSync();
     } catch (Throwable throwable) {
       // Should never happen
       String msg = "Failed to execute activity.finish() on the main thread";
@@ -435,11 +435,11 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
    * @throws IllegalStateException if the activity is not in finishing state.
    */
   public ActivityResult getActivityResult() {
-    if (null == mActivityResult) {
+    if (null == activityResult) {
       // This is required if users manually called .finish() on their activity instead of using
       // this.finishActivity(). Since .finish() is async there could be a case that our callback
       // wasn't called just yet.
-      T hardActivityRef = mActivity.get();
+      T hardActivityRef = activity.get();
       checkNotNull(hardActivityRef, "Activity wasn't created yet or already destroyed!");
       try {
         runOnUiThread(
@@ -454,7 +454,7 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
         throw new IllegalStateException(throwable);
       }
     }
-    return mActivityResult;
+    return activityResult;
   }
 
   private void setActivityResultForActivity(final T activity) {
@@ -468,7 +468,7 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
       Field resultDataField = Activity.class.getDeclaredField(FIELD_RESULT_DATA);
       resultDataField.setAccessible(true);
 
-      mActivityResult =
+      activityResult =
           new ActivityResult(
               (int) resultCodeField.get(activity), (Intent) resultDataField.get(activity));
     } catch (NoSuchFieldException e) {
@@ -505,37 +505,37 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
    */
   private class ActivityStatement extends Statement {
 
-    private final Statement mBase;
+    private final Statement base;
 
     public ActivityStatement(Statement base) {
-      mBase = base;
+      this.base = base;
     }
 
     @Override
     public void evaluate() throws Throwable {
       MonitoringInstrumentation instrumentation =
-          ActivityTestRule.this.mInstrumentation instanceof MonitoringInstrumentation
-              ? (MonitoringInstrumentation) ActivityTestRule.this.mInstrumentation
+          ActivityTestRule.this.instrumentation instanceof MonitoringInstrumentation
+              ? (MonitoringInstrumentation) ActivityTestRule.this.instrumentation
               : null;
       try {
-        if (mActivityFactory != null && instrumentation != null) {
-          instrumentation.interceptActivityUsing(mActivityFactory);
+        if (activityFactory != null && instrumentation != null) {
+          instrumentation.interceptActivityUsing(activityFactory);
         }
-        if (mLaunchActivity) {
+        if (launchActivity) {
           launchActivity(getActivityIntent());
         }
-        mBase.evaluate();
+        base.evaluate();
       } finally {
         if (instrumentation != null) {
           instrumentation.useDefaultInterceptingActivityFactory();
         }
 
-        T hardActivityRef = mActivity.get();
+        T hardActivityRef = activity.get();
         if (hardActivityRef != null) {
           finishActivity();
         }
-        mActivityResult = null;
-        ActivityLifecycleMonitorRegistry.getInstance().removeLifecycleCallback(mLifecycleCallback);
+        activityResult = null;
+        ActivityLifecycleMonitorRegistry.getInstance().removeLifecycleCallback(lifecycleCallback);
       }
     }
   }
@@ -555,13 +555,13 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
   private class LifecycleCallback implements ActivityLifecycleCallback {
     @Override
     public void onActivityLifecycleChanged(Activity activity, Stage stage) {
-      if (mActivityClass.isInstance(activity)) {
+      if (activityClass.isInstance(activity)) {
         if (Stage.RESUMED == stage) {
-          mActivity = makeWeakReference(mActivityClass.cast(activity));
+          ActivityTestRule.this.activity = makeWeakReference(activityClass.cast(activity));
         } else if (Stage.PAUSED == stage) {
           // If there is an activity result we save it
-          if (activity.isFinishing() && mActivityResult != null) {
-            setActivityResultForActivity(mActivityClass.cast(activity));
+          if (activity.isFinishing() && activityResult != null) {
+            setActivityResultForActivity(activityClass.cast(activity));
           }
         }
       }

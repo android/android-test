@@ -25,12 +25,12 @@ import org.junit.runner.notification.RunListener;
  */
 public class ManifestListener extends RunListener {
 
-  private static boolean sRunStarted = false;
+  private static boolean runStarted = false;
 
   @Override
   public void testRunStarted(Description description) throws Exception {
     // just do simple verification - set a boolean flag so test can verify it was called
-    sRunStarted = true;
+    runStarted = true;
   }
 
   /**
@@ -38,6 +38,6 @@ public class ManifestListener extends RunListener {
    * Intended to be used to verify in this listener was loaded and invoked properly.
    */
   public static boolean isRunStarted() {
-    return sRunStarted;
+    return runStarted;
   }
 }

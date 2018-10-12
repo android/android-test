@@ -47,10 +47,10 @@ public class OrchestratedInstrumentationListenerTest
 
   @Mock OrchestratorCallback mockCallback;
 
-  private OrchestratedInstrumentationListener mListener;
-  private Description mJUnitDescription;
-  private Failure mJUnitFailure;
-  private Result mJUnitResult;
+  private OrchestratedInstrumentationListener listener;
+  private Description jUnitDescription;
+  private Failure jUnitFailure;
+  private Result jUnitResult;
 
   @Override
   public void onOrchestratorConnect() {
@@ -60,24 +60,24 @@ public class OrchestratedInstrumentationListenerTest
   @Before
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
-    mListener = new OrchestratedInstrumentationListener(this);
-    mListener.odoCallback = mockCallback;
+    listener = new OrchestratedInstrumentationListener(this);
+    listener.odoCallback = mockCallback;
 
     Class<SampleJUnitTest> testClass = SampleJUnitTest.class;
-    mJUnitDescription = Description.createTestDescription(testClass, "sampleTest");
-    mJUnitFailure = new Failure(mJUnitDescription, new Throwable("error"));
-    mJUnitResult = new Result();
-    RunListener jUnitListener = mJUnitResult.createListener();
-    jUnitListener.testRunStarted(mJUnitDescription);
-    jUnitListener.testStarted(mJUnitDescription);
-    jUnitListener.testFinished(mJUnitDescription);
+    jUnitDescription = Description.createTestDescription(testClass, "sampleTest");
+    jUnitFailure = new Failure(jUnitDescription, new Throwable("error"));
+    jUnitResult = new Result();
+    RunListener jUnitListener = jUnitResult.createListener();
+    jUnitListener.testRunStarted(jUnitDescription);
+    jUnitListener.testStarted(jUnitDescription);
+    jUnitListener.testFinished(jUnitDescription);
   }
 
   @Test
   public void nullCallbackThrowsException() {
     try {
-      mListener.odoCallback = null;
-      mListener.testRunStarted(mJUnitDescription);
+      listener.odoCallback = null;
+      listener.testRunStarted(jUnitDescription);
       fail("Listener should throw an error if the callback is null");
     } catch (IllegalStateException e) {
       // as expected
@@ -86,77 +86,77 @@ public class OrchestratedInstrumentationListenerTest
 
   @Test
   public void testRunStarted() throws RemoteException {
-    mListener.testRunStarted(mJUnitDescription);
+    listener.testRunStarted(jUnitDescription);
     ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
     verify(mockCallback).sendTestNotification(argument.capture());
 
     ParcelableDescription description = BundleJUnitUtils.getDescription(argument.getValue());
-    compareDescription(description, mJUnitDescription);
+    compareDescription(description, jUnitDescription);
   }
 
   @Test
   public void testRunFinished() throws RemoteException {
-    mListener.testRunFinished(mJUnitResult);
+    listener.testRunFinished(jUnitResult);
     ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
     verify(mockCallback).sendTestNotification(argument.capture());
 
     ParcelableResult result = BundleJUnitUtils.getResult(argument.getValue());
-    assertThat(result.wasSuccessful(), is(mJUnitResult.wasSuccessful()));
+    assertThat(result.wasSuccessful(), is(jUnitResult.wasSuccessful()));
   }
 
   @Test
   public void testStarted() throws RemoteException {
-    mListener.testStarted(mJUnitDescription);
+    listener.testStarted(jUnitDescription);
     ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
     verify(mockCallback).sendTestNotification(argument.capture());
 
     ParcelableDescription description = BundleJUnitUtils.getDescription(argument.getValue());
-    compareDescription(description, mJUnitDescription);
+    compareDescription(description, jUnitDescription);
   }
 
   @Test
   public void testFinished() throws RemoteException {
-    mListener.testFinished(mJUnitDescription);
+    listener.testFinished(jUnitDescription);
     ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
     verify(mockCallback).sendTestNotification(argument.capture());
 
     ParcelableDescription description = BundleJUnitUtils.getDescription(argument.getValue());
-    compareDescription(description, mJUnitDescription);
+    compareDescription(description, jUnitDescription);
   }
 
   @Test
   public void testFailure() throws RemoteException {
-    mListener.testFailure(mJUnitFailure);
+    listener.testFailure(jUnitFailure);
     ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
     verify(mockCallback).sendTestNotification(argument.capture());
 
     ParcelableFailure failure = BundleJUnitUtils.getFailure(argument.getValue());
-    compareFailure(failure, mJUnitFailure);
+    compareFailure(failure, jUnitFailure);
   }
 
   @Test
   public void testAssumptionFailure() throws RemoteException {
-    mListener.testAssumptionFailure(mJUnitFailure);
+    listener.testAssumptionFailure(jUnitFailure);
     ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
     verify(mockCallback).sendTestNotification(argument.capture());
 
     ParcelableFailure failure = BundleJUnitUtils.getFailure(argument.getValue());
-    compareFailure(failure, mJUnitFailure);
+    compareFailure(failure, jUnitFailure);
   }
 
   @Test
   public void testIgnored() throws RemoteException {
-    mListener.testIgnored(mJUnitDescription);
+    listener.testIgnored(jUnitDescription);
     ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
     verify(mockCallback).sendTestNotification(argument.capture());
 
     ParcelableDescription description = BundleJUnitUtils.getDescription(argument.getValue());
-    compareDescription(description, mJUnitDescription);
+    compareDescription(description, jUnitDescription);
   }
 
   @Test
   public void addTest() throws RemoteException {
-    mListener.addTest("exampleTest");
+    listener.addTest("exampleTest");
     verify(mockCallback).addTest("exampleTest");
   }
 

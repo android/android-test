@@ -35,80 +35,80 @@ import java.lang.ref.WeakReference;
 final class ProviderArgs {
 
   private static final String TAG = "ProviderArgs";
-  private final String mAuthority;
-  private final Class<? extends ContentProvider> mProviderClass;
-  private String mDBName;
-  private String[] mDBCmds;
-  private File mDBCmdFile;
-  private File mDBDataFile;
-  private WeakReference<ContentProvider> mProviderRef;
+  private final String authority;
+  private final Class<? extends ContentProvider> providerClass;
+  private String dBName;
+  private String[] dBCmds;
+  private File dBCmdFile;
+  private File dBDataFile;
+  private WeakReference<ContentProvider> providerRef;
 
   /**
    * @see ProviderTestRule.Builder#Builder(String, Class)
    * @see ProviderTestRule.Builder#addProvider(String, Class)
    */
   public ProviderArgs(String authority, Class<? extends ContentProvider> providerClass) {
-    mAuthority = authority;
-    mProviderClass = providerClass;
+    this.authority = authority;
+    this.providerClass = providerClass;
   }
 
   /** @see ProviderTestRule.Builder#withDBName(String, String) */
   public void setDBName(String dbName) {
-    if (mDBName != null) {
+    if (dBName != null) {
       Log.w(
           TAG,
           String.format(
               "Database name for ContentProvider " + "with authority %s already exists",
-              mAuthority));
+              authority));
     }
-    mDBName = dbName;
+    dBName = dbName;
   }
 
   /** @see ProviderTestRule.Builder#withDBCmds(String, String...) */
   public void setDBCmds(String... dbCmds) {
-    if (mDBCmds != null) {
+    if (dBCmds != null) {
       Log.w(
           TAG,
           String.format(
               "Database commands for ContentProvider " + "with authority %s already set",
-              mAuthority));
+              authority));
     }
-    mDBCmds = dbCmds;
+    dBCmds = dbCmds;
   }
 
   /** @see ProviderTestRule.Builder#withDBCmdsFromFile(String, File) */
   public void setDBCmdFile(File dbCmdFile) {
-    if (mDBCmdFile != null) {
+    if (dBCmdFile != null) {
       Log.w(
           TAG,
           String.format(
               "Database command file for ContentProvider " + "with authority %s already set",
-              mAuthority));
+              authority));
     }
-    mDBCmdFile = dbCmdFile;
+    dBCmdFile = dbCmdFile;
   }
 
   /** @see ProviderTestRule.Builder#withDBDataFromFile(String, File) */
   public void setDBDataFile(File dbDataFile) {
-    if (mDBDataFile != null) {
+    if (dBDataFile != null) {
       Log.w(
           TAG,
           String.format(
               "Database file to restore for ContentProvider " + "with authority %s already set",
-              mAuthority));
+              authority));
     }
-    mDBDataFile = dbDataFile;
+    dBDataFile = dbDataFile;
   }
 
   /** Pass in the provider instance to hold a weak reference to it. */
   public void setProviderRef(ContentProvider provider) {
-    if (mProviderRef != null) {
+    if (providerRef != null) {
       Log.w(
           TAG,
           String.format(
-              "Reference to Provider instance " + "with authority %s already set", mAuthority));
+              "Reference to Provider instance " + "with authority %s already set", authority));
     }
-    mProviderRef = new WeakReference<>(provider);
+    providerRef = new WeakReference<>(provider);
   }
 
   /**
@@ -119,59 +119,59 @@ final class ProviderArgs {
    * @param dbCmds extra list of database commands to merge with existing database commands.
    */
   public void addDBCmds(String... dbCmds) {
-    if (null == mDBCmds) {
-      mDBCmds = dbCmds;
+    if (null == dBCmds) {
+      dBCmds = dbCmds;
     } else {
-      String[] newCmds = new String[mDBCmds.length + dbCmds.length];
-      System.arraycopy(mDBCmds, 0, newCmds, 0, mDBCmds.length);
-      System.arraycopy(dbCmds, 0, newCmds, mDBCmds.length, dbCmds.length);
-      mDBCmds = newCmds;
+      String[] newCmds = new String[dBCmds.length + dbCmds.length];
+      System.arraycopy(dBCmds, 0, newCmds, 0, dBCmds.length);
+      System.arraycopy(dbCmds, 0, newCmds, dBCmds.length, dbCmds.length);
+      dBCmds = newCmds;
     }
   }
 
   public boolean hasDBName() {
-    return (mDBName != null);
+    return (dBName != null);
   }
 
   public boolean hasDBCmds() {
-    return (mDBCmds != null);
+    return (dBCmds != null);
   }
 
   public boolean hasDBCmdFile() {
-    return (mDBCmdFile != null);
+    return (dBCmdFile != null);
   }
 
   public boolean hasDBDataFile() {
-    return (mDBDataFile != null);
+    return (dBDataFile != null);
   }
 
   public Class<? extends ContentProvider> getProviderClass() {
-    return mProviderClass;
+    return providerClass;
   }
 
   public String getAuthority() {
-    return mAuthority;
+    return authority;
   }
 
   public String getDBName() {
-    return mDBName;
+    return dBName;
   }
 
   public String[] getDBCmds() {
-    return mDBCmds;
+    return dBCmds;
   }
 
   public File getDBCmdFile() {
-    return mDBCmdFile;
+    return dBCmdFile;
   }
 
   public File getDBDataFile() {
-    return mDBDataFile;
+    return dBDataFile;
   }
 
   public ContentProvider getProvider() {
-    if (mProviderRef != null) {
-      return mProviderRef.get();
+    if (providerRef != null) {
+      return providerRef.get();
     } else {
       return null;
     }

@@ -36,10 +36,10 @@ import java.util.concurrent.Callable;
 @VisibleForTesting
 public abstract class RequestPermissionCallable implements Callable<Result> {
 
-  private final ShellCommand mShellCommand;
-  private final Context mTargetContext;
-  private final String mTargetPackage;
-  private final String mPermission;
+  private final ShellCommand shellCommand;
+  private final Context targetContext;
+  private final String targetPackage;
+  private final String permission;
 
   /** Result of a permission request. */
   public enum Result {
@@ -49,25 +49,25 @@ public abstract class RequestPermissionCallable implements Callable<Result> {
 
   public RequestPermissionCallable(
       @NonNull ShellCommand shellCommand, @NonNull Context targetContext, String permission) {
-    mShellCommand = checkNotNull(shellCommand, "shellCommand cannot be null!");
-    mTargetContext = checkNotNull(targetContext, "targetContext cannot be null!");
-    String targetPackage = mTargetContext.getPackageName();
+    this.shellCommand = checkNotNull(shellCommand, "shellCommand cannot be null!");
+    this.targetContext = checkNotNull(targetContext, "targetContext cannot be null!");
+    String targetPackage = this.targetContext.getPackageName();
     checkState(!TextUtils.isEmpty(targetPackage), "targetPackage cannot be empty or null!");
-    mTargetPackage = targetPackage;
-    mPermission = permission;
+    this.targetPackage = targetPackage;
+    this.permission = permission;
   }
 
   protected String getPermission() {
-    return mPermission;
+    return permission;
   }
 
   protected boolean isPermissionGranted() {
     return PackageManager.PERMISSION_GRANTED
-        == mTargetContext.checkCallingOrSelfPermission(mPermission);
+        == targetContext.checkCallingOrSelfPermission(permission);
   }
 
   protected ShellCommand getShellCommand() {
-    return mShellCommand;
+    return shellCommand;
   }
 
   @Override
@@ -79,12 +79,12 @@ public abstract class RequestPermissionCallable implements Callable<Result> {
       return false;
     }
     RequestPermissionCallable that = (RequestPermissionCallable) o;
-    return Objects.equals(mTargetPackage, that.mTargetPackage)
-        && Objects.equals(mPermission, that.mPermission);
+    return Objects.equals(targetPackage, that.targetPackage)
+        && Objects.equals(permission, that.permission);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(mTargetPackage, mPermission);
+    return Objects.hash(targetPackage, permission);
   }
 }

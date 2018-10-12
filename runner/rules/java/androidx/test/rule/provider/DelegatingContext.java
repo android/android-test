@@ -76,12 +76,12 @@ class DelegatingContext extends ContextWrapper {
   private static final int NO_OP_UID = -1;
   private static final int NO_OP_PID = -1;
 
-  private final String mPrefix;
-  private final Context mContext;
-  private final ContentResolver mContentResolver;
-  private Set<String> mDatabases = new HashSet<>();
-  private Set<String> mFiles = new HashSet<>();
-  private Set<String> mRevokedPermissions = new HashSet<>();
+  private final String prefix;
+  private final Context context;
+  private final ContentResolver contentResolver;
+  private Set<String> databases = new HashSet<>();
+  private Set<String> files = new HashSet<>();
+  private Set<String> revokedPermissions = new HashSet<>();
 
   /**
    * Constructor of the {@code DelegatingContext} with the {@link Context} to be delegated, a
@@ -96,9 +96,9 @@ class DelegatingContext extends ContextWrapper {
   public DelegatingContext(
       @NonNull Context context, @NonNull String prefix, @NonNull ContentResolver contentResolver) {
     super(checkNotNull(context));
-    mContext = context;
-    mPrefix = checkNotNull(prefix);
-    mContentResolver = checkNotNull(contentResolver);
+    this.context = context;
+    this.prefix = checkNotNull(prefix);
+    this.contentResolver = checkNotNull(contentResolver);
   }
 
   /**
@@ -106,13 +106,13 @@ class DelegatingContext extends ContextWrapper {
    */
   @Override
   public ContentResolver getContentResolver() {
-    return mContentResolver;
+    return contentResolver;
   }
 
   @Override
   public File getDir(@NonNull String name, int mode) {
     checkArgument(!TextUtils.isEmpty(name), "Directory name cannot be empty or null");
-    return mContext.getDir(getPrefixName(name), mode);
+    return context.getDir(getPrefixName(name), mode);
   }
 
   /**
@@ -123,16 +123,16 @@ class DelegatingContext extends ContextWrapper {
   public SQLiteDatabase openOrCreateDatabase(
       @NonNull String name, int mode, CursorFactory factory) {
     checkArgument(!TextUtils.isEmpty(name), "Database name cannot be empty or null");
-    if (!mDatabases.contains(name)) {
+    if (!databases.contains(name)) {
       addDatabase(name);
       String prefixName = getPrefixName(name);
-      if (mContext.getDatabasePath(prefixName).exists() && !mContext.deleteDatabase(prefixName)) {
+      if (context.getDatabasePath(prefixName).exists() && !context.deleteDatabase(prefixName)) {
         Log.w(
             TAG,
             "Database with prefixed name " + prefixName + " already exists but failed to delete.");
       }
     }
-    return mContext.openOrCreateDatabase(getPrefixName(name), mode, factory);
+    return context.openOrCreateDatabase(getPrefixName(name), mode, factory);
   }
 
   /**
@@ -145,9 +145,9 @@ class DelegatingContext extends ContextWrapper {
     checkArgument(!TextUtils.isEmpty(name), "Database name cannot be empty or null");
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       String prefixName = getPrefixName(name);
-      if (!mDatabases.contains(name)) {
+      if (!databases.contains(name)) {
         addDatabase(name);
-        if (mContext.getDatabasePath(prefixName).exists() && !mContext.deleteDatabase(prefixName)) {
+        if (context.getDatabasePath(prefixName).exists() && !context.deleteDatabase(prefixName)) {
           Log.w(
               TAG,
               "Database with prefixed name "
@@ -155,7 +155,7 @@ class DelegatingContext extends ContextWrapper {
                   + " already exists and cannot be deleted.");
         }
       }
-      return mContext.openOrCreateDatabase(prefixName, mode, factory, errorHandler);
+      return context.openOrCreateDatabase(prefixName, mode, factory, errorHandler);
     }
     throw new UnsupportedOperationException(
         "For API level < 11, use openOrCreateDatabase(String, int, CursorFactory) instead");
@@ -166,7 +166,7 @@ class DelegatingContext extends ContextWrapper {
    */
   @Override
   public String[] databaseList() {
-    return mDatabases.toArray(new String[mDatabases.size()]);
+    return databases.toArray(new String[databases.size()]);
   }
 
   /**
@@ -179,9 +179,9 @@ class DelegatingContext extends ContextWrapper {
   @Override
   public boolean deleteDatabase(@NonNull String name) {
     checkArgument(!TextUtils.isEmpty(name), "Database name cannot be empty or null");
-    if (mDatabases.contains(name)) {
-      if (mContext.deleteDatabase(getPrefixName(name))) {
-        mDatabases.remove(name);
+    if (databases.contains(name)) {
+      if (context.deleteDatabase(getPrefixName(name))) {
+        databases.remove(name);
         return true;
       }
     }
@@ -191,7 +191,7 @@ class DelegatingContext extends ContextWrapper {
   @Override
   public File getDatabasePath(@NonNull String name) {
     checkArgument(!TextUtils.isEmpty(name), "Database name cannot be empty or null");
-    return mContext.getDatabasePath(getPrefixName(name));
+    return context.getDatabasePath(getPrefixName(name));
   }
 
   /**
@@ -205,11 +205,11 @@ class DelegatingContext extends ContextWrapper {
   @Override
   public FileInputStream openFileInput(@NonNull String name) throws FileNotFoundException {
     checkArgument(!TextUtils.isEmpty(name), "File name cannot be empty or null");
-    if (!mFiles.contains(name)) {
+    if (!files.contains(name)) {
       throw new FileNotFoundException(
           String.format("File %s is not found in current context", name));
     }
-    return mContext.openFileInput(getPrefixName(name));
+    return context.openFileInput(getPrefixName(name));
   }
 
   /**
@@ -225,22 +225,22 @@ class DelegatingContext extends ContextWrapper {
   public FileOutputStream openFileOutput(@NonNull String name, int mode)
       throws FileNotFoundException {
     checkArgument(!TextUtils.isEmpty(name), "File name cannot be empty or null");
-    FileOutputStream fos = mContext.openFileOutput(getPrefixName(name), mode);
+    FileOutputStream fos = context.openFileOutput(getPrefixName(name), mode);
     if (fos != null) {
-      mFiles.add(name);
+      files.add(name);
     }
     return fos;
   }
 
   @Override
   public String[] fileList() {
-    return mFiles.toArray(new String[mFiles.size()]);
+    return files.toArray(new String[files.size()]);
   }
 
   @Override
   public File getFileStreamPath(@NonNull String name) {
     checkArgument(!TextUtils.isEmpty(name), "File name cannot be empty or null");
-    return mContext.getFileStreamPath(getPrefixName(name));
+    return context.getFileStreamPath(getPrefixName(name));
   }
 
   /**
@@ -252,9 +252,9 @@ class DelegatingContext extends ContextWrapper {
   @Override
   public boolean deleteFile(@NonNull String name) {
     checkArgument(!TextUtils.isEmpty(name), "File name cannot be empty or null");
-    if (mFiles.contains(name)) {
-      if (mContext.deleteFile(getPrefixName(name))) {
-        mFiles.remove(name);
+    if (files.contains(name)) {
+      if (context.deleteFile(getPrefixName(name))) {
+        files.remove(name);
         return true;
       }
     }
@@ -272,19 +272,19 @@ class DelegatingContext extends ContextWrapper {
     // API level >= 19.
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
         && Context.APP_OPS_SERVICE.equals(name)) {
-      return mContext.getSystemService(Context.APP_OPS_SERVICE);
+      return context.getSystemService(Context.APP_OPS_SERVICE);
     }
     throw new UnsupportedOperationException();
   }
 
   /**
-   * The return value only depends on {@link #mRevokedPermissions}, and the argument {@code pid} and
+   * The return value only depends on {@link #revokedPermissions}, and the argument {@code pid} and
    * {@code uid} are ignored.
    */
   @Override
   public int checkPermission(@NonNull String permission, int pid, int uid) {
     checkArgument(!TextUtils.isEmpty(permission), "permission cannot be null or empty");
-    if (mRevokedPermissions.contains(permission)) {
+    if (revokedPermissions.contains(permission)) {
       return PackageManager.PERMISSION_DENIED;
     }
     return PackageManager.PERMISSION_GRANTED;
@@ -728,16 +728,16 @@ class DelegatingContext extends ContextWrapper {
 
   boolean addDatabase(@NonNull String name) {
     checkArgument(!TextUtils.isEmpty(name), "Database name cannot be empty or null");
-    return mDatabases.add(name);
+    return databases.add(name);
   }
 
   void addRevokedPermission(@NonNull String permission) {
     checkArgument(!TextUtils.isEmpty(permission), "permission cannot be null or empty");
-    mRevokedPermissions.add(permission);
+    revokedPermissions.add(permission);
   }
 
   private String getPrefixName(@NonNull String name) {
     checkArgument(!TextUtils.isEmpty(name), "Name cannot be empty or null");
-    return mPrefix + name;
+    return prefix + name;
   }
 }

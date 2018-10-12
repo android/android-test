@@ -148,23 +148,23 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   private final OrchestrationListenerManager listenerManager =
       new OrchestrationListenerManager(this);
 
-  private final ExecutorService mExecutorService;
+  private final ExecutorService executorService;
 
   // assigned on service connection callback thread, read from several other threads.
   private volatile CallbackLogic callbackLogic;
 
-  private UsageTrackerFacilitator mUsageTrackerFacilitator;
-  private Bundle mArguments;
+  private UsageTrackerFacilitator usageTrackerFacilitator;
+  private Bundle arguments;
 
   // TODO(b/73548232) logic that touches these fields has nothing to do with being an
   // instrumentation, it should live in its own state machine class.
-  private String mTest;
-  private Iterator<String> mTestIterator;
+  private String test;
+  private Iterator<String> testIterator;
 
   public AndroidTestOrchestrator() {
     super();
     // We never want to execute multiple tests in parallel.
-    mExecutorService =
+    executorService =
         Executors.newSingleThreadExecutor(
             runnable -> {
               Thread t = Executors.defaultThreadFactory().newThread(runnable);
@@ -186,8 +186,8 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
       throw new IllegalArgumentException("You must provide a target instrumentation.");
     }
 
-    mArguments = arguments;
-    mArguments.putString(ORCHESTRATOR_SERVICE_ARGUMENT, ORCHESTRATOR_SERVICE_LOCATION);
+    this.arguments = arguments;
+    this.arguments.putString(ORCHESTRATOR_SERVICE_ARGUMENT, ORCHESTRATOR_SERVICE_LOCATION);
 
     super.onCreate(arguments);
     start();
@@ -224,7 +224,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
       // Fire and wait for the runtime permissions command.
       execShellCommandSync(
           context,
-          getSecret(mArguments),
+          getSecret(arguments),
           "pm",
           Arrays.asList("grant", context.getPackageName(), permission));
       if (PackageManager.PERMISSION_GRANTED != context.checkCallingOrSelfPermission(permission)) {
@@ -238,10 +238,10 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   // is done via executing shell commands.
   private void connectOrchestratorService() {
     Intent intent = new Intent(getContext(), OrchestratorService.class);
-    getContext().bindService(intent, mConnection, Service.BIND_AUTO_CREATE);
+    getContext().bindService(intent, connection, Service.BIND_AUTO_CREATE);
   }
 
-  private final ServiceConnection mConnection =
+  private final ServiceConnection connection =
       new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
@@ -262,7 +262,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
       };
 
   private void collectTests() {
-    String classArg = mArguments.getString(AJUR_CLASS_ARGUMENT);
+    String classArg = arguments.getString(AJUR_CLASS_ARGUMENT);
     // If we are given a single, fully qualified test then there's no point in test collection.
     // Proceed as if we had done collection and gotten the single argument.
     if (isSingleMethodTest(classArg)) {
@@ -271,11 +271,11 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
       runFinished();
     } else {
       Log.i(TAG, String.format("Multiple test parameter %s, starting test collection", classArg));
-      mExecutorService.execute(
+      executorService.execute(
           TestRunnable.testCollectionRunnable(
               getContext(),
-              getSecret(mArguments),
-              mArguments,
+              getSecret(arguments),
+              arguments,
               getOutputStream(),
               AndroidTestOrchestrator.this));
     }
@@ -295,9 +295,9 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     // everything in this method should live in a different class to model the test execution state
     // machine. We do not need to have any association with Instrumentation beyond calling finish.
     // The first run complete will occur during test collection.
-    if (null == mTest) {
+    if (null == test) {
       List<String> allTests = callbackLogic.provideCollectedTests();
-      mTestIterator = allTests.iterator();
+      testIterator = allTests.iterator();
       addListeners(allTests.size());
 
       if (allTests.isEmpty()) {
@@ -308,7 +308,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
       listenerManager.testProcessFinished(getOutputFile());
     }
 
-    if (runsInIsolatedMode(mArguments)) {
+    if (runsInIsolatedMode(arguments)) {
       executeNextTest();
     } else {
       executeEntireTestSuite();
@@ -316,57 +316,57 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   }
 
   private void executeEntireTestSuite() {
-    if (null != mTest) {
+    if (null != test) {
       finish(Activity.RESULT_OK, createResultBundle());
       return;
     }
 
-    // We don't actually need mTest to have any particular value,
+    // We don't actually need test to have any particular value,
     // just to indicate we've started execution.
-    mTest = "";
-    mExecutorService.execute(
+    test = "";
+    executorService.execute(
         TestRunnable.legacyTestRunnable(
-            getContext(), getSecret(mArguments), mArguments, getOutputStream(), this));
+            getContext(), getSecret(arguments), arguments, getOutputStream(), this));
   }
 
   private void executeNextTest() {
-    if (!mTestIterator.hasNext()) {
+    if (!testIterator.hasNext()) {
       finish(Activity.RESULT_OK, createResultBundle());
       return;
     }
-    mTest = mTestIterator.next();
-    listenerManager.testProcessStarted(new ParcelableDescription(mTest));
-    String coveragePath = addTestCoverageSupport(mArguments, mTest);
+    test = testIterator.next();
+    listenerManager.testProcessStarted(new ParcelableDescription(test));
+    String coveragePath = addTestCoverageSupport(arguments, test);
     if (coveragePath != null) {
-      mArguments.putString(AJUR_COVERAGE_FILE, coveragePath);
+      arguments.putString(AJUR_COVERAGE_FILE, coveragePath);
     }
     clearPackageData();
-    mExecutorService.execute(
+    executorService.execute(
         TestRunnable.singleTestRunnable(
-            getContext(), getSecret(mArguments), mArguments, getOutputStream(), this, mTest));
+            getContext(), getSecret(arguments), arguments, getOutputStream(), this, test));
     if (coveragePath != null) {
-      mArguments.remove(AJUR_COVERAGE_FILE);
+      arguments.remove(AJUR_COVERAGE_FILE);
     }
   }
 
   private void clearPackageData() {
-    if (!shouldClearPackageData(mArguments)) {
+    if (!shouldClearPackageData(arguments)) {
       return;
     }
-    mExecutorService.execute(
+    executorService.execute(
         new Runnable() {
           @Override
           public void run() {
             execShellCommandSync(
                 getContext(),
-                getSecret(mArguments),
+                getSecret(arguments),
                 "pm",
-                Arrays.asList("clear", getTargetPackage(mArguments)));
+                Arrays.asList("clear", getTargetPackage(arguments)));
             execShellCommandSync(
                 getContext(),
-                getSecret(mArguments),
+                getSecret(arguments),
                 "pm",
-                Arrays.asList("clear", getTargetInstrPackage(mArguments)));
+                Arrays.asList("clear", getTargetInstrPackage(arguments)));
           }
         });
   }
@@ -407,10 +407,10 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   }
 
   private String getOutputFile() {
-    if (null == mTest) {
+    if (null == test) {
       return TEST_COLLECTION_FILENAME;
     } else {
-      return String.format(TEST_RUN_FILENAME, mTest);
+      return String.format(TEST_RUN_FILENAME, test);
     }
   }
 
@@ -442,8 +442,8 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   public void finish(int resultCode, Bundle results) {
     xmlTestRunListener.orchestrationRunFinished();
     try {
-      mUsageTrackerFacilitator.trackUsage("AndroidTestOrchestrator", AxtVersions.RUNNER_VERSION);
-      mUsageTrackerFacilitator.sendUsages();
+      usageTrackerFacilitator.trackUsage("AndroidTestOrchestrator", AxtVersions.RUNNER_VERSION);
+      usageTrackerFacilitator.sendUsages();
     } catch (RuntimeException re) {
       Log.w(TAG, "Failed to send analytics.", re);
     } finally {
@@ -512,12 +512,12 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   }
 
   private void registerUserTracker() {
-    mUsageTrackerFacilitator = new UsageTrackerFacilitator(shouldTrackUsage(mArguments));
+    usageTrackerFacilitator = new UsageTrackerFacilitator(shouldTrackUsage(arguments));
     Context targetContext = getTargetContext();
     if (targetContext != null) {
-      mUsageTrackerFacilitator.registerUsageTracker(
+      usageTrackerFacilitator.registerUsageTracker(
           new AnalyticsBasedUsageTracker.Builder(targetContext)
-              .withTargetPackage(getTargetInstrPackage(mArguments))
+              .withTargetPackage(getTargetInstrPackage(arguments))
               .buildIfPossible());
     }
   }

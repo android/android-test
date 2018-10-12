@@ -30,29 +30,29 @@ import org.junit.runners.model.Statement;
 public class UiThreadStatement extends Statement {
   private static final String TAG = "UiThreadStatement";
 
-  private final Statement mBase;
+  private final Statement base;
 
-  private final boolean mRunOnUiThread;
+  private final boolean runOnUiThread;
 
   public UiThreadStatement(Statement base, boolean runOnUiThread) {
-    mBase = base;
-    mRunOnUiThread = runOnUiThread;
+    this.base = base;
+    this.runOnUiThread = runOnUiThread;
   }
 
   public boolean isRunOnUiThread() {
-    return mRunOnUiThread;
+    return runOnUiThread;
   }
 
   @Override
   public void evaluate() throws Throwable {
-    if (mRunOnUiThread) {
+    if (runOnUiThread) {
       final AtomicReference<Throwable> exceptionRef = new AtomicReference<>();
       runOnUiThread(
           new Runnable() {
             @Override
             public void run() {
               try {
-                mBase.evaluate();
+                base.evaluate();
               } catch (Throwable throwable) {
                 exceptionRef.set(throwable);
               }
@@ -63,7 +63,7 @@ public class UiThreadStatement extends Statement {
         throw throwable;
       }
     } else {
-      mBase.evaluate();
+      base.evaluate();
     }
   }
 

@@ -39,21 +39,21 @@ public class TestResult {
     IGNORED,
   }
 
-  private TestStatus mStatus;
-  private String mStackTrace;
-  private Map<String, String> mMetrics;
+  private TestStatus status;
+  private String stackTrace;
+  private Map<String, String> metrics;
   // the start and end time of the test, measured via {@link System#currentTimeMillis()}
-  private long mStartTime = 0;
-  private long mEndTime = 0;
+  private long startTime = 0;
+  private long endTime = 0;
 
   public TestResult() {
-    mStatus = TestStatus.INCOMPLETE;
-    mStartTime = System.currentTimeMillis();
+    status = TestStatus.INCOMPLETE;
+    startTime = System.currentTimeMillis();
   }
 
   /** Get the {@link TestStatus} result of the test. */
   public TestStatus getStatus() {
-    return mStatus;
+    return status;
   }
 
   /**
@@ -61,17 +61,17 @@ public class TestResult {
    * #getStatus()} is {@link TestStatus#PASSED}.
    */
   public String getStackTrace() {
-    return mStackTrace;
+    return stackTrace;
   }
 
   /** Get the associated test metrics. */
   public Map<String, String> getMetrics() {
-    return mMetrics;
+    return metrics;
   }
 
   /** Set the test metrics, overriding any previous values. */
   public void setMetrics(Map<String, String> metrics) {
-    mMetrics = metrics;
+    this.metrics = metrics;
   }
 
   /**
@@ -79,7 +79,7 @@ public class TestResult {
    * ITestRunListener#testStarted(TestIdentifier)} event was received.
    */
   public long getStartTime() {
-    return mStartTime;
+    return startTime;
   }
 
   /**
@@ -87,28 +87,28 @@ public class TestResult {
    * ITestRunListener#testEnded(TestIdentifier, Map)} event was received.
    */
   public long getEndTime() {
-    return mEndTime;
+    return endTime;
   }
 
   /** Set the {@link TestStatus}. */
   public TestResult setStatus(TestStatus status) {
-    mStatus = status;
+    this.status = status;
     return this;
   }
 
   /** Set the stack trace. */
   public void setStackTrace(String trace) {
-    mStackTrace = trace;
+    stackTrace = trace;
   }
 
   /** Sets the end time */
   public void setEndTime(long currentTimeMillis) {
-    mEndTime = currentTimeMillis;
+    endTime = currentTimeMillis;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.hashCode(new Object[] {mMetrics, mStackTrace, mStatus});
+    return Arrays.hashCode(new Object[] {metrics, stackTrace, status});
   }
 
   @Override
@@ -123,9 +123,9 @@ public class TestResult {
       return false;
     }
     TestResult other = (TestResult) obj;
-    return equal(mMetrics, other.mMetrics)
-        && equal(mStackTrace, other.mStackTrace)
-        && equal(mStatus, other.mStatus);
+    return equal(metrics, other.metrics)
+        && equal(stackTrace, other.stackTrace)
+        && equal(status, other.status);
   }
 
   private static boolean equal(Object a, Object b) {

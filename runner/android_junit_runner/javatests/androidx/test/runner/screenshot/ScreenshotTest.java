@@ -46,24 +46,24 @@ import org.mockito.MockitoAnnotations;
 @RunWith(AndroidJUnit4.class)
 @MediumTest
 public class ScreenshotTest {
-  @Mock private UiAutomationWrapper mUiAutomationWrapper;
-  @Mock private Callable mCallable;
-  @Mock private ScreenCaptureProcessor mScreenCaptureProcessor;
-  @Mock private ScreenCaptureProcessor mScreenCaptureProcessorAdditional;
-  @Mock private Activity mActivity;
-  @Mock private Window mWindow;
-  @Mock private View mView;
+  @Mock private UiAutomationWrapper uiAutomationWrapper;
+  @Mock private Callable callable;
+  @Mock private ScreenCaptureProcessor screenCaptureProcessor;
+  @Mock private ScreenCaptureProcessor screenCaptureProcessorAdditional;
+  @Mock private Activity activity;
+  @Mock private Window window;
+  @Mock private View view;
 
   @Rule public final ExpectedException expectedException = ExpectedException.none();
 
-  private Bitmap mStubBitmap = Bitmap.createBitmap(10, 10, ARGB_8888);
-  private Bitmap mStubBitmapLegacy = Bitmap.createBitmap(10, 10, ARGB_8888);
+  private Bitmap stubBitmap = Bitmap.createBitmap(10, 10, ARGB_8888);
+  private Bitmap stubBitmapLegacy = Bitmap.createBitmap(10, 10, ARGB_8888);
 
-  private TakeScreenshotCallable.Factory mStubCallableFactory =
+  private TakeScreenshotCallable.Factory stubCallableFactory =
       new TakeScreenshotCallable.Factory() {
         @Override
         Callable<Bitmap> create(View view) {
-          return mCallable;
+          return callable;
         }
       };
 
@@ -72,65 +72,65 @@ public class ScreenshotTest {
     MockitoAnnotations.initMocks(this);
     initWithStubbedDecorView();
 
-    Screenshot.setUiAutomationWrapper(mUiAutomationWrapper);
-    Screenshot.setTakeScreenshotCallableFactory(mStubCallableFactory);
+    Screenshot.setUiAutomationWrapper(uiAutomationWrapper);
+    Screenshot.setTakeScreenshotCallableFactory(stubCallableFactory);
     Screenshot.setAndroidRuntimeVersion(Build.VERSION.SDK_INT);
     Screenshot.setScreenshotProcessors(new HashSet<ScreenCaptureProcessor>());
 
-    doReturn(mStubBitmap).when(mUiAutomationWrapper).takeScreenshot();
-    doReturn(mStubBitmapLegacy).when(mCallable).call();
+    doReturn(stubBitmap).when(uiAutomationWrapper).takeScreenshot();
+    doReturn(stubBitmapLegacy).when(callable).call();
 
-    doReturn(null).when(mScreenCaptureProcessor).process(any(ScreenCapture.class));
+    doReturn(null).when(screenCaptureProcessor).process(any(ScreenCapture.class));
   }
 
   @Test
   public void captureScreenshotAbove18WithoutActivity_shouldCapture() throws Exception {
     Screenshot.setAndroidRuntimeVersion(18);
-    ScreenCapture comparableScreenCapture = new ScreenCapture(mStubBitmap);
+    ScreenCapture comparableScreenCapture = new ScreenCapture(stubBitmap);
 
     assertEquals(Screenshot.capture(), comparableScreenCapture);
-    verify(mUiAutomationWrapper).takeScreenshot();
-    verify(mCallable, never()).call();
+    verify(uiAutomationWrapper).takeScreenshot();
+    verify(callable, never()).call();
   }
 
   @Test
   public void captureScreenshotAbove18WithActivity_shouldCapture() throws Exception {
     Screenshot.setAndroidRuntimeVersion(18);
-    ScreenCapture comparableScreenCapture = new ScreenCapture(mStubBitmapLegacy);
+    ScreenCapture comparableScreenCapture = new ScreenCapture(stubBitmapLegacy);
 
-    assertEquals(Screenshot.capture(mActivity), comparableScreenCapture);
-    verify(mUiAutomationWrapper, never()).takeScreenshot();
-    verify(mCallable).call();
+    assertEquals(Screenshot.capture(activity), comparableScreenCapture);
+    verify(uiAutomationWrapper, never()).takeScreenshot();
+    verify(callable).call();
   }
 
   @Test
   public void captureScreenshotAbove18WithView_shouldCapture() throws Exception {
     Screenshot.setAndroidRuntimeVersion(18);
-    ScreenCapture comparableScreenCapture = new ScreenCapture(mStubBitmapLegacy);
+    ScreenCapture comparableScreenCapture = new ScreenCapture(stubBitmapLegacy);
 
-    assertEquals(Screenshot.capture(mView), comparableScreenCapture);
-    verify(mUiAutomationWrapper, never()).takeScreenshot();
-    verify(mCallable).call();
+    assertEquals(Screenshot.capture(view), comparableScreenCapture);
+    verify(uiAutomationWrapper, never()).takeScreenshot();
+    verify(callable).call();
   }
 
   @Test
   public void captureScreenshotBelow18WithActivity_shouldCapture() throws Exception {
     Screenshot.setAndroidRuntimeVersion(17);
-    ScreenCapture comparableScreenCapture = new ScreenCapture(mStubBitmapLegacy);
+    ScreenCapture comparableScreenCapture = new ScreenCapture(stubBitmapLegacy);
 
-    assertEquals(Screenshot.capture(mActivity), comparableScreenCapture);
-    verify(mUiAutomationWrapper, never()).takeScreenshot();
-    verify(mCallable).call();
+    assertEquals(Screenshot.capture(activity), comparableScreenCapture);
+    verify(uiAutomationWrapper, never()).takeScreenshot();
+    verify(callable).call();
   }
 
   @Test
   public void captureScreenshotBelow18WithView_shouldCapture() throws Exception {
     Screenshot.setAndroidRuntimeVersion(17);
-    ScreenCapture comparableScreenCapture = new ScreenCapture(mStubBitmapLegacy);
+    ScreenCapture comparableScreenCapture = new ScreenCapture(stubBitmapLegacy);
 
-    assertEquals(Screenshot.capture(mView), comparableScreenCapture);
-    verify(mUiAutomationWrapper, never()).takeScreenshot();
-    verify(mCallable).call();
+    assertEquals(Screenshot.capture(view), comparableScreenCapture);
+    verify(uiAutomationWrapper, never()).takeScreenshot();
+    verify(callable).call();
   }
 
   @Test
@@ -140,15 +140,15 @@ public class ScreenshotTest {
     expectedException.expect(IllegalStateException.class);
 
     Screenshot.capture();
-    verify(mCallable, never()).call();
-    verify(mUiAutomationWrapper, never()).takeScreenshot();
+    verify(callable, never()).call();
+    verify(uiAutomationWrapper, never()).takeScreenshot();
   }
 
   @Test
   public void capture_ShouldAddProcessor() throws Exception {
     Screenshot.setAndroidRuntimeVersion(18);
     Set screenshotProcessorSet = new HashSet<>();
-    screenshotProcessorSet.add(mScreenCaptureProcessor);
+    screenshotProcessorSet.add(screenCaptureProcessor);
     Screenshot.setScreenshotProcessors(screenshotProcessorSet);
 
     ScreenCapture capture = Screenshot.capture();
@@ -159,8 +159,8 @@ public class ScreenshotTest {
   public void capture_ShouldAddMultipleProcessors() throws Exception {
     Screenshot.setAndroidRuntimeVersion(18);
     Set screenshotProcessorSet = new HashSet<>();
-    screenshotProcessorSet.add(mScreenCaptureProcessor);
-    screenshotProcessorSet.add(mScreenCaptureProcessorAdditional);
+    screenshotProcessorSet.add(screenCaptureProcessor);
+    screenshotProcessorSet.add(screenCaptureProcessorAdditional);
     Screenshot.setScreenshotProcessors(screenshotProcessorSet);
 
     ScreenCapture capture = Screenshot.capture();
@@ -168,8 +168,8 @@ public class ScreenshotTest {
   }
 
   private void initWithStubbedDecorView() {
-    doReturn(mWindow).when(mActivity).getWindow();
-    doReturn(mView).when(mWindow).getDecorView();
-    doReturn(mView).when(mView).getRootView();
+    doReturn(window).when(activity).getWindow();
+    doReturn(view).when(window).getDecorView();
+    doReturn(view).when(view).getRootView();
   }
 }

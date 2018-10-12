@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /** Exposes an implementation of {@link IntentMonitor} to users. */
 public final class IntentMonitorRegistry {
 
-  private static final AtomicReference<IntentMonitor> mMonitorRef =
+  private static final AtomicReference<IntentMonitor> monitorRef =
       new AtomicReference<IntentMonitor>(null);
 
   /**
@@ -31,7 +31,7 @@ public final class IntentMonitorRegistry {
    * @throws IllegalStateException if no monitor has been registered.
    */
   public static IntentMonitor getInstance() {
-    IntentMonitor instance = mMonitorRef.get();
+    IntentMonitor instance = monitorRef.get();
     if (null == instance) {
       throw new IllegalStateException(
           "No intent monitor registered! Are you running under an "
@@ -45,7 +45,7 @@ public final class IntentMonitorRegistry {
    * monitor from the registry.
    */
   public static void registerInstance(IntentMonitor monitor) {
-    mMonitorRef.set(monitor);
+    monitorRef.set(monitor);
   }
 
   private IntentMonitorRegistry() {

@@ -66,13 +66,13 @@ public class InstrumentationResultPrinterTest {
   @Test
   public void verifyFailureStackTraceIsTruncated() throws Exception {
     InstrumentationResultPrinter intrResultPrinter = new InstrumentationResultPrinter();
-    intrResultPrinter.mTestNum = 1;
+    intrResultPrinter.testNum = 1;
 
     Failure testFailure = new Failure(Description.EMPTY, new Exception(getVeryLargeString()));
     intrResultPrinter.testFailure(testFailure);
 
     int testResultTraceLength =
-        intrResultPrinter.mTestResult.getString(REPORT_KEY_STACK).length() - 1;
+        intrResultPrinter.testResult.getString(REPORT_KEY_STACK).length() - 1;
     assertTrue(
         String.format(
             "The stack trace length: %s, exceeds the max: %s",

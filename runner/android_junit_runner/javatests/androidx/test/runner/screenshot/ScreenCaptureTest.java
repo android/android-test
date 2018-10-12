@@ -40,88 +40,88 @@ import org.mockito.MockitoAnnotations;
 @SmallTest
 public class ScreenCaptureTest {
 
-  private Bitmap mStubBitmap = Bitmap.createBitmap(10, 10, ARGB_8888);
-  private Bitmap mStubBitmapDifferent = Bitmap.createBitmap(20, 20, ARGB_8888);
-  private ScreenCapture mCapture;
+  private Bitmap stubBitmap = Bitmap.createBitmap(10, 10, ARGB_8888);
+  private Bitmap stubBitmapDifferent = Bitmap.createBitmap(20, 20, ARGB_8888);
+  private ScreenCapture capture;
 
-  @Mock ScreenCaptureProcessor mBasicProcessor;
-  @Mock ScreenCaptureProcessor mGlobalProcessor;
-  @Mock ScreenCaptureProcessor mPassedProcessor;
+  @Mock ScreenCaptureProcessor basicProcessor;
+  @Mock ScreenCaptureProcessor globalProcessor;
+  @Mock ScreenCaptureProcessor passedProcessor;
 
   @Before
   public void before() throws Exception {
     MockitoAnnotations.initMocks(this);
-    mCapture = new ScreenCapture(mStubBitmap, mBasicProcessor);
+    capture = new ScreenCapture(stubBitmap, basicProcessor);
   }
 
   @Test
   public void process_shouldCallBasicProcessorWhenNonePresent() throws Exception {
-    doReturn(null).when(mBasicProcessor).process(eq(mCapture));
+    doReturn(null).when(basicProcessor).process(eq(capture));
 
-    mCapture.process();
+    capture.process();
 
-    verify(mBasicProcessor).process(eq(mCapture));
+    verify(basicProcessor).process(eq(capture));
   }
 
   @Test
   public void process_shouldCallSetOfGlobalProcessorsNotBasicProcessor() throws Exception {
     // These are the processors that are contained in the global Set (set before process is run)
-    doReturn(null).when(mGlobalProcessor).process(eq(mCapture));
+    doReturn(null).when(globalProcessor).process(eq(capture));
     Set<ScreenCaptureProcessor> processorSet = new HashSet<>();
-    processorSet.add(mGlobalProcessor);
-    mCapture.setProcessors(processorSet);
+    processorSet.add(globalProcessor);
+    capture.setProcessors(processorSet);
 
-    mCapture.process();
+    capture.process();
 
-    verify(mGlobalProcessor).process(eq(mCapture));
-    verify(mBasicProcessor, never()).process(eq(mCapture));
+    verify(globalProcessor).process(eq(capture));
+    verify(basicProcessor, never()).process(eq(capture));
   }
 
   @Test
   public void process_shouldCallGivenSetOfProcessorsInsteadOfBasic() throws Exception {
     // These are the processors that are passes to the process method and override the globally
     // set processors.
-    doReturn(null).when(mPassedProcessor).process(eq(mCapture));
+    doReturn(null).when(passedProcessor).process(eq(capture));
     Set<ScreenCaptureProcessor> processorSet = new HashSet<>();
-    processorSet.add(mPassedProcessor);
+    processorSet.add(passedProcessor);
 
-    mCapture.process(processorSet);
+    capture.process(processorSet);
 
-    verify(mPassedProcessor).process(eq(mCapture));
-    verify(mBasicProcessor, never()).process(eq(mCapture));
-    verify(mGlobalProcessor, never()).process(eq(mCapture));
+    verify(passedProcessor).process(eq(capture));
+    verify(basicProcessor, never()).process(eq(capture));
+    verify(globalProcessor, never()).process(eq(capture));
   }
 
   @Test
   public void process_shouldCallGivenSetOfProcessorsInsteadOfGlobalSet() throws Exception {
-    doReturn(null).when(mGlobalProcessor).process(eq(mCapture));
-    doReturn(null).when(mPassedProcessor).process(eq(mCapture));
+    doReturn(null).when(globalProcessor).process(eq(capture));
+    doReturn(null).when(passedProcessor).process(eq(capture));
     Set<ScreenCaptureProcessor> processorSetGlobal = new HashSet<>();
-    processorSetGlobal.add(mGlobalProcessor);
-    mCapture.setProcessors(processorSetGlobal);
+    processorSetGlobal.add(globalProcessor);
+    capture.setProcessors(processorSetGlobal);
     Set<ScreenCaptureProcessor> processorSetPassed = new HashSet<>();
-    processorSetPassed.add(mPassedProcessor);
+    processorSetPassed.add(passedProcessor);
 
-    mCapture.process(processorSetPassed);
+    capture.process(processorSetPassed);
 
-    verify(mPassedProcessor).process(eq(mCapture));
-    verify(mBasicProcessor, never()).process(eq(mCapture));
-    verify(mGlobalProcessor, never()).process(eq(mCapture));
+    verify(passedProcessor).process(eq(capture));
+    verify(basicProcessor, never()).process(eq(capture));
+    verify(globalProcessor, never()).process(eq(capture));
   }
 
   @Test
   public void equalScreenCapturesShouldBeEqualAndHaveSameHashcode() throws Exception {
-    ScreenCapture capture2 = new ScreenCapture(mStubBitmap);
+    ScreenCapture capture2 = new ScreenCapture(stubBitmap);
 
-    assertTrue(mCapture.equals(capture2));
-    assertTrue(mCapture.hashCode() == capture2.hashCode());
+    assertTrue(capture.equals(capture2));
+    assertTrue(capture.hashCode() == capture2.hashCode());
   }
 
   @Test
   public void nonEqualScreenCapturesShouldNotBeEqual() throws Exception {
-    ScreenCapture capture2 = new ScreenCapture(mStubBitmapDifferent);
+    ScreenCapture capture2 = new ScreenCapture(stubBitmapDifferent);
 
-    assertFalse(mCapture.equals(capture2));
-    assertFalse(mCapture.hashCode() == capture2.hashCode());
+    assertFalse(capture.equals(capture2));
+    assertFalse(capture.hashCode() == capture2.hashCode());
   }
 }

@@ -31,18 +31,18 @@ import android.os.Parcelable;
  */
 public class ParcelableIBinder implements Parcelable {
 
-  private final IBinder mIBinder;
+  private final IBinder iBinder;
 
   public ParcelableIBinder(IBinder iBinder) {
-    mIBinder = checkNotNull(iBinder);
+    this.iBinder = checkNotNull(iBinder);
   }
 
   public IBinder getIBinder() {
-    return mIBinder;
+    return iBinder;
   }
 
   protected ParcelableIBinder(Parcel in) {
-    mIBinder = in.readStrongBinder();
+    iBinder = in.readStrongBinder();
   }
 
   public static final Creator<ParcelableIBinder> CREATOR =
@@ -65,6 +65,6 @@ public class ParcelableIBinder implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeStrongBinder(mIBinder);
+    dest.writeStrongBinder(iBinder);
   }
 }

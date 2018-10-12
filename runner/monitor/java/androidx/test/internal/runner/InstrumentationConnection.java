@@ -106,22 +106,22 @@ public class InstrumentationConnection {
   private static final int MSG_PERFORM_CLEANUP = 11;
   private static final int MSG_PERFORM_CLEANUP_FINISHED = 12;
 
-  private Context mTargetContext;
-  private static Instrumentation mInstrumentation;
-  private static MonitoringInstrumentation.ActivityFinisher mActivityFinisher;
+  private Context targetContext;
+  private static Instrumentation instrumentation;
+  private static MonitoringInstrumentation.ActivityFinisher activityFinisher;
 
   /**
    * The {@link IncomingHandler} that will handle all the incoming messages via {@link
-   * IncomingHandler#mMessengerHandler}
+   * IncomingHandler#messengerHandler}
    */
-  IncomingHandler mIncomingHandler;
+  IncomingHandler incomingHandler;
 
   /** Receiver used to discover and establish communication with new instrumentation instances */
-  @VisibleForTesting final BroadcastReceiver mMessengerReceiver = new MessengerReceiver();
+  @VisibleForTesting final BroadcastReceiver messengerReceiver = new MessengerReceiver();
 
   @VisibleForTesting
   InstrumentationConnection(@NonNull Context context) {
-    mTargetContext = checkNotNull(context, "Context can't be null");
+    targetContext = checkNotNull(context, "Context can't be null");
   }
 
   /**
@@ -153,24 +153,24 @@ public class InstrumentationConnection {
       Instrumentation instrumentation, MonitoringInstrumentation.ActivityFinisher finisher) {
     logDebugWithProcess(TAG, "init");
 
-    if (null == mIncomingHandler) {
-      mInstrumentation = instrumentation;
-      mActivityFinisher = finisher;
+    if (null == incomingHandler) {
+      InstrumentationConnection.instrumentation = instrumentation;
+      activityFinisher = finisher;
       HandlerThread ht = new HandlerThread("InstrumentationConnectionThread");
       ht.start();
-      mIncomingHandler = new IncomingHandler(ht.getLooper());
+      incomingHandler = new IncomingHandler(ht.getLooper());
 
       // Inform other instances of yourself
       Intent intent = new Intent(BROADCAST_FILTER);
       Bundle bundle = new Bundle();
       bundle.putParcelable(
           BUNDLE_BR_NEW_BINDER,
-          new ParcelableIBinder(mIncomingHandler.mMessengerHandler.getBinder()));
+          new ParcelableIBinder(incomingHandler.messengerHandler.getBinder()));
       intent.putExtra(BUNDLE_BR_NEW_BINDER, bundle);
       try {
-        mTargetContext.sendBroadcast(intent);
+        targetContext.sendBroadcast(intent);
         // TODO: Consider enforcing permissions when registering for a receiver
-        mTargetContext.registerReceiver(mMessengerReceiver, new IntentFilter(BROADCAST_FILTER));
+        targetContext.registerReceiver(messengerReceiver, new IntentFilter(BROADCAST_FILTER));
       } catch (SecurityException isolatedProcess) {
         Log.i(TAG, "Could not send broadcast or register receiver (isolatedProcess?)");
       }
@@ -184,18 +184,18 @@ public class InstrumentationConnection {
    */
   public synchronized void terminate() {
     logDebugWithProcess(TAG, "Terminate is called");
-    if (mIncomingHandler != null) {
+    if (incomingHandler != null) {
       // post termination message to the handler in case there messages in flight
-      mIncomingHandler.runSyncTask(
+      incomingHandler.runSyncTask(
           new Callable<Void>() {
             @Override
             public Void call() {
-              mIncomingHandler.doDie();
+              incomingHandler.doDie();
               return null;
             }
           });
-      mTargetContext.unregisterReceiver(mMessengerReceiver);
-      mIncomingHandler = null;
+      targetContext.unregisterReceiver(messengerReceiver);
+      incomingHandler = null;
     }
   }
 
@@ -204,18 +204,18 @@ public class InstrumentationConnection {
    * clean state before/after each test.
    */
   public synchronized void requestRemoteInstancesActivityCleanup() {
-    checkState(mIncomingHandler != null, "Instrumentation Connection in not yet initialized");
+    checkState(incomingHandler != null, "Instrumentation Connection in not yet initialized");
 
     UUID uuid = UUID.randomUUID();
     CountDownLatch latch = new CountDownLatch(1);
-    mIncomingHandler.associateLatch(uuid, latch);
+    incomingHandler.associateLatch(uuid, latch);
 
-    Message msg = mIncomingHandler.obtainMessage(MSG_REMOTE_CLEANUP_REQUEST);
-    msg.replyTo = mIncomingHandler.mMessengerHandler;
+    Message msg = incomingHandler.obtainMessage(MSG_REMOTE_CLEANUP_REQUEST);
+    msg.replyTo = incomingHandler.messengerHandler;
     Bundle bundle = msg.getData();
     bundle.putSerializable(BUNDLE_KEY_UUID, uuid);
     msg.setData(bundle);
-    mIncomingHandler.sendMessage(msg);
+    incomingHandler.sendMessage(msg);
 
     // block until remote clean up is complete, will timeout no reply received within 2 sec
     try {
@@ -225,7 +225,7 @@ public class InstrumentationConnection {
     } catch (InterruptedException e) {
       Log.e(TAG, "Interrupted while waiting for response from message with id: " + uuid, e);
     } finally {
-      mIncomingHandler.disassociateLatch(uuid);
+      incomingHandler.disassociateLatch(uuid);
     }
   }
 
@@ -236,14 +236,14 @@ public class InstrumentationConnection {
    * @param messenger a {@link Messenger} to use for future communication with the client
    */
   public synchronized void registerClient(String type, Messenger messenger) {
-    checkState(mIncomingHandler != null, "Instrumentation Connection in not yet initialized");
+    checkState(incomingHandler != null, "Instrumentation Connection in not yet initialized");
     Log.i(TAG, "Register client of type: " + type);
     Bundle bundle = new Bundle();
     bundle.putString(BUNDLE_KEY_CLIENT_TYPE, type);
     bundle.putParcelable(BUNDLE_KEY_CLIENT_MESSENGER, messenger);
-    Message msg = mIncomingHandler.obtainMessage(MSG_REG_CLIENT);
+    Message msg = incomingHandler.obtainMessage(MSG_REG_CLIENT);
     msg.setData(bundle);
-    mIncomingHandler.sendMessage(msg);
+    incomingHandler.sendMessage(msg);
   }
 
   /**
@@ -254,7 +254,7 @@ public class InstrumentationConnection {
    *     is unknown
    */
   public synchronized Set<Messenger> getClientsForType(final String type) {
-    return mIncomingHandler.getClientsForType(type);
+    return incomingHandler.getClientsForType(type);
   }
 
   /**
@@ -264,14 +264,14 @@ public class InstrumentationConnection {
    * @param messenger a {@link Messenger} to use for future communication with the client
    */
   public synchronized void unregisterClient(String type, Messenger messenger) {
-    checkState(mIncomingHandler != null, "Instrumentation Connection in not yet initialized");
+    checkState(incomingHandler != null, "Instrumentation Connection in not yet initialized");
     Log.i(TAG, "Unregister client of type: " + type);
     Bundle bundle = new Bundle();
     bundle.putString(BUNDLE_KEY_CLIENT_TYPE, type);
     bundle.putParcelable(BUNDLE_KEY_CLIENT_MESSENGER, messenger);
-    Message msg = mIncomingHandler.obtainMessage(MSG_UN_REG_CLIENT);
+    Message msg = incomingHandler.obtainMessage(MSG_UN_REG_CLIENT);
     msg.setData(bundle);
-    mIncomingHandler.sendMessage(msg);
+    incomingHandler.sendMessage(msg);
   }
 
   /** Receiver to handle Intent broadcasts with {@link #BROADCAST_FILTER} event. */
@@ -291,9 +291,9 @@ public class InstrumentationConnection {
       ParcelableIBinder iBinder = extras.getParcelable(BUNDLE_BR_NEW_BINDER);
       if (iBinder != null) {
         Messenger msgr = new Messenger(iBinder.getIBinder());
-        Message msg = mIncomingHandler.obtainMessage(MSG_HANDLE_INSTRUMENTATION_FROM_BROADCAST);
+        Message msg = incomingHandler.obtainMessage(MSG_HANDLE_INSTRUMENTATION_FROM_BROADCAST);
         msg.replyTo = msgr;
-        mIncomingHandler.sendMessage(msg);
+        incomingHandler.sendMessage(msg);
       }
     }
   }
@@ -306,18 +306,18 @@ public class InstrumentationConnection {
   @VisibleForTesting
   static class IncomingHandler extends Handler {
     /** Target we publish for clients to send messages to IncomingHandler. */
-    @VisibleForTesting Messenger mMessengerHandler = new Messenger(this);
+    @VisibleForTesting Messenger messengerHandler = new Messenger(this);
     /**
      * Keeps track of all currently registered clients. Note: This Set should only be modified via
-     * the mIncomingHandler.
+     * the incomingHandler.
      */
-    @VisibleForTesting Set<Messenger> mOtherInstrumentations = new HashSet<>();
+    @VisibleForTesting Set<Messenger> otherInstrumentations = new HashSet<>();
 
     /**
      * Keeps track of all Messengers for each unique client type. Note: This Map should only be
-     * modified via the mIncomingHandler.
+     * modified via the incomingHandler.
      */
-    @VisibleForTesting Map<String, Set<Messenger>> mTypedClients = new HashMap<>();
+    @VisibleForTesting Map<String, Set<Messenger>> typedClients = new HashMap<>();
 
     /**
      * Keeps track of {@link CountDownLatch}s mapped to {@link UUID}s to aid with synchronization.
@@ -345,7 +345,7 @@ public class InstrumentationConnection {
           // This message comes from the local MessengerReceiver#onReceive method to
           // register the remote instrumentation instance came in the broadcast and
           // reply back with local binder for future IPC.
-          if (mOtherInstrumentations.add(msg.replyTo)) {
+          if (otherInstrumentations.add(msg.replyTo)) {
             sendMessageWithReply(msg.replyTo, MSG_ADD_INSTRUMENTATION, null);
           } else {
             Log.w(TAG, "Broadcast with existing binder was received, ignoring it..");
@@ -357,9 +357,9 @@ public class InstrumentationConnection {
           // separate process who receive {@link BROADCAST_FILTER} broadcast. The message
           // should include: the sender's Messenger in Message#replyTo and a bundle with
           // a list of its potential clients.
-          if (mOtherInstrumentations.add(msg.replyTo)) {
+          if (otherInstrumentations.add(msg.replyTo)) {
             // Reply back with local list of clients if exist
-            if (!mTypedClients.isEmpty()) {
+            if (!typedClients.isEmpty()) {
               sendMessageWithReply(msg.replyTo, MSG_ADD_CLIENTS_IN_BUNDLE, null);
             }
             // Save remote clients
@@ -372,7 +372,7 @@ public class InstrumentationConnection {
           logDebugWithProcess(TAG, "handleMessage(MSG_REMOVE_INSTRUMENTATION)");
           // A message notifying the termination of a remote instrumentation instance.
           // This instance should no longer keep track of the sender's Messenger.
-          if (!mOtherInstrumentations.remove(msg.replyTo)) {
+          if (!otherInstrumentations.remove(msg.replyTo)) {
             Log.w(TAG, "Attempting to remove a non-existent binder!");
           }
           break;
@@ -419,7 +419,7 @@ public class InstrumentationConnection {
           break;
         case MSG_REMOTE_CLEANUP_REQUEST:
           logDebugWithProcess(TAG, "handleMessage(MSG_REMOTE_CLEANUP_REQUEST)");
-          if (mOtherInstrumentations.isEmpty()) {
+          if (otherInstrumentations.isEmpty()) {
             Message m = obtainMessage(MSG_PERFORM_CLEANUP_FINISHED);
             m.setData(msg.getData());
             sendMessage(m);
@@ -429,7 +429,7 @@ public class InstrumentationConnection {
           break;
         case MSG_PERFORM_CLEANUP:
           logDebugWithProcess(TAG, "handleMessage(MSG_PERFORM_CLEANUP)");
-          mInstrumentation.runOnMainSync(mActivityFinisher);
+          instrumentation.runOnMainSync(activityFinisher);
           sendMessageWithReply(msg.replyTo, MSG_PERFORM_CLEANUP_FINISHED, msg.getData());
           break;
         case MSG_PERFORM_CLEANUP_FINISHED:
@@ -489,14 +489,14 @@ public class InstrumentationConnection {
       Log.i(TAG, "terminating process");
       // notify others of self termination
       sendMessageToOtherInstr(MSG_REMOVE_INSTRUMENTATION, null);
-      mOtherInstrumentations.clear();
-      mTypedClients.clear();
+      otherInstrumentations.clear();
+      typedClients.clear();
       logDebugWithProcess(TAG, "quitting looper...");
       getLooper().quit();
       logDebugWithProcess(TAG, "finishing instrumentation...");
-      mInstrumentation.finish(0, null);
-      mInstrumentation = null;
-      mActivityFinisher = null;
+      instrumentation.finish(0, null);
+      instrumentation = null;
+      activityFinisher = null;
     }
 
     private Set<Messenger> getClientsForType(final String type) {
@@ -505,7 +505,7 @@ public class InstrumentationConnection {
               new Callable<Set<Messenger>>() {
                 @Override
                 public Set<Messenger> call() {
-                  return mTypedClients.get(type);
+                  return typedClients.get(type);
                 }
               });
       post(associationTask);
@@ -535,18 +535,18 @@ public class InstrumentationConnection {
 
       // Construct a message for a given code and with the local Messenger
       Message msg = obtainMessage(what);
-      msg.replyTo = mMessengerHandler;
+      msg.replyTo = messengerHandler;
       if (data != null) {
         msg.setData(data);
       }
 
       // The message should include all known clients
-      if (!mTypedClients.isEmpty()) {
+      if (!typedClients.isEmpty()) {
         Bundle clientsBundle = msg.getData();
         // Flatten the map of clients to send it as part of a bundle.
-        ArrayList<String> keyList = new ArrayList<>(mTypedClients.keySet());
+        ArrayList<String> keyList = new ArrayList<>(typedClients.keySet());
         clientsBundle.putStringArrayList(BUNDLE_KEY_CLIENTS, keyList);
-        for (Map.Entry<String, Set<Messenger>> entry : mTypedClients.entrySet()) {
+        for (Map.Entry<String, Set<Messenger>> entry : typedClients.entrySet()) {
           String clientType = String.valueOf(entry.getKey());
           Messenger[] clientArray =
               entry.getValue().toArray(new Messenger[entry.getValue().size()]);
@@ -571,7 +571,7 @@ public class InstrumentationConnection {
     private void sendMessageToOtherInstr(int what, Bundle data) {
       logDebugWithProcess(
           TAG, "sendMessageToOtherInstr() called with: what = [%s], data = [%s]", what, data);
-      for (Messenger otherInstr : mOtherInstrumentations) {
+      for (Messenger otherInstr : otherInstrumentations) {
         sendMessageWithReply(otherInstr, what, data);
       }
     }
@@ -618,13 +618,13 @@ public class InstrumentationConnection {
       checkNotNull(type, "type cannot be null!");
       checkNotNull(client, "client cannot be null!");
 
-      Set<Messenger> clientSet = mTypedClients.get(type);
+      Set<Messenger> clientSet = typedClients.get(type);
 
       if (null == clientSet) {
         // Add the new client
         clientSet = new HashSet<>();
         clientSet.add(client);
-        mTypedClients.put(type, clientSet);
+        typedClients.put(type, clientSet);
         return;
       }
 
@@ -638,12 +638,12 @@ public class InstrumentationConnection {
       checkNotNull(type, "type cannot be null!");
       checkNotNull(client, "client cannot be null!");
 
-      if (!mTypedClients.containsKey(type)) {
+      if (!typedClients.containsKey(type)) {
         Log.w(TAG, "There are no registered clients for type: " + type);
         return;
       }
 
-      Set<Messenger> clientSet = mTypedClients.get(type);
+      Set<Messenger> clientSet = typedClients.get(type);
 
       if (!clientSet.contains(client)) {
         Log.w(
@@ -658,7 +658,7 @@ public class InstrumentationConnection {
       clientSet.remove(client);
 
       if (clientSet.isEmpty()) {
-        mTypedClients.remove(type);
+        typedClients.remove(type);
       }
     }
 

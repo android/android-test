@@ -262,45 +262,44 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
 
   private static final String LOG_TAG = "AndroidJUnitRunner";
 
-  private Bundle mArguments;
-  private InstrumentationResultPrinter mInstrumentationResultPrinter =
+  private Bundle arguments;
+  private InstrumentationResultPrinter instrumentationResultPrinter =
       new InstrumentationResultPrinter();
-  private RunnerArgs mRunnerArgs;
-  private UsageTrackerFacilitator mUsageTrackerFacilitator;
-  private OrchestratedInstrumentationListener mOrchestratorListener;
+  private RunnerArgs runnerArgs;
+  private UsageTrackerFacilitator usageTrackerFacilitator;
+  private OrchestratedInstrumentationListener orchestratorListener;
 
   @Override
   public void onCreate(Bundle arguments) {
-    mArguments = arguments;
-    parseRunnerArgs(mArguments);
+    this.arguments = arguments;
+    parseRunnerArgs(this.arguments);
 
-    if (waitForDebugger(mRunnerArgs)) {
+    if (waitForDebugger(runnerArgs)) {
       Log.i(LOG_TAG, "Waiting for debugger to connect...");
       Debug.waitForDebugger();
       Log.i(LOG_TAG, "Debugger connected.");
     }
 
     // We are only interested in tracking usage of the primary process.
-    if (isPrimaryInstrProcess(mRunnerArgs.targetProcess)) {
-      mUsageTrackerFacilitator = new UsageTrackerFacilitator(mRunnerArgs);
+    if (isPrimaryInstrProcess(runnerArgs.targetProcess)) {
+      usageTrackerFacilitator = new UsageTrackerFacilitator(runnerArgs);
     } else {
-      mUsageTrackerFacilitator = new UsageTrackerFacilitator(false);
+      usageTrackerFacilitator = new UsageTrackerFacilitator(false);
     }
 
     super.onCreate(arguments);
 
-    for (ApplicationLifecycleCallback listener : mRunnerArgs.appListeners) {
+    for (ApplicationLifecycleCallback listener : runnerArgs.appListeners) {
       ApplicationLifecycleMonitorRegistry.getInstance().addLifecycleCallback(listener);
     }
 
-    addScreenCaptureProcessors(mRunnerArgs);
+    addScreenCaptureProcessors(runnerArgs);
 
-    if (mRunnerArgs.orchestratorService != null
-        && isPrimaryInstrProcess(mRunnerArgs.targetProcess)) {
+    if (runnerArgs.orchestratorService != null && isPrimaryInstrProcess(runnerArgs.targetProcess)) {
       // If orchestratorService is provided, and we are the primary process
       // we await onOrchestratorConnect() before we start().
-      mOrchestratorListener = new OrchestratedInstrumentationListener(this);
-      mOrchestratorListener.connect(getContext());
+      orchestratorListener = new OrchestratedInstrumentationListener(this);
+      orchestratorListener.connect(getContext());
     } else {
       // If no orchestration service is given, or we are not the primary process we can
       // start() immediately.
@@ -333,7 +332,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
    * @param arguments
    */
   private void parseRunnerArgs(Bundle arguments) {
-    mRunnerArgs = new RunnerArgs.Builder().fromManifest(this).fromBundle(this, arguments).build();
+    runnerArgs = new RunnerArgs.Builder().fromManifest(this).fromBundle(this, arguments).build();
   }
 
   /**
@@ -342,12 +341,12 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
    * @return the Bundle object
    */
   private Bundle getArguments() {
-    return mArguments;
+    return arguments;
   }
 
   @VisibleForTesting
   InstrumentationResultPrinter getInstrumentationResultPrinter() {
-    return mInstrumentationResultPrinter;
+    return instrumentationResultPrinter;
   }
 
   @Override
@@ -361,19 +360,19 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
      * out that would be run for a given class parameter.  AJUR will then be successively
      * called with whatever it passes back to the orchestratorListener.
      */
-    if (mRunnerArgs.listTestsForOrchestrator && isPrimaryInstrProcess(mRunnerArgs.targetProcess)) {
-      Request testRequest = buildRequest(mRunnerArgs, getArguments());
-      mOrchestratorListener.addTests(testRequest.getRunner().getDescription());
+    if (runnerArgs.listTestsForOrchestrator && isPrimaryInstrProcess(runnerArgs.targetProcess)) {
+      Request testRequest = buildRequest(runnerArgs, getArguments());
+      orchestratorListener.addTests(testRequest.getRunner().getDescription());
       finish(Activity.RESULT_OK, new Bundle());
       return;
     }
 
-    if (mRunnerArgs.remoteMethod != null) {
+    if (runnerArgs.remoteMethod != null) {
       reflectivelyInvokeRemoteMethod(
-          mRunnerArgs.remoteMethod.testClassName, mRunnerArgs.remoteMethod.methodName);
+          runnerArgs.remoteMethod.testClassName, runnerArgs.remoteMethod.methodName);
     }
 
-    if (!isPrimaryInstrProcess(mRunnerArgs.targetProcess)) {
+    if (!isPrimaryInstrProcess(runnerArgs.targetProcess)) {
       Log.i(LOG_TAG, "Runner is idle...");
       return;
     }
@@ -382,9 +381,9 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
     try {
       TestExecutor.Builder executorBuilder = new TestExecutor.Builder(this);
 
-      addListeners(mRunnerArgs, executorBuilder);
+      addListeners(runnerArgs, executorBuilder);
 
-      Request testRequest = buildRequest(mRunnerArgs, getArguments());
+      Request testRequest = buildRequest(runnerArgs, getArguments());
 
       results = executorBuilder.build().execute(testRequest);
 
@@ -401,8 +400,8 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
   @Override
   public void finish(int resultCode, Bundle results) {
     try {
-      mUsageTrackerFacilitator.trackUsage("AndroidJUnitRunner", AxtVersions.RUNNER_VERSION);
-      mUsageTrackerFacilitator.sendUsages();
+      usageTrackerFacilitator.trackUsage("AndroidJUnitRunner", AxtVersions.RUNNER_VERSION);
+      usageTrackerFacilitator.sendUsages();
     } catch (RuntimeException re) {
       Log.w(LOG_TAG, "Failed to send analytics.", re);
     }
@@ -427,8 +426,8 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
       builder.addRunListener(new SuiteAssignmentPrinter());
     } else {
       builder.addRunListener(new LogRunListener());
-      if (mOrchestratorListener != null) {
-        builder.addRunListener(mOrchestratorListener);
+      if (orchestratorListener != null) {
+        builder.addRunListener(orchestratorListener);
       } else {
         builder.addRunListener(getInstrumentationResultPrinter());
       }
@@ -465,8 +464,8 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
       builder.addRunListener(new LogRunListener());
       addDelayListener(args, builder);
       addCoverageListener(args, builder);
-      if (mOrchestratorListener != null) {
-        builder.addRunListener(mOrchestratorListener);
+      if (orchestratorListener != null) {
+        builder.addRunListener(orchestratorListener);
       } else {
         builder.addRunListener(getInstrumentationResultPrinter());
       }
@@ -547,7 +546,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
   private void registerUserTracker() {
     Context targetContext = getTargetContext();
     if (targetContext != null) {
-      mUsageTrackerFacilitator.registerUsageTracker(
+      usageTrackerFacilitator.registerUsageTracker(
           new AnalyticsBasedUsageTracker.Builder(targetContext).buildIfPossible());
     }
   }

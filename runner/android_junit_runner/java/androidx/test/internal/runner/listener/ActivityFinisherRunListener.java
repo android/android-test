@@ -29,29 +29,29 @@ import org.junit.runner.notification.RunListener;
  * running when it ends.
  */
 public class ActivityFinisherRunListener extends RunListener {
-  private final Instrumentation mInstrumentation;
-  private final MonitoringInstrumentation.ActivityFinisher mActivityFinisher;
-  private final Runnable mWaitForActivitiesToFinishRunnable;
+  private final Instrumentation instrumentation;
+  private final MonitoringInstrumentation.ActivityFinisher activityFinisher;
+  private final Runnable waitForActivitiesToFinishRunnable;
 
   public ActivityFinisherRunListener(
       Instrumentation instrumentation,
       MonitoringInstrumentation.ActivityFinisher finisher,
       Runnable waitForActivitiesToFinishRunnable) {
-    mInstrumentation = checkNotNull(instrumentation);
-    mActivityFinisher = checkNotNull(finisher);
-    mWaitForActivitiesToFinishRunnable = checkNotNull(waitForActivitiesToFinishRunnable);
+    this.instrumentation = checkNotNull(instrumentation);
+    activityFinisher = checkNotNull(finisher);
+    this.waitForActivitiesToFinishRunnable = checkNotNull(waitForActivitiesToFinishRunnable);
   }
 
   @Override
   public void testStarted(Description description) throws Exception {
-    mInstrumentation.runOnMainSync(mActivityFinisher);
-    mWaitForActivitiesToFinishRunnable.run();
+    instrumentation.runOnMainSync(activityFinisher);
+    waitForActivitiesToFinishRunnable.run();
   }
 
   @Override
   public void testFinished(Description description) throws Exception {
     InstrumentationConnection.getInstance().requestRemoteInstancesActivityCleanup();
-    mInstrumentation.runOnMainSync(mActivityFinisher);
-    mWaitForActivitiesToFinishRunnable.run();
+    instrumentation.runOnMainSync(activityFinisher);
+    waitForActivitiesToFinishRunnable.run();
   }
 }
