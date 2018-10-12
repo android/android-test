@@ -19,26 +19,31 @@ package androidx.test.internal.runner.lifecycle;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isIn;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import android.app.Activity;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
 import androidx.test.runner.lifecycle.Stage;
 import java.util.ArrayList;
 import java.util.List;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /** ActivityLifecycleMonitorImpl tests. */
+@RunWith(AndroidJUnit4.class)
 @SmallTest
-public class ActivityLifecycleMonitorImplTest extends TestCase {
+public class ActivityLifecycleMonitorImplTest {
 
   private final Activity mMockActivity = mock(Activity.class);
 
   private final ActivityLifecycleMonitorImpl mMonitor = new ActivityLifecycleMonitorImpl(true);
 
+  @Test
   public void testAddRemoveListener() {
     ActivityLifecycleCallback callback = mock(ActivityLifecycleCallback.class);
 
@@ -61,6 +66,7 @@ public class ActivityLifecycleMonitorImplTest extends TestCase {
     verify(callback, never()).onActivityLifecycleChanged(mMockActivity, Stage.DESTROYED);
   }
 
+  @Test
   public void testCallbackConsistancy() {
     ConsistancyCheckingCallback callback = new ConsistancyCheckingCallback();
     mMonitor.addLifecycleCallback(callback);
@@ -73,6 +79,7 @@ public class ActivityLifecycleMonitorImplTest extends TestCase {
     }
   }
 
+  @Test
   public void testDirectQueries() {
     Activity mock1 = mock(Activity.class);
     Activity mock2 = mock(Activity.class);
