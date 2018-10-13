@@ -16,6 +16,7 @@
 
 package androidx.test.internal.runner.lifecycle;
 
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isIn;
@@ -25,12 +26,14 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import android.app.Activity;
+import androidx.test.annotation.UiThreadTest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
 import androidx.test.runner.lifecycle.Stage;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -39,11 +42,21 @@ import org.junit.runner.RunWith;
 @SmallTest
 public class ActivityLifecycleMonitorImplTest {
 
-  private final Activity mockActivity = mock(Activity.class);
+  private Activity activity;
+  private ActivityLifecycleMonitorImpl monitor;
 
-  private final ActivityLifecycleMonitorImpl monitor = new ActivityLifecycleMonitorImpl(true);
+  @Before
+  public void setUp() {
+    getInstrumentation()
+        .runOnMainSync(
+            new Runnable() {
+              public void run() {
+                activity = new Activity();
+                monitor = new ActivityLifecycleMonitorImpl(true);
+              }
+            });
+  }
 
-  @Test
   public void testAddRemoveListener() {
     ActivityLifecycleCallback callback = mock(ActivityLifecycleCallback.class);
 
@@ -52,18 +65,18 @@ public class ActivityLifecycleMonitorImplTest {
     monitor.addLifecycleCallback(callback);
     monitor.addLifecycleCallback(callback);
 
-    monitor.signalLifecycleChange(Stage.CREATED, mockActivity);
-    monitor.signalLifecycleChange(Stage.STARTED, mockActivity);
+    monitor.signalLifecycleChange(Stage.CREATED, activity);
+    monitor.signalLifecycleChange(Stage.STARTED, activity);
 
     // multiple removes should no-op.
     monitor.removeLifecycleCallback(callback);
     monitor.removeLifecycleCallback(callback);
 
-    monitor.signalLifecycleChange(Stage.DESTROYED, mockActivity);
+    monitor.signalLifecycleChange(Stage.DESTROYED, activity);
 
-    verify(callback).onActivityLifecycleChanged(mockActivity, Stage.CREATED);
-    verify(callback).onActivityLifecycleChanged(mockActivity, Stage.STARTED);
-    verify(callback, never()).onActivityLifecycleChanged(mockActivity, Stage.DESTROYED);
+    verify(callback).onActivityLifecycleChanged(activity, Stage.CREATED);
+    verify(callback).onActivityLifecycleChanged(activity, Stage.STARTED);
+    verify(callback, never()).onActivityLifecycleChanged(activity, Stage.DESTROYED);
   }
 
   @Test
@@ -72,7 +85,7 @@ public class ActivityLifecycleMonitorImplTest {
     monitor.addLifecycleCallback(callback);
 
     for (Stage stage : Stage.values()) {
-      monitor.signalLifecycleChange(stage, mockActivity);
+      monitor.signalLifecycleChange(stage, activity);
       if (null != callback.error) {
         throw callback.error;
       }
@@ -80,10 +93,11 @@ public class ActivityLifecycleMonitorImplTest {
   }
 
   @Test
+  @UiThreadTest
   public void testDirectQueries() {
-    Activity mock1 = mock(Activity.class);
-    Activity mock2 = mock(Activity.class);
-    Activity mock3 = mock(Activity.class);
+    Activity mock1 = new Activity();
+    Activity mock2 = new Activity();
+    Activity mock3 = new Activity();
 
     monitor.signalLifecycleChange(Stage.CREATED, mock1);
     monitor.signalLifecycleChange(Stage.CREATED, mock2);
