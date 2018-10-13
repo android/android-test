@@ -35,15 +35,15 @@ import org.junit.runners.model.RunnerBuilder;
 /** A {@link RunnerBuilder} that can handle all types of tests. */
 class AndroidRunnerBuilder extends AllDefaultPossibilitiesBuilder {
 
-  private final AndroidJUnit3Builder mAndroidJUnit3Builder;
-  private final AndroidJUnit4Builder mAndroidJUnit4Builder;
-  private final AndroidSuiteBuilder mAndroidSuiteBuilder;
-  private final AndroidAnnotatedBuilder mAndroidAnnotatedBuilder;
+  private final AndroidJUnit3Builder androidJUnit3Builder;
+  private final AndroidJUnit4Builder androidJUnit4Builder;
+  private final AndroidSuiteBuilder androidSuiteBuilder;
+  private final AndroidAnnotatedBuilder androidAnnotatedBuilder;
 
   // TODO: customize for Android ?
-  private final IgnoredBuilder mIgnoredBuilder;
+  private final IgnoredBuilder ignoredBuilder;
 
-  private final List<RunnerBuilder> mCustomRunnerBuilders;
+  private final List<RunnerBuilder> customRunnerBuilders;
 
   /** @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters */
   public AndroidRunnerBuilder(AndroidRunnerParams runnerParams) {
@@ -83,14 +83,14 @@ class AndroidRunnerBuilder extends AllDefaultPossibilitiesBuilder {
       boolean scanningPath,
       List<Class<? extends RunnerBuilder>> customRunnerBuilderClasses) {
     super(true);
-    mAndroidJUnit3Builder = new AndroidJUnit3Builder(runnerParams, scanningPath);
-    mAndroidJUnit4Builder = new AndroidJUnit4Builder(runnerParams, scanningPath);
-    mAndroidSuiteBuilder = new AndroidSuiteBuilder(runnerParams);
-    mAndroidAnnotatedBuilder =
+    androidJUnit3Builder = new AndroidJUnit3Builder(runnerParams, scanningPath);
+    androidJUnit4Builder = new AndroidJUnit4Builder(runnerParams, scanningPath);
+    androidSuiteBuilder = new AndroidSuiteBuilder(runnerParams);
+    androidAnnotatedBuilder =
         new AndroidAnnotatedBuilder(suiteBuilder == null ? this : suiteBuilder, runnerParams);
-    mIgnoredBuilder = new IgnoredBuilder();
+    ignoredBuilder = new IgnoredBuilder();
 
-    mCustomRunnerBuilders = instantiateRunnerBuilders(customRunnerBuilderClasses);
+    customRunnerBuilders = instantiateRunnerBuilders(customRunnerBuilderClasses);
   }
 
   /**
@@ -143,7 +143,7 @@ class AndroidRunnerBuilder extends AllDefaultPossibilitiesBuilder {
   @Override
   public Runner runnerForClass(Class<?> testClass) throws Throwable {
     // Try the custom RunnerBuilder instances first.
-    for (RunnerBuilder customRunnerBuilder : mCustomRunnerBuilders) {
+    for (RunnerBuilder customRunnerBuilder : customRunnerBuilders) {
       Runner runner = customRunnerBuilder.safeRunnerForClass(testClass);
       if (runner != null) {
         return runner;
@@ -155,26 +155,26 @@ class AndroidRunnerBuilder extends AllDefaultPossibilitiesBuilder {
 
   @Override
   protected JUnit4Builder junit4Builder() {
-    return mAndroidJUnit4Builder;
+    return androidJUnit4Builder;
   }
 
   @Override
   protected JUnit3Builder junit3Builder() {
-    return mAndroidJUnit3Builder;
+    return androidJUnit3Builder;
   }
 
   @Override
   protected AnnotatedBuilder annotatedBuilder() {
-    return mAndroidAnnotatedBuilder;
+    return androidAnnotatedBuilder;
   }
 
   @Override
   protected IgnoredBuilder ignoredBuilder() {
-    return mIgnoredBuilder;
+    return ignoredBuilder;
   }
 
   @Override
   protected RunnerBuilder suiteMethodBuilder() {
-    return mAndroidSuiteBuilder;
+    return androidSuiteBuilder;
   }
 }

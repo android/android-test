@@ -46,14 +46,14 @@ public class OrchestrationListenerManagerTest {
   @Mock OrchestrationRunListener mockRunListener1;
   @Mock OrchestrationRunListener mockRunListener2;
 
-  public OrchestrationListenerManager mListener;
+  public OrchestrationListenerManager listener;
 
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    mListener = new OrchestrationListenerManager(mockInstrumentation);
-    mListener.addListener(mockRunListener1);
-    mListener.addListener(mockRunListener2);
+    listener = new OrchestrationListenerManager(mockInstrumentation);
+    listener.addListener(mockRunListener1);
+    listener.addListener(mockRunListener2);
   }
 
   @Test
@@ -74,7 +74,7 @@ public class OrchestrationListenerManagerTest {
 
   @Test
   public void orchestrationRunStarted_passedToListeners() {
-    mListener.orchestrationRunStarted(5);
+    listener.orchestrationRunStarted(5);
     verify(mockRunListener1).orchestrationRunStarted(5);
     verify(mockRunListener2).orchestrationRunStarted(5);
   }
@@ -82,7 +82,7 @@ public class OrchestrationListenerManagerTest {
   @Test
   public void handleTestRunStarted() {
     Bundle bundle = makeTestRunStartedBundle();
-    mListener.handleNotification(bundle);
+    listener.handleNotification(bundle);
     verify(mockRunListener1).testRunStarted(getDescription(bundle));
     verify(mockRunListener2).testRunStarted(getDescription(bundle));
   }
@@ -90,7 +90,7 @@ public class OrchestrationListenerManagerTest {
   @Test
   public void handleTestStarted() {
     Bundle bundle = makeTestStartedBundle();
-    mListener.handleNotification(bundle);
+    listener.handleNotification(bundle);
     verify(mockRunListener1).testStarted(getDescription(bundle));
     verify(mockRunListener2).testStarted(getDescription(bundle));
   }
@@ -98,7 +98,7 @@ public class OrchestrationListenerManagerTest {
   @Test
   public void handleTestFinished() {
     Bundle bundle = makeTestFinishedBundle();
-    mListener.handleNotification(bundle);
+    listener.handleNotification(bundle);
     verify(mockRunListener1).testFinished(getDescription(bundle));
     verify(mockRunListener2).testFinished(getDescription(bundle));
   }
@@ -106,7 +106,7 @@ public class OrchestrationListenerManagerTest {
   @Test
   public void handleTestFailure() {
     Bundle bundle = makeTestFailureBundle();
-    mListener.handleNotification(bundle);
+    listener.handleNotification(bundle);
     verify(mockRunListener1).testFailure(getFailure(bundle));
     verify(mockRunListener2).testFailure(getFailure(bundle));
   }
@@ -114,7 +114,7 @@ public class OrchestrationListenerManagerTest {
   @Test
   public void handleTestAssumptionFailure() {
     Bundle bundle = makeTestAssumptionFailureBundle();
-    mListener.handleNotification(bundle);
+    listener.handleNotification(bundle);
     verify(mockRunListener1).testAssumptionFailure(getFailure(bundle));
     verify(mockRunListener2).testAssumptionFailure(getFailure(bundle));
   }
@@ -122,7 +122,7 @@ public class OrchestrationListenerManagerTest {
   @Test
   public void handleTestIgnored() {
     Bundle bundle = makeTestIgnoredBundle();
-    mListener.handleNotification(bundle);
+    listener.handleNotification(bundle);
     verify(mockRunListener1).testIgnored(getDescription(bundle));
     verify(mockRunListener2).testIgnored(getDescription(bundle));
   }
@@ -130,16 +130,16 @@ public class OrchestrationListenerManagerTest {
   @Test
   public void handleTestRunFinished() throws Exception {
     Bundle bundle = makeTestRunFinishedBundle();
-    mListener.handleNotification(bundle);
+    listener.handleNotification(bundle);
     verify(mockRunListener1).testRunFinished(getResult(bundle));
     verify(mockRunListener2).testRunFinished(getResult(bundle));
   }
 
   @Test
   public void handleTestProcessFinished_normally() throws Exception {
-    mListener.handleNotification(makeTestRunStartedBundle());
-    mListener.handleNotification(makeTestRunFinishedBundle());
-    mListener.testProcessFinished("outputFile");
+    listener.handleNotification(makeTestRunStartedBundle());
+    listener.handleNotification(makeTestRunFinishedBundle());
+    listener.testProcessFinished("outputFile");
 
     // Failure generated inside the manager, so we wildcard
     verify(mockRunListener1, times(0)).testFailure(any());
@@ -147,8 +147,8 @@ public class OrchestrationListenerManagerTest {
 
   @Test
   public void handleTestProcessFinished_inProgress() {
-    mListener.handleNotification(makeTestRunStartedBundle());
-    mListener.testProcessFinished("outputFile");
+    listener.handleNotification(makeTestRunStartedBundle());
+    listener.testProcessFinished("outputFile");
 
     // Failure generated inside the manager, so we wildcard
     verify(mockRunListener1).testFailure(any());

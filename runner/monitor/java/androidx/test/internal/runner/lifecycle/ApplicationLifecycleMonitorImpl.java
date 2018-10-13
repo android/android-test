@@ -34,7 +34,7 @@ public class ApplicationLifecycleMonitorImpl implements ApplicationLifecycleMoni
   private static final String TAG = "ApplicationLifecycleMonitorImpl";
 
   // Accessed from any thread.
-  private final List<WeakReference<ApplicationLifecycleCallback>> mCallbacks = new ArrayList<>();
+  private final List<WeakReference<ApplicationLifecycleCallback>> callbacks = new ArrayList<>();
 
   @Override
   public void addLifecycleCallback(ApplicationLifecycleCallback callback) {
@@ -42,9 +42,9 @@ public class ApplicationLifecycleMonitorImpl implements ApplicationLifecycleMoni
     // be faster then the constant time costs of setting up and maintaining a map.
     checkNotNull(callback);
 
-    synchronized (mCallbacks) {
+    synchronized (callbacks) {
       boolean needsAdd = true;
-      Iterator<WeakReference<ApplicationLifecycleCallback>> refIter = mCallbacks.iterator();
+      Iterator<WeakReference<ApplicationLifecycleCallback>> refIter = callbacks.iterator();
       while (refIter.hasNext()) {
         ApplicationLifecycleCallback storedCallback = refIter.next().get();
         if (null == storedCallback) {
@@ -54,7 +54,7 @@ public class ApplicationLifecycleMonitorImpl implements ApplicationLifecycleMoni
         }
       }
       if (needsAdd) {
-        mCallbacks.add(new WeakReference<>(callback));
+        callbacks.add(new WeakReference<>(callback));
       }
     }
   }
@@ -63,8 +63,8 @@ public class ApplicationLifecycleMonitorImpl implements ApplicationLifecycleMoni
   public void removeLifecycleCallback(ApplicationLifecycleCallback callback) {
     checkNotNull(callback);
 
-    synchronized (mCallbacks) {
-      Iterator<WeakReference<ApplicationLifecycleCallback>> refIter = mCallbacks.iterator();
+    synchronized (callbacks) {
+      Iterator<WeakReference<ApplicationLifecycleCallback>> refIter = callbacks.iterator();
       while (refIter.hasNext()) {
         ApplicationLifecycleCallback storedCallback = refIter.next().get();
         if (null == storedCallback) {
@@ -77,8 +77,8 @@ public class ApplicationLifecycleMonitorImpl implements ApplicationLifecycleMoni
   }
 
   public void signalLifecycleChange(Application app, ApplicationStage stage) {
-    synchronized (mCallbacks) {
-      Iterator<WeakReference<ApplicationLifecycleCallback>> refIter = mCallbacks.iterator();
+    synchronized (callbacks) {
+      Iterator<WeakReference<ApplicationLifecycleCallback>> refIter = callbacks.iterator();
       while (refIter.hasNext()) {
         ApplicationLifecycleCallback callback = refIter.next().get();
         if (null == callback) {

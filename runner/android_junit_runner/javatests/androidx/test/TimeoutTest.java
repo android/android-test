@@ -46,17 +46,17 @@ public class TimeoutTest {
   private static final int TEST_TIMEOUT = 25;
   private static final int WAIT_FOR_TIMEOUT = 25;
 
-  private TestRequestBuilder mBuilder;
+  private TestRequestBuilder builder;
 
   @Before
   public void setUp() throws Exception {
-    mBuilder = new TestRequestBuilder(getInstrumentation(), getArguments());
+    builder = new TestRequestBuilder(getInstrumentation(), getArguments());
   }
 
   @Test
   public void testTimeoutsInJUnit4WithRule() {
     Request request =
-        mBuilder
+        builder
             .addTestClass(JUnit4WithRuleClass.class.getName())
             .setPerTestTimeout(GLOBAL_ARG_TIMEOUT)
             .build();
@@ -69,7 +69,7 @@ public class TimeoutTest {
   @Test
   public void testTimeoutsInJUnit4WithNoRule() {
     Request request =
-        mBuilder
+        builder
             .addTestClass(JUnit4NoRuleClass.class.getName())
             .setPerTestTimeout(GLOBAL_ARG_TIMEOUT)
             .build();
@@ -83,7 +83,7 @@ public class TimeoutTest {
   @Test
   public void testTimeoutInJUnit3Style() {
     Request request =
-        mBuilder
+        builder
             .addTestClass(JUnit3StyleClass.class.getName())
             .setPerTestTimeout(GLOBAL_ARG_TIMEOUT)
             .build();
@@ -108,7 +108,7 @@ public class TimeoutTest {
   @Test
   public void testJUnit3TimeoutTestsThatFailButNotTimeout() {
     Request request =
-        mBuilder.addTestClass(JUnit3StyleClass.class.getName()).setPerTestTimeout(200).build();
+        builder.addTestClass(JUnit3StyleClass.class.getName()).setPerTestTimeout(200).build();
     JUnitCore junitCore = new JUnitCore();
     Result result = junitCore.run(request);
     assertEquals(2, result.getFailures().size());

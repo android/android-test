@@ -36,29 +36,29 @@ import org.mockito.MockitoAnnotations;
 @RunWith(AndroidJUnit4.class)
 @MediumTest
 public final class TakeScreenshotCallableTest {
-  @Mock public View mView;
+  @Mock public View view;
 
-  private TakeScreenshotCallable.Factory mTakeScreenshotCallableFactory =
+  private TakeScreenshotCallable.Factory takeScreenshotCallableFactory =
       new TakeScreenshotCallable.Factory();
-  private Callable mCallable;
-  private Bitmap mFakeBitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
+  private Callable callable;
+  private Bitmap fakeBitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
 
   @Before
   public void before() throws Exception {
     MockitoAnnotations.initMocks(this);
-    mCallable = mTakeScreenshotCallableFactory.create(mView);
+    callable = takeScreenshotCallableFactory.create(view);
   }
 
   @Test
   public void call_shouldReturnBitmap() throws Exception {
     initWithStubbedDrawingCache();
 
-    mCallable.call();
-    verify(mView).getDrawingCache();
+    callable.call();
+    verify(view).getDrawingCache();
   }
 
   private void initWithStubbedDrawingCache() {
-    doNothing().when(mView).setDrawingCacheEnabled(any(Boolean.class));
-    doReturn(mFakeBitmap).when(mView).getDrawingCache();
+    doNothing().when(view).setDrawingCacheEnabled(any(Boolean.class));
+    doReturn(fakeBitmap).when(view).getDrawingCache();
   }
 }

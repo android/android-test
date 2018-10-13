@@ -29,11 +29,11 @@ import org.junit.runners.model.RunnerBuilder;
 public class AndroidAnnotatedBuilder extends AnnotatedBuilder {
   private static final String LOG_TAG = "AndroidAnnotatedBuilder";
 
-  private final AndroidRunnerParams mAndroidRunnerParams;
+  private final AndroidRunnerParams androidRunnerParams;
 
   public AndroidAnnotatedBuilder(RunnerBuilder suiteBuilder, AndroidRunnerParams runnerParams) {
     super(suiteBuilder);
-    mAndroidRunnerParams = runnerParams;
+    androidRunnerParams = runnerParams;
   }
 
   @Override
@@ -68,6 +68,6 @@ public class AndroidAnnotatedBuilder extends AnnotatedBuilder {
       throws Exception {
     return runnerClass
         .getConstructor(Class.class, AndroidRunnerParams.class)
-        .newInstance(testClass, mAndroidRunnerParams);
+        .newInstance(testClass, androidRunnerParams);
   }
 }

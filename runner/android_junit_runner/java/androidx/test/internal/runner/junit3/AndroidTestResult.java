@@ -29,24 +29,24 @@ import junit.framework.TestResult;
 /** A specialized {@link TestResult} that injects Android constructs into the test if necessary. */
 class AndroidTestResult extends DelegatingTestResult {
 
-  private final Instrumentation mInstr;
-  private final Bundle mBundle;
+  private final Instrumentation instr;
+  private final Bundle bundle;
 
-  private long mTimeout;
+  private long timeout;
 
   AndroidTestResult(Bundle bundle, Instrumentation instr, TestResult result) {
     super(result);
-    mBundle = bundle;
-    mInstr = instr;
+    this.bundle = bundle;
+    this.instr = instr;
   }
 
   @Override
   protected void run(final TestCase test) {
     if (test instanceof AndroidTestCase) {
-      ((AndroidTestCase) test).setContext(mInstr.getTargetContext());
+      ((AndroidTestCase) test).setContext(instr.getTargetContext());
     }
     if (test instanceof InstrumentationTestCase) {
-      ((InstrumentationTestCase) test).injectInstrumentation(mInstr);
+      ((InstrumentationTestCase) test).injectInstrumentation(instr);
     }
     super.run(test);
   }
@@ -59,7 +59,7 @@ class AndroidTestResult extends DelegatingTestResult {
    * @see #runProtected(Test, Protectable)
    */
   void setCurrentTimeout(long timeout) {
-    mTimeout = timeout;
+    this.timeout = timeout;
   }
 
   /**
@@ -78,7 +78,7 @@ class AndroidTestResult extends DelegatingTestResult {
     } catch (InterruptedException e) {
       super.addError(
           test,
-          new TimeoutException(String.format("Test timed out after %d milliseconds", mTimeout)));
+          new TimeoutException(String.format("Test timed out after %d milliseconds", timeout)));
     } catch (Throwable e) {
       super.addError(test, e);
     }

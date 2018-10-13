@@ -28,14 +28,14 @@ import org.junit.runner.notification.RunListener;
  */
 public abstract class InstrumentationRunListener extends RunListener {
 
-  private Instrumentation mInstr;
+  private Instrumentation instr;
 
   public Instrumentation getInstrumentation() {
-    return mInstr;
+    return instr;
   }
 
   public void setInstrumentation(Instrumentation instr) {
-    mInstr = instr;
+    this.instr = instr;
   }
 
   /** Convenience method for {@link #getInstrumentation()#sendStatus()} */

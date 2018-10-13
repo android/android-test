@@ -113,11 +113,11 @@ import org.junit.runners.model.Statement;
  *
  * &#064;Test
  * public void verifyTwoEntriesInserted() {
- *     ContentResolver mResolver = mProviderRule.getResolver();
+ *     ContentResolver resolver = mProviderRule.getResolver();
  *     // two entries are already inserted by rule, we can directly perform assertions to verify
  *     Cursor c = null;
  *     try {
- *       c = mResolver.query(URI_TO_QUERY_ALL, null, null, null, null);
+ *       c = resolver.query(URI_TO_QUERY_ALL, null, null, null, null);
  *       assertNotNull(c);
  *       assertEquals(2, c.getCount());
  *     } finally {
@@ -135,10 +135,10 @@ public class ProviderTestRule implements TestRule {
 
   private static final String TAG = "ProviderTestRule";
 
-  private final Set<WeakReference<ContentProvider>> mProvidersRef;
-  private final Set<DatabaseArgs> mDatabaseArgsSet;
-  private final ContentResolver mResolver;
-  private final DelegatingContext mContext;
+  private final Set<WeakReference<ContentProvider>> providersRef;
+  private final Set<DatabaseArgs> databaseArgsSet;
+  private final ContentResolver resolver;
+  private final DelegatingContext context;
 
   @VisibleForTesting
   ProviderTestRule(
@@ -146,10 +146,10 @@ public class ProviderTestRule implements TestRule {
       Set<DatabaseArgs> databaseArgsSet,
       ContentResolver resolver,
       DelegatingContext context) {
-    mProvidersRef = providersRef;
-    mDatabaseArgsSet = databaseArgsSet;
-    mResolver = resolver;
-    mContext = context;
+    this.providersRef = providersRef;
+    this.databaseArgsSet = databaseArgsSet;
+    this.resolver = resolver;
+    this.context = context;
   }
 
   /**
@@ -159,7 +159,7 @@ public class ProviderTestRule implements TestRule {
    * @return the isolated {@link ContentResolver} created by this {@code ProviderTestRule}.
    */
   public ContentResolver getResolver() {
-    return mResolver;
+    return resolver;
   }
 
   @Override
@@ -180,7 +180,7 @@ public class ProviderTestRule implements TestRule {
     checkNotNull(dbName);
     checkNotNull(dbCmds);
     if (dbCmds.length > 0) {
-      SQLiteDatabase database = mContext.openOrCreateDatabase(dbName, 0, null);
+      SQLiteDatabase database = context.openOrCreateDatabase(dbName, 0, null);
       for (String cmd : dbCmds) {
         if (!TextUtils.isEmpty(cmd)) {
           try {
@@ -225,7 +225,7 @@ public class ProviderTestRule implements TestRule {
    */
   public void revokePermission(@NonNull String permission) {
     checkArgument(!TextUtils.isEmpty(permission), "permission cannot be null or empty");
-    mContext.addRevokedPermission(permission);
+    context.addRevokedPermission(permission);
   }
 
   /**
@@ -248,7 +248,7 @@ public class ProviderTestRule implements TestRule {
 
   private void setUpProviders() throws IOException {
     beforeProviderSetup();
-    for (DatabaseArgs databaseArgs : mDatabaseArgsSet) {
+    for (DatabaseArgs databaseArgs : databaseArgsSet) {
       setUpProvider(databaseArgs);
     }
   }
@@ -271,9 +271,9 @@ public class ProviderTestRule implements TestRule {
         dbDataFile.exists(), String.format("The database file %s doesn't exist!", dbDataFile));
 
     String dbName = databaseArgs.getDBName();
-    copyFile(dbDataFile, mContext.getDatabasePath(dbName));
+    copyFile(dbDataFile, context.getDatabasePath(dbName));
     // Add the restored database to the DelegatingContext
-    mContext.addDatabase(dbName);
+    context.addDatabase(dbName);
   }
 
   private void collectDBCmdsFromFile(DatabaseArgs databaseArgs) throws IOException {
@@ -325,7 +325,7 @@ public class ProviderTestRule implements TestRule {
   private void cleanUpProviders() {
     // ContentProvider.shutdown() method is added in HONEYCOMB
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      for (WeakReference<ContentProvider> providerRef : mProvidersRef) {
+      for (WeakReference<ContentProvider> providerRef : providersRef) {
         ContentProvider provider = providerRef.get();
         if (provider != null) {
           provider.shutdown();
@@ -333,10 +333,10 @@ public class ProviderTestRule implements TestRule {
       }
     }
 
-    for (DatabaseArgs databaseArgs : mDatabaseArgsSet) {
+    for (DatabaseArgs databaseArgs : databaseArgsSet) {
       String dbName = databaseArgs.getDBName();
       if (dbName != null) {
-        mContext.deleteDatabase(dbName);
+        context.deleteDatabase(dbName);
       }
     }
 
@@ -353,9 +353,9 @@ public class ProviderTestRule implements TestRule {
   public static class Builder {
 
     private static final String DEFAULT_PREFIX = "test.";
-    private final Map<String, Class<? extends ContentProvider>> mProviderClasses = new HashMap<>();
-    private final Map<String, DatabaseArgs> mDatabaseArgsMap = new HashMap<>();
-    private String mPrefix = DEFAULT_PREFIX;
+    private final Map<String, Class<? extends ContentProvider>> providerClasses = new HashMap<>();
+    private final Map<String, DatabaseArgs> databaseArgsMap = new HashMap<>();
+    private String prefix = DEFAULT_PREFIX;
 
     /**
      * The basic builder to use when creating a {@code ProviderTestRule}, which allows to specify
@@ -368,7 +368,7 @@ public class ProviderTestRule implements TestRule {
         @NonNull Class<T> providerClass, @NonNull String providerAuth) {
       checkNotNull(providerClass);
       checkNotNull(providerAuth);
-      mProviderClasses.put(providerAuth, providerClass);
+      providerClasses.put(providerAuth, providerClass);
     }
 
     /**
@@ -379,7 +379,7 @@ public class ProviderTestRule implements TestRule {
      */
     public Builder setPrefix(@NonNull String prefix) {
       checkArgument(!TextUtils.isEmpty(prefix), "The prefix cannot be null or empty");
-      mPrefix = prefix;
+      this.prefix = prefix;
       return this;
     }
 
@@ -462,11 +462,11 @@ public class ProviderTestRule implements TestRule {
         @NonNull Class<T> providerClass, @NonNull String providerAuth) {
       checkNotNull(providerClass);
       checkNotNull(providerAuth);
-      checkState(mProviderClasses.size() > 0, "No existing provider yet while trying to add more");
+      checkState(providerClasses.size() > 0, "No existing provider yet while trying to add more");
       checkState(
-          !mProviderClasses.containsKey(providerAuth),
+          !providerClasses.containsKey(providerAuth),
           String.format("ContentProvider with authority %s already exists.", providerAuth));
-      mProviderClasses.put(providerAuth, providerClass);
+      providerClasses.put(providerAuth, providerClass);
       return this;
     }
 
@@ -474,17 +474,16 @@ public class ProviderTestRule implements TestRule {
       Set<WeakReference<ContentProvider>> mProvidersRef = new HashSet<>();
       MockContentResolver resolver = new MockContentResolver();
       DelegatingContext context =
-          new DelegatingContext(InstrumentationRegistry.getTargetContext(), mPrefix, resolver);
+          new DelegatingContext(InstrumentationRegistry.getTargetContext(), prefix, resolver);
 
-      for (Map.Entry<String, Class<? extends ContentProvider>> entry :
-          mProviderClasses.entrySet()) {
+      for (Map.Entry<String, Class<? extends ContentProvider>> entry : providerClasses.entrySet()) {
         ContentProvider provider =
             createProvider(entry.getKey(), entry.getValue(), resolver, context);
         mProvidersRef.add(new WeakReference<>(provider));
       }
 
       return new ProviderTestRule(
-          mProvidersRef, new HashSet<>(mDatabaseArgsMap.values()), resolver, context);
+          mProvidersRef, new HashSet<>(databaseArgsMap.values()), resolver, context);
     }
 
     private ContentProvider createProvider(
@@ -532,11 +531,11 @@ public class ProviderTestRule implements TestRule {
     }
 
     private DatabaseArgs getDatabaseArgs(String dbName) {
-      if (mDatabaseArgsMap.containsKey(dbName)) {
-        return mDatabaseArgsMap.get(dbName);
+      if (databaseArgsMap.containsKey(dbName)) {
+        return databaseArgsMap.get(dbName);
       } else {
         DatabaseArgs databaseArgs = new DatabaseArgs(dbName);
-        mDatabaseArgsMap.put(dbName, databaseArgs);
+        databaseArgsMap.put(dbName, databaseArgs);
         return databaseArgs;
       }
     }
@@ -544,17 +543,17 @@ public class ProviderTestRule implements TestRule {
 
   private class ProviderStatement extends Statement {
 
-    private final Statement mBase;
+    private final Statement base;
 
     public ProviderStatement(Statement base) {
-      mBase = base;
+      this.base = base;
     }
 
     @Override
     public void evaluate() throws Throwable {
       try {
         setUpProviders();
-        mBase.evaluate();
+        base.evaluate();
       } finally {
         cleanUpProviders();
       }

@@ -25,9 +25,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /** Exposes an implementation of {@link IntentStubber}. */
 public final class IntentStubberRegistry {
 
-  private static IntentStubber mInstance;
+  private static IntentStubber instance;
 
-  private static AtomicBoolean mIsLoaded = new AtomicBoolean();
+  private static AtomicBoolean isLoaded = new AtomicBoolean();
 
   /**
    * Loads an {@link IntentStubber} into this registry. There can only be one active stubber at a
@@ -40,19 +40,19 @@ public final class IntentStubberRegistry {
   public static void load(IntentStubber intentStubber) {
     checkNotNull(intentStubber, "IntentStubber cannot be null!");
     checkState(
-        !mIsLoaded.getAndSet(true),
+        !isLoaded.getAndSet(true),
         "Intent stubber already registered! Multiple stubbers are not"
             + "allowedAre you running under an ");
-    mInstance = intentStubber;
+    instance = intentStubber;
   }
 
   /** @return if an {@link IntentStubber} has been loaded. */
   public static boolean isLoaded() {
-    return mIsLoaded.get();
+    return isLoaded.get();
   }
 
   /**
-   * Returns the loaded Intent Stubber mInstance.
+   * Returns the loaded Intent Stubber instance.
    *
    * @throws IllegalStateException if this method is not called on the main thread.
    * @throws IllegalStateException if no Intent Stubber has been loaded.
@@ -60,10 +60,10 @@ public final class IntentStubberRegistry {
   public static IntentStubber getInstance() {
     checkMain();
     checkState(
-        null != mInstance,
+        null != instance,
         "No intent monitor registered! Are you running under an "
             + "Instrumentation which registers intent monitors?");
-    return mInstance;
+    return instance;
   }
 
   private static void checkMain() {
@@ -74,7 +74,7 @@ public final class IntentStubberRegistry {
 
   /** Clears the current instance of Intent Stubber. */
   public static synchronized void reset() {
-    mInstance = null;
-    mIsLoaded.set(false);
+    instance = null;
+    isLoaded.set(false);
   }
 }

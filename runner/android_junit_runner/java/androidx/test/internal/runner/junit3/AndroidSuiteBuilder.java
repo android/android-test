@@ -33,16 +33,16 @@ public class AndroidSuiteBuilder extends SuiteMethodBuilder {
 
   private static final String LOG_TAG = "AndroidSuiteBuilder";
 
-  private final AndroidRunnerParams mAndroidRunnerParams;
+  private final AndroidRunnerParams androidRunnerParams;
 
   /** @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters */
   public AndroidSuiteBuilder(AndroidRunnerParams runnerParams) {
-    mAndroidRunnerParams = runnerParams;
+    androidRunnerParams = runnerParams;
   }
 
   @Override
   public Runner runnerForClass(Class<?> testClass) throws Throwable {
-    if (mAndroidRunnerParams.isIgnoreSuiteMethods()) {
+    if (androidRunnerParams.isIgnoreSuiteMethods()) {
       return null;
     }
     try {
@@ -53,7 +53,7 @@ public class AndroidSuiteBuilder extends SuiteMethodBuilder {
           throw new IllegalArgumentException(
               testClass.getName() + "#suite() did not return a TestSuite");
         }
-        return new JUnit38ClassRunner(new AndroidTestSuite((TestSuite) t, mAndroidRunnerParams));
+        return new JUnit38ClassRunner(new AndroidTestSuite((TestSuite) t, androidRunnerParams));
       }
     } catch (Throwable e) {
       // log error message including stack trace before throwing to help with debugging.

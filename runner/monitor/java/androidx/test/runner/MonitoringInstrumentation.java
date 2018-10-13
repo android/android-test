@@ -103,35 +103,35 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   private static final long MILLIS_TO_POLL_FOR_ACTIVITY_STOP =
       MILLIS_TO_WAIT_FOR_ACTIVITY_TO_STOP / 40;
   private static final int START_ACTIVITY_TIMEOUT_SECONDS = 45;
-  private ActivityLifecycleMonitorImpl mLifecycleMonitor = new ActivityLifecycleMonitorImpl();
-  private ApplicationLifecycleMonitorImpl mApplicationMonitor =
+  private ActivityLifecycleMonitorImpl lifecycleMonitor = new ActivityLifecycleMonitorImpl();
+  private ApplicationLifecycleMonitorImpl applicationMonitor =
       new ApplicationLifecycleMonitorImpl();
-  private IntentMonitorImpl mIntentMonitor = new IntentMonitorImpl();
-  private ExecutorService mExecutorService;
-  private Handler mHandlerForMainLooper;
-  private AtomicBoolean mAnActivityHasBeenLaunched = new AtomicBoolean(false);
-  private AtomicLong mLastIdleTime = new AtomicLong(0);
-  private AtomicInteger mStartedActivityCounter = new AtomicInteger(0);
-  private String mJsBridgeClassName;
-  private AtomicBoolean mIsJsBridgeLoaded = new AtomicBoolean(false);
+  private IntentMonitorImpl intentMonitor = new IntentMonitorImpl();
+  private ExecutorService executorService;
+  private Handler handlerForMainLooper;
+  private AtomicBoolean anActivityHasBeenLaunched = new AtomicBoolean(false);
+  private AtomicLong lastIdleTime = new AtomicLong(0);
+  private AtomicInteger startedActivityCounter = new AtomicInteger(0);
+  private String jsBridgeClassName;
+  private AtomicBoolean isJsBridgeLoaded = new AtomicBoolean(false);
 
   // read from many threads / written by many threads.
   // if null will be calculated in the same way by any thread.
   private volatile Boolean isOriginalInstr = null;
 
-  private ThreadLocal<Boolean> mIsDexmakerClassLoaderInitialized = new ThreadLocal<>();
+  private ThreadLocal<Boolean> isDexmakerClassLoaderInitialized = new ThreadLocal<>();
 
-  private IdleHandler mIdleHandler =
+  private IdleHandler idleHandler =
       new IdleHandler() {
         @Override
         public boolean queueIdle() {
-          mLastIdleTime.set(System.currentTimeMillis());
+          lastIdleTime.set(System.currentTimeMillis());
           return true;
         }
       };
 
-  private volatile boolean mFinished = false;
-  private volatile InterceptingActivityFactory mInterceptingActivityFactory;
+  private volatile boolean finished = false;
+  private volatile InterceptingActivityFactory interceptingActivityFactory;
 
   /**
    * Sets up lifecycle monitoring, and argument registry.
@@ -149,14 +149,14 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
 
     InstrumentationRegistry.registerInstance(this, arguments);
     androidx.test.InstrumentationRegistry.registerInstance(this, arguments);
-    ActivityLifecycleMonitorRegistry.registerInstance(mLifecycleMonitor);
-    ApplicationLifecycleMonitorRegistry.registerInstance(mApplicationMonitor);
-    IntentMonitorRegistry.registerInstance(mIntentMonitor);
+    ActivityLifecycleMonitorRegistry.registerInstance(lifecycleMonitor);
+    ApplicationLifecycleMonitorRegistry.registerInstance(applicationMonitor);
+    IntentMonitorRegistry.registerInstance(intentMonitor);
 
-    mHandlerForMainLooper = new Handler(Looper.getMainLooper());
+    handlerForMainLooper = new Handler(Looper.getMainLooper());
     final int corePoolSize = 0;
     final long keepAliveTime = 0L;
-    mExecutorService =
+    executorService =
         new ThreadPoolExecutor(
             corePoolSize,
             Integer.MAX_VALUE,
@@ -171,7 +171,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
                 return thread;
               }
             });
-    Looper.myQueue().addIdleHandler(mIdleHandler);
+    Looper.myQueue().addIdleHandler(idleHandler);
     super.onCreate(arguments);
     specifyDexMakerCacheProperty();
     setupDexmakerClassloader();
@@ -229,15 +229,15 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       throw new NullPointerException("JsBridge class name cannot be null!");
     }
 
-    if (mIsJsBridgeLoaded.get()) {
+    if (isJsBridgeLoaded.get()) {
       throw new IllegalStateException("JsBridge is already loaded!");
     }
-    mJsBridgeClassName = className;
+    jsBridgeClassName = className;
   }
 
   private void setupDexmakerClassloader() {
 
-    if (Boolean.TRUE.equals(mIsDexmakerClassLoaderInitialized.get())) {
+    if (Boolean.TRUE.equals(isDexmakerClassLoaderInitialized.get())) {
       // We've already setup dexmaker for this ContextClassLoader, so let's not mess with
       // the user.
       return;
@@ -254,7 +254,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
             "Setting context classloader to '%s', Original: '%s'",
             newClassLoader.toString(), originalClassLoader.toString()));
     Thread.currentThread().setContextClassLoader(newClassLoader);
-    mIsDexmakerClassLoaderInitialized.set(Boolean.TRUE);
+    isDexmakerClassLoaderInitialized.set(Boolean.TRUE);
   }
 
   private void logUncaughtExceptions() {
@@ -301,8 +301,8 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   public void onStart() {
     super.onStart();
 
-    if (mJsBridgeClassName != null) {
-      tryLoadingJsBridge(mJsBridgeClassName);
+    if (jsBridgeClassName != null) {
+      tryLoadingJsBridge(jsBridgeClassName);
     }
 
     // Due to the way Android initializes instrumentation - all instrumentations have the
@@ -341,14 +341,14 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
    */
   @Override
   public void finish(int resultCode, Bundle results) {
-    if (mFinished) {
+    if (finished) {
       Log.w(TAG, "finish called 2x!");
       return;
     } else {
-      mFinished = true;
+      finished = true;
     }
 
-    mHandlerForMainLooper.post(new ActivityFinisher());
+    handlerForMainLooper.post(new ActivityFinisher());
 
     long startTime = System.currentTimeMillis();
     waitForActivitiesToComplete();
@@ -375,12 +375,12 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
     }
 
     long endTime = System.currentTimeMillis() + MILLIS_TO_WAIT_FOR_ACTIVITY_TO_STOP;
-    int currentActivityCount = mStartedActivityCounter.get();
+    int currentActivityCount = startedActivityCounter.get();
     while (currentActivityCount > 0 && System.currentTimeMillis() < endTime) {
       try {
         Log.i(TAG, "Unstopped activity count: " + currentActivityCount);
         Thread.sleep(MILLIS_TO_POLL_FOR_ACTIVITY_STOP);
-        currentActivityCount = mStartedActivityCounter.get();
+        currentActivityCount = startedActivityCounter.get();
       } catch (InterruptedException ie) {
         Log.i(TAG, "Abandoning activity wait due to interruption.", ie);
         break;
@@ -400,7 +400,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   @Override
   public void onDestroy() {
     Log.i(TAG, "Instrumentation Finished!");
-    Looper.myQueue().removeIdleHandler(mIdleHandler);
+    Looper.myQueue().removeIdleHandler(idleHandler);
 
     InstrumentationConnection.getInstance().terminate();
 
@@ -409,17 +409,17 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
 
   @Override
   public void callApplicationOnCreate(Application app) {
-    mApplicationMonitor.signalLifecycleChange(app, ApplicationStage.PRE_ON_CREATE);
+    applicationMonitor.signalLifecycleChange(app, ApplicationStage.PRE_ON_CREATE);
     super.callApplicationOnCreate(app);
-    mApplicationMonitor.signalLifecycleChange(app, ApplicationStage.CREATED);
+    applicationMonitor.signalLifecycleChange(app, ApplicationStage.CREATED);
   }
 
   @Override
   public Activity startActivitySync(final Intent intent) {
     checkNotMainThread();
-    long lastIdleTimeBeforeLaunch = mLastIdleTime.get();
+    long lastIdleTimeBeforeLaunch = lastIdleTime.get();
 
-    if (mAnActivityHasBeenLaunched.compareAndSet(false, true)) {
+    if (anActivityHasBeenLaunched.compareAndSet(false, true)) {
       // All activities launched from InstrumentationTestCase.launchActivityWithIntent get
       // started with FLAG_ACTIVITY_NEW_TASK. This includes calls to
       // ActivityInstrumentationTestcase2.getActivity().
@@ -436,7 +436,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     }
     Future<Activity> startedActivity =
-        mExecutorService.submit(
+        executorService.submit(
             new Callable<Activity>() {
               @Override
               public Activity call() {
@@ -462,7 +462,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
               intent,
               START_ACTIVITY_TIMEOUT_SECONDS,
               lastIdleTimeBeforeLaunch,
-              mLastIdleTime.get()));
+              lastIdleTime.get()));
     } catch (ExecutionException ee) {
       throw new RuntimeException("Could not launch activity", ee.getCause());
     } catch (InterruptedException ie) {
@@ -480,7 +480,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       Activity target,
       Intent intent,
       int requestCode) {
-    mIntentMonitor.signalIntent(intent);
+    intentMonitor.signalIntent(intent);
     ActivityResult ar = stubResultFor(intent);
     if (ar != null) {
       Log.i(TAG, String.format("Stubbing intent %s", intent));
@@ -499,7 +499,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       Intent intent,
       int requestCode,
       Bundle options) {
-    mIntentMonitor.signalIntent(intent);
+    intentMonitor.signalIntent(intent);
     ActivityResult ar = stubResultFor(intent);
     if (ar != null) {
       Log.i(TAG, String.format("Stubbing intent %s", intent));
@@ -518,7 +518,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       Intent intent,
       int requestCode,
       Bundle options) {
-    mIntentMonitor.signalIntent(intent);
+    intentMonitor.signalIntent(intent);
     ActivityResult ar = stubResultFor(intent);
     if (ar != null) {
       Log.i(TAG, String.format("Stubbing intent %s", intent));
@@ -575,7 +575,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       int requestCode,
       Bundle options) {
     Log.d(TAG, "execStartActivity(context, IBinder, IBinder, Fragment, Intent, int, Bundle)");
-    mIntentMonitor.signalIntent(intent);
+    intentMonitor.signalIntent(intent);
     ActivityResult ar = stubResultFor(intent);
     if (ar != null) {
       Log.i(TAG, String.format("Stubbing intent %s", intent));
@@ -585,15 +585,15 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   }
 
   private static class StubResultCallable implements Callable<ActivityResult> {
-    private final Intent mIntent;
+    private final Intent intent;
 
     StubResultCallable(Intent intent) {
-      mIntent = intent;
+      this.intent = intent;
     }
 
     @Override
     public ActivityResult call() {
-      return IntentStubberRegistry.getInstance().getActivityResultForIntent(mIntent);
+      return IntentStubberRegistry.getInstance().getActivityResultForIntent(intent);
     }
   }
 
@@ -659,20 +659,20 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   @Override
   public void callActivityOnDestroy(Activity activity) {
     super.callActivityOnDestroy(activity);
-    mLifecycleMonitor.signalLifecycleChange(Stage.DESTROYED, activity);
+    lifecycleMonitor.signalLifecycleChange(Stage.DESTROYED, activity);
   }
 
   @Override
   public void callActivityOnRestart(Activity activity) {
     super.callActivityOnRestart(activity);
-    mLifecycleMonitor.signalLifecycleChange(Stage.RESTARTED, activity);
+    lifecycleMonitor.signalLifecycleChange(Stage.RESTARTED, activity);
   }
 
   @Override
   public void callActivityOnCreate(Activity activity, Bundle bundle) {
-    mLifecycleMonitor.signalLifecycleChange(Stage.PRE_ON_CREATE, activity);
+    lifecycleMonitor.signalLifecycleChange(Stage.PRE_ON_CREATE, activity);
     super.callActivityOnCreate(activity, bundle);
-    mLifecycleMonitor.signalLifecycleChange(Stage.CREATED, activity);
+    lifecycleMonitor.signalLifecycleChange(Stage.CREATED, activity);
   }
 
   // NOTE: we need to keep a count of activities between the start
@@ -681,12 +681,12 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   // that would impact a subsequent test run.
   @Override
   public void callActivityOnStart(Activity activity) {
-    mStartedActivityCounter.incrementAndGet();
+    startedActivityCounter.incrementAndGet();
     try {
       super.callActivityOnStart(activity);
-      mLifecycleMonitor.signalLifecycleChange(Stage.STARTED, activity);
+      lifecycleMonitor.signalLifecycleChange(Stage.STARTED, activity);
     } catch (RuntimeException re) {
-      mStartedActivityCounter.decrementAndGet();
+      startedActivityCounter.decrementAndGet();
       throw re;
     }
   }
@@ -695,22 +695,22 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   public void callActivityOnStop(Activity activity) {
     try {
       super.callActivityOnStop(activity);
-      mLifecycleMonitor.signalLifecycleChange(Stage.STOPPED, activity);
+      lifecycleMonitor.signalLifecycleChange(Stage.STOPPED, activity);
     } finally {
-      mStartedActivityCounter.decrementAndGet();
+      startedActivityCounter.decrementAndGet();
     }
   }
 
   @Override
   public void callActivityOnResume(Activity activity) {
     super.callActivityOnResume(activity);
-    mLifecycleMonitor.signalLifecycleChange(Stage.RESUMED, activity);
+    lifecycleMonitor.signalLifecycleChange(Stage.RESUMED, activity);
   }
 
   @Override
   public void callActivityOnPause(Activity activity) {
     super.callActivityOnPause(activity);
-    mLifecycleMonitor.signalLifecycleChange(Stage.PAUSED, activity);
+    lifecycleMonitor.signalLifecycleChange(Stage.PAUSED, activity);
   }
 
   // ActivityUnitTestCase defaults to building the ComponentName via
@@ -756,8 +756,8 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   @Override
   public Activity newActivity(ClassLoader cl, String className, Intent intent)
       throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-    return mInterceptingActivityFactory.shouldIntercept(cl, className, intent)
-        ? mInterceptingActivityFactory.create(cl, className, intent)
+    return interceptingActivityFactory.shouldIntercept(cl, className, intent)
+        ? interceptingActivityFactory.create(cl, className, intent)
         : super.newActivity(cl, className, intent);
   }
 
@@ -772,7 +772,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
    */
   public void interceptActivityUsing(InterceptingActivityFactory interceptingActivityFactory) {
     Checks.checkNotNull(interceptingActivityFactory);
-    mInterceptingActivityFactory = interceptingActivityFactory;
+    this.interceptingActivityFactory = interceptingActivityFactory;
   }
 
   /**
@@ -780,7 +780,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
    * Intent)}
    */
   public void useDefaultInterceptingActivityFactory() {
-    mInterceptingActivityFactory = new DefaultInterceptingActivityFactory();
+    interceptingActivityFactory = new DefaultInterceptingActivityFactory();
   }
 
   /**
@@ -800,7 +800,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
               Class<?> jsBridge = Class.forName(className);
               Method install = jsBridge.getDeclaredMethod("installBridge");
               install.invoke(null);
-              mIsJsBridgeLoaded.set(true);
+              isJsBridgeLoaded.set(true);
             } catch (ClassNotFoundException | NoSuchMethodException ignored) {
               Log.i(TAG, "No JSBridge.");
             } catch (InvocationTargetException | IllegalAccessException ite) {
@@ -821,7 +821,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       List<Activity> activities = new ArrayList<>();
 
       for (Stage s : EnumSet.range(Stage.CREATED, Stage.STOPPED)) {
-        activities.addAll(mLifecycleMonitor.getActivitiesInStage(s));
+        activities.addAll(lifecycleMonitor.getActivitiesInStage(s));
       }
 
       Log.i(TAG, "Activities that are still in CREATED to STOPPED: " + activities.size());

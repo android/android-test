@@ -39,19 +39,19 @@ public class NonLeakyTestSuite extends TestSuite {
   }
 
   private static class NonLeakyTest implements Test, Describable {
-    private Test mDelegate;
-    private final Description mDesc;
+    private Test delegate;
+    private final Description desc;
 
     NonLeakyTest(Test delegate) {
-      this.mDelegate = delegate;
+      this.delegate = delegate;
       // cache description so it's available after execution
-      this.mDesc = JUnit38ClassRunner.makeDescription(mDelegate);
+      this.desc = JUnit38ClassRunner.makeDescription(this.delegate);
     }
 
     @Override
     public int countTestCases() {
-      if (mDelegate != null) {
-        return mDelegate.countTestCases();
+      if (delegate != null) {
+        return delegate.countTestCases();
       } else {
         return 0;
       }
@@ -59,21 +59,21 @@ public class NonLeakyTestSuite extends TestSuite {
 
     @Override
     public void run(TestResult result) {
-      mDelegate.run(result);
-      mDelegate = null;
+      delegate.run(result);
+      delegate = null;
     }
 
     @Override
     public Description getDescription() {
-      return mDesc;
+      return desc;
     }
 
     @Override
     public String toString() {
-      if (mDelegate != null) {
-        return mDelegate.toString();
+      if (delegate != null) {
+        return delegate.toString();
       } else {
-        return mDesc.toString();
+        return desc.toString();
       }
     }
   }

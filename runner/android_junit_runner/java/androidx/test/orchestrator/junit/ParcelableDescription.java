@@ -22,27 +22,27 @@ import org.junit.runner.Description;
 
 /** Parcelable imitation of a JUnit ParcelableDescription */
 public final class ParcelableDescription implements Parcelable {
-  private final String mClassName;
-  private final String mMethodName;
-  private final String mDisplayName;
+  private final String className;
+  private final String methodName;
+  private final String displayName;
 
   public ParcelableDescription(Description description) {
-    this.mClassName = description.getClassName();
-    this.mMethodName = description.getMethodName();
-    this.mDisplayName = description.getDisplayName();
+    this.className = description.getClassName();
+    this.methodName = description.getMethodName();
+    this.displayName = description.getDisplayName();
   }
 
   public ParcelableDescription(String classAndMethodName) {
     String[] classAndMethodNames = classAndMethodName.split("#");
-    this.mClassName = classAndMethodNames[0];
-    this.mMethodName = classAndMethodNames.length > 1 ? classAndMethodNames[1] : "";
-    this.mDisplayName = classAndMethodName;
+    this.className = classAndMethodNames[0];
+    this.methodName = classAndMethodNames.length > 1 ? classAndMethodNames[1] : "";
+    this.displayName = classAndMethodName;
   }
 
   private ParcelableDescription(Parcel in) {
-    mClassName = getNonNullString(in);
-    mMethodName = getNonNullString(in);
-    mDisplayName = getNonNullString(in);
+    className = getNonNullString(in);
+    methodName = getNonNullString(in);
+    displayName = getNonNullString(in);
   }
 
   private String getNonNullString(Parcel in) {
@@ -57,9 +57,9 @@ public final class ParcelableDescription implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel out, int flags) {
-    out.writeString(mClassName);
-    out.writeString(mMethodName);
-    out.writeString(mDisplayName);
+    out.writeString(className);
+    out.writeString(methodName);
+    out.writeString(displayName);
   }
 
   public static final Parcelable.Creator<ParcelableDescription> CREATOR =
@@ -76,14 +76,14 @@ public final class ParcelableDescription implements Parcelable {
       };
 
   public String getClassName() {
-    return mClassName;
+    return className;
   }
 
   public String getMethodName() {
-    return mMethodName;
+    return methodName;
   }
 
   public String getDisplayName() {
-    return mDisplayName;
+    return displayName;
   }
 }

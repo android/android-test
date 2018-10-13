@@ -25,11 +25,11 @@ import org.junit.runner.notification.RunListener;
  */
 public class DelayInjector extends RunListener {
 
-  private final int mDelayMsec;
+  private final int delayMsec;
 
   /** @param delayMsec */
   public DelayInjector(int delayMsec) {
-    mDelayMsec = delayMsec;
+    this.delayMsec = delayMsec;
   }
 
   @Override
@@ -46,7 +46,7 @@ public class DelayInjector extends RunListener {
 
   private void delay() {
     try {
-      Thread.sleep(mDelayMsec);
+      Thread.sleep(delayMsec);
     } catch (InterruptedException e) {
       Log.e("DelayInjector", "interrupted", e);
     }

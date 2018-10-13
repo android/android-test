@@ -42,27 +42,27 @@ class UiAutomationShellCommand extends ShellCommand {
   enum PmCommand {
     GRANT_PERMISSION("grant");
 
-    private final String mPmCommand;
+    private final String pmCommand;
 
     PmCommand(String command) {
-      mPmCommand = "pm " + command;
+      pmCommand = "pm " + command;
     }
 
     public String get() {
-      return mPmCommand;
+      return pmCommand;
     }
   }
 
-  private final String mTargetPackage;
-  private final String mPermission;
-  private final PmCommand mCommand;
-  private final UiAutomation mUiAutomation;
+  private final String targetPackage;
+  private final String permission;
+  private final PmCommand command;
+  private final UiAutomation uiAutomation;
 
   UiAutomationShellCommand(String targetPackage, String permission, PmCommand pmCommand) {
-    mTargetPackage = shellEscape(targetPackage);
-    mPermission = shellEscape(permission);
-    mCommand = pmCommand;
-    mUiAutomation = checkNotNull(InstrumentationRegistry.getInstrumentation().getUiAutomation());
+    this.targetPackage = shellEscape(targetPackage);
+    this.permission = shellEscape(permission);
+    command = pmCommand;
+    uiAutomation = checkNotNull(InstrumentationRegistry.getInstrumentation().getUiAutomation());
   }
 
   @Override
@@ -72,11 +72,11 @@ class UiAutomationShellCommand extends ShellCommand {
 
   @VisibleForTesting
   protected String commandForPermission() {
-    return new StringBuilder(mCommand.get())
+    return new StringBuilder(command.get())
         .append(" ")
-        .append(mTargetPackage)
+        .append(targetPackage)
         .append(" ")
-        .append(mPermission)
+        .append(permission)
         .toString();
   }
 
@@ -90,7 +90,7 @@ class UiAutomationShellCommand extends ShellCommand {
   private void executePermissionCommand(String cmd) throws IOException {
     Log.i(TAG, "Requesting permission: " + cmd);
     try {
-      awaitTermination(mUiAutomation.executeShellCommand(cmd), 2, TimeUnit.SECONDS);
+      awaitTermination(uiAutomation.executeShellCommand(cmd), 2, TimeUnit.SECONDS);
     } catch (TimeoutException e) {
       Log.e(TAG, "Timeout while executing cmd: " + cmd);
     }

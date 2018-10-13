@@ -39,16 +39,16 @@ import org.robolectric.RuntimeEnvironment;
 @RunWith(RobolectricTestRunner.class)
 public class TestRunnableTest {
 
-  private Bundle mArguments;
-  private OutputStream mOutputStream;
-  private Context mContext;
+  private Bundle arguments;
+  private OutputStream outputStream;
+  private Context context;
 
   /**
    * A {@link TestRunnable} which does not actually call on the shell command executor but rather
    * saves the params for inspection.
    */
   private static class FakeTestRunnable extends TestRunnable {
-    public List<String> mParams;
+    public List<String> params;
 
     FakeTestRunnable(
         Context context,
@@ -63,7 +63,7 @@ public class TestRunnableTest {
 
     @Override
     InputStream runShellCommand(List<String> params) {
-      mParams = params;
+      this.params = params;
       InputStream stream =
           new InputStream() {
             int mByte = 'a';
@@ -83,41 +83,41 @@ public class TestRunnableTest {
   }
 
   private static class FakeListener implements TestRunnable.RunFinishedListener {
-    public boolean mFinishedCalled = false;
+    public boolean finishedCalled = false;
 
     @Override
     public void runFinished() {
-      mFinishedCalled = true;
+      finishedCalled = true;
     }
   }
 
   @Before
   public void setUp() {
-    mArguments = new Bundle();
-    mArguments.putString("targetInstrumentation", "targetInstrumentation/targetRunner");
-    mArguments.putString("class", "com.google.android.example.MyClass");
-    mArguments.putString("arg1", "val1");
+    arguments = new Bundle();
+    arguments.putString("targetInstrumentation", "targetInstrumentation/targetRunner");
+    arguments.putString("class", "com.google.android.example.MyClass");
+    arguments.putString("arg1", "val1");
 
-    mOutputStream = new ByteArrayOutputStream();
-    mContext = RuntimeEnvironment.application;
+    outputStream = new ByteArrayOutputStream();
+    context = RuntimeEnvironment.application;
   }
 
   @Test
   public void testRun_callsListener() {
     FakeListener listener = new FakeListener();
     FakeTestRunnable runnable =
-        new FakeTestRunnable(mContext, "secret", mArguments, mOutputStream, listener, null, true);
+        new FakeTestRunnable(context, "secret", arguments, outputStream, listener, null, true);
     runnable.run();
-    assertThat(listener.mFinishedCalled, is(true));
+    assertThat(listener.finishedCalled, is(true));
   }
 
   @Test
   public void testRun_returnsOutputStream() {
     FakeListener listener = new FakeListener();
     FakeTestRunnable runnable =
-        new FakeTestRunnable(mContext, "secret", mArguments, mOutputStream, listener, null, true);
+        new FakeTestRunnable(context, "secret", arguments, outputStream, listener, null, true);
     runnable.run();
-    assertThat(mOutputStream.toString().trim(), is("abcdefg"));
+    assertThat(outputStream.toString().trim(), is("abcdefg"));
   }
 
   @Test
@@ -127,42 +127,42 @@ public class TestRunnableTest {
         new FakeTestRunnable(
             null,
             "secret",
-            mArguments,
-            mOutputStream,
+            arguments,
+            outputStream,
             listener,
             "com.google.android.example.MyClass#methodName",
             false);
     runnable.run();
     assertContainsRunnerArgs(
-        runnable.mParams, "-e arg1 val1", "-e class com.google.android.example.MyClass#methodName");
+        runnable.params, "-e arg1 val1", "-e class com.google.android.example.MyClass#methodName");
   }
 
   @Test
   public void testRun_removesPackage_givenClassNameAndMethod() {
     FakeListener listener = new FakeListener();
-    mArguments.putString("package", "package.to.be.deleted");
+    arguments.putString("package", "package.to.be.deleted");
     FakeTestRunnable runnable =
         new FakeTestRunnable(
             null,
             "secret",
-            mArguments,
-            mOutputStream,
+            arguments,
+            outputStream,
             listener,
             "com.google.android.example.MyClass#methodName",
             false);
     runnable.run();
     assertContainsRunnerArgs(
-        runnable.mParams, "-e arg1 val1", "-e class com.google.android.example.MyClass#methodName");
+        runnable.params, "-e arg1 val1", "-e class com.google.android.example.MyClass#methodName");
   }
 
   @Test
   public void testRun_buildsParams_givenNullClassNameAndMethodForTestCollection() {
     FakeListener listener = new FakeListener();
     FakeTestRunnable runnable =
-        new FakeTestRunnable(mContext, "secret", mArguments, mOutputStream, listener, null, true);
+        new FakeTestRunnable(context, "secret", arguments, outputStream, listener, null, true);
     runnable.run();
     assertContainsRunnerArgs(
-        runnable.mParams,
+        runnable.params,
         "-e listTestsForOrchestrator true",
         "-e arg1 val1",
         "-e class com.google.android.example.MyClass");

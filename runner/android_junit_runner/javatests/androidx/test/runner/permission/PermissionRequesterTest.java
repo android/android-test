@@ -51,11 +51,11 @@ public class PermissionRequesterTest {
   private static final String RUNTIME_PERMISSION2 = "android.permission.PERMISSION2";
   private static final String RUNTIME_PERMISSION3 = "android.permission.PERMISSION3";
 
-  @Rule public ExpectedException mExpected = ExpectedException.none();
+  @Rule public ExpectedException expected = ExpectedException.none();
 
-  @Mock public Context mTargetContext;
+  @Mock public Context targetContext;
 
-  @Mock public ShellCommand mShellCommand;
+  @Mock public ShellCommand shellCommand;
 
   private PermissionRequester permissionRequester;
 
@@ -63,7 +63,7 @@ public class PermissionRequesterTest {
   public void initMocks() {
     MockitoAnnotations.initMocks(this);
     withStubbedTargetPackage();
-    permissionRequester = new PermissionRequester(mTargetContext);
+    permissionRequester = new PermissionRequester(targetContext);
   }
 
   @Test
@@ -80,9 +80,9 @@ public class PermissionRequesterTest {
     permissionRequester.addPermissions(RUNTIME_PERMISSION2);
     permissionRequester.addPermissions(RUNTIME_PERMISSION3);
 
-    assertThat(permissionRequester.mRequestedPermissions, hasSize(3));
+    assertThat(permissionRequester.requestedPermissions, hasSize(3));
     assertThat(
-        permissionRequester.mRequestedPermissions,
+        permissionRequester.requestedPermissions,
         containsInAnyOrder(
             equalTo(requestPermissionCallable1),
             equalTo(requestPermissionCallable2),
@@ -92,7 +92,7 @@ public class PermissionRequesterTest {
   @Test
   @SdkSuppress(minSdkVersion = 23)
   public void duplicatePermissionThrows() {
-    mExpected.expect(IllegalStateException.class);
+    expected.expect(IllegalStateException.class);
     permissionRequester.addPermissions(RUNTIME_PERMISSION1, RUNTIME_PERMISSION1);
   }
 
@@ -109,7 +109,7 @@ public class PermissionRequesterTest {
   @Test
   @SdkSuppress(minSdkVersion = 23)
   public void failureInGrantingPermissionFailsTest() throws Throwable {
-    mExpected.expect(AssertionError.class);
+    expected.expect(AssertionError.class);
 
     RequestPermissionCallable stubbedCallable = withStubbedCallable(Result.FAILURE);
 
@@ -121,7 +121,7 @@ public class PermissionRequesterTest {
   @Test
   @SdkSuppress(minSdkVersion = 23)
   public void callableThrowsExceptionFailsTest() throws Throwable {
-    mExpected.expect(AssertionError.class);
+    expected.expect(AssertionError.class);
 
     RequestPermissionCallable stubbedCallable = withStubbedCallable(Result.FAILURE);
     when(stubbedCallable.call()).thenThrow(Exception.class);
@@ -136,7 +136,7 @@ public class PermissionRequesterTest {
     withRuntimeVersion(Build.VERSION_CODES.LOLLIPOP_MR1);
     permissionRequester.addPermissions(RUNTIME_PERMISSION1);
 
-    assertThat(permissionRequester.mRequestedPermissions, hasSize(0));
+    assertThat(permissionRequester.requestedPermissions, hasSize(0));
   }
 
   private void withRuntimeVersion(int sdkInt) {
@@ -145,17 +145,17 @@ public class PermissionRequesterTest {
   }
 
   private void withStubbedTargetPackage() {
-    when(mTargetContext.getPackageName()).thenReturn(TARGET_PACKAGE);
+    when(targetContext.getPackageName()).thenReturn(TARGET_PACKAGE);
   }
 
   private RequestPermissionCallable withGrantPermissionCallable(String permission) {
-    return new GrantPermissionCallable(mShellCommand, mTargetContext, permission);
+    return new GrantPermissionCallable(shellCommand, targetContext, permission);
   }
 
   private RequestPermissionCallable withStubbedCallable(Result result) throws Exception {
     RequestPermissionCallable mockCallable = mock(RequestPermissionCallable.class);
     when(mockCallable.call()).thenReturn(result);
-    permissionRequester.mRequestedPermissions.add(mockCallable);
+    permissionRequester.requestedPermissions.add(mockCallable);
     return mockCallable;
   }
 }

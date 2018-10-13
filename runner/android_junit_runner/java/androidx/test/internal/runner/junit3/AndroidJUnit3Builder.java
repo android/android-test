@@ -51,8 +51,8 @@ public class AndroidJUnit3Builder extends JUnit3Builder {
         public void run(RunNotifier notifier) {}
       };
 
-  private final AndroidRunnerParams mAndroidRunnerParams;
-  private final boolean mScanningPath;
+  private final AndroidRunnerParams androidRunnerParams;
+  private final boolean scanningPath;
 
   /**
    * @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters
@@ -60,8 +60,8 @@ public class AndroidJUnit3Builder extends JUnit3Builder {
    *     scanning the path; requires extra checks to avoid unnecessary errors.
    */
   public AndroidJUnit3Builder(AndroidRunnerParams runnerParams, boolean scanningPath) {
-    mAndroidRunnerParams = runnerParams;
-    mScanningPath = scanningPath;
+    androidRunnerParams = runnerParams;
+    this.scanningPath = scanningPath;
   }
 
   /**
@@ -79,12 +79,12 @@ public class AndroidJUnit3Builder extends JUnit3Builder {
       if (isJUnit3Test(testClass)) {
         // If scanning the path then make sure that it has at least one test method before
         // trying to run it.
-        if (mScanningPath && !hasJUnit3TestMethod(testClass)) {
+        if (scanningPath && !hasJUnit3TestMethod(testClass)) {
           // Return a runner to prevent any other RunnerBuilder classes from
           // trying to check this class.
           return NOT_A_VALID_TEST;
         }
-        return new JUnit38ClassRunner(new AndroidTestSuite(testClass, mAndroidRunnerParams));
+        return new JUnit38ClassRunner(new AndroidTestSuite(testClass, androidRunnerParams));
       }
     } catch (Throwable e) {
       // log error message including stack trace before throwing to help with debugging.

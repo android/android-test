@@ -55,18 +55,18 @@ import org.mockito.MockitoAnnotations;
 public class AndroidJUnitRunnerTest {
   public static final int SLEEP_TIME = 300;
 
-  private AndroidJUnitRunner mAndroidJUnitRunner;
+  private AndroidJUnitRunner androidJUnitRunner;
 
   @Captor private ArgumentCaptor<Iterable<String>> pathsCaptor;
   @Mock private Context mockContext;
-  @Mock private InstrumentationResultPrinter mInstrumentationResultPrinter;
+  @Mock private InstrumentationResultPrinter instrumentationResultPrinter;
   @Mock private TestRequestBuilder testRequestBuilder;
 
   @Before
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
     doReturn("/apps/foo.apk").when(mockContext).getPackageCodePath();
-    mAndroidJUnitRunner =
+    androidJUnitRunner =
         new AndroidJUnitRunner() {
 
           @Override
@@ -76,7 +76,7 @@ public class AndroidJUnitRunnerTest {
 
           @Override
           InstrumentationResultPrinter getInstrumentationResultPrinter() {
-            return mInstrumentationResultPrinter;
+            return instrumentationResultPrinter;
           }
 
           @Override
@@ -120,9 +120,9 @@ public class AndroidJUnitRunnerTest {
   @Test
   public void testInstrResultPrinter_reportProcessCrash() {
     Throwable e = new RuntimeException();
-    mAndroidJUnitRunner.getInstrumentationResultPrinter();
-    mAndroidJUnitRunner.onException(this, e);
-    Mockito.verify(mInstrumentationResultPrinter).reportProcessCrash(e);
+    androidJUnitRunner.getInstrumentationResultPrinter();
+    androidJUnitRunner.onException(this, e);
+    Mockito.verify(instrumentationResultPrinter).reportProcessCrash(e);
   }
 
   /**
@@ -143,7 +143,7 @@ public class AndroidJUnitRunnerTest {
             .fromBundle(InstrumentationRegistry.getInstrumentation(), b)
             .build();
     TestExecutor.Builder executorBuilder = Mockito.mock(TestExecutor.Builder.class);
-    mAndroidJUnitRunner.addListeners(args, executorBuilder);
+    androidJUnitRunner.addListeners(args, executorBuilder);
 
     InOrder order = Mockito.inOrder(executorBuilder);
     order.verify(executorBuilder).addRunListener(Mockito.isA(LogRunListener.class));
@@ -175,7 +175,7 @@ public class AndroidJUnitRunnerTest {
             .fromBundle(InstrumentationRegistry.getInstrumentation(), b)
             .build();
     TestExecutor.Builder executorBuilder = Mockito.mock(TestExecutor.Builder.class);
-    mAndroidJUnitRunner.addListeners(args, executorBuilder);
+    androidJUnitRunner.addListeners(args, executorBuilder);
 
     InOrder order = Mockito.inOrder(executorBuilder);
     // Two extra user added listeners go first
@@ -199,7 +199,7 @@ public class AndroidJUnitRunnerTest {
         new RunnerArgs.Builder()
             .fromBundle(InstrumentationRegistry.getInstrumentation(), b)
             .build();
-    mAndroidJUnitRunner.buildRequest(runnerArgs, new Bundle());
+    androidJUnitRunner.buildRequest(runnerArgs, new Bundle());
     verify(testRequestBuilder, times(1)).addPathsToScan(pathsCaptor.capture());
 
     Set<String> pathsToScan = new HashSet<>();
@@ -220,7 +220,7 @@ public class AndroidJUnitRunnerTest {
         new RunnerArgs.Builder()
             .fromBundle(InstrumentationRegistry.getInstrumentation(), b)
             .build();
-    mAndroidJUnitRunner.buildRequest(runnerArgs, new Bundle());
+    androidJUnitRunner.buildRequest(runnerArgs, new Bundle());
     verify(testRequestBuilder, times(1)).addPathToScan("/apps/foo.apk");
   }
 }

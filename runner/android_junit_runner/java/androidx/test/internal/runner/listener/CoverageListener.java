@@ -31,7 +31,7 @@ import org.junit.runner.Result;
 public class CoverageListener extends InstrumentationRunListener {
   private static final String TAG = "CoverageListener";
 
-  private String mCoverageFilePath;
+  private String coverageFilePath;
 
   /**
    * If included in the status or final bundle sent to an IInstrumentationWatcher, this key
@@ -51,14 +51,14 @@ public class CoverageListener extends InstrumentationRunListener {
    *         If null, file will be generated in test app's file directory.
    */
   public CoverageListener(String customCoverageFilePath) {
-    mCoverageFilePath = customCoverageFilePath;
+    coverageFilePath = customCoverageFilePath;
   }
 
   @Override
   public void setInstrumentation(Instrumentation instr) {
     super.setInstrumentation(instr);
-    if (mCoverageFilePath == null) {
-      mCoverageFilePath =
+    if (coverageFilePath == null) {
+      coverageFilePath =
           instr.getTargetContext().getFilesDir().getAbsolutePath()
               + File.separator
               + DEFAULT_COVERAGE_FILE_NAME;
@@ -73,7 +73,7 @@ public class CoverageListener extends InstrumentationRunListener {
   private void generateCoverageReport(PrintStream writer, Bundle results) {
     // use reflection to call emma dump coverage method, to avoid
     // always statically compiling against emma jar
-    java.io.File coverageFile = new java.io.File(mCoverageFilePath);
+    java.io.File coverageFile = new java.io.File(coverageFilePath);
     try {
       // In case the target and instrumentation contexts are different,
       // prioritize coverage from the target context. If the target
@@ -102,9 +102,9 @@ public class CoverageListener extends InstrumentationRunListener {
 
       // output path to generated coverage file so it can be parsed by a test harness if
       // needed
-      results.putString(REPORT_KEY_COVERAGE_PATH, mCoverageFilePath);
+      results.putString(REPORT_KEY_COVERAGE_PATH, coverageFilePath);
       // also output a more user friendly msg
-      writer.format("\nGenerated code coverage data to %s", mCoverageFilePath);
+      writer.format("\nGenerated code coverage data to %s", coverageFilePath);
     } catch (ClassNotFoundException e) {
       reportEmmaError(writer, "Is Emma/JaCoCo jar on classpath?", e);
     } catch (SecurityException e) {

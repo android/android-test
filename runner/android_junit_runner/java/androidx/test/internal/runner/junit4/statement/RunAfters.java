@@ -26,11 +26,11 @@ import org.junit.runners.model.Statement;
 
 /** <code>@UiThreadTest</code> aware implementation of {@link RunAfters}. */
 public class RunAfters extends UiThreadStatement {
-  private final Statement mNext;
+  private final Statement next;
 
-  private final Object mTarget;
+  private final Object target;
 
-  private final List<FrameworkMethod> mAfters;
+  private final List<FrameworkMethod> afters;
 
   /**
    * Run all non-overridden {@code @After} methods on this class and superclasses before running
@@ -48,9 +48,9 @@ public class RunAfters extends UiThreadStatement {
   public RunAfters(
       FrameworkMethod method, Statement next, List<FrameworkMethod> afters, Object target) {
     super(next, shouldRunOnUiThread(method));
-    this.mNext = next;
-    this.mAfters = afters;
-    this.mTarget = target;
+    this.next = next;
+    this.afters = afters;
+    this.target = target;
   }
 
   @Override
@@ -58,18 +58,18 @@ public class RunAfters extends UiThreadStatement {
     final List<Throwable> errors = new CopyOnWriteArrayList<>();
 
     try {
-      mNext.evaluate();
+      next.evaluate();
     } catch (Throwable e) {
       errors.add(e);
     } finally {
-      for (final FrameworkMethod each : mAfters) {
+      for (final FrameworkMethod each : afters) {
         if (shouldRunOnUiThread(each)) {
           runOnUiThread(
               new Runnable() {
                 @Override
                 public void run() {
                   try {
-                    each.invokeExplosively(mTarget);
+                    each.invokeExplosively(target);
                   } catch (Throwable throwable) {
                     errors.add(throwable);
                   }
@@ -77,7 +77,7 @@ public class RunAfters extends UiThreadStatement {
               });
         } else {
           try {
-            each.invokeExplosively(mTarget);
+            each.invokeExplosively(target);
           } catch (Throwable e) {
             errors.add(e);
           }

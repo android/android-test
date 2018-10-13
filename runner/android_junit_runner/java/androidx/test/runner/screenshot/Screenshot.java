@@ -46,11 +46,11 @@ import java.util.concurrent.FutureTask;
  */
 @Beta
 public final class Screenshot {
-  private static int sAndroidRuntimeVersion = Build.VERSION.SDK_INT;
-  private static UiAutomationWrapper sUiWrapper = new UiAutomationWrapper();
+  private static int androidRuntimeVersion = Build.VERSION.SDK_INT;
+  private static UiAutomationWrapper uiWrapper = new UiAutomationWrapper();
   // Set of processors to pass to every ScreenCapture when it is created.
-  private static Set<ScreenCaptureProcessor> sScreenCaptureProcessorSet = new HashSet<>();
-  private static TakeScreenshotCallable.Factory sTakeScreenshotCallableFactory =
+  private static Set<ScreenCaptureProcessor> screenCaptureProcessorSet = new HashSet<>();
+  private static TakeScreenshotCallable.Factory takeScreenshotCallableFactory =
       new TakeScreenshotCallable.Factory();
 
   /**
@@ -146,7 +146,7 @@ public final class Screenshot {
    */
   public static void addScreenCaptureProcessors(
       Set<ScreenCaptureProcessor> screenCaptureProcessors) {
-    sScreenCaptureProcessorSet.addAll(screenCaptureProcessors);
+    screenCaptureProcessorSet.addAll(screenCaptureProcessors);
   }
 
   /**
@@ -159,22 +159,22 @@ public final class Screenshot {
    * @param screenCaptureProcessors the set of {@link ScreenCaptureProcessor}s to use
    */
   public static void setScreenshotProcessors(Set<ScreenCaptureProcessor> screenCaptureProcessors) {
-    sScreenCaptureProcessorSet = screenCaptureProcessors;
+    screenCaptureProcessorSet = screenCaptureProcessors;
   }
 
   private static ScreenCapture captureImpl(View targetView)
       throws IOException, InterruptedException, ExecutionException {
     Bitmap bitmap;
-    if (targetView == null && sAndroidRuntimeVersion >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+    if (targetView == null && androidRuntimeVersion >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
       bitmap = captureUiAutomatorImpl();
     } else {
       bitmap = captureViewBasedImpl(targetView);
     }
-    return new ScreenCapture(bitmap).setProcessors(sScreenCaptureProcessorSet);
+    return new ScreenCapture(bitmap).setProcessors(screenCaptureProcessorSet);
   }
 
   private static Bitmap captureUiAutomatorImpl() {
-    return sUiWrapper.takeScreenshot();
+    return uiWrapper.takeScreenshot();
   }
 
   private static Bitmap captureViewBasedImpl(@NonNull final View view)
@@ -183,7 +183,7 @@ public final class Screenshot {
         view,
         "Taking view based screenshot requires using either takeScreenshot(view) or"
             + " takeScreenshot(activity) where view and activity are non-null.");
-    Callable<Bitmap> takeScreenshotCallable = sTakeScreenshotCallableFactory.create(view);
+    Callable<Bitmap> takeScreenshotCallable = takeScreenshotCallableFactory.create(view);
     FutureTask<Bitmap> task = new FutureTask<>(takeScreenshotCallable);
     // If we already run on the main thread just execute the task
     if (Looper.myLooper() == Looper.getMainLooper()) {
@@ -196,17 +196,17 @@ public final class Screenshot {
 
   @VisibleForTesting
   static void setTakeScreenshotCallableFactory(TakeScreenshotCallable.Factory factory) {
-    sTakeScreenshotCallableFactory = factory;
+    takeScreenshotCallableFactory = factory;
   }
 
   @VisibleForTesting
   static void setUiAutomationWrapper(UiAutomationWrapper wrapper) {
-    sUiWrapper = wrapper;
+    uiWrapper = wrapper;
   }
 
   @VisibleForTesting
   static void setAndroidRuntimeVersion(int sdkInt) {
-    sAndroidRuntimeVersion = sdkInt;
+    androidRuntimeVersion = sdkInt;
   }
 
   /** An Exception associated with failing to capture a screenshot. */
