@@ -39,10 +39,10 @@ public final class IntentMonitorImpl implements IntentMonitor {
 
   private static final String TAG = "IntentMonitorImpl";
 
-  // Accessed from any thread. Wrapping mCallbacks in WeakReference because we don't fully
-  // trust the users to remove the mCallbacks (and we don't want to build up a set of dangling
+  // Accessed from any thread. Wrapping callbacks in WeakReference because we don't fully
+  // trust the users to remove the callbacks (and we don't want to build up a set of dangling
   // ones as the instrumentation runs).
-  List<WeakReference<IntentCallback>> mCallbacks =
+  List<WeakReference<IntentCallback>> callbacks =
       Collections.synchronizedList(new ArrayList<WeakReference<IntentCallback>>());
 
   /**
@@ -55,7 +55,7 @@ public final class IntentMonitorImpl implements IntentMonitor {
       throw new NullPointerException("callback cannot be null!");
     }
     boolean needsAdd = true;
-    Iterator<WeakReference<IntentCallback>> refIter = mCallbacks.iterator();
+    Iterator<WeakReference<IntentCallback>> refIter = callbacks.iterator();
     while (refIter.hasNext()) {
       IntentCallback storedCallback = refIter.next().get();
       if (null == storedCallback) {
@@ -65,7 +65,7 @@ public final class IntentMonitorImpl implements IntentMonitor {
       }
     }
     if (needsAdd) {
-      mCallbacks.add(new WeakReference<IntentCallback>(callback));
+      callbacks.add(new WeakReference<IntentCallback>(callback));
     }
   }
 
@@ -75,7 +75,7 @@ public final class IntentMonitorImpl implements IntentMonitor {
     if (null == callback) {
       throw new NullPointerException("callback cannot be null!");
     }
-    Iterator<WeakReference<IntentCallback>> refIter = mCallbacks.iterator();
+    Iterator<WeakReference<IntentCallback>> refIter = callbacks.iterator();
     while (refIter.hasNext()) {
       IntentCallback storedCallback = refIter.next().get();
       if (null == storedCallback) {
@@ -94,7 +94,7 @@ public final class IntentMonitorImpl implements IntentMonitor {
    * @param intent the intent to signal
    */
   public void signalIntent(Intent intent) {
-    Iterator<WeakReference<IntentCallback>> refIter = mCallbacks.iterator();
+    Iterator<WeakReference<IntentCallback>> refIter = callbacks.iterator();
     while (refIter.hasNext()) {
       IntentCallback callback = refIter.next().get();
       if (null == callback) {

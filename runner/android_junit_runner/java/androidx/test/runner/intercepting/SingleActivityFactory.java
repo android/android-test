@@ -28,16 +28,16 @@ import android.content.Intent;
 public abstract class SingleActivityFactory<T extends Activity>
     implements InterceptingActivityFactory {
 
-  private final Class<T> mActivityClassToIntercept;
+  private final Class<T> activityClassToIntercept;
 
   public SingleActivityFactory(Class<T> activityClassToIntercept) {
     checkNotNull(activityClassToIntercept);
-    mActivityClassToIntercept = checkNotNull(activityClassToIntercept);
+    this.activityClassToIntercept = checkNotNull(activityClassToIntercept);
   }
 
   @Override
   public final boolean shouldIntercept(ClassLoader classLoader, String className, Intent intent) {
-    return mActivityClassToIntercept.getName().equals(className);
+    return activityClassToIntercept.getName().equals(className);
   }
 
   @Override
@@ -54,7 +54,7 @@ public abstract class SingleActivityFactory<T extends Activity>
    * @return Class of the activity object being instantiated
    */
   public final Class<T> getActivityClassToIntercept() {
-    return mActivityClassToIntercept;
+    return activityClassToIntercept;
   }
 
   /**

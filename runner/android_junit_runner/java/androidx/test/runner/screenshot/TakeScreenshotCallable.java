@@ -32,7 +32,7 @@ import java.util.concurrent.Callable;
  */
 final class TakeScreenshotCallable implements Callable<Bitmap> {
   private static final String TAG = "TakeScreenshotCallable";
-  private WeakReference<View> mViewRef;
+  private WeakReference<View> viewRef;
 
   /** Factory class to create a {@link TakeScreenshotCallable} object. */
   @VisibleForTesting
@@ -43,19 +43,19 @@ final class TakeScreenshotCallable implements Callable<Bitmap> {
   }
 
   private TakeScreenshotCallable(View view) {
-    this.mViewRef = new WeakReference<View>(view);
+    this.viewRef = new WeakReference<View>(view);
   }
 
   @Override
   public Bitmap call() {
     Bitmap bitmap = null;
-    mViewRef.get().setDrawingCacheEnabled(true);
+    viewRef.get().setDrawingCacheEnabled(true);
     try {
-      bitmap = Bitmap.createBitmap(mViewRef.get().getDrawingCache());
+      bitmap = Bitmap.createBitmap(viewRef.get().getDrawingCache());
     } catch (OutOfMemoryError omm) {
       Log.e(TAG, "Out of memory exception while trying to take a screenshot.", omm);
     } finally {
-      mViewRef.get().setDrawingCacheEnabled(false);
+      viewRef.get().setDrawingCacheEnabled(false);
     }
     return bitmap;
   }

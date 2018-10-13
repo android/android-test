@@ -23,17 +23,17 @@ import org.junit.runners.model.Statement;
 
 /** {@link Statement} that executes a test on the application's main thread (or UI thread). */
 public class UiThreadStatement extends Statement {
-  private final Statement mBase;
-  private final boolean mRunOnUiThread;
+  private final Statement base;
+  private final boolean runOnUiThread;
 
   public UiThreadStatement(Statement base, boolean runOnUiThread) {
-    mBase = base;
-    mRunOnUiThread = runOnUiThread;
+    this.base = base;
+    this.runOnUiThread = runOnUiThread;
   }
 
   @Override
   public void evaluate() throws Throwable {
-    if (mRunOnUiThread) {
+    if (runOnUiThread) {
       final AtomicReference<Throwable> exceptionRef = new AtomicReference<>();
       getInstrumentation()
           .runOnMainSync(
@@ -41,7 +41,7 @@ public class UiThreadStatement extends Statement {
                 @Override
                 public void run() {
                   try {
-                    mBase.evaluate();
+                    base.evaluate();
                   } catch (Throwable throwable) {
                     exceptionRef.set(throwable);
                   }
@@ -52,7 +52,7 @@ public class UiThreadStatement extends Statement {
         throw throwable;
       }
     } else {
-      mBase.evaluate();
+      base.evaluate();
     }
   }
 }

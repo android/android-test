@@ -44,15 +44,15 @@ public class GrantPermissionRuleTest {
 
   private static final String RUNTIME_PERMISSION1 = "android.permission.PERMISSION1";
 
-  @Mock public PermissionRequester mPermissionRequester;
+  @Mock public PermissionRequester permissionRequester;
 
-  private GrantPermissionRule mGrantPermissionRule;
+  private GrantPermissionRule grantPermissionRule;
 
   @Before
   public void initMocks() {
     MockitoAnnotations.initMocks(this);
-    mGrantPermissionRule = GrantPermissionRule.grant(RUNTIME_PERMISSION1);
-    mGrantPermissionRule.setPermissionRequester(mPermissionRequester);
+    grantPermissionRule = GrantPermissionRule.grant(RUNTIME_PERMISSION1);
+    grantPermissionRule.setPermissionRequester(permissionRequester);
   }
 
   @Test
@@ -60,16 +60,16 @@ public class GrantPermissionRuleTest {
     Statement mockBaseStatement = mock(Statement.class);
     Description mockDescription = mock(Description.class);
 
-    mGrantPermissionRule.apply(mockBaseStatement, mockDescription).evaluate();
+    grantPermissionRule.apply(mockBaseStatement, mockDescription).evaluate();
 
     verify(mockBaseStatement).evaluate();
-    verify(mPermissionRequester).requestPermissions();
+    verify(permissionRequester).requestPermissions();
   }
 
   @Test
   public void requestingWriteExternalStoragePermission_addsReadExternalStoragePermission()
       throws Throwable {
-    GrantPermissionRule grantPermissionRule = new GrantPermissionRule(mPermissionRequester);
+    GrantPermissionRule grantPermissionRule = new GrantPermissionRule(permissionRequester);
     Set<String> permissions =
         grantPermissionRule.satisfyPermissionDependencies(permission.WRITE_EXTERNAL_STORAGE);
     assertThat(permissions, hasSize(2));
@@ -80,7 +80,7 @@ public class GrantPermissionRuleTest {
 
   @Test
   public void requestingPermission_doesNotAddReadExternalStoragePermission() throws Throwable {
-    GrantPermissionRule grantPermissionRule = new GrantPermissionRule(mPermissionRequester);
+    GrantPermissionRule grantPermissionRule = new GrantPermissionRule(permissionRequester);
     assertThat(
         grantPermissionRule.satisfyPermissionDependencies(RUNTIME_PERMISSION1),
         not(contains(permission.READ_EXTERNAL_STORAGE)));

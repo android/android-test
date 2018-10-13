@@ -101,59 +101,59 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
    */
   public static final String REPORT_KEY_STACK = "stack";
 
-  private final Bundle mResultTemplate;
-  @VisibleForTesting Bundle mTestResult;
-  int mTestNum = 0;
-  int mTestResultCode = -999;
-  String mTestClass = null;
-  private Description mDescription = Description.EMPTY;
+  private final Bundle resultTemplate;
+  @VisibleForTesting Bundle testResult;
+  int testNum = 0;
+  int testResultCode = -999;
+  String testClass = null;
+  private Description description = Description.EMPTY;
 
   public InstrumentationResultPrinter() {
-    mResultTemplate = new Bundle();
-    mTestResult = new Bundle(mResultTemplate);
+    resultTemplate = new Bundle();
+    testResult = new Bundle(resultTemplate);
   }
 
   @Override
   public void testRunStarted(Description description) throws Exception {
-    mResultTemplate.putString(Instrumentation.REPORT_KEY_IDENTIFIER, REPORT_VALUE_ID);
-    mResultTemplate.putInt(REPORT_KEY_NUM_TOTAL, description.testCount());
+    resultTemplate.putString(Instrumentation.REPORT_KEY_IDENTIFIER, REPORT_VALUE_ID);
+    resultTemplate.putInt(REPORT_KEY_NUM_TOTAL, description.testCount());
   }
 
   /** send a status for the start of a each test, so long tests can be seen as "running" */
   @Override
   public void testStarted(Description description) throws Exception {
-    mDescription = description; // cache Description in case of a crash
+    this.description = description; // cache Description in case of a crash
     String testClass = description.getClassName();
     String testName = description.getMethodName();
-    mTestResult = new Bundle(mResultTemplate);
-    mTestResult.putString(REPORT_KEY_NAME_CLASS, testClass);
-    mTestResult.putString(REPORT_KEY_NAME_TEST, testName);
-    mTestResult.putInt(REPORT_KEY_NUM_CURRENT, ++mTestNum);
+    testResult = new Bundle(resultTemplate);
+    testResult.putString(REPORT_KEY_NAME_CLASS, testClass);
+    testResult.putString(REPORT_KEY_NAME_TEST, testName);
+    testResult.putInt(REPORT_KEY_NUM_CURRENT, ++testNum);
     // pretty printing
-    if (testClass != null && !testClass.equals(mTestClass)) {
-      mTestResult.putString(
+    if (testClass != null && !testClass.equals(this.testClass)) {
+      testResult.putString(
           Instrumentation.REPORT_KEY_STREAMRESULT, String.format("\n%s:", testClass));
-      mTestClass = testClass;
+      this.testClass = testClass;
     } else {
-      mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT, "");
+      testResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT, "");
     }
 
-    sendStatus(REPORT_VALUE_RESULT_START, mTestResult);
-    mTestResultCode = REPORT_VALUE_RESULT_OK;
+    sendStatus(REPORT_VALUE_RESULT_START, testResult);
+    testResultCode = REPORT_VALUE_RESULT_OK;
   }
 
   @Override
   public void testFinished(Description description) throws Exception {
-    if (mTestResultCode == REPORT_VALUE_RESULT_OK) {
-      mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT, ".");
+    if (testResultCode == REPORT_VALUE_RESULT_OK) {
+      testResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT, ".");
     }
-    sendStatus(mTestResultCode, mTestResult);
+    sendStatus(testResultCode, testResult);
   }
 
   @Override
   public void testFailure(Failure failure) throws Exception {
     boolean shouldCallFinish = false;
-    if (mDescription.equals(Description.EMPTY) && mTestNum == 0 && mTestClass == null) {
+    if (description.equals(Description.EMPTY) && testNum == 0 && testClass == null) {
       // Junit failed during initialization and testStarted was never called. For example, an
       // exception was thrown in @BeforeClass method. We must artificially call testStarted and
       // testFinished in order to print a descriptive result that external tools (like Studio) can
@@ -161,7 +161,7 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
       testStarted(failure.getDescription());
       shouldCallFinish = true;
     }
-    mTestResultCode = REPORT_VALUE_RESULT_FAILURE;
+    testResultCode = REPORT_VALUE_RESULT_FAILURE;
     reportFailure(failure);
     if (shouldCallFinish) {
       testFinished(failure.getDescription());
@@ -170,8 +170,8 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
 
   @Override
   public void testAssumptionFailure(Failure failure) {
-    mTestResultCode = REPORT_VALUE_RESULT_ASSUMPTION_FAILURE;
-    mTestResult.putString(REPORT_KEY_STACK, failure.getTrace());
+    testResultCode = REPORT_VALUE_RESULT_ASSUMPTION_FAILURE;
+    testResult.putString(REPORT_KEY_STACK, failure.getTrace());
   }
 
   private void reportFailure(Failure failure) {
@@ -184,9 +184,9 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
           String.format("Stack trace too long, trimmed to first %s characters.", MAX_TRACE_SIZE));
       trace = trace.substring(0, MAX_TRACE_SIZE) + "\n";
     }
-    mTestResult.putString(REPORT_KEY_STACK, trace);
+    testResult.putString(REPORT_KEY_STACK, trace);
     // pretty printing
-    mTestResult.putString(
+    testResult.putString(
         Instrumentation.REPORT_KEY_STREAMRESULT,
         String.format(
             "\nError in %s:\n%s", failure.getDescription().getDisplayName(), failure.getTrace()));
@@ -195,7 +195,7 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
   @Override
   public void testIgnored(Description description) throws Exception {
     testStarted(description);
-    mTestResultCode = REPORT_VALUE_RESULT_IGNORED;
+    testResultCode = REPORT_VALUE_RESULT_IGNORED;
     testFinished(description);
   }
 
@@ -205,25 +205,25 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
    */
   public void reportProcessCrash(Throwable t) {
     try {
-      mTestResultCode = REPORT_VALUE_RESULT_FAILURE;
-      Failure failure = new Failure(mDescription, t);
-      mTestResult.putString(REPORT_KEY_STACK, failure.getTrace());
+      testResultCode = REPORT_VALUE_RESULT_FAILURE;
+      Failure failure = new Failure(description, t);
+      testResult.putString(REPORT_KEY_STACK, failure.getTrace());
       // pretty printing
-      mTestResult.putString(
+      testResult.putString(
           Instrumentation.REPORT_KEY_STREAMRESULT,
           String.format(
               "\nProcess crashed while executing %s:\n%s",
-              mDescription.getDisplayName(), failure.getTrace()));
-      testFinished(mDescription);
+              description.getDisplayName(), failure.getTrace()));
+      testFinished(description);
     } catch (Exception e) {
       // ignore, about to crash anyway
-      if (null == mDescription) {
+      if (null == description) {
         Log.e(TAG, "Failed to initialize test before process crash");
       } else {
         Log.e(
             TAG,
             "Failed to mark test "
-                + mDescription.getDisplayName()
+                + description.getDisplayName()
                 + " as finished after process crash");
       }
     }

@@ -1,7 +1,8 @@
 steps:
-# build the docker image that contains bazel + android SDK
+# pull the latest docker image contains bazel + android SDK
 - name: gcr.io/cloud-builders/docker
   args: ['pull', 'gcr.io/$PROJECT_ID/bazel-android:latest']
+# build the docker image, caching from the latest image
 - name: gcr.io/cloud-builders/docker
   args: [
           'build',
@@ -22,4 +23,5 @@ timeout: '1200s'
 options:
   machineType: "N1_HIGHCPU_32"
 
+# push the built docker image to google cloud storage
 images: ['gcr.io/$PROJECT_ID/bazel-android:latest']

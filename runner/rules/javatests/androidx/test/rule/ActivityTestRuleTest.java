@@ -66,7 +66,7 @@ public class ActivityTestRuleTest {
 
   private static final String STUB_ANDROID_PACKAGE_NAME = "com.android.testing.rocks";
 
-  private static final ActivityFixture mMockActivity = mock(ActivityFixture.class);
+  private static final ActivityFixture mockActivity = mock(ActivityFixture.class);
 
   public static class ActivityFixture extends Activity {}
 
@@ -75,13 +75,13 @@ public class ActivityTestRuleTest {
     private static StringBuilder log = new StringBuilder();
 
     @Rule
-    public ActivityTestRule<ActivityFixture> mActivityRule =
+    public ActivityTestRule<ActivityFixture> activityRule =
         new ActivityTestRule<ActivityFixture>(ActivityFixture.class) {
           @Override
           public ActivityFixture launchActivity(Intent startIntent) {
             log.append("launchActivity ");
-            mActivity = makeWeakReference(mMockActivity);
-            return mActivity.get();
+            activity = makeWeakReference(mockActivity);
+            return activity.get();
           }
 
           @Override
@@ -126,7 +126,7 @@ public class ActivityTestRuleTest {
   public static class FailureOfActivityLaunchTest {
 
     @Rule
-    public ActivityTestRule<ActivityFixture> mActivityRule =
+    public ActivityTestRule<ActivityFixture> activityRule =
         new ActivityTestRule<>(ActivityFixture.class);
 
     @Test
@@ -146,23 +146,23 @@ public class ActivityTestRuleTest {
   public static class SuccessfulLaunchTest {
 
     @Rule
-    public ActivityTestRule<ActivityFixture> mActivityRule =
+    public ActivityTestRule<ActivityFixture> activityRule =
         new ActivityTestRule<ActivityFixture>(ActivityFixture.class) {
           @Override
           public ActivityFixture launchActivity(Intent startIntent) {
-            mActivity = makeWeakReference(mMockActivity);
-            return mActivity.get();
+            activity = makeWeakReference(mockActivity);
+            return activity.get();
           }
 
           @Override
           public void finishActivity() {
-            mActivity = null;
+            activity = null;
           }
         };
 
     @Test
     public void verifyTheLaunchedActivityIsReturned() {
-      ActivityFixture activity = mActivityRule.getActivity();
+      ActivityFixture activity = activityRule.getActivity();
       assertThat(activity, notNullValue());
     }
   }
@@ -176,22 +176,22 @@ public class ActivityTestRuleTest {
   public static class SuccessfulLaunchWithDefaultsTest {
 
     @Rule
-    public ActivityTestRule<ActivityFixture> mActivityRule =
+    public ActivityTestRule<ActivityFixture> activityRule =
         new ActivityTestRule<ActivityFixture>(ActivityFixture.class, false, false) {};
 
     @Test
     public void verifyLaunchedActivityIsReturned() {
       Instrumentation mockInstrumentation = mock(Instrumentation.class);
-      mActivityRule.setInstrumentation(mockInstrumentation);
+      activityRule.setInstrumentation(mockInstrumentation);
 
-      ActivityFixture activity = mActivityRule.launchActivity(null);
+      ActivityFixture activity = activityRule.launchActivity(null);
 
       assertThat(activity, notNullValue());
       assertThat(
-          mActivityRule.getActivityIntent().getComponent().getPackageName(),
+          activityRule.getActivityIntent().getComponent().getPackageName(),
           equalTo(getTargetContext().getPackageName()));
       assertThat(
-          mActivityRule.getActivityIntent().getFlags(), equalTo(Intent.FLAG_ACTIVITY_NEW_TASK));
+          activityRule.getActivityIntent().getFlags(), equalTo(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
   }
 
@@ -203,33 +203,33 @@ public class ActivityTestRuleTest {
 
   public static class MockedInstrumentationTest {
 
-    @Mock Instrumentation mInstrumentation;
+    @Mock Instrumentation instrumentation;
 
-    @Mock Context mTargetContext;
+    @Mock Context targetContext;
 
-    boolean mBeforeActivityLaunched;
-    boolean mAfterActivityLaunched;
-    boolean mAfterActivityFinished;
+    boolean beforeActivityLaunched;
+    boolean afterActivityLaunched;
+    boolean afterActivityFinished;
 
     @Rule
-    public ActivityTestRule<ActivityFixture> mActivityRule =
+    public ActivityTestRule<ActivityFixture> activityRule =
         new ActivityTestRule<ActivityFixture>(ActivityFixture.class, false, false) {
 
           @Override
           protected void beforeActivityLaunched() {
             super.beforeActivityLaunched();
-            mBeforeActivityLaunched = true;
+            beforeActivityLaunched = true;
           }
 
           @Override
           protected void afterActivityLaunched() {
-            mAfterActivityLaunched = true;
+            afterActivityLaunched = true;
             super.afterActivityLaunched();
           }
 
           @Override
           protected void afterActivityFinished() {
-            mAfterActivityFinished = true;
+            afterActivityFinished = true;
             super.afterActivityFinished();
           }
 
@@ -242,18 +242,18 @@ public class ActivityTestRuleTest {
     @Before
     public void injectMockInstrumentation() {
       MockitoAnnotations.initMocks(this);
-      mBeforeActivityLaunched = false;
-      mAfterActivityLaunched = false;
-      mAfterActivityFinished = false;
-      mActivityRule.setInstrumentation(mInstrumentation);
+      beforeActivityLaunched = false;
+      afterActivityLaunched = false;
+      afterActivityFinished = false;
+      activityRule.setInstrumentation(instrumentation);
       withStubbedInstrumentation();
     }
 
     /** Stubs Instrumentation to return a mock Activity and mock Context and package name. */
     protected void withStubbedInstrumentation() {
-      when(mInstrumentation.startActivitySync(any(Intent.class))).thenReturn(mMockActivity);
-      when(mInstrumentation.getTargetContext()).thenReturn(mTargetContext);
-      when(mTargetContext.getPackageName()).thenReturn(STUB_ANDROID_PACKAGE_NAME);
+      when(instrumentation.startActivitySync(any(Intent.class))).thenReturn(mockActivity);
+      when(instrumentation.getTargetContext()).thenReturn(targetContext);
+      when(targetContext.getPackageName()).thenReturn(STUB_ANDROID_PACKAGE_NAME);
     }
   }
 
@@ -261,14 +261,14 @@ public class ActivityTestRuleTest {
 
     @Test
     public void launchActivityCallsLifecycleMethods() {
-      assertThat(mActivityRule.getActivity(), nullValue());
-      assertThat(mBeforeActivityLaunched, equalTo(false));
+      assertThat(activityRule.getActivity(), nullValue());
+      assertThat(beforeActivityLaunched, equalTo(false));
 
-      mActivityRule.launchActivity(null);
+      activityRule.launchActivity(null);
 
-      assertThat(mActivityRule.getActivity(), notNullValue());
-      assertThat(mBeforeActivityLaunched, equalTo(true));
-      assertThat(mAfterActivityLaunched, equalTo(true));
+      assertThat(activityRule.getActivity(), notNullValue());
+      assertThat(beforeActivityLaunched, equalTo(true));
+      assertThat(afterActivityLaunched, equalTo(true));
     }
   }
 
@@ -283,25 +283,25 @@ public class ActivityTestRuleTest {
 
     @Test
     public void launchActivityCallsLifecycleMethods() {
-      assertThat(mActivityRule.getActivity(), nullValue());
-      assertThat(mBeforeActivityLaunched, equalTo(false));
-      assertThat(mAfterActivityLaunched, equalTo(false));
-      assertThat(mAfterActivityFinished, equalTo(false));
+      assertThat(activityRule.getActivity(), nullValue());
+      assertThat(beforeActivityLaunched, equalTo(false));
+      assertThat(afterActivityLaunched, equalTo(false));
+      assertThat(afterActivityFinished, equalTo(false));
 
-      mActivityRule.launchActivity(null);
+      activityRule.launchActivity(null);
 
-      assertThat(mActivityRule.getActivity(), notNullValue());
-      assertThat(mAfterActivityLaunched, equalTo(true));
+      assertThat(activityRule.getActivity(), notNullValue());
+      assertThat(afterActivityLaunched, equalTo(true));
 
-      mActivityRule.finishActivity();
+      activityRule.finishActivity();
 
-      assertThat(mActivityRule.getActivity(), nullValue());
-      assertThat(mAfterActivityFinished, equalTo(true));
+      assertThat(activityRule.getActivity(), nullValue());
+      assertThat(afterActivityFinished, equalTo(true));
 
-      mActivityRule.launchActivity(null);
+      activityRule.launchActivity(null);
 
-      assertThat(mActivityRule.getActivity(), notNullValue());
-      assertThat(mAfterActivityLaunched, equalTo(true));
+      assertThat(activityRule.getActivity(), notNullValue());
+      assertThat(afterActivityLaunched, equalTo(true));
     }
   }
 
@@ -319,25 +319,25 @@ public class ActivityTestRuleTest {
 
     @Override
     protected void withStubbedInstrumentation() {
-      when(mInstrumentation.startActivitySync(any(Intent.class)))
+      when(instrumentation.startActivitySync(any(Intent.class)))
           .thenReturn(null /* return null here to simulate a failed Activity launch */);
-      when(mInstrumentation.getTargetContext()).thenReturn(mTargetContext);
-      when(mTargetContext.getPackageName()).thenReturn(STUB_ANDROID_PACKAGE_NAME);
+      when(instrumentation.getTargetContext()).thenReturn(targetContext);
+      when(targetContext.getPackageName()).thenReturn(STUB_ANDROID_PACKAGE_NAME);
     }
 
     @Test
     public void failedActivityLaunch_DoesNotCallAfterLifecycleMethods() {
-      assertThat(mActivityRule.getActivity(), nullValue());
-      assertThat(mBeforeActivityLaunched, equalTo(false));
+      assertThat(activityRule.getActivity(), nullValue());
+      assertThat(beforeActivityLaunched, equalTo(false));
 
-      mActivityRule.launchActivity(null);
+      activityRule.launchActivity(null);
 
-      assertThat(mActivityRule.getActivity(), nullValue());
-      assertThat(mBeforeActivityLaunched, equalTo(true));
-      assertThat(mAfterActivityLaunched, equalTo(false));
-      assertThat(mAfterActivityFinished, equalTo(false));
+      assertThat(activityRule.getActivity(), nullValue());
+      assertThat(beforeActivityLaunched, equalTo(true));
+      assertThat(afterActivityLaunched, equalTo(false));
+      assertThat(afterActivityFinished, equalTo(false));
 
-      verify(mInstrumentation).sendStatus(eq(0), any(Bundle.class));
+      verify(instrumentation).sendStatus(eq(0), any(Bundle.class));
     }
   }
 
@@ -352,15 +352,15 @@ public class ActivityTestRuleTest {
 
     @Test
     public void lazilyLaunchedActivity_ExercisesLifecycleCorrectly() {
-      assertThat(mActivityRule.getActivity(), nullValue());
-      assertThat(mBeforeActivityLaunched, equalTo(false));
+      assertThat(activityRule.getActivity(), nullValue());
+      assertThat(beforeActivityLaunched, equalTo(false));
 
-      mActivityRule.launchActivity(null);
+      activityRule.launchActivity(null);
 
-      assertThat(mActivityRule.getActivity(), notNullValue());
-      assertThat(mBeforeActivityLaunched, equalTo(true));
-      assertThat(mAfterActivityLaunched, equalTo(true));
-      assertThat(mAfterActivityFinished, equalTo(false));
+      assertThat(activityRule.getActivity(), notNullValue());
+      assertThat(beforeActivityLaunched, equalTo(true));
+      assertThat(afterActivityLaunched, equalTo(true));
+      assertThat(afterActivityFinished, equalTo(false));
     }
   }
 
@@ -374,53 +374,53 @@ public class ActivityTestRuleTest {
 
     @Test
     public void customIntent_Set_IsUsedToStartActivity() {
-      assertThat(mActivityRule.getActivity(), nullValue());
+      assertThat(activityRule.getActivity(), nullValue());
 
       final Intent actionPick = new Intent(Intent.ACTION_PICK);
-      mActivityRule.launchActivity(actionPick);
+      activityRule.launchActivity(actionPick);
 
-      assertThat(mActivityRule.getActivity(), notNullValue());
-      verify(mInstrumentation).startActivitySync(actionPick);
+      assertThat(activityRule.getActivity(), notNullValue());
+      verify(instrumentation).startActivitySync(actionPick);
     }
 
     @Test
     public void customIntent_NotSet_UsesDefaultIntentToStartActivity() {
-      assertThat(mActivityRule.getActivity(), nullValue());
+      assertThat(activityRule.getActivity(), nullValue());
 
-      mActivityRule.launchActivity(null);
+      activityRule.launchActivity(null);
 
-      assertThat(mActivityRule.getActivity(), notNullValue());
+      assertThat(activityRule.getActivity(), notNullValue());
     }
 
     @Test
     public void customIntent_SetToNull_DoesNotThrow() {
-      assertThat(mActivityRule.getActivity(), nullValue());
-      assertThat(mActivityRule.launchActivity(null), notNullValue());
+      assertThat(activityRule.getActivity(), nullValue());
+      assertThat(activityRule.launchActivity(null), notNullValue());
     }
 
     @Test
     public void customIntent_OverridesDefaultValues() {
       String customActivityClass = "SomeCustomActivity";
       String customPackageName = "some.custom.package";
-      assertThat(mActivityRule.getActivity(), nullValue());
+      assertThat(activityRule.getActivity(), nullValue());
       final Intent actionPick =
           new Intent(Intent.ACTION_PICK)
               .setClassName(customPackageName, customActivityClass)
               .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-      assertThat(mActivityRule.launchActivity(actionPick), notNullValue());
-      verify(mInstrumentation).startActivitySync(eq(actionPick));
+      assertThat(activityRule.launchActivity(actionPick), notNullValue());
+      verify(instrumentation).startActivitySync(eq(actionPick));
     }
 
     @Test
     public void customIntent_PartialOverride_AddsMissingComponentName() {
-      assertThat(mActivityRule.getActivity(), nullValue());
+      assertThat(activityRule.getActivity(), nullValue());
       final Intent actionPick =
           new Intent(Intent.ACTION_PICK).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
       ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
-      assertThat(mActivityRule.launchActivity(actionPick), notNullValue());
-      verify(mInstrumentation).startActivitySync(intentArgumentCaptor.capture());
+      assertThat(activityRule.launchActivity(actionPick), notNullValue());
+      verify(instrumentation).startActivitySync(intentArgumentCaptor.capture());
       assertThat(
           intentArgumentCaptor.getValue().getComponent(),
           is(equalTo(new ComponentName(getTargetContext(), ActivityFixture.class.getName()))));
@@ -430,13 +430,13 @@ public class ActivityTestRuleTest {
     public void customIntent_PartialOverride_AddsMissingLaunchFlag() {
       String customActivityClass = "SomeCustomActivity";
       String customPackageName = "some.custom.package";
-      assertThat(mActivityRule.getActivity(), nullValue());
+      assertThat(activityRule.getActivity(), nullValue());
       final Intent actionPick =
           new Intent(Intent.ACTION_PICK).setClassName(customPackageName, customActivityClass);
 
       ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
-      assertThat(mActivityRule.launchActivity(actionPick), notNullValue());
-      verify(mInstrumentation).startActivitySync(intentArgumentCaptor.capture());
+      assertThat(activityRule.launchActivity(actionPick), notNullValue());
+      verify(instrumentation).startActivitySync(intentArgumentCaptor.capture());
       assertThat(
           intentArgumentCaptor.getValue().getFlags(), is(equalTo(Intent.FLAG_ACTIVITY_NEW_TASK)));
     }
@@ -454,10 +454,10 @@ public class ActivityTestRuleTest {
 
     private static final int CUSTOM_FLAGS = Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
-    @Mock Instrumentation mInstrumentation;
+    @Mock Instrumentation instrumentation;
 
     @Rule
-    public ActivityTestRule<ActivityFixture> mActivityRule =
+    public ActivityTestRule<ActivityFixture> activityRule =
         new ActivityTestRule<ActivityFixture>(
             ActivityFixture.class,
             CUSTOM_PACKAGE_NAME,
@@ -468,12 +468,12 @@ public class ActivityTestRuleTest {
     @Test
     public void customPackageSet_IsUsedToStartActivity() {
       final Intent customIntent = new Intent(Intent.ACTION_PICK);
-      mActivityRule.launchActivity(customIntent);
+      activityRule.launchActivity(customIntent);
 
       assertThat(customIntent.getComponent().getPackageName(), equalTo(CUSTOM_PACKAGE_NAME));
       assertThat(customIntent.getFlags(), equalTo(CUSTOM_FLAGS));
 
-      verify(mInstrumentation).startActivitySync(customIntent);
+      verify(instrumentation).startActivitySync(customIntent);
     }
   }
 
@@ -489,10 +489,10 @@ public class ActivityTestRuleTest {
     private static final String CUSTOM_PACKAGE_NAME = "some.custom.package";
     private static final int CUSTOM_FLAGS = Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
-    @Mock Instrumentation mInstrumentation;
+    @Mock Instrumentation instrumentation;
 
     @Rule
-    public ActivityTestRule<ActivityFixture> mActivityRule =
+    public ActivityTestRule<ActivityFixture> activityRule =
         new ActivityTestRule<ActivityFixture>(ActivityFixture.class, false, false) {
           @Override
           protected Intent getActivityIntent() {
@@ -506,11 +506,11 @@ public class ActivityTestRuleTest {
 
     @Test
     public void customIntent_PartialOverride_AddsMissingComponentName() {
-      assertThat(mActivityRule.getActivity(), nullValue());
+      assertThat(activityRule.getActivity(), nullValue());
 
       ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
-      assertThat(mActivityRule.launchActivity(null), notNullValue());
-      verify(mInstrumentation).startActivitySync(intentArgumentCaptor.capture());
+      assertThat(activityRule.launchActivity(null), notNullValue());
+      verify(instrumentation).startActivitySync(intentArgumentCaptor.capture());
       assertThat(
           intentArgumentCaptor.getValue().getComponent(),
           is(equalTo(new ComponentName(getTargetContext(), ActivityFixture.class.getName()))));
@@ -533,7 +533,7 @@ public class ActivityTestRuleTest {
         new SingleActivityFactory<ActivityFixture>(ActivityFixture.class) {
           @Override
           public ActivityFixture create(Intent intent) {
-            return mMockActivity;
+            return mockActivity;
           }
         };
     ActivityTestRule<ActivityFixture> activityTestRule =
@@ -552,19 +552,19 @@ public class ActivityTestRuleTest {
 
   public static class SuccessfulGetActivityResultTest {
 
-    @Rule public ActivityTestRule<Activity> mRule = new ActivityTestRule<>(Activity.class);
+    @Rule public ActivityTestRule<Activity> rule = new ActivityTestRule<>(Activity.class);
 
     @Test
     @UiThreadTest
     public void shouldReturnActivityResult() {
       // We need to use a real Activity (no mock) here in order to capture the result.
       // The Activity we use is android.app.Activity which exists on all API levels.
-      Activity activity = mRule.getActivity();
+      Activity activity = rule.getActivity();
       activity.setResult(Activity.RESULT_OK, new Intent(Intent.ACTION_VIEW));
 
       activity.finish(); // must be called on the UI Thread
 
-      ActivityResult activityResult = mRule.getActivityResult();
+      ActivityResult activityResult = rule.getActivityResult();
       assertNotNull(activityResult);
       assertEquals(Activity.RESULT_OK, activityResult.getResultCode());
       assertEquals(Intent.ACTION_VIEW, activityResult.getResultData().getAction());
@@ -574,12 +574,12 @@ public class ActivityTestRuleTest {
     public void shouldReturnActivityResult_withActivityFinish() {
       // We need to use a real Activity (no mock) here in order to capture the result.
       // The Activity we use is android.app.Activity which exists on all API levels.
-      Activity activity = mRule.getActivity();
+      Activity activity = rule.getActivity();
       activity.setResult(Activity.RESULT_OK, new Intent(Intent.ACTION_VIEW));
 
-      mRule.finishActivity();
+      rule.finishActivity();
 
-      ActivityResult activityResult = mRule.getActivityResult();
+      ActivityResult activityResult = rule.getActivityResult();
       assertNotNull(activityResult);
       assertEquals(Activity.RESULT_OK, activityResult.getResultCode());
       assertEquals(Intent.ACTION_VIEW, activityResult.getResultData().getAction());
@@ -594,13 +594,13 @@ public class ActivityTestRuleTest {
 
   public static class FailureGetActivityResultTest extends MockedInstrumentationTest {
 
-    @Rule public ActivityTestRule<Activity> mRule = new ActivityTestRule<>(Activity.class);
+    @Rule public ActivityTestRule<Activity> rule = new ActivityTestRule<>(Activity.class);
 
     @Test
     public void shouldFailWhenNotFinishing() {
-      Activity activity = mRule.getActivity();
+      Activity activity = rule.getActivity();
       activity.setResult(Activity.RESULT_OK, new Intent(Intent.ACTION_VIEW));
-      mRule.getActivityResult();
+      rule.getActivityResult();
     }
   }
 

@@ -63,20 +63,20 @@ public class ClassPathScanner {
 
   /** A {@link ClassNameFilter} that chains one or more filters together */
   public static class ChainedClassNameFilter implements ClassNameFilter {
-    private final List<ClassNameFilter> mFilters = new ArrayList<ClassNameFilter>();
+    private final List<ClassNameFilter> filters = new ArrayList<ClassNameFilter>();
 
     public void add(ClassNameFilter filter) {
-      mFilters.add(filter);
+      filters.add(filter);
     }
 
     public void addAll(ClassNameFilter... filters) {
-      mFilters.addAll(Arrays.asList(filters));
+      this.filters.addAll(Arrays.asList(filters));
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean accept(String className) {
-      for (ClassNameFilter filter : mFilters) {
+      for (ClassNameFilter filter : filters) {
         if (!filter.accept(className)) {
           return false;
         }
@@ -97,15 +97,15 @@ public class ClassPathScanner {
   /** A {@link ClassNameFilter} that only accepts package names within the given namespaces. */
   public static class InclusivePackageNamesFilter implements ClassNameFilter {
 
-    private final Collection<String> mPkgNames;
+    private final Collection<String> pkgNames;
 
     InclusivePackageNamesFilter(Collection<String> pkgNames) {
-      mPkgNames = new ArrayList<>(pkgNames.size());
+      this.pkgNames = new ArrayList<>(pkgNames.size());
       for (String packageName : pkgNames) {
         if (!packageName.endsWith(".")) {
-          mPkgNames.add(String.format("%s.", packageName));
+          this.pkgNames.add(String.format("%s.", packageName));
         } else {
-          mPkgNames.add(packageName);
+          this.pkgNames.add(packageName);
         }
       }
     }
@@ -113,7 +113,7 @@ public class ClassPathScanner {
     /** {@inheritDoc} */
     @Override
     public boolean accept(String pathName) {
-      for (String packageName : mPkgNames) {
+      for (String packageName : pkgNames) {
         if (pathName.startsWith(packageName)) {
           return true;
         }
@@ -127,34 +127,34 @@ public class ClassPathScanner {
    */
   public static class ExcludePackageNameFilter implements ClassNameFilter {
 
-    private final String mPkgName;
+    private final String pkgName;
 
     ExcludePackageNameFilter(String pkgName) {
       if (!pkgName.endsWith(".")) {
-        mPkgName = String.format("%s.", pkgName);
+        this.pkgName = String.format("%s.", pkgName);
       } else {
-        mPkgName = pkgName;
+        this.pkgName = pkgName;
       }
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean accept(String pathName) {
-      return !pathName.startsWith(mPkgName);
+      return !pathName.startsWith(pkgName);
     }
   }
 
   static class ExcludeClassNamesFilter implements ClassNameFilter {
 
-    private Set<String> mExcludedClassNames;
+    private Set<String> excludedClassNames;
 
     public ExcludeClassNamesFilter(Set<String> excludedClassNames) {
-      this.mExcludedClassNames = excludedClassNames;
+      this.excludedClassNames = excludedClassNames;
     }
 
     @Override
     public boolean accept(String className) {
-      return !mExcludedClassNames.contains(className);
+      return !excludedClassNames.contains(className);
     }
   }
 

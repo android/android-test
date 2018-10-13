@@ -42,9 +42,9 @@ public class UsageTrackerFacilitatorTest {
   static final String ARGUMENT_ORCHESTRATOR_SERVICE = "orchestratorService";
   static final String ARGUMENT_LIST_TESTS_FOR_ORCHESTRATOR = "listTestsForOrchestrator";
 
-  private UsageTrackerFacilitator mAnalyticsFacilitator;
+  private UsageTrackerFacilitator analyticsFacilitator;
 
-  @Mock private UsageTracker mUsageTracker;
+  @Mock private UsageTracker usageTracker;
 
   @Before
   public void setUp() throws Exception {
@@ -53,72 +53,72 @@ public class UsageTrackerFacilitatorTest {
 
   @Test
   public void analyticsDisabled_shouldTrackUsage_ReturnsFalse() {
-    mAnalyticsFacilitator = new UsageTrackerFacilitator(withAnalyticsDisabled());
+    analyticsFacilitator = new UsageTrackerFacilitator(withAnalyticsDisabled());
 
-    assertThat(mAnalyticsFacilitator.shouldTrackUsage(), equalTo(false));
+    assertThat(analyticsFacilitator.shouldTrackUsage(), equalTo(false));
   }
 
   @Test
   public void analyticsEnabledShouldTrackUsage_ReturnsTrue() {
-    mAnalyticsFacilitator = new UsageTrackerFacilitator(withAnalyticsEnabled());
+    analyticsFacilitator = new UsageTrackerFacilitator(withAnalyticsEnabled());
 
-    assertThat(mAnalyticsFacilitator.shouldTrackUsage(), equalTo(true));
+    assertThat(analyticsFacilitator.shouldTrackUsage(), equalTo(true));
   }
 
   @Test
   public void analyticsEnabledDoesTrackUsage() {
-    mAnalyticsFacilitator = new UsageTrackerFacilitator(withAnalyticsEnabled());
-    mAnalyticsFacilitator.registerUsageTracker(mUsageTracker);
+    analyticsFacilitator = new UsageTrackerFacilitator(withAnalyticsEnabled());
+    analyticsFacilitator.registerUsageTracker(usageTracker);
 
     String usage = "SomeComponent";
     String version = "1.2.3";
-    mAnalyticsFacilitator.trackUsage(usage, version);
-    mAnalyticsFacilitator.sendUsages();
+    analyticsFacilitator.trackUsage(usage, version);
+    analyticsFacilitator.sendUsages();
 
-    verify(mUsageTracker).trackUsage(eq(usage), eq(version));
-    verify(mUsageTracker).sendUsages();
+    verify(usageTracker).trackUsage(eq(usage), eq(version));
+    verify(usageTracker).sendUsages();
   }
 
   @Test
   public void analyticsDisabledDoesNotTrackUsage() {
-    mAnalyticsFacilitator = new UsageTrackerFacilitator(withAnalyticsDisabled());
-    mAnalyticsFacilitator.registerUsageTracker(mUsageTracker);
+    analyticsFacilitator = new UsageTrackerFacilitator(withAnalyticsDisabled());
+    analyticsFacilitator.registerUsageTracker(usageTracker);
 
     String usage = "SomeComponent";
     String version = "1.2.3";
-    mAnalyticsFacilitator.trackUsage(usage, version);
-    mAnalyticsFacilitator.sendUsages();
+    analyticsFacilitator.trackUsage(usage, version);
+    analyticsFacilitator.sendUsages();
 
-    verify(mUsageTracker, never()).trackUsage(eq(usage), eq(version));
-    verify(mUsageTracker, never()).sendUsages();
+    verify(usageTracker, never()).trackUsage(eq(usage), eq(version));
+    verify(usageTracker, never()).sendUsages();
   }
 
   @Test
   public void orchestratorCollectionRunDoesTrackUsage() {
-    mAnalyticsFacilitator = new UsageTrackerFacilitator(withOrchestratorCollectionRun());
-    mAnalyticsFacilitator.registerUsageTracker(mUsageTracker);
+    analyticsFacilitator = new UsageTrackerFacilitator(withOrchestratorCollectionRun());
+    analyticsFacilitator.registerUsageTracker(usageTracker);
 
     String usage = "SomeComponent";
     String version = "1.2.3";
-    mAnalyticsFacilitator.trackUsage(usage, version);
-    mAnalyticsFacilitator.sendUsages();
+    analyticsFacilitator.trackUsage(usage, version);
+    analyticsFacilitator.sendUsages();
 
-    verify(mUsageTracker).trackUsage(eq(usage), eq(version));
-    verify(mUsageTracker).sendUsages();
+    verify(usageTracker).trackUsage(eq(usage), eq(version));
+    verify(usageTracker).sendUsages();
   }
 
   @Test
   public void orchestratorSecondaryRunDoesNotTrackUsage() {
-    mAnalyticsFacilitator = new UsageTrackerFacilitator(withOrchestratorSecondaryRun());
-    mAnalyticsFacilitator.registerUsageTracker(mUsageTracker);
+    analyticsFacilitator = new UsageTrackerFacilitator(withOrchestratorSecondaryRun());
+    analyticsFacilitator.registerUsageTracker(usageTracker);
 
     String usage = "SomeComponent";
     String version = "1.2.3";
-    mAnalyticsFacilitator.trackUsage(usage, version);
-    mAnalyticsFacilitator.sendUsages();
+    analyticsFacilitator.trackUsage(usage, version);
+    analyticsFacilitator.sendUsages();
 
-    verify(mUsageTracker, never()).trackUsage(eq(usage), eq(version));
-    verify(mUsageTracker, never()).sendUsages();
+    verify(usageTracker, never()).trackUsage(eq(usage), eq(version));
+    verify(usageTracker, never()).sendUsages();
   }
 
   private static RunnerArgs withOrchestratorCollectionRun() {

@@ -34,26 +34,26 @@ import org.mockito.ArgumentMatcher;
 @SmallTest
 public class IntentMonitorImplTest {
 
-  private final IntentMonitorImpl mMonitor = new IntentMonitorImpl();
+  private final IntentMonitorImpl monitor = new IntentMonitorImpl();
 
   @Test
   public void addRemoveListener() {
     IntentCallback callback = mock(IntentCallback.class);
 
     // multiple adds should only register once.
-    mMonitor.addIntentCallback(callback);
-    mMonitor.addIntentCallback(callback);
-    mMonitor.addIntentCallback(callback);
+    monitor.addIntentCallback(callback);
+    monitor.addIntentCallback(callback);
+    monitor.addIntentCallback(callback);
 
     Intent intentBeforeRemove = new Intent(Intent.ACTION_VIEW);
-    mMonitor.signalIntent(intentBeforeRemove);
+    monitor.signalIntent(intentBeforeRemove);
 
     // multiple removes should no-op.
-    mMonitor.removeIntentCallback(callback);
-    mMonitor.removeIntentCallback(callback);
+    monitor.removeIntentCallback(callback);
+    monitor.removeIntentCallback(callback);
 
     Intent intentAfterRemove = new Intent(Intent.ACTION_DIAL);
-    mMonitor.signalIntent(intentAfterRemove);
+    monitor.signalIntent(intentAfterRemove);
 
     verify(callback).onIntentSent(withAction(Intent.ACTION_VIEW));
     verify(callback, never()).onIntentSent(withAction(Intent.ACTION_DIAL));

@@ -31,37 +31,37 @@ import java.io.File;
 final class DatabaseArgs {
 
   private static final String TAG = "DatabaseArgs";
-  private String mDBName;
-  private String[] mDBCmds;
-  private File mDBCmdFile;
-  private File mDBDataFile;
+  private String dBName;
+  private String[] dBCmds;
+  private File dBCmdFile;
+  private File dBDataFile;
 
   public DatabaseArgs(String dbName) {
-    mDBName = dbName;
+    dBName = dbName;
   }
 
   /** @see ProviderTestRule.Builder#setDatabaseCommands(String, String...) */
   public void setDBCmds(String... dbCmds) {
-    if (mDBCmds != null) {
-      Log.w(TAG, String.format("Commands for database %s already set", mDBName));
+    if (dBCmds != null) {
+      Log.w(TAG, String.format("Commands for database %s already set", dBName));
     }
-    mDBCmds = dbCmds;
+    dBCmds = dbCmds;
   }
 
   /** @see ProviderTestRule.Builder#setDatabaseCommandsFile(String, File) */
   public void setDBCmdFile(File dbCmdFile) {
-    if (mDBCmdFile != null) {
-      Log.w(TAG, String.format("Command file for database %s already set", mDBName));
+    if (dBCmdFile != null) {
+      Log.w(TAG, String.format("Command file for database %s already set", dBName));
     }
-    mDBCmdFile = dbCmdFile;
+    dBCmdFile = dbCmdFile;
   }
 
   /** @see ProviderTestRule.Builder#setDatabaseFile(String, File) */
   public void setDBDataFile(File dbDataFile) {
-    if (mDBDataFile != null) {
-      Log.w(TAG, String.format("Data file to restore for database %s already set", mDBName));
+    if (dBDataFile != null) {
+      Log.w(TAG, String.format("Data file to restore for database %s already set", dBName));
     }
-    mDBDataFile = dbDataFile;
+    dBDataFile = dbDataFile;
   }
 
   /**
@@ -72,41 +72,41 @@ final class DatabaseArgs {
    * @param dbCmds extra list of database commands to merge with existing database commands.
    */
   public void addDBCmds(String... dbCmds) {
-    if (null == mDBCmds) {
-      mDBCmds = dbCmds;
+    if (null == dBCmds) {
+      dBCmds = dbCmds;
     } else {
-      String[] newCmds = new String[mDBCmds.length + dbCmds.length];
-      System.arraycopy(mDBCmds, 0, newCmds, 0, mDBCmds.length);
-      System.arraycopy(dbCmds, 0, newCmds, mDBCmds.length, dbCmds.length);
-      mDBCmds = newCmds;
+      String[] newCmds = new String[dBCmds.length + dbCmds.length];
+      System.arraycopy(dBCmds, 0, newCmds, 0, dBCmds.length);
+      System.arraycopy(dbCmds, 0, newCmds, dBCmds.length, dbCmds.length);
+      dBCmds = newCmds;
     }
   }
 
   public boolean hasDBCmds() {
-    return (mDBCmds != null);
+    return (dBCmds != null);
   }
 
   public boolean hasDBCmdFile() {
-    return (mDBCmdFile != null);
+    return (dBCmdFile != null);
   }
 
   public boolean hasDBDataFile() {
-    return (mDBDataFile != null);
+    return (dBDataFile != null);
   }
 
   public String getDBName() {
-    return mDBName;
+    return dBName;
   }
 
   public String[] getDBCmds() {
-    return mDBCmds;
+    return dBCmds;
   }
 
   public File getDBCmdFile() {
-    return mDBCmdFile;
+    return dBCmdFile;
   }
 
   public File getDBDataFile() {
-    return mDBDataFile;
+    return dBDataFile;
   }
 }

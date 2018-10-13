@@ -40,10 +40,10 @@ import org.mockito.Mockito;
 public class AndroidJUnitRunnerLifeCycleTest
     extends ActivityUnitTestCase<AndroidJUnitRunnerLifeCycleTest.PublicLifecycleMethodActivity> {
 
-  private final ActivityLifecycleCallback mCallback = Mockito.mock(ActivityLifecycleCallback.class);
+  private final ActivityLifecycleCallback callback = Mockito.mock(ActivityLifecycleCallback.class);
 
-  private PublicLifecycleMethodActivity mSpiedActivity;
-  private ActivityLifecycleMonitor mMonitor;
+  private PublicLifecycleMethodActivity spiedActivity;
+  private ActivityLifecycleMonitor monitor;
 
   public AndroidJUnitRunnerLifeCycleTest() {
     super(PublicLifecycleMethodActivity.class);
@@ -52,7 +52,7 @@ public class AndroidJUnitRunnerLifeCycleTest
   @Override
   public void setActivity(Activity activity) {
     if (null != activity) {
-      mSpiedActivity = Mockito.spy((PublicLifecycleMethodActivity) activity);
+      spiedActivity = Mockito.spy((PublicLifecycleMethodActivity) activity);
     }
   }
 
@@ -66,13 +66,13 @@ public class AndroidJUnitRunnerLifeCycleTest
   @Override
   protected void setUp() throws Exception {
     super.setUp();
-    mMonitor = ActivityLifecycleMonitorRegistry.getInstance();
-    mMonitor.addLifecycleCallback(mCallback);
+    monitor = ActivityLifecycleMonitorRegistry.getInstance();
+    monitor.addLifecycleCallback(callback);
   }
 
   @Override
   protected void tearDown() throws Exception {
-    mMonitor.removeLifecycleCallback(mCallback);
+    monitor.removeLifecycleCallback(callback);
     super.tearDown();
   }
 
@@ -83,15 +83,15 @@ public class AndroidJUnitRunnerLifeCycleTest
   @UiThreadTest
   public void testActivityPreOnCreateCalled() {
     startActivity(new Intent(), null, null);
-    mSpiedActivity.setRunnableForOnCreate(
+    spiedActivity.setRunnableForOnCreate(
         new Runnable() {
           @Override
           public void run() {
-            assertThat(mSpiedActivity, isIn(mMonitor.getActivitiesInStage(Stage.PRE_ON_CREATE)));
-            assertThat(mMonitor.getLifecycleStageOf(mSpiedActivity), is(Stage.PRE_ON_CREATE));
+            assertThat(spiedActivity, isIn(monitor.getActivitiesInStage(Stage.PRE_ON_CREATE)));
+            assertThat(monitor.getLifecycleStageOf(spiedActivity), is(Stage.PRE_ON_CREATE));
           }
         });
-    getInstrumentation().callActivityOnCreate(mSpiedActivity, new Bundle());
+    getInstrumentation().callActivityOnCreate(spiedActivity, new Bundle());
   }
 
   // temporarily suppress - fails due to some sort of mockito issue
@@ -102,80 +102,80 @@ public class AndroidJUnitRunnerLifeCycleTest
 
     // if we dont pair start/stop together the test runner will block until a timeout
     // occurs waiting for the activity to stop.
-    getInstrumentation().callActivityOnStart(mSpiedActivity);
-    assertThat(mSpiedActivity, isIn(mMonitor.getActivitiesInStage(Stage.STARTED)));
-    assertThat(mMonitor.getLifecycleStageOf(mSpiedActivity), is(Stage.STARTED));
+    getInstrumentation().callActivityOnStart(spiedActivity);
+    assertThat(spiedActivity, isIn(monitor.getActivitiesInStage(Stage.STARTED)));
+    assertThat(monitor.getLifecycleStageOf(spiedActivity), is(Stage.STARTED));
 
-    getInstrumentation().callActivityOnStop(mSpiedActivity);
-    assertThat(mSpiedActivity, isIn(mMonitor.getActivitiesInStage(Stage.STOPPED)));
-    assertThat(mMonitor.getLifecycleStageOf(mSpiedActivity), is(Stage.STOPPED));
+    getInstrumentation().callActivityOnStop(spiedActivity);
+    assertThat(spiedActivity, isIn(monitor.getActivitiesInStage(Stage.STOPPED)));
+    assertThat(monitor.getLifecycleStageOf(spiedActivity), is(Stage.STOPPED));
 
-    InOrder order = inOrder(mSpiedActivity, mCallback);
-    order.verify(mSpiedActivity).onStart();
-    order.verify(mCallback).onActivityLifecycleChanged(mSpiedActivity, Stage.STARTED);
-    order.verify(mSpiedActivity).onStop();
-    order.verify(mCallback).onActivityLifecycleChanged(mSpiedActivity, Stage.STOPPED);
+    InOrder order = inOrder(spiedActivity, callback);
+    order.verify(spiedActivity).onStart();
+    order.verify(callback).onActivityLifecycleChanged(spiedActivity, Stage.STARTED);
+    order.verify(spiedActivity).onStop();
+    order.verify(callback).onActivityLifecycleChanged(spiedActivity, Stage.STOPPED);
   }
 
   @UiThreadTest
   public void testOnCreateCalled() {
     startActivity(new Intent(), null, null);
     Bundle b = new Bundle();
-    getInstrumentation().callActivityOnCreate(mSpiedActivity, b);
+    getInstrumentation().callActivityOnCreate(spiedActivity, b);
 
-    assertThat(mSpiedActivity, isIn(mMonitor.getActivitiesInStage(Stage.CREATED)));
-    assertThat(mMonitor.getLifecycleStageOf(mSpiedActivity), is(Stage.CREATED));
-    InOrder order = inOrder(mSpiedActivity, mCallback);
-    order.verify(mSpiedActivity).onCreate(b);
-    order.verify(mCallback).onActivityLifecycleChanged(mSpiedActivity, Stage.CREATED);
+    assertThat(spiedActivity, isIn(monitor.getActivitiesInStage(Stage.CREATED)));
+    assertThat(monitor.getLifecycleStageOf(spiedActivity), is(Stage.CREATED));
+    InOrder order = inOrder(spiedActivity, callback);
+    order.verify(spiedActivity).onCreate(b);
+    order.verify(callback).onActivityLifecycleChanged(spiedActivity, Stage.CREATED);
   }
 
   @UiThreadTest
   public void testOnResumeCalled() {
     startActivity(new Intent(), null, null);
-    getInstrumentation().callActivityOnResume(mSpiedActivity);
+    getInstrumentation().callActivityOnResume(spiedActivity);
 
-    assertThat(mSpiedActivity, isIn(mMonitor.getActivitiesInStage(Stage.RESUMED)));
-    assertThat(mMonitor.getLifecycleStageOf(mSpiedActivity), is(Stage.RESUMED));
-    InOrder order = inOrder(mSpiedActivity, mCallback);
-    order.verify(mSpiedActivity).onResume();
-    order.verify(mCallback).onActivityLifecycleChanged(mSpiedActivity, Stage.RESUMED);
+    assertThat(spiedActivity, isIn(monitor.getActivitiesInStage(Stage.RESUMED)));
+    assertThat(monitor.getLifecycleStageOf(spiedActivity), is(Stage.RESUMED));
+    InOrder order = inOrder(spiedActivity, callback);
+    order.verify(spiedActivity).onResume();
+    order.verify(callback).onActivityLifecycleChanged(spiedActivity, Stage.RESUMED);
   }
 
   @UiThreadTest
   public void testOnPauseCalled() {
     startActivity(new Intent(), null, null);
-    getInstrumentation().callActivityOnPause(mSpiedActivity);
+    getInstrumentation().callActivityOnPause(spiedActivity);
 
-    assertThat(mSpiedActivity, isIn(mMonitor.getActivitiesInStage(Stage.PAUSED)));
-    assertThat(mMonitor.getLifecycleStageOf(mSpiedActivity), is(Stage.PAUSED));
-    InOrder order = inOrder(mSpiedActivity, mCallback);
-    order.verify(mSpiedActivity).onPause();
-    order.verify(mCallback).onActivityLifecycleChanged(mSpiedActivity, Stage.PAUSED);
+    assertThat(spiedActivity, isIn(monitor.getActivitiesInStage(Stage.PAUSED)));
+    assertThat(monitor.getLifecycleStageOf(spiedActivity), is(Stage.PAUSED));
+    InOrder order = inOrder(spiedActivity, callback);
+    order.verify(spiedActivity).onPause();
+    order.verify(callback).onActivityLifecycleChanged(spiedActivity, Stage.PAUSED);
   }
 
   @UiThreadTest
   public void testOnRestartCalled() {
     startActivity(new Intent(), null, null);
-    getInstrumentation().callActivityOnRestart(mSpiedActivity);
+    getInstrumentation().callActivityOnRestart(spiedActivity);
 
-    assertThat(mSpiedActivity, isIn(mMonitor.getActivitiesInStage(Stage.RESTARTED)));
-    assertThat(mMonitor.getLifecycleStageOf(mSpiedActivity), is(Stage.RESTARTED));
-    InOrder order = inOrder(mSpiedActivity, mCallback);
-    order.verify(mSpiedActivity).onRestart();
-    order.verify(mCallback).onActivityLifecycleChanged(mSpiedActivity, Stage.RESTARTED);
+    assertThat(spiedActivity, isIn(monitor.getActivitiesInStage(Stage.RESTARTED)));
+    assertThat(monitor.getLifecycleStageOf(spiedActivity), is(Stage.RESTARTED));
+    InOrder order = inOrder(spiedActivity, callback);
+    order.verify(spiedActivity).onRestart();
+    order.verify(callback).onActivityLifecycleChanged(spiedActivity, Stage.RESTARTED);
   }
 
   @UiThreadTest
   public void testOnDestroyCalled() {
     startActivity(new Intent(), null, null);
-    getInstrumentation().callActivityOnDestroy(mSpiedActivity);
+    getInstrumentation().callActivityOnDestroy(spiedActivity);
 
-    assertThat(mSpiedActivity, isIn(mMonitor.getActivitiesInStage(Stage.DESTROYED)));
-    assertThat(mMonitor.getLifecycleStageOf(mSpiedActivity), is(Stage.DESTROYED));
-    InOrder order = inOrder(mSpiedActivity, mCallback);
-    order.verify(mSpiedActivity).onDestroy();
-    order.verify(mCallback).onActivityLifecycleChanged(mSpiedActivity, Stage.DESTROYED);
+    assertThat(spiedActivity, isIn(monitor.getActivitiesInStage(Stage.DESTROYED)));
+    assertThat(monitor.getLifecycleStageOf(spiedActivity), is(Stage.DESTROYED));
+    InOrder order = inOrder(spiedActivity, callback);
+    order.verify(spiedActivity).onDestroy();
+    order.verify(callback).onActivityLifecycleChanged(spiedActivity, Stage.DESTROYED);
   }
 
   /** Makes lifecycle methods public so we can verify on them. */

@@ -30,22 +30,22 @@ import org.junit.runner.notification.Failure;
  */
 public class SuiteAssignmentPrinter extends InstrumentationRunListener {
 
-  @VisibleForTesting long mStartTime;
-  @VisibleForTesting long mEndTime;
-  @VisibleForTesting boolean mTimingValid;
+  @VisibleForTesting long startTime;
+  @VisibleForTesting long endTime;
+  @VisibleForTesting boolean timingValid;
 
   @Override
   public void testStarted(Description description) throws Exception {
-    mTimingValid = true;
-    mStartTime = getCurrentTimeMillis();
+    timingValid = true;
+    startTime = getCurrentTimeMillis();
   }
 
   @Override
   public void testFinished(Description description) throws Exception {
     long runTime;
-    mEndTime = getCurrentTimeMillis();
+    endTime = getCurrentTimeMillis();
 
-    if (!mTimingValid || mStartTime < 0) {
+    if (!timingValid || startTime < 0) {
       sendString("F");
       Log.d(
           "SuiteAssignmentPrinter",
@@ -53,7 +53,7 @@ public class SuiteAssignmentPrinter extends InstrumentationRunListener {
               "%s#%s: skipping suite assignment due to test failure\n",
               description.getClassName(), description.getMethodName()));
     } else {
-      runTime = mEndTime - mStartTime;
+      runTime = endTime - startTime;
       TestSize assignmentSuite = TestSize.getTestSizeForRunTime(runTime);
       TestSize currentRenameSize = TestSize.fromDescription(description);
       if (!assignmentSuite.equals(currentRenameSize)) {
@@ -78,23 +78,23 @@ public class SuiteAssignmentPrinter extends InstrumentationRunListener {
                 runTime));
       }
     }
-    // Clear mStartTime so that we can verify that it gets set next time.
-    mStartTime = -1;
+    // Clear startTime so that we can verify that it gets set next time.
+    startTime = -1;
   }
 
   @Override
   public void testFailure(Failure failure) throws Exception {
-    mTimingValid = false;
+    timingValid = false;
   }
 
   @Override
   public void testAssumptionFailure(Failure failure) {
-    mTimingValid = false;
+    timingValid = false;
   }
 
   @Override
   public void testIgnored(Description description) throws Exception {
-    mTimingValid = false;
+    timingValid = false;
   }
 
   @VisibleForTesting

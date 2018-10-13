@@ -37,34 +37,33 @@ import org.junit.runner.RunWith;
 @SmallTest
 public class ClassPathScannerTest {
 
-  private ClassPathScanner mClassPathScanner;
-  private Enumeration<String> mDexEntries;
+  private ClassPathScanner classPathScanner;
+  private Enumeration<String> dexEntries;
 
   @Before
   public void setUp() throws Exception {
-    mClassPathScanner =
+    classPathScanner =
         new ClassPathScanner(InstrumentationRegistry.getTargetContext().getPackageCodePath()) {
           @Override
           Enumeration<String> getDexEntries(DexFile dexFile) {
-            return mDexEntries;
+            return dexEntries;
           }
         };
   }
 
   @Test
   public void externalClassNameFilter() throws IOException {
-    mDexEntries = createEntries("com.example.MyName", "com.example.MyName$Inner");
-    Set<String> result = mClassPathScanner.getClassPathEntries(new ExternalClassNameFilter());
+    dexEntries = createEntries("com.example.MyName", "com.example.MyName$Inner");
+    Set<String> result = classPathScanner.getClassPathEntries(new ExternalClassNameFilter());
     Assert.assertEquals(1, result.size());
     Assert.assertTrue(result.contains("com.example.MyName"));
   }
 
   @Test
   public void inclusivePackageNamesFilter() throws IOException {
-    mDexEntries =
-        createEntries("com.example.MyName", "com.exclude.Excluded", "com.example2.MyName");
+    dexEntries = createEntries("com.example.MyName", "com.exclude.Excluded", "com.example2.MyName");
     Set<String> result =
-        mClassPathScanner.getClassPathEntries(
+        classPathScanner.getClassPathEntries(
             new InclusivePackageNamesFilter(Arrays.asList("com.example")));
     Assert.assertEquals(1, result.size());
     Assert.assertTrue(result.contains("com.example.MyName"));
@@ -72,10 +71,10 @@ public class ClassPathScannerTest {
 
   @Test
   public void exclusivePackageNameFilter() throws IOException {
-    mDexEntries =
+    dexEntries =
         createEntries("com.example.MyName", "com.exclude.Excluded", "com.exclude2.Excluded");
     Set<String> result =
-        mClassPathScanner.getClassPathEntries(new ExcludePackageNameFilter("com.exclude"));
+        classPathScanner.getClassPathEntries(new ExcludePackageNameFilter("com.exclude"));
     Assert.assertEquals(2, result.size());
     Assert.assertTrue(result.contains("com.example.MyName"));
     Assert.assertTrue(result.contains("com.exclude2.Excluded"));

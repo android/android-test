@@ -92,71 +92,71 @@ public class OrchestrationResultPrinter extends OrchestrationRunListener {
    */
   public static final String REPORT_KEY_STACK = "stack";
 
-  private final Bundle mResultTemplate;
-  private Bundle mTestResult;
-  int mTestNum = 0;
-  int mTestResultCode = -999;
-  String mTestClass = null;
-  private ParcelableDescription mDescription;
+  private final Bundle resultTemplate;
+  private Bundle testResult;
+  int testNum = 0;
+  int testResultCode = -999;
+  String testClass = null;
+  private ParcelableDescription description;
 
   public OrchestrationResultPrinter() {
-    mResultTemplate = new Bundle();
-    mTestResult = new Bundle(mResultTemplate);
+    resultTemplate = new Bundle();
+    testResult = new Bundle(resultTemplate);
   }
 
   @Override
   public void orchestrationRunStarted(int testCount) {
-    mResultTemplate.putString(Instrumentation.REPORT_KEY_IDENTIFIER, REPORT_VALUE_ID);
-    mResultTemplate.putInt(REPORT_KEY_NUM_TOTAL, testCount);
+    resultTemplate.putString(Instrumentation.REPORT_KEY_IDENTIFIER, REPORT_VALUE_ID);
+    resultTemplate.putInt(REPORT_KEY_NUM_TOTAL, testCount);
   }
 
   /** send a status for the start of a each test, so long tests can be seen as "running" */
   @Override
   public void testStarted(ParcelableDescription description) {
-    mDescription = description; // cache ParcelableDescription in case of a crash
+    this.description = description; // cache ParcelableDescription in case of a crash
     String testClass = description.getClassName();
     String testName = description.getMethodName();
-    mTestResult = new Bundle(mResultTemplate);
-    mTestResult.putString(REPORT_KEY_NAME_CLASS, testClass);
-    mTestResult.putString(REPORT_KEY_NAME_TEST, testName);
-    mTestResult.putInt(REPORT_KEY_NUM_CURRENT, ++mTestNum);
+    testResult = new Bundle(resultTemplate);
+    testResult.putString(REPORT_KEY_NAME_CLASS, testClass);
+    testResult.putString(REPORT_KEY_NAME_TEST, testName);
+    testResult.putInt(REPORT_KEY_NUM_CURRENT, ++testNum);
     // pretty printing
-    if (testClass != null && !testClass.equals(mTestClass)) {
-      mTestResult.putString(
+    if (testClass != null && !testClass.equals(this.testClass)) {
+      testResult.putString(
           Instrumentation.REPORT_KEY_STREAMRESULT, String.format("\n%s:", testClass));
-      mTestClass = testClass;
+      this.testClass = testClass;
     } else {
-      mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT, "");
+      testResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT, "");
     }
 
-    sendStatus(REPORT_VALUE_RESULT_START, mTestResult);
-    mTestResultCode = REPORT_VALUE_RESULT_OK;
+    sendStatus(REPORT_VALUE_RESULT_START, testResult);
+    testResultCode = REPORT_VALUE_RESULT_OK;
   }
 
   @Override
   public void testFinished(ParcelableDescription description) {
-    if (mTestResultCode == REPORT_VALUE_RESULT_OK) {
-      mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT, ".");
+    if (testResultCode == REPORT_VALUE_RESULT_OK) {
+      testResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT, ".");
     }
-    sendStatus(mTestResultCode, mTestResult);
+    sendStatus(testResultCode, testResult);
   }
 
   @Override
   public void testFailure(ParcelableFailure failure) {
-    mTestResultCode = REPORT_VALUE_RESULT_FAILURE;
+    testResultCode = REPORT_VALUE_RESULT_FAILURE;
     reportFailure(failure);
   }
 
   @Override
   public void testAssumptionFailure(ParcelableFailure failure) {
-    mTestResultCode = REPORT_VALUE_RESULT_ASSUMPTION_FAILURE;
-    mTestResult.putString(REPORT_KEY_STACK, failure.getTrace());
+    testResultCode = REPORT_VALUE_RESULT_ASSUMPTION_FAILURE;
+    testResult.putString(REPORT_KEY_STACK, failure.getTrace());
   }
 
   private void reportFailure(ParcelableFailure failure) {
-    mTestResult.putString(REPORT_KEY_STACK, failure.getTrace());
+    testResult.putString(REPORT_KEY_STACK, failure.getTrace());
     // pretty printing
-    mTestResult.putString(
+    testResult.putString(
         Instrumentation.REPORT_KEY_STREAMRESULT,
         String.format(
             "\nError in %s:\n%s", failure.getDescription().getDisplayName(), failure.getTrace()));
@@ -165,7 +165,7 @@ public class OrchestrationResultPrinter extends OrchestrationRunListener {
   @Override
   public void testIgnored(ParcelableDescription description) {
     testStarted(description);
-    mTestResultCode = REPORT_VALUE_RESULT_IGNORED;
+    testResultCode = REPORT_VALUE_RESULT_IGNORED;
     testFinished(description);
   }
 
@@ -175,24 +175,24 @@ public class OrchestrationResultPrinter extends OrchestrationRunListener {
    */
   public void reportProcessCrash(Throwable t) {
     try {
-      mTestResultCode = REPORT_VALUE_RESULT_FAILURE;
-      ParcelableFailure failure = new ParcelableFailure(mDescription, t);
-      mTestResult.putString(REPORT_KEY_STACK, failure.getTrace());
+      testResultCode = REPORT_VALUE_RESULT_FAILURE;
+      ParcelableFailure failure = new ParcelableFailure(description, t);
+      testResult.putString(REPORT_KEY_STACK, failure.getTrace());
       // pretty printing
-      mTestResult.putString(
+      testResult.putString(
           Instrumentation.REPORT_KEY_STREAMRESULT,
           String.format(
               "\nProcess crashed while executing %s:\n%s",
-              mDescription.getDisplayName(), failure.getTrace()));
-      testFinished(mDescription);
+              description.getDisplayName(), failure.getTrace()));
+      testFinished(description);
     } catch (Exception e) {
-      if (null == mDescription) {
+      if (null == description) {
         Log.e(LOG_TAG, "Failed to initialize test before process crash");
       } else {
         Log.e(
             LOG_TAG,
             "Failed to mark test "
-                + mDescription.getDisplayName()
+                + description.getDisplayName()
                 + " as finished after process crash");
       }
     }

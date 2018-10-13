@@ -26,84 +26,84 @@ import junit.framework.TestResult;
 /** A {@link TestResult} that delegates all calls to another {@link TestResult}. */
 class DelegatingTestResult extends TestResult {
 
-  private TestResult mWrappedResult;
+  private TestResult wrappedResult;
 
   DelegatingTestResult(TestResult wrappedResult) {
-    mWrappedResult = wrappedResult;
+    this.wrappedResult = wrappedResult;
   }
 
   @Override
   public void addError(Test test, Throwable t) {
-    mWrappedResult.addError(test, t);
+    wrappedResult.addError(test, t);
   }
 
   @Override
   public void addFailure(Test test, AssertionFailedError t) {
-    mWrappedResult.addFailure(test, t);
+    wrappedResult.addFailure(test, t);
   }
 
   @Override
   public void addListener(TestListener listener) {
-    mWrappedResult.addListener(listener);
+    wrappedResult.addListener(listener);
   }
 
   @Override
   public void removeListener(TestListener listener) {
-    mWrappedResult.removeListener(listener);
+    wrappedResult.removeListener(listener);
   }
 
   @Override
   public void endTest(Test test) {
-    mWrappedResult.endTest(test);
+    wrappedResult.endTest(test);
   }
 
   @Override
   public int errorCount() {
-    return mWrappedResult.errorCount();
+    return wrappedResult.errorCount();
   }
 
   @Override
   public Enumeration<TestFailure> errors() {
-    return mWrappedResult.errors();
+    return wrappedResult.errors();
   }
 
   @Override
   public int failureCount() {
-    return mWrappedResult.failureCount();
+    return wrappedResult.failureCount();
   }
 
   @Override
   public Enumeration<TestFailure> failures() {
-    return mWrappedResult.failures();
+    return wrappedResult.failures();
   }
 
   @Override
   public int runCount() {
-    return mWrappedResult.runCount();
+    return wrappedResult.runCount();
   }
 
   @Override
   public void runProtected(final Test test, Protectable p) {
-    mWrappedResult.runProtected(test, p);
+    wrappedResult.runProtected(test, p);
   }
 
   @Override
   public boolean shouldStop() {
-    return mWrappedResult.shouldStop();
+    return wrappedResult.shouldStop();
   }
 
   @Override
   public void startTest(Test test) {
-    mWrappedResult.startTest(test);
+    wrappedResult.startTest(test);
   }
 
   @Override
   public void stop() {
-    mWrappedResult.stop();
+    wrappedResult.stop();
   }
 
   @Override
   public boolean wasSuccessful() {
-    return mWrappedResult.wasSuccessful();
+    return wrappedResult.wasSuccessful();
   }
 }

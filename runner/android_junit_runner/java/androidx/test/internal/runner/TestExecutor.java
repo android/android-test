@@ -38,12 +38,12 @@ import org.junit.runner.notification.RunListener;
 public final class TestExecutor {
   private static final String LOG_TAG = "TestExecutor";
 
-  private final List<RunListener> mListeners;
-  private final Instrumentation mInstr;
+  private final List<RunListener> listeners;
+  private final Instrumentation instr;
 
   private TestExecutor(Builder builder) {
-    mListeners = Checks.checkNotNull(builder.mListeners);
-    mInstr = builder.mInstr;
+    listeners = Checks.checkNotNull(builder.listeners);
+    instr = builder.instr;
   }
 
   /** Execute the tests */
@@ -62,7 +62,7 @@ public final class TestExecutor {
       ByteArrayOutputStream summaryStream = new ByteArrayOutputStream();
       // create the stream used to output summary data to the user
       PrintStream summaryWriter = new PrintStream(summaryStream);
-      reportRunEnded(mListeners, summaryWriter, resultBundle, junitResults);
+      reportRunEnded(listeners, summaryWriter, resultBundle, junitResults);
       summaryWriter.close();
       resultBundle.putString(
           Instrumentation.REPORT_KEY_STREAMRESULT, String.format("\n%s", summaryStream.toString()));
@@ -72,11 +72,11 @@ public final class TestExecutor {
 
   /** Initialize listeners and add them to the JUnitCore runner */
   private void setUpListeners(JUnitCore testRunner) {
-    for (RunListener listener : mListeners) {
+    for (RunListener listener : listeners) {
       Log.d(LOG_TAG, "Adding listener " + listener.getClass().getName());
       testRunner.addListener(listener);
       if (listener instanceof InstrumentationRunListener) {
-        ((InstrumentationRunListener) listener).setInstrumentation(mInstr);
+        ((InstrumentationRunListener) listener).setInstrumentation(instr);
       }
     }
   }
@@ -95,11 +95,11 @@ public final class TestExecutor {
   }
 
   public static class Builder {
-    private final List<RunListener> mListeners = new ArrayList<RunListener>();
-    private final Instrumentation mInstr;
+    private final List<RunListener> listeners = new ArrayList<RunListener>();
+    private final Instrumentation instr;
 
     public Builder(Instrumentation instr) {
-      mInstr = instr;
+      this.instr = instr;
     }
 
     /**
@@ -109,7 +109,7 @@ public final class TestExecutor {
      * @return the {@link androidx.test.internal.runner.TestExecutor.Builder}
      */
     public Builder addRunListener(RunListener listener) {
-      mListeners.add(listener);
+      listeners.add(listener);
       return this;
     }
 

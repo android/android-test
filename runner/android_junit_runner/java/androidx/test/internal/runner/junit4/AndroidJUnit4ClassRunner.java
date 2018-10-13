@@ -36,12 +36,12 @@ import org.junit.runners.model.Statement;
 /** A specialized {@link BlockJUnit4ClassRunner} that can handle timeouts */
 public class AndroidJUnit4ClassRunner extends BlockJUnit4ClassRunner {
 
-  private final AndroidRunnerParams mAndroidRunnerParams;
+  private final AndroidRunnerParams androidRunnerParams;
 
   public AndroidJUnit4ClassRunner(Class<?> klass, AndroidRunnerParams runnerParams)
       throws InitializationError {
     super(klass);
-    mAndroidRunnerParams = runnerParams;
+    androidRunnerParams = runnerParams;
   }
 
   public AndroidJUnit4ClassRunner(Class<?> klass) throws InitializationError {
@@ -87,8 +87,8 @@ public class AndroidJUnit4ClassRunner extends BlockJUnit4ClassRunner {
     long timeout = getTimeout(method.getAnnotation(Test.class));
 
     // use runner arg timeout if test level timeout is not present
-    if (timeout <= 0 && mAndroidRunnerParams.getPerTestTimeout() > 0) {
-      timeout = mAndroidRunnerParams.getPerTestTimeout();
+    if (timeout <= 0 && androidRunnerParams.getPerTestTimeout() > 0) {
+      timeout = androidRunnerParams.getPerTestTimeout();
     }
 
     if (timeout <= 0) {

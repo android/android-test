@@ -44,8 +44,8 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
     private final RunNotifier fNotifier;
     // android-changed - cache description and test - since building description can be
     // slightly memory intensive
-    private Test mCurrentTest = null;
-    private Description mDescription = null;
+    private Test currentTest = null;
+    private Description description = null;
     // end android-changed
 
     private OldTestClassAdaptingListener(RunNotifier notifier) {
@@ -71,19 +71,19 @@ public class JUnit38ClassRunner extends Runner implements Filterable, Sortable {
 
     private Description asDescription(Test test) {
       // android-changed - cache description
-      if (mCurrentTest != null && mCurrentTest.equals(test) && mDescription != null) {
-        return mDescription;
+      if (currentTest != null && currentTest.equals(test) && description != null) {
+        return description;
       }
-      mCurrentTest = test;
+      currentTest = test;
       if (test instanceof Describable) {
         Describable facade = (Describable) test;
-        mDescription = facade.getDescription();
+        description = facade.getDescription();
       } else if (test instanceof TestCase) {
-        mDescription = makeDescription(test);
+        description = makeDescription(test);
       } else {
-        mDescription = Description.createTestDescription(getEffectiveClass(test), test.toString());
+        description = Description.createTestDescription(getEffectiveClass(test), test.toString());
       }
-      return mDescription;
+      return description;
       // end android-changed
     }
 

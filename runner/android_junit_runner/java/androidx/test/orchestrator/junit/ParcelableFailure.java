@@ -28,22 +28,22 @@ public final class ParcelableFailure implements Parcelable {
 
   private static final int MAX_STREAM_LENGTH = 16 * 1024;
 
-  private final ParcelableDescription mDescription;
-  private final String mTrace;
+  private final ParcelableDescription description;
+  private final String trace;
 
   public ParcelableFailure(Failure failure) {
-    this.mDescription = new ParcelableDescription(failure.getDescription());
-    this.mTrace = failure.getTrace();
+    this.description = new ParcelableDescription(failure.getDescription());
+    this.trace = failure.getTrace();
   }
 
   private ParcelableFailure(Parcel in) {
-    mDescription = in.readParcelable(ParcelableDescription.class.getClassLoader());
-    mTrace = in.readString();
+    description = in.readParcelable(ParcelableDescription.class.getClassLoader());
+    trace = in.readString();
   }
 
   public ParcelableFailure(ParcelableDescription description, Throwable t) {
-    mDescription = description;
-    mTrace = trimToLength(t.getMessage());
+    this.description = description;
+    trace = trimToLength(t.getMessage());
   }
 
   @Override
@@ -53,8 +53,8 @@ public final class ParcelableFailure implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel out, int flags) {
-    out.writeParcelable(mDescription, 0);
-    out.writeString(mTrace);
+    out.writeParcelable(description, 0);
+    out.writeString(trace);
   }
 
   public static final Creator<ParcelableFailure> CREATOR =
@@ -83,10 +83,10 @@ public final class ParcelableFailure implements Parcelable {
   }
 
   public String getTrace() {
-    return mTrace;
+    return trace;
   }
 
   public ParcelableDescription getDescription() {
-    return mDescription;
+    return description;
   }
 }

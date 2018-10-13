@@ -45,16 +45,16 @@ import org.junit.runner.RunWith;
 public class AndroidTimeoutUiTest {
   @Rule public Timeout globalTimeout = new Timeout(100);
 
-  private static final ActivityFixture mMockActivity = mock(ActivityFixture.class);
+  private static final ActivityFixture mockActivity = mock(ActivityFixture.class);
 
   public static class ActivityFixture extends Activity {}
 
   @Rule
-  public ActivityTestRule<ActivityFixture> mActivityRule =
+  public ActivityTestRule<ActivityFixture> activityRule =
       new ActivityTestRule<ActivityFixture>(ActivityFixture.class) {
         @Override
         public ActivityFixture launchActivity(Intent startIntent) {
-          return mMockActivity;
+          return mockActivity;
         }
       };
 

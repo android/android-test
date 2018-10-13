@@ -35,35 +35,35 @@ import java.util.Set;
 public class TestRunResult implements ITestRunListener {
   private static final String LOG_TAG =
       androidx.test.orchestrator.listeners.result.TestRunResult.class.getSimpleName();
-  private String mTestRunName;
+  private String testRunName;
   // Uses a LinkedHashMap to have predictable iteration order
-  private Map<TestIdentifier, TestResult> mTestResults =
+  private Map<TestIdentifier, TestResult> testResults =
       new LinkedHashMap<TestIdentifier, TestResult>();
-  private Map<String, String> mRunMetrics = new HashMap<String, String>();
-  private boolean mIsRunComplete = false;
-  private long mElapsedTime = 0;
+  private Map<String, String> runMetrics = new HashMap<String, String>();
+  private boolean isRunComplete = false;
+  private long elapsedTime = 0;
 
   /** represents sums of tests in each TestStatus state. Indexed by TestStatus.ordinal() */
-  private int[] mStatusCounts = new int[TestStatus.values().length];
-  /** tracks if mStatusCounts is accurate, or if it needs to be recalculated */
-  private boolean mIsCountDirty = true;
+  private int[] statusCounts = new int[TestStatus.values().length];
+  /** tracks if statusCounts is accurate, or if it needs to be recalculated */
+  private boolean isCountDirty = true;
 
-  private String mRunFailureError = null;
+  private String runFailureError = null;
 
-  private boolean mAggregateMetrics = false;
+  private boolean aggregateMetrics = false;
 
   /** Create an empty{@link androidx.test.orchestrator.listeners.result.TestRunResult}. */
   public TestRunResult() {
-    mTestRunName = "not started";
+    testRunName = "not started";
   }
 
   public void setAggregateMetrics(boolean metricAggregation) {
-    mAggregateMetrics = metricAggregation;
+    aggregateMetrics = metricAggregation;
   }
 
   /** @return the test run name */
   public String getName() {
-    return mTestRunName;
+    return testRunName;
   }
 
   /**
@@ -72,12 +72,12 @@ public class TestRunResult implements ITestRunListener {
    * @return
    */
   public Map<TestIdentifier, TestResult> getTestResults() {
-    return mTestResults;
+    return testResults;
   }
 
   /** @return a {@link Map} of the test test run metrics. */
   public Map<String, String> getRunMetrics() {
-    return mRunMetrics;
+    return runMetrics;
   }
 
   /** Gets the set of completed tests. */
@@ -93,37 +93,37 @@ public class TestRunResult implements ITestRunListener {
 
   /** @return <code>true</code> if test run failed. */
   public boolean isRunFailure() {
-    return mRunFailureError != null;
+    return runFailureError != null;
   }
 
   /** @return <code>true</code> if test run finished. */
   public boolean isRunComplete() {
-    return mIsRunComplete;
+    return isRunComplete;
   }
 
   public void setRunComplete(boolean runComplete) {
-    mIsRunComplete = runComplete;
+    isRunComplete = runComplete;
   }
 
   /** Gets the number of tests in given state for this run. */
   public int getNumTestsInState(TestStatus status) {
-    if (mIsCountDirty) {
+    if (isCountDirty) {
       // clear counts
-      for (int i = 0; i < mStatusCounts.length; i++) {
-        mStatusCounts[i] = 0;
+      for (int i = 0; i < statusCounts.length; i++) {
+        statusCounts[i] = 0;
       }
       // now recalculate
-      for (TestResult r : mTestResults.values()) {
-        mStatusCounts[r.getStatus().ordinal()]++;
+      for (TestResult r : testResults.values()) {
+        statusCounts[r.getStatus().ordinal()]++;
       }
-      mIsCountDirty = false;
+      isCountDirty = false;
     }
-    return mStatusCounts[status.ordinal()];
+    return statusCounts[status.ordinal()];
   }
 
   /** Gets the number of tests in this run. */
   public int getNumTests() {
-    return mTestResults.size();
+    return testResults.size();
   }
 
   /** Gets the number of complete tests in this run ie with status != incomplete. */
@@ -143,19 +143,19 @@ public class TestRunResult implements ITestRunListener {
 
   /** @return */
   public long getElapsedTime() {
-    return mElapsedTime;
+    return elapsedTime;
   }
 
   /** Return the run failure error message, <code>null</code> if run did not fail. */
   public String getRunFailureMessage() {
-    return mRunFailureError;
+    return runFailureError;
   }
 
   @Override
   public void testRunStarted(String runName, int testCount) {
-    mTestRunName = runName;
-    mIsRunComplete = false;
-    mRunFailureError = null;
+    testRunName = runName;
+    isRunComplete = false;
+    runFailureError = null;
   }
 
   @Override
@@ -164,12 +164,12 @@ public class TestRunResult implements ITestRunListener {
   }
 
   private void addTestResult(TestIdentifier test, TestResult testResult) {
-    mIsCountDirty = true;
-    mTestResults.put(test, testResult);
+    isCountDirty = true;
+    testResults.put(test, testResult);
   }
 
   private void updateTestResult(TestIdentifier test, TestStatus status, String trace) {
-    TestResult r = mTestResults.get(test);
+    TestResult r = testResults.get(test);
     if (r == null) {
       Log.d(LOG_TAG, String.format("received test event without test start for %s", test));
       r = new TestResult();
@@ -196,7 +196,7 @@ public class TestRunResult implements ITestRunListener {
 
   @Override
   public void testEnded(TestIdentifier test, Map<String, String> testMetrics) {
-    TestResult result = mTestResults.get(test);
+    TestResult result = testResults.get(test);
     if (result == null) {
       result = new TestResult();
     }
@@ -210,28 +210,28 @@ public class TestRunResult implements ITestRunListener {
 
   @Override
   public void testRunFailed(String errorMessage) {
-    mRunFailureError = errorMessage;
+    runFailureError = errorMessage;
   }
 
   @Override
   public void testRunStopped(long elapsedTime) {
-    mElapsedTime += elapsedTime;
-    mIsRunComplete = true;
+    this.elapsedTime += elapsedTime;
+    isRunComplete = true;
   }
 
   @Override
   public void testRunEnded(long elapsedTime, Map<String, String> runMetrics) {
-    if (mAggregateMetrics) {
+    if (aggregateMetrics) {
       for (Map.Entry<String, String> entry : runMetrics.entrySet()) {
-        String existingValue = mRunMetrics.get(entry.getKey());
+        String existingValue = this.runMetrics.get(entry.getKey());
         String combinedValue = combineValues(existingValue, entry.getValue());
-        mRunMetrics.put(entry.getKey(), combinedValue);
+        this.runMetrics.put(entry.getKey(), combinedValue);
       }
     } else {
-      mRunMetrics.putAll(runMetrics);
+      this.runMetrics.putAll(runMetrics);
     }
-    mElapsedTime += elapsedTime;
-    mIsRunComplete = true;
+    this.elapsedTime += elapsedTime;
+    isRunComplete = true;
   }
 
   /**

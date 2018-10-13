@@ -54,18 +54,18 @@ public class PortForwardingRule implements TestRule {
   @VisibleForTesting static final String HTTP_PORT_PROPERTY = "http.proxyPort";
   @VisibleForTesting static final String HTTPS_PORT_PROPERTY = "https.proxyPort";
 
-  @VisibleForTesting final String mProxyHost;
-  @VisibleForTesting final int mProxyPort;
-  @VisibleForTesting Properties mProp;
+  @VisibleForTesting final String proxyHost;
+  @VisibleForTesting final int proxyPort;
+  @VisibleForTesting Properties prop;
 
-  private Properties mBackUpProp;
+  private Properties backUpProp;
 
   /** @hide */
   public static class Builder {
 
-    private String mProxyHost = DEFAULT_PROXY_HOST;
-    private int mProxyPort = DEFAULT_PROXY_PORT;
-    private Properties mProp = System.getProperties();
+    private String proxyHost = DEFAULT_PROXY_HOST;
+    private int proxyPort = DEFAULT_PROXY_PORT;
+    private Properties prop = System.getProperties();
 
     /**
      * Builder to set a specific host address to forward the network traffic to.
@@ -73,7 +73,7 @@ public class PortForwardingRule implements TestRule {
      * @param proxyHost The host address to which the network traffic is forwarded during tests.
      */
     public Builder withProxyHost(@NonNull String proxyHost) {
-      mProxyHost = checkNotNull(proxyHost);
+      this.proxyHost = checkNotNull(proxyHost);
       return this;
     }
 
@@ -89,7 +89,7 @@ public class PortForwardingRule implements TestRule {
           proxyPort,
           MIN_PORT,
           MAX_PORT);
-      mProxyPort = proxyPort;
+      this.proxyPort = proxyPort;
       return this;
     }
 
@@ -100,7 +100,7 @@ public class PortForwardingRule implements TestRule {
      * @param properties A pre-constructed properties object for testing.
      */
     public Builder withProperties(@NonNull Properties properties) {
-      mProp = checkNotNull(properties);
+      prop = checkNotNull(properties);
       return this;
     }
 
@@ -110,7 +110,7 @@ public class PortForwardingRule implements TestRule {
   }
 
   private PortForwardingRule(Builder builder) {
-    this(builder.mProxyHost, builder.mProxyPort, builder.mProp);
+    this(builder.proxyHost, builder.proxyPort, builder.prop);
   }
 
   protected PortForwardingRule(int proxyPort) {
@@ -119,10 +119,10 @@ public class PortForwardingRule implements TestRule {
 
   @VisibleForTesting
   PortForwardingRule(String proxyHost, int proxyPort, @NonNull Properties properties) {
-    mProxyHost = proxyHost;
-    mProxyPort = proxyPort;
-    mProp = checkNotNull(properties);
-    mBackUpProp = new Properties();
+    this.proxyHost = proxyHost;
+    this.proxyPort = proxyPort;
+    prop = checkNotNull(properties);
+    backUpProp = new Properties();
     backUpProperties();
   }
 
@@ -172,10 +172,10 @@ public class PortForwardingRule implements TestRule {
    */
   private void setPortForwarding() {
     beforePortForwarding();
-    mProp.setProperty(HTTP_HOST_PROPERTY, mProxyHost);
-    mProp.setProperty(HTTPS_HOST_PROPERTY, mProxyHost);
-    mProp.setProperty(HTTP_PORT_PROPERTY, String.valueOf(mProxyPort));
-    mProp.setProperty(HTTPS_PORT_PROPERTY, String.valueOf(mProxyPort));
+    prop.setProperty(HTTP_HOST_PROPERTY, proxyHost);
+    prop.setProperty(HTTPS_HOST_PROPERTY, proxyHost);
+    prop.setProperty(HTTP_PORT_PROPERTY, String.valueOf(proxyPort));
+    prop.setProperty(HTTPS_PORT_PROPERTY, String.valueOf(proxyPort));
     afterPortForwarding();
   }
 
@@ -184,26 +184,26 @@ public class PortForwardingRule implements TestRule {
     try {
       beforeRestoreForwarding();
     } finally {
-      restoreOneProperty(mProp, mBackUpProp, HTTP_HOST_PROPERTY);
-      restoreOneProperty(mProp, mBackUpProp, HTTPS_HOST_PROPERTY);
-      restoreOneProperty(mProp, mBackUpProp, HTTP_PORT_PROPERTY);
-      restoreOneProperty(mProp, mBackUpProp, HTTPS_PORT_PROPERTY);
+      restoreOneProperty(prop, backUpProp, HTTP_HOST_PROPERTY);
+      restoreOneProperty(prop, backUpProp, HTTPS_HOST_PROPERTY);
+      restoreOneProperty(prop, backUpProp, HTTP_PORT_PROPERTY);
+      restoreOneProperty(prop, backUpProp, HTTPS_PORT_PROPERTY);
       afterRestoreForwarding();
     }
   }
 
   private void backUpProperties() {
-    if (mProp.getProperty(HTTP_HOST_PROPERTY) != null) {
-      mBackUpProp.setProperty(HTTP_HOST_PROPERTY, mProp.getProperty(HTTP_HOST_PROPERTY));
+    if (prop.getProperty(HTTP_HOST_PROPERTY) != null) {
+      backUpProp.setProperty(HTTP_HOST_PROPERTY, prop.getProperty(HTTP_HOST_PROPERTY));
     }
-    if (mProp.getProperty(HTTPS_HOST_PROPERTY) != null) {
-      mBackUpProp.setProperty(HTTPS_HOST_PROPERTY, mProp.getProperty(HTTPS_HOST_PROPERTY));
+    if (prop.getProperty(HTTPS_HOST_PROPERTY) != null) {
+      backUpProp.setProperty(HTTPS_HOST_PROPERTY, prop.getProperty(HTTPS_HOST_PROPERTY));
     }
-    if (mProp.getProperty(HTTP_PORT_PROPERTY) != null) {
-      mBackUpProp.setProperty(HTTP_PORT_PROPERTY, mProp.getProperty(HTTP_PORT_PROPERTY));
+    if (prop.getProperty(HTTP_PORT_PROPERTY) != null) {
+      backUpProp.setProperty(HTTP_PORT_PROPERTY, prop.getProperty(HTTP_PORT_PROPERTY));
     }
-    if (mProp.getProperty(HTTPS_PORT_PROPERTY) != null) {
-      mBackUpProp.setProperty(HTTPS_PORT_PROPERTY, mProp.getProperty(HTTPS_PORT_PROPERTY));
+    if (prop.getProperty(HTTPS_PORT_PROPERTY) != null) {
+      backUpProp.setProperty(HTTPS_PORT_PROPERTY, prop.getProperty(HTTPS_PORT_PROPERTY));
     }
   }
 
@@ -223,10 +223,10 @@ public class PortForwardingRule implements TestRule {
   /** {@link Statement} that set/restore port forwarding before/after the execution of the test. */
   private class PortForwardingStatement extends Statement {
 
-    private final Statement mBase;
+    private final Statement base;
 
     public PortForwardingStatement(Statement base) {
-      mBase = base;
+      this.base = base;
     }
 
     @Override
@@ -236,8 +236,8 @@ public class PortForwardingRule implements TestRule {
         Log.i(
             TAG,
             String.format(
-                "The current process traffic is forwarded to %s:%d", mProxyHost, mProxyPort));
-        mBase.evaluate();
+                "The current process traffic is forwarded to %s:%d", proxyHost, proxyPort));
+        base.evaluate();
       } finally {
         restorePortForwarding();
         Log.i(TAG, "Current process traffic forwarding is cancelled");
