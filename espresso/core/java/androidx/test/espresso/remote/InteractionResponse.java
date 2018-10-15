@@ -55,8 +55,8 @@ public final class InteractionResponse implements To<MessageLite> {
 
               // Get remote error if any
               RemoteError remoteError = null;
-              Error errorMsg = resultProto.getErrorMsg();
-              if (errorMsg != null) {
+              if (resultProto.hasErrorMsg()) {
+                Error errorMsg = resultProto.getErrorMsg();
                 int errorCode = errorMsg.getCode();
                 String errorDescription = errorMsg.getDescription();
                 if (RemoteError.isWellKnownError(errorCode)) {
