@@ -253,7 +253,8 @@ def _FirstBootAtBuildTimeOnly(
     qemu_gdb_port,
     enable_single_step,
     emulator_tmp_dir,
-    boot_time_apks):
+    boot_time_apks,
+    mini_boot):
   """Performs first, cold boot of a system image.
 
   This is only used at build time. Blaze boots up device in this mode, then
@@ -285,6 +286,7 @@ def _FirstBootAtBuildTimeOnly(
     emulator_tmp_dir: temporary directory where system_images/sockets/ramdisk
       files are placed while starting the emulator
     boot_time_apks: apks to install at boot time.
+    mini_boot: should the device be booted up in a minimalistic mode.
   """
 
   sysdir = _FindSystemImagesDir(system_images)
@@ -312,7 +314,8 @@ def _FirstBootAtBuildTimeOnly(
       android_platform=_MakeAndroidPlatform(),
       qemu_gdb_port=qemu_gdb_port,
       enable_single_step=enable_single_step,
-      source_properties=source_properties)
+      source_properties=source_properties,
+      mini_boot=mini_boot)
   device.delete_temp_on_exit = False  # we will do it ourselves.
 
   device.Configure(
@@ -856,6 +859,18 @@ def EntryPoint(reporter):
       FLAGS.default_properties_file,
   ])
 
+  src_props = _ReadSourceProperties(FLAGS.source_properties_file)
+
+  assert emulated_device.API_LEVEL_KEY in src_props, ('API level not in source'
+                                                      ' props file.')
+  assert emulated_device.SYSTEM_ABI_KEY in src_props, ('ABI not in source'
+                                                       ' props file.')
+
+  mini_boot = FLAGS.action == 'mini_boot' or (
+      # force mini_boot for arm images. They are unusable under full mode.
+      int(src_props[emulated_device.API_LEVEL_KEY]) > 19 and
+      src_props[emulated_device.SYSTEM_ABI_KEY].startswith('arm'))
+
   if 'boot' == FLAGS.action:
     _FirstBootAtBuildTimeOnly(
         filtered_system_images,
@@ -863,13 +878,14 @@ def EntryPoint(reporter):
         FLAGS.density,
         FLAGS.memory,
         FLAGS.generate_output_dir,
-        _ReadSourceProperties(FLAGS.source_properties_file),
+        src_props,
         FLAGS.vm_size,
         _ReadDefaultProperties(FLAGS.default_properties_file),
         FLAGS.qemu_gdb_port,
         FLAGS.enable_single_step,
         _GetTmpDir(),
-        boot_time_apks)
+        boot_time_apks,
+        mini_boot)
   elif FLAGS.action in ['start', 'mini_boot']:
     _Run(FLAGS.adb_server_port, FLAGS.emulator_port, FLAGS.adb_port,
          FLAGS.enable_display, FLAGS.start_vnc_on_port, FLAGS.logcat_path,
@@ -884,7 +900,7 @@ def EntryPoint(reporter):
          _GetTmpDir(), FLAGS.lockdown_level, FLAGS.open_gl_driver,
          FLAGS.allow_experimental_open_gl, FLAGS.add_insecure_cacert,
          FLAGS.grant_runtime_permissions, FLAGS.accounts, reporter,
-         'mini_boot' == FLAGS.action, FLAGS.sim_access_rules_file)
+         mini_boot, FLAGS.sim_access_rules_file)
   elif 'kill' == FLAGS.action:
     _Kill(FLAGS.adb_server_port, FLAGS.emulator_port, FLAGS.adb_port)
   elif 'ping' == FLAGS.action:
