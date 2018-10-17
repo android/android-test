@@ -16,21 +16,28 @@
 
 package androidx.test.runner.intent;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.fail;
+
 import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
-import android.test.InstrumentationTestCase;
-import android.test.UiThreadTest;
+import androidx.test.annotation.UiThreadTest;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /** {@link IntentStubberRegistry} tests. */
+@RunWith(AndroidJUnit4.class)
 @SmallTest
-public class IntentStubberRegistryTest extends InstrumentationTestCase {
+public class IntentStubberRegistryTest {
 
   private IntentStubber mIntentStubber;
 
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
+  @Before
+  public void setUp() throws Exception {
     mIntentStubber =
         new IntentStubber() {
           @Override
@@ -40,21 +47,22 @@ public class IntentStubberRegistryTest extends InstrumentationTestCase {
         };
   }
 
-  @Override
-  protected void tearDown() throws Exception {
+  @After
+  public void tearDown() throws Exception {
     IntentStubberRegistry.reset();
-    assertFalse(IntentStubberRegistry.isLoaded());
-    super.tearDown();
+    assertThat(IntentStubberRegistry.isLoaded()).isFalse();
   }
 
+  @Test
   @UiThreadTest
   public void testIntentStubberLoading() {
     IntentStubberRegistry.load(mIntentStubber);
-    assertTrue(IntentStubberRegistry.isLoaded());
+    assertThat(IntentStubberRegistry.isLoaded()).isTrue();
 
-    assertNotNull(IntentStubberRegistry.getInstance());
+    assertThat(IntentStubberRegistry.getInstance()).isNotNull();
   }
 
+  @Test
   public void testLoadCanOnlyBeCalledOnce() {
     try {
       IntentStubberRegistry.load(mIntentStubber);
@@ -65,6 +73,7 @@ public class IntentStubberRegistryTest extends InstrumentationTestCase {
     }
   }
 
+  @Test
   public void testLoadPassingNullThrows() {
     try {
       IntentStubberRegistry.load(null);
@@ -73,6 +82,7 @@ public class IntentStubberRegistryTest extends InstrumentationTestCase {
     }
   }
 
+  @Test
   public void testGetInstanceCanOnlyBeCalledOnMainThread() {
     IntentStubberRegistry.load(mIntentStubber);
     try {
@@ -84,6 +94,7 @@ public class IntentStubberRegistryTest extends InstrumentationTestCase {
     }
   }
 
+  @Test
   public void testNoInstanceLoadedThrows() {
     try {
       IntentStubberRegistry.getInstance();

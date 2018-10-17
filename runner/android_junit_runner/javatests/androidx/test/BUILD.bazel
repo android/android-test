@@ -34,7 +34,8 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         ":legacy-test-neverlink",
-        "//runner/android_junit_runner/java/androidx/test:runner",
+        "//ext/junit",
+        "//runner/android_junit_runner",
         "@dexmaker//jar",
         "@dexmaker_mockito//jar",
         "@hamcrest//jar",

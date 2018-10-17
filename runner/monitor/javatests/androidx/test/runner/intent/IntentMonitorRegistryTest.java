@@ -16,12 +16,10 @@
 
 package androidx.test.runner.intent;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
+import static com.google.common.truth.Truth.assertThat;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -32,6 +30,6 @@ public class IntentMonitorRegistryTest {
 
   @Test
   public void intentMonitorIsRegisteredDuringInitialization() {
-    assertThat(IntentMonitorRegistry.getInstance(), is(notNullValue()));
+    assertThat(IntentMonitorRegistry.getInstance()).isNotNull();
   }
 }
