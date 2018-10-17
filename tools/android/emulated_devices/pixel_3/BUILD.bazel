@@ -1,0 +1,28 @@
+# Description:
+#   Pixel 3 runs from Pie 9.0
+#   Specs from: https://store.google.com/product/pixel_3
+#
+#   target name format:
+#     :google_${api_level}_${arch} for google add-ons
+
+load("//tools/android/emulated_devices:macro/make_device.bzl", "make_device")
+
+make_device(
+    name = "pixel_3",
+    avd_properties = {
+        "hw.mainKeys": "no",
+    },
+    boot_properties = {
+        "ro.product.brand": "google",
+        "ro.product.manufacturer": "google",
+        "ro.product.model": "Pixel 3",
+        "ro.opa.eligible_device": "true",
+    },
+    cache = 32,
+    horizontal_resolution = 1080,
+    min_api = 28,
+    ram = 4096,
+    screen_density = 443,
+    vertical_resolution = 2160,
+    vm_heap = 512,
+)
