@@ -36,29 +36,31 @@ private fun lastLifeCycleTransition(activity: Activity): Stage {
 @RunWith(AndroidJUnit4::class)
 class ActivityScenarioKotlinTest {
   @Test
-  fun testMainActivityLifecycle_withActivityScenario() {
+  fun basicUseCase() {
     val scenario = ActivityScenario.launch(RecreationRecordingActivity::class.java)
     scenario.onActivity {
-      assertThat(it.getNumberOfRecreations()).isEqualTo(0)
+      assertThat(it.numberOfRecreations).isEqualTo(0)
       assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
     }
 
     scenario.recreate()
     scenario.onActivity {
-      assertThat(it.getNumberOfRecreations()).isEqualTo(1)
+      assertThat(it.numberOfRecreations).isEqualTo(1)
       assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
     }
 
     scenario.moveToState(State.STARTED)
     scenario.onActivity {
-      assertThat(it.getNumberOfRecreations()).isEqualTo(1)
+      assertThat(it.numberOfRecreations).isEqualTo(1)
       assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.PAUSED)
     }
 
     scenario.moveToState(State.CREATED)
     scenario.onActivity {
-      assertThat(it.getNumberOfRecreations()).isEqualTo(1)
+      assertThat(it.numberOfRecreations).isEqualTo(1)
       assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.STOPPED)
     }
+
+    scenario.moveToState(State.DESTROYED)
   }
 }

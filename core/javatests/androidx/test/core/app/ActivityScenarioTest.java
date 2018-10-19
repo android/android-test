@@ -20,9 +20,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import android.app.Activity;
 import android.arch.lifecycle.Lifecycle.State;
+import androidx.test.core.app.testing.FinishItselfActivity;
 import androidx.test.core.app.testing.RecreationRecordingActivity;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
 import org.junit.Test;
@@ -43,6 +43,19 @@ public final class ActivityScenarioTest {
           assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
           assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
         });
+  }
+
+  @Test
+  public void launchedFinishItSelfActivityShouldBeLaunchable() throws Exception {
+    ActivityScenario<FinishItselfActivity> scenario =
+        ActivityScenario.launch(FinishItselfActivity.class);
+  }
+
+  @Test
+  public void fromResumedToDestroyed() throws Exception {
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.DESTROYED);
   }
 
   @Test
@@ -79,6 +92,14 @@ public final class ActivityScenarioTest {
           assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
           assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
         });
+  }
+
+  @Test
+  public void fromCreatedToDestroyed() throws Exception {
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.CREATED);
+    scenario.moveToState(State.DESTROYED);
   }
 
   @Test
@@ -121,6 +142,14 @@ public final class ActivityScenarioTest {
   }
 
   @Test
+  public void fromStartedToDestroyed() throws Exception {
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.STARTED);
+    scenario.moveToState(State.DESTROYED);
+  }
+
+  @Test
   public void fromStartedToCreated() throws Exception {
     ActivityScenario<RecreationRecordingActivity> scenario =
         ActivityScenario.launch(RecreationRecordingActivity.class);
@@ -160,6 +189,14 @@ public final class ActivityScenarioTest {
   }
 
   @Test
+  public void fromDestroyedToDestroyed() throws Exception {
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.DESTROYED);
+    scenario.moveToState(State.DESTROYED);
+  }
+
+  @Test
   public void recreateCreatedActivity() throws Exception {
     ActivityScenario<RecreationRecordingActivity> scenario =
         ActivityScenario.launch(RecreationRecordingActivity.class);
@@ -173,9 +210,6 @@ public final class ActivityScenarioTest {
   }
 
   @Test
-  @SdkSuppress(minSdkVersion = 16)
-  // TODO: It seems a bug in Android Framework in API level 15 where an Intent to re-order Activity
-  // to front can be ignored under some conditions. Figure out the cause and write workaround.
   public void recreateStartedActivity() throws Exception {
     ActivityScenario<RecreationRecordingActivity> scenario =
         ActivityScenario.launch(RecreationRecordingActivity.class);
