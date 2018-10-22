@@ -16,12 +16,12 @@
 
 package androidx.test.internal.runner;
 
-import static androidx.test.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 import android.os.Bundle;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import androidx.test.internal.runner.listener.InstrumentationRunListener;
-import androidx.test.runner.AndroidJUnit4;
 import java.io.PrintStream;
 import org.junit.Before;
 import org.junit.Test;

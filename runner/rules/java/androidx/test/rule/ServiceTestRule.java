@@ -24,9 +24,9 @@ import android.os.IBinder;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import android.util.Log;
-import androidx.test.InstrumentationRegistry;
 import androidx.test.annotation.Beta;
 import androidx.test.internal.util.Checks;
+import androidx.test.platform.app.InstrumentationRegistry;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -129,7 +129,7 @@ public class ServiceTestRule implements TestRule {
    */
   public void startService(@NonNull Intent intent) throws TimeoutException {
     serviceIntent = Checks.checkNotNull(intent, "intent can't be null");
-    InstrumentationRegistry.getTargetContext().startService(serviceIntent);
+    InstrumentationRegistry.getInstrumentation().getTargetContext().startService(serviceIntent);
     serviceStarted = true;
 
     // bind to the started service to guarantee its started and connected before test execution
@@ -196,7 +196,9 @@ public class ServiceTestRule implements TestRule {
     ProxyServiceConnection serviceConn = new ProxyServiceConnection(conn);
 
     boolean isBound =
-        InstrumentationRegistry.getTargetContext().bindService(intent, serviceConn, flags);
+        InstrumentationRegistry.getInstrumentation()
+            .getTargetContext()
+            .bindService(intent, serviceConn, flags);
 
     if (isBound) {
       // block until service connection is established
@@ -217,7 +219,7 @@ public class ServiceTestRule implements TestRule {
    */
   public void unbindService() {
     if (serviceBound) {
-      InstrumentationRegistry.getTargetContext().unbindService(serviceConn);
+      InstrumentationRegistry.getInstrumentation().getTargetContext().unbindService(serviceConn);
       binder = null;
       serviceBound = false;
     }
@@ -286,7 +288,7 @@ public class ServiceTestRule implements TestRule {
   @VisibleForTesting
   void shutdownService() throws TimeoutException {
     if (serviceStarted) {
-      InstrumentationRegistry.getTargetContext().stopService(serviceIntent);
+      InstrumentationRegistry.getInstrumentation().getTargetContext().stopService(serviceIntent);
       serviceStarted = false;
     }
     unbindService();

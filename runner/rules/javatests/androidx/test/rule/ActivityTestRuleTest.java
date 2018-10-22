@@ -16,7 +16,7 @@
 
 package androidx.test.rule;
 
-import static androidx.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -40,9 +40,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.test.annotation.UiThreadTest;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.SdkSuppress;
-import androidx.test.runner.AndroidJUnit4;
 import androidx.test.runner.MonitoringInstrumentation;
 import androidx.test.runner.intercepting.SingleActivityFactory;
 import org.hamcrest.CoreMatchers;
@@ -189,7 +189,7 @@ public class ActivityTestRuleTest {
       assertThat(activity, notNullValue());
       assertThat(
           activityRule.getActivityIntent().getComponent().getPackageName(),
-          equalTo(getTargetContext().getPackageName()));
+          equalTo(getApplicationContext().getPackageName()));
       assertThat(
           activityRule.getActivityIntent().getFlags(), equalTo(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
@@ -423,7 +423,7 @@ public class ActivityTestRuleTest {
       verify(instrumentation).startActivitySync(intentArgumentCaptor.capture());
       assertThat(
           intentArgumentCaptor.getValue().getComponent(),
-          is(equalTo(new ComponentName(getTargetContext(), ActivityFixture.class.getName()))));
+          is(equalTo(new ComponentName(getApplicationContext(), ActivityFixture.class.getName()))));
     }
 
     @Test
@@ -513,7 +513,7 @@ public class ActivityTestRuleTest {
       verify(instrumentation).startActivitySync(intentArgumentCaptor.capture());
       assertThat(
           intentArgumentCaptor.getValue().getComponent(),
-          is(equalTo(new ComponentName(getTargetContext(), ActivityFixture.class.getName()))));
+          is(equalTo(new ComponentName(getApplicationContext(), ActivityFixture.class.getName()))));
       assertThat(
           intentArgumentCaptor.getValue().getFlags(), is(equalTo(Intent.FLAG_ACTIVITY_NEW_TASK)));
     }
@@ -539,7 +539,7 @@ public class ActivityTestRuleTest {
     ActivityTestRule<ActivityFixture> activityTestRule =
         new ActivityTestRule<>(singleActivityFactory, true, false);
     MonitoringInstrumentation instrumentation = mock(MonitoringInstrumentation.class);
-    when(instrumentation.getTargetContext()).thenReturn(getTargetContext());
+    when(instrumentation.getTargetContext()).thenReturn(getApplicationContext());
     activityTestRule.setInstrumentation(instrumentation);
     Statement baseStatement = mock(Statement.class);
     activityTestRule.apply(baseStatement, mock(Description.class)).evaluate();

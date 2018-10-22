@@ -16,7 +16,7 @@
 
 package androidx.test.internal.statement;
 
-import static androidx.test.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.runners.model.Statement;

@@ -15,12 +15,13 @@
  */
 package androidx.test.internal.runner;
 
-import androidx.test.InstrumentationRegistry;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import androidx.test.internal.runner.ClassPathScanner.ExcludePackageNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExternalClassNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.InclusivePackageNamesFilter;
-import androidx.test.runner.AndroidJUnit4;
 import dalvik.system.DexFile;
 import java.io.IOException;
 import java.util.Arrays;
@@ -43,7 +44,7 @@ public class ClassPathScannerTest {
   @Before
   public void setUp() throws Exception {
     classPathScanner =
-        new ClassPathScanner(InstrumentationRegistry.getTargetContext().getPackageCodePath()) {
+        new ClassPathScanner(getApplicationContext().getPackageCodePath()) {
           @Override
           Enumeration<String> getDexEntries(DexFile dexFile) {
             return dexEntries;

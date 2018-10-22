@@ -34,6 +34,7 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         ":legacy-test-neverlink",
+        "//core",
         "//ext/junit",
         "//runner/android_junit_runner",
         "//runner/rules",

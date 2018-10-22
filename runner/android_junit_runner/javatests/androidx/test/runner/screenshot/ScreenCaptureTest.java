@@ -25,8 +25,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import android.graphics.Bitmap;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Before;

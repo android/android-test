@@ -15,8 +15,8 @@
  */
 package androidx.test.internal.runner.junit4;
 
-import static androidx.test.InstrumentationRegistry.getArguments;
-import static androidx.test.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.platform.app.InstrumentationRegistry.getArguments;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 import androidx.test.internal.runner.RunnerArgs;
 import androidx.test.internal.runner.junit4.statement.RunAfters;

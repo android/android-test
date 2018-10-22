@@ -7,6 +7,8 @@ RULES_DEPS = [
     "//runner/android_junit_runner",
     "//runner/rules",
     "//runner/monitor",
+    "//core",
+    "//ext/junit",
 ]
 
 EXTERNAL_DEPS = [
