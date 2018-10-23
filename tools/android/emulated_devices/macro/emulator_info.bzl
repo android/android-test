@@ -11,7 +11,6 @@ load("//tools/android/emulated_devices:macro/props.bzl", "new_props")
 
 _EMULATOR_TYPE_PROP = "ro.mobile_ninjas.emulator_type"
 
-
 # QEMU1 is the legacy emulator. It is also currently our default emulator.
 # Most of android-emulator's team development work focuses on QEMU2, we're
 # actively migrating to it.
@@ -78,7 +77,6 @@ def _t2e():
     t2e = dict()
     for e in [QEMU, QEMU2]:
         t2e[emulator_type(e)] = e
-
     return t2e
 
 TYPE_TO_EMULATOR = _t2e()

@@ -33,7 +33,6 @@ load(
     "TYPE_TO_EMULATOR",
     "extra_system_image_contents",
 )
-
 load(
     "//tools/android/emulated_devices:macro/props_info.bzl",
     "generate_prop_content",
@@ -235,7 +234,6 @@ def new_devices(
     user_props = user_props or new_props()
     if not emulators:
         emulators = [QEMU, QEMU2]
-
 
     boot_apks = boot_apks or []
     requested_flavors = system_image_flavors or ["google", "android"]
