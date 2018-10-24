@@ -16,14 +16,15 @@
 package androidx.test.core.app;
 
 import static androidx.test.InstrumentationRegistry.getInstrumentation;
-import static androidx.test.internal.util.Checks.checkArgument;
 import static androidx.test.internal.util.Checks.checkNotMainThread;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
 
 import android.app.Activity;
+import android.arch.lifecycle.Lifecycle.Event;
 import android.arch.lifecycle.Lifecycle.State;
 import android.content.Intent;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.GuardedBy;
 import android.support.annotation.Nullable;
@@ -34,9 +35,12 @@ import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
+import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -46,17 +50,21 @@ import java.util.concurrent.locks.ReentrantLock;
  * works with arbitrary activities and works consistently across different versions of the Android
  * framework.
  *
- * <p>The ActivityScenario API uses {@link Lifecycle.State} extensively. If you are unfamiliar with
- * {@link android.arch.lifecycle} components, please read <a
+ * <p>The ActivityScenario API uses {@link State} extensively. If you are unfamiliar with {@link
+ * android.arch.lifecycle} components, please read <a
  * href="https://developer.android.com/topic/libraries/architecture/lifecycle#lc">lifecycle</a>
- * before starting. It is crucial to understand the difference between {@link Lifecycle.State} and
- * {@link Lifecycle.Event}.
+ * before starting. It is crucial to understand the difference between {@link State} and {@link
+ * Event}.
  *
- * <p>{@link ActivityScenario#moveTo(Lifecycle.State)} allows you to transition your Activity's
- * state to {@link State.CREATED}, {@link State.STARTED}, or {@link State.RESUMED}. There are two
- * paths for an Activity to reach {@link State.CREATED}: after {@link Event.ON_CREATE} happens but
- * before {@link Event.ON_START}, and after {@link Event.ON_STOP}. ActivityScenario always moves the
- * Activity's state to the second one. The same applies to {@link State.STARTED}.
+ * <p>{@link ActivityScenario#moveToState(State)} allows you to transition your Activity's state to
+ * {@link State#CREATED}, {@link State#STARTED}, {@link State#RESUMED}, or {@link State#DESTROYED}.
+ * There are two paths for an Activity to reach {@link State#CREATED}: after {@link Event#ON_CREATE}
+ * happens but before {@link Event#ON_START}, and after {@link Event#ON_STOP}. ActivityScenario
+ * always moves the Activity's state to the second one. The same applies to {@link State#STARTED}.
+ *
+ * <p>{@link State#DESTROYED} is the terminal state. You cannot move your Activity to other state
+ * once it reaches to that state. If you want to test recreation of Activity instance, use {@link
+ * #recreate()}.
  *
  * <p>This class is a replacement of ActivityController in Robolectric and ActivityTestRule in ATSL.
  *
@@ -79,6 +87,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *   controller.get();          // Returns resumed activity.
  *   controller.pause().get();  // Returns paused activity.
  *   controller.stop().get();   // Returns stopped activity.
+ *   controller.destroy();      // Destroys activity.
  *
  * After:
  *   ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class);
@@ -87,12 +96,13 @@ import java.util.concurrent.locks.ReentrantLock;
  *   scenario.onActivity(activity -> {});  // Your activity is paused.
  *   scenario.moveTo(State.CREATED);
  *   scenario.onActivity(activity -> {});  // Your activity is stopped.
+ *   scenario.moveTo(State.DESTROYED);     // Your activity is destroyed and finished.
  * </pre>
  */
 @Beta
 public final class ActivityScenario<A extends Activity> {
   /**
-   * The timeout for {@link #waitForActivityToBecome} method. If an Activity doesn't become
+   * The timeout for {@link #waitForActivityToBecomeAnyOf} method. If an Activity doesn't become
    * requested state after the timeout, we will throw {@link AssertionError} to fail tests.
    */
   private static final long TIMEOUT_MILLISECONDS = 45000;
@@ -114,22 +124,23 @@ public final class ActivityScenario<A extends Activity> {
   }
 
   /**
-   * A map to convert {@link Stage} to {@link State}. This map only contains stages that are
-   * supported in {@link #moveToState}.
+   * A map to lookup steady {@link State} by {@link Stage}. Transient stages such as {@link
+   * Stage#CREATED}, {@link Stage#STARTED} and {@link Stage#RESTARTED} are not included in the map.
    */
-  private static final Map<Stage, State> SUPPORTED_STAGE_TO_STATE = new EnumMap<>(Stage.class);
+  private static final Map<Stage, State> STEADY_STATES = new EnumMap<>(Stage.class);
 
   static {
-    SUPPORTED_STAGE_TO_STATE.put(Stage.RESUMED, State.RESUMED);
-    SUPPORTED_STAGE_TO_STATE.put(Stage.PAUSED, State.STARTED);
-    SUPPORTED_STAGE_TO_STATE.put(Stage.STOPPED, State.CREATED);
+    STEADY_STATES.put(Stage.RESUMED, State.RESUMED);
+    STEADY_STATES.put(Stage.PAUSED, State.STARTED);
+    STEADY_STATES.put(Stage.STOPPED, State.CREATED);
+    STEADY_STATES.put(Stage.DESTROYED, State.DESTROYED);
   }
 
   /** A lock that is used to block the main thread until the Activity becomes a requested state. */
   private final ReentrantLock lock = new ReentrantLock();
 
-  /** A map to retrieve condition object by state. */
-  private final Map<State, Condition> stateToCondition = new EnumMap<>(State.class);
+  /** A condition object to be notified when the activity state changes. */
+  private final Condition stateChangedCondition = lock.newCondition();
 
   /** An intent to start a testing Activity. */
   private final Intent startActivityIntent;
@@ -159,21 +170,19 @@ public final class ActivityScenario<A extends Activity> {
             == 0,
         "\"Don't keep activities\" developer options must be disabled for ActivityScenario");
 
-    stateToCondition.put(State.CREATED, lock.newCondition());
-    stateToCondition.put(State.STARTED, lock.newCondition());
-    stateToCondition.put(State.RESUMED, lock.newCondition());
-
     startActivityIntent = activityInvoker.getIntentForActivity(activityClass);
     currentActivityStage = Stage.PRE_ON_CREATE;
   }
 
   /**
-   * Launches an Activity of a given class and constructs ActivityScenario with the activity. Waits
-   * for the activity to become {@link State#RESUMED}.
+   * Launches an activity of a given class and constructs ActivityScenario with the activity. Waits
+   * for the lifecycle state transitions to be complete.
+   *
+   * <p>Normally this would be {@link State#RESUMED}, but may be another state.
    *
    * <p>This method cannot be called from the main thread except in Robolectric tests.
    *
-   * @throws AssertionError if Activity never becomes {@link State#RESUMED} after timeout
+   * @throws AssertionError if the lifecycle state transition never completes within the timeout
    * @return ActivityScenario which you can use to make further state transitions
    */
   public static <A extends Activity> ActivityScenario<A> launch(Class<A> activityClass) {
@@ -185,41 +194,47 @@ public final class ActivityScenario<A extends Activity> {
         .addLifecycleCallback(scenario.activityLifecycleObserver);
 
     activityInvoker.startActivity(scenario.startActivityIntent);
-    scenario.waitForActivityToBecome(State.RESUMED);
+
+    scenario.waitForActivityToBecomeAnyOf(State.RESUMED, State.DESTROYED);
 
     return scenario;
   }
 
-  private void waitForActivityToBecome(State state) {
+  /**
+   * Blocks the current thread until activity transition completes and its state becomes one of a
+   * given state.
+   */
+  private void waitForActivityToBecomeAnyOf(State... expectedStates) {
     // Wait for idle sync otherwise we might hit transient state.
     getInstrumentation().waitForIdleSync();
 
+    Set<State> expectedStateSet = new HashSet<>(Arrays.asList(expectedStates));
     lock.lock();
     try {
-      if (state == SUPPORTED_STAGE_TO_STATE.get(currentActivityStage)) {
+      if (expectedStateSet.contains(STEADY_STATES.get(currentActivityStage))) {
         return;
       }
 
-      // Spurious wakeups may happen so we wrap await() with while-loop.
       long now = System.currentTimeMillis();
       long deadline = now + TIMEOUT_MILLISECONDS;
-      while (now < deadline && state != SUPPORTED_STAGE_TO_STATE.get(currentActivityStage)) {
-        stateToCondition.get(state).await(deadline - now, TimeUnit.MILLISECONDS);
+      while (now < deadline
+          && !expectedStateSet.contains(STEADY_STATES.get(currentActivityStage))) {
+        stateChangedCondition.await(deadline - now, TimeUnit.MILLISECONDS);
         now = System.currentTimeMillis();
       }
 
-      if (state != SUPPORTED_STAGE_TO_STATE.get(currentActivityStage)) {
+      if (!expectedStateSet.contains(STEADY_STATES.get(currentActivityStage))) {
         throw new AssertionError(
             String.format(
                 "Activity never becomes requested state \"%s\" "
                     + "(last lifecycle transition = \"%s\")",
-                state, currentActivityStage));
+                expectedStateSet, currentActivityStage));
       }
     } catch (InterruptedException e) {
       throw new AssertionError(
           String.format(
               "Activity never becomes requested state \"%s\" (last lifecycle transition = \"%s\")",
-              state, currentActivityStage));
+              expectedStateSet, currentActivityStage));
     } finally {
       lock.unlock();
     }
@@ -235,13 +250,36 @@ public final class ActivityScenario<A extends Activity> {
           }
           lock.lock();
           try {
+            switch (currentActivityStage) {
+              case PRE_ON_CREATE:
+              case DESTROYED:
+                // The initial state (or after destroyed when the activity is being recreated)
+                // transition must be to CREATED. Ignore events with non-created stage, which are
+                // likely come from activities that the previous test starts and doesn't clean up.
+                if (stage != Stage.CREATED) {
+                  return;
+                }
+                break;
+
+              default:
+                // Make sure the received event is about the activity which this ActivityScenario
+                // is monitoring. The Android framework may start multiple instances of a same
+                // activity class and intent at a time. Also, there can be a race condition between
+                // an activity that is used by the previous test and being destroyed and an activity
+                // that is being resumed.
+                if (currentActivity != activity) {
+                  return;
+                }
+                break;
+            }
+
+            // Update the internal state to be synced with the Android system. Don't hold activity
+            // reference if the new state is destroyed. It's not good idea to access to destroyed
+            // activity since the system may reuse the instance or want to garbage collect.
             currentActivityStage = stage;
             currentActivity = (A) (stage != Stage.DESTROYED ? activity : null);
 
-            State currentState = SUPPORTED_STAGE_TO_STATE.get(stage);
-            if (currentState != null) {
-              stateToCondition.get(currentState).signal();
-            }
+            stateChangedCondition.signal();
           } finally {
             lock.unlock();
           }
@@ -255,10 +293,12 @@ public final class ActivityScenario<A extends Activity> {
   private static class ActivityState<A extends Activity> {
     @Nullable final A activity;
     @Nullable final State state;
+    final Stage stage;
 
-    ActivityState(@Nullable A activity, @Nullable State state) {
+    ActivityState(@Nullable A activity, @Nullable State state, Stage stage) {
       this.activity = activity;
       this.state = state;
+      this.stage = stage;
     }
   }
 
@@ -267,7 +307,7 @@ public final class ActivityScenario<A extends Activity> {
     lock.lock();
     try {
       return new ActivityState<>(
-          currentActivity, SUPPORTED_STAGE_TO_STATE.get(currentActivityStage));
+          currentActivity, STEADY_STATES.get(currentActivityStage), currentActivityStage);
     } finally {
       lock.unlock();
     }
@@ -277,7 +317,10 @@ public final class ActivityScenario<A extends Activity> {
    * Moves Activity state to a new state.
    *
    * <p>If a new state and current state are the same, it does nothing. It accepts {@link
-   * State.CREATED}, {@link State.STARTED}, and {@link State.RESUMED}.
+   * State#CREATED}, {@link State#STARTED}, {@link State#RESUMED}, and {@link State#DESTROYED}.
+   *
+   * <p>{@link State#DESTROYED} is the terminal state. You cannot move the state to other state
+   * after the activity reaches that state.
    *
    * <p>This method cannot be called from the main thread except in Robolectric tests.
    *
@@ -287,13 +330,12 @@ public final class ActivityScenario<A extends Activity> {
    */
   public ActivityScenario<A> moveToState(State newState) {
     checkNotMainThread();
-    checkArgument(
-        stateToCondition.containsKey(newState),
-        String.format("A requested state \"%s\" is not supported", newState));
     getInstrumentation().waitForIdleSync();
 
     ActivityState<A> currentState = getCurrentActivityState();
-    checkNotNull(currentState.state);
+    checkNotNull(
+        currentState.state,
+        String.format("Current state was null unexpectedly. Last stage = %s", currentState.stage));
     if (currentState.state == newState) {
       return this;
     }
@@ -307,18 +349,23 @@ public final class ActivityScenario<A extends Activity> {
         activityInvoker.stopActivity(currentState.activity);
         break;
       case STARTED:
+        // ActivityInvoker#pauseActivity only accepts resumed or paused activity. Move the state to
+        // resumed first.
         moveToState(State.RESUMED);
         activityInvoker.pauseActivity(currentState.activity);
         break;
       case RESUMED:
         activityInvoker.resumeActivity(currentState.activity);
         break;
+      case DESTROYED:
+        activityInvoker.finishActivity(currentState.activity);
+        break;
       default:
         throw new IllegalArgumentException(
             String.format("A requested state \"%s\" is not supported", newState));
     }
 
-    waitForActivityToBecome(newState);
+    waitForActivityToBecomeAnyOf(newState);
     return this;
   }
 
@@ -326,9 +373,9 @@ public final class ActivityScenario<A extends Activity> {
    * Recreates the Activity.
    *
    * <p>A current Activity will be destroyed after its data is saved into {@link android.os.Bundle}
-   * with {@link Activity#savedInstanceState}, then it creates a new Activity with the saved Bundle.
-   * After this method call, it is ensured that the Activity state goes back to the same state as
-   * its previous state.
+   * with {@link Activity#onSaveInstanceState(Bundle)}, then it creates a new Activity with the
+   * saved Bundle. After this method call, it is ensured that the Activity state goes back to the
+   * same state as its previous state.
    *
    * <p>This method cannot be called from the main thread except in Robolectric tests.
    *
@@ -354,7 +401,7 @@ public final class ActivityScenario<A extends Activity> {
     long now = System.currentTimeMillis();
     long deadline = now + TIMEOUT_MILLISECONDS;
     do {
-      waitForActivityToBecome(State.RESUMED);
+      waitForActivityToBecomeAnyOf(State.RESUMED);
       now = System.currentTimeMillis();
       activityState = getCurrentActivityState();
     } while (now < deadline && activityState.activity == prevActivityState.activity);

@@ -16,7 +16,6 @@
 
 package androidx.test.ext.junit.runners;
 
-import android.util.Log;
 import java.lang.reflect.InvocationTargetException;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -72,26 +71,27 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
       Class<? extends Runner> runnerClass = (Class<? extends Runner>) Class.forName(className);
       return runnerClass.getConstructor(Class.class).newInstance(testClass);
     } catch (ClassNotFoundException e) {
-      Log.e(TAG, className + " could not be loaded", e);
-      // fall through
+      throwInitializationError(className, e);
     } catch (NoSuchMethodException e) {
-      Log.e(TAG, className + " could not be loaded", e);
-      // fall through
+      throwInitializationError(className, e);
     } catch (IllegalAccessException e) {
-      Log.e(TAG, className + " could not be loaded", e);
-      // fall through
+      throwInitializationError(className, e);
     } catch (InstantiationException e) {
-      Log.e(TAG, className + " could not be loaded", e);
-      // fall through
+      throwInitializationError(className, e);
     } catch (InvocationTargetException e) {
-      Log.e(TAG, className + " could not be loaded", e);
-      // fall through
+      throwInitializationError(className, e);
     }
+    throw new IllegalStateException("Should never reach here");
+  }
+
+  private static void throwInitializationError(String delegateRunner, Throwable cause)
+      throws InitializationError {
+    // wrap the cause in a RuntimeException with a more detailed error message
     throw new InitializationError(
-        String.format(
-            "Delegate runner '%s' for AndroidJUnit4 could not be loaded. Check your build "
-                + "configuration.",
-            className));
+        new RuntimeException(
+            String.format(
+                "Delegate runner '%s' for AndroidJUnit4 could not be loaded.", delegateRunner),
+            cause));
   }
 
   @Override

@@ -6,7 +6,16 @@
       android:minSdkVersion="14"/>
   <application>
     <activity
-        android:name="androidx.test.core.app.testing.RecreationRecordingActivity">
+        android:name=".RecreationRecordingActivity"
+        android:exported="false">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+    <activity
+        android:name=".FinishItselfActivity"
+        android:exported="false">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

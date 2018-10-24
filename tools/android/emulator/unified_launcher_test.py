@@ -487,7 +487,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         android_platform=mox.IsA(emulated_device.AndroidPlatform),
         qemu_gdb_port=0,
         enable_single_step=False,
-        source_properties=None)
+        source_properties=None,
+        mini_boot=False)
     self.mox.StubOutWithMock(initial_boot_device, 'Configure')
     self.mox.StubOutWithMock(initial_boot_device, 'StartDevice')
     skin = 'rabbit_fur'
@@ -543,7 +544,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         qemu_gdb_port=0,
         enable_single_step=False,
         emulator_tmp_dir=None,
-        boot_time_apks=['hello_world.apk'])
+        boot_time_apks=['hello_world.apk'],
+        mini_boot=False)
 
   def testBoot_snapshot(self):
     self.mox.StubOutClassWithMocks(emulated_device, 'EmulatedDevice')
@@ -551,7 +553,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         android_platform=mox.IsA(emulated_device.AndroidPlatform),
         qemu_gdb_port=0,
         enable_single_step=False,
-        source_properties=None)
+        source_properties=None,
+        mini_boot=False)
     self.mox.StubOutWithMock(initial_boot_device, 'Configure')
     self.mox.StubOutWithMock(initial_boot_device, 'StartDevice')
     skin = 'rabbit_fur'
@@ -604,7 +607,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         qemu_gdb_port=0,
         enable_single_step=False,
         emulator_tmp_dir=None,
-        boot_time_apks=[])
+        boot_time_apks=[],
+        mini_boot=False)
 
   def testConvertToDict(self):
     self.assertEquals(

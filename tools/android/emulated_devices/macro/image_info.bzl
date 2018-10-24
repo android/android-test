@@ -12,6 +12,7 @@ _ANDROID = "android"
 _WEAR = "wear"
 _WEAR_TESTKEYS = "wear-testkeys"
 _WEAR_LE = "wear-le"
+_WEAR_LE_GFW = "wear-le-gfw"
 _TV = "tv"
 _AUTO = "auto"
 _GO = "go"
@@ -67,7 +68,7 @@ _ALL_IMAGES = (
         [_GOOGLE, _ANDROID, _WEAR, _WEAR_LE, _AUTO, _DAYDREAM, _TV],
     ) +
     _default_images(27, [_GOOGLE, _ANDROID, _GO, _AUTO, _DAYDREAM, _TV, _JASPER]) +
-    _default_images(28, [_GOOGLE, _AUTO, _DAYDREAM, _TV]) +
+    _default_images(28, [_GOOGLE, _AUTO, _DAYDREAM, _TV, _WEAR_LE, _WEAR_LE_GFW]) +
     _default_images(29, [_GOOGLE])
 )
 

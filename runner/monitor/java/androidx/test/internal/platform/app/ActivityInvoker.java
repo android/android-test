@@ -82,4 +82,13 @@ public interface ActivityInvoker {
    * @throws IllegalStateException when you call this method with Activity in non-supported state
    */
   void recreateActivity(Activity activity);
+
+  /**
+   * Finishes the Activity.
+   *
+   * <p>The current Activity state must be resumed, paused, or stopped.
+   *
+   * @throws IllegalStateException when you call this method with Activity in non-supported state
+   */
+  void finishActivity(Activity activity);
 }
