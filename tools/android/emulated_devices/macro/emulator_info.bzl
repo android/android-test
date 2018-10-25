@@ -39,6 +39,7 @@ QEMU = new_emulator(
             17,
             18,
             19,
+            21,
         ],
     },
 )
@@ -69,12 +70,7 @@ QEMU2 = new_emulator(
         "@androidsdk//:qemu2_x86",
     ],
     props = new_props(boot_properties = {_EMULATOR_TYPE_PROP: "qemu2"}),
-    supports = {
-        "x86": QEMU2_APIS,
-        "arm": [
-            21,
-        ],
-    },
+    supports = {"x86": QEMU2_APIS},
 )
 
 def _t2e():

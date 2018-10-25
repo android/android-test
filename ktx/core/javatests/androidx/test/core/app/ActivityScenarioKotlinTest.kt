@@ -37,7 +37,7 @@ private fun lastLifeCycleTransition(activity: Activity): Stage {
 class ActivityScenarioKotlinTest {
   @Test
   fun basicUseCase() {
-    val scenario = ActivityScenario.launch(RecreationRecordingActivity::class.java)
+    val scenario = launchActivity<RecreationRecordingActivity>()
     scenario.onActivity {
       assertThat(it.numberOfRecreations).isEqualTo(0)
       assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)

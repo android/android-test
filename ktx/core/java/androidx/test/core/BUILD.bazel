@@ -1,0 +1,24 @@
+# androidx.test.core Kotlin extensions
+
+package(
+    default_testonly = 1,
+    default_visibility = [
+        "//:__subpackages__",
+    ],
+)
+
+licenses(["notice"])  # Apache License 2.0
+
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library")
+
+kt_android_library(
+    name = "core",
+    testonly = 1,
+    srcs = glob(
+        ["**/*.kt"],
+    ),
+    deps = [
+        "//:android_arch_lifecycle_common",
+        "//core",
+    ],
+)

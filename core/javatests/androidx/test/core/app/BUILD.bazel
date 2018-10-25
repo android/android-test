@@ -1,4 +1,4 @@
-# Description: Tests for androidx.test.view
+# Description: Tests for androidx.test.core.app
 
 package(
     default_testonly = 1,
@@ -12,6 +12,9 @@ licenses(["notice"])  # Apache License 2.0
 android_binary(
     name = "target_stub",
     manifest = "AndroidManifest_target.xml",
+    visibility = [
+        "//ktx/core/javatests/androidx/test/core/app:__subpackages__",
+    ],
     deps = [
         "//core/javatests/androidx/test/core/app/testing",
     ],
@@ -20,6 +23,9 @@ android_binary(
 java_library(
     name = "robolectric_config",
     resources = ["robolectric.properties"],
+    visibility = [
+        "//ktx/core/javatests/androidx/test/core/app:__subpackages__",
+    ],
 )
 
 #

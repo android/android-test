@@ -1,0 +1,56 @@
+# Description: Tests for androidx.test.core Kotlin extension
+
+package(
+    default_testonly = 1,
+)
+
+licenses(["notice"])  # Apache License 2.0
+
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library")
+
+kt_android_library(
+    name = "ActivityScenarioKotlinTest_lib",
+    srcs = ["ActivityScenarioKotlinTest.kt"],
+    deps = [
+        "//:android_arch_lifecycle_common",
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//ext/junit",
+        "//ktx/core",
+        "//runner/android_junit_runner",
+        "//runner/monitor",
+        "@guava//jar",
+        "@junit//jar",
+        "@truth//jar",
+    ],
+)
+
+
+android_binary(
+    name = "ActivityScenarioKotlinTest_test_apk",
+    instruments = "//core/javatests/androidx/test/core/app:target_stub",
+    manifest = "AndroidManifest_test.xml",
+    deps = [
+        ":ActivityScenarioKotlinTest_lib",
+        "//:android_arch_lifecycle_common",
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//ext/junit",
+        "//ktx/core",
+        "//runner/android_junit_runner",
+        "//runner/monitor",
+        "@guava//jar",
+        "@junit//jar",
+        "@truth//jar",
+    ],
+)
+
+android_instrumentation_test(
+    name = "ActivityScenarioKotlinTest_android",
+    args = [
+        "--clear_package_data",
+        "--install_test_services=True",  # required for Bazel 0.11, can be removed in 0.12
+    ],
+    target_device = "//tools/android/emulated_devices/generic_phone:android_23_x86_qemu2",
+    test_app = ":ActivityScenarioKotlinTest_test_apk",
+)
