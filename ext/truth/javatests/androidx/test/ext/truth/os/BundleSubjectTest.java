@@ -65,4 +65,26 @@ public class BundleSubjectTest {
     assertThat(bundle).integer("foo").isEqualTo(1);
   }
 
+  @Test
+  public void bool() {
+    Bundle bundle = new Bundle();
+    bundle.putBoolean("foo", true);
+    assertThat(bundle).bool("foo").isTrue();
+  }
+
+  @Test
+  public void parcelable() {
+    Bundle bundle = new Bundle();
+    Account account = new Account("bar", "type");
+    bundle.putParcelable("foo", account);
+    assertThat(bundle).<Account>parcelable("foo").isEqualTo(account);
+  }
+
+  @Test
+  public void parcelableAsType() {
+    Bundle bundle = new Bundle();
+    Intent intent = new Intent("bar");
+    bundle.putParcelable("foo", intent);
+    assertThat(bundle).parcelableAsType("foo", IntentSubject.intents()).hasAction("bar");
+  }
 }

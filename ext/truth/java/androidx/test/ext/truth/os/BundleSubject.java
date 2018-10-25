@@ -19,6 +19,7 @@ import static com.google.common.truth.Fact.simpleFact;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import com.google.common.truth.BooleanSubject;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.IntegerSubject;
 import com.google.common.truth.StringSubject;
@@ -64,6 +65,22 @@ public final class BundleSubject extends Subject<BundleSubject, Bundle> {
     return check("getInt(%s)", key).that(actual().getInt(key));
   }
 
+  public BooleanSubject bool(String key) {
+    return check("getBoolean(%s)", key).that(actual().getBoolean(key));
+  }
+
+  public <T extends Parcelable> ParcelableSubject<T> parcelable(String key) {
+    return check("getParcelable(%s)", key)
+        .about(ParcelableSubject.<T>parcelables())
+        .that(actual().<T>getParcelable(key));
+  }
+
+  public <T extends Parcelable, SubjectT extends Subject<SubjectT, T>> SubjectT parcelableAsType(
+      String key, Subject.Factory<SubjectT, T> subjectFactory) {
+    return check("getParcelable(%s)", key)
+        .about(subjectFactory)
+        .that(actual().<T>getParcelable(key));
+  }
 
   public void containsKey(String key) {
     if (!actual().containsKey(key)) {
