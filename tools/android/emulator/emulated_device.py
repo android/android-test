@@ -2474,8 +2474,6 @@ class EmulatedDevice(object):
         # KVM snapshot migrations are a reality (again.)
       else:
         qemu_args.append('-disable-kvm')
-    if 'armeabi-v7a' == arch:
-      qemu_args += ['-cpu', 'cortex-a8']
     return qemu_args
 
   def _WithKvm(self, source_properties, kvm_present):

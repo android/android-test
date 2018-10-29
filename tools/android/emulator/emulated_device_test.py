@@ -173,10 +173,6 @@ class EmulatedDeviceTest(mox.MoxTestBase):
   def testDetermineQemuArgs_FromSourceProperties(self):
     props = {'systemimage.abi': 'armeabi-v7a'}
     device = emulated_device.EmulatedDevice()
-    self.assertEquals(['-cpu', 'cortex-a8'],
-                      device._DetermineQemuArgs(props, False))
-    self.assertEquals(['-cpu', 'cortex-a8'],
-                      device._DetermineQemuArgs(props, True))
 
     props = {'systemimage.abi': 'armeabi'}
     self.assertEquals([],

@@ -25,7 +25,22 @@ import com.google.common.io.LineProcessor;
 import java.util.List;
 import java.util.logging.Logger;
 
-/** {@link LineProcessor} for instrumentation test runner output. */
+/**
+ * {@link LineProcessor} for instrumentation test runner output.
+ *
+ * <p>This {@link LineProcessor} works specifically for the output of the following command: {@code
+ * adb shell am instrument -w -r ...}. See: https://developer.android.com/studio/test/command-line
+ * for more information on instrumentation testing with adb.
+ *
+ * <p>Required Flags:
+ *
+ * <ul>
+ *   <li>{@code -w}: Forces {@code am instrument} to wait for the instrumentation to finish before
+ *       terminating.
+ *   <li>{@code -r}: Enables verbose status logging, allowing the LineProcessor to gather more
+ *       information about the test run.
+ * </ul>
+ */
 public class InstrumentationTestRunnerProcessor implements LineProcessor<List<ExecutedTest>> {
   public static final String INSTRUMENTATION_CODE = "INSTRUMENTATION_CODE:";
   public static final String INSTRUMENTATION_STATUS = "INSTRUMENTATION_STATUS:";
