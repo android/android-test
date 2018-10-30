@@ -31,6 +31,7 @@ load(
     "QEMU",
     "QEMU2",
     "TYPE_TO_EMULATOR",
+    "emulator_type",
     "extra_system_image_contents",
 )
 load(
@@ -344,7 +345,7 @@ def _new_devices_for_image_and_emulator(
         image,
         visibility,
         hardware,
-        emu_suffix,
+        emulator,
     )
 
 
@@ -356,7 +357,7 @@ def make_android_device(
         image,
         visibility,
         hardware,
-        emu_suffix):
+        emulator):
     """Builds android_device targets."""
 
     native.android_device(

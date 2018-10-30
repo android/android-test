@@ -1,0 +1,10 @@
+# Publicly visible androidx.test.core Kotlin extension library
+
+licenses(["notice"])  # Apache License 2.0
+
+android_library(
+    name = "core",
+    testonly = 1,
+    visibility = ["//visibility:public"],
+    exports = ["//ktx/core/java/androidx/test/core"],
+)

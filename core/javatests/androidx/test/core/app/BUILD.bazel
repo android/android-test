@@ -1,4 +1,4 @@
-# Description: Tests for androidx.test.view
+# Description: Tests for androidx.test.core.app
 
 package(
     default_testonly = 1,
