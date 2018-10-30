@@ -73,6 +73,7 @@ QEMU2 = new_emulator(
         "x86": QEMU2_APIS,
         "arm": [
             21,
+            22,
         ],
     },
 )
