@@ -10,11 +10,11 @@
 ;;   term, but are allowed. E.g,. go/ aren't allowed, but links to the Go rules
 ;;   are, so rules/go/ is allowed.
 ;;
-;; See //depot/android_test_support/testing/leakr/common/dictionary/README.md for more on
+;; See //depot/google3/testing/leakr/common/dictionary/README.md for more on
 ;; Leakr format.
 
-;3;
-;3;
-$RE:\s[f|F]orge\s;3;
-;3;
-;3;
+.googleplex.com;3;
+corp.google.com;3;
+$RE:\s[f|F]orge\s;3;Forge
+pastries;3;
+pastry;3;

@@ -19,13 +19,13 @@
 
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="28"/>
 
-    <application android:label="GoogleInstrumentationTestRunnerTest" >
+    <application android:label="Google3InstrumentationTestRunnerTest" >
 
     </application>
 
 
     <instrumentation
-        android:name="com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
+        android:name="androidx.test.runner.AndroidJUnitRunner"
         android:targetPackage = "androidx.test.ui.app" />
 
 </manifest>

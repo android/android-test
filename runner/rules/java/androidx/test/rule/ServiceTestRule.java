@@ -39,7 +39,7 @@ import org.junit.runners.model.Statement;
  * after the duration of your test. It also guarantees that the service is successfully connected
  * when starting (or binding to) a service. The service can be started (or bound) using one of the
  * helper methods. It will automatically be stopped (or unbound) after the test completes and any
- * methods annotated with <a href="http://junit.source.net/javadoc/org/junit/After.html"><code>
+ * methods annotated with <a href="http://junit.sourceforge.net/javadoc/org/junit/After.html"><code>
  * After</code></a> are finished.
  *
  * <p>Note: This rule doesn't support {@link android.app.IntentService} because it's automatically
@@ -295,7 +295,7 @@ public class ServiceTestRule implements TestRule {
   /**
    * Override this method to do your own service specific initialization before starting or binding
    * to the service. The method is called before each test method is executed including any method
-   * annotated with <a href="http://junit.source.net/javadoc/org/junit/Before.html"><code>
+   * annotated with <a href="http://junit.sourceforge.net/javadoc/org/junit/Before.html"><code>
    * Before</code></a>. Do not start or bind to a service from here!
    */
   protected void beforeService() {
@@ -305,7 +305,7 @@ public class ServiceTestRule implements TestRule {
   /**
    * Override this method to do your own service specific clean up after the service is shutdown.
    * The method is called after each test method is executed including any method annotated with <a
-   * href="http://junit.source.net/javadoc/org/junit/After.html"><code>After</code></a> and
+   * href="http://junit.sourceforge.net/javadoc/org/junit/After.html"><code>After</code></a> and
    * after necessary calls to stop (or unbind) the service under test were called.
    */
   protected void afterService() {

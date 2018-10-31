@@ -18,6 +18,7 @@ maven_repository(
         "//espresso/accessibility/java/androidx/test/espresso/accessibility:accessibility_checks_maven_artifact",
         "//espresso/contrib/java/androidx/test/espresso/contrib:espresso_contrib_maven_artifact",
         "//espresso/core/java/androidx/test/espresso:espresso_core_maven_artifact",
+        "//espresso/core/java/androidx/test/espresso/remote:espresso_remote_maven_artifact",
         "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:idling_concurrent_maven_artifact",
         "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_maven_artifact",
         "//espresso/idling_resource/net/java/androidx/test/espresso/idling/net:idling_net_maven_artifact",

@@ -222,7 +222,7 @@ public final class ViewInteraction {
             "Performing '%s' action on view %s", viewAction.getDescription(), viewMatcher));
     if (!constraints.matches(targetView)) {
       // TODO: update this to describeMismatch once hamcrest is updated to new
-      // version in android_test_support (we are waiting for version 1.4 to avoid issues with generics)
+      // version in google3 (we are waiting for version 1.4 to avoid issues with generics)
       StringDescription stringDescription =
           new StringDescription(
               new StringBuilder(

@@ -17,7 +17,7 @@
 #
 # Usage: droiddoc.sh [arguments] source.jar ...
 
-#source ${BASH_SOURCE[0]}.runfiles/android_test_support/util/gbash.sh || exit
+#source ${BASH_SOURCE[0]}.runfiles/google3/util/gbash.sh || exit
 
 set -o errexit
 set -o pipefail
@@ -25,7 +25,7 @@ set -o pipefail
 # When running from a skylark action a simple "source gbash.sh" will not work.
 # However once we manage to source gbash we can safely rely on the $RUNFILES
 # variable it sets for resolving all other dependencies.
-source "${BASH_SOURCE[0]}.runfiles/android_test_support/util/shell/gbash/gbash.sh" || exit 1
+source "${BASH_SOURCE[0]}.runfiles/google3/util/shell/gbash/gbash.sh" || exit 1
 
 DEFINE_string classpath --required "" "Classpath to supply to javadoc command"
 DEFINE_string output --required "" "Path to output zip file"
@@ -41,11 +41,11 @@ DEFINE_string devsite "" "Generate docs for devsite"
 DEFINE_string yamlV2 "" "Generate docs for devsite"
 
 
-readonly JAVADOC="$RUNFILES/android_test_support/third_party/java/jdk/langtools/javadoc_bin"
-readonly ZIP="$RUNFILES/android_test_support/third_party/zip/zip"
-readonly UNZIP="$RUNFILES/android_test_support/third_party/unzip/unzip"
-readonly DOCLAVA="$RUNFILES/android_test_support/third_party/java/doclava/current/doclava.jar"
-readonly JSILVER="$RUNFILES/android_test_support/third_party/java/jsilver/v1_0_0/jsilver.jar"
+readonly JAVADOC="$RUNFILES/google3/third_party/java/jdk/langtools/javadoc_bin"
+readonly ZIP="$RUNFILES/google3/third_party/zip/zip"
+readonly UNZIP="$RUNFILES/google3/third_party/unzip/unzip"
+readonly DOCLAVA="$RUNFILES/google3/third_party/java/doclava/current/doclava.jar"
+readonly JSILVER="$RUNFILES/google3/third_party/java/jsilver/v1_0_0/jsilver.jar"
 
 # Reorganize directory of java files by their java packages.
 # javadoc -sourcepath only works if source files are in paths matching
