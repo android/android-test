@@ -4,10 +4,7 @@ licenses(["notice"])  # Apache License 2.0
 
 package(
     default_visibility = [
-        "//espresso/core/java/androidx/test/espresso:espresso_pkg",
-        "//espresso/web/java/androidx/test/espresso/web/action:__pkg__",
-        "//testapps/multiprocess_testapp/java/androidx/test/multiprocess/app:__pkg__",
-        "//testapps/multiprocess_testapp/javatests/androidx/test/multiprocess/app:__pkg__",
+        "//visibility:public",
     ],
 )
 
@@ -186,6 +183,10 @@ android_library(
     ],
 )
 
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION", "ESPRESSO_VERSION", "ANDROIDX_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
 filegroup(
     name = "espresso_remote_src",
     srcs = [
@@ -197,4 +198,54 @@ filegroup(
         ":libregistry-src.jar",
         ":libremote-src.jar",
     ],
+)
+
+combine_jars(
+    name = "espresso_remote_src_jars",
+    srcs = [
+        ":espresso_remote_src",
+    ],
+)
+
+load("//build_extensions:release.bzl", "axt_release_lib")
+
+axt_release_lib(
+    name = "espresso_remote_release",
+    jarjar_rules = "release_jarjar_rules.txt",
+    overlapping_jars = [
+        "//runner/android_junit_runner/java/androidx/test:runner_release_no_deps.jar",
+        "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
+        "//espresso/core/java/androidx/test/espresso:espresso_core_release_no_deps.jar",
+        "//espresso/web/java/androidx/test/espresso/web:espresso_web_release_no_deps.jar",
+        "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_release_no_deps.jar",
+    ],
+    proguard_library = ":proguard_library.cfg",
+    proguard_specs = [
+        "//:proguard_binary.cfg",
+        "//espresso:proguard_binary.cfg",
+    ],
+    remove_specs = [
+        "android.support.annotation*",
+        # remove META-INF directory to avoid duplicate clashes with imports from the support library.
+        "META-INF",
+    ],
+    deps = [
+        ":remote",
+    ],
+)
+
+maven_artifact(
+    name = "espresso_remote_maven_artifact",
+    src = ":espresso_remote_release.aar",
+    artifact_deps = [
+        "androidx.test:runner:%s" % RUNNER_VERSION,
+        "androidx.test.espresso:espresso-core:%s" % ESPRESSO_VERSION,
+        "androidx.test.espresso:espresso-web:%s" % ESPRESSO_VERSION,
+        "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
+    ],
+    artifact_id = "espresso-remote",
+    group_id = "androidx.test.espresso",
+    last_updated = "20170622000000",
+    src_jar = ":espresso_remote_src_jars.jar",
+    version = "%s" % ESPRESSO_VERSION,
 )

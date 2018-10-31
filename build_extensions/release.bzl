@@ -12,7 +12,8 @@ def axt_release_lib(
     multidex = "off",
     jarjar_rules = "//build_extensions:noJarJarRules.txt",
     overlapping_jars = [],
-    remove_specs = []):
+    remove_specs = [],
+    resource_files = None):
   """Generates release artifacts for a AXT library.
 
   Resulting output will be two files:
@@ -30,6 +31,7 @@ def axt_release_lib(
     remove_specs: A list of additional items to be removed from the jar. See
       remove_from_jar:removes documentation for format. By default all com*,
       org*, and junit* classes will be removed.
+    resource_files: res files to include in library
   """
 
   # The rules here produce a final .aar artifact and jar for external release.
@@ -50,6 +52,7 @@ def axt_release_lib(
   native.android_library(
       name = "%s_initial" % name,
       manifest = "AndroidManifest.xml",
+      resource_files = resource_files,
       visibility = ["//visibility:private"],
       custom_package = custom_package,
       testonly = 1,
@@ -101,6 +104,8 @@ def axt_release_lib(
           "jsr305_annotations*",
           "jsr330_inject*",
           "third_party*",
+          "META-INF",
+          "protobuf.meta",
       ] + remove_specs,
   )
 

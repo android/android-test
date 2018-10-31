@@ -1,7 +1,6 @@
 # androidx.test.core Kotlin extensions
 
 package(
-    default_testonly = 1,
     default_visibility = [
         "//:__subpackages__",
     ],
@@ -13,7 +12,6 @@ load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library")
 
 kt_android_library(
     name = "core",
-    testonly = 1,
     srcs = glob(
         ["**/*.kt"],
     ),
@@ -21,4 +19,56 @@ kt_android_library(
         "//:android_arch_lifecycle_common",
         "//core",
     ],
+)
+
+load("//build_extensions:release.bzl", "axt_release_lib")
+
+# Group of targets to use to produce release binary
+android_library(
+    name = "core_release_lib",
+    exports = [
+        ":core",
+    ],
+)
+
+# Generate rules for the release artifacts. This generates three targets
+# genrule output: core_release_no_deps.jar and core_release.aar
+# a java_library target libcore_release_no_deps
+axt_release_lib(
+    name = "core_release",
+    overlapping_jars = [
+        "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
+    ],
+    remove_specs = [
+        # remove classes from external dependencies AND generated R file, since gradle will produce
+        # this
+        "androidx.test.core.R.*",
+        "android.support.*",
+        "android.arch.*",
+    ],
+    resource_files = glob(
+        ["res/**/*"],
+    ),
+    deps = [
+        ":core_release_lib",
+    ],
+)
+
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "CORE_VERSION", "ANDROIDX_VERSION", "RUNNER_VERSION", "ANDROIDX_ARCH_COMPONENTS_VERSION")
+
+maven_artifact(
+    name = "core_maven_artifact",
+    src = ":core_release.aar",
+    artifact_deps = [
+        "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
+        "androidx.test:core:%s" % CORE_VERSION,
+        "androidx.test:monitor:%s" % RUNNER_VERSION,
+        "androidx.lifecycle:lifecycle-common:%s" % ANDROIDX_ARCH_COMPONENTS_VERSION,
+    ],
+    artifact_id = "core-ktx",
+    group_id = "androidx.test",
+    last_updated = "20181029000000",
+    src_jar = ":libcore-src.jar",
+    version = "%s" % CORE_VERSION,
 )
