@@ -282,7 +282,7 @@ public class ViewInteractionTest {
   public void verifyFailingCheckWithFailingRemoteInteractionPropagatesError() {
     NoActivityResumedException noActivityResumed =
         new NoActivityResumedException(
-            "No activities in stage RESUMED. Did you t to launch the activity. "
+            "No activities in stage RESUMED. Did you forget to launch the activity. "
                 + "(test.getActivity() or similar)?");
 
     Callable<Void> failingRemoteInteraction =
@@ -453,7 +453,7 @@ public class ViewInteractionTest {
     when(mockViewFinder.getView())
         .thenThrow(
             new NoActivityResumedException(
-                "No activities in stage RESUMED. Did you t to launch the activity. "
+                "No activities in stage RESUMED. Did you forget to launch the activity. "
                     + "(test.getActivity() or similar)?"));
 
     // enable remote interaction

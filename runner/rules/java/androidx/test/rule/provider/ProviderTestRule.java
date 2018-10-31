@@ -231,7 +231,7 @@ public class ProviderTestRule implements TestRule {
   /**
    * Override this method to execute any code that should run before provider is set up. This method
    * is called before each test method, including any method annotated with <a
-   * href="http://junit.source.net/javadoc/org/junit/Before.html"><code>Before</code></a>.
+   * href="http://junit.sourceforge.net/javadoc/org/junit/Before.html"><code>Before</code></a>.
    */
   protected void beforeProviderSetup() {
     // empty by default
@@ -240,7 +240,7 @@ public class ProviderTestRule implements TestRule {
   /**
    * Override this method to execute any code that should run after provider is cleaned up. This
    * method is called after each test method, including any method annotated with <a
-   * href="http://junit.source.net/javadoc/org/junit/After.html"><code>After</code></a>.
+   * href="http://junit.sourceforge.net/javadoc/org/junit/After.html"><code>After</code></a>.
    */
   protected void afterProviderCleanedUp() {
     // empty by default

@@ -695,6 +695,7 @@ public class ViewMatchersTest {
   }
 
   @Test
+  @UiThreadTest
   public void supportsInputMethodsTest() {
     Button button = new Button(context);
     EditText editText = new EditText(context);
@@ -757,6 +758,7 @@ public class ViewMatchersTest {
   }
 
   @Test
+  @UiThreadTest
   public void hasErrorTextReturnsTrue_WithCorrectErrorString() {
     EditText editText = new EditText(context);
     editText.setError("TEST");
@@ -764,6 +766,7 @@ public class ViewMatchersTest {
   }
 
   @Test
+  @UiThreadTest
   public void hasErrorTextNullTest() {
     EditText editText = new EditText(context);
     editText.setError(null);
@@ -772,6 +775,7 @@ public class ViewMatchersTest {
   }
 
   @Test
+  @UiThreadTest
   public void hasErrorTextReturnsFalse_WithDifferentErrorString() {
     EditText editText = new EditText(context);
     editText.setError("TEST");
@@ -800,6 +804,7 @@ public class ViewMatchersTest {
 
 
   @Test
+  @UiThreadTest
   public void withInputType_ReturnsTrueIf_CorrectInput() {
     EditText editText = new EditText(context);
     editText.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -807,6 +812,7 @@ public class ViewMatchersTest {
   }
 
   @Test
+  @UiThreadTest
   public void withInputType_ReturnsFalseIf_IncorrectInput() {
     EditText editText = new EditText(context);
     editText.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -814,6 +820,7 @@ public class ViewMatchersTest {
   }
 
   @Test
+  @UiThreadTest
   public void withInputType_ShouldNotCrashIf_InputTypeIsNotRecognized() {
     EditText editText = new EditText(context);
     editText.setInputType(InputType.TYPE_CLASS_NUMBER);

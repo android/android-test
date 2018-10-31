@@ -31,7 +31,7 @@
       android:name="targetProcess"
       android:value="androidx.test.multiprocess.app:idling"/>
 
-    <!-- TODO: change to the syntax after next emulator image update -->
+    <!-- TODO(nkorsote): change to the syntax after next emulator image update -->
     <!--android:targetProcess=":idling"-->
 
   </instrumentation>
