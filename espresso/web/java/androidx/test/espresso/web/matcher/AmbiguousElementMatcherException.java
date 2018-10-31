@@ -26,7 +26,7 @@ public final class AmbiguousElementMatcherException extends RuntimeException
     implements EspressoException {
 
   public AmbiguousElementMatcherException(String xpath) {
-    // TODO: Print out the DOM and highlight which elements were matched.
+    // TODO(vsethia): Print out the DOM and highlight which elements were matched.
     super(
         String.format(
             "Multiple Element(s) found for xpath %s. Please narrow down " + "your search.", xpath));

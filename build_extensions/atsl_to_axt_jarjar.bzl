@@ -11,7 +11,7 @@ See go/jetpack-test-lsc
 
 def atsl_to_axt_jarjar(name, src_jar, out_jar, **kwargs):
     # this will be swapped to "atslToAxtJarJarRules.txt" in the ATSL -> AXT LSC
-    JARJAR_RULES = "//build_extensions:atslToAxtJarJarRules.txt"
+    JARJAR_RULES = "//third_party/android/androidx_test/build_extensions:atslToAxtJarJarRules.txt"
 
     # TODO(b/78906684): use jetifier instead of jarjar
     native.genrule(

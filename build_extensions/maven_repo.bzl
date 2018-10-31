@@ -198,7 +198,7 @@ maven_artifact = rule(
         "last_updated": attr.string(mandatory = True),
         "artifact_deps": attr.string_list(),
         "_maven_artifact": attr.label(
-            default = Label("//build_extensions:maven_artifact"),
+            default = Label("//third_party/android/androidx_test/build_extensions:maven_artifact"),
             executable = True,
             allow_files = True,
             cfg = "host",
@@ -214,7 +214,7 @@ maven_repository = rule(
     attrs = {
         "srcs": attr.label_list(allow_rules = ["maven_artifact"]),
         "_maven_repository": attr.label(
-            default = Label("//build_extensions:maven_repository"),
+            default = Label("//third_party/android/androidx_test/build_extensions:maven_repository"),
             executable = True,
             allow_files = True,
             cfg = "host",

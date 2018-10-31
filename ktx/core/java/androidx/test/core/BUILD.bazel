@@ -21,7 +21,7 @@ kt_android_library(
     ],
 )
 
-load("//build_extensions:release.bzl", "axt_release_lib")
+load("//third_party/android/androidx_test/build_extensions:release.bzl", "axt_release_lib")
 
 # Group of targets to use to produce release binary
 android_library(
