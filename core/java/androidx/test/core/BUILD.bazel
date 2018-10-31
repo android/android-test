@@ -41,6 +41,9 @@ axt_release_lib(
         "com.google*",
         "difflib*",
     ],
+    resource_files = glob(
+        ["res/**/*"],
+    ),
     deps = [
         ":core_release_lib",
     ],
