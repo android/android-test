@@ -17,8 +17,8 @@
 package androidx.test.espresso.remote;
 
 /**
- * Transforms an Espresso remote message from and to a proto message. TODO: Once this API
- * is stable document on how and when these IFs need to be implemented
+ * Transforms an Espresso remote message from and to a proto message. TODO: Once this API is stable
+ * document on how and when these IFs need to be implemented
  */
 public interface EspressoRemoteMessage {
 

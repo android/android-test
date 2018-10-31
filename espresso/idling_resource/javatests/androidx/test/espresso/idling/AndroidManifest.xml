@@ -26,7 +26,7 @@
     </application>
 
     <instrumentation
-        android:name="com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
+        android:name="androidx.test.runner.AndroidJUnitRunner"
         android:targetPackage="androidx.test.ui.app" />
 
 </manifest>

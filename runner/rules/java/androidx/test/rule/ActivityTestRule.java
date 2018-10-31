@@ -48,9 +48,9 @@ import org.junit.runners.model.Statement;
  * is set to true in the constructor, the Activity under test will be launched before each test
  * annotated with <a href="http://junit.org/javadoc/latest/org/junit/Test.html"><code>Test</code>
  * </a> and before methods annotated with <a
- * href="http://junit.source.net/javadoc/org/junit/Before.html"><code>Before</code></a>, and it
+ * href="http://junit.sourceforge.net/javadoc/org/junit/Before.html"><code>Before</code></a>, and it
  * will be terminated after the test is completed and methods annotated with <a
- * href="http://junit.source.net/javadoc/org/junit/After.html"><code>After
+ * href="http://junit.sourceforge.net/javadoc/org/junit/After.html"><code>After
  * </code></a> are finished.
  *
  * <p>The Activity can be manually launched with {@link #launchActivity(Intent)}, and manually
@@ -107,9 +107,9 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
    * Similar to {@link #ActivityTestRule(Class, boolean, boolean)} but defaults to launch the
    * activity under test once per <a href="http://junit.org/javadoc/latest/org/junit/Test.html">
    * <code>Test</code></a> method. It is launched before the first <a
-   * href="http://junit.source.net/javadoc/org/junit/Before.html"><code>Before</code></a>
+   * href="http://junit.sourceforge.net/javadoc/org/junit/Before.html"><code>Before</code></a>
    * method, and terminated after the last <a
-   * href="http://junit.source.net/javadoc/org/junit/After.html"><code>After</code></a> method.
+   * href="http://junit.sourceforge.net/javadoc/org/junit/After.html"><code>After</code></a> method.
    *
    * @param activityClass The activity under test. This must be a class in the instrumentation
    *     targetPackage specified in the AndroidManifest.xml
@@ -132,9 +132,9 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
    * @param launchActivity true if the Activity should be launched once per <a
    *     href="http://junit.org/javadoc/latest/org/junit/Test.html"><code>Test</code></a> method. It
    *     will be launched before the first <a
-   *     href="http://junit.source.net/javadoc/org/junit/Before.html"><code>Before</code></a>
+   *     href="http://junit.sourceforge.net/javadoc/org/junit/Before.html"><code>Before</code></a>
    *     method, and terminated after the last <a
-   *     href="http://junit.source.net/javadoc/org/junit/After.html"><code>After</code></a>
+   *     href="http://junit.sourceforge.net/javadoc/org/junit/After.html"><code>After</code></a>
    *     method.
    */
   public ActivityTestRule(
@@ -155,9 +155,9 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
    * @param launchActivity true if the Activity should be launched once per <a
    *     href="http://junit.org/javadoc/latest/org/junit/Test.html"><code>Test</code></a> method. It
    *     will be launched before the first <a
-   *     href="http://junit.source.net/javadoc/org/junit/Before.html"><code>Before</code></a>
+   *     href="http://junit.sourceforge.net/javadoc/org/junit/Before.html"><code>Before</code></a>
    *     method, and terminated after the last <a
-   *     href="http://junit.source.net/javadoc/org/junit/After.html"><code>After</code></a>
+   *     href="http://junit.sourceforge.net/javadoc/org/junit/After.html"><code>After</code></a>
    *     method.
    */
   public ActivityTestRule(
@@ -175,9 +175,9 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
    * @param launchActivity true if the Activity should be launched once per <a
    *     href="http://junit.org/javadoc/latest/org/junit/Test.html"><code>Test</code></a> method. It
    *     will be launched before the first <a
-   *     href="http://junit.source.net/javadoc/org/junit/Before.html"><code>Before</code></a>
+   *     href="http://junit.sourceforge.net/javadoc/org/junit/Before.html"><code>Before</code></a>
    *     method, and terminated after the last <a
-   *     href="http://junit.source.net/javadoc/org/junit/After.html"><code>After</code></a>
+   *     href="http://junit.sourceforge.net/javadoc/org/junit/After.html"><code>After</code></a>
    *     method.
    * @param targetPackage The name of the target package that the Activity is started under. This
    *     value is passed down to the start Intent using {@link
@@ -228,7 +228,7 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
   /**
    * Override this method to execute any code that should run before your {@link Activity} is
    * created and launched. This method is called before each test method, including any method
-   * annotated with <a href="http://junit.source.net/javadoc/org/junit/Before.html"><code>
+   * annotated with <a href="http://junit.sourceforge.net/javadoc/org/junit/Before.html"><code>
    * Before</code></a>.
    */
   protected void beforeActivityLaunched() {
@@ -238,9 +238,9 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
   /**
    * Override this method to execute any code that should run after your {@link Activity} is
    * launched, but before any test code is run including any method annotated with <a
-   * href="http://junit.source.net/javadoc/org/junit/Before.html"><code>Before</code></a>.
+   * href="http://junit.sourceforge.net/javadoc/org/junit/Before.html"><code>Before</code></a>.
    *
-   * <p>Prefer <a href="http://junit.source.net/javadoc/org/junit/Before.html"><code>Before
+   * <p>Prefer <a href="http://junit.sourceforge.net/javadoc/org/junit/Before.html"><code>Before
    * </code></a> over this method. This method should usually not be overwritten directly in tests
    * and only be used by subclasses of ActivityTestRule to get notified when the activity is created
    * and visible but test runs.
@@ -252,10 +252,10 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
   /**
    * Override this method to execute any code that should run after the currently launched {@link
    * Activity} is finished. This method is called after each test method, including any method
-   * annotated with <a href="http://junit.source.net/javadoc/org/junit/After.html"><code>After
+   * annotated with <a href="http://junit.sourceforge.net/javadoc/org/junit/After.html"><code>After
    * </code></a>.
    *
-   * <p>Prefer <a href="http://junit.source.net/javadoc/org/junit/After.html"><code>Before
+   * <p>Prefer <a href="http://junit.sourceforge.net/javadoc/org/junit/After.html"><code>Before
    * </code></a> over this method. This method should usually not be overwritten directly in tests
    * and only be used by subclasses of ActivityTestRule to get notified when the activity is created
    * and visible but test runs.
