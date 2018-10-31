@@ -133,7 +133,7 @@ public class PortForwardingRule implements TestRule {
   /**
    * Override this method to execute any code that should run before port forwarding. This method is
    * called before each test method, including any method annotated with <a
-   * href="http://junit.source.net/javadoc/org/junit/Before.html"><code>Before</code></a>.
+   * href="http://junit.sourceforge.net/javadoc/org/junit/Before.html"><code>Before</code></a>.
    */
   protected void beforePortForwarding() {
     // empty by default
@@ -142,7 +142,7 @@ public class PortForwardingRule implements TestRule {
   /**
    * Override this method to execute any code that should run after port forwarding is set up, but
    * before any test code is run including any method annotated with <a
-   * href="http://junit.source.net/javadoc/org/junit/Before.html"><code>Before</code></a>.
+   * href="http://junit.sourceforge.net/javadoc/org/junit/Before.html"><code>Before</code></a>.
    */
   protected void afterPortForwarding() {
     // empty by default
@@ -151,7 +151,7 @@ public class PortForwardingRule implements TestRule {
   /**
    * Override this method to execute any code that should run before port forwarding is restored.
    * This method is called after each test method, including any method annotated with <a
-   * href="http://junit.source.net/javadoc/org/junit/After.html"><code>After</code></a>.
+   * href="http://junit.sourceforge.net/javadoc/org/junit/After.html"><code>After</code></a>.
    */
   protected void beforeRestoreForwarding() {
     // empty by default
@@ -160,7 +160,7 @@ public class PortForwardingRule implements TestRule {
   /**
    * Override this method to execute any code that should run after port forwarding is restored.
    * This method is called after each test method, including any method annotated with <a
-   * href="http://junit.source.net/javadoc/org/junit/After.html"><code>After</code></a>.
+   * href="http://junit.sourceforge.net/javadoc/org/junit/After.html"><code>After</code></a>.
    */
   protected void afterRestoreForwarding() {
     // empty by default
