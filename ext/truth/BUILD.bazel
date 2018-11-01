@@ -6,5 +6,5 @@ licenses(["notice"])  # Apache License 2.0
 java_library(
     name = "truth",
     visibility = ["//visibility:public"],
-    exports = ["//ext/truth/java/androidx/test/ext/truth"],
+    exports = ["//ext/truth/java/androidx/test/ext/truth:truth"],
 )

@@ -1,4 +1,6 @@
-# androidx.test.core Kotlin extensions
+# androidx.ext.junit Kotlin extensions
+
+licenses(["notice"])  # Apache License 2.0
 
 package(
     default_visibility = [
@@ -6,18 +8,16 @@ package(
     ],
 )
 
-licenses(["notice"])  # Apache License 2.0
-
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library")
 
 kt_android_library(
-    name = "core",
+    name = "junit",
     srcs = glob(
         ["**/*.kt"],
     ),
     deps = [
         "//:android_arch_lifecycle_common",
-        "//core",
+        "//ext/junit",
     ],
 )
 
@@ -25,17 +25,17 @@ load("//build_extensions:release.bzl", "axt_release_lib")
 
 # Group of targets to use to produce release binary
 android_library(
-    name = "core_release_lib",
+    name = "junit_release_lib",
     exports = [
-        ":core",
+        ":junit",
     ],
 )
 
 # Generate rules for the release artifacts. This generates three targets
-# genrule output: core_release_no_deps.jar and core_release.aar
-# a java_library target libcore_release_no_deps
+# genrule output: junit_release_no_deps.jar and junit_release.aar
+# a java_library target libjunit_release_no_deps
 axt_release_lib(
-    name = "core_release",
+    name = "junit_release",
     overlapping_jars = [
         "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
     ],
@@ -50,25 +50,26 @@ axt_release_lib(
         ["res/**/*"],
     ),
     deps = [
-        ":core_release_lib",
+        ":junit_release_lib",
     ],
 )
 
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "CORE_VERSION", "ANDROIDX_VERSION", "RUNNER_VERSION", "ANDROIDX_ARCH_COMPONENTS_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_JUNIT_VERSION", "CORE_VERSION", "ANDROIDX_VERSION", "RUNNER_VERSION", "ANDROIDX_ARCH_COMPONENTS_VERSION")
 
 maven_artifact(
-    name = "core_maven_artifact",
-    src = ":core_release.aar",
+    name = "junit_maven_artifact",
+    src = ":junit_release.aar",
     artifact_deps = [
         "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
         "androidx.test:core:%s" % CORE_VERSION,
+        "androidx.test.ext:junit:%s" % ANDROIDX_JUNIT_VERSION,
         "androidx.test:monitor:%s" % RUNNER_VERSION,
         "androidx.lifecycle:lifecycle-common:%s" % ANDROIDX_ARCH_COMPONENTS_VERSION,
     ],
-    artifact_id = "core-ktx",
+    artifact_id = "junit-ktx",
     group_id = "androidx.test",
     last_updated = "20181029000000",
-    src_jar = ":libcore-src.jar",
-    version = "%s" % CORE_VERSION,
+    src_jar = ":libjunit-src.jar",
+    version = "%s" % ANDROIDX_JUNIT_VERSION,
 )

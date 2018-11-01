@@ -182,7 +182,7 @@ public class BaseLayerModule {
 
   @Provides
   @Default
-  FailureHandler provideFailureHander() {
-    return new DefaultFailureHandler(InstrumentationRegistry.getTargetContext());
-  }
+  FailureHandler provideFailureHander(DefaultFailureHandler impl) {
+    return impl;
+  } // REPLACE
 }
