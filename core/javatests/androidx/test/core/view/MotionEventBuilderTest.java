@@ -5,7 +5,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import android.os.SystemClock;
 import android.view.MotionEvent;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.google.common.collect.Range;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ public final class MotionEventBuilderTest {
     MotionEvent event = newBuilder().build();
     assertThat(event.getDownTime()).isEqualTo(0);
     assertThat(event.getEventTime())
-        .isIn(Range.closed(SystemClock.uptimeMillis() - 100, SystemClock.uptimeMillis()));
+        .isIn(Range.closed(SystemClock.uptimeMillis() - 1000, SystemClock.uptimeMillis()));
     assertThat(event.getAction()).isEqualTo(MotionEvent.ACTION_DOWN);
     assertThat(event.getPointerCount()).isEqualTo(1);
     assertThat(event.getX()).isEqualTo(0f);

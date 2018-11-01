@@ -20,8 +20,8 @@ import static androidx.test.ext.truth.os.BundleSubject.assertThat;
 import android.accounts.Account;
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.ext.truth.content.IntentSubject;
-import androidx.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

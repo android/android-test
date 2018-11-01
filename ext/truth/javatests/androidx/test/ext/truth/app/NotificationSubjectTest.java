@@ -17,12 +17,12 @@ package androidx.test.ext.truth.app;
 
 import static androidx.test.ext.truth.app.NotificationSubject.assertThat;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
+import androidx.test.core.app.testing.RecreationRecordingActivity;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +31,9 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class NotificationSubjectTest {
 
-  @Rule public ActivityTestRule<Activity> activityTestRule = new ActivityTestRule<>(Activity.class);
+  @Rule
+  public ActivityTestRule<RecreationRecordingActivity> activityTestRule =
+      new ActivityTestRule<>(RecreationRecordingActivity.class);
 
   @Test
   public void contentIntent() {

@@ -1,0 +1,77 @@
+# Description: Tests for androidx.test.core
+
+load("//build_extensions:android_library_instrumentation_tests.bzl", "android_library_instrumentation_tests")
+load("//build_extensions:android_library_local_tests.bzl", "android_library_local_tests")
+load("//build_extensions:android_app_instrumentation_tests.bzl", "android_app_instrumentation_tests")
+load("//build_extensions:test_devices.bzl", "DEVICES")
+
+package(
+    default_testonly = 1,
+)
+
+licenses(["notice"])  # Apache License 2.0
+
+# ActivityScenarioTest is unique, in that we want to define the activity under test in a
+# separate target binary, since that is how most users tests will be setup
+android_binary(
+    name = "ActivityScenarioTest_target",
+    aapt_version = "aapt",
+    manifest = "AndroidManifest_target.xml",
+    deps = [
+        "//core/javatests/androidx/test/core/app/testing",
+    ],
+)
+
+android_app_instrumentation_tests(
+    name = "ActivityScenarioTest_instrumentation",
+    srcs = glob(["**/ActivityScenarioTest.java"]),
+    binary_target = ":ActivityScenarioTest_target",
+    target_devices = DEVICES,
+    deps = [
+        "//:androidx_lifecycle_common",
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//ext/junit",
+        "//ext/truth",
+        "//runner/android_junit_runner",
+        "@guava//jar",
+        "@junit//jar",
+        "@truth//jar",
+    ],
+)
+
+android_library_instrumentation_tests(
+    name = "instrumentation_tests",
+    srcs = glob(
+        ["**/*.java"],
+        exclude = ["**/ActivityScenarioTest.java"],
+    ),
+    target_devices = DEVICES,
+    deps = [
+        "//core",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "@guava//jar",
+        "@junit//jar",
+        "@truth//jar",
+    ],
+)
+
+android_library_local_tests(
+    name = "local_tests",
+    srcs = glob(
+        ["**/*.java"],
+        exclude = ["**/ActivityScenarioTest.java"],
+    ),
+    deps = [
+        "//:androidx_lifecycle_common",
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//ext/junit",
+        "//ext/truth",
+        "//runner/monitor/java/androidx/test:monitor",
+        "@guava//jar",
+        "@junit//jar",
+        "@truth//jar",
+    ],
+)

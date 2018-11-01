@@ -1,7 +1,37 @@
 licenses(["notice"])  # Apache License 2.0
 
-java_library(
-    name = "robolectric_config",
-    resources = ["robolectric.properties"],
-    visibility = ["//visibility:public"],
+load("//build_extensions:android_library_instrumentation_tests.bzl", "android_library_instrumentation_tests")
+load("//build_extensions:android_library_local_tests.bzl", "android_library_local_tests")
+load("//build_extensions:test_devices.bzl", "DEVICES")
+
+android_library_instrumentation_tests(
+    name = "instrumentation_tests",
+    srcs = glob(
+        ["**/*.java"],
+    ),
+    target_devices = DEVICES,
+    deps = [
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//ext/junit",
+        "//ext/truth",
+        "//runner/android_junit_runner",
+        "//runner/rules",
+        "@junit//jar",
+        "@truth//jar",
+    ],
+)
+
+android_library_local_tests(
+    name = "local_tests",
+    srcs = glob(["**/*.java"]),
+    deps = [
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//ext/junit",
+        "//ext/truth",
+        "//runner/rules",
+        "@junit//jar",
+        "@truth//jar",
+    ],
 )
