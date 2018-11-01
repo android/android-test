@@ -167,7 +167,7 @@ public final class RootViewPicker implements Provider<View> {
 
       if (activities.isEmpty()) {
         throw new RuntimeException(
-            "No activities found. Did you t to launch the activity "
+            "No activities found. Did you forget to launch the activity "
                 + "by calling getActivity() or startActivitySync or similar?");
       }
       // well at least there are some activities in the pipeline - lets see if they resume.
@@ -182,7 +182,7 @@ public final class RootViewPicker implements Provider<View> {
         }
       }
       throw new NoActivityResumedException(
-          "No activities in stage RESUMED. Did you t to "
+          "No activities in stage RESUMED. Did you forget to "
               + "launch the activity. (test.getActivity() or similar)?");
     }
   }

@@ -43,7 +43,7 @@ public abstract class ShellCommand {
     }
     for (int ii = 0; ii < len; ii++) {
       char c = word.charAt(ii);
-      // We do this positively so as to be sure we don't inadvertently t
+      // We do this positively so as to be sure we don't inadvertently forget
       // any unsafe characters.
       if (!Character.isLetterOrDigit(c) && SAFE_PUNCTUATION.indexOf(c) == -1) {
         // replace() actually means "replace all".

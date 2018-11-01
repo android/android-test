@@ -275,7 +275,7 @@ public final class PositionAssertions {
           Log.e(TAG, description.toString());
           throw noViewException;
         } else {
-          // TODO: describe the foundView matcher instead of the foundView it self.
+          // TODO: describe the foundView matcher instead of the foundView itself.
           description
               .appendText("View:")
               .appendText(HumanReadables.describe(foundView))

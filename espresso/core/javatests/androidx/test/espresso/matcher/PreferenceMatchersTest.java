@@ -29,6 +29,7 @@ import static org.hamcrest.Matchers.not;
 
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
+import androidx.test.annotation.UiThreadTest;
 import androidx.test.filters.SmallTest;
 import androidx.test.runner.AndroidJUnit4;
 import androidx.test.ui.app.R;
@@ -65,6 +66,7 @@ public class PreferenceMatchersTest {
   }
 
   @Test
+  @UiThreadTest
   public void isEnabledTest() {
     CheckBoxPreference pref = new CheckBoxPreference(getTargetContext());
     pref.setEnabled(true);

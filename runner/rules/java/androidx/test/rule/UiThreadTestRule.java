@@ -29,8 +29,8 @@ import org.junit.runners.model.Statement;
  * application's main thread (or UI thread).
  *
  * <p>Note, methods annotated with <a
- * href="http://junit.source.net/javadoc/org/junit/Before.html"><code>Before</code></a> and <a
- * href="http://junit.source.net/javadoc/org/junit/After.html"><code>After</code></a> will also
+ * href="http://junit.sourceforge.net/javadoc/org/junit/Before.html"><code>Before</code></a> and <a
+ * href="http://junit.sourceforge.net/javadoc/org/junit/After.html"><code>After</code></a> will also
  * be executed on the UI thread.
  *
  * @see androidx.test.annotation.UiThreadTest if you need to switch in and out of the UI

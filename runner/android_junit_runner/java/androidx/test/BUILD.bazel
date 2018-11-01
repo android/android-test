@@ -70,7 +70,6 @@ axt_release_lib(
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
 load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION", "ANDROIDX_VERSION", "JUNIT_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
-load("//build_extensions:droiddoc.bzl", "droiddoc")
 
 maven_artifact(
     name = "runner_maven_artifact",
