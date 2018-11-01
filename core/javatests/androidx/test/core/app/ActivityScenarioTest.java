@@ -36,220 +36,202 @@ import org.junit.runner.RunWith;
 public final class ActivityScenarioTest {
   @Test
   public void launchedActivityShouldBeResumed() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.onActivity(
-          activity -> {
-            assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
-            assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
-          });
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.onActivity(
+        activity -> {
+          assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
+          assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
+        });
   }
 
   @Test
   public void launchedFinishItSelfActivityShouldBeLaunchable() throws Exception {
-    try (ActivityScenario<FinishItselfActivity> scenario =
-        ActivityScenario.launch(FinishItselfActivity.class)) {}
-    ;
+    ActivityScenario<FinishItselfActivity> scenario =
+        ActivityScenario.launch(FinishItselfActivity.class);
   }
 
   @Test
   public void fromResumedToDestroyed() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.moveToState(State.DESTROYED);
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.DESTROYED);
   }
 
   @Test
   public void fromResumedToCreated() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.moveToState(State.CREATED);
-      scenario.onActivity(
-          activity -> {
-            assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.STOPPED);
-            assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
-          });
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.CREATED);
+    scenario.onActivity(
+        activity -> {
+          assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.STOPPED);
+          assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
+        });
   }
 
   @Test
   public void fromResumedToStarted() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.moveToState(State.STARTED);
-      scenario.onActivity(
-          activity -> {
-            assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.PAUSED);
-            assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
-          });
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.STARTED);
+    scenario.onActivity(
+        activity -> {
+          assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.PAUSED);
+          assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
+        });
   }
 
   @Test
   public void fromResumedToResumed() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.moveToState(State.RESUMED);
-      scenario.onActivity(
-          activity -> {
-            assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
-            assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
-          });
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.RESUMED);
+    scenario.onActivity(
+        activity -> {
+          assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
+          assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
+        });
   }
 
   @Test
   public void fromCreatedToDestroyed() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.moveToState(State.CREATED);
-      scenario.moveToState(State.DESTROYED);
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.CREATED);
+    scenario.moveToState(State.DESTROYED);
   }
 
   @Test
   public void fromCreatedToCreated() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.moveToState(State.CREATED);
-      scenario.moveToState(State.CREATED);
-      scenario.onActivity(
-          activity -> {
-            assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.STOPPED);
-            assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
-          });
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.CREATED);
+    scenario.moveToState(State.CREATED);
+    scenario.onActivity(
+        activity -> {
+          assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.STOPPED);
+          assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
+        });
   }
 
   @Test
   public void fromCreatedToStarted() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.moveToState(State.CREATED);
-      scenario.moveToState(State.STARTED);
-      scenario.onActivity(
-          activity -> {
-            assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.PAUSED);
-            assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
-          });
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.CREATED);
+    scenario.moveToState(State.STARTED);
+    scenario.onActivity(
+        activity -> {
+          assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.PAUSED);
+          assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
+        });
   }
 
   @Test
   public void fromCreatedToResumed() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.moveToState(State.CREATED);
-      scenario.moveToState(State.RESUMED);
-      scenario.onActivity(
-          activity -> {
-            assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
-            assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
-          });
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.CREATED);
+    scenario.moveToState(State.RESUMED);
+    scenario.onActivity(
+        activity -> {
+          assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
+          assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
+        });
   }
 
   @Test
   public void fromStartedToDestroyed() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.moveToState(State.STARTED);
-      scenario.moveToState(State.DESTROYED);
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.STARTED);
+    scenario.moveToState(State.DESTROYED);
   }
 
   @Test
   public void fromStartedToCreated() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.moveToState(State.STARTED);
-      scenario.moveToState(State.CREATED);
-      scenario.onActivity(
-          activity -> {
-            assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.STOPPED);
-            assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
-          });
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.STARTED);
+    scenario.moveToState(State.CREATED);
+    scenario.onActivity(
+        activity -> {
+          assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.STOPPED);
+          assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
+        });
   }
 
   @Test
   public void fromStartedToStarted() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.moveToState(State.STARTED);
-      scenario.moveToState(State.STARTED);
-      scenario.onActivity(
-          activity -> {
-            assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.PAUSED);
-            assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
-          });
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.STARTED);
+    scenario.moveToState(State.STARTED);
+    scenario.onActivity(
+        activity -> {
+          assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.PAUSED);
+          assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
+        });
   }
 
   @Test
   public void fromStartedToResumed() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.moveToState(State.STARTED);
-      scenario.moveToState(State.RESUMED);
-      scenario.onActivity(
-          activity -> {
-            assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
-            assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
-          });
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.STARTED);
+    scenario.moveToState(State.RESUMED);
+    scenario.onActivity(
+        activity -> {
+          assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
+          assertThat(activity.getNumberOfRecreations()).isEqualTo(0);
+        });
   }
 
   @Test
   public void fromDestroyedToDestroyed() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.moveToState(State.DESTROYED);
-      scenario.moveToState(State.DESTROYED);
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.DESTROYED);
+    scenario.moveToState(State.DESTROYED);
   }
 
   @Test
   public void recreateCreatedActivity() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.moveToState(State.CREATED);
-      scenario.recreate();
-      scenario.onActivity(
-          activity -> {
-            assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.STOPPED);
-            assertThat(activity.getNumberOfRecreations()).isEqualTo(1);
-          });
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.CREATED);
+    scenario.recreate();
+    scenario.onActivity(
+        activity -> {
+          assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.STOPPED);
+          assertThat(activity.getNumberOfRecreations()).isEqualTo(1);
+        });
   }
 
   @Test
   public void recreateStartedActivity() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.moveToState(State.STARTED);
-      scenario.recreate();
-      scenario.onActivity(
-          activity -> {
-            assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.PAUSED);
-            assertThat(activity.getNumberOfRecreations()).isEqualTo(1);
-          });
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.moveToState(State.STARTED);
+    scenario.recreate();
+    scenario.onActivity(
+        activity -> {
+          assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.PAUSED);
+          assertThat(activity.getNumberOfRecreations()).isEqualTo(1);
+        });
   }
 
   @Test
   public void recreateResumedActivity() throws Exception {
-    try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
-      scenario.recreate();
-      scenario.onActivity(
-          activity -> {
-            assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
-            assertThat(activity.getNumberOfRecreations()).isEqualTo(1);
-          });
-    }
+    ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class);
+    scenario.recreate();
+    scenario.onActivity(
+        activity -> {
+          assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
+          assertThat(activity.getNumberOfRecreations()).isEqualTo(1);
+        });
   }
 
   private static Stage lastLifeCycleTransition(Activity activity) {

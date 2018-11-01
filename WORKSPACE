@@ -1,8 +1,6 @@
 # TODO(b/114418172): rename to androidx_test. Requires a bazel change
 workspace(name = "android_test_support")
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
 # Google Maven Repository
 GMAVEN_COMMIT = "dc905ebd5a306e2061351dcb6d3c787d84cfbac1"
 

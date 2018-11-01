@@ -184,11 +184,5 @@ public class BaseLayerModule {
   @Default
   FailureHandler provideFailureHander(DefaultFailureHandler impl) {
     return impl;
-  }
-
-  @Provides
-  DefaultFailureHandler provideDefaultFailureHander(
-          Context context) {
-    return new DefaultFailureHandler(context);
-  }
+  } // REPLACE
 }

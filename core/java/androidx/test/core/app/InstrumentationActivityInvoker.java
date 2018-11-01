@@ -273,7 +273,6 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     // Stop the activity before finish it as a workaround for the framework bug in API level 15 to
     // 22 where the framework never calls #onStop and #onDestroy if you call Activity#finish while
     // floating style Activity is in the stack.
-    // See b/118967373
     stopActivity(activity);
 
     getInstrumentation().runOnMainSync(() -> activity.finish());

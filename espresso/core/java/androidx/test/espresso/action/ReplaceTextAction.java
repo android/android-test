@@ -53,6 +53,6 @@ public final class ReplaceTextAction implements ViewAction {
 
   @Override
   public String getDescription() {
-    return String.format("replace text(%s)", stringToBeSet);
+    return "replace text";
   }
 }

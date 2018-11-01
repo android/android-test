@@ -38,24 +38,6 @@ kt_android_library(
     ],
 )
 
-android_local_test(
-    name = "ActivityScenarioKotlinTest",
-    manifest = "AndroidManifest_target.xml",
-    deps = [
-        ":ActivityScenarioKotlinTest_lib",
-        ":robolectric_config",
-        "//:android_arch_lifecycle_common",
-        "//core",
-        "//core/javatests/androidx/test/core/app/testing",
-        "//ext/junit",
-        "//ktx/core",
-        "//runner/monitor",
-        "@guava//jar",
-        "@junit//jar",
-        "@robolectric//bazel:robolectric",
-        "@truth//jar",
-    ],
-)
 
 android_binary(
     name = "ActivityScenarioKotlinTest_test_apk",

@@ -35,7 +35,6 @@ import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
-import java.io.Closeable;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -67,26 +66,20 @@ import java.util.concurrent.locks.ReentrantLock;
  * once it reaches to that state. If you want to test recreation of Activity instance, use {@link
  * #recreate()}.
  *
- * <p>ActivityScenario does't clean up device state automatically and may leave the activity keep
- * running after the test finishes. Call {@link #close()} in your test to clean up the state or use
- * try-with-resources statement. This is optional but highly recommended to improve the stability of
- * your tests. Also, consider using {@link androidx.test.ext.junit.rules.ActivityScenarioRule}.
- *
  * <p>This class is a replacement of ActivityController in Robolectric and ActivityTestRule in ATSL.
  *
  * <p>Following are the example of common use cases.
  *
- * <pre>{@code
+ * <pre>
  * Before:
  *   MyActivity activity = Robolectric.setupActivity(MyActivity.class);
  *   assertThat(activity.getSomething()).isEqualTo("something");
  *
  * After:
- *   try(ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class)) {
- *     scenario.onActivity(activity -> {
- *       assertThat(activity.getSomething()).isEqualTo("something");
- *     });
- *   }
+ *   ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class);
+ *   scenario.onActivity(activity -> {
+ *     assertThat(activity.getSomething()).isEqualTo("something");
+ *   });
  *
  * Before:
  *   ActivityController<MyActivity> controller = Robolectric.buildActivity(MyActivity.class);
@@ -97,17 +90,17 @@ import java.util.concurrent.locks.ReentrantLock;
  *   controller.destroy();      // Destroys activity.
  *
  * After:
- *   try(ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class)) {
- *     scenario.onActivity(activity -> {});  // Your activity is resumed.
- *     scenario.moveTo(State.STARTED);
- *     scenario.onActivity(activity -> {});  // Your activity is paused.
- *     scenario.moveTo(State.CREATED);
- *     scenario.onActivity(activity -> {});  // Your activity is stopped.
- *   }
- * }</pre>
+ *   ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class);
+ *   scenario.onActivity(activity -> {});  // Your activity is resumed.
+ *   scenario.moveTo(State.STARTED);
+ *   scenario.onActivity(activity -> {});  // Your activity is paused.
+ *   scenario.moveTo(State.CREATED);
+ *   scenario.onActivity(activity -> {});  // Your activity is stopped.
+ *   scenario.moveTo(State.DESTROYED);     // Your activity is destroyed and finished.
+ * </pre>
  */
 @Beta
-public final class ActivityScenario<A extends Activity> implements AutoCloseable, Closeable {
+public final class ActivityScenario<A extends Activity> {
   /**
    * The timeout for {@link #waitForActivityToBecomeAnyOf} method. If an Activity doesn't become
    * requested state after the timeout, we will throw {@link AssertionError} to fail tests.
@@ -205,44 +198,6 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
     scenario.waitForActivityToBecomeAnyOf(State.RESUMED, State.DESTROYED);
 
     return scenario;
-  }
-
-  /**
-   * Finishes the managed activity and cleans up device's state. This method blocks execution until
-   * the activity becomes {@link State#DESTROYED}.
-   *
-   * <p>It is highly recommended to call this method after you test is done to keep the device state
-   * clean although this is optional.
-   *
-   * <p>You may call this method more than once. If the activity has been finished already, this
-   * method does nothing.
-   *
-   * <p>Avoid calling this method directly. Consider one of the following options instead:
-   *
-   * <pre>{@code
-   *  Option 1, use try-with-resources:
-   *
-   *  try (ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class)) {
-   *    // Your test code goes here.
-   *  }
-   *
-   *  Option 2, use ActivityScenarioRule:
-   *
-   * }{@literal @Rule}{@code
-   *  ActivityScenarioRule<MyActivity> rule = new ActivityScenarioRule<>(MyActivity.class);
-   *
-   * }{@literal @Test}{@code
-   *  public void myTest() {
-   *    ActivityScenario<MyActivity> scenario = rule.getScenario();
-   *    // Your test code goes here.
-   *  }
-   * }</pre>
-   */
-  @Override
-  public void close() {
-    moveToState(State.DESTROYED);
-    ActivityLifecycleMonitorRegistry.getInstance()
-        .removeLifecycleCallback(activityLifecycleObserver);
   }
 
   /**
@@ -464,20 +419,20 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * executed by the main thread. An Activity that is instrumented by the ActivityScenario is passed
    * to {@link ActivityAction#perform} method.
    *
-   * <pre>{@code
+   * <pre>
    * Example:
    *   ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class);
    *   scenario.onActivity(activity -> {
    *     assertThat(activity.getSomething()).isEqualTo("something");
    *   });
-   * }</pre>
+   * </pre>
    *
    * <p>You should never keep the Activity reference. It should only be accessed in {@link
    * ActivityAction#perform} scope for two reasons: 1) Android framework may re-create the Activity
    * during lifecycle changes, your holding reference might be stale. 2) It increases the reference
    * counter and it may affect to the framework behavior, especially after you finish the Activity.
    *
-   * <pre>{@code
+   * <pre>
    * Bad Example:
    *   ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class);
    *   final MyActivity[] myActivityHolder = new MyActivity[1];
@@ -485,7 +440,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    *     myActivityHolder[0] = activity;
    *   });
    *   assertThat(myActivityHolder[0].getSomething()).isEqualTo("something");
-   * }</pre>
+   * </pre>
    */
   public interface ActivityAction<A extends Activity> {
     /**

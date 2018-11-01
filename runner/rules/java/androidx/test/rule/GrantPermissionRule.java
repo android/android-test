@@ -43,7 +43,7 @@ import org.junit.runners.model.Statement;
  *
  * <p>Note, this Rule is usually used to grant runtime permissions to avoid the permission dialog
  * from showing up and blocking the App's Ui. This is especially helpful for Ui-Testing to avoid
- * losing control over the app under test.
+ * loosing control over the app under test.
  *
  * <p>The requested permissions will be granted for all test methods in the test class. Use {@link
  * #grant(String...)} static factory method to request a variable number of permissions. Usage:

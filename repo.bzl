@@ -79,13 +79,13 @@ def _development_repositories():
         artifact = "org.ccil/cowan.tagsoup:tagsoup:1.2",
     )
 
-    http_archive(
+    native.http_archive(
         name = "com_google_protobuf",
         strip_prefix = "protobuf-3.5.0",
         urls = ["https://github.com/google/protobuf/archive/v3.5.0.tar.gz"],
     )
 
-    http_archive(
+    native.http_archive(
         name = "com_google_protobuf_java",
         strip_prefix = "protobuf-3.5.0",
         urls = ["https://github.com/google/protobuf/releases/download/v3.5.0/protobuf-java-3.5.0.tar.gz"],
@@ -93,20 +93,14 @@ def _development_repositories():
 
     http_archive(
         name = "robolectric",
-        sha256 = "dff7a1f8e7bd8dc737f20b6bbfaf78d8b5851debe6a074757f75041029f0c43b",
-        strip_prefix = "robolectric-bazel-4.0.1",
-        urls = ["https://github.com/robolectric/robolectric-bazel/archive/4.0.1.tar.gz"],
+        urls = ["https://github.com/robolectric/robolectric-bazel/archive/4.0-alpha-3.tar.gz"],
+        strip_prefix = "robolectric-bazel-4.0-alpha-3",
+        sha256 = "7730b46281c2f8c23f6c045ddfe449bf077328f0128200043a5ac57210643f22",
     )
-    # uncomment to test with new robolectric version. Change path to point to local filesystem
-    # clone of https://github.com/robolectric/robolectric-bazel
-    #native.local_repository(
-    #    name = "robolectric",
-    #    path = "~/robogithub/robolectric-bazel/",
-    #)
 
     # java_lite_proto_library rules implicitly depend on @com_google_protobuf_javalite//:javalite_toolchain,
     # which is the JavaLite proto runtime (base classes and common utilities).
-    http_archive(
+    native.http_archive(
         name = "com_google_protobuf_javalite",
         strip_prefix = "protobuf-javalite",
         urls = ["https://github.com/google/protobuf/archive/javalite.zip"],
@@ -127,7 +121,7 @@ def _development_repositories():
         artifact = "aopalliance:aopalliance:1.0",
     )
 
-    http_archive(
+    native.new_http_archive(
         name = "jsr330",
         build_file_content = """
 package(default_visibility = ["//visibility:public"])
@@ -226,65 +220,65 @@ def android_test_repositories(with_dev_repositories = False):
     # the python path containing b/ is a.runfiles/b_archive which contains all of
     # __init__.py, b/ and b/c.py so the import will succeed.
 
-    http_archive(
+    native.new_http_archive(
         name = "google_apputils",
-        build_file = str(Label("//opensource:google-apputils.BUILD")),
+        url = "https://pypi.python.org/packages/69/66/a511c428fef8591c5adfa432a257a333e0d14184b6c5d03f1450827f7fe7/google-apputils-0.4.2.tar.gz",
         sha256 = "47959d0651c32102c10ad919b8a0ffe0ae85f44b8457ddcf2bdc0358fb03dc29",
         strip_prefix = "google-apputils-0.4.2",
-        url = "https://pypi.python.org/packages/69/66/a511c428fef8591c5adfa432a257a333e0d14184b6c5d03f1450827f7fe7/google-apputils-0.4.2.tar.gz",
+        build_file = str(Label("//opensource:google-apputils.BUILD")),
     )
 
-    http_archive(
+    native.new_http_archive(
         name = "gflags_archive",
-        build_file = str(Label("//opensource:gflags.BUILD")),
+        url = "https://github.com/google/python-gflags/releases/download/3.1.0/python-gflags-3.1.0.tar.gz",
         sha256 = "3377d9dbeedb99c0325beb1f535f8fa9fa131d1d8b50db7481006f0a4c6919b4",
         strip_prefix = "python-gflags-3.1.0",
-        url = "https://github.com/google/python-gflags/releases/download/3.1.0/python-gflags-3.1.0.tar.gz",
+        build_file = str(Label("//opensource:gflags.BUILD")),
     )
 
-    http_archive(
+    native.new_http_archive(
         name = "portpicker_archive",
-        build_file = str(Label("//opensource:portpicker.BUILD")),
+        url = "https://pypi.python.org/packages/96/48/0e1f20fdc0b85cc8722284da3c5b80222ae4036ad73210a97d5362beaa6d/portpicker-1.1.1.tar.gz",
         sha256 = "2f88edf7c6406034d7577846f224aff6e53c5f4250e3294b1904d8db250f27ec",
         strip_prefix = "portpicker-1.1.1/src",
-        url = "https://pypi.python.org/packages/96/48/0e1f20fdc0b85cc8722284da3c5b80222ae4036ad73210a97d5362beaa6d/portpicker-1.1.1.tar.gz",
+        build_file = str(Label("//opensource:portpicker.BUILD")),
     )
 
-    http_archive(
+    native.new_http_archive(
         name = "mox_archive",
-        build_file = str(Label("//opensource:mox.BUILD")),
+        url = "https://pypi.python.org/packages/0c/a1/64740c638cc5fae807022368f4141700518ee343b53eb3e90bf3cc15a4d4/mox-0.5.3.tar.gz#md5=6de7371e7e8bd9e2dad3fef2646f4a43",
         sha256 = "424ee725ee12652802b4e86571f816059b0d392401ceae70bf6487d65602cba9",
         strip_prefix = "mox-0.5.3",
-        url = "https://pypi.python.org/packages/0c/a1/64740c638cc5fae807022368f4141700518ee343b53eb3e90bf3cc15a4d4/mox-0.5.3.tar.gz#md5=6de7371e7e8bd9e2dad3fef2646f4a43",
+        build_file = str(Label("//opensource:mox.BUILD")),
     )
 
     # Six provides simple utilities for wrapping over differences between Python 2 and Python 3.
-    http_archive(
+    native.new_http_archive(
         name = "six_archive",
-        build_file = str(Label("//opensource:six.BUILD")),
+        url = "https://pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz",
         sha256 = "105f8d68616f8248e24bf0e9372ef04d3cc10104f1980f54d57b2ce73a5ad56a",
         strip_prefix = "six-1.10.0",
-        url = "https://pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz",
+        build_file = str(Label("//opensource:six.BUILD")),
     )
 
     # Needed by protobuf
     native.bind(name = "six", actual = "@six_archive//:six")
 
-    http_archive(
+    native.new_http_archive(
         name = "protobuf_archive",
-        # TODO(https://github.com/google/protobuf/issues/2833): Remove BUILD file
-        # and make this rule http_archive. This will also require updating
-        # the URL to be a newer protobuf release.
-        build_file = str(Label("//opensource:protobuf.BUILD")),
+        url = "https://github.com/google/protobuf/releases/download/v3.4.1/protobuf-python-3.4.1.tar.gz",
         sha256 = "1faa722cf475c8e4c43ddb393d6f1477f1a56c93be38a1c8e367c358db476b5f",
         strip_prefix = "protobuf-3.4.1",
-        url = "https://github.com/google/protobuf/releases/download/v3.4.1/protobuf-python-3.4.1.tar.gz",
+        # TODO(https://github.com/google/protobuf/issues/2833): Remove BUILD file
+        # and make this rule native.http_archive. This will also require updating
+        # the URL to be a newer protobuf release.
+        build_file = str(Label("//opensource:protobuf.BUILD")),
     )
 
     # Open source version of the google python flags library.
-    http_archive(
+    native.http_archive(
         name = "absl_py",
-        sha256 = "980ce58c34dfa75a9d20d45c355658191c166557f1de41ab52f208bd00604c2b",
-        strip_prefix = "abseil-py-b347ba6022370f895d3133241ed96965b95ecb40",
         urls = ["https://github.com/abseil/abseil-py/archive/b347ba6022370f895d3133241ed96965b95ecb40.tar.gz"],
+        strip_prefix = "abseil-py-b347ba6022370f895d3133241ed96965b95ecb40",
+        sha256 = "980ce58c34dfa75a9d20d45c355658191c166557f1de41ab52f208bd00604c2b",
     )

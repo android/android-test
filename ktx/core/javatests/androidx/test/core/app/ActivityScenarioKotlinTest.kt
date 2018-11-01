@@ -31,35 +31,36 @@ private fun lastLifeCycleTransition(activity: Activity): Stage {
 }
 
 /**
- * An example test with ActivityScenario using Kotlin extensions.
+ * An example test with ActivityScenario in Kotlin.
  */
 @RunWith(AndroidJUnit4::class)
 class ActivityScenarioKotlinTest {
   @Test
   fun basicUseCase() {
-    launchActivity<RecreationRecordingActivity>().use { scenario ->
-      scenario.onActivity {
-        assertThat(it.numberOfRecreations).isEqualTo(0)
-        assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
-      }
-
-      scenario.recreate()
-      scenario.onActivity {
-        assertThat(it.numberOfRecreations).isEqualTo(1)
-        assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
-      }
-
-      scenario.moveToState(State.STARTED)
-      scenario.onActivity {
-        assertThat(it.numberOfRecreations).isEqualTo(1)
-        assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.PAUSED)
-      }
-
-      scenario.moveToState(State.CREATED)
-      scenario.onActivity {
-        assertThat(it.numberOfRecreations).isEqualTo(1)
-        assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.STOPPED)
-      }
+    val scenario = launchActivity<RecreationRecordingActivity>()
+    scenario.onActivity {
+      assertThat(it.numberOfRecreations).isEqualTo(0)
+      assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
     }
+
+    scenario.recreate()
+    scenario.onActivity {
+      assertThat(it.numberOfRecreations).isEqualTo(1)
+      assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
+    }
+
+    scenario.moveToState(State.STARTED)
+    scenario.onActivity {
+      assertThat(it.numberOfRecreations).isEqualTo(1)
+      assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.PAUSED)
+    }
+
+    scenario.moveToState(State.CREATED)
+    scenario.onActivity {
+      assertThat(it.numberOfRecreations).isEqualTo(1)
+      assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.STOPPED)
+    }
+
+    scenario.moveToState(State.DESTROYED)
   }
 }

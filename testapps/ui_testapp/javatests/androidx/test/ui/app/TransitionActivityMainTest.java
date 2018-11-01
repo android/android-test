@@ -48,7 +48,6 @@ public class TransitionActivityMainTest
   }
 
   // This test only applies to Lollipop+
-  // b/29833613
   @SdkSuppress(minSdkVersion = 21)
   public void testTransition() throws InterruptedException {
     onView(withId(R.id.grid)).check(matches(isDisplayed()));
