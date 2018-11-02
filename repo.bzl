@@ -93,10 +93,17 @@ def _development_repositories():
 
     http_archive(
         name = "robolectric",
-        sha256 = "7730b46281c2f8c23f6c045ddfe449bf077328f0128200043a5ac57210643f22",
-        strip_prefix = "robolectric-bazel-4.0-alpha-3",
-        urls = ["https://github.com/robolectric/robolectric-bazel/archive/4.0-alpha-3.tar.gz"],
+        sha256 = "dff7a1f8e7bd8dc737f20b6bbfaf78d8b5851debe6a074757f75041029f0c43b",
+        strip_prefix = "robolectric-bazel-4.0.1",
+        urls = ["https://github.com/robolectric/robolectric-bazel/archive/4.0.1.tar.gz"],
     )
+    # uncomment to test with new robolectric version. Change path to point to local filesystem
+    # clone of https://github.com/robolectric/robolectric-bazel
+    #native.local_repository(
+    #    name = "robolectric",
+    #    path = "~/robogithub/robolectric-bazel/",
+    #)
+
 
     # java_lite_proto_library rules implicitly depend on @com_google_protobuf_javalite//:javalite_toolchain,
     # which is the JavaLite proto runtime (base classes and common utilities).
