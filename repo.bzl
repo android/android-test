@@ -79,13 +79,13 @@ def _development_repositories():
         artifact = "org.ccil/cowan.tagsoup:tagsoup:1.2",
     )
 
-    native.http_archive(
+    http_archive(
         name = "com_google_protobuf",
         strip_prefix = "protobuf-3.5.0",
         urls = ["https://github.com/google/protobuf/archive/v3.5.0.tar.gz"],
     )
 
-    native.http_archive(
+    http_archive(
         name = "com_google_protobuf_java",
         strip_prefix = "protobuf-3.5.0",
         urls = ["https://github.com/google/protobuf/releases/download/v3.5.0/protobuf-java-3.5.0.tar.gz"],
@@ -93,14 +93,14 @@ def _development_repositories():
 
     http_archive(
         name = "robolectric",
-        urls = ["https://github.com/robolectric/robolectric-bazel/archive/4.0-alpha-3.tar.gz"],
-        strip_prefix = "robolectric-bazel-4.0-alpha-3",
         sha256 = "7730b46281c2f8c23f6c045ddfe449bf077328f0128200043a5ac57210643f22",
+        strip_prefix = "robolectric-bazel-4.0-alpha-3",
+        urls = ["https://github.com/robolectric/robolectric-bazel/archive/4.0-alpha-3.tar.gz"],
     )
 
     # java_lite_proto_library rules implicitly depend on @com_google_protobuf_javalite//:javalite_toolchain,
     # which is the JavaLite proto runtime (base classes and common utilities).
-    native.http_archive(
+    http_archive(
         name = "com_google_protobuf_javalite",
         strip_prefix = "protobuf-javalite",
         urls = ["https://github.com/google/protobuf/archive/javalite.zip"],
@@ -270,15 +270,15 @@ def android_test_repositories(with_dev_repositories = False):
         sha256 = "1faa722cf475c8e4c43ddb393d6f1477f1a56c93be38a1c8e367c358db476b5f",
         strip_prefix = "protobuf-3.4.1",
         # TODO(https://github.com/google/protobuf/issues/2833): Remove BUILD file
-        # and make this rule native.http_archive. This will also require updating
+        # and make this rule http_archive. This will also require updating
         # the URL to be a newer protobuf release.
         build_file = str(Label("//opensource:protobuf.BUILD")),
     )
 
     # Open source version of the google python flags library.
-    native.http_archive(
+    http_archive(
         name = "absl_py",
-        urls = ["https://github.com/abseil/abseil-py/archive/b347ba6022370f895d3133241ed96965b95ecb40.tar.gz"],
-        strip_prefix = "abseil-py-b347ba6022370f895d3133241ed96965b95ecb40",
         sha256 = "980ce58c34dfa75a9d20d45c355658191c166557f1de41ab52f208bd00604c2b",
+        strip_prefix = "abseil-py-b347ba6022370f895d3133241ed96965b95ecb40",
+        urls = ["https://github.com/abseil/abseil-py/archive/b347ba6022370f895d3133241ed96965b95ecb40.tar.gz"],
     )
