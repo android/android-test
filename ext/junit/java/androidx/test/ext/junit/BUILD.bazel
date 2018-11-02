@@ -14,6 +14,9 @@ android_library(
     ),
     manifest = "AndroidManifest.xml",
     deps = [
+        "//:com_android_support_support_annotations",
+        "//core",
+        "//runner/monitor",
         "@junit//jar",
     ],
 )

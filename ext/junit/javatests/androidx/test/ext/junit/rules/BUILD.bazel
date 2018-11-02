@@ -1,0 +1,8 @@
+# Description: Tests for androidx.test.ext.junit.rules
+licenses(["notice"])  # Apache License 2.0
+
+package(
+    default_testonly = 1,
+)
+
+load("//build_extensions:android_multidevice_instrumentation_test.bzl", "android_multidevice_instrumentation_test", "DEVICES")

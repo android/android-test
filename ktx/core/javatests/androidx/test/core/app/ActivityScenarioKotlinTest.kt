@@ -31,36 +31,35 @@ private fun lastLifeCycleTransition(activity: Activity): Stage {
 }
 
 /**
- * An example test with ActivityScenario in Kotlin.
+ * An example test with ActivityScenario using Kotlin extensions.
  */
 @RunWith(AndroidJUnit4::class)
 class ActivityScenarioKotlinTest {
   @Test
   fun basicUseCase() {
-    val scenario = launchActivity<RecreationRecordingActivity>()
-    scenario.onActivity {
-      assertThat(it.numberOfRecreations).isEqualTo(0)
-      assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
-    }
+    launchActivity<RecreationRecordingActivity>().use { scenario ->
+      scenario.onActivity {
+        assertThat(it.numberOfRecreations).isEqualTo(0)
+        assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
+      }
 
-    scenario.recreate()
-    scenario.onActivity {
-      assertThat(it.numberOfRecreations).isEqualTo(1)
-      assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
-    }
+      scenario.recreate()
+      scenario.onActivity {
+        assertThat(it.numberOfRecreations).isEqualTo(1)
+        assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
+      }
 
-    scenario.moveToState(State.STARTED)
-    scenario.onActivity {
-      assertThat(it.numberOfRecreations).isEqualTo(1)
-      assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.PAUSED)
-    }
+      scenario.moveToState(State.STARTED)
+      scenario.onActivity {
+        assertThat(it.numberOfRecreations).isEqualTo(1)
+        assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.PAUSED)
+      }
 
-    scenario.moveToState(State.CREATED)
-    scenario.onActivity {
-      assertThat(it.numberOfRecreations).isEqualTo(1)
-      assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.STOPPED)
+      scenario.moveToState(State.CREATED)
+      scenario.onActivity {
+        assertThat(it.numberOfRecreations).isEqualTo(1)
+        assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.STOPPED)
+      }
     }
-
-    scenario.moveToState(State.DESTROYED)
   }
 }
