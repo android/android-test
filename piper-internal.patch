@@ -1,0 +1,507 @@
+diff --git a/core/java/androidx/test/core/app/ActivityScenario.java b/core/java/androidx/test/core/app/ActivityScenario.java
+index 50c8d80..1c610f9 100644
+--- a/core/java/androidx/test/core/app/ActivityScenario.java
++++ b/core/java/androidx/test/core/app/ActivityScenario.java
+@@ -99,6 +99,10 @@ import java.util.concurrent.locks.ReentrantLock;
+  *   scenario.moveTo(State.DESTROYED);     // Your activity is destroyed and finished.
+  * </pre>
+  */
+ @Beta
+ public final class ActivityScenario<A extends Activity> {
+   /**
+diff --git a/core/java/androidx/test/core/app/InstrumentationActivityInvoker.java b/core/java/androidx/test/core/app/InstrumentationActivityInvoker.java
+index 770922f..13c3112 100644
+--- a/core/java/androidx/test/core/app/InstrumentationActivityInvoker.java
++++ b/core/java/androidx/test/core/app/InstrumentationActivityInvoker.java
+@@ -273,6 +273,9 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
+     // Stop the activity before finish it as a workaround for the framework bug in API level 15 to
+     // 22 where the framework never calls #onStop and #onDestroy if you call Activity#finish while
+     // floating style Activity is in the stack.
+     stopActivity(activity);
+ 
+     getInstrumentation().runOnMainSync(() -> activity.finish());
+diff --git a/core/javatests/androidx/test/core/app/BUILD.bazel b/core/javatests/androidx/test/core/app/BUILD.bazel
+index 1e2c532..588e1f8 100644
+--- a/core/javatests/androidx/test/core/app/BUILD.bazel
++++ b/core/javatests/androidx/test/core/app/BUILD.bazel
+@@ -69,6 +69,28 @@ android_instrumentation_test(
+ #
+ # Activity Scenario Tests
+ #
+ 
+ android_binary(
+     name = "ActivityScenarioTest_test_apk",
+diff --git a/espresso/core/java/androidx/test/espresso/AmbiguousViewMatcherException.java b/espresso/core/java/androidx/test/espresso/AmbiguousViewMatcherException.java
+index 9edb9c7..dfb6d3d 100644
+--- a/espresso/core/java/androidx/test/espresso/AmbiguousViewMatcherException.java
++++ b/espresso/core/java/androidx/test/espresso/AmbiguousViewMatcherException.java
+@@ -16,9 +16,12 @@
+ 
+ package androidx.test.espresso;
+ 
+ import static com.google.common.base.Preconditions.checkNotNull;
+ 
+ import android.view.View;
+ import androidx.test.espresso.util.HumanReadables;
+ import com.google.common.collect.ImmutableSet;
+ import com.google.common.collect.Lists;
+@@ -39,6 +42,7 @@ import org.hamcrest.Matcher;
+  */
+ public final class AmbiguousViewMatcherException extends RuntimeException
+     implements EspressoException {
+ 
+   private Matcher<? super View> viewMatcher;
+   private View rootView;
+@@ -49,6 +53,15 @@ public final class AmbiguousViewMatcherException extends RuntimeException
+   private AmbiguousViewMatcherException(String description) {
+     super(description);
+ 
+   }
+ 
+   private AmbiguousViewMatcherException(Builder builder) {
+diff --git a/espresso/core/java/androidx/test/espresso/AppNotIdleException.java b/espresso/core/java/androidx/test/espresso/AppNotIdleException.java
+index 604e702..a7546f5 100644
+--- a/espresso/core/java/androidx/test/espresso/AppNotIdleException.java
++++ b/espresso/core/java/androidx/test/espresso/AppNotIdleException.java
+@@ -16,9 +16,12 @@
+ 
+ package androidx.test.espresso;
+ 
+ import static com.google.common.base.Preconditions.checkState;
+ 
+ import android.os.Looper;
+ import com.google.common.base.Joiner;
+ import java.util.List;
+ 
+@@ -26,10 +29,20 @@ import java.util.List;
+  * An exception which indicates that the App has not become idle even after the specified duration.
+  */
+ public final class AppNotIdleException extends RuntimeException implements EspressoException {
+ 
+   private AppNotIdleException(String description) {
+     super(description);
+ 
+   }
+ 
+   /**
+diff --git a/espresso/core/java/androidx/test/espresso/GraphHolder.java b/espresso/core/java/androidx/test/espresso/GraphHolder.java
+index 2f00c0f..d4bf076 100644
+--- a/espresso/core/java/androidx/test/espresso/GraphHolder.java
++++ b/espresso/core/java/androidx/test/espresso/GraphHolder.java
+@@ -18,6 +18,7 @@ package androidx.test.espresso;
+ 
+ import static com.google.common.base.Preconditions.checkNotNull;
+ 
+ import androidx.test.internal.runner.tracker.UsageTrackerRegistry;
+ import androidx.test.internal.runner.tracker.UsageTrackerRegistry.AxtVersions;
+ import java.util.concurrent.atomic.AtomicReference;
+@@ -48,4 +49,9 @@ public final class GraphHolder {
+       return instanceRef.component;
+     }
+   }
+ }
+diff --git a/espresso/core/java/androidx/test/espresso/IdlingPolicies.java b/espresso/core/java/androidx/test/espresso/IdlingPolicies.java
+index 24fc41d..00c14ad 100644
+--- a/espresso/core/java/androidx/test/espresso/IdlingPolicies.java
++++ b/espresso/core/java/androidx/test/espresso/IdlingPolicies.java
+@@ -101,9 +101,35 @@ public final class IdlingPolicies {
+     masterIdlingPolicy =
+         masterIdlingPolicy
+             .toBuilder()
+             .build();
+   }
+ 
+ 
+   public static IdlingPolicy getMasterIdlingPolicy() {
+     return masterIdlingPolicy;
+diff --git a/espresso/core/java/androidx/test/espresso/IdlingPolicy.java b/espresso/core/java/androidx/test/espresso/IdlingPolicy.java
+index a2f1163..5078287 100644
+--- a/espresso/core/java/androidx/test/espresso/IdlingPolicy.java
++++ b/espresso/core/java/androidx/test/espresso/IdlingPolicy.java
+@@ -36,6 +36,8 @@ public final class IdlingPolicy {
+   private final long idleTimeout;
+   private final TimeUnit unit;
+   private final ResponseAction errorHandler;
+ 
+   /** The amount of time the policy allows a resource to be non-idle. */
+   public long getIdleTimeout() {
+@@ -67,6 +69,19 @@ public final class IdlingPolicy {
+     }
+   }
+ 
+ 
+   Builder toBuilder() {
+     return new Builder(this);
+@@ -77,12 +92,16 @@ public final class IdlingPolicy {
+     this.idleTimeout = builder.idleTimeout;
+     this.unit = checkNotNull(builder.unit);
+     this.errorHandler = checkNotNull(builder.errorHandler);
+   }
+ 
+   static class Builder {
+     private long idleTimeout = -1;
+     private TimeUnit unit = null;
+     private ResponseAction errorHandler = null;
+ 
+     public Builder() {}
+ 
+@@ -96,6 +115,17 @@ public final class IdlingPolicy {
+       this.errorHandler = copy.errorHandler;
+     }
+ 
+ 
+     public Builder withIdlingTimeout(long idleTimeout) {
+       this.idleTimeout = idleTimeout;
+diff --git a/espresso/core/java/androidx/test/espresso/IdlingResourceTimeoutException.java b/espresso/core/java/androidx/test/espresso/IdlingResourceTimeoutException.java
+index b756898..0c1c1f8 100644
+--- a/espresso/core/java/androidx/test/espresso/IdlingResourceTimeoutException.java
++++ b/espresso/core/java/androidx/test/espresso/IdlingResourceTimeoutException.java
+@@ -16,8 +16,11 @@
+ 
+ package androidx.test.espresso;
+ 
+ import static com.google.common.base.Preconditions.checkNotNull;
+ 
+ import java.util.List;
+ 
+ /**
+@@ -30,8 +33,18 @@ import java.util.List;
+  */
+ public final class IdlingResourceTimeoutException extends RuntimeException
+     implements EspressoException {
+ 
+   public IdlingResourceTimeoutException(List<String> resourceNames) {
+     super(String.format("Wait for %s to become idle timed out", checkNotNull(resourceNames)));
+   }
+ }
+diff --git a/espresso/core/java/androidx/test/espresso/InjectEventSecurityException.java b/espresso/core/java/androidx/test/espresso/InjectEventSecurityException.java
+index 0c62f11..e324cde 100644
+--- a/espresso/core/java/androidx/test/espresso/InjectEventSecurityException.java
++++ b/espresso/core/java/androidx/test/espresso/InjectEventSecurityException.java
+@@ -16,7 +16,10 @@
+ 
+ package androidx.test.espresso;
+ 
+ 
+ 
+ /**
+  * An checked {@link Exception} indicating that event injection failed with a {@link
+@@ -24,6 +27,7 @@ package androidx.test.espresso;
+  */
+ public final class InjectEventSecurityException
+     extends androidx.test.platform.ui.InjectEventSecurityException implements EspressoException {
+ 
+   public InjectEventSecurityException(String message) {
+     super(message);
+@@ -41,5 +45,14 @@ public final class InjectEventSecurityException
+   }
+ 
+   private void dumpThreads() {
+   }
+ }
+diff --git a/espresso/core/java/androidx/test/espresso/NoMatchingRootException.java b/espresso/core/java/androidx/test/espresso/NoMatchingRootException.java
+index 784af25..cb8778c 100644
+--- a/espresso/core/java/androidx/test/espresso/NoMatchingRootException.java
++++ b/espresso/core/java/androidx/test/espresso/NoMatchingRootException.java
+@@ -16,8 +16,11 @@
+ 
+ package androidx.test.espresso;
+ 
+ import static com.google.common.base.Preconditions.checkNotNull;
+ 
+ import java.util.List;
+ import org.hamcrest.Matcher;
+ 
+@@ -26,9 +29,19 @@ import org.hamcrest.Matcher;
+  * currently available.
+  */
+ public final class NoMatchingRootException extends RuntimeException implements EspressoException {
+ 
+   private NoMatchingRootException(String description) {
+     super(description);
+   }
+ 
+   public static NoMatchingRootException create(Matcher<Root> rootMatcher, List<Root> roots) {
+diff --git a/espresso/core/java/androidx/test/espresso/PerformException.java b/espresso/core/java/androidx/test/espresso/PerformException.java
+index 5e4f1cd..f143f37 100644
+--- a/espresso/core/java/androidx/test/espresso/PerformException.java
++++ b/espresso/core/java/androidx/test/espresso/PerformException.java
+@@ -16,8 +16,11 @@
+ 
+ package androidx.test.espresso;
+ 
+ import static com.google.common.base.Preconditions.checkNotNull;
+ 
+ 
+ /**
+  * Indicates that an exception occurred while performing a ViewAction on the UI thread.
+@@ -29,6 +32,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
+  * <p>This is generally not recoverable so it is thrown on the instrumentation thread.
+  */
+ public final class PerformException extends RuntimeException implements EspressoException {
+   private static final String MESSAGE_FORMAT = "Error performing '%s' on view '%s'.";
+ 
+   private final String actionDescription;
+@@ -40,6 +44,15 @@ public final class PerformException extends RuntimeException implements Espresso
+         builder.cause);
+     this.actionDescription = checkNotNull(builder.actionDescription);
+     this.viewDescription = checkNotNull(builder.viewDescription);
+   }
+ 
+   public String getActionDescription() {
+diff --git a/espresso/core/java/androidx/test/espresso/base/BaseLayerModule.java b/espresso/core/java/androidx/test/espresso/base/BaseLayerModule.java
+index 13a0af4..3b7d807 100644
+--- a/espresso/core/java/androidx/test/espresso/base/BaseLayerModule.java
++++ b/espresso/core/java/androidx/test/espresso/base/BaseLayerModule.java
+@@ -26,6 +26,7 @@ import androidx.test.espresso.IdlingRegistry;
+ import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
+ import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
+ import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+ import com.google.common.base.Optional;
+ import com.google.common.util.concurrent.ListeningExecutorService;
+ import com.google.common.util.concurrent.MoreExecutors;
+@@ -56,6 +57,7 @@ public class BaseLayerModule {
+   }
+ 
+   @Provides
+   public Context provideTargetContext() {
+     // TODO: replace with installation of AndroidInstrumentationModule once
+     // proguard issues resolved.
+diff --git a/espresso/core/java/androidx/test/espresso/base/DefaultFailureHandler.java b/espresso/core/java/androidx/test/espresso/base/DefaultFailureHandler.java
+index d1d2ce9..2175cb9 100644
+--- a/espresso/core/java/androidx/test/espresso/base/DefaultFailureHandler.java
++++ b/espresso/core/java/androidx/test/espresso/base/DefaultFailureHandler.java
+@@ -27,6 +27,10 @@ import android.view.View;
+ import androidx.test.espresso.EspressoException;
+ import androidx.test.espresso.FailureHandler;
+ import androidx.test.espresso.PerformException;
+ import junit.framework.AssertionFailedError;
+ import org.hamcrest.Matcher;
+ 
+@@ -36,15 +40,26 @@ import org.hamcrest.Matcher;
+  */
+ public final class DefaultFailureHandler implements FailureHandler {
+ 
+   private final Context appContext;
+ 
+   public DefaultFailureHandler(
+           Context appContext) {
+     this.appContext = checkNotNull(appContext);
+   }
+ 
+   @Override
+   public void handle(Throwable error, Matcher<View> viewMatcher) {
+     if (error instanceof EspressoException
+         || error instanceof AssertionFailedError
+         || error instanceof AssertionError) {
+diff --git a/espresso/core/java/androidx/test/espresso/base/UiControllerImpl.java b/espresso/core/java/androidx/test/espresso/base/UiControllerImpl.java
+index b47eb99..298e043 100644
+--- a/espresso/core/java/androidx/test/espresso/base/UiControllerImpl.java
++++ b/espresso/core/java/androidx/test/espresso/base/UiControllerImpl.java
+@@ -510,6 +510,9 @@ final class UiControllerImpl
+   private IdleNotifier<IdleNotificationCallback> loopUntil(
+       EnumSet<IdleCondition> conditions, IdleNotifier<IdleNotificationCallback> dynamicIdle) {
+     IdlingPolicy masterIdlePolicy = IdlingPolicies.getMasterIdlingPolicy();
+     try {
+       long start = SystemClock.uptimeMillis();
+       long end =
+@@ -530,6 +533,37 @@ final class UiControllerImpl
+       for (IdleCondition condition : conditions) {
+         if (!condition.isSignaled(conditionSet)) {
+           idleConditions.add(condition.name());
+         }
+       }
+       masterIdlePolicy.handleTimeout(
+diff --git a/espresso/core/java/androidx/test/espresso/matcher/ViewMatchers.java b/espresso/core/java/androidx/test/espresso/matcher/ViewMatchers.java
+index 96c8823..82eba0b 100644
+--- a/espresso/core/java/androidx/test/espresso/matcher/ViewMatchers.java
++++ b/espresso/core/java/androidx/test/espresso/matcher/ViewMatchers.java
+@@ -1361,6 +1361,46 @@ public final class ViewMatchers {
+     };
+   }
+ 
+ 
+   @VisibleForTesting
+   static final class WithAlphaMatcher extends TypeSafeMatcher<View> {
+diff --git a/espresso/core/javatests/androidx/test/espresso/EspressoEdgeCaseTest.java b/espresso/core/javatests/androidx/test/espresso/EspressoEdgeCaseTest.java
+index 38c92a8..f92cab9 100644
+--- a/espresso/core/javatests/androidx/test/espresso/EspressoEdgeCaseTest.java
++++ b/espresso/core/javatests/androidx/test/espresso/EspressoEdgeCaseTest.java
+@@ -248,6 +248,62 @@ public class EspressoEdgeCaseTest {
+     onView(withId(R.id.enter_data_edit_text)).check(matches(withText("Har Har")));
+   }
+ 
+ 
+   private abstract static class TestAction implements ViewAction {
+     @Override
+diff --git a/espresso/core/javatests/androidx/test/espresso/action/OpenLinkActionTest.java b/espresso/core/javatests/androidx/test/espresso/action/OpenLinkActionTest.java
+index ebbcb6b..5f13a0c 100644
+--- a/espresso/core/javatests/androidx/test/espresso/action/OpenLinkActionTest.java
++++ b/espresso/core/javatests/androidx/test/espresso/action/OpenLinkActionTest.java
+@@ -95,4 +95,14 @@ public class OpenLinkActionTest {
+     onView(withId(R.id.spanned)).perform(scrollTo(), openLinkWithText("bacon"));
+   }
+ 
+ }
+diff --git a/espresso/core/javatests/androidx/test/espresso/matcher/ViewMatchersTest.java b/espresso/core/javatests/androidx/test/espresso/matcher/ViewMatchersTest.java
+index 4fe6306..883482e 100644
+--- a/espresso/core/javatests/androidx/test/espresso/matcher/ViewMatchersTest.java
++++ b/espresso/core/javatests/androidx/test/espresso/matcher/ViewMatchersTest.java
+@@ -38,6 +38,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
+ import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
+ import static androidx.test.espresso.matcher.ViewMatchers.isSelected;
+ import static androidx.test.espresso.matcher.ViewMatchers.supportsInputMethods;
+ import static androidx.test.espresso.matcher.ViewMatchers.withAlpha;
+ import static androidx.test.espresso.matcher.ViewMatchers.withChild;
+ import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
+@@ -802,6 +803,20 @@ public class ViewMatchersTest {
+     assertTrue(hasBackground(R.drawable.drawable_1).matches(viewWithBackground));
+   }
+ 
+ 
+   @Test
+   @UiThreadTest
+diff --git a/ktx/core/javatests/androidx/test/core/app/BUILD.bazel b/ktx/core/javatests/androidx/test/core/app/BUILD.bazel
+index 9b2baf1..05b2e0c 100644
+--- a/ktx/core/javatests/androidx/test/core/app/BUILD.bazel
++++ b/ktx/core/javatests/androidx/test/core/app/BUILD.bazel
+@@ -38,6 +38,27 @@ kt_android_library(
+     ],
+ )
+ 
+ 
+ android_binary(
+     name = "ActivityScenarioKotlinTest_test_apk",
+diff --git a/runner/android_junit_runner/java/androidx/test/internal/runner/tracker/UsageTrackerRegistry.java b/runner/android_junit_runner/java/androidx/test/internal/runner/tracker/UsageTrackerRegistry.java
+index 5337081..7e9bd73 100644
+--- a/runner/android_junit_runner/java/androidx/test/internal/runner/tracker/UsageTrackerRegistry.java
++++ b/runner/android_junit_runner/java/androidx/test/internal/runner/tracker/UsageTrackerRegistry.java
+@@ -33,6 +33,14 @@ public final class UsageTrackerRegistry {
+     String RUNNER_VERSION = "1.1.0";
+   }
+ 
+ 
+   // By default we use a NoOp class.
+   private static volatile UsageTracker instance = new UsageTracker.NoOpUsageTracker();
+diff --git a/runner/android_test_orchestrator/javatests/androidx/test/orchestrator/BUILD.bazel b/runner/android_test_orchestrator/javatests/androidx/test/orchestrator/BUILD.bazel
+index 1bda5c1..618990a 100644
+--- a/runner/android_test_orchestrator/javatests/androidx/test/orchestrator/BUILD.bazel
++++ b/runner/android_test_orchestrator/javatests/androidx/test/orchestrator/BUILD.bazel
+@@ -72,3 +72,21 @@ android_binary(
+     deps = [":ato_test_lib"],
+ )
+ 
+diff --git a/runner/monitor/java/androidx/test/platform/ui/InjectEventSecurityException.java b/runner/monitor/java/androidx/test/platform/ui/InjectEventSecurityException.java
+index 74cbcc3..29af4cc 100644
+--- a/runner/monitor/java/androidx/test/platform/ui/InjectEventSecurityException.java
++++ b/runner/monitor/java/androidx/test/platform/ui/InjectEventSecurityException.java
+@@ -23,6 +23,7 @@ import androidx.test.platform.TestFrameworkException;
+  * SecurityException}.
+  */
+ public class InjectEventSecurityException extends Exception implements TestFrameworkException {
+ 
+   public InjectEventSecurityException(String message) {
+     super(message);
+diff --git a/runner/monitor/java/androidx/test/runner/MonitoringInstrumentation.java b/runner/monitor/java/androidx/test/runner/MonitoringInstrumentation.java
+index 052516e..56be651 100644
+--- a/runner/monitor/java/androidx/test/runner/MonitoringInstrumentation.java
++++ b/runner/monitor/java/androidx/test/runner/MonitoringInstrumentation.java
+@@ -853,6 +853,33 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
+    */
+   @Deprecated
+   protected boolean isPrimaryInstrProcess(@Nullable String argsProcessName) {
+     return isPrimaryInstrProcess();
+   }
+ 
+diff --git a/runner/monitor/javatests/androidx/test/internal/util/LogUtilsTest.java b/runner/monitor/javatests/androidx/test/internal/util/LogUtilsTest.java
+index c27911b..89ad47c 100644
+--- a/runner/monitor/javatests/androidx/test/internal/util/LogUtilsTest.java
++++ b/runner/monitor/javatests/androidx/test/internal/util/LogUtilsTest.java
+@@ -29,4 +29,16 @@ public class LogUtilsTest {
+     assertThat(ShadowLog.getLogsForTag(LogUtilsTest.class.getSimpleName())).isEmpty();
+   }
+ 
+ }
+diff --git a/services/speakeasy/javatests/androidx/test/services/speakeasy/client/SpeakEasyClientTest.java b/services/speakeasy/javatests/androidx/test/services/speakeasy/client/SpeakEasyClientTest.java
+index 686a698..4955e39 100644
+--- a/services/speakeasy/javatests/androidx/test/services/speakeasy/client/SpeakEasyClientTest.java
++++ b/services/speakeasy/javatests/androidx/test/services/speakeasy/client/SpeakEasyClientTest.java
+@@ -80,6 +80,31 @@ public class SpeakEasyClientTest {
+     assertWithMessage("Did we find the message?").that(found).isTrue();
+   }
+ 
+ 
+   private SpeakEasyProtocol.FindResult find(String key) {
+     final CountDownLatch latch = new CountDownLatch(1);
+diff --git a/testapps/ui_testapp/javatests/androidx/test/ui/app/ChatHeadActivityTest.java b/testapps/ui_testapp/javatests/androidx/test/ui/app/ChatHeadActivityTest.java
+index bd1ece4..3c8c2b0 100644
+--- a/testapps/ui_testapp/javatests/androidx/test/ui/app/ChatHeadActivityTest.java
++++ b/testapps/ui_testapp/javatests/androidx/test/ui/app/ChatHeadActivityTest.java
+@@ -39,6 +39,8 @@ import androidx.test.filters.SdkSuppress;
+ import androidx.test.filters.SmallTest;
+ import androidx.test.rule.ActivityTestRule;
+ import androidx.test.runner.AndroidJUnit4;
+ import org.hamcrest.Matchers;
+ import org.junit.After;
+ import org.junit.Before;
+@@ -56,15 +58,25 @@ public class ChatHeadActivityTest {
+       new ActivityTestRule<>(ChatHeadActivity.class);
+ 
+   private Activity activity;
+ 
+   @Before
+   public void setUp() {
+     // Espresso will not launch our activity for us, we must launch it via getActivity().
+     activity = activityTestRule.getActivity();
+   }
+ 
+   @After
+   public void tearDown() {
+   }
+ 
+   @SdkSuppress(maxSdkVersion = 22) // Requires special permission to draw over other apps
+@@ -92,6 +104,14 @@ public class ChatHeadActivityTest {
+         .inRoot(withDecorView(not(is(activity.getWindow().getDecorView()))))
+         .check(matches(withTagValue((Matchers.is((Object) "blue")))));
+ 
+ 
+     // Preform a click on the chat head button
+     Log.d(TAG, "click on chat chat head...");
+@@ -148,4 +168,24 @@ public class ChatHeadActivityTest {
+         .perform(click());
+   }
+ 
+ }
+diff --git a/testapps/ui_testapp/javatests/androidx/test/ui/app/MultipleWindowTest.java b/testapps/ui_testapp/javatests/androidx/test/ui/app/MultipleWindowTest.java
+index 1e7d27e..fb0d133 100644
+--- a/testapps/ui_testapp/javatests/androidx/test/ui/app/MultipleWindowTest.java
++++ b/testapps/ui_testapp/javatests/androidx/test/ui/app/MultipleWindowTest.java
+@@ -61,6 +61,9 @@ public class MultipleWindowTest extends ActivityInstrumentationTestCase2<SendAct
+   }
+ 
+   // Froyo's AutoCompleteTextBox is broken - do not bother testing with it.
+   @SdkSuppress(minSdkVersion = 24)
+   public void testInteractionsWithAutoCompletePopup() {
+     // Android's Window system allows multiple view hierarchies to layer on top of each other.
+diff --git a/testapps/ui_testapp/javatests/androidx/test/ui/app/TaskStackTest.java b/testapps/ui_testapp/javatests/androidx/test/ui/app/TaskStackTest.java
+index e83db69..da1524f 100644
+--- a/testapps/ui_testapp/javatests/androidx/test/ui/app/TaskStackTest.java
++++ b/testapps/ui_testapp/javatests/androidx/test/ui/app/TaskStackTest.java
+@@ -49,6 +49,20 @@ public class TaskStackTest extends ActivityInstrumentationTestCase2<TaskStackAct
+     onView(withText("drawer activity")).check(matches(isDisplayed()));
+   }
+ 
+ 
+   // The task stack behavior is available on API level 11 and up.
+   @SdkSuppress(minSdkVersion = 11)
+diff --git a/testapps/ui_testapp/javatests/androidx/test/ui/app/TransitionActivityMainTest.java b/testapps/ui_testapp/javatests/androidx/test/ui/app/TransitionActivityMainTest.java
+index f512e7a..d96082f 100644
+--- a/testapps/ui_testapp/javatests/androidx/test/ui/app/TransitionActivityMainTest.java
++++ b/testapps/ui_testapp/javatests/androidx/test/ui/app/TransitionActivityMainTest.java
+@@ -48,6 +48,9 @@ public class TransitionActivityMainTest
+   }
+ 
+   // This test only applies to Lollipop+
+   @SdkSuppress(minSdkVersion = 21)
+   public void testTransition() throws InterruptedException {
+     onView(withId(R.id.grid)).check(matches(isDisplayed()));
