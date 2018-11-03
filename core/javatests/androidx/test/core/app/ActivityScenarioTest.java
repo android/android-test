@@ -16,10 +16,13 @@
 
 package androidx.test.core.app;
 
+import static android.app.Activity.RESULT_OK;
+import static androidx.test.ext.truth.content.IntentSubject.assertThat;
 import static com.google.common.truth.Truth.assertThat;
 
 import android.app.Activity;
 import android.arch.lifecycle.Lifecycle.State;
+import android.content.Intent;
 import androidx.test.core.app.testing.FinishItselfActivity;
 import androidx.test.core.app.testing.RecreationRecordingActivity;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -249,6 +252,49 @@ public final class ActivityScenarioTest {
             assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
             assertThat(activity.getNumberOfRecreations()).isEqualTo(1);
           });
+    }
+  }
+
+  @Test
+  public void activityResultWithNoResultData() throws Exception {
+    try (ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class)) {
+      scenario.onActivity(
+          activity -> {
+            activity.setResult(RESULT_OK);
+            activity.finish();
+          });
+      assertThat(scenario.getResult().getResultCode()).isEqualTo(RESULT_OK);
+      assertThat(scenario.getResult().getResultData()).isNull();
+    }
+  }
+
+  @Test
+  public void activityResultWithResultData() throws Exception {
+    try (ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class)) {
+      scenario.onActivity(
+          activity -> {
+            activity.setResult(RESULT_OK, new Intent().setAction(Intent.ACTION_SEND));
+            activity.finish();
+          });
+      assertThat(scenario.getResult().getResultCode()).isEqualTo(RESULT_OK);
+      assertThat(scenario.getResult().getResultData()).hasAction(Intent.ACTION_SEND);
+    }
+  }
+
+  @Test
+  public void activityResultWithResultDataAfterRecreate() throws Exception {
+    try (ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class)) {
+      scenario.recreate();
+      scenario.onActivity(
+          activity -> {
+            activity.setResult(RESULT_OK, new Intent().setAction(Intent.ACTION_SEND));
+            activity.finish();
+          });
+      assertThat(scenario.getResult().getResultCode()).isEqualTo(RESULT_OK);
+      assertThat(scenario.getResult().getResultData()).hasAction(Intent.ACTION_SEND);
     }
   }
 

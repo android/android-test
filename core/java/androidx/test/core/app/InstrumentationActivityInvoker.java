@@ -18,15 +18,20 @@ package androidx.test.core.app;
 
 import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
 
 import android.app.Activity;
+import android.app.Instrumentation.ActivityResult;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import androidx.test.internal.platform.app.ActivityInvoker;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
@@ -52,6 +57,31 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
    */
   private static final long TIMEOUT_SECONDS = 45;
 
+  /** A bundle key to retrieve an intent to start test target activity in extras bundle. */
+  private static final String TARGET_ACTIVITY_INTENT_KEY =
+      "androidx.test.core.app.InstrumentationActivityInvoker.START_TARGET_ACTIVITY_INTENT_KEY";
+
+  /**
+   * An intent action broadcasted by {@link BootstrapActivity} notifying the activity receives
+   * activity result and passes payload back to the instrumentation process.
+   */
+  private static final String BOOTSTRAP_ACTIVITY_RESULT_RECEIVED =
+      "androidx.test.core.app.InstrumentationActivityInvoker.BOOTSTRAP_ACTIVITY_RESULT_RECEIVED";
+
+  /**
+   * A bundle key to retrieve an activity result code from the extras bundle of {@link
+   * #BOOTSTRAP_ACTIVITY_RESULT_RECEIVED} action.
+   */
+  private static final String BOOTSTRAP_ACTIVITY_RESULT_CODE_KEY =
+      "androidx.test.core.app.InstrumentationActivityInvoker.BOOTSTRAP_ACTIVITY_RESULT_CODE_KEY";
+
+  /**
+   * A bundle key to retrieve an activity result data intent from the extras bundle of {@link
+   * #BOOTSTRAP_ACTIVITY_RESULT_RECEIVED} action.
+   */
+  private static final String BOOTSTRAP_ACTIVITY_RESULT_DATA_KEY =
+      "androidx.test.core.app.InstrumentationActivityInvoker.BOOTSTRAP_ACTIVITY_RESULT_DATA_KEY";
+
   /**
    * An intent action broadcasted by {@link EmptyActivity} notifying the activity becomes resumed
    * state.
@@ -66,6 +96,10 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
   private static final String EMPTY_FLOATING_ACTIVITY_RESUMED =
       "androidx.test.core.app.InstrumentationActivityInvoker.EMPTY_FLOATING_ACTIVITY_RESUMED";
 
+  /** An intent action to notify {@link BootstrapActivity} to be finished. */
+  private static final String FINISH_BOOTSTRAP_ACTIVITY =
+      "androidx.test.core.app.InstrumentationActivityInvoker.FINISH_BOOTSTRAP_ACTIVITY";
+
   /**
    * An intent action to notify {@link EmptyActivity} and {@link EmptyFloatingActivity} to be
    * finished.
@@ -74,14 +108,159 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
       "androidx.test.core.app.InstrumentationActivityInvoker.FINISH_EMPTY_ACTIVITIES";
 
   /**
+   * BootstrapActivity starts a test target activity specified by the extras bundle with key {@link
+   * #TARGET_ACTIVITY_INTENT_KEY} in the intent that starts this bootstrap activity. The target
+   * activity is started by {@link Activity#startActivityForResult} when the bootstrap activity is
+   * created. Upon an arrival of the activity result, the bootstrap activity forwards the result to
+   * the instrumentation process by broadcasting the result and finishes itself. This activity also
+   * finishes itself when it receives {@link #FINISH_BOOTSTRAP_ACTIVITY} action.
+   */
+  public static class BootstrapActivity extends Activity {
+    private static final String TAG = BootstrapActivity.class.getName();
+    private static final String IS_TARGET_ACTIVITY_STARTED_KEY = "IS_TARGET_ACTIVITY_STARTED_KEY";
+    private final BroadcastReceiver receiver =
+        new BroadcastReceiver() {
+          @Override
+          public void onReceive(Context context, Intent intent) {
+            finishActivity(/*requestCode=*/ 0);
+            finish();
+          }
+        };
+
+    private boolean isTargetActivityStarted;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      registerReceiver(receiver, new IntentFilter(FINISH_BOOTSTRAP_ACTIVITY));
+
+      isTargetActivityStarted =
+          (savedInstanceState != null
+              && savedInstanceState.getBoolean(IS_TARGET_ACTIVITY_STARTED_KEY, false));
+    }
+
+    @Override
+    protected void onResume() {
+      super.onResume();
+
+      if (!isTargetActivityStarted) {
+        isTargetActivityStarted = true;
+        PendingIntent startTargetActivityIntent =
+            checkNotNull(getIntent().getParcelableExtra(TARGET_ACTIVITY_INTENT_KEY));
+        try {
+          // Override and disable FLAG_ACTIVITY_NEW_TASK flag by flagsMask and flagsValue.
+          // PendingIntentRecord#sendInner() will mask the original intent flag with the flagsMask
+          // then override those bits with the new flagsValue specified here. This override is
+          // necessary because if the activity is started as a new task ActivityStarter disposes
+          // the originator information and the result is never be delivered. Instead you will get
+          // an error "Activity is launching as a new task, so cancelling activity result." and
+          // #onActivityResult() will be invoked immediately with result code
+          // Activity#RESULT_CANCELED.
+          startIntentSenderForResult(
+              startTargetActivityIntent.getIntentSender(),
+              /*requestCode=*/ 0,
+              /*fillInIntent=*/ null,
+              /*flagsMask=*/ Intent.FLAG_ACTIVITY_NEW_TASK,
+              /*flagsValues=*/ 0,
+              /*extraFlags=*/ 0);
+        } catch (IntentSender.SendIntentException e) {
+          Log.e(TAG, "Failed to start target activity.", e);
+          throw new RuntimeException(e);
+        }
+      }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+      super.onSaveInstanceState(outState);
+      outState.putBoolean(IS_TARGET_ACTIVITY_STARTED_KEY, isTargetActivityStarted);
+    }
+
+    @Override
+    protected void onDestroy() {
+      super.onDestroy();
+      unregisterReceiver(receiver);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+      if (requestCode == 0) {
+        Intent activityResultReceivedActionIntent = new Intent(BOOTSTRAP_ACTIVITY_RESULT_RECEIVED);
+        activityResultReceivedActionIntent.putExtra(BOOTSTRAP_ACTIVITY_RESULT_CODE_KEY, resultCode);
+        if (data != null) {
+          activityResultReceivedActionIntent.putExtra(BOOTSTRAP_ACTIVITY_RESULT_DATA_KEY, data);
+        }
+        sendBroadcast(activityResultReceivedActionIntent);
+        finish();
+      }
+    }
+  }
+
+  /**
+   * ActivityResultWaiter listens broadcast messages and waits for {@link
+   * #BOOTSTRAP_ACTIVITY_RESULT_RECEIVED} action. Upon the reception of that action, it retrieves
+   * result code and data from the action and makes a local copy. Clients can access to the result
+   * by {@link #getActivityResult()}.
+   */
+  private static class ActivityResultWaiter {
+
+    private static final String TAG = ActivityResultWaiter.class.getName();
+    private final CountDownLatch latch = new CountDownLatch(1);
+    @Nullable private ActivityResult activityResult;
+
+    /**
+     * Constructs ActivityResultWaiter and starts listening to broadcast with the given context. It
+     * keeps subscribing the event until it receives {@link #BOOTSTRAP_ACTIVITY_RESULT_RECEIVED}
+     * action.
+     */
+    public ActivityResultWaiter(Context context) {
+      BroadcastReceiver receiver =
+          new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+              // Stop listening to the broadcast once we get the result.
+              context.unregisterReceiver(this);
+
+              int resultCode =
+                  intent.getIntExtra(BOOTSTRAP_ACTIVITY_RESULT_CODE_KEY, Activity.RESULT_CANCELED);
+              Intent resultData = intent.getParcelableExtra(BOOTSTRAP_ACTIVITY_RESULT_DATA_KEY);
+              if (resultData != null) {
+                // Make a copy of resultData since the lifetime of the given intent is unknown.
+                resultData = new Intent(resultData);
+              }
+              activityResult = new ActivityResult(resultCode, resultData);
+              latch.countDown();
+            }
+          };
+      context.registerReceiver(receiver, new IntentFilter(BOOTSTRAP_ACTIVITY_RESULT_RECEIVED));
+    }
+
+    /**
+     * Waits for the activity result to be available until the timeout and returns the result.
+     *
+     * @throws NullPointerException if the result doesn't become available after the timeout
+     * @return activity result of which {@link #startActivity(Intent)} starts
+     */
+    public ActivityResult getActivityResult() {
+      try {
+        latch.await(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+      } catch (InterruptedException e) {
+        Log.i(TAG, "Waiting activity result was interrupted", e);
+      }
+      checkNotNull(
+          activityResult, "onActivityResult never be called after %d seconds", TIMEOUT_SECONDS);
+      return activityResult;
+    }
+  }
+
+  /**
    * An empty activity with style "android:windowIsFloating = false". The style is set by
    * AndroidManifest.xml via "android:theme".
    *
-   * <p>When this activity is resumed, it broadcasts {@link
-   * InstrumentationActivityInvoker#EMPTY_ACTIVITY_RESUMED} action to notify the state.
+   * <p>When this activity is resumed, it broadcasts {@link #EMPTY_ACTIVITY_RESUMED} action to
+   * notify the state.
    *
-   * <p>This activity finishes itself when it receives {@link
-   * InstrumentationActivityInvoker#FINISH_EMPTY_ACTIVITIES} action.
+   * <p>This activity finishes itself when it receives {@link #FINISH_EMPTY_ACTIVITIES} action.
    *
    * <p>This activity is used to send an arbitrary resumed Activity to stopped.
    */
@@ -111,17 +290,16 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
       super.onDestroy();
       unregisterReceiver(receiver);
     }
-  };
+  }
 
   /**
    * An empty activity with style "android:windowIsFloating = true". The style is set by
    * AndroidManifest.xml via "android:theme".
    *
-   * <p>When this activity is resumed, it broadcasts {@link
-   * InstrumentationActivityInvoker#EMPTY_FLOATING_ACTIVITY_RESUMED} action to notify the state.
+   * <p>When this activity is resumed, it broadcasts {@link #EMPTY_FLOATING_ACTIVITY_RESUMED} action
+   * to notify the state.
    *
-   * <p>This activity finishes itself when it receives {@link
-   * InstrumentationActivityInvoker#FINISH_EMPTY_ACTIVITIES} action.
+   * <p>This activity finishes itself when it receives {@link #FINISH_EMPTY_ACTIVITIES} action.
    *
    * <p>This activity is used to send an arbitrary resumed Activity to paused.
    */
@@ -151,27 +329,41 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
       super.onDestroy();
       unregisterReceiver(receiver);
     }
-  };
+  }
 
-  /**
-   * Starts an Activity using the given intent. {@link Intent#FLAG_ACTIVITY_NEW_TASK} and {@link
-   * Intent#FLAG_ACTIVITY_CLEAR_TASK} flags are set to the intent to start the Activity in brand-new
-   * task stack.
-   */
+  /** A waiter to observe activity result that is started by {@link #startActivity(Intent)}. */
+  @Nullable private ActivityResultWaiter activityResultWaiter;
+
+  /** Starts an Activity using the given intent. */
   @Override
   public void startActivity(Intent intent) {
-    // Close empty activities if it's running. This might happen if the previous test crashes while
-    // empty activities are resumed.
+    // Close empty activities and bootstrap activity if it's running. This might happen if the
+    // previous test crashes before it cleans up the state.
+    getTargetContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
     getTargetContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
 
-    // Note: Instrumentation.startActivitySync(Intent) cannot be used here because it has an
-    // assertion that the resolved Activity's process name equals to the test target package name.
-    // This is to ensure that the Activity is launched in the same process as instrumentation
-    // however it is still possible that Activities with different process names share the same PID
-    // if they set the same android:sharedUserId in AndroidManifests.
+    activityResultWaiter = new ActivityResultWaiter(getTargetContext());
+
+    // Note: Instrumentation.startActivitySync(Intent) cannot be used here because BootstrapActivity
+    // may start in different process. Also, we use PendingIntent because the target activity may
+    // set "exported" attribute to false so that it prohibits starting the activity outside of their
+    // package. With PendingIntent we delegate the authority to BootstrapActivity.
     getTargetContext()
         .startActivity(
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+            getIntentForActivity(BootstrapActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                .putExtra(
+                    TARGET_ACTIVITY_INTENT_KEY,
+                    PendingIntent.getActivity(
+                        getTargetContext(),
+                        /*requestCode=*/ 0,
+                        intent,
+                        /*flags=*/ PendingIntent.FLAG_UPDATE_CURRENT)));
+  }
+
+  @Override
+  public ActivityResult getActivityResult() {
+    return checkNotNull(activityResultWaiter, "You must start Activity first").getActivityResult();
   }
 
   /** Resumes the tested activity by finishing empty activities. */
@@ -188,7 +380,10 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
   @Override
   public void pauseActivity(Activity activity) {
     checkActivityStageIsIn(activity, Stage.RESUMED, Stage.PAUSED);
+    startFloatingEmptyActivitySync();
+  }
 
+  private void startFloatingEmptyActivitySync() {
     CountDownLatch latch = new CountDownLatch(1);
     BroadcastReceiver receiver =
         new BroadcastReceiver() {
@@ -205,7 +400,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     getTargetContext()
         .startActivity(
             getIntentForActivity(EmptyFloatingActivity.class)
-                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 
     try {
       latch.await(TIMEOUT_SECONDS, TimeUnit.SECONDS);
@@ -220,7 +415,10 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
   @Override
   public void stopActivity(Activity activity) {
     checkActivityStageIsIn(activity, Stage.RESUMED, Stage.PAUSED, Stage.STOPPED);
+    startEmptyActivitySync();
+  }
 
+  private void startEmptyActivitySync() {
     CountDownLatch latch = new CountDownLatch(1);
     BroadcastReceiver receiver =
         new BroadcastReceiver() {
@@ -235,8 +433,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     // to the stopped state.
     getTargetContext()
         .startActivity(
-            getIntentForActivity(EmptyActivity.class)
-                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+            getIntentForActivity(EmptyActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 
     try {
       latch.await(TIMEOUT_SECONDS, TimeUnit.SECONDS);
@@ -268,14 +465,16 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
 
   @Override
   public void finishActivity(Activity activity) {
-    checkActivityStageIsIn(activity, Stage.RESUMED, Stage.PAUSED, Stage.STOPPED);
-
-    // Stop the activity before finish it as a workaround for the framework bug in API level 15 to
-    // 22 where the framework never calls #onStop and #onDestroy if you call Activity#finish while
-    // floating style Activity is in the stack.
-    // See b/118967373
-    stopActivity(activity);
-
+    // Stop the activity before calling Activity#finish() as a workaround for the framework bug in
+    // API level 15 to 19 where the framework may not call #onStop and #onDestroy if you call
+    // Activity#finish() while it is resumed. The exact root cause is unknown but moving the
+    // activity back-and-forth between foreground and background helps the finish operation to be
+    // executed so here we try finishing the activity by several means. This hack is not necessary
+    // for the API level above 19.
+    startEmptyActivitySync();
+    getInstrumentation().runOnMainSync(() -> activity.finish());
+    getTargetContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
+    startEmptyActivitySync();
     getInstrumentation().runOnMainSync(() -> activity.finish());
     getTargetContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
   }

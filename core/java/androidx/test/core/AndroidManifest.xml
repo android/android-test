@@ -25,6 +25,13 @@
 
     <application>
         <activity
+            android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity"
+            android:theme="@style/InstrumentationActivityInvokerBootstrapActivityTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity"
             android:theme="@style/InstrumentationActivityInvokerEmptyActivityTheme">
             <intent-filter>

@@ -20,6 +20,7 @@ import static androidx.test.InstrumentationRegistry.getContext;
 import static androidx.test.InstrumentationRegistry.getTargetContext;
 
 import android.app.Activity;
+import android.app.Instrumentation.ActivityResult;
 import android.content.ComponentName;
 import android.content.Intent;
 
@@ -43,8 +44,21 @@ public interface ActivityInvoker {
     return Intent.makeMainActivity(new ComponentName(getContext(), activityClass));
   }
 
-  /** Starts an Activity using the given intent. */
+  /**
+   * Starts an activity using the given intent. After the activity finishes you can retrieve its
+   * result code and data via {@link #getActivityResult()}.
+   */
   void startActivity(Intent intent);
+
+  /**
+   * Returns activity result that is started by {@link #startActivity(Intent)}. Unlike other methods
+   * this method blocks execution until the result becomes available.
+   *
+   * <p>Note: this method doesn't call {@link Activity#finish()} of the activity that is started by
+   * {@link #startActivity(Intent)}. If you call this method without calling that, it will end up
+   * with runtime error and make the test to fail.
+   */
+  ActivityResult getActivityResult();
 
   /**
    * Transitions a current Activity to {@link androidx.test.runner.lifecycle.Stage#RESUMED}.

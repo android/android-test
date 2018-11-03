@@ -21,6 +21,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
 
 import android.app.Activity;
+import android.app.Instrumentation.ActivityResult;
 import android.arch.lifecycle.Lifecycle.Event;
 import android.arch.lifecycle.Lifecycle.State;
 import android.content.Intent;
@@ -514,5 +515,25 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
               }
             });
     return this;
+  }
+
+  /**
+   * Waits for the activity to be finished and returns the activity result.
+   *
+   * <p>Note: This method doesn't call {@link Activity#finish()}. The activity must be finishing or
+   * finished otherwise this method will throws runtime exception after the timeout.
+   *
+   * <pre>{@code
+   * Example:
+   *   ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class);
+   *   // Let's say MyActivity has a button that finishes itself.
+   *   onView(withId(R.id.finish_button)).perform(click());
+   *   assertThat(scenario.getResult().getResultCode()).isEqualTo(Activity.RESULT_OK);
+   * }</pre>
+   *
+   * @return activity result of the activity that managed by this scenario class.
+   */
+  public ActivityResult getResult() {
+    return activityInvoker.getActivityResult();
   }
 }
