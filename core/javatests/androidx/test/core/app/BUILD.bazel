@@ -69,6 +69,25 @@ android_instrumentation_test(
 #
 # Activity Scenario Tests
 #
+android_local_test(
+    name = "ActivityScenarioTest",
+    srcs = ["ActivityScenarioTest.java"],
+    manifest = "AndroidManifest_target.xml",
+    tags = ["robolectric"],
+    deps = [
+        ":robolectric_config",
+        "//:android_arch_lifecycle_common",
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/monitor",
+        "@guava//jar",
+        "@junit//jar",
+        "@robolectric//bazel:robolectric",
+        "@truth//jar",
+    ],
+)
 
 android_binary(
     name = "ActivityScenarioTest_test_apk",
