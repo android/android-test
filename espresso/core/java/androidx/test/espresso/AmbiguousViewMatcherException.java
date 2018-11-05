@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.view.View;
 import androidx.test.espresso.util.HumanReadables;
+import androidx.test.internal.platform.util.DebugUtil;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import org.hamcrest.Matcher;
@@ -48,7 +49,7 @@ public final class AmbiguousViewMatcherException extends RuntimeException
 
   private AmbiguousViewMatcherException(String description) {
     super(description);
-
+    DebugUtil.dumpThreadStates("ThreadState-AmbiguousViewMatcherException.txt");
   }
 
   private AmbiguousViewMatcherException(Builder builder) {

@@ -39,7 +39,6 @@ import java.io.Closeable;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -115,20 +114,9 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   private static final long TIMEOUT_MILLISECONDS = 45000;
 
   /** An ActivityInvoker to use. Implementation class can be configured by service provider. */
-  private static final ActivityInvoker activityInvoker;
-
-  static {
-    List<ActivityInvoker> impls = ServiceLoaderWrapper.loadService(ActivityInvoker.class);
-    if (impls.isEmpty()) {
-      activityInvoker = new InstrumentationActivityInvoker();
-    } else if (impls.size() == 1) {
-      activityInvoker = impls.get(0);
-    } else {
-      throw new IllegalStateException(
-          String.format(
-              "Found more than one %s implementations.", ActivityInvoker.class.getName()));
-    }
-  }
+  private static final ActivityInvoker activityInvoker =
+      ServiceLoaderWrapper.loadSingleService(
+          ActivityInvoker.class, () -> new InstrumentationActivityInvoker());
 
   /**
    * A map to lookup steady {@link State} by {@link Stage}. Transient stages such as {@link

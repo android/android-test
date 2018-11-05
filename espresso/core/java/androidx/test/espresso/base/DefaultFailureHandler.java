@@ -27,6 +27,8 @@ import android.view.View;
 import androidx.test.espresso.EspressoException;
 import androidx.test.espresso.FailureHandler;
 import androidx.test.espresso.PerformException;
+import androidx.test.internal.platform.util.DebugUtil;
+import java.util.concurrent.atomic.AtomicInteger;
 import junit.framework.AssertionFailedError;
 import org.hamcrest.Matcher;
 
@@ -36,6 +38,7 @@ import org.hamcrest.Matcher;
  */
 public final class DefaultFailureHandler implements FailureHandler {
 
+  private static final AtomicInteger failureCount = new AtomicInteger(0);
   private final Context appContext;
 
   public DefaultFailureHandler(
@@ -45,6 +48,7 @@ public final class DefaultFailureHandler implements FailureHandler {
 
   @Override
   public void handle(Throwable error, Matcher<View> viewMatcher) {
+    DebugUtil.takeScreenshot("view-op-error-" + failureCount.incrementAndGet() + ".png");
     if (error instanceof EspressoException
         || error instanceof AssertionFailedError
         || error instanceof AssertionError) {

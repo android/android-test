@@ -49,4 +49,31 @@ public final class ServiceLoaderWrapper {
     StrictMode.setThreadPolicy(oldPolicy);
     return services;
   }
+
+  /** A factory for creating default implementations of service classes. */
+  public interface Factory<T> {
+    T create();
+  }
+
+  /**
+   * A wrapper method around loadService that strictly enforces there is only one implementation of
+   * the service.
+   *
+   * @param serviceClass the service type class to load implementation for
+   * @param defaultImplFactory the factory implementation for creating instances
+   * @return the implementing service, or a new instance via defaultImplFactory.create() if no
+   *     implementations are defined.
+   * @throws IllegalStateException if more than one service implementations are found
+   */
+  public static <T> T loadSingleService(Class<T> serviceClass, Factory<T> defaultImplFactory) {
+    List<T> impls = ServiceLoaderWrapper.loadService(serviceClass);
+    if (impls.isEmpty()) {
+      return defaultImplFactory.create();
+    } else if (impls.size() == 1) {
+      return impls.get(0);
+    } else {
+      throw new IllegalStateException(
+          "Found more than one implementation for " + serviceClass.getName());
+    }
+  }
 }

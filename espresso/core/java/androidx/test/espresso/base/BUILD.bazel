@@ -75,6 +75,7 @@ android_library(
     visibility = ["//visibility:public"],
     deps = [
         "//espresso/core/java/androidx/test/espresso:interface",
+        "//runner/monitor/java/androidx/test:monitor",
         "@dagger_api//jar",
         "@guava//jar",
         "@hamcrest//jar",

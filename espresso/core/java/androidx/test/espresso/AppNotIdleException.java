@@ -19,6 +19,7 @@ package androidx.test.espresso;
 import static com.google.common.base.Preconditions.checkState;
 
 import android.os.Looper;
+import androidx.test.internal.platform.util.DebugUtil;
 import com.google.common.base.Joiner;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public final class AppNotIdleException extends RuntimeException implements Espre
 
   private AppNotIdleException(String description) {
     super(description);
-
+    DebugUtil.dumpThreadStates("ThreadState-AppNotIdleException.txt");
   }
 
   /**
