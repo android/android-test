@@ -28,6 +28,8 @@ import androidx.test.espresso.EspressoException;
 import androidx.test.espresso.FailureHandler;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.internal.inject.TargetContext;
+import androidx.test.internal.platform.util.TestOutputEmitter;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 import junit.framework.AssertionFailedError;
 import org.hamcrest.Matcher;
@@ -38,6 +40,7 @@ import org.hamcrest.Matcher;
  */
 public final class DefaultFailureHandler implements FailureHandler {
 
+  private static final AtomicInteger failureCount = new AtomicInteger(0);
   private final Context appContext;
 
   @Inject
@@ -47,6 +50,7 @@ public final class DefaultFailureHandler implements FailureHandler {
 
   @Override
   public void handle(Throwable error, Matcher<View> viewMatcher) {
+    TestOutputEmitter.takeScreenshot("view-op-error-" + failureCount.incrementAndGet() + ".png");
     if (error instanceof EspressoException
         || error instanceof AssertionFailedError
         || error instanceof AssertionError) {

@@ -18,6 +18,7 @@ package androidx.test.espresso;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import androidx.test.internal.platform.util.TestOutputEmitter;
 import java.util.List;
 
 /**
@@ -33,5 +34,6 @@ public final class IdlingResourceTimeoutException extends RuntimeException
 
   public IdlingResourceTimeoutException(List<String> resourceNames) {
     super(String.format("Wait for %s to become idle timed out", checkNotNull(resourceNames)));
+    TestOutputEmitter.dumpThreadStates("ThreadState-IdlingResTimeoutExcep.txt");
   }
 }

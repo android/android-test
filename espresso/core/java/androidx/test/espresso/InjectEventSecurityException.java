@@ -16,7 +16,7 @@
 
 package androidx.test.espresso;
 
-
+import androidx.test.internal.platform.util.TestOutputEmitter;
 
 /**
  * An checked {@link Exception} indicating that event injection failed with a {@link
@@ -41,5 +41,6 @@ public final class InjectEventSecurityException
   }
 
   private void dumpThreads() {
+    TestOutputEmitter.dumpThreadStates("ThreadState-InjectEventSecurityException.txt");
   }
 }

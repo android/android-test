@@ -18,6 +18,7 @@ package androidx.test.espresso;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import androidx.test.internal.platform.util.TestOutputEmitter;
 import java.util.List;
 import org.hamcrest.Matcher;
 
@@ -29,6 +30,7 @@ public final class NoMatchingRootException extends RuntimeException implements E
 
   private NoMatchingRootException(String description) {
     super(description);
+    TestOutputEmitter.dumpThreadStates("ThreadState-NoMatchingRootException.txt");
   }
 
   public static NoMatchingRootException create(Matcher<Root> rootMatcher, List<Root> roots) {
