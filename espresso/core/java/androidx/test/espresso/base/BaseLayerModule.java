@@ -20,10 +20,11 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.test.InstrumentationRegistry;
 import androidx.test.espresso.FailureHandler;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
+import androidx.test.espresso.internal.inject.TargetContext;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import com.google.common.base.Optional;
@@ -50,16 +51,13 @@ public class BaseLayerModule {
 
   @Provides
   public ActivityLifecycleMonitor provideLifecycleMonitor() {
-    // TODO: replace with installation of AndroidInstrumentationModule once
-    // proguard issues resolved.
     return ActivityLifecycleMonitorRegistry.getInstance();
   }
 
   @Provides
+  @TargetContext
   public Context provideTargetContext() {
-    // TODO: replace with installation of AndroidInstrumentationModule once
-    // proguard issues resolved.
-    return InstrumentationRegistry.getTargetContext();
+    return InstrumentationRegistry.getInstrumentation().getTargetContext();
   }
 
   @Provides
@@ -187,8 +185,7 @@ public class BaseLayerModule {
   }
 
   @Provides
-  DefaultFailureHandler provideDefaultFailureHander(
-          Context context) {
+  DefaultFailureHandler provideDefaultFailureHander(@TargetContext Context context) {
     return new DefaultFailureHandler(context);
   }
 }

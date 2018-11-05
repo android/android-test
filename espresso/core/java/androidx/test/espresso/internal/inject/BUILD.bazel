@@ -1,0 +1,12 @@
+# Description:
+#   Exposes test infrastructure as a dagger module.
+
+package(default_visibility = ["//visibility:public"])
+
+android_library(
+    name = "inject",
+    srcs = glob(["*java"]),
+    deps = [
+        "@jsr330",
+    ],
+)
