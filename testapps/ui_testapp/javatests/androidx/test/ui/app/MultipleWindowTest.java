@@ -61,6 +61,7 @@ public class MultipleWindowTest extends ActivityInstrumentationTestCase2<SendAct
   }
 
   // Froyo's AutoCompleteTextBox is broken - do not bother testing with it.
+  // b/18916590
   @SdkSuppress(minSdkVersion = 24)
   public void testInteractionsWithAutoCompletePopup() {
     // Android's Window system allows multiple view hierarchies to layer on top of each other.
