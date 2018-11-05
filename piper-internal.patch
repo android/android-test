@@ -1,33 +1,42 @@
-diff --git a/core/java/androidx/test/core/app/ActivityScenario.java b/core/java/androidx/test/core/app/ActivityScenario.java
-index 50c8d80..1c610f9 100644
---- a/core/java/androidx/test/core/app/ActivityScenario.java
-+++ b/core/java/androidx/test/core/app/ActivityScenario.java
-@@ -99,6 +99,10 @@ import java.util.concurrent.locks.ReentrantLock;
-  *   scenario.moveTo(State.DESTROYED);     // Your activity is destroyed and finished.
-  * </pre>
-  */
- @Beta
- public final class ActivityScenario<A extends Activity> {
-   /**
 diff --git a/core/java/androidx/test/core/app/InstrumentationActivityInvoker.java b/core/java/androidx/test/core/app/InstrumentationActivityInvoker.java
-index 770922f..13c3112 100644
+index 770922f..938071f 100644
 --- a/core/java/androidx/test/core/app/InstrumentationActivityInvoker.java
 +++ b/core/java/androidx/test/core/app/InstrumentationActivityInvoker.java
-@@ -273,6 +273,9 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
+@@ -273,6 +273,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
      // Stop the activity before finish it as a workaround for the framework bug in API level 15 to
      // 22 where the framework never calls #onStop and #onDestroy if you call Activity#finish while
      // floating style Activity is in the stack.
++    // See b/118967373
      stopActivity(activity);
  
      getInstrumentation().runOnMainSync(() -> activity.finish());
 diff --git a/core/javatests/androidx/test/core/app/BUILD.bazel b/core/javatests/androidx/test/core/app/BUILD.bazel
-index 1e2c532..588e1f8 100644
+index 1e2c532..889087c 100644
 --- a/core/javatests/androidx/test/core/app/BUILD.bazel
 +++ b/core/javatests/androidx/test/core/app/BUILD.bazel
-@@ -69,6 +69,28 @@ android_instrumentation_test(
+@@ -69,6 +69,25 @@ android_instrumentation_test(
  #
  # Activity Scenario Tests
  #
++android_local_test(
++    name = "ActivityScenarioTest",
++    srcs = ["ActivityScenarioTest.java"],
++    manifest = "AndroidManifest_target.xml",
++    tags = ["robolectric"],
++    deps = [
++        ":robolectric_config",
++        "//:android_arch_lifecycle_common",
++        "//core",
++        "//core/javatests/androidx/test/core/app/testing",
++        "//ext/junit",
++        "//runner/android_junit_runner",
++        "//runner/monitor",
++        "@guava//jar",
++        "@junit//jar",
++        "@robolectric//bazel:robolectric",
++        "@truth//jar",
++    ],
++)
  
  android_binary(
      name = "ActivityScenarioTest_test_apk",
@@ -250,7 +259,7 @@ index 5e4f1cd..f143f37 100644
  
    public String getActionDescription() {
 diff --git a/espresso/core/java/androidx/test/espresso/base/BaseLayerModule.java b/espresso/core/java/androidx/test/espresso/base/BaseLayerModule.java
-index 13a0af4..3b7d807 100644
+index 40c361a..247a5f9 100644
 --- a/espresso/core/java/androidx/test/espresso/base/BaseLayerModule.java
 +++ b/espresso/core/java/androidx/test/espresso/base/BaseLayerModule.java
 @@ -26,6 +26,7 @@ import androidx.test.espresso.IdlingRegistry;
@@ -267,6 +276,13 @@ index 13a0af4..3b7d807 100644
    public Context provideTargetContext() {
      // TODO: replace with installation of AndroidInstrumentationModule once
      // proguard issues resolved.
+@@ -188,6 +190,7 @@ public class BaseLayerModule {
+ 
+   @Provides
+   DefaultFailureHandler provideDefaultFailureHander(
+           Context context) {
+     return new DefaultFailureHandler(context);
+   }
 diff --git a/espresso/core/java/androidx/test/espresso/base/DefaultFailureHandler.java b/espresso/core/java/androidx/test/espresso/base/DefaultFailureHandler.java
 index d1d2ce9..2175cb9 100644
 --- a/espresso/core/java/androidx/test/espresso/base/DefaultFailureHandler.java
@@ -362,16 +378,493 @@ index 4fe6306..883482e 100644
    @Test
    @UiThreadTest
 diff --git a/ktx/core/javatests/androidx/test/core/app/BUILD.bazel b/ktx/core/javatests/androidx/test/core/app/BUILD.bazel
-index 9b2baf1..05b2e0c 100644
+index 9b2baf1..956ad6f 100644
 --- a/ktx/core/javatests/androidx/test/core/app/BUILD.bazel
 +++ b/ktx/core/javatests/androidx/test/core/app/BUILD.bazel
-@@ -38,6 +38,27 @@ kt_android_library(
+@@ -38,6 +38,24 @@ kt_android_library(
      ],
  )
  
++android_local_test(
++    name = "ActivityScenarioKotlinTest",
++    manifest = "AndroidManifest_target.xml",
++    deps = [
++        ":ActivityScenarioKotlinTest_lib",
++        ":robolectric_config",
++        "//:android_arch_lifecycle_common",
++        "//core",
++        "//core/javatests/androidx/test/core/app/testing",
++        "//ext/junit",
++        "//ktx/core",
++        "//runner/monitor",
++        "@guava//jar",
++        "@junit//jar",
++        "@robolectric//bazel:robolectric",
++        "@truth//jar",
++    ],
++)
  
  android_binary(
      name = "ActivityScenarioKotlinTest_test_apk",
+diff --git a/ktx/ext/junit/javatests/androidx/test/ext/junit/rules/BUILD.bazel b/ktx/ext/junit/javatests/androidx/test/ext/junit/rules/BUILD.bazel
+index 33664ca..272d306 100644
+--- a/ktx/ext/junit/javatests/androidx/test/ext/junit/rules/BUILD.bazel
++++ b/ktx/ext/junit/javatests/androidx/test/ext/junit/rules/BUILD.bazel
+@@ -39,6 +39,25 @@ kt_android_library(
+     ],
+ )
+ 
++android_local_test(
++    name = "ActivityScenarioRuleKotlinTest",
++    manifest = "AndroidManifest_target.xml",
++    deps = [
++        ":ActivityScenarioRuleKotlinTest_lib",
++        ":robolectric_config",
++        "//:android_arch_lifecycle_common",
++        "//core",
++        "//core/javatests/androidx/test/core/app/testing",
++        "//ext/junit",
++        "//ktx/core",
++        "//ktx/ext/junit",
++        "//runner/monitor",
++        "@guava//jar",
++        "@junit//jar",
++        "@robolectric//bazel:robolectric",
++        "@truth//jar",
++    ],
++)
+ 
+ android_binary(
+     name = "ActivityScenarioRuleKotlinTest_test_apk",
+diff --git a/piper-internal.patch b/piper-internal.patch
+index 4aa30bd..eaafc3d 100644
+--- a/piper-internal.patch
++++ b/piper-internal.patch
+@@ -6,6 +6,10 @@ index 50c8d80..1c610f9 100644
+   *   scenario.moveTo(State.DESTROYED);     // Your activity is destroyed and finished.
+   * </pre>
+   */
+  @Beta
+  public final class ActivityScenario<A extends Activity> {
+    /**
+@@ -17,6 +21,9 @@ index 770922f..13c3112 100644
+      // Stop the activity before finish it as a workaround for the framework bug in API level 15 to
+      // 22 where the framework never calls #onStop and #onDestroy if you call Activity#finish while
+      // floating style Activity is in the stack.
+      stopActivity(activity);
+  
+      getInstrumentation().runOnMainSync(() -> activity.finish());
+@@ -28,6 +35,28 @@ index 1e2c532..588e1f8 100644
+  #
+  # Activity Scenario Tests
+  #
+  
+  android_binary(
+      name = "ActivityScenarioTest_test_apk",
+@@ -39,9 +68,12 @@ index 9edb9c7..dfb6d3d 100644
+  
+  package androidx.test.espresso;
+  
+  import static com.google.common.base.Preconditions.checkNotNull;
+  
+  import android.view.View;
+  import androidx.test.espresso.util.HumanReadables;
+  import com.google.common.collect.ImmutableSet;
+  import com.google.common.collect.Lists;
+@@ -49,6 +81,7 @@ index 9edb9c7..dfb6d3d 100644
+   */
+  public final class AmbiguousViewMatcherException extends RuntimeException
+      implements EspressoException {
+  
+    private Matcher<? super View> viewMatcher;
+    private View rootView;
+@@ -56,6 +89,15 @@ index 9edb9c7..dfb6d3d 100644
+    private AmbiguousViewMatcherException(String description) {
+      super(description);
+  
+    }
+  
+    private AmbiguousViewMatcherException(Builder builder) {
+@@ -67,9 +109,12 @@ index 604e702..a7546f5 100644
+  
+  package androidx.test.espresso;
+  
+  import static com.google.common.base.Preconditions.checkState;
+  
+  import android.os.Looper;
+  import com.google.common.base.Joiner;
+  import java.util.List;
+  
+@@ -77,10 +122,20 @@ index 604e702..a7546f5 100644
+   * An exception which indicates that the App has not become idle even after the specified duration.
+   */
+  public final class AppNotIdleException extends RuntimeException implements EspressoException {
+  
+    private AppNotIdleException(String description) {
+      super(description);
+  
+    }
+  
+    /**
+@@ -92,6 +147,7 @@ index 2f00c0f..d4bf076 100644
+  
+  import static com.google.common.base.Preconditions.checkNotNull;
+  
+  import androidx.test.internal.runner.tracker.UsageTrackerRegistry;
+  import androidx.test.internal.runner.tracker.UsageTrackerRegistry.AxtVersions;
+  import java.util.concurrent.atomic.AtomicReference;
+@@ -99,6 +155,11 @@ index 2f00c0f..d4bf076 100644
+        return instanceRef.component;
+      }
+    }
+  }
+ diff --git a/espresso/core/java/androidx/test/espresso/IdlingPolicies.java b/espresso/core/java/androidx/test/espresso/IdlingPolicies.java
+ index 24fc41d..00c14ad 100644
+@@ -108,9 +169,35 @@ index 24fc41d..00c14ad 100644
+      masterIdlingPolicy =
+          masterIdlingPolicy
+              .toBuilder()
+              .build();
+    }
+  
+  
+    public static IdlingPolicy getMasterIdlingPolicy() {
+      return masterIdlingPolicy;
+@@ -122,6 +209,8 @@ index a2f1163..5078287 100644
+    private final long idleTimeout;
+    private final TimeUnit unit;
+    private final ResponseAction errorHandler;
+  
+    /** The amount of time the policy allows a resource to be non-idle. */
+    public long getIdleTimeout() {
+@@ -129,6 +218,19 @@ index a2f1163..5078287 100644
+      }
+    }
+  
+  
+    Builder toBuilder() {
+      return new Builder(this);
+@@ -136,12 +238,16 @@ index a2f1163..5078287 100644
+      this.idleTimeout = builder.idleTimeout;
+      this.unit = checkNotNull(builder.unit);
+      this.errorHandler = checkNotNull(builder.errorHandler);
+    }
+  
+    static class Builder {
+      private long idleTimeout = -1;
+      private TimeUnit unit = null;
+      private ResponseAction errorHandler = null;
+  
+      public Builder() {}
+  
+@@ -149,6 +255,17 @@ index a2f1163..5078287 100644
+        this.errorHandler = copy.errorHandler;
+      }
+  
+  
+      public Builder withIdlingTimeout(long idleTimeout) {
+        this.idleTimeout = idleTimeout;
+@@ -160,8 +277,11 @@ index b756898..0c1c1f8 100644
+  
+  package androidx.test.espresso;
+  
+  import static com.google.common.base.Preconditions.checkNotNull;
+  
+  import java.util.List;
+  
+  /**
+@@ -169,9 +289,19 @@ index b756898..0c1c1f8 100644
+   */
+  public final class IdlingResourceTimeoutException extends RuntimeException
+      implements EspressoException {
+  
+    public IdlingResourceTimeoutException(List<String> resourceNames) {
+      super(String.format("Wait for %s to become idle timed out", checkNotNull(resourceNames)));
+    }
+  }
+ diff --git a/espresso/core/java/androidx/test/espresso/InjectEventSecurityException.java b/espresso/core/java/androidx/test/espresso/InjectEventSecurityException.java
+@@ -182,7 +312,10 @@ index 0c62f11..e324cde 100644
+  
+  package androidx.test.espresso;
+  
+  
+  
+  /**
+   * An checked {@link Exception} indicating that event injection failed with a {@link
+@@ -190,6 +323,7 @@ index 0c62f11..e324cde 100644
+   */
+  public final class InjectEventSecurityException
+      extends androidx.test.platform.ui.InjectEventSecurityException implements EspressoException {
+  
+    public InjectEventSecurityException(String message) {
+      super(message);
+@@ -197,6 +331,15 @@ index 0c62f11..e324cde 100644
+    }
+  
+    private void dumpThreads() {
+    }
+  }
+ diff --git a/espresso/core/java/androidx/test/espresso/NoMatchingRootException.java b/espresso/core/java/androidx/test/espresso/NoMatchingRootException.java
+@@ -207,8 +350,11 @@ index 784af25..cb8778c 100644
+  
+  package androidx.test.espresso;
+  
+  import static com.google.common.base.Preconditions.checkNotNull;
+  
+  import java.util.List;
+  import org.hamcrest.Matcher;
+  
+@@ -216,9 +362,19 @@ index 784af25..cb8778c 100644
+   * currently available.
+   */
+  public final class NoMatchingRootException extends RuntimeException implements EspressoException {
+  
+    private NoMatchingRootException(String description) {
+      super(description);
+    }
+  
+    public static NoMatchingRootException create(Matcher<Root> rootMatcher, List<Root> roots) {
+@@ -230,8 +386,11 @@ index 5e4f1cd..f143f37 100644
+  
+  package androidx.test.espresso;
+  
+  import static com.google.common.base.Preconditions.checkNotNull;
+  
+  
+  /**
+   * Indicates that an exception occurred while performing a ViewAction on the UI thread.
+@@ -239,6 +398,7 @@ index 5e4f1cd..f143f37 100644
+   * <p>This is generally not recoverable so it is thrown on the instrumentation thread.
+   */
+  public final class PerformException extends RuntimeException implements EspressoException {
+    private static final String MESSAGE_FORMAT = "Error performing '%s' on view '%s'.";
+  
+    private final String actionDescription;
+@@ -246,6 +406,15 @@ index 5e4f1cd..f143f37 100644
+          builder.cause);
+      this.actionDescription = checkNotNull(builder.actionDescription);
+      this.viewDescription = checkNotNull(builder.viewDescription);
+    }
+  
+    public String getActionDescription() {
+@@ -257,6 +426,7 @@ index 13a0af4..3b7d807 100644
+  import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
+  import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
+  import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+  import com.google.common.base.Optional;
+  import com.google.common.util.concurrent.ListeningExecutorService;
+  import com.google.common.util.concurrent.MoreExecutors;
+@@ -264,6 +434,7 @@ index 13a0af4..3b7d807 100644
+    }
+  
+    @Provides
+    public Context provideTargetContext() {
+      // TODO: replace with installation of AndroidInstrumentationModule once
+      // proguard issues resolved.
+@@ -275,6 +446,10 @@ index d1d2ce9..2175cb9 100644
+  import androidx.test.espresso.EspressoException;
+  import androidx.test.espresso.FailureHandler;
+  import androidx.test.espresso.PerformException;
+  import junit.framework.AssertionFailedError;
+  import org.hamcrest.Matcher;
+  
+@@ -282,15 +457,26 @@ index d1d2ce9..2175cb9 100644
+   */
+  public final class DefaultFailureHandler implements FailureHandler {
+  
+    private final Context appContext;
+  
+    public DefaultFailureHandler(
+            Context appContext) {
+      this.appContext = checkNotNull(appContext);
+    }
+  
+    @Override
+    public void handle(Throwable error, Matcher<View> viewMatcher) {
+      if (error instanceof EspressoException
+          || error instanceof AssertionFailedError
+          || error instanceof AssertionError) {
+@@ -302,6 +488,9 @@ index b47eb99..298e043 100644
+    private IdleNotifier<IdleNotificationCallback> loopUntil(
+        EnumSet<IdleCondition> conditions, IdleNotifier<IdleNotificationCallback> dynamicIdle) {
+      IdlingPolicy masterIdlePolicy = IdlingPolicies.getMasterIdlingPolicy();
+      try {
+        long start = SystemClock.uptimeMillis();
+        long end =
+@@ -309,6 +498,37 @@ index b47eb99..298e043 100644
+        for (IdleCondition condition : conditions) {
+          if (!condition.isSignaled(conditionSet)) {
+            idleConditions.add(condition.name());
+          }
+        }
+        masterIdlePolicy.handleTimeout(
+@@ -320,6 +540,46 @@ index 96c8823..82eba0b 100644
+      };
+    }
+  
+  
+    @VisibleForTesting
+    static final class WithAlphaMatcher extends TypeSafeMatcher<View> {
+@@ -331,6 +591,62 @@ index 38c92a8..f92cab9 100644
+      onView(withId(R.id.enter_data_edit_text)).check(matches(withText("Har Har")));
+    }
+  
+  
+    private abstract static class TestAction implements ViewAction {
+      @Override
+@@ -342,6 +658,16 @@ index ebbcb6b..5f13a0c 100644
+      onView(withId(R.id.spanned)).perform(scrollTo(), openLinkWithText("bacon"));
+    }
+  
+  }
+ diff --git a/espresso/core/javatests/androidx/test/espresso/matcher/ViewMatchersTest.java b/espresso/core/javatests/androidx/test/espresso/matcher/ViewMatchersTest.java
+ index 4fe6306..883482e 100644
+@@ -351,6 +677,7 @@ index 4fe6306..883482e 100644
+  import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
+  import static androidx.test.espresso.matcher.ViewMatchers.isSelected;
+  import static androidx.test.espresso.matcher.ViewMatchers.supportsInputMethods;
+  import static androidx.test.espresso.matcher.ViewMatchers.withAlpha;
+  import static androidx.test.espresso.matcher.ViewMatchers.withChild;
+  import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
+@@ -358,6 +685,20 @@ index 4fe6306..883482e 100644
+      assertTrue(hasBackground(R.drawable.drawable_1).matches(viewWithBackground));
+    }
+  
+  
+    @Test
+    @UiThreadTest
+@@ -369,6 +710,27 @@ index 9b2baf1..05b2e0c 100644
+      ],
+  )
+  
+  
+  android_binary(
+      name = "ActivityScenarioKotlinTest_test_apk",
+@@ -380,6 +742,14 @@ index 5337081..7e9bd73 100644
+      String RUNNER_VERSION = "1.1.0";
+    }
+  
+  
+    // By default we use a NoOp class.
+    private static volatile UsageTracker instance = new UsageTracker.NoOpUsageTracker();
+@@ -391,6 +761,24 @@ index 1bda5c1..618990a 100644
+      deps = [":ato_test_lib"],
+  )
+  
+ diff --git a/runner/monitor/java/androidx/test/platform/ui/InjectEventSecurityException.java b/runner/monitor/java/androidx/test/platform/ui/InjectEventSecurityException.java
+ index 74cbcc3..29af4cc 100644
+ --- a/runner/monitor/java/androidx/test/platform/ui/InjectEventSecurityException.java
+@@ -399,6 +787,7 @@ index 74cbcc3..29af4cc 100644
+   * SecurityException}.
+   */
+  public class InjectEventSecurityException extends Exception implements TestFrameworkException {
+  
+    public InjectEventSecurityException(String message) {
+      super(message);
+@@ -410,6 +799,33 @@ index 052516e..56be651 100644
+     */
+    @Deprecated
+    protected boolean isPrimaryInstrProcess(@Nullable String argsProcessName) {
+      return isPrimaryInstrProcess();
+    }
+  
+@@ -421,6 +837,18 @@ index c27911b..89ad47c 100644
+      assertThat(ShadowLog.getLogsForTag(LogUtilsTest.class.getSimpleName())).isEmpty();
+    }
+  
+  }
+ diff --git a/services/speakeasy/javatests/androidx/test/services/speakeasy/client/SpeakEasyClientTest.java b/services/speakeasy/javatests/androidx/test/services/speakeasy/client/SpeakEasyClientTest.java
+ index 686a698..4955e39 100644
+@@ -430,6 +858,31 @@ index 686a698..4955e39 100644
+      assertWithMessage("Did we find the message?").that(found).isTrue();
+    }
+  
+  
+    private SpeakEasyProtocol.FindResult find(String key) {
+      final CountDownLatch latch = new CountDownLatch(1);
+@@ -441,6 +894,8 @@ index bd1ece4..3c8c2b0 100644
+  import androidx.test.filters.SmallTest;
+  import androidx.test.rule.ActivityTestRule;
+  import androidx.test.runner.AndroidJUnit4;
+  import org.hamcrest.Matchers;
+  import org.junit.After;
+  import org.junit.Before;
+@@ -448,15 +903,25 @@ index bd1ece4..3c8c2b0 100644
+        new ActivityTestRule<>(ChatHeadActivity.class);
+  
+    private Activity activity;
+  
+    @Before
+    public void setUp() {
+      // Espresso will not launch our activity for us, we must launch it via getActivity().
+      activity = activityTestRule.getActivity();
+    }
+  
+    @After
+    public void tearDown() {
+    }
+  
+    @SdkSuppress(maxSdkVersion = 22) // Requires special permission to draw over other apps
+@@ -464,6 +929,14 @@ index bd1ece4..3c8c2b0 100644
+          .inRoot(withDecorView(not(is(activity.getWindow().getDecorView()))))
+          .check(matches(withTagValue((Matchers.is((Object) "blue")))));
+  
+  
+      // Preform a click on the chat head button
+      Log.d(TAG, "click on chat chat head...");
+@@ -471,6 +944,26 @@ index bd1ece4..3c8c2b0 100644
+          .perform(click());
+    }
+  
+  }
+ diff --git a/testapps/ui_testapp/javatests/androidx/test/ui/app/MultipleWindowTest.java b/testapps/ui_testapp/javatests/androidx/test/ui/app/MultipleWindowTest.java
+ index 1e7d27e..fb0d133 100644
+@@ -480,6 +973,9 @@ index 1e7d27e..fb0d133 100644
+    }
+  
+    // Froyo's AutoCompleteTextBox is broken - do not bother testing with it.
+    @SdkSuppress(minSdkVersion = 24)
+    public void testInteractionsWithAutoCompletePopup() {
+      // Android's Window system allows multiple view hierarchies to layer on top of each other.
+@@ -491,6 +987,20 @@ index e83db69..da1524f 100644
+      onView(withText("drawer activity")).check(matches(isDisplayed()));
+    }
+  
+  
+    // The task stack behavior is available on API level 11 and up.
+    @SdkSuppress(minSdkVersion = 11)
+@@ -502,6 +1012,9 @@ index f512e7a..d96082f 100644
+    }
+  
+    // This test only applies to Lollipop+
+    @SdkSuppress(minSdkVersion = 21)
+    public void testTransition() throws InterruptedException {
+      onView(withId(R.id.grid)).check(matches(isDisplayed()));
+diff --git a/repo.bzl b/repo.bzl
+index d80427b..8b33a13 100644
+--- a/repo.bzl
++++ b/repo.bzl
+@@ -93,10 +93,16 @@ def _development_repositories():
+ 
+     http_archive(
+         name = "robolectric",
+-        sha256 = "7730b46281c2f8c23f6c045ddfe449bf077328f0128200043a5ac57210643f22",
+-        strip_prefix = "robolectric-bazel-4.0-alpha-3",
+-        urls = ["https://github.com/robolectric/robolectric-bazel/archive/4.0-alpha-3.tar.gz"],
+-    )
++        sha256 = "dff7a1f8e7bd8dc737f20b6bbfaf78d8b5851debe6a074757f75041029f0c43b",
++        strip_prefix = "robolectric-bazel-4.0.1",
++        urls = ["https://github.com/robolectric/robolectric-bazel/archive/4.0.1.tar.gz"],
++    )
++    # uncomment to test with new robolectric version. Change path to point to local filesystem
++    # clone of https://github.com/robolectric/robolectric-bazel
++    #native.local_repository(
++    #    name = "robolectric",
++    #    path = "~/robogithub/robolectric-bazel/",
++    #)
+ 
+     # java_lite_proto_library rules implicitly depend on @com_google_protobuf_javalite//:javalite_toolchain,
+     # which is the JavaLite proto runtime (base classes and common utilities).
 diff --git a/runner/android_junit_runner/java/androidx/test/internal/runner/tracker/UsageTrackerRegistry.java b/runner/android_junit_runner/java/androidx/test/internal/runner/tracker/UsageTrackerRegistry.java
 index 5337081..7e9bd73 100644
 --- a/runner/android_junit_runner/java/androidx/test/internal/runner/tracker/UsageTrackerRegistry.java
@@ -414,13 +907,22 @@ index 052516e..56be651 100644
    }
  
 diff --git a/runner/monitor/javatests/androidx/test/internal/util/LogUtilsTest.java b/runner/monitor/javatests/androidx/test/internal/util/LogUtilsTest.java
-index c27911b..89ad47c 100644
+index c27911b..1e6c548 100644
 --- a/runner/monitor/javatests/androidx/test/internal/util/LogUtilsTest.java
 +++ b/runner/monitor/javatests/androidx/test/internal/util/LogUtilsTest.java
-@@ -29,4 +29,16 @@ public class LogUtilsTest {
+@@ -29,4 +29,13 @@ public class LogUtilsTest {
      assertThat(ShadowLog.getLogsForTag(LogUtilsTest.class.getSimpleName())).isEmpty();
    }
  
++  @Test
++  public void logDebugWithProcess() {
++    Log.isLoggable(LogUtilsTest.class.getSimpleName(), Log.DEBUG);
++    String message = "Order me a %s";
++    LogUtil.logDebugWithProcess(LogUtilsTest.class.getSimpleName(), message, "latte");
++    assertThat(ShadowLog.getLogsForTag(LogUtilsTest.class.getSimpleName())).isNotEmpty();
++    assertThat(ShadowLog.getLogsForTag(LogUtilsTest.class.getSimpleName()).get(0).msg)
++        .contains("Order me a latte in robolectric");
++  }
  }
 diff --git a/services/speakeasy/javatests/androidx/test/services/speakeasy/client/SpeakEasyClientTest.java b/services/speakeasy/javatests/androidx/test/services/speakeasy/client/SpeakEasyClientTest.java
 index 686a698..4955e39 100644
@@ -473,13 +975,14 @@ index bd1ece4..3c8c2b0 100644
  
  }
 diff --git a/testapps/ui_testapp/javatests/androidx/test/ui/app/MultipleWindowTest.java b/testapps/ui_testapp/javatests/androidx/test/ui/app/MultipleWindowTest.java
-index 1e7d27e..fb0d133 100644
+index 1e7d27e..28b52d8 100644
 --- a/testapps/ui_testapp/javatests/androidx/test/ui/app/MultipleWindowTest.java
 +++ b/testapps/ui_testapp/javatests/androidx/test/ui/app/MultipleWindowTest.java
-@@ -61,6 +61,9 @@ public class MultipleWindowTest extends ActivityInstrumentationTestCase2<SendAct
+@@ -61,6 +61,7 @@ public class MultipleWindowTest extends ActivityInstrumentationTestCase2<SendAct
    }
  
    // Froyo's AutoCompleteTextBox is broken - do not bother testing with it.
++  // b/18916590
    @SdkSuppress(minSdkVersion = 24)
    public void testInteractionsWithAutoCompletePopup() {
      // Android's Window system allows multiple view hierarchies to layer on top of each other.
@@ -495,13 +998,14 @@ index e83db69..da1524f 100644
    // The task stack behavior is available on API level 11 and up.
    @SdkSuppress(minSdkVersion = 11)
 diff --git a/testapps/ui_testapp/javatests/androidx/test/ui/app/TransitionActivityMainTest.java b/testapps/ui_testapp/javatests/androidx/test/ui/app/TransitionActivityMainTest.java
-index f512e7a..d96082f 100644
+index f512e7a..d94e012 100644
 --- a/testapps/ui_testapp/javatests/androidx/test/ui/app/TransitionActivityMainTest.java
 +++ b/testapps/ui_testapp/javatests/androidx/test/ui/app/TransitionActivityMainTest.java
-@@ -48,6 +48,9 @@ public class TransitionActivityMainTest
+@@ -48,6 +48,7 @@ public class TransitionActivityMainTest
    }
  
    // This test only applies to Lollipop+
++  // b/29833613
    @SdkSuppress(minSdkVersion = 21)
    public void testTransition() throws InterruptedException {
      onView(withId(R.id.grid)).check(matches(isDisplayed()));
