@@ -1,0 +1,6 @@
+# Bazel
+bazel*
+
+# IntelliJ
+.idea
+
