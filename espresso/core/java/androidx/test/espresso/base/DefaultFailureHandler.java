@@ -27,6 +27,8 @@ import android.view.View;
 import androidx.test.espresso.EspressoException;
 import androidx.test.espresso.FailureHandler;
 import androidx.test.espresso.PerformException;
+import androidx.test.espresso.internal.inject.TargetContext;
+import javax.inject.Inject;
 import junit.framework.AssertionFailedError;
 import org.hamcrest.Matcher;
 
@@ -38,8 +40,8 @@ public final class DefaultFailureHandler implements FailureHandler {
 
   private final Context appContext;
 
-  public DefaultFailureHandler(
-          Context appContext) {
+  @Inject
+  public DefaultFailureHandler(@TargetContext Context appContext) {
     this.appContext = checkNotNull(appContext);
   }
 

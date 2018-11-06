@@ -22,6 +22,7 @@ android_library(
         ":idling_resource_registry",
         ":idling_uicontroller_interface",
         "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/internal/inject",
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource",
@@ -75,6 +76,7 @@ android_library(
     visibility = ["//visibility:public"],
     deps = [
         "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/internal/inject",
         "@dagger_api//jar",
         "@guava//jar",
         "@hamcrest//jar",
