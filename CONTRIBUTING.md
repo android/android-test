@@ -55,8 +55,10 @@ eg to run the androidx-test-core tests
 bazel test //core/javatests/… --spawn_strategy=local
 ```
 
-To run all the robolectric/local tests: `bazel test ...
---test_tag_filters=robolectric --build_tag_filters=robolectric`
+To run all the robolectric/local tests:
+```
+bazel test //core/... //ext/... //espresso/... //runner/... --test_tag_filters=robolectric --build_tag_filters=robolectric
+```
 
 ## Code reviews
 
