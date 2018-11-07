@@ -21,19 +21,10 @@ android_library(
         "//runner/monitor",
     ],
     deps = [
-        ":legacy-test-neverlink",
+        "@androidsdk//:legacy_test-28",
         "//:com_android_support_support_annotations",
         "//runner/monitor",
         "@junit//jar",
-    ],
-)
-
-# TODO(b/117464840): remove when legacy_test-28 is a neverlink target
-java_library(
-    name = "legacy-test-neverlink",
-    neverlink = 1,
-    exports = [
-        "@androidsdk//:legacy_test-28",
     ],
 )
 
