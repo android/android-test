@@ -17,17 +17,8 @@ EXTERNAL_DEPS = [
     "@dexmaker//jar",
     "@dexmaker_mockito//jar",
     "@objenesis//jar",
-    ":legacy-test-neverlink",
+    "@androidsdk//:legacy_test-28",
 ]
-
-# TODO(b/117464840): remove when legacy_test-28 is a neverlink target
-java_library(
-    name = "legacy-test-neverlink",
-    neverlink = 1,
-    exports = [
-        "@androidsdk//:legacy_test-28",
-    ],
-)
 
 java_library(
     name = "test_deps",
