@@ -22,7 +22,7 @@ AndroidX Test uses the [bazel](https://bazel.build/) build system.
 ### One time setup
 
  * [Fork](https://help.github.com/articles/fork-a-repo/) and [clone](https://help.github.com/articles/cloning-a-repository/) the [AndroidX Test repo](https://github.com/android/android-test)
- * Install [bazel](https://docs.bazel.build/versions/master/install.html). Version 0.17.2 is recommended. Ensure your environment meets the following [prerequisites](https://docs.bazel.build/versions/master/android-instrumentation-test.html#prerequisites)
+ * Install [bazel](https://docs.bazel.build/versions/master/install.html). Version 0.19 is recommended. Ensure your environment meets the following [prerequisites](https://docs.bazel.build/versions/master/android-instrumentation-test.html#prerequisites)
  * Install [maven](http://maven.apache.org/install.html) and make it available on PATH.
  * Install the [Android SDK](https://developer.android.com/studio/install) and run the following command to ensure you have the necessary components:
  ```
@@ -55,8 +55,19 @@ eg to run the androidx-test-core tests
 bazel test //core/javatests/… --spawn_strategy=local
 ```
 
-To run all the robolectric/local tests: `bazel test ...
---test_tag_filters=robolectric --build_tag_filters=robolectric`
+To run all the robolectric local tests (and thus replicate the Google Cloud Build CI)
+```
+bazel test ... --test_tag_filters=robolectric --build_tag_filters=robolectric
+```
+
+### IDE setup
+
+Android Studio is recommended.
+
+  * Install the bazel Android Studio plugin [instructions](https://docs.bazel.build/versions/master/ide.html)
+  * Select 'Import Bazel project' and set workspace location to android-test github repo
+  * Select 'Import project view' and select <github repo>/.bazelproject
+
 
 ## Code reviews
 
