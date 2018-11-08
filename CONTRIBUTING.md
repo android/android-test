@@ -17,7 +17,7 @@ again.
 
 ## Building and Testing
 
-AndroidX Test uses the [bazel](https://bazel.build/) build system.
+AndroidX Test uses the [bazel](https://bazel.build) build system.
 
 ### One time setup
 
