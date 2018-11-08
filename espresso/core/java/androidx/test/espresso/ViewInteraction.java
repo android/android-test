@@ -158,7 +158,7 @@ public final class ViewInteraction {
     ViewAction innerViewAction = va.getInnerViewAction();
 
     List<ListenableFuture<Void>> interactions = new ArrayList<>();
-    interactions.add(runSynchronouslyOnUiThread(performInteraction));
+    interactions.add(postAsynchronouslyOnUiThread(performInteraction));
     if (!remoteInteraction.isRemoteProcess()) {
       // Only the original process should submit remote interactionsList;
       interactions.add(
@@ -281,7 +281,7 @@ public final class ViewInteraction {
         };
 
     List<ListenableFuture<Void>> interactions = new ArrayList<>();
-    interactions.add(runSynchronouslyOnUiThread(checkInteraction));
+    interactions.add(postAsynchronouslyOnUiThread(checkInteraction));
     if (!remoteInteraction.isRemoteProcess()) {
       // Only the original process should submit remote interactionsList;
       interactions.add(
@@ -297,7 +297,7 @@ public final class ViewInteraction {
     return this;
   }
 
-  private ListenableFuture<Void> runSynchronouslyOnUiThread(Callable<Void> interaction) {
+  private ListenableFuture<Void> postAsynchronouslyOnUiThread(Callable<Void> interaction) {
     ListenableFutureTask<Void> mainThreadInteraction = ListenableFutureTask.create(interaction);
     mainThreadExecutor.execute(mainThreadInteraction);
     return mainThreadInteraction;
@@ -305,6 +305,7 @@ public final class ViewInteraction {
 
   private void waitForAndHandleInteractionResults(List<ListenableFuture<Void>> interactions) {
     try {
+      uiController.drainMainThreadUntilIdle();
       // Blocking call
       InteractionResultsHandler.gatherAnyResult(interactions);
     } catch (RuntimeException ee) {

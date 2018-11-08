@@ -19,6 +19,7 @@ package androidx.test.espresso;
 import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import androidx.test.annotation.Beta;
 import java.util.Iterator;
 
 /**
@@ -104,4 +105,14 @@ public interface UiController {
    * @param millisDelay time to spend in looping the main thread
    */
   void loopMainThreadForAtLeast(long millisDelay);
+
+  /**
+   * Similar to loopMainThreadUntilIdle but can be called from test thread.
+   *
+   * <p>Intended to be used in unit test environments where main thread looper is in a paused state.
+   *
+   * <p>Beta API, subject to change in the future.
+   */
+  @Beta
+  void drainMainThreadUntilIdle();
 }

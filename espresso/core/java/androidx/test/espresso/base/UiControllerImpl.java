@@ -464,6 +464,11 @@ final class UiControllerImpl
   }
 
   @Override
+  public void drainMainThreadUntilIdle() {
+    // ignore
+  }
+
+  @Override
   public boolean handleMessage(Message msg) {
     if (!IdleCondition.handleMessage(msg, conditionSet, generation)) {
       Log.i(TAG, "Unknown message type: " + msg);
