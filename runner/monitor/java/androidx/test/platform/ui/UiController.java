@@ -18,6 +18,7 @@ package androidx.test.platform.ui;
 
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import androidx.test.annotation.Beta;
 
 /**
  * Provides base-level UI operations (such as injection of {@link MotionEvent}s) that can be used to
@@ -81,4 +82,12 @@ public interface UiController {
    * @param millisDelay time to spend in looping the main thread
    */
   void loopMainThreadForAtLeast(long millisDelay);
+
+  /**
+   * Similar to loopMainThreadUntilIdle but called from test thread.
+   *
+   * <p>Beta API.
+   */
+  @Beta
+  void drainMainThreadUntilIdle();
 }

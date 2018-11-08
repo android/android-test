@@ -17,28 +17,21 @@ again.
 
 ## Building and Testing
 
-AndroidX Test uses the [bazel](https://bazel.build) build system.
+AndroidX Test uses the [bazel](https://bazel.build/) build system.
 
 ### One time setup
 
-*   [Fork](https://help.github.com/articles/fork-a-repo/) and
-    [clone](https://help.github.com/articles/cloning-a-repository/) the
-    [AndroidX Test repo](https://github.com/android/android-test)
-*   Install [bazel](https://docs.bazel.build/versions/master/install.html).
-    Version 0.19 is recommended. Ensure your environment meets the following
-    [prerequisites](https://docs.bazel.build/versions/master/android-instrumentation-test.html#prerequisites)
-*   Install [maven](http://maven.apache.org/install.html) and make it available
-    on PATH.
-*   Install the [Android SDK](https://developer.android.com/studio/install) and
-    run the following command to ensure you have the necessary components:
-    `./tools/bin/sdkmanager --install 'build-tools;28.0.3'
-    'platforms;android-28' 'emulator' 'platform-tools'
-    'system-images;android-19;default;x86'
-    'system-images;android-21;default;x86'
-    'system-images;android-22;default;x86'
-    'system-images;android-23;default;x86'`
-*   Set the ANDROID_HOME environment variable to point to the SDK install
-    location. eg `export ANDROID_HOME=/home/$USER/Android/Sdk`
+ * [Fork](https://help.github.com/articles/fork-a-repo/) and [clone](https://help.github.com/articles/cloning-a-repository/) the [AndroidX Test repo](https://github.com/android/android-test)
+ * Install [bazel](https://docs.bazel.build/versions/master/install.html). Version 0.17.2 is recommended. Ensure your environment meets the following [prerequisites](https://docs.bazel.build/versions/master/android-instrumentation-test.html#prerequisites)
+ * Install [maven](http://maven.apache.org/install.html) and make it available on PATH.
+ * Install the [Android SDK](https://developer.android.com/studio/install) and run the following command to ensure you have the necessary components:
+ ```
+ ./tools/bin/sdkmanager --install 'build-tools;28.0.3' 'platforms;android-28' 'emulator' 'platform-tools' 'system-images;android-19;default;x86' 'system-images;android-21;default;x86' 'system-images;android-22;default;x86' 'system-images;android-23;default;x86'
+ ```
+ * Set the ANDROID_HOME environment variable to point to the SDK install location. eg
+```
+ export ANDROID_HOME=/home/$USER/Android/Sdk
+```
 
 ### Building
 
@@ -62,19 +55,8 @@ eg to run the androidx-test-core tests
 bazel test //core/javatests/… --spawn_strategy=local
 ```
 
-To run all the robolectric local tests (and thus replicate the Google Cloud
-Build CI) `bazel test ... --test_tag_filters=robolectric
---build_tag_filters=robolectric`
-
-### IDE setup
-
-Android Studio is recommended.
-
-*   Install the bazel Android Studio plugin
-    [instructions](https://docs.bazel.build/versions/master/ide.html)
-*   Select 'Import Bazel project' and set workspace location to android-test
-    github repo
-*   Select 'Import project view' and select <github repo>/.bazelproject
+To run all the robolectric/local tests: `bazel test ...
+--test_tag_filters=robolectric --build_tag_filters=robolectric`
 
 ## Code reviews
 

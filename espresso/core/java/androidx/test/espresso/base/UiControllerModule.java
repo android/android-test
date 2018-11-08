@@ -96,6 +96,11 @@ public class UiControllerModule {
     }
 
     @Override
+    public void drainMainThreadUntilIdle() {
+      platformUiController.drainMainThreadUntilIdle();
+    }
+
+    @Override
     public void interruptEspressoTasks() {
       Log.w("UiController", "interruptEspressoTasks called, no-op");
     }
