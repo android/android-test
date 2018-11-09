@@ -54,4 +54,10 @@ public abstract class OrchestrationRunListener {
   public void testRunFinished(ParcelableResult result) {}
 
   public void testProcessFinished(String message) {}
+
+  public byte[] serialize() {
+    return null;
+  }
+
+  public void deserialize(byte[] buffer) {}
 }

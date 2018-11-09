@@ -62,6 +62,12 @@ public final class OrchestrationResult {
       return new OrchestrationResult(
           runCount, expectedCount - ignoredCount, startTime, finishTime, failures);
     }
+
+    public byte[] serialize() {
+      return null;
+    }
+
+    public void deserialize(byte[] buffer) {}
   }
 
   private final long runCount;

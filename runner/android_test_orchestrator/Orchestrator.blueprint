@@ -1,0 +1,21 @@
+include "devtools/blueprint/ncl/blueprint_file.ncl";
+
+blueprint_file = ::blueprint::BlueprintFile(
+  project_name = "androidx.test.orchestrator",
+  mdb_groups = ["example"],
+  buganizer_component_ids = [12345],
+  dev_mailing_list = "example-dev@google.com",
+  project_grouping = [
+    "Ads",
+    "Google Product Infrastructure",
+    "Mobile DevX"],
+  buildable_units = [
+    ::blueprint::BuildableUnit(
+      name = "androidx.test.orchestrator",
+      enable_continuous_build = true,  // TAP
+      build_patterns = ["//runner/android_test_orchestrator/.."],
+      test_patterns = ["//runner/android_test_orchestrator/.."],
+      build_flags = ["--fat_apk_cpu=x86,x86_64"],
+    ),
+  ],
+);
