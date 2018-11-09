@@ -23,9 +23,7 @@ java_library(
 
 kt_android_library(
     name = "ActivityScenarioRuleKotlinTest_lib",
-    srcs = [
-        "ActivityScenarioRuleKotlinTest.kt",
-    ],
+    srcs = ["ActivityScenarioRuleKotlinTest.kt"],
     deps = [
         "//:android_arch_lifecycle_common",
         "//core",
@@ -89,57 +87,4 @@ android_instrumentation_test(
     ],
     target_device = "//tools/android/emulated_devices/generic_phone:android_23_x86_qemu2",
     test_app = ":ActivityScenarioRuleKotlinTest_test_apk",
-)
-
-kt_android_library(
-    name = "ActivityScenarioRuleWithCustomIntentKotlinTest_lib",
-    srcs = [
-        "ActivityScenarioRuleWithCustomIntentKotlinTest.kt",
-    ],
-    deps = [
-        "//:android_arch_lifecycle_common",
-        "//core",
-        "//core/javatests/androidx/test/core/app/testing",
-        "//ext/junit",
-        "//ext/truth",
-        "//ktx/core",
-        "//ktx/ext/junit",
-        "//runner/android_junit_runner",
-        "//runner/monitor",
-        "@guava//jar",
-        "@junit//jar",
-        "@truth//jar",
-    ],
-)
-
-
-android_binary(
-    name = "ActivityScenarioRuleWithCustomIntentKotlinTest_test_apk",
-    instruments = ":target_stub",
-    manifest = "AndroidManifest_test.xml",
-    deps = [
-        ":ActivityScenarioRuleWithCustomIntentKotlinTest_lib",
-        "//:android_arch_lifecycle_common",
-        "//core",
-        "//core/javatests/androidx/test/core/app/testing",
-        "//ext/junit",
-        "//ext/truth",
-        "//ktx/core",
-        "//ktx/ext/junit",
-        "//runner/android_junit_runner",
-        "//runner/monitor",
-        "@guava//jar",
-        "@junit//jar",
-        "@truth//jar",
-    ],
-)
-
-android_instrumentation_test(
-    name = "ActivityScenarioRuleWithCustomIntentKotlinTest_android",
-    args = [
-        "--clear_package_data",
-        "--install_test_services=True",  # required for Bazel 0.11, can be removed in 0.12
-    ],
-    target_device = "//tools/android/emulated_devices/generic_phone:android_23_x86_qemu2",
-    test_app = ":ActivityScenarioRuleWithCustomIntentKotlinTest_test_apk",
 )

@@ -19,6 +19,7 @@ import android.app.Instrumentation;
 import androidx.test.orchestrator.junit.ParcelableDescription;
 import androidx.test.orchestrator.junit.ParcelableFailure;
 import androidx.test.orchestrator.junit.ParcelableResult;
+import java.io.IOException;
 
 /** Listens to events created during an orchestration run. */
 public abstract class OrchestrationRunListener {
@@ -54,4 +55,10 @@ public abstract class OrchestrationRunListener {
   public void testRunFinished(ParcelableResult result) {}
 
   public void testProcessFinished(String message) {}
+
+  public byte[] serialize() {
+    return null;
+  }
+
+  public void deserialize(byte[] buffer) throws IOException {}
 }

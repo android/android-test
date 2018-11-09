@@ -18,7 +18,6 @@ package androidx.test.ext.junit.rules;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.support.annotation.Nullable;
 import androidx.test.annotation.Beta;
 import androidx.test.core.app.ActivityScenario;
@@ -49,16 +48,7 @@ import org.junit.rules.ExternalResource;
 @Beta
 public final class ActivityScenarioRule<A extends Activity> extends ExternalResource {
 
-  /**
-   * Same as {@link java.util.function.Supplier} which requires API level 24.
-   *
-   * @hide
-   */
-  interface Supplier<T> {
-    T get();
-  }
-
-  private final Supplier<ActivityScenario<A>> scenarioSupplier;
+  private final Class<A> activityClass;
   @Nullable private ActivityScenario<A> scenario;
 
   /**
@@ -67,21 +57,12 @@ public final class ActivityScenarioRule<A extends Activity> extends ExternalReso
    * @param activityClass an activity class to launch
    */
   public ActivityScenarioRule(Class<A> activityClass) {
-    scenarioSupplier = () -> ActivityScenario.launch(checkNotNull(activityClass));
-  }
-
-  /**
-   * Constructs ActivityScenarioRule for a given activity class and intent.
-   *
-   * @param startActivityIntent an intent to start the activity
-   */
-  public ActivityScenarioRule(Intent startActivityIntent) {
-    scenarioSupplier = () -> ActivityScenario.launch(checkNotNull(startActivityIntent));
+    this.activityClass = activityClass;
   }
 
   @Override
   protected void before() throws Throwable {
-    scenario = scenarioSupplier.get();
+    scenario = ActivityScenario.launch(activityClass);
   }
 
   @Override

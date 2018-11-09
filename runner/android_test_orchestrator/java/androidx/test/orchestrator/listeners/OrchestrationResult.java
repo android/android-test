@@ -18,6 +18,9 @@ package androidx.test.orchestrator.listeners;
 
 import androidx.test.orchestrator.junit.ParcelableDescription;
 import androidx.test.orchestrator.junit.ParcelableFailure;
+import androidx.test.orchestrator.listeners.proto.OrchestrationResultProto;
+import com.google.protobuf.InvalidProtocolBufferException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +64,44 @@ public final class OrchestrationResult {
     public OrchestrationResult build() {
       return new OrchestrationResult(
           runCount, expectedCount - ignoredCount, startTime, finishTime, failures);
+    }
+
+    @Override
+    public byte[] serialize() {
+      // TODO: serialize failures
+      return OrchestrationResultProto.OrchestrationResult.newBuilder()
+          .setRunCount(runCount)
+          .setExpectedCount(expectedCount)
+          .setIgnoredCount(ignoredCount)
+          .setStartTime(startTime)
+          .setFinishTime(finishTime)
+          .build()
+          .toByteArray();
+    }
+
+    @Override
+    public void deserialize(byte[] buffer) throws IOException {
+      try {
+        OrchestrationResultProto.OrchestrationResult proto =
+            OrchestrationResultProto.OrchestrationResult.parseFrom(buffer);
+        if (proto.hasRunCount()) {
+          runCount = proto.getRunCount();
+        }
+        if (proto.hasExpectedCount()) {
+          expectedCount = proto.getExpectedCount();
+        }
+        if (proto.hasIgnoredCount()) {
+          ignoredCount = proto.getIgnoredCount();
+        }
+        if (proto.hasStartTime()) {
+          startTime = proto.getStartTime();
+        }
+        if (proto.hasFinishTime()) {
+          finishTime = proto.getFinishTime();
+        }
+      } catch (InvalidProtocolBufferException e) {
+        throw new IOException("Failed to deserialize results", e);
+      }
     }
   }
 

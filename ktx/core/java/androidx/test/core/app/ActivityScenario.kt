@@ -17,7 +17,6 @@ package androidx.test.core.app
 
 import android.app.Activity
 import android.arch.lifecycle.Lifecycle.State
-import android.content.Intent
 
 /**
  * Launches an activity of a given class and constructs ActivityScenario with the activity. Waits
@@ -27,12 +26,7 @@ import android.content.Intent
  *
  * This method cannot be called from the main thread except in Robolectric tests.
  *
- * @param intent an intent to start activity or null to use the default one
  * @throws AssertionError if the lifecycle state transition never completes within the timeout
  * @return ActivityScenario which you can use to make further state transitions
  */
-inline fun <reified A : Activity> launchActivity(intent: Intent? = null): ActivityScenario<A> =
-        when (intent) {
-          null -> ActivityScenario.launch(A::class.java)
-          else -> ActivityScenario.launch(intent)
-        }
+inline fun <reified A : Activity> launchActivity() = ActivityScenario.launch(A::class.java)
