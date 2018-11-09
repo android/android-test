@@ -24,6 +24,7 @@ import static androidx.test.orchestrator.OrchestratorConstants.CLEAR_PKG_DATA;
 import static androidx.test.orchestrator.OrchestratorConstants.COVERAGE_FILE_PATH;
 import static androidx.test.orchestrator.OrchestratorConstants.ISOLATED_ARGUMENT;
 import static androidx.test.orchestrator.OrchestratorConstants.ORCHESTRATOR_DEBUG_ARGUMENT;
+import static androidx.test.orchestrator.OrchestratorConstants.SNAPSHOT_RUNNER;
 import static androidx.test.orchestrator.OrchestratorConstants.TARGET_INSTRUMENTATION_ARGUMENT;
 import static com.google.common.base.Preconditions.checkState;
 
@@ -60,11 +61,13 @@ import androidx.test.services.shellexecutor.ClientNotConnected;
 import androidx.test.services.shellexecutor.ShellExecSharedConstants;
 import androidx.test.services.shellexecutor.ShellExecutor;
 import androidx.test.services.shellexecutor.ShellExecutorImpl;
+import com.google.android.offworld.Snapshot;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -160,6 +163,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   // instrumentation, it should live in its own state machine class.
   private String test;
   private Iterator<String> testIterator;
+  private Snapshot snapshot;
 
   public AndroidTestOrchestrator() {
     super();
@@ -295,23 +299,54 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     // everything in this method should live in a different class to model the test execution state
     // machine. We do not need to have any association with Instrumentation beyond calling finish.
     // The first run complete will occur during test collection.
-    if (null == test) {
-      List<String> allTests = callbackLogic.provideCollectedTests();
-      testIterator = allTests.iterator();
-      addListeners(allTests.size());
-
-      if (allTests.isEmpty()) {
-        finish(Activity.RESULT_CANCELED, createResultBundle());
-        return;
+    if (usesSnapshotRunner(arguments)) {
+      if (null != snapshot) {
+        try {
+          listenerManager.testProcessFinished(getOutputFile());
+          snapshot.doneInstance();
+          // The following will only run for the last test
+          snapshot.close();
+          snapshot = null;
+          finish(Activity.RESULT_OK, createResultBundle());
+          return;
+        } catch (IOException e) {
+          Log.i(TAG, "Snapshot test runner failed on finish, " + e);
+          return;
+        }
+      }
+      try {
+        snapshot = Snapshot.connect();
+        ArrayList<String> allTest = new ArrayList<>(callbackLogic.provideCollectedTests());
+        if (allTest.isEmpty()) {
+          // TODO: stich the results from all runs together
+          finish(Activity.RESULT_CANCELED, createResultBundle());
+          return;
+        }
+        addListeners(1);
+        int snapshotId = snapshot.forkReadOnlyInstances(allTest.size());
+        testIterator = allTest.listIterator(snapshotId);
+        executeNextTest();
+      } catch (IOException e) {
+        Log.i(TAG, "Snapshot test runner failed: " + e);
       }
     } else {
-      listenerManager.testProcessFinished(getOutputFile());
-    }
+      if (null == test) {
+        List<String> allTests = callbackLogic.provideCollectedTests();
+        testIterator = allTests.iterator();
+        addListeners(allTests.size());
+        if (allTests.isEmpty()) {
+          finish(Activity.RESULT_CANCELED, createResultBundle());
+          return;
+        }
+      } else {
+        listenerManager.testProcessFinished(getOutputFile());
+      }
 
-    if (runsInIsolatedMode(arguments)) {
-      executeNextTest();
-    } else {
-      executeEntireTestSuite();
+      if (runsInIsolatedMode(arguments)) {
+        executeNextTest();
+      } else {
+        executeEntireTestSuite();
+      }
     }
   }
 
@@ -340,7 +375,9 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     if (coveragePath != null) {
       arguments.putString(AJUR_COVERAGE_FILE, coveragePath);
     }
-    clearPackageData();
+    if (!usesSnapshotRunner(arguments)) {
+      clearPackageData();
+    }
     executorService.execute(
         TestRunnable.singleTestRunnable(
             getContext(), getSecret(arguments), arguments, getOutputStream(), this, test));
@@ -464,6 +501,10 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   public boolean onException(Object obj, Throwable e) {
     resultPrinter.reportProcessCrash(e);
     return super.onException(obj, e);
+  }
+
+  private static boolean usesSnapshotRunner(Bundle arguments) {
+    return Boolean.TRUE.toString().equalsIgnoreCase(arguments.getString(SNAPSHOT_RUNNER));
   }
 
   private static boolean runsInIsolatedMode(Bundle arguments) {
