@@ -25,6 +25,7 @@ import static androidx.test.orchestrator.OrchestratorConstants.COVERAGE_FILE_PAT
 import static androidx.test.orchestrator.OrchestratorConstants.ISOLATED_ARGUMENT;
 import static androidx.test.orchestrator.OrchestratorConstants.ORCHESTRATOR_DEBUG_ARGUMENT;
 import static androidx.test.orchestrator.OrchestratorConstants.TARGET_INSTRUMENTATION_ARGUMENT;
+import static androidx.test.orchestrator.OrchestratorConstants.USE_SNAPSHOTS;
 import static com.google.common.base.Preconditions.checkState;
 
 import android.Manifest.permission;
@@ -60,6 +61,7 @@ import androidx.test.services.shellexecutor.ClientNotConnected;
 import androidx.test.services.shellexecutor.ShellExecSharedConstants;
 import androidx.test.services.shellexecutor.ShellExecutor;
 import androidx.test.services.shellexecutor.ShellExecutorImpl;
+import com.google.android.offworld.Snapshot;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -160,6 +162,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   // instrumentation, it should live in its own state machine class.
   private String test;
   private Iterator<String> testIterator;
+  private Snapshot snapshot;
 
   public AndroidTestOrchestrator() {
     super();
@@ -289,6 +292,38 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     return FULLY_QUALIFIED_CLASS_AND_METHOD.matcher(classArg).matches();
   }
 
+  private void snapshotInitTestIterator(List<String> allTests) {
+    try {
+      // Create snapshot checkpoint
+      snapshot = Snapshot.connect();
+      int testId = snapshot.forkReadOnlyInstances(allTests.size());
+      // Recover data if we are rewinding to this checkpoint
+      byte[] serialized = snapshot.getForkMetaData();
+      if (serialized != null) {
+        resultBuilder.deserialize(serialized);
+      }
+      // Directly jumps to the #testId test, because we are using snapshot
+      testIterator = allTests.listIterator(testId);
+    } catch (IOException e) {
+      Log.e(TAG, "Snapshot test runner failed: " + e);
+      snapshot = null;
+      testIterator = allTests.iterator();
+    }
+  }
+
+  private void snapshotFinishTest() {
+    try {
+      // Rewind to previous checkpoint if necessary
+      snapshot.doneInstance(resultBuilder.serialize());
+      // Snapshot does not rewind, which means we are running the last test
+      snapshot.close();
+      snapshot = null;
+    } catch (IOException e) {
+      Log.e(TAG, "Snapshot test runner failed: " + e);
+      snapshot = null;
+    }
+  }
+
   /** Invoked every time the TestRunnable finishes, including after test collection. */
   @Override
   public void runFinished() {
@@ -297,15 +332,24 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     // The first run complete will occur during test collection.
     if (null == test) {
       List<String> allTests = callbackLogic.provideCollectedTests();
-      testIterator = allTests.iterator();
       addListeners(allTests.size());
-
       if (allTests.isEmpty()) {
         finish(Activity.RESULT_CANCELED, createResultBundle());
         return;
       }
+      // If feasible, put most of the logic before creating snapshots for better performance.
+      if (usesSnapshotRunner(arguments)) {
+        snapshotInitTestIterator(allTests);
+      } else {
+        testIterator = allTests.iterator();
+      }
     } else {
       listenerManager.testProcessFinished(getOutputFile());
+      if (usesSnapshotRunner(arguments)) {
+        // We cannot add this to a listener because we need to make sure it runs after other
+        // listeners.
+        snapshotFinishTest();
+      }
     }
 
     if (runsInIsolatedMode(arguments)) {
@@ -340,7 +384,9 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     if (coveragePath != null) {
       arguments.putString(AJUR_COVERAGE_FILE, coveragePath);
     }
-    clearPackageData();
+    if (!usesSnapshotRunner(arguments)) {
+      clearPackageData();
+    }
     executorService.execute(
         TestRunnable.singleTestRunnable(
             getContext(), getSecret(arguments), arguments, getOutputStream(), this, test));
@@ -464,6 +510,10 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   public boolean onException(Object obj, Throwable e) {
     resultPrinter.reportProcessCrash(e);
     return super.onException(obj, e);
+  }
+
+  private static boolean usesSnapshotRunner(Bundle arguments) {
+    return Boolean.TRUE.toString().equalsIgnoreCase(arguments.getString(USE_SNAPSHOTS));
   }
 
   private static boolean runsInIsolatedMode(Bundle arguments) {

@@ -18,6 +18,7 @@ android_library(
         "@guava//jar",
         "@junit//jar",
         "@kxml//jar",
+        "@offworld//jar",
     ],
 )
 

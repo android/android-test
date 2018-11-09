@@ -23,6 +23,7 @@ final class OrchestratorConstants {
   static final String ORCHESTRATOR_DEBUG_ARGUMENT = "orchestratorDebug";
   static final String COVERAGE_FILE_PATH = "coverageFilePath";
   static final String CLEAR_PKG_DATA = "clearPackageData";
+  static final String USE_SNAPSHOTS = "SnapshotRunner";
 
   // The following args have equivalents in AJUR:
   static final String AJUR_LIST_TESTS_ARGUMENT = "listTestsForOrchestrator";
