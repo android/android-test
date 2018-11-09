@@ -60,11 +60,13 @@ import androidx.test.services.shellexecutor.ClientNotConnected;
 import androidx.test.services.shellexecutor.ShellExecSharedConstants;
 import androidx.test.services.shellexecutor.ShellExecutor;
 import androidx.test.services.shellexecutor.ShellExecutorImpl;
+import com.google.android.offworld.Snapshot;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -160,6 +162,8 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   // instrumentation, it should live in its own state machine class.
   private String test;
   private Iterator<String> testIterator;
+  private boolean useSnapshot = true;
+  private Snapshot snapshot;
 
   public AndroidTestOrchestrator() {
     super();
@@ -295,23 +299,60 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     // everything in this method should live in a different class to model the test execution state
     // machine. We do not need to have any association with Instrumentation beyond calling finish.
     // The first run complete will occur during test collection.
-    if (null == test) {
-      List<String> allTests = callbackLogic.provideCollectedTests();
-      testIterator = allTests.iterator();
-      addListeners(allTests.size());
-
-      if (allTests.isEmpty()) {
-        finish(Activity.RESULT_CANCELED, createResultBundle());
-        return;
+    if (useSnapshot) {
+      if (null != snapshot) {
+        try {
+          listenerManager.testProcessFinished(getOutputFile());
+          snapshot.doneInstance();
+          // Snapshot loaded. Nothing should run after this point.
+          throw new IOException("Snapshot test runner failed to load.");
+        } catch (IOException e) {
+          Log.i(TAG, "Snapshot test runner failed on finish, " + e);
+          return;
+        }
+      }
+      try {
+        snapshot = Snapshot.connect();
+        ArrayList<String> allTest = new ArrayList<String>(callbackLogic.provideCollectedTests());
+        if (allTest.isEmpty()) {
+          // TODO: stich the results from all runs together
+          finish(Activity.RESULT_CANCELED, createResultBundle());
+          return;
+        }
+        addListeners(1);
+        int snapshotId = snapshot.forkReadOnlyInstances(allTest.size() + 1);
+        if (snapshotId == allTest.size()) {
+          snapshot.doneInstance();
+          snapshot.close();
+          snapshot = null;
+          finish(Activity.RESULT_OK, createResultBundle());
+          return;
+        }
+        testIterator = allTest.listIterator(snapshotId);
+        executeNextTest();
+      } catch (IOException e) {
+        Log.i(TAG, "Snapshot test runner not available, fallback to default runner");
+        doUseSnapshot = false;
       }
     } else {
-      listenerManager.testProcessFinished(getOutputFile());
-    }
+      if (null == test) {
+        List<String> allTests = callbackLogic.provideCollectedTests();
+        testIterator = allTests.iterator();
+        addListeners(allTests.size());
 
-    if (runsInIsolatedMode(arguments)) {
-      executeNextTest();
-    } else {
-      executeEntireTestSuite();
+        if (allTests.isEmpty()) {
+          finish(Activity.RESULT_CANCELED, createResultBundle());
+          return;
+        }
+      } else {
+        listenerManager.testProcessFinished(getOutputFile());
+      }
+
+      if (runsInIsolatedMode(arguments)) {
+        executeNextTest();
+      } else {
+        executeEntireTestSuite();
+      }
     }
   }
 
