@@ -20,6 +20,7 @@ import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.arch.lifecycle.Lifecycle.State
 import android.content.Intent
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.core.app.testing.RecreationRecordingActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.ext.truth.content.IntentSubject.assertThat
@@ -72,6 +73,21 @@ class ActivityScenarioKotlinTest {
         }
         assertThat(result.resultCode).isEqualTo(RESULT_OK)
         assertThat(result.resultData).hasAction(Intent.ACTION_SEND)
+      }
+    }
+  }
+
+  @Test
+  fun basicUseCaseWithCustomIntent() {
+    val intent = Intent(getApplicationContext(), RecreationRecordingActivity::class.java).apply {
+      putExtra("MyIntentParameterKey", "MyIntentParameterValue")
+    }
+    launchActivity<RecreationRecordingActivity>(intent).use { scenario ->
+      scenario.onActivity { activity ->
+        assertThat(activity.intent)
+                .extras()
+                .string("MyIntentParameterKey")
+                .isEqualTo("MyIntentParameterValue")
       }
     }
   }
