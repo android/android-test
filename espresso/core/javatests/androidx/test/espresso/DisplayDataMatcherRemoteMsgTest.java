@@ -36,8 +36,8 @@ import androidx.test.espresso.proto.matcher.ViewMatchers.DisplayDataMatcherProto
 import androidx.test.espresso.remote.GenericRemoteMessage;
 import androidx.test.espresso.remote.RemoteDescriptorRegistry;
 import androidx.test.espresso.util.EspressoOptional;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
 import com.google.common.base.Function;
 import org.hamcrest.Matcher;
 import org.junit.Before;

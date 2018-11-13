@@ -16,7 +16,7 @@
 
 package androidx.test.espresso;
 
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.InstrumentationRegistry.getContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
@@ -25,8 +25,8 @@ import static org.hamcrest.Matchers.notNullValue;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Before;
@@ -48,14 +48,14 @@ public class AmbiguousViewMatcherExceptionTest {
   @Before
   public void setUp() throws Exception {
     alwaysTrueMatcher = notNullValue(View.class);
-    testView = new RelativeLayout(getInstrumentation().getContext());
-    child1 = new TextView(getInstrumentation().getContext());
+    testView = new RelativeLayout(getContext());
+    child1 = new TextView(getContext());
     child1.setId(1);
-    child2 = new TextView(getInstrumentation().getContext());
+    child2 = new TextView(getContext());
     child2.setId(2);
-    child3 = new TextView(getInstrumentation().getContext());
+    child3 = new TextView(getContext());
     child3.setId(3);
-    child4 = new TextView(getInstrumentation().getContext());
+    child4 = new TextView(getContext());
     child4.setId(4);
     testView.addView(child1);
     testView.addView(child2);

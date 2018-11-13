@@ -29,7 +29,6 @@ ESPRESSO_REMOTE_DEPS = [
 
 ESPRESSO_DEPS = [
     "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
-    "//core",
     "//espresso/intents/java/androidx/test/espresso/intent:intents",
     "//espresso/intents/java/androidx/test/espresso/intent/matcher",
     "//espresso/core/java/androidx/test/espresso",
@@ -43,7 +42,6 @@ ESPRESSO_DEPS = [
     "//espresso/core/java/androidx/test/espresso/matcher",
     "//espresso/core/java/androidx/test/espresso/util",
     "//espresso/web/java/androidx/test/espresso/web/model",
-    "//ext/junit",
     "//runner/android_junit_runner",
     "//runner/rules",
 ] + ESPRESSO_REMOTE_DEPS

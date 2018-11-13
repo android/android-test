@@ -16,6 +16,7 @@
 
 package androidx.test.espresso;
 
+import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
@@ -27,7 +28,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.hasValue;
@@ -42,9 +42,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.assertion.ViewAssertions;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 import androidx.test.ui.app.ActionBarTestActivity;
 import androidx.test.ui.app.KeyboardTestActivity;
 import androidx.test.ui.app.MainActivity;

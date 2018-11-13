@@ -16,7 +16,6 @@
 
 package androidx.test.espresso.intent;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName;
 import static androidx.test.espresso.intent.matcher.ComponentNameMatchers.hasMyPackageName;
 import static androidx.test.espresso.intent.matcher.ComponentNameMatchers.hasPackageName;
@@ -27,8 +26,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import android.content.ComponentName;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.InstrumentationRegistry;
 import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -80,7 +80,7 @@ public class ComponentNameMatchersTest {
 
   @Test
   public void hasMyPackageNameTesting() {
-    String targetPackage = getApplicationContext().getPackageName();
+    String targetPackage = InstrumentationRegistry.getTargetContext().getPackageName();
     ComponentName targetComponent = new ComponentName(targetPackage, targetPackage + ".SomeClass ");
     assertTrue(hasMyPackageName().matches(targetComponent));
   }

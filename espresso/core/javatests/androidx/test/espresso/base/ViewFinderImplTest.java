@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.base;
 
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
@@ -31,9 +31,9 @@ import androidx.test.annotation.UiThreadTest;
 import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewFinder;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
 import androidx.test.rule.UiThreadTestRule;
+import androidx.test.runner.AndroidJUnit4;
 import javax.inject.Provider;
 import org.junit.Before;
 import org.junit.Rule;

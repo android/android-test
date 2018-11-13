@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.matcher;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static androidx.test.espresso.matcher.PreferenceMatchers.isEnabled;
 import static androidx.test.espresso.matcher.PreferenceMatchers.withKey;
 import static androidx.test.espresso.matcher.PreferenceMatchers.withSummary;
@@ -30,8 +30,8 @@ import static org.hamcrest.Matchers.not;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import androidx.test.annotation.UiThreadTest;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
 import androidx.test.ui.app.R;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +43,7 @@ public class PreferenceMatchersTest {
 
   @Test
   public void withSummaryTest() {
-    CheckBoxPreference pref = new CheckBoxPreference(getApplicationContext());
+    CheckBoxPreference pref = new CheckBoxPreference(getTargetContext());
     pref.setSummary(R.string.something);
     assertThat(pref, withSummary(R.string.something));
     assertThat(pref, not(withSummary(R.string.other_string)));
@@ -54,7 +54,7 @@ public class PreferenceMatchersTest {
 
   @Test
   public void withTitleTest() {
-    CheckBoxPreference pref = new CheckBoxPreference(getApplicationContext());
+    CheckBoxPreference pref = new CheckBoxPreference(getTargetContext());
     assertThat(pref, not(withTitle(R.string.other_string)));
     assertThat(pref, not(withTitleText("not null")));
     pref.setTitle(R.string.other_string);
@@ -68,12 +68,12 @@ public class PreferenceMatchersTest {
   @Test
   @UiThreadTest
   public void isEnabledTest() {
-    CheckBoxPreference pref = new CheckBoxPreference(getApplicationContext());
+    CheckBoxPreference pref = new CheckBoxPreference(getTargetContext());
     pref.setEnabled(true);
     assertThat(pref, isEnabled());
     pref.setEnabled(false);
     assertThat(pref, not(isEnabled()));
-    EditTextPreference pref2 = new EditTextPreference(getApplicationContext());
+    EditTextPreference pref2 = new EditTextPreference(getTargetContext());
     pref2.setEnabled(true);
     assertThat(pref2, isEnabled());
     pref2.setEnabled(false);
@@ -82,7 +82,7 @@ public class PreferenceMatchersTest {
 
   @Test
   public void withKeyTest() {
-    CheckBoxPreference pref = new CheckBoxPreference(getApplicationContext());
+    CheckBoxPreference pref = new CheckBoxPreference(getTargetContext());
     pref.setKey("foo");
     assertThat(pref, withKey("foo"));
     assertThat(pref, not(withKey("bar")));

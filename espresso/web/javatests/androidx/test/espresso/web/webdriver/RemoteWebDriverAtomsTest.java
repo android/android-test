@@ -47,8 +47,8 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.SelectFrameByIndexTransf
 import androidx.test.espresso.web.webdriver.DriverAtoms.WebClickSimpleAtom;
 import androidx.test.espresso.web.webdriver.DriverAtoms.WebKeysSimpleAtom;
 import androidx.test.espresso.web.webdriver.DriverAtoms.WebScrollIntoViewAtom;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;

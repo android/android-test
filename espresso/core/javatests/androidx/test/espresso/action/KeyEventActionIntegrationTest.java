@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.action;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
@@ -39,12 +39,12 @@ import android.content.Intent;
 import android.view.KeyEvent;
 import android.widget.TextView;
 import androidx.test.espresso.NoActivityResumedException;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.FlakyTest;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.Suppress;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 import androidx.test.ui.app.MainActivity;
 import androidx.test.ui.app.R;
 import java.util.Map;
@@ -103,7 +103,7 @@ public class KeyEventActionIntegrationTest {
   @FlakyTest
   public void clickOnBackFromFragment() {
     Intent fragmentStack =
-        new Intent().setClassName(getApplicationContext(), "androidx.test.ui.app.FragmentStack");
+        new Intent().setClassName(getTargetContext(), "androidx.test.ui.app.FragmentStack");
     fragmentStack.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     rule.launchActivity(fragmentStack);
     onView(allOf(withParent(withId(R.id.simple_fragment)), isAssignableFrom(TextView.class)))

@@ -64,7 +64,7 @@ axt_release_lib(
 )
 
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION", "RUNNER_VERSION", "CORE_VERSION")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION", "RUNNER_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 filegroup(
@@ -89,7 +89,6 @@ maven_artifact(
     src = ":espresso_intents_release.aar",
     artifact_deps = [
         "androidx.test.espresso:espresso-core:%s" % ESPRESSO_VERSION,
-        "androidx.test:core:%s" % CORE_VERSION,
         "androidx.test:rules:%s" % RUNNER_VERSION,
     ],
     artifact_id = "espresso-intents",

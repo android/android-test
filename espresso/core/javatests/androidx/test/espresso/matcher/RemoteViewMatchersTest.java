@@ -16,6 +16,7 @@
 
 package androidx.test.espresso.matcher;
 
+import static androidx.test.InstrumentationRegistry.getContext;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.hasContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -52,7 +53,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagKey;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -63,6 +63,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.test.InstrumentationRegistry;
 import androidx.test.espresso.matcher.ViewMatchers.HasChildCountMatcher;
 import androidx.test.espresso.matcher.ViewMatchers.HasContentDescriptionMatcher;
 import androidx.test.espresso.matcher.ViewMatchers.HasDescendantMatcher;
@@ -139,8 +140,8 @@ import androidx.test.espresso.proto.matcher.ViewMatchers.WithTagValueMatcherProt
 import androidx.test.espresso.proto.matcher.ViewMatchers.WithTextMatcherProto;
 import androidx.test.espresso.remote.GenericRemoteMessage;
 import androidx.test.espresso.remote.RemoteDescriptorRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
 import androidx.test.ui.app.R;
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -180,7 +181,7 @@ public class RemoteViewMatchersTest {
 
   @Test
   public void withText_transformationToProto() {
-    TextView textView = new TextView(getInstrumentation().getContext());
+    TextView textView = new TextView(getContext());
     textView.setText(TEXT_VIEW_TEXT);
     Matcher<View> withTextMatcher = withText(is(TEXT_VIEW_TEXT));
     assertThat(textView, withTextMatcher);
@@ -192,7 +193,7 @@ public class RemoteViewMatchersTest {
 
   @Test
   public void withText_transformationFromProto() {
-    TextView textView = new TextView(getInstrumentation().getContext());
+    TextView textView = new TextView(getContext());
     textView.setText(TEXT_VIEW_TEXT);
     Matcher<View> withTextMatcher = withText(is(TEXT_VIEW_TEXT));
     assertThat(textView, withTextMatcher);
@@ -225,7 +226,7 @@ public class RemoteViewMatchersTest {
 
   @Test
   public void isAssignable_transformationToProto() {
-    TextView textView = new TextView(getInstrumentation().getContext());
+    TextView textView = new TextView(getContext());
     textView.setText(TEXT_VIEW_TEXT);
 
     Matcher<View> isAssignableFromMatcher = isAssignableFrom(TextView.class);
@@ -236,7 +237,7 @@ public class RemoteViewMatchersTest {
 
   @Test
   public void isAssignable_transformationFromProto() {
-    TextView textView = new TextView(getInstrumentation().getContext());
+    TextView textView = new TextView(getContext());
     textView.setText(TEXT_VIEW_TEXT);
 
     Matcher<View> isAssignableFromMatcher = isAssignableFrom(TextView.class);
@@ -264,7 +265,7 @@ public class RemoteViewMatchersTest {
     Matcher<View> withTagKeyMatcherFromProto =
         (Matcher<View>) GenericRemoteMessage.FROM.fromProto(withTagKeyMatcherProto);
 
-    View view = new View(getInstrumentation().getContext());
+    View view = new View(InstrumentationRegistry.getContext());
     assertThat(view, not(withTagKeyMatcherFromProto));
     view.setTag(R.id.testId1, "blah");
     assertThat(view, withTagKeyMatcherFromProto);
