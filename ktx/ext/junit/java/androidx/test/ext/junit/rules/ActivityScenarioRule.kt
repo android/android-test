@@ -16,10 +16,13 @@
 package androidx.test.ext.junit.rules
 
 import android.app.Activity
+import android.content.Intent
 
 /**
  * Constructs an [ActivityScenarioRule] of a given class.
  *
+ * @param intent an intent to start activity or null to use default one
  * @return ActivityScenarioRule which you can use to access to [ActivityScenario] from your tests
  */
-inline fun <reified A : Activity> activityScenarioRule() = ActivityScenarioRule(A::class.java)
+inline fun <reified A : Activity> activityScenarioRule(intent: Intent? = null) =
+        ActivityScenarioRule(A::class.java, intent)

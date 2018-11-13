@@ -18,6 +18,7 @@ package androidx.test.ext.junit.rules;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import androidx.test.annotation.Beta;
 import androidx.test.core.app.ActivityScenario;
@@ -49,6 +50,7 @@ import org.junit.rules.ExternalResource;
 public final class ActivityScenarioRule<A extends Activity> extends ExternalResource {
 
   private final Class<A> activityClass;
+  @Nullable final Intent startActivityIntent;
   @Nullable private ActivityScenario<A> scenario;
 
   /**
@@ -57,12 +59,23 @@ public final class ActivityScenarioRule<A extends Activity> extends ExternalReso
    * @param activityClass an activity class to launch
    */
   public ActivityScenarioRule(Class<A> activityClass) {
+    this(activityClass, /*startActivityIntent=*/ null);
+  }
+
+  /**
+   * Constructs ActivityScenarioRule for a given activity class and intent.
+   *
+   * @param activityClass an activity class to launch
+   * @param startActivityIntent an intent to start the activity or null to use default one
+   */
+  public ActivityScenarioRule(Class<A> activityClass, @Nullable Intent startActivityIntent) {
     this.activityClass = activityClass;
+    this.startActivityIntent = startActivityIntent;
   }
 
   @Override
   protected void before() throws Throwable {
-    scenario = ActivityScenario.launch(activityClass);
+    scenario = ActivityScenario.launch(activityClass, startActivityIntent);
   }
 
   @Override

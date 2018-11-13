@@ -18,8 +18,11 @@ package androidx.test.core.app
 
 import android.app.Activity
 import android.arch.lifecycle.Lifecycle.State
+import android.content.Intent
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.core.app.testing.RecreationRecordingActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.ext.truth.content.IntentSubject.assertThat
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
 import com.google.common.truth.Truth.assertThat
@@ -59,6 +62,21 @@ class ActivityScenarioKotlinTest {
       scenario.onActivity {
         assertThat(it.numberOfRecreations).isEqualTo(1)
         assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.STOPPED)
+      }
+    }
+  }
+
+  @Test
+  fun basicUseCaseWithCustomIntent() {
+    val intent = Intent(getApplicationContext(), RecreationRecordingActivity::class.java).apply {
+      putExtra("MyIntentParameterKey", "MyIntentParameterValue")
+    }
+    launchActivity<RecreationRecordingActivity>(intent).use { scenario ->
+      scenario.onActivity { activity ->
+        assertThat(activity.intent)
+                .extras()
+                .string("MyIntentParameterKey")
+                .isEqualTo("MyIntentParameterValue")
       }
     }
   }

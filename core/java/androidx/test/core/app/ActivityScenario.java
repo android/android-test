@@ -156,7 +156,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   private A currentActivity;
 
   /** Private constructor. Use {@link #launch} to instantiate this class. */
-  private ActivityScenario(Class<A> activityClass) {
+  private ActivityScenario(Intent startActivityIntent) {
     checkState(
         Settings.System.getInt(
                 getInstrumentation().getTargetContext().getContentResolver(),
@@ -165,26 +165,50 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
             == 0,
         "\"Don't keep activities\" developer options must be disabled for ActivityScenario");
 
-    startActivityIntent = activityInvoker.getIntentForActivity(activityClass);
+    this.startActivityIntent = startActivityIntent;
     currentActivityStage = Stage.PRE_ON_CREATE;
   }
 
   /**
    * Launches an activity of a given class and constructs ActivityScenario with the activity. Waits
-   * for the lifecycle state transitions to be complete.
+   * for the lifecycle state transitions to be complete. If you need to supply parameters to the
+   * start activity intent, use {@link #launch(Class, Intent)}.
    *
    * <p>Normally this would be {@link State#RESUMED}, but may be another state.
    *
    * <p>This method cannot be called from the main thread except in Robolectric tests.
    *
+   * @param activityClass an activity class to launch
    * @throws AssertionError if the lifecycle state transition never completes within the timeout
    * @return ActivityScenario which you can use to make further state transitions
    */
   public static <A extends Activity> ActivityScenario<A> launch(Class<A> activityClass) {
+    return launch(activityClass, /*startActivityIntent=*/ null);
+  }
+
+  /**
+   * Launches an activity by using a given intent and constructs ActivityScenario with the activity.
+   * Waits for the lifecycle state transitions to be complete.
+   *
+   * <p>Normally this would be {@link State#RESUMED}, but may be another state.
+   *
+   * <p>This method cannot be called from the main thread except in Robolectric tests.
+   *
+   * @param activityClass an activity class to launch
+   * @param startActivityIntent an intent to start the activity or null to use default one
+   * @throws AssertionError if the lifecycle state transition never completes within the timeout
+   * @return ActivityScenario which you can use to make further state transitions
+   */
+  public static <A extends Activity> ActivityScenario<A> launch(
+      Class<A> activityClass, @Nullable Intent startActivityIntent) {
     checkNotMainThread();
     getInstrumentation().waitForIdleSync();
 
-    ActivityScenario<A> scenario = new ActivityScenario<>(activityClass);
+    if (startActivityIntent == null) {
+      startActivityIntent = activityInvoker.getIntentForActivity(activityClass);
+    }
+
+    ActivityScenario<A> scenario = new ActivityScenario<>(startActivityIntent);
     ActivityLifecycleMonitorRegistry.getInstance()
         .addLifecycleCallback(scenario.activityLifecycleObserver);
 

@@ -23,7 +23,10 @@ java_library(
 
 kt_android_library(
     name = "ActivityScenarioRuleKotlinTest_lib",
-    srcs = ["ActivityScenarioRuleKotlinTest.kt"],
+    srcs = [
+        "ActivityScenarioRuleKotlinTest.kt",
+        "ActivityScenarioRuleWithCustomIntentKotlinTest.kt",
+    ],
     deps = [
         "//:android_arch_lifecycle_common",
         "//core",
