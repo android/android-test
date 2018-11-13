@@ -17,9 +17,12 @@
 package androidx.test.core.app
 
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.arch.lifecycle.Lifecycle.State
+import android.content.Intent
 import androidx.test.core.app.testing.RecreationRecordingActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.ext.truth.content.IntentSubject.assertThat
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
 import com.google.common.truth.Truth.assertThat
@@ -38,27 +41,37 @@ class ActivityScenarioKotlinTest {
   @Test
   fun basicUseCase() {
     launchActivity<RecreationRecordingActivity>().use { scenario ->
-      scenario.onActivity {
-        assertThat(it.numberOfRecreations).isEqualTo(0)
-        assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
-      }
+      with(scenario) {
+        onActivity {
+          assertThat(it.numberOfRecreations).isEqualTo(0)
+          assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
+        }
 
-      scenario.recreate()
-      scenario.onActivity {
-        assertThat(it.numberOfRecreations).isEqualTo(1)
-        assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
-      }
+        recreate()
+        onActivity {
+          assertThat(it.numberOfRecreations).isEqualTo(1)
+          assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
+        }
 
-      scenario.moveToState(State.STARTED)
-      scenario.onActivity {
-        assertThat(it.numberOfRecreations).isEqualTo(1)
-        assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.PAUSED)
-      }
+        moveToState(State.STARTED)
+        onActivity {
+          assertThat(it.numberOfRecreations).isEqualTo(1)
+          assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.PAUSED)
+        }
 
-      scenario.moveToState(State.CREATED)
-      scenario.onActivity {
-        assertThat(it.numberOfRecreations).isEqualTo(1)
-        assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.STOPPED)
+        moveToState(State.CREATED)
+        onActivity {
+          assertThat(it.numberOfRecreations).isEqualTo(1)
+          assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.STOPPED)
+        }
+
+        moveToState(State.RESUMED)
+        onActivity {
+          it.setResult(RESULT_OK, Intent().setAction(Intent.ACTION_SEND))
+          it.finish()
+        }
+        assertThat(result.resultCode).isEqualTo(RESULT_OK)
+        assertThat(result.resultData).hasAction(Intent.ACTION_SEND)
       }
     }
   }
