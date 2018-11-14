@@ -52,7 +52,7 @@ public class GrantPermissionRuleTest {
   public void initMocks() {
     MockitoAnnotations.initMocks(this);
     grantPermissionRule = GrantPermissionRule.grant(RUNTIME_PERMISSION1);
-    grantPermissionRule.setPermissionRequester(permissionRequester);
+    grantPermissionRule.setPermissionGranter(permissionRequester);
   }
 
   @Test

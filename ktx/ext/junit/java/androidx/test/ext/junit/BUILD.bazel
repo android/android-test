@@ -38,8 +38,6 @@ axt_release_lib(
     name = "junit_release",
     overlapping_jars = [
         "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
-        "//ext/junit/java/androidx/test/ext/junit:junit_release_no_deps.jar",
-        "//core/java/androidx/test/core:core_release_no_deps.jar",
     ],
     remove_specs = [
         # remove classes from external dependencies AND generated R file, since gradle will produce
@@ -63,7 +61,10 @@ maven_artifact(
     name = "junit_maven_artifact",
     src = ":junit_release.aar",
     artifact_deps = [
+        "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
+        "androidx.test:core:%s" % CORE_VERSION,
         "androidx.test.ext:junit:%s" % ANDROIDX_JUNIT_VERSION,
+        "androidx.test:monitor:%s" % RUNNER_VERSION,
         "androidx.lifecycle:lifecycle-common:%s" % ANDROIDX_ARCH_COMPONENTS_VERSION,
     ],
     artifact_id = "junit-ktx",
