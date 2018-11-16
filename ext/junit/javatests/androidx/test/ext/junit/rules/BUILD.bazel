@@ -6,3 +6,73 @@ package(
 )
 
 load("//build_extensions:android_multidevice_instrumentation_test.bzl", "android_multidevice_instrumentation_test", "DEVICES")
+
+#
+# Activity Scenario Rule Tests
+#
+
+android_binary(
+    name = "ActivityScenarioRuleTest_test_apk",
+    srcs = [
+        "ActivityScenarioRuleTest.java",
+    ],
+    instruments = ":target_stub",
+    manifest = "AndroidManifest_test.xml",
+    deps = [
+        "//:android_arch_lifecycle_common",
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//ext/junit",
+        "//ktx/core",
+        "//ktx/ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/monitor",
+        "@guava//jar",
+        "@junit//jar",
+        "@truth//jar",
+    ],
+)
+
+android_instrumentation_test(
+    name = "ActivityScenarioRuleTest_android",
+    args = [
+        "--clear_package_data",
+        "--install_test_services=True",  # required for Bazel 0.11, can be removed in 0.12
+    ],
+    target_device = "//tools/android/emulated_devices/generic_phone:android_23_x86_qemu2",
+    test_app = ":ActivityScenarioRuleTest_test_apk",
+)
+
+
+android_binary(
+    name = "ActivityScenarioRuleWithCustomIntentTest_test_apk",
+    srcs = [
+        "ActivityScenarioRuleWithCustomIntentTest.java",
+    ],
+    instruments = ":target_stub",
+    manifest = "AndroidManifest_test.xml",
+    deps = [
+        "//:android_arch_lifecycle_common",
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//ext/junit",
+        "//ext/truth",
+        "//ktx/core",
+        "//ktx/ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/monitor",
+        "@guava//jar",
+        "@junit//jar",
+        "@truth//jar",
+    ],
+)
+
+android_instrumentation_test(
+    name = "ActivityScenarioRuleWithCustomIntentTest_android",
+    args = [
+        "--clear_package_data",
+        "--install_test_services=True",  # required for Bazel 0.11, can be removed in 0.12
+    ],
+    target_device = "//tools/android/emulated_devices/generic_phone:android_23_x86_qemu2",
+    test_app = ":ActivityScenarioRuleWithCustomIntentTest_test_apk",
+)

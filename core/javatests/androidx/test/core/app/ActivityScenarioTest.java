@@ -50,10 +50,25 @@ public final class ActivityScenarioTest {
   }
 
   @Test
-  public void launchedFinishItSelfActivityShouldBeLaunchable() throws Exception {
+  public void finishItselfActivityShouldBeLaunchable() throws Exception {
     try (ActivityScenario<FinishItselfActivity> scenario =
         ActivityScenario.launch(FinishItselfActivity.class)) {}
-    ;
+  }
+
+  @Test
+  public void launchWithCustomIntent() throws Exception {
+    Intent startActivityIntent =
+        new Intent(ApplicationProvider.getApplicationContext(), RecreationRecordingActivity.class)
+            .putExtra("MyIntentParameterKey", "MyIntentParameterValue");
+    try (ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(startActivityIntent)) {
+      scenario.onActivity(
+          activity ->
+              assertThat(activity.getIntent())
+                  .extras()
+                  .string("MyIntentParameterKey")
+                  .isEqualTo("MyIntentParameterValue"));
+    }
   }
 
   @Test
