@@ -16,7 +16,7 @@ android_library(
         exclude = REMOTE_WEB_DRIVER_ATOMS,
     ),
     deps = [
-        "//:com_android_support_support_annotations",
+        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/web/java/androidx/test/espresso/web/model",
@@ -32,7 +32,7 @@ android_library(
     ),
     deps = [
         ":webdriver",
-        "//:com_android_support_support_annotations",
+        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/remote:exceptions",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote:protoUtils",

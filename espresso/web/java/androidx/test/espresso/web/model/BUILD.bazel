@@ -20,7 +20,7 @@ android_library(
     idl_import_root = "idls",
     idl_parcelables = glob(["idls/**"]),
     deps = [
-        "//:com_android_support_support_annotations",
+        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "@com_google_protobuf_javalite//:protobuf_java_lite",

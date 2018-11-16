@@ -30,7 +30,7 @@ TESTAPP_DEPS = [
 
 EXTERNAL_DEPS = [
     "@accessibility//jar",
-    "//:com_android_support_support_annotations",
+    "//:androidx_annotation",
     "@javax_inject//jar",
     "@hamcrest//jar",
     "@jsr305//jar",

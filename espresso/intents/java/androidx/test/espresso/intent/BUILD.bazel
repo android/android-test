@@ -19,7 +19,7 @@ android_library(
     visibility = ["//visibility:public"],
     deps = [
         ":resolved_intent_interface",
-        "//:com_android_support_support_annotations",
+        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",

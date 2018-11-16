@@ -10,7 +10,7 @@ RULES_DEPS = [
 ]
 
 EXTERNAL_DEPS = [
-    "//:com_android_support_support_annotations",
+    "//:androidx_annotation",
     "@hamcrest//jar",
     "@junit//jar",
     "@mockito//jar",

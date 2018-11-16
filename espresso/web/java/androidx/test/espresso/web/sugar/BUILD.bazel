@@ -13,7 +13,7 @@ android_library(
         exclude = REMOTE_SUGAR,
     ),
     deps = [
-        "//:com_android_support_support_annotations",
+        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
@@ -34,7 +34,7 @@ android_library(
     ),
     deps = [
         ":sugar",
-        "//:com_android_support_support_annotations",
+        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/remote:exceptions",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote:protoUtils",

@@ -1,7 +1,7 @@
 package(default_visibility = ["//:__subpackages__"])
 
 load("//build_extensions:maven_repo.bzl", "maven_repository")
-load("//build_extensions:axt_versions.bzl", "ANDROID_SUPPORT_LIBRARY_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "ANDROIDX_LIFECYCLE_VERSION", "GOOGLE_MATERIAL_VERSION", "ANDROIDX_MULTIDEX_VERSION")
 load("@gmaven_rules//:defs.bzl", "gmaven_artifact")
 
 exports_files([
@@ -55,56 +55,71 @@ alias(
 # Support library aliases
 
 alias(
-    name = "com_android_support_appcompat_v7",
-    actual = gmaven_artifact("com.android.support:appcompat-v7:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+    name = "androidx_appcompat",
+    actual = gmaven_artifact("androidx.appcompat:appcompat:aar:" + ANDROIDX_VERSION),
 )
 
 alias(
-    name = "com_android_support_design",
-    actual = gmaven_artifact("com.android.support:design:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+    name = "google_android_material",
+    actual = gmaven_artifact("com.google.android.material:material:aar:" + GOOGLE_MATERIAL_VERSION),
 )
 
 alias(
-    name = "com_android_support_multidex",
-    actual = gmaven_artifact("com.android.support:multidex:aar:1.0.2"),
+    name = "androidx_multidex",
+    actual = gmaven_artifact("androidx.multidex:multidex:aar:" + ANDROIDX_MULTIDEX_VERSION),
 )
 
 alias(
-    name = "com_android_support_support_annotations",
-    actual = gmaven_artifact("com.android.support:support-annotations:jar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+    name = "androidx_annotation",
+    actual = gmaven_artifact("androidx.annotation:annotation:jar:" + ANDROIDX_VERSION),
 )
 
 alias(
-    name = "android_arch_lifecycle_common",
-    actual = gmaven_artifact("android.arch.lifecycle:common:jar:1.1.1"),
+    name = "androidx_lifecycle_common",
+    actual = gmaven_artifact("androidx.lifecycle:lifecycle-common:jar:" + ANDROIDX_LIFECYCLE_VERSION),
 )
 
 alias(
-    name = "com_android_support_support_compat",
-    actual = gmaven_artifact("com.android.support:support-compat:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+    name = "androidx_core",
+    actual = gmaven_artifact("androidx.core:core:aar:" + ANDROIDX_VERSION),
 )
 
 alias(
-    name = "com_android_support_support_core_ui",
-    actual = gmaven_artifact("com.android.support:support-core-ui:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+    name = "androidx_legacy_support_core_ui",
+    actual = gmaven_artifact("androidx.legacy:legacy-support-core-ui:aar:" + ANDROIDX_VERSION),
 )
 
 alias(
-    name = "com_android_support_support_core_utils",
-    actual = gmaven_artifact("com.android.support:support-core-utils:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+    name = "androidx_legacy_support_core_utils",
+    actual = gmaven_artifact("androidx.legacy:legacy-support-core-utils:aar:" + ANDROIDX_VERSION),
 )
 
 alias(
-    name = "com_android_support_support_fragment",
-    actual = gmaven_artifact("com.android.support:support-fragment:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+    name = "androidx_fragment",
+    actual = gmaven_artifact("androidx.fragment:fragment:aar:" + ANDROIDX_VERSION),
 )
 
 alias(
-    name = "com_android_support_support_v4",
-    actual = gmaven_artifact("com.android.support:support-v4:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+    name = "androidx_legacy_support_v4",
+    actual = gmaven_artifact("androidx.legacy:legacy-support-v4:aar:" + ANDROIDX_VERSION),
 )
 
 alias(
-    name = "com_android_support_recyclerview_v7",
-    actual = gmaven_artifact("com.android.support:recyclerview-v7:aar:" + ANDROID_SUPPORT_LIBRARY_VERSION),
+    name = "androidx_recyclerview",
+    actual = gmaven_artifact("androidx.recyclerview:recyclerview:aar:" + ANDROIDX_VERSION),
+)
+
+alias(
+    name = "androidx_viewpager",
+    actual = gmaven_artifact("androidx.viewpager:viewpager:aar:" + ANDROIDX_VERSION),
+)
+
+alias(
+    name = "androidx_drawerlayout",
+    actual = gmaven_artifact("androidx.drawerlayout:drawerlayout:aar:" + ANDROIDX_VERSION),
+)
+
+alias(
+    name = "androidx_cursoradapter",
+    actual = gmaven_artifact("androidx.cursoradapter:cursoradapter:aar:" + ANDROIDX_VERSION),
 )
