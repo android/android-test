@@ -22,8 +22,6 @@ import android.Manifest.permission;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import androidx.test.annotation.Beta;
-import androidx.test.internal.platform.ServiceLoaderWrapper;
-import androidx.test.internal.platform.content.PermissionGranter;
 import androidx.test.runner.permission.PermissionRequester;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -65,15 +63,15 @@ import org.junit.runners.model.Statement;
 @Beta
 public class GrantPermissionRule implements TestRule {
 
-  private PermissionGranter permissionGranter;
+  private PermissionRequester permissionRequester;
 
   private GrantPermissionRule() {
-    this(ServiceLoaderWrapper.loadSingleService(PermissionGranter.class, PermissionRequester::new));
+    this(new PermissionRequester());
   }
 
   @VisibleForTesting
-  GrantPermissionRule(@NonNull PermissionGranter permissionGranter) {
-    setPermissionGranter(permissionGranter);
+  GrantPermissionRule(@NonNull PermissionRequester permissionRequester) {
+    setPermissionRequester(permissionRequester);
   }
 
   /**
@@ -94,7 +92,7 @@ public class GrantPermissionRule implements TestRule {
 
   private void grantPermissions(String... permissions) {
     Set<String> permissionSet = satisfyPermissionDependencies(permissions);
-    permissionGranter.addPermissions(permissionSet.toArray(new String[permissionSet.size()]));
+    permissionRequester.addPermissions(permissionSet.toArray(new String[permissionSet.size()]));
   }
 
   @VisibleForTesting
@@ -113,8 +111,9 @@ public class GrantPermissionRule implements TestRule {
   }
 
   @VisibleForTesting
-  void setPermissionGranter(PermissionGranter permissionGranter) {
-    this.permissionGranter = checkNotNull(permissionGranter, "permissionRequester cannot be null!");
+  void setPermissionRequester(PermissionRequester permissionRequester) {
+    this.permissionRequester =
+        checkNotNull(permissionRequester, "permissionRequester cannot be null!");
   }
 
   private class RequestPermissionStatement extends Statement {
@@ -127,7 +126,7 @@ public class GrantPermissionRule implements TestRule {
 
     @Override
     public void evaluate() throws Throwable {
-      permissionGranter.requestPermissions();
+      permissionRequester.requestPermissions();
       base.evaluate();
     }
   }

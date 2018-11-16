@@ -30,7 +30,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.annotation.Beta;
-import androidx.test.internal.platform.content.PermissionGranter;
 import androidx.test.runner.permission.UiAutomationShellCommand.PmCommand;
 import java.util.HashSet;
 
@@ -52,7 +51,7 @@ import java.util.HashSet;
  */
 @Beta
 @TargetApi(value = 23)
-public class PermissionRequester implements PermissionGranter {
+public class PermissionRequester {
 
   private static final String TAG = "PermissionRequester";
 
