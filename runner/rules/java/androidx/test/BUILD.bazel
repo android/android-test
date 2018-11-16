@@ -16,7 +16,7 @@ android_library(
     ],
     deps = [
         ":legacy-test-neverlink",
-        "//:com_android_support_support_annotations",
+        "//:androidx_annotation",
         "//runner/android_junit_runner",
         "@junit//jar",
     ],
@@ -43,7 +43,7 @@ axt_release_lib(
     ],
     proguard_library = "proguard.cfg",
     remove_specs = [
-        "android.support.annotation*",
+        "androidx.annotation*",
         "androidx.test.internal.runner.hidden.*",
     ],
     deps = [

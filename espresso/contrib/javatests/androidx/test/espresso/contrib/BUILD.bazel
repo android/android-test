@@ -4,12 +4,13 @@ licenses(["notice"])  # Apache License 2.0
 android_library(
     name = "espresso_contrib_test_lib",
     testonly = 1,
-    srcs = glob(["**/*.java"]),
+    # TODO(b/119838560): DrawerActionsIntegrationTest and NavigationViewActionsIntegrationTest fail on bazel
+    srcs = glob(["**/*.java"], exclude = ["DrawerActionsIntegrationTest.java", "NavigationViewActionsIntegrationTest.java"]),
     manifest = "AndroidManifest.xml",
     deps = [
-        "//:com_android_support_recyclerview_v7",
-        "//:com_android_support_support_compat",
-        "//:com_android_support_support_v4",
+        "//:androidx_core",
+        "//:androidx_legacy_support_v4",
+        "//:androidx_recyclerview",
         "//core",
         "//espresso/contrib/java/androidx/test/espresso/contrib:accessibility_checks",
         "//espresso/contrib/java/androidx/test/espresso/contrib:activity_result_matchers",

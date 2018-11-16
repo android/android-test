@@ -2,38 +2,24 @@
 #   Tests for espresso accessibility apis
 licenses(["notice"])  # Apache License 2.0
 
-ACCESSIBILITY_TEST_SRCS = glob(["*.java"])
-
-ACCESSIBILITY_DEPS = [
-    "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
-    "//espresso/core/java/androidx/test/espresso",
-    "//espresso/core/java/androidx/test/espresso:framework",
-    "//espresso/core/java/androidx/test/espresso:interface",
-    "//espresso/accessibility/java/androidx/test/espresso/accessibility:accessibility_checks",
-    "//runner/android_junit_runner",
-    "//ext/junit",
-    "//core",
-]
-
-EXTERNAL_DEPS = [
-    "@accessibility//jar",
-    "@hamcrest//jar",
-    "@junit//jar",
-] + ACCESSIBILITY_DEPS
-
-java_library(
-    name = "test_deps",
-    testonly = 1,
-    visibility = ["//visibility:public"],
-    exports = EXTERNAL_DEPS,
-)
-
 android_library(
     name = "espresso_accessibility_test_lib",
     testonly = 1,
-    srcs = ACCESSIBILITY_TEST_SRCS,
+    srcs = glob(["*.java"]),
     manifest = "AndroidManifest_opensource.xml",
-    deps = [":test_deps"],
+    deps = [
+        "//core",
+        "//espresso/accessibility/java/androidx/test/espresso/accessibility:accessibility_checks",
+        "//espresso/core/java/androidx/test/espresso",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "@accessibility//jar",
+        "@hamcrest//jar",
+        "@junit//jar",
+    ],
 )
 
 android_binary(
@@ -51,13 +37,14 @@ API_LEVELS = [
     "23_x86",
 ]
 
-[android_instrumentation_test(
-    name = "espresso_accessibility_tests_%s" % api_level,
-    size = "large",
-    args = [
-        "--clear_package_data",
-        "--install_test_services=True",  # Required for Bazel 0.11, can be removed in 0.12
-    ],
-    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
-    test_app = ":espresso_accessibility_tests",
-) for api_level in API_LEVELS]
+# TODO(b/119839492): accessibility test framework doesn't support androidx
+#[android_instrumentation_test(
+#    name = "espresso_accessibility_tests_%s" % api_level,
+#    size = "large",
+#    args = [
+#        "--clear_package_data",
+#        "--install_test_services=True",  # Required for Bazel 0.11, can be removed in 0.12
+#    ],
+#    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
+#    test_app = ":espresso_accessibility_tests",
+#) for api_level in API_LEVELS]

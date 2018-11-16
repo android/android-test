@@ -16,7 +16,7 @@ android_library(
         exclude = REMOTE_VIEW_ASSERTIONS,
     ),
     deps = [
-        "//:com_android_support_support_annotations",
+        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",

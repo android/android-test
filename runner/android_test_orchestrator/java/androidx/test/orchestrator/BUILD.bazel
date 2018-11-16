@@ -10,9 +10,9 @@ android_library(
         ":export",
     ],
     deps = [
-        "//:com_android_support_support_annotations",
-        "//:com_android_support_support_compat",
-        "//:com_android_support_support_v4",
+        "//:androidx_annotation",
+        "//:androidx_core",
+        "//:androidx_legacy_support_v4",
         "//runner/android_junit_runner",
         "//services/shellexecutor:exec_client",
         "@guava//jar",

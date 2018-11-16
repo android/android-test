@@ -13,6 +13,6 @@ android_library(
     manifest = "AndroidManifest.xml",
     visibility = ["//visibility:public"],
     deps = [
-        "//:com_android_support_support_annotations",
+        "//:androidx_annotation",
     ],
 )
