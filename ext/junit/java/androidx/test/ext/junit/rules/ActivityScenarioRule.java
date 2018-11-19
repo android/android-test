@@ -20,7 +20,6 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import androidx.test.annotation.Beta;
 import androidx.test.core.app.ActivityScenario;
 import org.junit.rules.ExternalResource;
 
@@ -46,7 +45,6 @@ import org.junit.rules.ExternalResource;
  *   }
  * }</pre>
  */
-@Beta
 public final class ActivityScenarioRule<A extends Activity> extends ExternalResource {
 
   /**

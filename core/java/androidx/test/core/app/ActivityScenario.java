@@ -29,7 +29,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.GuardedBy;
 import android.support.annotation.Nullable;
-import androidx.test.annotation.Beta;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.app.ActivityInvoker;
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
@@ -106,7 +105,6 @@ import java.util.concurrent.locks.ReentrantLock;
  *   }
  * }</pre>
  */
-@Beta
 public final class ActivityScenario<A extends Activity> implements AutoCloseable, Closeable {
   /**
    * The timeout for {@link #waitForActivityToBecomeAnyOf} method. If an Activity doesn't become
