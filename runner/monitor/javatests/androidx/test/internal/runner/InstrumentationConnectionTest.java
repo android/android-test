@@ -63,16 +63,16 @@ import org.mockito.MockitoAnnotations;
 @SmallTest
 public class InstrumentationConnectionTest {
 
-  @Mock private Context mMockedContext;
-  @Mock private Instrumentation mMockedInstrumentation;
-  @Mock private MonitoringInstrumentation.ActivityFinisher mMockedFinisher;
+  @Mock private Context mockedContext;
+  @Mock private Instrumentation mockedInstrumentation;
+  @Mock private MonitoringInstrumentation.ActivityFinisher mockedFinisher;
 
-  InstrumentationConnection mInstrumentationConnection;
+  InstrumentationConnection instrumentationConnection;
 
   @Before
   public void setup() {
     MockitoAnnotations.initMocks(this);
-    mInstrumentationConnection = new InstrumentationConnection(mMockedContext);
+    instrumentationConnection = new InstrumentationConnection(mockedContext);
   }
 
   /**
@@ -85,11 +85,11 @@ public class InstrumentationConnectionTest {
    */
   @Test
   public void verifyHappyReceiverFlow() {
-    mInstrumentationConnection.init(mMockedInstrumentation, mMockedFinisher);
+    instrumentationConnection.init(mockedInstrumentation, mockedFinisher);
 
     // verify broadcast was sent
     ArgumentCaptor<Intent> intentArg = ArgumentCaptor.forClass(Intent.class);
-    verify(mMockedContext).sendBroadcast(intentArg.capture());
+    verify(mockedContext).sendBroadcast(intentArg.capture());
     Intent receivedIntent = intentArg.getValue();
     assertNotNull(receivedIntent.getAction());
     ParcelableIBinder parcelableIBinder =
@@ -97,21 +97,21 @@ public class InstrumentationConnectionTest {
             .getBundleExtra(InstrumentationConnection.BUNDLE_BR_NEW_BINDER)
             .getParcelable(InstrumentationConnection.BUNDLE_BR_NEW_BINDER);
     Messenger msgr = new Messenger(parcelableIBinder.getIBinder());
-    assertEquals(mInstrumentationConnection.mIncomingHandler.mMessengerHandler, msgr);
+    assertEquals(instrumentationConnection.incomingHandler.messengerHandler, msgr);
 
     // verify broadcast registration
     ArgumentCaptor<BroadcastReceiver> brArg = ArgumentCaptor.forClass(BroadcastReceiver.class);
     ArgumentCaptor<IntentFilter> ifArg = ArgumentCaptor.forClass(IntentFilter.class);
-    verify(mMockedContext).registerReceiver(brArg.capture(), ifArg.capture());
-    assertEquals(mInstrumentationConnection.mMessengerReceiver, brArg.getValue());
+    verify(mockedContext).registerReceiver(brArg.capture(), ifArg.capture());
+    assertEquals(instrumentationConnection.messengerReceiver, brArg.getValue());
     assertEquals(InstrumentationConnection.BROADCAST_FILTER, ifArg.getValue().getAction(0));
 
-    mInstrumentationConnection.terminate();
+    instrumentationConnection.terminate();
 
     // very broadcast un-registration
-    verify(mMockedContext).unregisterReceiver(brArg.capture());
-    assertEquals(mInstrumentationConnection.mMessengerReceiver, brArg.getValue());
-    assertNull(mInstrumentationConnection.mIncomingHandler);
+    verify(mockedContext).unregisterReceiver(brArg.capture());
+    assertEquals(instrumentationConnection.messengerReceiver, brArg.getValue());
+    assertNull(instrumentationConnection.incomingHandler);
   }
 
   /**
@@ -125,7 +125,7 @@ public class InstrumentationConnectionTest {
   @Test
   public void verifyMessengerCommunicationBetweenTwoInstrumentations()
       throws RemoteException, InterruptedException {
-    mInstrumentationConnection.init(mMockedInstrumentation, mMockedFinisher);
+    instrumentationConnection.init(mockedInstrumentation, mockedFinisher);
 
     // use a latch to ensure synchronous response
     final CountDownLatch latch = new CountDownLatch(1);
@@ -149,82 +149,82 @@ public class InstrumentationConnectionTest {
     // add a fake client to get a response from the caller instrumentation
     Set<Messenger> clients = new HashSet<>();
     clients.add(tmpReplyToMessenger);
-    mInstrumentationConnection.mIncomingHandler.mTypedClients.put("123", clients);
+    instrumentationConnection.incomingHandler.typedClients.put("123", clients);
 
     // mimic a MSG_ADD_INSTRUMENTATION response with the tmp messenger
     Message msg = Message.obtain(null, InstrumentationConnection.MSG_ADD_INSTRUMENTATION);
     msg.replyTo = tmpReplyToMessenger;
-    mInstrumentationConnection.mIncomingHandler.sendMessage(msg);
+    instrumentationConnection.incomingHandler.sendMessage(msg);
 
     // to insure synchronization, wait for the the tmp handler to receive the
     // MSG_ADD_CLIENTS_IN_BUNDLE message from the InstrumentationConnection under test
     assertTrue("latch timed out!", latch.await(1, TimeUnit.SECONDS));
 
     // ensue InstrumentationConnection keeps track of the newly received messenger
-    assertEquals(1, mInstrumentationConnection.mIncomingHandler.mOtherInstrumentations.size());
+    assertEquals(1, instrumentationConnection.incomingHandler.otherInstrumentations.size());
     assertTrue(
-        mInstrumentationConnection.mIncomingHandler.mOtherInstrumentations.contains(
+        instrumentationConnection.incomingHandler.otherInstrumentations.contains(
             tmpReplyToMessenger));
 
     // ensure we clear the set of other messenger after termination
-    mInstrumentationConnection.terminate();
-    assertNull(mInstrumentationConnection.mIncomingHandler);
+    instrumentationConnection.terminate();
+    assertNull(instrumentationConnection.incomingHandler);
   }
 
   @Test
   public void verifyCallingTerminateBeforeInitInitializeShouldNotExplode() {
-    mInstrumentationConnection.terminate();
-    mInstrumentationConnection.terminate();
-    mInstrumentationConnection.terminate();
+    instrumentationConnection.terminate();
+    instrumentationConnection.terminate();
+    instrumentationConnection.terminate();
 
     // verify unregisterReceiver is never called
-    verify(mMockedContext, never()).unregisterReceiver(any(BroadcastReceiver.class));
+    verify(mockedContext, never()).unregisterReceiver(any(BroadcastReceiver.class));
   }
 
   @Test
   public void verifyBroadcastRegistrationOnlyCalledOnce() {
-    mInstrumentationConnection.init(mMockedInstrumentation, mMockedFinisher);
-    mInstrumentationConnection.init(mMockedInstrumentation, mMockedFinisher);
-    mInstrumentationConnection.init(mMockedInstrumentation, mMockedFinisher);
-    mInstrumentationConnection.init(mMockedInstrumentation, mMockedFinisher);
+    instrumentationConnection.init(mockedInstrumentation, mockedFinisher);
+    instrumentationConnection.init(mockedInstrumentation, mockedFinisher);
+    instrumentationConnection.init(mockedInstrumentation, mockedFinisher);
+    instrumentationConnection.init(mockedInstrumentation, mockedFinisher);
 
     // verify registerReceiver called only once
     ArgumentCaptor<BroadcastReceiver> brArg = ArgumentCaptor.forClass(BroadcastReceiver.class);
     ArgumentCaptor<IntentFilter> ifArg = ArgumentCaptor.forClass(IntentFilter.class);
-    verify(mMockedContext).registerReceiver(brArg.capture(), ifArg.capture());
-    assertEquals(mInstrumentationConnection.mMessengerReceiver, brArg.getValue());
+    verify(mockedContext).registerReceiver(brArg.capture(), ifArg.capture());
+    assertEquals(instrumentationConnection.messengerReceiver, brArg.getValue());
     assertEquals(InstrumentationConnection.BROADCAST_FILTER, ifArg.getValue().getAction(0));
   }
 
   @Test
   public void verifyClientRegAndUnReg() throws InterruptedException {
-    mInstrumentationConnection.init(mMockedInstrumentation, mMockedFinisher);
-    IncomingHandler incomingHandler = mInstrumentationConnection.mIncomingHandler;
+    instrumentationConnection.init(mockedInstrumentation, mockedFinisher);
+    IncomingHandler incomingHandler = instrumentationConnection.incomingHandler;
     // create client
     Messenger client = new Messenger(new Handler(Looper.getMainLooper()));
     String clientType = "1";
     // register client
-    mInstrumentationConnection.registerClient(clientType, client);
+    instrumentationConnection.registerClient(clientType, client);
     // wait for all messages to be handled
     waitForMsgHandling(incomingHandler);
     // ensure TypedClient list contain client
-    assertEquals(1, incomingHandler.mTypedClients.size());
-    assertTrue(incomingHandler.mTypedClients.get(clientType).contains(client));
+    assertEquals(1, incomingHandler.typedClients.size());
+    assertTrue(incomingHandler.typedClients.get(clientType).contains(client));
     // un-register only client
-    mInstrumentationConnection.unregisterClient(clientType, client);
+    instrumentationConnection.unregisterClient(clientType, client);
     waitForMsgHandling(incomingHandler);
     // ensure no clients
-    assertEquals(0, incomingHandler.mTypedClients.size());
-    assertNull(incomingHandler.mTypedClients.get(clientType));
+    assertEquals(0, incomingHandler.typedClients.size());
+    assertNull(incomingHandler.typedClients.get(clientType));
     // terminate
-    mInstrumentationConnection.terminate();
-    assertNull(mInstrumentationConnection.mIncomingHandler);
+    instrumentationConnection.terminate();
+    assertNull(instrumentationConnection.incomingHandler);
   }
 
   @Test
   public void verifyMultiClientRegAndUnReg() throws InterruptedException {
-    mInstrumentationConnection.init(mMockedInstrumentation, mMockedFinisher);
-    IncomingHandler incomingHandler = mInstrumentationConnection.mIncomingHandler;
+    instrumentationConnection.init(mockedInstrumentation, mockedFinisher);
+    IncomingHandler incomingHandler = instrumentationConnection.incomingHandler;
 
     // Create clients
     Messenger client1 = new Messenger(new Handler(Looper.getMainLooper()));
@@ -233,116 +233,116 @@ public class InstrumentationConnectionTest {
     String clientType = "2";
 
     // register clients
-    mInstrumentationConnection.registerClient(clientType, client1);
-    mInstrumentationConnection.registerClient(clientType, client2);
-    mInstrumentationConnection.registerClient(clientType, client3);
+    instrumentationConnection.registerClient(clientType, client1);
+    instrumentationConnection.registerClient(clientType, client2);
+    instrumentationConnection.registerClient(clientType, client3);
 
     // wait for all messages to be handled
     waitForMsgHandling(incomingHandler);
 
     // ensure TypedClient list contain all clients
-    assertEquals(1, incomingHandler.mTypedClients.size());
-    assertEquals(3, incomingHandler.mTypedClients.get(clientType).size());
-    assertTrue(incomingHandler.mTypedClients.get(clientType).contains(client1));
-    assertTrue(incomingHandler.mTypedClients.get(clientType).contains(client2));
-    assertTrue(incomingHandler.mTypedClients.get(clientType).contains(client3));
+    assertEquals(1, incomingHandler.typedClients.size());
+    assertEquals(3, incomingHandler.typedClients.get(clientType).size());
+    assertTrue(incomingHandler.typedClients.get(clientType).contains(client1));
+    assertTrue(incomingHandler.typedClients.get(clientType).contains(client2));
+    assertTrue(incomingHandler.typedClients.get(clientType).contains(client3));
 
     // un-register only client1
-    mInstrumentationConnection.unregisterClient(clientType, client1);
+    instrumentationConnection.unregisterClient(clientType, client1);
     waitForMsgHandling(incomingHandler);
 
     // ensure TypedClient list contain all client2 and client3 while client1 is gone
-    assertEquals(1, incomingHandler.mTypedClients.size());
-    assertEquals(2, incomingHandler.mTypedClients.get(clientType).size());
-    assertFalse(incomingHandler.mTypedClients.get(clientType).contains(client1));
-    assertTrue(incomingHandler.mTypedClients.get(clientType).contains(client2));
-    assertTrue(incomingHandler.mTypedClients.get(clientType).contains(client3));
+    assertEquals(1, incomingHandler.typedClients.size());
+    assertEquals(2, incomingHandler.typedClients.get(clientType).size());
+    assertFalse(incomingHandler.typedClients.get(clientType).contains(client1));
+    assertTrue(incomingHandler.typedClients.get(clientType).contains(client2));
+    assertTrue(incomingHandler.typedClients.get(clientType).contains(client3));
 
     // un-register the rest of the clients
-    mInstrumentationConnection.unregisterClient(clientType, client2);
-    mInstrumentationConnection.unregisterClient(clientType, client3);
+    instrumentationConnection.unregisterClient(clientType, client2);
+    instrumentationConnection.unregisterClient(clientType, client3);
     waitForMsgHandling(incomingHandler);
 
     // ensure all clients are gone
-    assertEquals(0, incomingHandler.mTypedClients.size());
-    assertNull(incomingHandler.mTypedClients.get(clientType));
+    assertEquals(0, incomingHandler.typedClients.size());
+    assertNull(incomingHandler.typedClients.get(clientType));
 
-    mInstrumentationConnection.terminate();
-    assertNull(mInstrumentationConnection.mIncomingHandler);
+    instrumentationConnection.terminate();
+    assertNull(instrumentationConnection.incomingHandler);
   }
 
   @Test
   public void verifyDupClientRegAddsOnlyOne() throws InterruptedException {
-    mInstrumentationConnection.init(mMockedInstrumentation, mMockedFinisher);
-    IncomingHandler incomingHandler = mInstrumentationConnection.mIncomingHandler;
+    instrumentationConnection.init(mockedInstrumentation, mockedFinisher);
+    IncomingHandler incomingHandler = instrumentationConnection.incomingHandler;
 
     // Create clients
     Messenger client1 = new Messenger(new Handler(Looper.getMainLooper()));
     String clientType = "3";
 
     // register clients
-    mInstrumentationConnection.registerClient(clientType, client1);
-    mInstrumentationConnection.registerClient(clientType, client1);
-    mInstrumentationConnection.registerClient(clientType, client1);
+    instrumentationConnection.registerClient(clientType, client1);
+    instrumentationConnection.registerClient(clientType, client1);
+    instrumentationConnection.registerClient(clientType, client1);
 
     // wait for all messages to be handled
     waitForMsgHandling(incomingHandler);
 
     // ensure TypedClient list contain all clients
-    assertEquals(1, incomingHandler.mTypedClients.size());
-    assertEquals(1, incomingHandler.mTypedClients.get(clientType).size());
-    assertTrue(incomingHandler.mTypedClients.get(clientType).contains(client1));
+    assertEquals(1, incomingHandler.typedClients.size());
+    assertEquals(1, incomingHandler.typedClients.get(clientType).size());
+    assertTrue(incomingHandler.typedClients.get(clientType).contains(client1));
 
     // un-register only client1
-    mInstrumentationConnection.unregisterClient(clientType, client1);
+    instrumentationConnection.unregisterClient(clientType, client1);
     waitForMsgHandling(incomingHandler);
 
     // ensure all client1 is gone
-    assertEquals(0, incomingHandler.mTypedClients.size());
-    assertNull(incomingHandler.mTypedClients.get(clientType));
+    assertEquals(0, incomingHandler.typedClients.size());
+    assertNull(incomingHandler.typedClients.get(clientType));
 
-    mInstrumentationConnection.terminate();
-    assertNull(mInstrumentationConnection.mIncomingHandler);
+    instrumentationConnection.terminate();
+    assertNull(instrumentationConnection.incomingHandler);
   }
 
   @Test
   public void verifyDupClientUnRegShouldNotThrow() throws InterruptedException {
-    mInstrumentationConnection.init(mMockedInstrumentation, mMockedFinisher);
-    IncomingHandler incomingHandler = mInstrumentationConnection.mIncomingHandler;
+    instrumentationConnection.init(mockedInstrumentation, mockedFinisher);
+    IncomingHandler incomingHandler = instrumentationConnection.incomingHandler;
 
     // Create clients
     Messenger client1 = new Messenger(new Handler(Looper.getMainLooper()));
     String clientType = "4";
 
     // register clients
-    mInstrumentationConnection.registerClient(clientType, client1);
+    instrumentationConnection.registerClient(clientType, client1);
 
     // wait for all messages to be handled
     waitForMsgHandling(incomingHandler);
 
     // ensure TypedClient list contain all clients
-    assertEquals(1, incomingHandler.mTypedClients.size());
-    assertEquals(1, incomingHandler.mTypedClients.get(clientType).size());
-    assertTrue(incomingHandler.mTypedClients.get(clientType).contains(client1));
+    assertEquals(1, incomingHandler.typedClients.size());
+    assertEquals(1, incomingHandler.typedClients.get(clientType).size());
+    assertTrue(incomingHandler.typedClients.get(clientType).contains(client1));
 
     // un-register only client1
-    mInstrumentationConnection.unregisterClient(clientType, client1);
-    mInstrumentationConnection.unregisterClient(clientType, client1);
-    mInstrumentationConnection.unregisterClient(clientType, client1);
+    instrumentationConnection.unregisterClient(clientType, client1);
+    instrumentationConnection.unregisterClient(clientType, client1);
+    instrumentationConnection.unregisterClient(clientType, client1);
     waitForMsgHandling(incomingHandler);
 
     // ensure all client1 is gone
-    assertEquals(0, incomingHandler.mTypedClients.size());
-    assertNull(incomingHandler.mTypedClients.get(clientType));
+    assertEquals(0, incomingHandler.typedClients.size());
+    assertNull(incomingHandler.typedClients.get(clientType));
 
-    mInstrumentationConnection.terminate();
-    assertNull(mInstrumentationConnection.mIncomingHandler);
+    instrumentationConnection.terminate();
+    assertNull(instrumentationConnection.incomingHandler);
   }
 
   @Test
   public void verifyGetClientsOfType() throws InterruptedException {
-    mInstrumentationConnection.init(mMockedInstrumentation, mMockedFinisher);
-    IncomingHandler incomingHandler = mInstrumentationConnection.mIncomingHandler;
+    instrumentationConnection.init(mockedInstrumentation, mockedFinisher);
+    IncomingHandler incomingHandler = instrumentationConnection.incomingHandler;
 
     // Create clients
     Messenger client1 = new Messenger(new Handler(Looper.getMainLooper()));
@@ -351,40 +351,40 @@ public class InstrumentationConnectionTest {
     String unknownType = "999";
 
     // register clients
-    mInstrumentationConnection.registerClient(desiredClientType, client1);
-    mInstrumentationConnection.registerClient(desiredClientType, client2);
+    instrumentationConnection.registerClient(desiredClientType, client1);
+    instrumentationConnection.registerClient(desiredClientType, client2);
 
     // wait for all messages to be handled
     waitForMsgHandling(incomingHandler);
 
     // ensure client set contain all clients of the desired type
-    assertEquals(1, incomingHandler.mTypedClients.size());
-    assertEquals(2, mInstrumentationConnection.getClientsForType(desiredClientType).size());
+    assertEquals(1, incomingHandler.typedClients.size());
+    assertEquals(2, instrumentationConnection.getClientsForType(desiredClientType).size());
     // ensure client set does not contain clients of an unknown type
-    assertNull(mInstrumentationConnection.getClientsForType(unknownType));
+    assertNull(instrumentationConnection.getClientsForType(unknownType));
 
-    mInstrumentationConnection.terminate();
-    assertNull(mInstrumentationConnection.mIncomingHandler);
+    instrumentationConnection.terminate();
+    assertNull(instrumentationConnection.incomingHandler);
   }
 
   @Test
   public void verifyActivityFinisher() {
-    mInstrumentationConnection.init(mMockedInstrumentation, mMockedFinisher);
+    instrumentationConnection.init(mockedInstrumentation, mockedFinisher);
 
     // mimic remote instrumentation presence
-    InstrumentationConnection other = new InstrumentationConnection(mMockedContext);
-    other.init(mMockedInstrumentation, mMockedFinisher);
-    mInstrumentationConnection.mIncomingHandler.mOtherInstrumentations.add(
-        new Messenger(other.mIncomingHandler));
+    InstrumentationConnection other = new InstrumentationConnection(mockedContext);
+    other.init(mockedInstrumentation, mockedFinisher);
+    instrumentationConnection.incomingHandler.otherInstrumentations.add(
+        new Messenger(other.incomingHandler));
 
     // request cleanup
-    mInstrumentationConnection.requestRemoteInstancesActivityCleanup();
+    instrumentationConnection.requestRemoteInstancesActivityCleanup();
 
     // verify clean up was done
-    verify(mMockedInstrumentation).runOnMainSync(mMockedFinisher);
+    verify(mockedInstrumentation).runOnMainSync(mockedFinisher);
 
-    mInstrumentationConnection.terminate();
-    assertNull(mInstrumentationConnection.mIncomingHandler);
+    instrumentationConnection.terminate();
+    assertNull(instrumentationConnection.incomingHandler);
   }
 
   private void waitForMsgHandling(Handler handler) throws InterruptedException {

@@ -33,9 +33,10 @@ java_library(
     name = "test_deps",
     visibility = ["//visibility:public"],
     exports = [
-        "@androidsdk//:legacy_test-28",
         "//ext/junit",
         "//runner/android_junit_runner",
+        "//runner/rules",
+        "@androidsdk//:legacy_test-28",
         "@dexmaker//jar",
         "@dexmaker_mockito//jar",
         "@hamcrest//jar",

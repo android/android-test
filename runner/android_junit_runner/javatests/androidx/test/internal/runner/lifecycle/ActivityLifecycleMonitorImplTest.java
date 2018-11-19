@@ -57,6 +57,7 @@ public class ActivityLifecycleMonitorImplTest {
             });
   }
 
+  @Test
   public void testAddRemoveListener() {
     ActivityLifecycleCallback callback = mock(ActivityLifecycleCallback.class);
 
