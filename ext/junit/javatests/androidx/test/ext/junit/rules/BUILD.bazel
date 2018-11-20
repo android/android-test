@@ -14,6 +14,9 @@ load("//build_extensions:android_multidevice_instrumentation_test.bzl", "DEVICES
 android_binary(
     name = "target_stub",
     manifest = "AndroidManifest_target.xml",
+    deps = [
+        "//core/javatests/androidx/test/core/app/testing",
+    ],
 )
 
 android_binary(
