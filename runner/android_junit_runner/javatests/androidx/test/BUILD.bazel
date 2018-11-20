@@ -33,16 +33,25 @@ java_library(
     name = "test_deps",
     visibility = ["//visibility:public"],
     exports = [
+        ":legacy-test-neverlink",
         "//ext/junit",
         "//runner/android_junit_runner",
         "//runner/rules",
-        "@androidsdk//:legacy_test-28",
         "@dexmaker//jar",
         "@dexmaker_mockito//jar",
         "@hamcrest//jar",
         "@junit//jar",
         "@mockito//jar",
         "@objenesis//jar",
+    ],
+)
+
+# TODO(b/117464840): remove when legacy_test-28 is a neverlink target
+java_library(
+    name = "legacy-test-neverlink",
+    neverlink = 1,
+    exports = [
+        "@androidsdk//:legacy_test-28",
     ],
 )
 
