@@ -1,64 +1,50 @@
 # Description: Tests for espresso contrib
 licenses(["notice"])  # Apache License 2.0
 
-ESPRESSO_CONTRIB_TEST_SRCS = glob(["**/*.java"])
-
-ESPRESSO_CONTRIB_DEPS = [
-    "//espresso/contrib/java/androidx/test/espresso/contrib:accessibility_checks",
-    "//espresso/contrib/java/androidx/test/espresso/contrib:activity_result_matchers",
-    "//espresso/contrib/java/androidx/test/espresso/contrib:design_lib_actions",
-    "//espresso/contrib/java/androidx/test/espresso/contrib:drawer_actions",
-    "//espresso/contrib/java/androidx/test/espresso/contrib:recycler_view",
-    "//espresso/contrib/java/androidx/test/espresso/contrib:view_pager_actions",
-    "//espresso/idling_resource/net/java/androidx/test/espresso/idling/net:uri_idling_resource",
-    "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
-    "//espresso/core/java/androidx/test/espresso",
-    "//espresso/core/java/androidx/test/espresso:framework",
-    "//espresso/core/java/androidx/test/espresso:interface",
-    "//espresso/core/java/androidx/test/espresso/matcher",
-    "//runner/android_junit_runner",
-    "//runner/rules",
-    "//ext/junit",
-    "//core",
-]
-
-EXTERNAL_DEPS = [
-    "//:com_android_support_support_compat",
-    "//:com_android_support_support_v4",
-    "//:com_android_support_recyclerview_v7",
-    "@accessibility//jar",
-    "@dexmaker//jar",
-    "@dexmaker_mockito//jar",
-    "@guava//jar",
-    "@hamcrest//jar",
-    "@javax_inject//jar",
-    "@jsr305//jar",
-    "@junit//jar",
-    "@mockito//jar",
-    "@objenesis//jar",
-    "@truth//jar",
-] + ESPRESSO_CONTRIB_DEPS
-
-java_library(
-    name = "test_deps",
-    testonly = 1,
-    visibility = ["//visibility:public"],
-    exports = EXTERNAL_DEPS,
-)
-
 android_library(
     name = "espresso_contrib_test_lib",
     testonly = 1,
-    srcs = ESPRESSO_CONTRIB_TEST_SRCS,
-    manifest = "AndroidManifest_opensource.xml",
-    deps = [":test_deps"],
+    srcs = glob(["**/*.java"]),
+    manifest = "AndroidManifest.xml",
+    deps = [
+        "//:com_android_support_recyclerview_v7",
+        "//:com_android_support_support_compat",
+        "//:com_android_support_support_v4",
+        "//core",
+        "//espresso/contrib/java/androidx/test/espresso/contrib:accessibility_checks",
+        "//espresso/contrib/java/androidx/test/espresso/contrib:activity_result_matchers",
+        "//espresso/contrib/java/androidx/test/espresso/contrib:design_lib_actions",
+        "//espresso/contrib/java/androidx/test/espresso/contrib:drawer_actions",
+        "//espresso/contrib/java/androidx/test/espresso/contrib:recycler_view",
+        "//espresso/contrib/java/androidx/test/espresso/contrib:view_pager_actions",
+        "//espresso/core/java/androidx/test/espresso",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/idling_resource/net/java/androidx/test/espresso/idling/net:uri_idling_resource",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/rules",
+        "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "@accessibility//jar",
+        "@dexmaker//jar",
+        "@dexmaker_mockito//jar",
+        "@guava//jar",
+        "@hamcrest//jar",
+        "@javax_inject//jar",
+        "@jsr305//jar",
+        "@junit//jar",
+        "@mockito//jar",
+        "@objenesis//jar",
+        "@truth//jar",
+    ],
 )
 
 android_binary(
     name = "espresso_contrib_tests",
     testonly = 1,
     instruments = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
-    manifest = "AndroidManifest_opensource.xml",
+    manifest = "AndroidManifest.xml",
     deps = [":espresso_contrib_test_lib"],
 )
 

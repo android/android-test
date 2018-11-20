@@ -32,6 +32,12 @@ android_library(
 android_library(
     name = "lib_neverlink",
     testonly = 1,
+    # Don't export manifest. This lib is just for compile time dependency and it
+    # should never merged to other libraries manifest files.
+    exports_manifest = 0,
+    # This manifest is unused because this lib does not export the manifest but
+    # is required to make bazel happy.
+    manifest = "AndroidManifest_opensource.xml",
     # No other libraries should depend on this one
     neverlink = 1,
     exports = [":lib"],
