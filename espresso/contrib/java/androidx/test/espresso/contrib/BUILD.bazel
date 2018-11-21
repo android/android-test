@@ -149,6 +149,8 @@ android_library(
 
 android_library(
     name = "support_v4_neverlink",
+    exports_manifest = 0,
+    manifest = "AndroidManifest.xml",
     neverlink = 1,
     exports = [
         "//:com_android_support_support_annotations",
@@ -159,12 +161,16 @@ android_library(
 
 android_library(
     name = "recyclerview_neverlink",
+    exports_manifest = 0,
+    manifest = "AndroidManifest.xml",
     neverlink = 1,
     exports = ["//:com_android_support_recyclerview_v7"],
 )
 
 android_library(
     name = "designlib_neverlink",
+    exports_manifest = 0,
+    manifest = "AndroidManifest.xml",
     neverlink = 1,
     exports = ["//:com_android_support_design"],
 )
