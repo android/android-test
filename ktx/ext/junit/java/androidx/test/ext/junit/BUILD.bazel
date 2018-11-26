@@ -67,7 +67,7 @@ maven_artifact(
         "androidx.lifecycle:lifecycle-common:%s" % ANDROIDX_LIFECYCLE_VERSION,
     ],
     artifact_id = "junit-ktx",
-    group_id = "androidx.test",
+    group_id = "androidx.test.ext",
     last_updated = "20181029000000",
     src_jar = ":libjunit-src.jar",
     version = "%s" % ANDROIDX_JUNIT_VERSION,
