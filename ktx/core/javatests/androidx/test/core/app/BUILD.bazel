@@ -25,7 +25,7 @@ kt_android_library(
     name = "ActivityScenarioKotlinTest_lib",
     srcs = ["ActivityScenarioKotlinTest.kt"],
     deps = [
-        "//:androidx_lifecycle_common",
+        "//:android_arch_lifecycle_common",
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
         "//ext/junit",
@@ -45,7 +45,7 @@ android_binary(
     manifest = "AndroidManifest_test.xml",
     deps = [
         ":ActivityScenarioKotlinTest_lib",
-        "//:androidx_lifecycle_common",
+        "//:android_arch_lifecycle_common",
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
         "//ext/junit",

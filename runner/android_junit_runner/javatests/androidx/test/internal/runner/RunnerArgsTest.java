@@ -406,41 +406,6 @@ public class RunnerArgsTest {
     assertFalse(RunnerArgs.Builder.isClassOrMethod("pkg.foo&.Bar#method1"));
   }
 
-  /** Test static method validatePackage in RunnerArgs.Builder with valid package names */
-  @Test
-  public void validatePackage() throws Exception {
-    // test valid package names
-    RunnerArgs.Builder.validatePackage("pkg.foo.bar");
-    RunnerArgs.Builder.validatePackage("pkg");
-    RunnerArgs.Builder.validatePackage("pkg1.foo_2.bar$3");
-    // test properly formatted class names (Note: RunnerArgs should never use validatePackage
-    // on class name, but validatePackage should successfully validate valid class names
-    // as they are also technically valid package names)
-    RunnerArgs.Builder.validatePackage("pkg.foo.Bar");
-    RunnerArgs.Builder.validatePackage("Bar");
-  }
-
-  /** Test static method validatePackage in RunnerArgs.Builder with invalid package names */
-  @Test
-  public void invalidatePackage() throws Exception {
-    // test invalid package names
-    assertInvalidPackage("");
-    assertInvalidPackage(".pkg.foo.Bar");
-    assertInvalidPackage("pkg..foo.Bar");
-    assertInvalidPackage("pkg.foo.Bar.");
-    assertInvalidPackage("2pkg.foo.Bar");
-    assertInvalidPackage("pkg.foo.Bar#method1"); // method name is not valid package name
-  }
-
-  private static void assertInvalidPackage(String line) throws Exception {
-    try {
-      RunnerArgs.Builder.validatePackage(line);
-      fail("validatePackage did not throw exception for invalid package name: " + line);
-    } catch (IllegalArgumentException e) {
-      /* expected */
-    }
-  }
-
   /** Test parsing bundle when test timeout is provided */
   @Test
   public void testFromBundle_timeout() {

@@ -39,7 +39,7 @@ MONITOR_TEST_SRCS = glob(
 )
 
 EXTERNAL_DEPS = [
-    "//:androidx_annotation",
+    "//:com_android_support_support_annotations",
     "@hamcrest//jar",
     "@javax_inject//jar",
     "@junit//jar",

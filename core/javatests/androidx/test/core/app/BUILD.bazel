@@ -75,7 +75,7 @@ android_binary(
     instruments = ":target_stub",
     manifest = "AndroidManifest_test.xml",
     deps = [
-        "//:androidx_lifecycle_common",
+        "//:android_arch_lifecycle_common",
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
         "//ext/junit",

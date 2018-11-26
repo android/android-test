@@ -72,7 +72,7 @@ android_library(
     deps = [
         ":framework",
         ":interface",
-        "//:androidx_annotation",
+        "//:com_android_support_support_annotations",
         "//espresso/core/java/androidx/test/espresso/action",
         "//espresso/core/java/androidx/test/espresso/base",
         "//espresso/core/java/androidx/test/espresso/matcher",
@@ -142,7 +142,7 @@ android_library(
         ":framework",
         ":interface",
         ":view-interaction",
-        "//:androidx_annotation",
+        "//:com_android_support_support_annotations",
         "//espresso/core/java/androidx/test/espresso/action",
         "//espresso/core/java/androidx/test/espresso/action:adapter_view_protocol",
         "//espresso/core/java/androidx/test/espresso/base:idling_resource_registry",
@@ -199,8 +199,8 @@ android_binary(
     manifest = "AndroidManifest.xml",
     deps = [
         ":espresso",
-        "//:androidx_recyclerview",
-        "//:androidx_core",
+        "//:com_android_support_recyclerview_v7",
+        "//:com_android_support_support_compat",
         "//opensource/java_lib:webbridge",
         "@tagsoup//jar",
     ],

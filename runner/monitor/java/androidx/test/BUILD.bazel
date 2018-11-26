@@ -17,7 +17,7 @@ android_library(
     deps = [
         ":compiletime_hidden_apis",
         ":runtime_hidden_apis",
-        "//:androidx_annotation",
+        "//:com_android_support_support_annotations",
     ],
 )
 

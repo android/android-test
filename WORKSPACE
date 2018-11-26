@@ -4,7 +4,7 @@ workspace(name = "android_test_support")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # Google Maven Repository
-GMAVEN_COMMIT = "a5bc4640c35dd9b8234731678e9953f9fa64e0eb"
+GMAVEN_COMMIT = "dc905ebd5a306e2061351dcb6d3c787d84cfbac1"
 
 http_archive(
     name = "gmaven_rules",

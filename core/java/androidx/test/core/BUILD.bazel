@@ -16,8 +16,8 @@ android_library(
     manifest = ":AndroidManifest.xml",
     resource_files = glob(["res/**/*"]),
     deps = [
-        "//:androidx_lifecycle_common",
-        "//:androidx_annotation",
+        "//:android_arch_lifecycle_common",
+        "//:com_android_support_support_annotations",
         "//runner/monitor",
     ],
 )

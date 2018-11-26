@@ -34,7 +34,7 @@ axt_release_lib(
         "//espresso:proguard_binary.cfg",
     ],
     remove_specs = [
-        # remove all android classes except androidx.test.espresso.web
+        # remove all android.support classes except androidx.test.espresso.web
         "android.*|^androidx.test.espresso.web",
         # remove META-INF directory to avoid duplicate clashes with imports from the support library.
         "META-INF",

@@ -36,7 +36,7 @@ android_library(
     srcs = ["PickerActions.java"],
     visibility = ["//visibility:public"],
     deps = [
-        ":androidx_neverlink",
+        ":support_v4_neverlink",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
@@ -53,7 +53,7 @@ android_library(
     deps = [
         ":guava_checks",
         ":recyclerview_neverlink",
-        ":androidx_neverlink",
+        ":support_v4_neverlink",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
@@ -72,8 +72,7 @@ android_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        ":androidx_neverlink",
-        ":drawerlayout_neverlink",
+        ":support_v4_neverlink",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
@@ -118,8 +117,7 @@ android_library(
     deps = [
         ":designlib_neverlink",
         ":recyclerview_neverlink",
-        ":androidx_neverlink",
-        ":drawerlayout_neverlink",
+        ":support_v4_neverlink",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
@@ -135,8 +133,7 @@ android_library(
     srcs = ["ViewPagerActions.java"],
     visibility = ["//visibility:public"],
     deps = [
-        ":androidx_neverlink",
-        ":view_pager_neverlink",
+        ":support_v4_neverlink",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/action",
         "//espresso/core/java/androidx/test/espresso/matcher",
@@ -151,14 +148,14 @@ android_library(
 )
 
 android_library(
-    name = "androidx_neverlink",
+    name = "support_v4_neverlink",
     exports_manifest = 0,
     manifest = "AndroidManifest.xml",
     neverlink = 1,
     exports = [
-        "//:androidx_annotation",
-        "//:androidx_core",
-        "//:androidx_legacy_support_core_ui",
+        "//:com_android_support_support_annotations",
+        "//:com_android_support_support_compat",
+        "//:com_android_support_support_core_ui",
     ],
 )
 
@@ -167,7 +164,7 @@ android_library(
     exports_manifest = 0,
     manifest = "AndroidManifest.xml",
     neverlink = 1,
-    exports = ["//:androidx_recyclerview"],
+    exports = ["//:com_android_support_recyclerview_v7"],
 )
 
 android_library(
@@ -175,27 +172,7 @@ android_library(
     exports_manifest = 0,
     manifest = "AndroidManifest.xml",
     neverlink = 1,
-    exports = ["//:google_android_material"],
-)
-
-android_library(
-    name = "view_pager_neverlink",
-    exports_manifest = 0,
-    manifest = "AndroidManifest.xml",
-    neverlink = 1,
-    exports = [
-        "//:androidx_viewpager",
-    ],
-)
-
-android_library(
-    name = "drawerlayout_neverlink",
-    exports_manifest = 0,
-    manifest = "AndroidManifest.xml",
-    neverlink = 1,
-    exports = [
-        "//:androidx_drawerlayout",
-    ],
+    exports = ["//:com_android_support_design"],
 )
 
 load("//build_extensions:release.bzl", "axt_release_lib")
@@ -275,8 +252,6 @@ maven_artifact(
         "androidx.test.espresso:espresso-idling-resource:%s" % ESPRESSO_VERSION,
         "com.google.android.material:material:%s" % GOOGLE_MATERIAL_VERSION,
         "androidx.recyclerview:recyclerview:%s" % ANDROIDX_VERSION,
-        "androidx.drawerlayout:drawerlayout:%s" % ANDROIDX_VERSION,
-        "androidx.viewpager:viewpager:%s" % ANDROIDX_VERSION,
         "androidx.core:core:%s" % ANDROIDX_VERSION,
         "androidx.legacy:legacy-support-core-utils:%s" % ANDROIDX_VERSION,
         "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.0",

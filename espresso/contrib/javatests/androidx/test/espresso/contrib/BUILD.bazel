@@ -4,8 +4,7 @@ licenses(["notice"])  # Apache License 2.0
 android_library(
     name = "espresso_contrib_test_lib",
     testonly = 1,
-    # TODO(b/119839492): need androidx version of accessibility
-    srcs = glob(["**/*.java"], exclude = ["AccessibilityChecksIntegrationTest.java"]),
+    srcs = glob(["**/*.java"]),
     manifest = "AndroidManifest.xml",
     deps = [
         "//core",
@@ -15,7 +14,7 @@ android_library(
         "//espresso/contrib/java/androidx/test/espresso/contrib:drawer_actions",
         "//espresso/contrib/java/androidx/test/espresso/contrib:recycler_view",
         "//espresso/contrib/java/androidx/test/espresso/contrib:recyclerview_neverlink",
-        "//espresso/contrib/java/androidx/test/espresso/contrib:androidx_neverlink",
+        "//espresso/contrib/java/androidx/test/espresso/contrib:support_v4_neverlink",
         "//espresso/contrib/java/androidx/test/espresso/contrib:view_pager_actions",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
