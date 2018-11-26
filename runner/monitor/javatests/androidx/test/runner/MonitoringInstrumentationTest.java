@@ -26,7 +26,7 @@ import static org.mockito.Mockito.mock;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.test.filters.MediumTest;
 import androidx.test.runner.intercepting.InterceptingActivityFactory;
 import java.util.concurrent.atomic.AtomicReference;

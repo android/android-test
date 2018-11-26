@@ -19,7 +19,7 @@ package androidx.test.ui.app;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.widget.TextView;
 
 /** An activity with a delayed text view loading */

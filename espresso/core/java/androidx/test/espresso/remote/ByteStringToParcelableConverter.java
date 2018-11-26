@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.google.protobuf.ByteString;
 import java.lang.reflect.Field;
 

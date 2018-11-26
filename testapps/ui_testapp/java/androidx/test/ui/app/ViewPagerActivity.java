@@ -18,7 +18,7 @@ package androidx.test.ui.app;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * Activity to demonstrate actions on a {@link ViewPager}.

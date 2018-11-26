@@ -18,7 +18,7 @@ package androidx.test.core.app.testing;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * An activity that finishes itself in {@link #onCreate(Bundle)}.

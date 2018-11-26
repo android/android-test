@@ -23,7 +23,7 @@
 
   <!-- With update to rev 19, swipe does not consistently work on small pagers
        b/12113054 opened to investigate why this regressed .-->
-  <android.support.v4.view.ViewPager
+  <androidx.viewpager.widget.ViewPager
       android:id="@+id/small_pager"
       android:layout_width="120dp"
       android:layout_height="48dp" />
@@ -31,7 +31,7 @@
   <RelativeLayout
       android:layout_width="fill_parent"
       android:layout_height="100dp">
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/overlapped_pager"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

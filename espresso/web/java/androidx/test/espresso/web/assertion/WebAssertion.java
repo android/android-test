@@ -18,7 +18,7 @@ package androidx.test.espresso.web.assertion;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.view.View;
 import android.webkit.WebView;
 import androidx.test.espresso.NoMatchingViewException;

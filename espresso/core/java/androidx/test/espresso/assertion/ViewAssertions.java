@@ -21,7 +21,7 @@ import static androidx.test.espresso.util.TreeIterables.breadthFirstViewTraversa
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.hamcrest.Matchers.is;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.View;
 import androidx.test.espresso.NoMatchingViewException;

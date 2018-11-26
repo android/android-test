@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkPositionIndex;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +29,7 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * An {@link android.support.v7.widget.RecyclerView.Adapter} with a list of String items.
+ * An {@link androidx.recyclerview.widget.RecyclerView.Adapter} with a list of String items.
  */
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemViewHolder> {
 
@@ -73,7 +73,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
   }
 
   /**
-   * {@link android.support.v7.widget.RecyclerView.ViewHolder} used for list items.
+   * {@link androidx.recyclerview.widget.RecyclerView.ViewHolder} used for list items.
    */
   public static class ItemViewHolder extends RecyclerView.ViewHolder {
 

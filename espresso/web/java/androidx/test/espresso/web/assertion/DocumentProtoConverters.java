@@ -18,7 +18,7 @@ package androidx.test.espresso.web.assertion;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.google.protobuf.ByteString;
 import org.w3c.dom.Document;
 

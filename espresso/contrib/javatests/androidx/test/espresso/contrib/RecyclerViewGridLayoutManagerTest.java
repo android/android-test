@@ -31,8 +31,8 @@ import org.junit.runner.RunWith;
 
 /**
  * {@link androidx.test.espresso.contrib.RecyclerViewIntegrationTest}s for {@link
- * android.support.v7.widget.RecyclerView} using a {@link
- * android.support.v7.widget.GridLayoutManager}
+ * androidx.recyclerview.widget.RecyclerView} using a {@link
+ * androidx.recyclerview.widget.GridLayoutManager}
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest

@@ -18,7 +18,7 @@ package androidx.test.espresso.idling.net;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 import androidx.test.espresso.IdlingResource;
 import java.util.concurrent.CopyOnWriteArrayList;

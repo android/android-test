@@ -11,7 +11,7 @@ android_library(
     srcs = ["UriIdlingResource.java"],
     visibility = ["//visibility:public"],
     deps = [
-        "//:com_android_support_support_annotations",
+        "//:androidx_annotation",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
     ],
 )
@@ -26,8 +26,8 @@ axt_release_lib(
         "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_release_no_deps.jar",
     ],
     remove_specs = [
-        # remove all android.support.annotation
-        "android.support.annotation",
+        # remove all androidx.annotation
+        "androidx.annotation",
         # remove META-INF directory to avoid duplicate clashes with imports from the support library.
         "META-INF",
     ],

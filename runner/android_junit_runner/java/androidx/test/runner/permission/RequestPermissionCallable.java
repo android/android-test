@@ -21,8 +21,8 @@ import static androidx.test.internal.util.Checks.checkState;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import androidx.test.runner.permission.RequestPermissionCallable.Result;
 import java.util.Objects;

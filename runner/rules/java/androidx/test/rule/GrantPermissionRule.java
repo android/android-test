@@ -19,8 +19,8 @@ package androidx.test.rule;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.Manifest.permission;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.annotation.Beta;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.content.PermissionGranter;

@@ -33,7 +33,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.MessageQueue.IdleHandler;
 import android.os.UserHandle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import androidx.test.internal.runner.InstrumentationConnection;
 import androidx.test.internal.runner.hidden.ExposedInstrumentationApi;

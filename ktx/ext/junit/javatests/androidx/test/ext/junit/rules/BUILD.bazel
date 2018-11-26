@@ -27,7 +27,7 @@ kt_android_library(
         "ActivityScenarioRuleKotlinTest.kt",
     ],
     deps = [
-        "//:android_arch_lifecycle_common",
+        "//:androidx_lifecycle_common",
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
         "//ext/junit",
@@ -47,7 +47,7 @@ android_local_test(
     deps = [
         ":ActivityScenarioRuleKotlinTest_lib",
         ":robolectric_config",
-        "//:android_arch_lifecycle_common",
+        "//:androidx_lifecycle_common",
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
         "//ext/junit",
@@ -67,7 +67,7 @@ android_binary(
     manifest = "AndroidManifest_test.xml",
     deps = [
         ":ActivityScenarioRuleKotlinTest_lib",
-        "//:android_arch_lifecycle_common",
+        "//:androidx_lifecycle_common",
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
         "//ext/junit",
@@ -97,7 +97,7 @@ kt_android_library(
         "ActivityScenarioRuleWithCustomIntentKotlinTest.kt",
     ],
     deps = [
-        "//:android_arch_lifecycle_common",
+        "//:androidx_lifecycle_common",
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
         "//ext/junit",
@@ -119,7 +119,7 @@ android_binary(
     manifest = "AndroidManifest_test.xml",
     deps = [
         ":ActivityScenarioRuleWithCustomIntentKotlinTest_lib",
-        "//:android_arch_lifecycle_common",
+        "//:androidx_lifecycle_common",
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
         "//ext/junit",

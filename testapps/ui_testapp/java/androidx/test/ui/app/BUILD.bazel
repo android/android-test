@@ -17,14 +17,17 @@ android_library(
     resource_files = glob(["res/**"]),
     visibility = ["//visibility:private"],
     deps = [
-        "//:com_android_support_appcompat_v7",
-        "//:com_android_support_design",
-        "//:com_android_support_recyclerview_v7",
-        "//:com_android_support_support_annotations",
-        "//:com_android_support_support_compat",
-        "//:com_android_support_support_core_ui",
-        "//:com_android_support_support_core_utils",
-        "//:com_android_support_support_fragment",
+        "//:androidx_appcompat",
+        "//:google_android_material",
+        "//:androidx_recyclerview",
+        "//:androidx_annotation",
+        "//:androidx_core",
+        "//:androidx_legacy_support_core_ui",
+        "//:androidx_legacy_support_core_utils",
+        "//:androidx_fragment",
+        "//:androidx_cursoradapter",
+        "//:androidx_viewpager",
+        "//:androidx_drawerlayout",
         "@guava//jar",
     ],
 )
@@ -53,6 +56,6 @@ android_binary(
     resource_files = glob(["res/**"]),
     deps = [
         ":lib",
-        "//:com_android_support_multidex",
+        "//:androidx_multidex",
     ],
 )

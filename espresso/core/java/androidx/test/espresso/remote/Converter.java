@@ -16,7 +16,7 @@
  */
 package androidx.test.espresso.remote;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /** Converts input to output. */
 public interface Converter<I, O> {

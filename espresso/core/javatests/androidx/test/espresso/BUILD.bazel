@@ -47,7 +47,7 @@ ESPRESSO_DEPS = [
 ] + ESPRESSO_REMOTE_DEPS
 
 EXTERNAL_DEPS = [
-    "//:com_android_support_support_annotations",
+    "//:androidx_annotation",
     "@com_google_protobuf_javalite//:protobuf_java_lite",
     "@dexmaker//jar",
     "@dexmaker_mockito//jar",

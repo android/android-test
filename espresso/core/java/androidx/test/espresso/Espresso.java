@@ -30,7 +30,7 @@ import static org.hamcrest.Matchers.endsWith;
 import android.content.Context;
 import android.os.Build;
 import android.os.Looper;
-import android.support.annotation.CheckResult;
+import androidx.annotation.CheckResult;
 import android.view.View;
 import android.view.ViewConfiguration;
 import androidx.test.espresso.action.ViewActions;

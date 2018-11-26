@@ -19,7 +19,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import androidx.test.core.app.ActivityScenario;
 import org.junit.rules.ExternalResource;
 

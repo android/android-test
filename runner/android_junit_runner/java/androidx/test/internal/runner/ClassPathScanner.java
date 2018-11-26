@@ -16,7 +16,7 @@
 
 package androidx.test.internal.runner;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import dalvik.system.DexFile;
 import java.io.IOException;
 import java.util.ArrayList;

@@ -19,7 +19,7 @@ package androidx.test.espresso.remote;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.test.espresso.remote.EspressoRemoteMessage.To;
 import com.google.protobuf.Any;
 import com.google.protobuf.MessageLite;

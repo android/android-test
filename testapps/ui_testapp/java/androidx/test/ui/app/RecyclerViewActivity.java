@@ -17,12 +17,12 @@
 package androidx.test.ui.app;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import 	androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.ViewGroup;
@@ -30,11 +30,11 @@ import androidx.test.ui.app.RecyclerViewFragment.LayoutManagerType;
 import com.google.common.annotations.VisibleForTesting;
 
 /**
- * Simple RecylcerViewActivity which hosts a {@link android.support.v4.view.ViewPager} that contains
- * three {@link android.support.v4.app.Fragment}s. Each Fragment contains a
- * {@link android.support.v7.widget.RecyclerView} with a different layout manager,
- * {@link android.support.v7.widget.LinearLayoutManager},
- * {@link android.support.v7.widget.GridLayoutManager} and {@link StaggeredGridLayoutManager}
+ * Simple RecylcerViewActivity which hosts a {@link androidx.viewpager.widget.ViewPager} that contains
+ * three {@link androidx.fragment.app.Fragment}s. Each Fragment contains a
+ * {@link androidx.recyclerview.widget.RecyclerView} with a different layout manager,
+ * {@link androidx.recyclerview.widget.LinearLayoutManager},
+ * {@link androidx.recyclerview.widget.GridLayoutManager} and {@link StaggeredGridLayoutManager}
  */
 public class RecyclerViewActivity extends FragmentActivity {
 
@@ -66,7 +66,7 @@ public class RecyclerViewActivity extends FragmentActivity {
   }
 
   /**
-   * The {@link android.support.v4.app.FragmentPagerAdapter} to display the different
+   * The {@link androidx.fragment.app.FragmentPagerAdapter} to display the different
    * {@link androidx.test.ui.app.RecyclerViewFragment}s
    */
   private static class RecyclerViewPagerAdapter extends FragmentPagerAdapter {

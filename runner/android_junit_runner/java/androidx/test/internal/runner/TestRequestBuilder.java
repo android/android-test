@@ -18,7 +18,7 @@ package androidx.test.internal.runner;
 
 import android.app.Instrumentation;
 import android.os.Bundle;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 import androidx.test.filters.RequiresDevice;
 import androidx.test.filters.SdkSuppress;

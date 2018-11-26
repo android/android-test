@@ -18,8 +18,8 @@ package androidx.test.runner;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import androidx.test.internal.runner.RunnerArgs;
 import androidx.test.internal.runner.tracker.UsageTracker;

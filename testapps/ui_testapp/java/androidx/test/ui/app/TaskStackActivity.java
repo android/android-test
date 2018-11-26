@@ -19,7 +19,7 @@ package androidx.test.ui.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.TaskStackBuilder;
+import androidx.core.app.TaskStackBuilder;
 
 /**
  * Activity used to test TaskStackBuilder behavior.

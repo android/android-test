@@ -17,7 +17,7 @@
 package androidx.test.runner.permission;
 
 import android.app.UiAutomation;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 
 /**
  * Ideally we wouldn't need this abstraction but since {@link UiAutomation} is final we need an

@@ -16,7 +16,7 @@
 
 package androidx.test.internal.runner.listener;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 import androidx.test.internal.runner.TestSize;
 import org.junit.runner.Description;

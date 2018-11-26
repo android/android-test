@@ -15,7 +15,7 @@
  */
 package androidx.test.ext.truth.view;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.MotionEvent.PointerProperties;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.Subject;

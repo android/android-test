@@ -16,7 +16,7 @@
 package androidx.test.runner.screenshot;
 
 import android.graphics.Bitmap;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.InstrumentationRegistry;
 
 /**

@@ -20,7 +20,7 @@ import static androidx.test.internal.util.LogUtil.logDebug;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;

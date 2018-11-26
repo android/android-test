@@ -17,7 +17,7 @@
 package androidx.test.espresso.web.assertion;
 
 import android.os.Binder;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.test.espresso.remote.Converter;
 import com.google.protobuf.ByteString;
 import java.io.IOException;

@@ -20,7 +20,7 @@ import static androidx.test.espresso.remote.TypeProtoConverters.anyToType;
 import static androidx.test.espresso.remote.TypeProtoConverters.typeToAny;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.proto.action.ViewActions.SwipeViewActionProto;
 import androidx.test.espresso.proto.action.ViewActions.SwipeViewActionProto.Builder;

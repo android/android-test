@@ -18,7 +18,7 @@ package androidx.test.espresso.web.model;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import com.google.common.collect.Lists;

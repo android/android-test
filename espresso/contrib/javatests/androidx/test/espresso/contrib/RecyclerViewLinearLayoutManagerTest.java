@@ -23,8 +23,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static com.google.common.truth.Truth.assertThat;
 
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.ui.app.RecyclerViewFragment.LayoutManagerType;
@@ -33,8 +33,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * {@link RecyclerViewIntegrationTest}s for {@link android.support.v7.widget.RecyclerView} using a
- * {@link android.support.v7.widget.LinearLayoutManager}
+ * {@link RecyclerViewIntegrationTest}s for {@link androidx.recyclerview.widget.RecyclerView} using a
+ * {@link androidx.recyclerview.widget.LinearLayoutManager}
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest

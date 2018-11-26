@@ -16,7 +16,7 @@
 
 package androidx.test.internal.platform.content;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Requests a runtime permission.

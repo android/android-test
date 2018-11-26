@@ -21,7 +21,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import android.annotation.TargetApi;
 import android.app.UiAutomation;
 import android.os.ParcelFileDescriptor;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 import androidx.test.InstrumentationRegistry;
 import java.io.BufferedReader;

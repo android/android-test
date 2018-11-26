@@ -16,7 +16,7 @@ kt_android_library(
         ["**/*.kt"],
     ),
     deps = [
-        "//:android_arch_lifecycle_common",
+        "//:androidx_lifecycle_common",
         "//ext/junit",
     ],
 )
@@ -57,14 +57,14 @@ axt_release_lib(
 )
 
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_JUNIT_VERSION", "CORE_VERSION", "ANDROIDX_VERSION", "RUNNER_VERSION", "ANDROIDX_ARCH_COMPONENTS_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_JUNIT_VERSION", "CORE_VERSION", "ANDROIDX_VERSION", "RUNNER_VERSION", "ANDROIDX_LIFECYCLE_VERSION")
 
 maven_artifact(
     name = "junit_maven_artifact",
     src = ":junit_release.aar",
     artifact_deps = [
         "androidx.test.ext:junit:%s" % ANDROIDX_JUNIT_VERSION,
-        "androidx.lifecycle:lifecycle-common:%s" % ANDROIDX_ARCH_COMPONENTS_VERSION,
+        "androidx.lifecycle:lifecycle-common:%s" % ANDROIDX_LIFECYCLE_VERSION,
     ],
     artifact_id = "junit-ktx",
     group_id = "androidx.test",

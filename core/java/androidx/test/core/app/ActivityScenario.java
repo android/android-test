@@ -22,13 +22,13 @@ import static androidx.test.internal.util.Checks.checkState;
 
 import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
-import android.arch.lifecycle.Lifecycle.Event;
-import android.arch.lifecycle.Lifecycle.State;
+import androidx.lifecycle.Lifecycle.Event;
+import androidx.lifecycle.Lifecycle.State;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.GuardedBy;
-import android.support.annotation.Nullable;
+import androidx.annotation.GuardedBy;
+import androidx.annotation.Nullable;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.app.ActivityInvoker;
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
@@ -51,7 +51,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * framework.
  *
  * <p>The ActivityScenario API uses {@link State} extensively. If you are unfamiliar with {@link
- * android.arch.lifecycle} components, please read <a
+ * androidx.lifecycle} components, please read <a
  * href="https://developer.android.com/topic/libraries/architecture/lifecycle#lc">lifecycle</a>
  * before starting. It is crucial to understand the difference between {@link State} and {@link
  * Event}.

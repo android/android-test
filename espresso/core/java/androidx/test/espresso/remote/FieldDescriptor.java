@@ -19,7 +19,7 @@ package androidx.test.espresso.remote;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import com.google.common.collect.ImmutableList;
 import java.lang.annotation.Annotation;

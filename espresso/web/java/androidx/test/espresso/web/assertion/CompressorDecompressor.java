@@ -16,7 +16,7 @@
  */
 package androidx.test.espresso.web.assertion;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.internal.util.LogUtil;
 import com.google.common.io.ByteStreams;
 import java.io.ByteArrayInputStream;

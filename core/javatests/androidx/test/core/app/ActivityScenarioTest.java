@@ -21,7 +21,7 @@ import static androidx.test.ext.truth.content.IntentSubject.assertThat;
 import static com.google.common.truth.Truth.assertThat;
 
 import android.app.Activity;
-import android.arch.lifecycle.Lifecycle.State;
+import androidx.lifecycle.Lifecycle.State;
 import android.content.Intent;
 import androidx.test.core.app.testing.FinishItselfActivity;
 import androidx.test.core.app.testing.RecreationRecordingActivity;

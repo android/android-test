@@ -19,8 +19,8 @@ import static androidx.test.espresso.remote.TypeProtoConverters.byteStringToType
 import static androidx.test.espresso.remote.TypeProtoConverters.typeToAny;
 import static androidx.test.espresso.remote.TypeProtoConverters.typeToByteString;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.proto.action.ViewActions.AdapterDataLoaderActionProto;
 import androidx.test.espresso.remote.ConstructorInvocation;
 import androidx.test.espresso.remote.EspressoRemoteMessage;

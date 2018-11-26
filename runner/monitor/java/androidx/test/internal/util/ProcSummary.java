@@ -17,7 +17,7 @@ package androidx.test.internal.util;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

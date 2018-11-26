@@ -18,7 +18,7 @@ package androidx.test.espresso.action;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.test.espresso.proto.action.ViewActions.PressProto.Precision;
 import androidx.test.espresso.remote.EspressoRemoteMessage;
 import androidx.test.espresso.remote.ProtoUtils;

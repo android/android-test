@@ -18,7 +18,7 @@ android_library(
     resource_files = glob(["res/**"]),
     visibility = ["//visibility:private"],
     deps = [
-        "//:com_android_support_support_annotations",
+        "//:androidx_annotation",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
     ],
 )

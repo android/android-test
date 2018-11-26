@@ -16,7 +16,7 @@
 
 package androidx.test.internal.runner;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 import androidx.test.internal.runner.junit3.AndroidJUnit3Builder;
 import java.lang.reflect.Modifier;

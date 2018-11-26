@@ -16,7 +16,7 @@
  */
 package androidx.test.espresso.remote;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.google.protobuf.ByteString;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

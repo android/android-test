@@ -21,7 +21,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.test.annotation.Beta;
 import java.io.IOException;
 import java.util.HashSet;

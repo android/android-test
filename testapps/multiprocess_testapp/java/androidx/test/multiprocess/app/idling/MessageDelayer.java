@@ -17,7 +17,7 @@
 package com.google.android.apps.common.testing.ui.multiprocess.testapp.idling;
 
 import android.os.Handler;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.IdlingResource;
 
 /**

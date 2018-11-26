@@ -16,7 +16,7 @@
 
 package androidx.test.internal.runner;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collections;

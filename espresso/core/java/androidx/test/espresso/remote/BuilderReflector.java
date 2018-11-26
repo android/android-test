@@ -20,8 +20,8 @@ import static androidx.test.espresso.remote.ProtoUtils.capitalizeFirstChar;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
 

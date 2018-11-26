@@ -19,7 +19,7 @@ package androidx.test.espresso.web.webdriver;
 import static androidx.test.espresso.web.model.Atoms.castOrDie;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import androidx.test.espresso.web.model.Atom;

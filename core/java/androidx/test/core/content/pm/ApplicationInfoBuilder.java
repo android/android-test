@@ -18,7 +18,7 @@ package androidx.test.core.content.pm;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.content.pm.ApplicationInfo;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /** Builder for {@link ApplicationInfo}. */
 public final class ApplicationInfoBuilder {

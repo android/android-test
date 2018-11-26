@@ -17,7 +17,7 @@ android_library(
     deps = [
         ":compiletime_hidden_apis",
         ":runtime_hidden_apis",
-        "//:com_android_support_support_annotations",
+        "//:androidx_annotation",
     ],
 )
 
@@ -54,7 +54,7 @@ axt_release_lib(
     jarjar_rules = "release_jarjar_rules.txt",
     proguard_library = ":proguard_library.cfg",
     remove_specs = [
-        "android.support.annotation*",
+        "androidx.annotation*",
     ],
     deps = [
         ":monitor_release_lib",

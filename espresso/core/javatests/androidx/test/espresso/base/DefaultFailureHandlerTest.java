@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.fail;
 import static org.junit.rules.ExpectedException.none;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.NoMatchingViewException;

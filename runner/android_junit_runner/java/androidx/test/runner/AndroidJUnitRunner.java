@@ -24,7 +24,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.MediumTest;

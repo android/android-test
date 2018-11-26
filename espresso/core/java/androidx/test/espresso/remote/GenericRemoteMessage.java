@@ -19,8 +19,8 @@ package androidx.test.espresso.remote;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import com.google.protobuf.MessageLite;
 
 /**

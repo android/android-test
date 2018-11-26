@@ -23,7 +23,7 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.View;
 import androidx.test.espresso.InjectEventSecurityException;

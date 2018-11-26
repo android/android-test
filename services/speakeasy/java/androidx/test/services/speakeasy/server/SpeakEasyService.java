@@ -28,7 +28,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.test.services.speakeasy.SpeakEasyProtocol;
 
 /** Serves SpeakEasy requests. */

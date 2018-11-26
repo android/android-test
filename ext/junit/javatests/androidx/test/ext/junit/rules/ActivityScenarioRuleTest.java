@@ -18,7 +18,7 @@ package androidx.test.ext.junit.rules;
 import static com.google.common.truth.Truth.assertThat;
 
 import android.app.Activity;
-import android.arch.lifecycle.Lifecycle;
+import androidx.lifecycle.Lifecycle;
 import androidx.test.core.app.testing.RecreationRecordingActivity;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;

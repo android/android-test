@@ -17,7 +17,7 @@
 package androidx.test.runner.permission;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 /** Grants a permission at runtime using a @{link ShellCommand} */
