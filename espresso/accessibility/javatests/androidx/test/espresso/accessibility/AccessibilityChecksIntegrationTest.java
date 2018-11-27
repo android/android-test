@@ -23,7 +23,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertThrows;
 
 import android.os.Build;
 import android.text.SpannableString;
@@ -77,13 +77,12 @@ public class AccessibilityChecksIntegrationTest {
 
   @Test
   public void testRunAccessibilityChecks_viewWithOneError() {
-    try {
-      onView(withId(R.id.large_view)).check(accessibilityAssertion());
-    } catch (AccessibilityViewCheckException e) {
-      assertEquals(1, e.getResults().size());
-      return;
-    }
-    fail("Should have thrown an AccessibilityViewCheckException for a small touch target.");
+    AccessibilityViewCheckException e =
+        assertThrows(
+            "Should throw an AccessibilityViewCheckException for a small touch target.",
+            AccessibilityViewCheckException.class,
+            () -> onView(withId(R.id.large_view)).check(accessibilityAssertion()));
+    assertEquals(1, e.getResults().size());
   }
 
   @Test
@@ -109,26 +108,24 @@ public class AccessibilityChecksIntegrationTest {
                 ((TextView) view).setText(spannableString);
               }
             });
-    try {
-      onView(withId(R.id.large_view)).check(accessibilityAssertion());
-    } catch (AccessibilityViewCheckException e) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        // Android O and above provides support for URL/ClickableSpans for accessibility
-        assertEquals(1, e.getResults().size());
-      } else {
-        assertEquals(2, e.getResults().size());
-      }
-      return;
+    AccessibilityViewCheckException e =
+        assertThrows(
+            "Should throw an AccessibilityViewCheckException for a small touch target.",
+            AccessibilityViewCheckException.class,
+            () -> onView(withId(R.id.large_view)).check(accessibilityAssertion()));
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      // Android O and above provides support for URL/ClickableSpans for accessibility
+      assertEquals(1, e.getResults().size());
+    } else {
+      assertEquals(2, e.getResults().size());
     }
-    fail("Should have thrown an AccessibilityViewCheckException for a small touch target.");
   }
 
   @Test
   public void testCheckWithNonNullMatchingViewException_throwsNoMatchingViewException() {
-    try {
-      onView(withText("There is no view with this text!")).check(accessibilityAssertion());
-      fail("Should have thrown a NoMatchingViewException");
-    } catch (NoMatchingViewException expected) {
-    }
+    assertThrows(
+        "Should throw a NoMatchingViewException",
+        NoMatchingViewException.class,
+        () -> onView(withText("There is no view with this text!")).check(accessibilityAssertion()));
   }
 }
