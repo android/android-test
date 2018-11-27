@@ -22,15 +22,7 @@ load("//build_extensions:release.bzl", "axt_release_lib")
 # idling_net_release_no_deps.jar and idling_net_release.aar
 axt_release_lib(
     name = "idling_net_release",
-    overlapping_jars = [
-        "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_release_no_deps.jar",
-    ],
-    remove_specs = [
-        # remove all androidx.annotation
-        "androidx.annotation",
-        # remove META-INF directory to avoid duplicate clashes with imports from the support library.
-        "META-INF",
-    ],
+    keep_spec = "androidx/test/espresso/idling/net",
     deps = [
         ":uri_idling_resource",
     ],

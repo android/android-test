@@ -51,9 +51,9 @@ android_library(
     srcs = ["RecyclerViewActions.java"],
     visibility = ["//visibility:public"],
     deps = [
+        ":androidx_neverlink",
         ":guava_checks",
         ":recyclerview_neverlink",
-        ":androidx_neverlink",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
@@ -116,10 +116,10 @@ android_library(
     srcs = ["NavigationViewActions.java"],
     visibility = ["//visibility:public"],
     deps = [
-        ":designlib_neverlink",
-        ":recyclerview_neverlink",
         ":androidx_neverlink",
+        ":designlib_neverlink",
         ":drawerlayout_neverlink",
+        ":recyclerview_neverlink",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
@@ -217,26 +217,9 @@ android_library(
 
 axt_release_lib(
     name = "espresso_contrib_release",
-    # use a custom package so the unnecessary generated R class containing support lib resources
-    # gets removed
-    custom_package = "com.removeme",
+    keep_spec = "androidx/test/espresso/contrib",
     multidex = "native",
-    overlapping_jars = [
-        "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
-        "//runner/android_junit_runner/java/androidx/test:runner_release_no_deps.jar",
-        "//runner/rules/java/androidx/test:rules_release_no_deps.jar",
-        "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_release_no_deps.jar",
-        "//espresso/core/java/androidx/test/espresso:espresso_core_release_no_deps.jar",
-        "@junit//jar",
-    ],
-    remove_specs = [
-        # remove all android.support classes except androidx.test.espresso.contrib
-        "android.*|^androidx.test.espresso.contrib",
-        # remove META-INF directory to avoid duplicate clashes with imports from the support library.
-        "META-INF",
-        # remove android.arch classes that get pulled in from the support library.
-        "android.arch.*",
-    ],
+    remove_spec = "androidx/test/espresso/contrib/R[$$\.]",
     deps = [
         ":espresso_contrib_release_lib",
     ],

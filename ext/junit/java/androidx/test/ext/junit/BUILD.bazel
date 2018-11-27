@@ -37,18 +37,8 @@ android_library(
 # a java_library target libjunit_release_no_deps
 axt_release_lib(
     name = "junit_release",
-    overlapping_jars = [
-        "//core/java/androidx/test/core:core_release_no_deps.jar",
-        "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
-    ],
-    remove_specs = [
-        # remove classes from external dependencies AND generated R file, since gradle will produce
-        # this
-        "androidx.test.core.R.*",
-        "androidx.test.ext.junit.R.*",
-        "android.support.*",
-        "android.arch.*",
-    ],
+    keep_spec = "androidx/test/ext/junit",
+    remove_spec = "androidx/test/ext/junit/R[$$\.]",
     deps = [
         ":junit_release_lib",
     ],

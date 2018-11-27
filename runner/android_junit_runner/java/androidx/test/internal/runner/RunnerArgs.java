@@ -93,6 +93,9 @@ public class RunnerArgs {
   // pattern used to identify java class names conforming to java naming conventions
   private static final String CLASS_OR_METHOD_REGEX =
       "^([\\p{L}_$][\\p{L}\\p{N}_$]*\\.)*[\\p{Lu}_$][\\p{L}\\p{N}_$]*(#[\\p{L}_$][\\p{L}\\p{N}_$]*)?$";
+  // pattern used to match valid java package names
+  private static final String VALID_PACKAGE_REGEX =
+      "^([\\p{L}_$][\\p{L}\\p{N}_$]*\\.)*[\\p{L}_$][\\p{L}\\p{N}_$]*$";
 
   public final boolean debug;
   public final boolean suiteAssignment;
@@ -442,7 +445,7 @@ public class RunnerArgs {
             args.tests.add(parseTestClass(line));
           } else {
             // validate and parse test package
-            args.packages.addAll(parseTestPackages(line));
+            args.packages.addAll(parseTestPackages(validatePackage(line)));
           }
         }
       } catch (FileNotFoundException e) {
@@ -485,6 +488,23 @@ public class RunnerArgs {
     @VisibleForTesting
     static boolean isClassOrMethod(String line) {
       return line.matches(CLASS_OR_METHOD_REGEX);
+    }
+
+    /**
+     * Throw an exception if the line from test file is not a valid package name. Providing an
+     * invalid class name to this method will also result in an exception.
+     *
+     * @param line string containing an individual package name.
+     * @throws ClassNotFoundException
+     * @return line
+     */
+    @VisibleForTesting
+    static String validatePackage(String line) {
+      if (!line.matches(VALID_PACKAGE_REGEX)) {
+        throw new IllegalArgumentException(
+            String.format("\"%s\" not recognized as valid package name", line));
+      }
+      return line;
     }
 
     /**

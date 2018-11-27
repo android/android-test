@@ -52,10 +52,8 @@ android_library(
 axt_release_lib(
     name = "monitor_release",
     jarjar_rules = "release_jarjar_rules.txt",
+    keep_spec = "androidx/test",
     proguard_library = ":proguard_library.cfg",
-    remove_specs = [
-        "androidx.annotation*",
-    ],
     deps = [
         ":monitor_release_lib",
     ],

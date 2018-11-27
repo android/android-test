@@ -36,16 +36,12 @@ load("//build_extensions:release.bzl", "axt_release_lib")
 # and runner_release.aar
 axt_release_lib(
     name = "rules_release",
+    keep_spec = "androidx/test",
     overlapping_jars = [
         "//runner/android_junit_runner/java/androidx/test:runner_release_no_deps.jar",
         "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
-        "@junit//jar",
     ],
     proguard_library = "proguard.cfg",
-    remove_specs = [
-        "androidx.annotation*",
-        "androidx.test.internal.runner.hidden.*",
-    ],
     deps = [
         ":rules",
     ],

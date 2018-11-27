@@ -199,8 +199,8 @@ android_binary(
     manifest = "AndroidManifest.xml",
     deps = [
         ":espresso",
-        "//:androidx_recyclerview",
         "//:androidx_core",
+        "//:androidx_recyclerview",
         "//opensource/java_lib:webbridge",
         "@tagsoup//jar",
     ],
@@ -211,28 +211,17 @@ load("//build_extensions:release.bzl", "axt_release_lib")
 axt_release_lib(
     name = "espresso_core_release",
     jarjar_rules = "release_jarjar_rules.txt",
+    keep_spec = "androidx/test/espresso",
     overlapping_jars = [
-        "//runner/android_junit_runner/java/androidx/test:runner_release_no_deps.jar",
         "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_release_no_deps.jar",
-        "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
-        "@junit//jar",
     ],
     proguard_library = ":proguard_library.cfg",
     proguard_specs = [
         "//:proguard_binary.cfg",
         "//espresso:proguard_binary.cfg",
     ],
-    remove_specs = [
-        "android.support*",
-        "androidx.test.services*",
-        "androidx.test.espresso.contrib*",
-        "androidx.test.internal.runner.hidden.*",
-        # remove META-INF directory to avoid duplicate clashes with imports from the support library.
-        "META-INF",
-    ],
     deps = [
         ":espresso",
-        "//espresso/core/java/androidx/test/espresso/remote",
     ],
 )
 
@@ -268,11 +257,9 @@ combine_jars(
 remove_from_jar(
     name = "espresso_src_jars",
     jar = ":espresso_src_all_jars.jar",
+    keep_spec = "androidx/test/espresso",
     # Remove generated dagger classes from source jar
-    removes = [
-        ".*_Provide.*",
-        ".*_Factory.*",
-    ],
+    remove_spec = ".*_Provide.*|.*_Factory.*",
 )
 
 maven_artifact(
