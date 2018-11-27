@@ -71,14 +71,6 @@ public final class SpeakEasyProtocol {
     this.findResult = null;
   }
 
-  @Override
-  public String toString() {
-    return String.format(
-        "SpeakEasyProtocol{ type: %d, publish: %s, publishResult: %s, remove: %s, find: %s,"
-            + "findResult: %s }",
-        type, publish, publishResult, remove, find, findResult);
-  }
-
   private SpeakEasyProtocol(PublishResult pr) {
     this.type = PUBLISH_RESULT_TYPE;
     this.publish = null;
@@ -113,6 +105,14 @@ public final class SpeakEasyProtocol {
     this.remove = null;
     this.find = null;
     this.findResult = fr;
+  }
+
+  @Override
+  public String toString() {
+    return String.format(
+        "SpeakEasyProtocol{ type: %d, publish: %s, publishResult: %s, remove: %s, find: %s,"
+            + "findResult: %s }",
+        type, publish, publishResult, remove, find, findResult);
   }
 
   /**
