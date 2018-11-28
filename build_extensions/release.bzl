@@ -11,8 +11,9 @@ def axt_release_lib(
     proguard_library = None,
     multidex = "off",
     jarjar_rules = "//build_extensions:noJarJarRules.txt",
+    keep_spec = None,
+    remove_spec = None,
     overlapping_jars = [],
-    remove_specs = [],
     resource_files = None):
   """Generates release artifacts for a AXT library.
 
@@ -26,11 +27,12 @@ def axt_release_lib(
     proguard_specs: Proguard to apply when building the jar
     proguard_library: Proguard to bundle with the jar
     jarjar_rules: Optional file containing jarjar rules to be applied
-    overlapping_jars: jars containing entries to be removed from the main jar. See remove_from_jar
-      docs
-    remove_specs: A list of additional items to be removed from the jar. See
-      remove_from_jar:removes documentation for format. By default all com*,
-      org*, and junit* classes will be removed.
+    keep_spec: A regex to match items to retain in the jar. This is typically the
+      root java namespace of the library.
+    remove_spec: A regex to match items to remove from the jar.
+    overlapping_jars: jars containing entries to be removed from the main jar.
+      This is useful when the library has dependencies whose java package namespaces
+      overlap with this jar. See remove_from_jar docs for more details.
     resource_files: res files to include in library
   """
 
@@ -93,20 +95,9 @@ def axt_release_lib(
   remove_from_jar(
       name = "%s_no_deps" % name,
       jar = ":%s_jarjared.jar" % name,
+      keep_spec = keep_spec,
+      remove_spec = remove_spec,
       overlapping_jars = overlapping_jars,
-      removes = [
-          "*.gwt.xml",
-          "com*",
-          "junit*",
-          "org*",
-          "javax*",
-          "dagger*",
-          "jsr305_annotations*",
-          "jsr330_inject*",
-          "third_party*",
-          "META-INF",
-          "protobuf.meta",
-      ] + remove_specs,
   )
 
   expected_output = ":%s_initial.aar" % name

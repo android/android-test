@@ -212,9 +212,8 @@ load("//build_extensions:release.bzl", "axt_release_lib")
 axt_release_lib(
     name = "espresso_remote_release",
     jarjar_rules = "release_jarjar_rules.txt",
+    keep_spec = "androidx/test/espresso",
     overlapping_jars = [
-        "//runner/android_junit_runner/java/androidx/test:runner_release_no_deps.jar",
-        "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
         "//espresso/core/java/androidx/test/espresso:espresso_core_release_no_deps.jar",
         "//espresso/web/java/androidx/test/espresso/web:espresso_web_release_no_deps.jar",
         "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_release_no_deps.jar",
@@ -223,11 +222,6 @@ axt_release_lib(
     proguard_specs = [
         "//:proguard_binary.cfg",
         "//espresso:proguard_binary.cfg",
-    ],
-    remove_specs = [
-        "androidx.annotation*",
-        # remove META-INF directory to avoid duplicate clashes with imports from the support library.
-        "META-INF",
     ],
     deps = [
         ":remote",

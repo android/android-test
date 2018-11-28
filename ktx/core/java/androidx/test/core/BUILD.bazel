@@ -36,17 +36,11 @@ android_library(
 # a java_library target libcore_release_no_deps
 axt_release_lib(
     name = "core_release",
+    keep_spec = "androidx/test/core|META-INF/androidx.test.core.kotlin_module",
     overlapping_jars = [
-        "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
         "//core/java/androidx/test/core:core_release_no_deps.jar",
     ],
-    remove_specs = [
-        # remove classes from external dependencies AND generated R file, since gradle will produce
-        # this
-        "androidx.test.core.R.*",
-        "android.support.*",
-        "android.arch.*",
-    ],
+    remove_spec = "androidx/test/core/R[$$\.]",
     resource_files = glob(
         ["res/**/*"],
     ),

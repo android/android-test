@@ -54,14 +54,11 @@ android_library(
 axt_release_lib(
     name = "runner_release",
     jarjar_rules = "release_jarjar_rules.txt",
+    keep_spec = "androidx/test",
     overlapping_jars = [
         "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
-        "@junit//jar",
     ],
     proguard_library = ":proguard_library.cfg",
-    remove_specs = [
-        "androidx.annotation*",
-    ],
     deps = [
         ":runner_release_lib",
     ],

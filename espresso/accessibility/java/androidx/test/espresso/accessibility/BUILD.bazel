@@ -26,24 +26,8 @@ load("//build_extensions:release.bzl", "axt_release_lib")
 
 axt_release_lib(
     name = "accessibility_checks_release",
-    # use a custom package so the unnecessary generated R class containing support lib resources
-    # gets removed
-    custom_package = "com.removeme",
-    overlapping_jars = [
-        "//runner/android_junit_runner/java/androidx/test:runner_release_no_deps.jar",
-        "//espresso/core/java/androidx/test/espresso:espresso_core_release_no_deps.jar",
-        "@junit//jar",
-    ],
-    remove_specs = [
-        # remove all com.google.android.apps.common.testing.accessibility.framework classes
-        "com.google.android.apps.common.testing.accessibility.framework",
-        # remove all android classes except androidx.test.espresso.accessibility
-        "android.*|^androidx.test.espresso.accessibility",
-        # remove META-INF directory to avoid duplicate clashes with imports from the support library.
-        "META-INF",
-        # remove android.arch classes that get pulled in from the support library.
-        "android.arch.*",
-    ],
+    keep_spec = "androidx/test/espresso/accessibility",
+    remove_spec = "androidx/test/espresso/accessibility/R[$$\.]",
     deps = [
         ":accessibility_checks",
     ],
