@@ -28,7 +28,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/selected_item_default_text"/>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_sglm_item_list"
             android:scrollbars="vertical"
             android:layout_width="match_parent"

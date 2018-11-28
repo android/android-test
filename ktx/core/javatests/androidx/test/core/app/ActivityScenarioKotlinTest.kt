@@ -18,7 +18,7 @@ package androidx.test.core.app
 
 import android.app.Activity
 import android.app.Activity.RESULT_OK
-import androidx.lifecycle.Lifecycle.State
+import android.arch.lifecycle.Lifecycle.State
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.core.app.testing.RecreationRecordingActivity

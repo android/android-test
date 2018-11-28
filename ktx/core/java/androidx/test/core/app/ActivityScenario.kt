@@ -16,7 +16,7 @@
 package androidx.test.core.app
 
 import android.app.Activity
-import androidx.lifecycle.Lifecycle.State
+import android.arch.lifecycle.Lifecycle.State
 import android.content.Intent
 
 /**
