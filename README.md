@@ -9,12 +9,4 @@ For more details see [developers.android.com/testing](https://developers.android
 See [CONTRIBUTING.md](https://github.com/android/android-test/blob/master/CONTRIBUTING.md)
 
 ## Issues
-
-We use the
-[GitHub issue tracker](https://github.com/android/android-test/issues) for
-tracking feature requests and bugs.
-
-Please see the
-[AndroidX Test Discuss mailing list](https://groups.google.com/forum/#!forum/androidx-test-discuss)
-for general questions and discussion, and please direct specific questions to
-[Stack Overflow](https://stackoverflow.com/questions/tagged/androidx-test).
+Use the [Android issue tracker](http://issuetracker.google.com/issues?q=componentid:192735%2B). See [Reporting Bugs](https://source.android.com/setup/contribute/report-bugs) for more information.
