@@ -34,6 +34,7 @@ import androidx.test.espresso.remote.Bindable;
 import androidx.test.espresso.remote.IInteractionExecutionStatus;
 import androidx.test.espresso.remote.RemoteInteraction;
 import androidx.test.espresso.util.HumanReadables;
+import androidx.test.internal.platform.os.ControlledLooper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -67,6 +68,7 @@ public final class ViewInteraction {
   private final InterruptableUiController uiController;
   private final ViewFinder viewFinder;
   private final Executor mainThreadExecutor;
+  private final ControlledLooper controlledLooper;
   private volatile FailureHandler failureHandler;
   private final Matcher<View> viewMatcher;
   private final AtomicReference<Matcher<Root>> rootMatcherRef;
@@ -86,7 +88,8 @@ public final class ViewInteraction {
       AtomicReference<Matcher<Root>> rootMatcherRef,
       AtomicReference<Boolean> needsActivity,
       RemoteInteraction remoteInteraction,
-      ListeningExecutorService remoteExecutor) {
+      ListeningExecutorService remoteExecutor,
+      ControlledLooper controlledLooper) {
     this.viewFinder = checkNotNull(viewFinder);
     this.uiController = (InterruptableUiController) checkNotNull(uiController);
     this.failureHandler = checkNotNull(failureHandler);
@@ -96,6 +99,7 @@ public final class ViewInteraction {
     this.needsActivity = checkNotNull(needsActivity);
     this.remoteInteraction = checkNotNull(remoteInteraction);
     this.remoteExecutor = checkNotNull(remoteExecutor);
+    this.controlledLooper = checkNotNull(controlledLooper);
   }
 
   /**
@@ -158,7 +162,7 @@ public final class ViewInteraction {
     ViewAction innerViewAction = va.getInnerViewAction();
 
     List<ListenableFuture<Void>> interactions = new ArrayList<>();
-    interactions.add(runSynchronouslyOnUiThread(performInteraction));
+    interactions.add(postAsynchronouslyOnUiThread(performInteraction));
     if (!remoteInteraction.isRemoteProcess()) {
       // Only the original process should submit remote interactionsList;
       interactions.add(
@@ -281,7 +285,7 @@ public final class ViewInteraction {
         };
 
     List<ListenableFuture<Void>> interactions = new ArrayList<>();
-    interactions.add(runSynchronouslyOnUiThread(checkInteraction));
+    interactions.add(postAsynchronouslyOnUiThread(checkInteraction));
     if (!remoteInteraction.isRemoteProcess()) {
       // Only the original process should submit remote interactionsList;
       interactions.add(
@@ -297,7 +301,7 @@ public final class ViewInteraction {
     return this;
   }
 
-  private ListenableFuture<Void> runSynchronouslyOnUiThread(Callable<Void> interaction) {
+  private ListenableFuture<Void> postAsynchronouslyOnUiThread(Callable<Void> interaction) {
     ListenableFutureTask<Void> mainThreadInteraction = ListenableFutureTask.create(interaction);
     mainThreadExecutor.execute(mainThreadInteraction);
     return mainThreadInteraction;
@@ -305,6 +309,7 @@ public final class ViewInteraction {
 
   private void waitForAndHandleInteractionResults(List<ListenableFuture<Void>> interactions) {
     try {
+      controlledLooper.drainMainThreadUntilIdle();
       // Blocking call
       InteractionResultsHandler.gatherAnyResult(interactions);
     } catch (RuntimeException ee) {

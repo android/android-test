@@ -21,6 +21,7 @@ import androidx.test.espresso.base.BaseLayerModule;
 import androidx.test.espresso.base.IdlingResourceRegistry;
 import androidx.test.espresso.base.MainThread;
 import androidx.test.espresso.base.UiControllerModule;
+import androidx.test.internal.platform.os.ControlledLooper;
 import dagger.Component;
 import java.util.concurrent.Executor;
 import javax.inject.Singleton;
@@ -43,4 +44,6 @@ public interface BaseLayerComponent {
 
   @MainThread
   Executor mainThreadExecutor();
+
+  ControlledLooper controlledLooper();
 }
