@@ -281,6 +281,7 @@ public final class Espresso {
     FutureTask<T> actionTask = new FutureTask<>(action);
     idleFuture.addListener(actionTask, mainThreadExecutor);
     mainThreadExecutor.execute(idleFuture);
+    BASE.controlledLooper().drainMainThreadUntilIdle();
 
     try {
       idleFuture.get();

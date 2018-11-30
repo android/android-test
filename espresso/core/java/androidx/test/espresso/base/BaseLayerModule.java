@@ -24,6 +24,8 @@ import androidx.test.espresso.FailureHandler;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
 import androidx.test.espresso.internal.inject.TargetContext;
+import androidx.test.internal.platform.ServiceLoaderWrapper;
+import androidx.test.internal.platform.os.ControlledLooper;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
@@ -187,5 +189,12 @@ public class BaseLayerModule {
   @Provides
   DefaultFailureHandler provideDefaultFailureHander(@TargetContext Context context) {
     return new DefaultFailureHandler(context);
+  }
+
+  @Provides
+  @Singleton
+  public ControlledLooper provideControlledLooper() {
+    // load a service loaded provided ControlledLooper if available, otherwise return a no-op
+    return ServiceLoaderWrapper.loadSingleService(ControlledLooper.class, () -> () -> {});
   }
 }
