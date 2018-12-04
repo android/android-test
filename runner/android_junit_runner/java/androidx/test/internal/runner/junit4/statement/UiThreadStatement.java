@@ -16,7 +16,7 @@
 
 package androidx.test.internal.runner.junit4.statement;
 
-import static androidx.test.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 import android.os.Looper;
 import android.util.Log;

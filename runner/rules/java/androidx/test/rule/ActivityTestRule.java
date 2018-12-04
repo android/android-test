@@ -29,9 +29,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import android.util.Log;
-import androidx.test.InstrumentationRegistry;
 import androidx.test.annotation.UiThreadTest;
 import androidx.test.internal.runner.junit4.statement.UiThreadStatement;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.MonitoringInstrumentation;
 import androidx.test.runner.intercepting.SingleActivityFactory;
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
@@ -149,7 +149,7 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
       Class<T> activityClass, boolean initialTouchMode, boolean launchActivity) {
     this(
         activityClass,
-        InstrumentationRegistry.getTargetContext().getPackageName(),
+        InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName(),
         Intent.FLAG_ACTIVITY_NEW_TASK,
         initialTouchMode,
         launchActivity);

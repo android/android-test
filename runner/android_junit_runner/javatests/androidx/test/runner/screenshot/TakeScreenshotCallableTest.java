@@ -23,8 +23,8 @@ import static org.mockito.Mockito.verify;
 
 import android.graphics.Bitmap;
 import android.view.View;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
-import androidx.test.runner.AndroidJUnit4;
 import java.util.concurrent.Callable;
 import org.junit.Before;
 import org.junit.Test;

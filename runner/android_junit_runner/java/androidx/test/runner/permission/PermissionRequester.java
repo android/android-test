@@ -28,9 +28,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
-import androidx.test.InstrumentationRegistry;
 import androidx.test.annotation.Beta;
 import androidx.test.internal.platform.content.PermissionGranter;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.permission.UiAutomationShellCommand.PmCommand;
 import java.util.HashSet;
 
@@ -64,7 +64,7 @@ public class PermissionRequester implements PermissionGranter {
   final HashSet<RequestPermissionCallable> requestedPermissions = new HashSet<>();
 
   public PermissionRequester() {
-    this(InstrumentationRegistry.getTargetContext());
+    this(InstrumentationRegistry.getInstrumentation().getTargetContext());
   }
 
   @VisibleForTesting
