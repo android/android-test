@@ -42,9 +42,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.assertion.ViewAssertions;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.ui.app.ActionBarTestActivity;
 import androidx.test.ui.app.KeyboardTestActivity;
 import androidx.test.ui.app.MainActivity;
@@ -65,7 +65,8 @@ import org.junit.runner.RunWith;
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class EspressoTest {
-  @Rule public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
+  @Rule
+  public ActivityScenarioRule<MainActivity> rule = new ActivityScenarioRule<>(MainActivity.class);
 
   @Rule public ExpectedException expectedException = none();
 

@@ -25,10 +25,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.SdkSuppress;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SendActivity;
 import org.junit.Rule;
@@ -39,7 +39,8 @@ import org.junit.runner.RunWith;
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class WindowOrderingIntegrationTest {
-  @Rule public ActivityTestRule<SendActivity> rule = new ActivityTestRule<>(SendActivity.class);
+  @Rule
+  public ActivityScenarioRule<SendActivity> rule = new ActivityScenarioRule<>(SendActivity.class);
 
   // popup menus are post honeycomb.
   @SdkSuppress(minSdkVersion = 11)

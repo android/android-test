@@ -27,9 +27,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import android.view.View;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.ViewPagerActivity;
 import org.hamcrest.Matcher;
@@ -43,8 +43,8 @@ import org.junit.runner.RunWith;
 public final class ViewPagerActionsIntegrationTest {
 
   @Rule
-  public ActivityTestRule<ViewPagerActivity> activityTestRule =
-      new ActivityTestRule<>(ViewPagerActivity.class);
+  public ActivityScenarioRule<ViewPagerActivity> activityTestRule =
+      new ActivityScenarioRule<>(ViewPagerActivity.class);
 
   @Test
   public void scrollRightThenLeft() {
