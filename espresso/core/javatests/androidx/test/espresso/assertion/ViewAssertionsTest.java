@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.assertion;
 
-import static androidx.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.assertion.ViewAssertions.selectedDescendantsMatch;
 import static androidx.test.espresso.matcher.ViewMatchers.hasContentDescription;
@@ -34,8 +34,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
-import androidx.test.runner.AndroidJUnit4;
 import junit.framework.AssertionFailedError;
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -62,7 +62,7 @@ public class ViewAssertionsTest {
 
   @Before
   public void setUp() throws Exception {
-    mTargetContext = getTargetContext();
+    mTargetContext = getApplicationContext();
     presentView = new View(mTargetContext);
     absentView = null;
     absentException = null;

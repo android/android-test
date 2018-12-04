@@ -16,7 +16,8 @@
 
 package androidx.test.internal.platform.app;
 
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.InstrumentationRegistry.getContext;
+import static androidx.test.InstrumentationRegistry.getTargetContext;
 
 import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
@@ -36,15 +37,11 @@ public interface ActivityInvoker {
    * fallback to instrumentation context.
    */
   default Intent getIntentForActivity(Class<? extends Activity> activityClass) {
-    Intent intent =
-        Intent.makeMainActivity(
-            new ComponentName(getInstrumentation().getTargetContext(), activityClass));
-    if (getInstrumentation().getTargetContext().getPackageManager().resolveActivity(intent, 0)
-        != null) {
+    Intent intent = Intent.makeMainActivity(new ComponentName(getTargetContext(), activityClass));
+    if (getTargetContext().getPackageManager().resolveActivity(intent, 0) != null) {
       return intent;
     }
-    return Intent.makeMainActivity(
-        new ComponentName(getInstrumentation().getContext(), activityClass));
+    return Intent.makeMainActivity(new ComponentName(getContext(), activityClass));
   }
 
   /**

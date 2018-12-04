@@ -17,7 +17,6 @@
 package androidx.test.rule.provider;
 
 import static android.content.Context.MODE_PRIVATE;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -29,9 +28,10 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.InstrumentationRegistry;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -52,7 +52,7 @@ public class DelegatingContextTest {
   private static final String DUMMY_TEST_DIR_NAME = "dummy";
   private static final String DUMMY_TEST_FILE_NAME = "dummy.file";
   private static final String DUMMY_TEST_DB_NAME = "dummy.db";
-  private static final Context context = getInstrumentation().getContext();
+  private static final Context context = InstrumentationRegistry.getContext();
   private DelegatingContext delegatingContext;
 
   @Mock private ContentResolver mockResolver;

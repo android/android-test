@@ -16,14 +16,14 @@
 
 package androidx.test.espresso.intent.rule;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import android.app.Activity;
 import android.content.Intent;
-import androidx.test.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
-import androidx.test.runner.AndroidJUnit4;
 import androidx.test.runner.intent.IntentStubberRegistry;
 import org.junit.Test;
 import org.junit.runner.Description;
@@ -127,7 +127,7 @@ public class IntentsRuleTest {
   }
 
   private void launchStubActivityWithRule(IntentsTestRule<StubActivity> intentsTestRule) {
-    Intent intent = new Intent(InstrumentationRegistry.getTargetContext(), StubActivity.class);
+    Intent intent = new Intent(getApplicationContext(), StubActivity.class);
     intentsTestRule.launchActivity(intent);
   }
 

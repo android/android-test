@@ -16,6 +16,7 @@
 
 package androidx.test.espresso.action;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.replaceText;
@@ -25,10 +26,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 
-import androidx.test.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SendActivity;
 import org.junit.Rule;
@@ -43,9 +43,7 @@ public class ReplaceTextActionIntegrationTest {
 
   @Test
   public void replaceTextActionPerform() {
-    String text =
-        InstrumentationRegistry.getTargetContext()
-            .getString(R.string.send_data_to_message_edit_text);
+    String text = getApplicationContext().getString(R.string.send_data_to_message_edit_text);
     onView(withId(is(R.id.send_data_to_message_edit_text))).check(matches(withText(is(text))));
     String newText = "new Text";
     onView(withId(is(R.id.send_data_to_message_edit_text))).perform(replaceText(newText));
@@ -56,9 +54,7 @@ public class ReplaceTextActionIntegrationTest {
 
   @Test
   public void clearTextActionPerformWithTypeText() {
-    String text =
-        InstrumentationRegistry.getTargetContext()
-            .getString(R.string.send_data_to_message_edit_text);
+    String text = getApplicationContext().getString(R.string.send_data_to_message_edit_text);
     onView(withId(is(R.id.send_data_to_call_edit_text))).perform(typeText(text));
     onView(withId(is(R.id.send_data_to_call_edit_text))).check(matches(withText(is(text))));
     onView(withId(is(R.id.send_data_to_call_edit_text))).perform(clearText());

@@ -35,8 +35,8 @@ import androidx.test.espresso.web.proto.matcher.RemoteWebMatchers.HasElementWith
 import androidx.test.espresso.web.proto.matcher.RemoteWebMatchers.HasElementWithXPathMatcherProto;
 import androidx.test.espresso.web.proto.matcher.RemoteWebMatchers.WithBodyMatcherProto;
 import androidx.test.espresso.web.proto.matcher.RemoteWebMatchers.WithTextContentMatcherProto;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;

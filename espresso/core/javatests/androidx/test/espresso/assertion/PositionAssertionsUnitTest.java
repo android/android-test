@@ -16,8 +16,8 @@
 
 package androidx.test.espresso.assertion;
 
-import static androidx.test.InstrumentationRegistry.getContext;
 import static androidx.test.espresso.assertion.PositionAssertions.isRelativePosition;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
@@ -26,8 +26,8 @@ import static org.mockito.Mockito.spy;
 
 import android.view.View;
 import androidx.test.espresso.assertion.PositionAssertions.Position;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
@@ -242,7 +242,7 @@ public class PositionAssertionsUnitTest {
 
   // Helper methods
   private View setupView(final int x, final int y, final int width, final int height) {
-    View mockView = spy(new View(getContext()));
+    View mockView = spy(new View(getInstrumentation().getContext()));
     doAnswer(
             new Answer<Void>() {
               @Override

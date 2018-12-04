@@ -15,17 +15,16 @@
  */
 package androidx.test.internal.runner;
 
+import static androidx.test.InstrumentationRegistry.getArguments;
+import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.internal.runner.TestRequestBuilder.RequiresDeviceFilter.EMULATOR_HARDWARE_GOLDFISH;
 import static androidx.test.internal.runner.TestRequestBuilder.RequiresDeviceFilter.EMULATOR_HARDWARE_RANCHU;
-import static androidx.test.platform.app.InstrumentationRegistry.getArguments;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.MediumTest;
 import androidx.test.filters.RequiresDevice;
@@ -33,6 +32,7 @@ import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
 import androidx.test.filters.Suppress;
 import androidx.test.internal.runner.TestRequestBuilder.DeviceBuild;
+import androidx.test.runner.AndroidJUnit4;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;

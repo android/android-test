@@ -24,8 +24,8 @@ import static org.hamcrest.core.Is.is;
 
 import android.os.Handler;
 import android.os.Looper;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.runner.AndroidJUnit4;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.FutureTask;

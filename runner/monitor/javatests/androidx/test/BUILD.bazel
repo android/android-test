@@ -6,7 +6,6 @@ MONITOR_DEPS = [
     "//runner/monitor",
     "//runner/rules",
     "//ext/junit",
-    "//core",
 ]
 
 ROBOLECTRIC_DEPS = [

@@ -29,8 +29,8 @@ import androidx.test.espresso.proto.action.ViewActions.AdapterDataLoaderActionPr
 import androidx.test.espresso.remote.RemoteDescriptorRegistry;
 import androidx.test.espresso.remote.TypeProtoConverters;
 import androidx.test.espresso.util.EspressoOptional;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;

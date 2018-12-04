@@ -16,7 +16,6 @@
 
 package androidx.test.espresso.assertion;
 
-import static androidx.test.InstrumentationRegistry.getContext;
 import static androidx.test.espresso.assertion.LayoutAssertions.noOverlaps;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -24,6 +23,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.selectedDescendant
 import static androidx.test.espresso.matcher.ViewMatchers.hasContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertThat;
@@ -42,8 +42,8 @@ import androidx.test.espresso.proto.assertion.ViewAssertions.NoOverlapsViewAsser
 import androidx.test.espresso.proto.assertion.ViewAssertions.SelectedDescendantsMatchViewAssertionProto;
 import androidx.test.espresso.remote.GenericRemoteMessage;
 import androidx.test.espresso.remote.RemoteDescriptorRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -65,7 +65,7 @@ public class RemoteViewAssertionsTest {
 
   @Test
   public void matches_transformationToProto() {
-    View view = new View(getContext());
+    View view = new View(getInstrumentation().getContext());
     ViewAssertion viewAssertion = matches(withId(view.getId()));
 
     MatchesViewAssertionProto viewAssertionProto =
@@ -76,7 +76,7 @@ public class RemoteViewAssertionsTest {
 
   @Test
   public void matches_transformationFromProto() {
-    View view = new View(getContext());
+    View view = new View(getInstrumentation().getContext());
     ViewAssertion viewAssertion = matches(withId(view.getId()));
 
     MatchesViewAssertionProto viewAssertionProto =

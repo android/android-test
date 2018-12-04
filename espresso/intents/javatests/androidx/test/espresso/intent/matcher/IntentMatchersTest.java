@@ -16,6 +16,7 @@
 
 package androidx.test.espresso.intent;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.intent.matcher.BundleMatchers.hasEntry;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasCategories;
@@ -45,9 +46,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import androidx.test.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
 import java.util.HashSet;
 import org.hamcrest.Matcher;
 import org.junit.Rule;
@@ -452,7 +452,7 @@ public class IntentMatchersTest {
 
   @Test
   public void isInternalTesting() {
-    String targetPackage = InstrumentationRegistry.getTargetContext().getPackageName();
+    String targetPackage = getApplicationContext().getPackageName();
     ComponentName targetComponent = new ComponentName(targetPackage, targetPackage + ".SomeClass ");
     assertTrue(isInternal().matches(new Intent().setComponent(targetComponent)));
     assertFalse(not(isInternal()).matches(new Intent().setComponent(targetComponent)));
