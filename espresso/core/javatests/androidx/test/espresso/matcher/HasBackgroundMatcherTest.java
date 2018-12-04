@@ -16,6 +16,7 @@
 
 package androidx.test.espresso.matcher;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -23,10 +24,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
-import androidx.test.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
 import androidx.test.filters.SdkSuppress;
-import androidx.test.runner.AndroidJUnit4;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +40,7 @@ public class HasBackgroundMatcherTest {
 
   @Before
   public void setUp() throws Exception {
-    context = InstrumentationRegistry.getTargetContext();
+    context = getApplicationContext();
   }
 
   @Test

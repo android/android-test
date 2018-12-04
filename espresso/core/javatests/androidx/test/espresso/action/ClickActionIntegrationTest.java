@@ -26,10 +26,10 @@ import static org.junit.Assert.assertTrue;
 
 import android.view.InputDevice;
 import android.view.MotionEvent;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
 import androidx.test.ui.app.LargeViewActivity;
 import androidx.test.ui.app.R;
 import org.junit.Rule;

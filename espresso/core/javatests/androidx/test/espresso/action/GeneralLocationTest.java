@@ -16,15 +16,15 @@
 
 package androidx.test.espresso.action;
 
-import static androidx.test.InstrumentationRegistry.getContext;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.spy;
 
 import android.view.View;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +48,7 @@ public class GeneralLocationTest {
 
   @Before
   public void setUp() throws Exception {
-    mockView = spy(new View(getContext()));
+    mockView = spy(new View(getInstrumentation().getContext()));
     doAnswer(
             new Answer<Void>() {
               @Override

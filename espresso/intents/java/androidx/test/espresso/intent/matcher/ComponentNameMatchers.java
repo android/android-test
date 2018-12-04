@@ -16,12 +16,12 @@
 
 package androidx.test.espresso.intent.matcher;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.intent.Checks.checkNotNull;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 
 import android.content.ComponentName;
-import androidx.test.InstrumentationRegistry;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -92,6 +92,6 @@ public final class ComponentNameMatchers {
    * for the test.
    */
   public static Matcher<ComponentName> hasMyPackageName() {
-    return hasPackageName(is(InstrumentationRegistry.getTargetContext().getPackageName()));
+    return hasPackageName(is(getApplicationContext().getPackageName()));
   }
 }

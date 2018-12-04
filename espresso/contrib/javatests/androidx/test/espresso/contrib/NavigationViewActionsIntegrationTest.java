@@ -16,6 +16,7 @@
 
 package androidx.test.espresso.contrib;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerActions.close;
@@ -25,10 +26,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import androidx.core.view.GravityCompat;
-import androidx.test.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
 import androidx.test.ui.app.NavigationViewActivity;
 import androidx.test.ui.app.R;
 import org.junit.Rule;
@@ -52,25 +52,20 @@ public class NavigationViewActionsIntegrationTest {
       onView(withId(R.id.drawer_layout)).perform(open(GravityCompat.START));
 
       int navItemViewId =
-          InstrumentationRegistry.getTargetContext()
+          getApplicationContext()
               .getResources()
               .getIdentifier(
-                  "navigation_view_menu_item" + i,
-                  "id",
-                  InstrumentationRegistry.getTargetContext().getPackageName());
+                  "navigation_view_menu_item" + i, "id", getApplicationContext().getPackageName());
 
       onView(withId(R.id.nav_view)).perform(navigateTo(navItemViewId));
 
       int navItemStringId =
-          InstrumentationRegistry.getTargetContext()
+          getApplicationContext()
               .getResources()
               .getIdentifier(
-                  "navigation_view_item" + i,
-                  "string",
-                  InstrumentationRegistry.getTargetContext().getPackageName());
+                  "navigation_view_item" + i, "string", getApplicationContext().getPackageName());
 
-      String expectedItemText =
-          InstrumentationRegistry.getTargetContext().getString(navItemStringId);
+      String expectedItemText = getApplicationContext().getString(navItemStringId);
       onView(withId(R.id.selected_nav_item_text_view)).check(matches(withText(expectedItemText)));
 
       // Force closing of drawer

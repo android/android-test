@@ -21,8 +21,8 @@ import static org.junit.Assert.assertThat;
 
 import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;

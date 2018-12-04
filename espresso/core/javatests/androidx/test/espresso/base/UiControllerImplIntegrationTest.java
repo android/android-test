@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.base;
 
-import static androidx.test.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -34,9 +34,9 @@ import androidx.test.espresso.UiController;
 import androidx.test.espresso.action.MotionEvents;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
 import androidx.test.espresso.util.HumanReadables;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SendActivity;
 import java.util.ArrayList;

@@ -30,10 +30,10 @@ import static org.junit.rules.ExpectedException.none;
 
 import android.view.inputmethod.EditorInfo;
 import androidx.test.espresso.PerformException;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.Suppress;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SendActivity;
 import org.hamcrest.CustomTypeSafeMatcher;

@@ -38,8 +38,8 @@ import androidx.test.espresso.web.proto.assertion.WebAssertions.DocumentParserAt
 import androidx.test.espresso.web.proto.assertion.WebAssertions.ToStringResultDescriberProto;
 import androidx.test.espresso.web.proto.assertion.WebAssertions.WebContentResultDescriberProto;
 import androidx.test.espresso.web.webdriver.RemoteWebDriverAtoms;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;

@@ -16,6 +16,7 @@
 
 package androidx.test.espresso.assertion;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.assertion.PositionAssertions.findView;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -28,11 +29,10 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import androidx.test.InstrumentationRegistry;
 import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
-import androidx.test.runner.AndroidJUnit4;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -73,7 +73,7 @@ public class PositionAssertionsTest {
   }
 
   private View setUpViewHierarchy() {
-    Context targetContext = InstrumentationRegistry.getTargetContext();
+    Context targetContext = getApplicationContext();
     TextView v1 = new TextView(targetContext);
     v1.setText(text1);
     TextView v2 = new TextView(targetContext);

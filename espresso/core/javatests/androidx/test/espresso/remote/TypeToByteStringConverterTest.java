@@ -18,8 +18,8 @@ package androidx.test.espresso.remote;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import androidx.test.runner.AndroidJUnit4;
 import com.google.protobuf.ByteString;
 import org.junit.Assert;
 import org.junit.Test;
