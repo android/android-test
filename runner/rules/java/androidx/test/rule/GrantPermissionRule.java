@@ -60,6 +60,9 @@ import org.junit.runners.model.Statement;
  * this rule will automatically grant {@link android.Manifest.permission#READ_EXTERNAL_STORAGE} when
  * {@link android.Manifest.permission#WRITE_EXTERNAL_STORAGE} is requested.
  *
+ * <p>See <a href="https://developer.android.com/training/permissions/requesting">Request App
+ * Permissions</a> for more details on runtime permissions.
+ *
  * <p><b>This API is currently in beta.</b>
  */
 @Beta
