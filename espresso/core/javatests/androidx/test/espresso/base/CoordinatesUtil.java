@@ -19,6 +19,8 @@ package androidx.test.espresso.base;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.view.View;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.core.app.ActivityScenario.ActivityAction;
 import androidx.test.ui.app.R;
 
 class CoordinatesUtil {
@@ -40,7 +42,23 @@ class CoordinatesUtil {
     return xyMiddle;
   }
 
-  static float[][] getCoordinatesToDrag(Activity activity, Instrumentation instrumentation) {
+  static int[] getCoordinatesInMiddleOfSendButton(ActivityScenario activityScenario) {
+    final int[] xyMiddle = new int[2];
+    activityScenario.onActivity(
+        new ActivityAction() {
+          @Override
+          public void perform(Activity activity) {
+            final View sendButton = activity.findViewById(R.id.send_button);
+            final int[] xy = new int[2];
+            sendButton.getLocationOnScreen(xy);
+            xyMiddle[0] = xy[0] + (sendButton.getWidth() / 2);
+            xyMiddle[1] = xy[1] + (sendButton.getHeight() / 2);
+          }
+        });
+    return xyMiddle;
+  }
+
+  static float[][] getCoordinatesToDrag() {
     float[][] coords = {
       {200, 500},
       {200, 450},

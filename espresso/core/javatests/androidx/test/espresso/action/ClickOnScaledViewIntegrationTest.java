@@ -20,10 +20,10 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.SdkSuppress;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.ScaledViewActivity;
 import org.junit.Rule;
@@ -35,8 +35,8 @@ import org.junit.runner.RunWith;
 public class ClickOnScaledViewIntegrationTest {
 
   @Rule
-  public final ActivityTestRule<ScaledViewActivity> activityRule =
-      new ActivityTestRule<>(ScaledViewActivity.class);
+  public final ActivityScenarioRule<ScaledViewActivity> activityRule =
+      new ActivityScenarioRule<>(ScaledViewActivity.class);
 
   @Test
   @SdkSuppress(minSdkVersion = 12)

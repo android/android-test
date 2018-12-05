@@ -30,10 +30,10 @@ import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.InjectEventSecurityException;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
@@ -52,14 +52,10 @@ import org.junit.runner.RunWith;
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class EventInjectorTest {
-  @Rule
-  public ActivityTestRule<SendActivity> rule =
-      new ActivityTestRule<>(SendActivity.class, true, false);
 
   @Rule public ExpectedException expectedException = none();
 
   private static final String TAG = EventInjectorTest.class.getSimpleName();
-  private Activity sendActivity;
   private EventInjector injector;
   final AtomicBoolean injectEventWorked = new AtomicBoolean(false);
   final AtomicBoolean injectEventThrewSecurityException = new AtomicBoolean(false);
@@ -80,18 +76,14 @@ public class EventInjectorTest {
 
   @Test
   public void injectKeyEventUpWithNoDown() throws Exception {
-    sendActivity = rule.launchActivity(null);
+    ActivityScenario<SendActivity> scenario = ActivityScenario.launch(SendActivity.class);
 
-    getInstrumentation()
-        .runOnMainSync(
-            new Runnable() {
-              @Override
-              public void run() {
-                View view = sendActivity.findViewById(R.id.send_data_edit_text);
-                assertTrue(view.requestFocus());
-                latch.countDown();
-              }
-            });
+    scenario.onActivity(
+        sendActivity -> {
+          View view = sendActivity.findViewById(R.id.send_data_edit_text);
+          assertTrue(view.requestFocus());
+          latch.countDown();
+        });
 
     assertTrue("Timed out!", latch.await(10, TimeUnit.SECONDS));
     KeyCharacterMap keyCharacterMap = UiControllerImpl.getKeyCharacterMap();
@@ -101,18 +93,14 @@ public class EventInjectorTest {
 
   @Test
   public void injectStaleKeyEvent() throws Exception {
-    sendActivity = rule.launchActivity(null);
+    ActivityScenario<SendActivity> scenario = ActivityScenario.launch(SendActivity.class);
 
-    getInstrumentation()
-        .runOnMainSync(
-            new Runnable() {
-              @Override
-              public void run() {
-                View view = sendActivity.findViewById(R.id.send_data_edit_text);
-                assertTrue(view.requestFocus());
-                latch.countDown();
-              }
-            });
+    scenario.onActivity(
+        sendActivity -> {
+          View view = sendActivity.findViewById(R.id.send_data_edit_text);
+          assertTrue(view.requestFocus());
+          latch.countDown();
+        });
 
     assertTrue("Timed out!", latch.await(10, TimeUnit.SECONDS));
     assertFalse("SecurityException exception was thrown.", injectEventThrewSecurityException.get());
@@ -180,11 +168,9 @@ public class EventInjectorTest {
         };
     ActivityLifecycleMonitorRegistry.getInstance().addLifecycleCallback(callback);
     try {
-      rule.launchActivity(null);
+      ActivityScenario activityScenario = ActivityScenario.launch(SendActivity.class);
       assertTrue(activityStarted.await(20, TimeUnit.SECONDS));
-      final int[] xy =
-          CoordinatesUtil.getCoordinatesInMiddleOfSendButton(
-              rule.getActivity(), getInstrumentation());
+      final int[] xy = CoordinatesUtil.getCoordinatesInMiddleOfSendButton(activityScenario);
 
       getInstrumentation()
           .runOnMainSync(
