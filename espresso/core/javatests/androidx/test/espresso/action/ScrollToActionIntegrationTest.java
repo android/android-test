@@ -24,9 +24,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.ScrollActivity;
 import org.junit.Rule;
@@ -38,7 +38,9 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class ScrollToActionIntegrationTest {
 
-  @Rule public ActivityTestRule<ScrollActivity> rule = new ActivityTestRule<>(ScrollActivity.class);
+  @Rule
+  public ActivityScenarioRule<ScrollActivity> rule =
+      new ActivityScenarioRule<>(ScrollActivity.class);
 
   @Test
   public void scrollDown() {

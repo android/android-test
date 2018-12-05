@@ -28,9 +28,9 @@ import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.ui.app.LongListActivity;
 import androidx.test.ui.app.R;
 import java.util.Map;
@@ -44,7 +44,8 @@ import org.junit.runner.RunWith;
 public class AdapterDataIntegrationTest {
 
   @Rule
-  public ActivityTestRule<LongListActivity> rule = new ActivityTestRule<>(LongListActivity.class);
+  public ActivityScenarioRule<LongListActivity> rule =
+      new ActivityScenarioRule<>(LongListActivity.class);
 
   @Test
   public void clickAroundList() {

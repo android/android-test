@@ -38,13 +38,13 @@ import static org.junit.rules.ExpectedException.none;
 import android.content.Intent;
 import android.view.KeyEvent;
 import android.widget.TextView;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.FlakyTest;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.Suppress;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.ui.app.MainActivity;
 import androidx.test.ui.app.R;
 import java.util.Map;
@@ -58,10 +58,6 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class KeyEventActionIntegrationTest {
 
-  @Rule
-  public ActivityTestRule<MainActivity> rule =
-      new ActivityTestRule<>(MainActivity.class, true, false);
-
   @Rule public ExpectedException expectedException = none();
 
   /**
@@ -71,14 +67,14 @@ public class KeyEventActionIntegrationTest {
   @Suppress
   @Test
   public void clickBackOnRootAction() {
-    rule.launchActivity(null);
+    ActivityScenario.launch(MainActivity.class);
     expectedException.expect(NoActivityResumedException.class);
     pressBack();
   }
 
   @Test
   public void clickBackOnNonRootActivityLatte() {
-    rule.launchActivity(null);
+    ActivityScenario.launch(MainActivity.class);
     onData(allOf(instanceOf(Map.class), hasValue("LargeViewActivity"))).perform(click());
     pressBack();
 
@@ -89,7 +85,7 @@ public class KeyEventActionIntegrationTest {
 
   @Test
   public void clickBackOnNonRootActionNoLatte() {
-    rule.launchActivity(null);
+    ActivityScenario.launch(MainActivity.class);
     onData(allOf(instanceOf(Map.class), hasValue("LargeViewActivity"))).perform(click());
     onView(isRoot()).perform(ViewActions.pressBack());
 
@@ -105,7 +101,7 @@ public class KeyEventActionIntegrationTest {
     Intent fragmentStack =
         new Intent().setClassName(getApplicationContext(), "androidx.test.ui.app.FragmentStack");
     fragmentStack.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    rule.launchActivity(fragmentStack);
+    ActivityScenario.launch(MainActivity.class);
     onView(allOf(withParent(withId(R.id.simple_fragment)), isAssignableFrom(TextView.class)))
         .check(matches(withText(containsString("#1"))));
     try {
@@ -114,7 +110,7 @@ public class KeyEventActionIntegrationTest {
     } catch (NoActivityResumedException ignored) {
       // expected
     }
-    rule.launchActivity(fragmentStack);
+    ActivityScenario.launch(MainActivity.class);
 
     onView(withId(R.id.new_fragment)).perform(click()).perform(click()).perform(click());
 
@@ -146,7 +142,7 @@ public class KeyEventActionIntegrationTest {
 
   @Test
   public void pressKeyWithKeyCode() {
-    rule.launchActivity(null);
+    ActivityScenario.launch(MainActivity.class);
     onData(allOf(instanceOf(Map.class), hasValue("SendActivity"))).perform(click());
     onView(withId(R.id.enter_data_edit_text)).perform(click());
     onView(withId(R.id.enter_data_edit_text)).perform(ViewActions.pressKey(KeyEvent.KEYCODE_X));
