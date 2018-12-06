@@ -80,13 +80,6 @@ def _development_repositories():
     )
 
     http_archive(
-        name = "com_google_protobuf",
-        strip_prefix = "protobuf-3.6.1.2",
-        sha256 = "2244b0308846bb22b4ff0bcc675e99290ff9f1115553ae9671eba1030af31bc0",
-        urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.6.1.2.tar.gz"],
-    )
-
-    http_archive(
         name = "robolectric",
         sha256 = "dff7a1f8e7bd8dc737f20b6bbfaf78d8b5851debe6a074757f75041029f0c43b",
         strip_prefix = "robolectric-bazel-4.0.1",
@@ -264,6 +257,13 @@ def android_test_repositories(with_dev_repositories = False):
 
     # Needed by protobuf
     native.bind(name = "six", actual = "@six_archive//:six")
+
+    http_archive(
+        name = "com_google_protobuf",
+        strip_prefix = "protobuf-3.6.1.2",
+        sha256 = "2244b0308846bb22b4ff0bcc675e99290ff9f1115553ae9671eba1030af31bc0",
+        urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.6.1.2.tar.gz"],
+    )
 
     # Open source version of the google python flags library.
     http_archive(
