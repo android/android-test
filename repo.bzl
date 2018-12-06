@@ -81,14 +81,9 @@ def _development_repositories():
 
     http_archive(
         name = "com_google_protobuf",
-        strip_prefix = "protobuf-3.5.0",
-        urls = ["https://github.com/google/protobuf/archive/v3.5.0.tar.gz"],
-    )
-
-    http_archive(
-        name = "com_google_protobuf_java",
-        strip_prefix = "protobuf-3.5.0",
-        urls = ["https://github.com/google/protobuf/releases/download/v3.5.0/protobuf-java-3.5.0.tar.gz"],
+        strip_prefix = "protobuf-3.6.1.2",
+        sha256 = "2244b0308846bb22b4ff0bcc675e99290ff9f1115553ae9671eba1030af31bc0",
+        urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.6.1.2.tar.gz"],
     )
 
     http_archive(
@@ -269,17 +264,6 @@ def android_test_repositories(with_dev_repositories = False):
 
     # Needed by protobuf
     native.bind(name = "six", actual = "@six_archive//:six")
-
-    http_archive(
-        name = "protobuf_archive",
-        # TODO(https://github.com/google/protobuf/issues/2833): Remove BUILD file
-        # and make this rule http_archive. This will also require updating
-        # the URL to be a newer protobuf release.
-        build_file = str(Label("//opensource:protobuf.BUILD")),
-        sha256 = "1faa722cf475c8e4c43ddb393d6f1477f1a56c93be38a1c8e367c358db476b5f",
-        strip_prefix = "protobuf-3.4.1",
-        url = "https://github.com/google/protobuf/releases/download/v3.4.1/protobuf-python-3.4.1.tar.gz",
-    )
 
     # Open source version of the google python flags library.
     http_archive(

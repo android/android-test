@@ -222,7 +222,7 @@ java_library(
         ":private_impl",
         "//tools/android/emulator:emulator_meta_data_pb_java_proto",
         "@aop_alliance//jar",
-        "@com_google_protobuf_java//:protobuf_java",
+        "@com_google_protobuf//:protobuf_java",
         "@guava//jar",
         "@guice//jar",
         "@guice_multibindings//jar",
