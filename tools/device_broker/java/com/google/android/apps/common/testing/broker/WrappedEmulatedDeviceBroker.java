@@ -28,6 +28,7 @@ import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.Adb
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.ApksToInstall;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.ConsoleAuth;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.DataPartitionSize;
+import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.DeviceControllerPath;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.DeviceSerialNumber;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.Dex2OatOnCloudEnabled;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.EmulateNetworkType;
@@ -51,8 +52,8 @@ import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.Sim
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.SubprocessLogDir;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.SystemApksToInstall;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.TestServicesApksToInstall;
-import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.TurboAdbPath;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.UniquePort;
+import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.UseWaterfall;
 import com.google.android.apps.common.testing.proto.EmulatorProtos.EmulatorMetaDataPb;
 import com.google.android.apps.common.testing.proto.EmulatorProtos.PerformanceDataPb;
 import com.google.android.apps.common.testing.proto.EmulatorProtos.PropertyPb;
@@ -133,6 +134,7 @@ class WrappedEmulatedDeviceBroker implements DeviceBroker {
   private final Environment environment;
   private final boolean enableDex2OatOnCloud;
   private final String simAccessRulesFile;
+  private final boolean useWaterfall;
 
   enum ScriptAction {
     START("start"), STOP("kill");
@@ -151,7 +153,7 @@ class WrappedEmulatedDeviceBroker implements DeviceBroker {
   @Inject
   WrappedEmulatedDeviceBroker(
       @GeneratedLauncherScript String emulatorLauncherPath,
-      @TurboAdbPath String adbPath,
+      @DeviceControllerPath String adbPath,
       @UniquePort Provider<Integer> portPicker,
       @LogcatPath Provider<String> logcatFilePathProvider,
       @LogcatFilters Provider<List<LogcatFilter>> logcatFiltersProvider,
@@ -182,6 +184,7 @@ class WrappedEmulatedDeviceBroker implements DeviceBroker {
       @EmulatorStartupTimeoutFlag Integer emulatorStartupTimeout,
       @Dex2OatOnCloudEnabled boolean enableDex2OatOnCloud,
       @SimAccessRulesFile String simAccessRulesFile,
+      @UseWaterfall boolean useWaterfall,
       Environment environment) {
     this.emulatorLauncherPath = emulatorLauncherPath;
     this.adbPath = adbPath;
@@ -217,6 +220,7 @@ class WrappedEmulatedDeviceBroker implements DeviceBroker {
     this.environment = environment;
     this.enableDex2OatOnCloud = enableDex2OatOnCloud;
     this.simAccessRulesFile = simAccessRulesFile;
+    this.useWaterfall = useWaterfall;
     checkState(!"".equals(emulatorLauncherPath), "No emulator launch script");
   }
 
@@ -460,6 +464,11 @@ class WrappedEmulatedDeviceBroker implements DeviceBroker {
             "--initial_ime=" + initialIME,
             "--kvm_device=" + kvmDevice,
             "--grant_runtime_permissions=" + grantRuntimePermissions);
+
+    if (useWaterfall) {
+      command.add("--use_h2o=" + useWaterfall);
+      command.add("--adb_bin=" + adbPath);
+    }
 
     if (logcatFilters != null && !logcatFilters.isEmpty()) {
       command.add("--logcat_filter='" + Joiner.on(" ").join(logcatFilters) + "'");

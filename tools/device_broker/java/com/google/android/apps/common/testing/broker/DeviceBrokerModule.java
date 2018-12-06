@@ -29,6 +29,7 @@ import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.Adb
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.ApksToInstall;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.ApksToInstallFlag;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.DataDir;
+import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.DeviceControllerPath;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.DexdumpPath;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.DexdumpPathFlag;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.ExecutorLocation;
@@ -56,7 +57,7 @@ import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.Tes
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.TestServicesApkResourceName;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.TestServicesApksToInstall;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.TestTempDir;
-import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.TurboAdbPath;
+import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.UseWaterfall;
 import com.google.common.base.Preconditions;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -294,15 +295,22 @@ class DeviceBrokerModule extends AbstractModule {
 
   @Provides
   @Singleton
-  @TurboAdbPath
-  public String provideTurboAdbPath(@DataDir File dataDir, @AdbPath String realAdbPath) {
-    File turboAdb = new File(dataDir, "tools/android/emulator/support/adb.turbo");
-    if (turboAdb.exists()) {
-      return turboAdb.getAbsolutePath();
+  @DeviceControllerPath
+  public String provideDeviceControllerPath(
+      @UseWaterfall boolean useWaterfall, @DataDir File dataDir, @AdbPath String realAdbPath) {
+
+    File controller;
+    if (useWaterfall) {
+      controller = new File(dataDir, "third_party/h2o/waterfall/client/adb/adb_bin");
+    } else {
+      controller = new File(dataDir, "tools/android/emulator/support/adb.turbo");
+    }
+
+    if (controller.exists()) {
+      return controller.getAbsolutePath();
     } else {
       return realAdbPath;
     }
-
   }
 
 

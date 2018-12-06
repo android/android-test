@@ -107,12 +107,19 @@ flags.DEFINE_string('android_corp_libs', None, '[bazel ONLY] deprecated '
 flags.DEFINE_string('source_properties_file', None, '[bazel ONLY] the path to '
                     'a source.properties file for this system image')
 flags.DEFINE_string('adb', None, 'The path to ADB')
-flags.DEFINE_string('emulator_x86', None, '[bazel ONLY] the path to '
-                    'emulator_x86')
-flags.DEFINE_string('emulator_arm', None, '[bazel ONLY] the path to '
-                    'emulator_arm')
+flags.DEFINE_string(
+    'custom_emulator', None, '[bazel ONLY] path to a custom '
+    'emulator binary to launch')
+flags.DEFINE_string(
+    'emulator_x86', None, '[bazel ONLY] the path to '
+    'emulator_x86. Deprecated, only used for qemu1 emulators.')
+flags.DEFINE_string(
+    'emulator_arm', None, '[bazel ONLY] the path to '
+    'emulator_arm Deprecated, only used for qemu1 emulators.')
 flags.DEFINE_string('adb_static', None, 'OBSOLETE: the path to adb.static')
 flags.DEFINE_string('adb_turbo', None, 'The path to turbo adb')
+flags.DEFINE_string('forward_bin', None, 'The path to h2o forwarder binary')
+flags.DEFINE_string('adb_bin', None, 'The path to h2o adb binary')
 flags.DEFINE_string('emulator_x86_static', None, 'Deprecated. NO-OP.')
 flags.DEFINE_string('emulator_arm_static', None, 'Deprecated. NO-OP.')
 flags.DEFINE_string('empty_snapshot_fs', None, '[bazel ONLY] the path to '
@@ -208,13 +215,19 @@ flags.DEFINE_list('platform_apks', None, '[BOOT ONLY] Platform apks are '
 flags.DEFINE_string('sim_access_rules_file', None, 'the path to a sim access '
                     'rules proto file. Used to grant UICC carrier privileges '
                     'to apps.')
+flags.DEFINE_string('phone_number', None, 'A custom phone number to set for '
+                    'the emulator. Used for apps that need specific phone '
+                    'numbers.')
 flags.DEFINE_boolean('save_snapshot', False, 'If true, saves the device  '
                      'snapshots in BOOT phase and reloads them during START '
                      ' phase.')
 flags.DEFINE_string('snapshot_file', None, '[bazel ONLY] The path to the '
                     'snapshot file that was saved in BOOT cycle and is used '
                     'during START cycle.')
-
+flags.DEFINE_bool(
+    'use_h2o', False, 'Whether to use H2O to control the device. '
+    'Note that if this option is true, turbo will not be '
+    'configured.')
 
 _METADATA_FILE_NAME = 'emulator-meta-data.pb'
 _USERDATA_IMAGES_NAME = 'userdata_images.dat'
@@ -315,7 +328,9 @@ def _FirstBootAtBuildTimeOnly(
       qemu_gdb_port=qemu_gdb_port,
       enable_single_step=enable_single_step,
       source_properties=source_properties,
-      mini_boot=mini_boot)
+      mini_boot=mini_boot,
+      use_h2o=FLAGS.use_h2o,
+      forward_bin=FLAGS.forward_bin)
   device.delete_temp_on_exit = False  # we will do it ourselves.
 
   device.Configure(
@@ -545,7 +560,8 @@ def _Run(adb_server_port,
          accounts=None,
          reporter=None,
          mini_boot=False,
-         sim_access_rules_file=None):
+         sim_access_rules_file=None,
+         phone_number=None):
   """Starts a device for use or testing.
 
   Args:
@@ -595,6 +611,7 @@ def _Run(adb_server_port,
     reporter: a reporting.Reporter to track the emulator state.
     mini_boot: should the device be booted up in a minimalistic mode.
     sim_access_rules_file: sim access rules textproto filepath.
+    phone_number: custom phone number to on the sim.
   """
   device = emulated_device.EmulatedDevice(
       android_platform=_MakeAndroidPlatform(),
@@ -612,7 +629,10 @@ def _Run(adb_server_port,
       reporter=reporter,
       mini_boot=mini_boot,
       sim_access_rules_file=sim_access_rules_file,
-      source_properties=_ReadSourceProperties(FLAGS.source_properties_file))
+      phone_number=phone_number,
+      source_properties=_ReadSourceProperties(FLAGS.source_properties_file),
+      use_h2o=FLAGS.use_h2o,
+      forward_bin=FLAGS.forward_bin)
 
   _RestartDevice(
       device,
@@ -849,6 +869,7 @@ def EntryPoint(reporter):
       FLAGS.android_corp_libs,
       FLAGS.source_properties_file,
       FLAGS.adb,
+      FLAGS.custom_emulator,
       FLAGS.emulator_x86,
       FLAGS.emulator_arm,
       FLAGS.adb_static,
@@ -900,7 +921,7 @@ def EntryPoint(reporter):
          _GetTmpDir(), FLAGS.lockdown_level, FLAGS.open_gl_driver,
          FLAGS.allow_experimental_open_gl, FLAGS.add_insecure_cacert,
          FLAGS.grant_runtime_permissions, FLAGS.accounts, reporter,
-         mini_boot, FLAGS.sim_access_rules_file)
+         mini_boot, FLAGS.sim_access_rules_file, FLAGS.phone_number)
   elif 'kill' == FLAGS.action:
     _Kill(FLAGS.adb_server_port, FLAGS.emulator_port, FLAGS.adb_port)
   elif 'ping' == FLAGS.action:
@@ -959,7 +980,10 @@ def _MakeAndroidPlatform():
   if not os.path.exists(root_dir):
     root_dir = runfiles_base
 
-  if FLAGS.emulator_x86:
+  if FLAGS.custom_emulator:
+    base_emulator_path = os.path.dirname(
+        os.path.join(root_dir, FLAGS.custom_emulator))
+  elif FLAGS.emulator_x86:
     base_emulator_path = os.path.dirname(os.path.join(root_dir,
                                                       FLAGS.emulator_x86))
   else:
@@ -974,18 +998,27 @@ def _MakeAndroidPlatform():
 
   platform.base_emulator_path = base_emulator_path
 
-  if FLAGS.adb_turbo:
-    platform.adb = FLAGS.adb_turbo
-  else:
-    turbo_relative = (''
-                      'tools/android/emulator/support/adb.turbo')
-    turbo_g3_relative = os.path.join('android_test_support', turbo_relative)
-    if os.path.exists(os.path.abspath(turbo_relative)):
-      platform.adb = os.path.abspath(turbo_relative)
-    elif os.path.exists(os.path.abspath(turbo_g3_relative)):
-      platform.adb = os.path.abspath(turbo_g3_relative)
+  adb_path = None
+  if FLAGS.use_h2o:
+    if FLAGS.adb_bin:
+      adb_path = FLAGS.adb_bin
     else:
-      platform.adb = resources.GetResourceFilename(turbo_g3_relative)
+      adb_path = 'third_party/h2o/waterfall/client/adb/adb_bin'
+  else:
+    if FLAGS.adb_turbo:
+      adb_path = FLAGS.adb_turbo
+    else:
+      adb_path = (''
+                  'tools/android/emulator/support/adb.turbo')
+
+  g3_relative = os.path.join('android_test_support', adb_path)
+  if os.path.exists(adb_path):
+    platform.adb = os.path.abspath(adb_path)
+  elif os.path.exists(g3_relative):
+    platform.adb = os.path.abspath(g3_relative)
+  else:
+    platform.adb = resources.GetResourceFilename(g3_relative)
+
   assert os.path.exists(platform.adb), ('%s: does not exist. please pass '
                                         '--adb_turbo' % platform.adb)
   platform.real_adb = FLAGS.adb
@@ -1000,8 +1033,11 @@ def _MakeAndroidPlatform():
     platform.mksdcard = FLAGS.mksdcard
     platform.bios_files = filter(lambda e: e, FLAGS.bios_files)
 
-  platform.emulator_wrapper_launcher = _ExtractSuffixFile(
-      FLAGS.system_images, '/emulator')
+  if FLAGS.custom_emulator:
+    platform.emulator_wrapper_launcher = FLAGS.custom_emulator
+  else:
+    platform.emulator_wrapper_launcher = _ExtractSuffixFile(
+        FLAGS.system_images, '/emulator')
 
   return platform
 
@@ -1053,10 +1089,6 @@ def main(unused_argv):
       except emulated_device.TransientEmulatorFailure as e:
         if attempts < FLAGS.retry_attempts:
           logging.warning('Transient failure: %s', e)
-          if FLAGS.snapshot_file:
-            # If we loaded from Snapshot and at times, we've seen adb calls
-            # hanging. In those cases, retry without snapshot(ram.bin) file.
-            FLAGS.snapshot_file = None
         else:
           reporter.ReportFailure('tools.android.emulator.SoMuchDeath',
                                  {'message': str(e),

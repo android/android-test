@@ -3,6 +3,7 @@
 load(
     "//tools/android/emulated_devices:macro/emulator.bzl",
     "emulator_files",
+    "emulator_is_qemu2",
     "emulator_type",
     "new_emulator",
 )
@@ -41,6 +42,7 @@ QEMU = new_emulator(
             19,
         ],
     },
+    qemu2 = False,
 )
 
 QEMU2_APIS = [
@@ -74,8 +76,11 @@ QEMU2 = new_emulator(
         "arm": [
             21,
             22,
+            23,
+            24,
         ],
     },
+    qemu2 = True,
 )
 
 def _t2e():
@@ -102,7 +107,7 @@ def extra_system_image_contents(emulator, image):
     """
     contents = [image_files(image) + image_compressed_suffix(image)]
     contents += emulator_files(emulator)
-    if emulator_type(emulator) == emulator_type(QEMU2):
+    if emulator_is_qemu2(emulator):
         maybe_extra_kernel_target = "%s_qemu2_extra" % image_files(image)
         contents.append(maybe_extra_kernel_target)
     return contents

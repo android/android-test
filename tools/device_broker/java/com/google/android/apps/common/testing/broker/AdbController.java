@@ -534,9 +534,21 @@ public class AdbController {
    * Clears all the package data for both the test apk and the app under test.
    */
   public void clearPackageData(Instrumentation instrumentation) {
-    logger.info("Clearing all app data and the granted runtime permissions for api level >= 23");
-    makeAdbCall("shell", "pm", "clear", instrumentation.getAndroidPackage());
-    makeAdbCall("shell", "pm", "clear", instrumentation.getTargetPackage());
+    clearPackageData(instrumentation.getAndroidPackage());
+    clearPackageData(instrumentation.getTargetPackage());
+  }
+
+  /**
+   * Clear all package data for the package given.
+   *
+   * @param thePackage package name with data to be cleared
+   */
+  public void clearPackageData(String thePackage) {
+    logger.info(
+        String.format(
+            "Clearing app (%s) data and the granted runtime permissions for api level >= 23",
+            thePackage));
+    makeAdbCall("shell", "pm", "clear", thePackage);
   }
 
   /**

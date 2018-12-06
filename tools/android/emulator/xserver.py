@@ -148,12 +148,16 @@ class X11Server(object):
 
     preexec_fn = _ExecFn
 
-    self._x11_process = subprocess.Popen(
-        args,
-        preexec_fn=preexec_fn,
-        close_fds=True,
-        stdin=open(os.devnull),
-        env=x11_env)
+    try:
+      self._x11_process = subprocess.Popen(
+          args,
+          preexec_fn=preexec_fn,
+          close_fds=True,
+          stdin=open(os.devnull),
+          env=x11_env)
+    except (ValueError, OSError) as e:
+      logging.error('Failed to start process, %s', e)
+      raise ProcessCrashedError('Xvfb failed to launch')
     self._x11_process.display = ':%s' % self._x11_process.pid
 
   # Clean up leftover X server files in the tmp directory
@@ -211,6 +215,11 @@ class External(object):
   @property
   def display(self):
     return self._display
+
+  @property
+  def x11_pid(self):
+    """Returns None, this is for compatibility with X11Server."""
+    return None
 
   @property
   def environment(self):
