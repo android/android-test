@@ -22,33 +22,32 @@ import static androidx.test.espresso.action.ViewActions.pressMenuKey;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesViews;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import android.os.Build;
-import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.LinearLayout.LayoutParams;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.contrib.AccessibilityChecks;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import com.google.android.apps.common.testing.accessibility.framework.integrations.AccessibilityViewCheckException;
 import org.hamcrest.Matcher;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- * Demonstrates use of {@link AccessibilityChecks}.
- */
+/** Demonstrates use of {@link AccessibilityChecks}. */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class AccessibilityChecksTest extends
-    ActivityInstrumentationTestCase2<LargeViewActivity> {
+public class AccessibilityChecksTest {
 
-  public AccessibilityChecksTest() {
-    super(LargeViewActivity.class);
-  }
-
-  @Override
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
-    getActivity();
+    ActivityScenario.launch(LargeViewActivity.class);
 
     // ViewAction to set the height, width to be too small, which will cause an a11y exception
     onView(withId(R.id.large_view)).perform(new ViewAction() {
@@ -71,9 +70,10 @@ public class AccessibilityChecksTest extends
   }
 
   /**
-   * Demonstrates how to run Accessibility Checks by default on all actions contained in
-   * {@link ViewActions}
+   * Demonstrates how to run Accessibility Checks by default on all actions contained in {@link
+   * ViewActions}
    */
+  @Test
   public void testRunAccessibilityChecks_usingPressMenuKey() {
     // will not run accessibility checks (off by default), so no error will be thrown
     onView(withId(R.id.large_view)).perform(pressMenuKey());
@@ -92,6 +92,7 @@ public class AccessibilityChecksTest extends
    * Demonstrates how to run global assertions, and in particular Accessibility Checks, before
    * custom actions.
    */
+  @Test
   public void testRunAccessibilityChecks_usingCustomAction() {
     // could be any custom action, this one does nothing
     ViewAction customAction = new ViewAction() {
@@ -128,6 +129,7 @@ public class AccessibilityChecksTest extends
    * Demonstrates how to run Accessibility Checks with a custom configuration, in this case with a
    * suppressing result matcher to suppress the error.
    */
+  @Test
   public void testRunAccessibilityChecks_usingCustomConfiguration() {
     AccessibilityChecks.enable()
     // set the suppressing result matcher, which could be used to suppress known bugs
@@ -144,6 +146,7 @@ public class AccessibilityChecksTest extends
     }
   }
 
+  @Test
   public void testEnableAccessibilityChecksTwice_throwsIllegalStateException() {
     AccessibilityChecks.enable();
     try {

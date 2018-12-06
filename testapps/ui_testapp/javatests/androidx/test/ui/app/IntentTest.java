@@ -35,37 +35,35 @@ import static org.hamcrest.Matchers.not;
 import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
 import android.net.Uri;
-import android.test.ActivityInstrumentationTestCase2;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- * Sample test that demonstrates the use of Intento as well as the openLink action.
- */
-public class IntentTest extends ActivityInstrumentationTestCase2<SendActivity>{
-  @SuppressWarnings("deprecation")
-  public IntentTest() {
-    // This constructor was deprecated - but we want to support lower API levels.
-    super("androidx.test.ui.app", SendActivity.class);
-  }
+/** Sample test that demonstrates the use of Intento as well as the openLink action. */
+@RunWith(AndroidJUnit4.class)
+public class IntentTest {
 
-  @Override
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
-    // Espresso will not launch our activity for us, we must launch it via getActivity().
-    getActivity();
+    // Espresso will not launch our activity for us, we must launch it via ActivityScenario.launch.
+    ActivityScenario.launch(SendActivity.class);
     // Once initialized, Intento will begin recording and providing stubbing for intents.
     Intents.init();
     // Stubbing to block all external intents
     intending(not(isInternal())).respondWith(new ActivityResult(Activity.RESULT_OK, null));
   }
 
-  @Override
+  @After
   public void tearDown() throws Exception {
     // Releasing clears recorded intents and stubbing, ensuring a clean state for each test.
     Intents.release();
-    super.tearDown();
   }
 
+  @Test
   public void testOpenLink() {
     // Basic usage of the openLink action
     onView(withId(R.id.spanned)).perform(scrollTo(), openLinkWithText("altavista.com"));

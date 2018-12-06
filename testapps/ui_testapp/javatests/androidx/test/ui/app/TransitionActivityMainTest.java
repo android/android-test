@@ -26,29 +26,31 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.containsString;
 
-import android.test.ActivityInstrumentationTestCase2;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.core.app.ActivityScenario.ActivityAction;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.SdkSuppress;
 import org.hamcrest.Matchers;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class TransitionActivityMainTest
-    extends ActivityInstrumentationTestCase2<TransitionActivityMain> {
+public class TransitionActivityMainTest {
 
-  @SuppressWarnings("deprecation")
-  public TransitionActivityMainTest() {
-        // This constructor was deprecated - but we want to support lower API levels.
-    super("androidx.test.ui.app", TransitionActivityMain.class);
-  }
-  @Override
+  private ActivityScenario<TransitionActivityMain> activityScenario;
+
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
-        // Espresso will not launch our activity for us, we must launch it via getActivity().
-    getActivity();
+    // Espresso will not launch our activity for us, we must launch it via ActivityScenario.launch.
+    activityScenario = ActivityScenario.launch(TransitionActivityMain.class);
   }
 
   // This test only applies to Lollipop+
   // b/29833613
+  @Test
   @SdkSuppress(minSdkVersion = 21)
   public void testTransition() throws InterruptedException {
     onView(withId(R.id.grid)).check(matches(isDisplayed()));
@@ -59,10 +61,17 @@ public class TransitionActivityMainTest
     onView(withId(R.id.grid)).check(matches(isDisplayed()));
   }
 
+  @Test
   @SdkSuppress(minSdkVersion = 21)
   public void testInterruptedBackDoesntExit() {
     // Set a flag in the activity to intercept the back button.
-    ((TransitionActivityMain) getActivity()).setExitOnBackPressed(false);
+    activityScenario.onActivity(
+        new ActivityAction<TransitionActivityMain>() {
+          @Override
+          public void perform(TransitionActivityMain activity) {
+            activity.setExitOnBackPressed(false);
+          }
+        });
     pressBack();
     pressBack();
     pressBack();

@@ -24,28 +24,25 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import android.test.ActivityInstrumentationTestCase2;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- * Demonstrates use of {@link ViewActions#swipeUp()} and {@link ViewActions#swipeDown()}.
- */
+/** Demonstrates use of {@link ViewActions#swipeUp()} and {@link ViewActions#swipeDown()}. */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class VerticalSwipeTest extends ActivityInstrumentationTestCase2<VerticalViewPagerActivity> {
+public class VerticalSwipeTest {
 
-  @SuppressWarnings("deprecation")
-  public VerticalSwipeTest() {
-    // This constructor was deprecated - but we want to support lower API levels.
-    super("androidx.test.ui.app", VerticalViewPagerActivity.class);
+  @Before
+  public void setUp() throws Exception {
+    ActivityScenario.launch(VerticalViewPagerActivity.class);
   }
 
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
-    getActivity();
-  }
-
+  @Test
   public void testSwipingThroughViews() {
     // Should be on position 0 to start with.
     onView(withText("Position #0")).check(matches(isDisplayed()));
@@ -57,6 +54,7 @@ public class VerticalSwipeTest extends ActivityInstrumentationTestCase2<Vertical
     onView(withText("Position #2")).check(matches(isDisplayed()));
   }
 
+  @Test
   public void testSwipingBackAndForward() {
     // Should be on position 0 to start with.
     onView(withText("Position #0")).check(matches(isDisplayed()));

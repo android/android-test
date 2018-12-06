@@ -27,11 +27,12 @@ import static org.hamcrest.Matchers.instanceOf;
 
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
-import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.ListView;
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.SdkSuppress;
 import com.google.common.collect.Lists;
@@ -39,27 +40,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import org.hamcrest.Matcher;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- * Demonstrates Espresso with action bar and app compat searchview widget
- */
+/** Demonstrates Espresso with action bar and app compat searchview widget */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class MainActivityTest extends
-  ActivityInstrumentationTestCase2<MainActivity> {
+public class MainActivityTest {
 
-  @SuppressWarnings("deprecation")
-  public MainActivityTest() {
-    // This constructor was deprecated - but we want to support lower API levels.
-    super("androidx.test.ui.app", MainActivity.class);
-  }
-
-  MainActivity underTest;
-
-  @Override
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
-    // Espresso will not launch our activity for us, we must launch it via getActivity().
-    underTest = getActivity();
+    // Espresso will not launch our activity for us, we must launch it via ActivityScenario.launch.
+    ActivityScenario.launch(MainActivity.class);
   }
 
   private static class ScrapeListView implements ViewAction {
@@ -96,6 +89,7 @@ public class MainActivityTest extends
     }
   }
 
+  @Test
   @SdkSuppress(maxSdkVersion = 23) // b/29833613
   @SuppressWarnings("unchecked")
   public void testOpenAllActivities() throws Exception {

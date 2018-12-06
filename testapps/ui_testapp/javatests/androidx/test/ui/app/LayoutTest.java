@@ -31,24 +31,22 @@ import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.not;
 
-import android.test.ActivityInstrumentationTestCase2;
 import android.widget.Button;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- * Sample accessibility and Layout PositionAssertions tests.
- */
+/** Sample accessibility and Layout PositionAssertions tests. */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class LayoutTest extends ActivityInstrumentationTestCase2<LayoutIssuesActivity> {
+public class LayoutTest {
 
-  public LayoutTest() {
-    super(LayoutIssuesActivity.class);
-  }
-
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
-    getActivity();
+  @Before
+  public void setUp() throws Exception {
+    ActivityScenario.launch(LayoutIssuesActivity.class);
   }
 
   /**
@@ -66,6 +64,7 @@ public class LayoutTest extends ActivityInstrumentationTestCase2<LayoutIssuesAct
     // Add other suitable generic checks, e.g. Accessibility, below
   }
 
+  @Test
   public void testLayout() {
     // Test initial layout state
     assertNoLayoutBreakages();
@@ -86,6 +85,7 @@ public class LayoutTest extends ActivityInstrumentationTestCase2<LayoutIssuesAct
     assertNoLayoutBreakages();
   }
 
+  @Test
   public void testRelativePositions() {
     // left text should be left of right button although they share 1 pixel at the boundary.
     onView(withId(R.id.left_text)).check(isLeftOf(withId(R.id.right_button)));

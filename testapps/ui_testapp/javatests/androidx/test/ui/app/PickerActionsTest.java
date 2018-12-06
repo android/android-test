@@ -27,30 +27,26 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
-import android.test.ActivityInstrumentationTestCase2;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- * Integration tests for {@link PickerActions}.
- */
+/** Integration tests for {@link PickerActions}. */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class PickerActionsTest extends
-    ActivityInstrumentationTestCase2<PickersActivity> {
+public class PickerActionsTest {
 
-  @SuppressWarnings("deprecation")
-  public PickerActionsTest() {
-    // Supporting froyo.
-    super("androidx.test.ui.app", PickersActivity.class);
+  @Before
+  public void setUp() throws Exception {
+    ActivityScenario.launch(PickersActivity.class);
   }
 
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
-    getActivity();
-  }
-
+  @Test
   @SuppressWarnings("unchecked")
   public void testSetDateInDatePicker() {
     // Show the date picker
@@ -69,8 +65,9 @@ public class PickerActionsTest extends
         isDisplayed())));
   }
 
-   @SuppressWarnings("unchecked")
-   public void testSetTimeInTimePicker() {
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testSetTimeInTimePicker() {
      // Show the date picker
      onView(withId(R.id.button_pick_time)).perform(click());
 

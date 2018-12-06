@@ -28,35 +28,33 @@ import static androidx.test.ui.app.LongListMatchers.withItemSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
-import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
- * Demonstrates the usage of {@link
- * androidx.test.espresso.Espresso#onData(org.hamcrest.Matcher)} to match data within list
- * views.
+ * Demonstrates the usage of {@link androidx.test.espresso.Espresso#onData(org.hamcrest.Matcher)} to
+ * match data within list views.
  */
+@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class AdapterViewTest extends ActivityInstrumentationTestCase2<LongListActivity> {
+public class AdapterViewTest {
 
-  @SuppressWarnings("deprecation")
-  public AdapterViewTest() {
-    // This constructor was deprecated - but we want to support lower API levels.
-    super("androidx.test.ui.app", LongListActivity.class);
-  }
-
-  @Override
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
-    getActivity();
+    ActivityScenario.launch(LongListActivity.class);
   }
 
+  @Test
   public void testClickOnItem50() {
     // The text view "item: 50" may not exist if we haven't scrolled to it.
     // By using onData api we tell Espresso to look into the Adapter for an item matching
@@ -70,6 +68,7 @@ public class AdapterViewTest extends ActivityInstrumentationTestCase2<LongListAc
       .check(matches(withText("50")));
   }
 
+  @Test
   public void testClickOnSpecificChildOfRow60() {
     onData(withItemContent("item: 60"))
       .onChildView(withId(R.id.item_size)) // resource id of second column from xml layout
@@ -82,6 +81,7 @@ public class AdapterViewTest extends ActivityInstrumentationTestCase2<LongListAc
       .check(matches(withText("2")));
   }
 
+  @Test
   public void testClickOnFirstAndFifthItemOfLength8() {
     onData(is(withItemSize(8)))
       .atPosition(0)
@@ -98,6 +98,7 @@ public class AdapterViewTest extends ActivityInstrumentationTestCase2<LongListAc
       .check(matches(withText("14")));
   }
 
+  @Test
   @SuppressWarnings("unchecked")
   public void testClickFooter() {
     onData(isFooter())
@@ -107,8 +108,9 @@ public class AdapterViewTest extends ActivityInstrumentationTestCase2<LongListAc
       .check(matches(withText("100")));
   }
 
+  @Test
   @SuppressWarnings("unchecked")
-  public void testDataItemNotInAdapter(){
+  public void testDataItemNotInAdapter() {
     onView(withId(R.id.list))
       .check(matches(not(withAdaptedData(withItemContent("item: 168")))));
   }

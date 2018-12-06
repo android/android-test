@@ -16,31 +16,36 @@
 
 package androidx.test.ui.app;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.Espresso.pressBackUnconditionally;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.fail;
 
-import android.test.ActivityInstrumentationTestCase2;
+import android.content.Intent;
+import androidx.core.app.TaskStackBuilder;
 import androidx.test.espresso.NoActivityResumedException;
-import androidx.test.filters.SdkSuppress;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-public class TaskStackTest extends ActivityInstrumentationTestCase2<TaskStackActivity> {
+@RunWith(AndroidJUnit4.class)
+public class TaskStackTest {
 
-  public TaskStackTest() {
-    super(TaskStackActivity.class);
-  }
-
-  @Override
+  @Before
   public void setUp() throws Exception {
-    super.setUp();
-    getActivity();
+    TaskStackBuilder.create(getApplicationContext())
+        .addNextIntent(new Intent(getApplicationContext(), DrawerActivity.class))
+        .addNextIntent(new Intent(getApplicationContext(), ToolbarActivity.class))
+        .addNextIntent(new Intent(getApplicationContext(), DisplayActivity.class))
+        .startActivities();
   }
 
-  // The task stack behavior is available on API level 11 and up.
-  @SdkSuppress(minSdkVersion = 11)
+  @Test
   public void testTaskStack() {
     onView(withText("display activity")).check(matches(isDisplayed()));
     pressBack();
@@ -50,8 +55,7 @@ public class TaskStackTest extends ActivityInstrumentationTestCase2<TaskStackAct
   }
 
 
-  // The task stack behavior is available on API level 11 and up.
-  @SdkSuppress(minSdkVersion = 11)
+  @Test
   public void testBackUnconditionallyExitsAppAndDoesNotThrow() {
     onView(withText("display activity")).check(matches(isDisplayed()));
     pressBack();
