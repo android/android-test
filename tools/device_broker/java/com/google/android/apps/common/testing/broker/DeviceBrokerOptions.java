@@ -59,6 +59,7 @@ import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.Sim
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.SkipCoverageFilesCheck;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.SystemApksToInstallFlag;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.TestTimeoutOverride;
+import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.UseWaterfall;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -139,6 +140,7 @@ class DeviceBrokerOptions extends AbstractModule {
   private final Integer longPressTimeout;
   private final Boolean dex2OatOnCloudEnabled;
   private final String simAccessRulesFile;
+  private final Boolean useWaterfall;
 
   @Override
   protected void configure() {
@@ -184,6 +186,7 @@ class DeviceBrokerOptions extends AbstractModule {
     dataPartitionSize = checkNotNull(b.dataPartitionSize);
     longPressTimeout = checkNotNull(b.longPressTimeout);
     dex2OatOnCloudEnabled = checkNotNull(b.dex2OatOnCloudEnabled);
+    useWaterfall = checkNotNull(b.useWaterfall);
     simAccessRulesFile = checkNotNull(b.simAccessRulesFile);
   }
 
@@ -428,6 +431,12 @@ class DeviceBrokerOptions extends AbstractModule {
   @Dex2OatOnCloudEnabled
   Boolean provideDex2OatOnCloud() {
     return dex2OatOnCloudEnabled;
+  }
+
+  @Provides
+  @UseWaterfall
+  Boolean providesUseWaterfall() {
+    return useWaterfall;
   }
 
   public static class Builder {
@@ -1043,6 +1052,21 @@ class DeviceBrokerOptions extends AbstractModule {
 
     Builder withLongPressTimeout(Integer longPressTimeout) {
       this.longPressTimeout = checkNotNull(longPressTimeout);
+      return this;
+    }
+
+    static final String EXPERIMENTAL_USE_WATERFALL_FLAG = "experimental_use_waterfall";
+    static final String EXPERIMENTAL_USE_WATERFALL_FLAG_DESC =
+        "Uses waterfall to control the devices instead of adb.turbo";
+
+    @Parameter(
+        names = "--" + EXPERIMENTAL_USE_WATERFALL_FLAG,
+        description = EXPERIMENTAL_USE_WATERFALL_FLAG_DESC,
+        arity = 1)
+    public Boolean useWaterfall = Boolean.FALSE;
+
+    Builder withUseWaterfall(Boolean useWaterfall) {
+      this.useWaterfall = checkNotNull(useWaterfall);
       return this;
     }
   }

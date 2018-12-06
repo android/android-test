@@ -118,7 +118,10 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         reporter=reporter,
         mini_boot=False,
         sim_access_rules_file=None,
-        source_properties=None)
+        phone_number=None,
+        source_properties=None,
+        use_h2o=False,
+        forward_bin=None)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device,
@@ -189,7 +192,10 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         reporter=reporter,
         mini_boot=False,
         sim_access_rules_file=None,
-        source_properties=None)
+        phone_number=None,
+        source_properties=None,
+        use_h2o=False,
+        forward_bin=None)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device,
@@ -256,7 +262,10 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         reporter=reporter,
         mini_boot=False,
         sim_access_rules_file=None,
-        source_properties=None)
+        phone_number=None,
+        source_properties=None,
+        use_h2o=False,
+        forward_bin=None)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device, enable_display=True,
@@ -329,7 +338,10 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         reporter=reporter,
         mini_boot=False,
         sim_access_rules_file=None,
-        source_properties=None)
+        phone_number=None,
+        source_properties=None,
+        use_h2o=False,
+        forward_bin=None)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device, enable_display=True,
@@ -488,7 +500,9 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         qemu_gdb_port=0,
         enable_single_step=False,
         source_properties=None,
-        mini_boot=False)
+        mini_boot=False,
+        use_h2o=False,
+        forward_bin=None)
     self.mox.StubOutWithMock(initial_boot_device, 'Configure')
     self.mox.StubOutWithMock(initial_boot_device, 'StartDevice')
     skin = 'rabbit_fur'
@@ -554,7 +568,9 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         qemu_gdb_port=0,
         enable_single_step=False,
         source_properties=None,
-        mini_boot=False)
+        mini_boot=False,
+        use_h2o=False,
+        forward_bin=None)
     self.mox.StubOutWithMock(initial_boot_device, 'Configure')
     self.mox.StubOutWithMock(initial_boot_device, 'StartDevice')
     skin = 'rabbit_fur'

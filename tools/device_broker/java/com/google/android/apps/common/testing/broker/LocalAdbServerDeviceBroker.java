@@ -20,6 +20,7 @@ import com.google.android.apps.common.testing.broker.AdbController.AdbController
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.AdbEnvironment;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.AdbServerPort;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.ApksToInstall;
+import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.DeviceControllerPath;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.DeviceSerialNumber;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.GrantRuntimePermissions;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.InitialIME;
@@ -30,7 +31,6 @@ import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.Pac
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.PreverifyApks;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.ReuseApks;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.TestServicesApksToInstall;
-import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.TurboAdbPath;
 import com.google.android.apps.common.testing.broker.LogcatStreamer.OutputFormat;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
@@ -92,7 +92,7 @@ class LocalAdbServerDeviceBroker implements DeviceBroker {
   @Inject
   LocalAdbServerDeviceBroker(
       @AdbServerPort Optional<Integer> adbServerPort,
-      @TurboAdbPath String adbPath,
+      @DeviceControllerPath String adbPath,
       AdbControllerFactory adbControllerFactory,
       @ApksToInstall List<String> apksToInstall,
       @TestServicesApksToInstall List<String> testServicesApksToInstall,

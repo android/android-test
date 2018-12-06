@@ -9,6 +9,7 @@ def new_emulator(
         supports = None,
         uses_kvm = True,
         props = None,
+        qemu2 = True,
         default_visibility = ["//visibility:public"]):
     """Creates a new emulator object.
 
@@ -18,6 +19,8 @@ def new_emulator(
       supports: a dictionary of arch: [api_levels] that are supported.
       uses_kvm: emulator can use kvm for x86 images.
       props: a props object to add to all images started by this emulator.
+      qemu2: indicates if this emulator is qemu2-based (the default).
+          Qemu1 emulators are deprecated.
       default_visibility: The emulator's visibility, if not overridden by an
           explicit visibility argument to new_devices. Only applies to targets
           with an explciit emulator suffix. Defaults to public.
@@ -31,6 +34,7 @@ def new_emulator(
         "uses_kvm": uses_kvm,
         "extra_files": extra_files or [],
         "props": props or new_props(),
+        "qemu2": qemu2,
         "default_visibility": default_visibility,
     }
 
@@ -67,6 +71,10 @@ def emulator_props(emulator):
 def emulator_suffix(emulator):
     """A suffix for this emulator."""
     return "_%s" % emulator_type(emulator)
+
+def emulator_is_qemu2(emulator):
+    """Identifies if the emulator is qemu2-based."""
+    return emulator["qemu2"]
 
 def emulator_default_visibility(emulator):
     """The default visibility for this emulator."""

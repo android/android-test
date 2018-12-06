@@ -7,8 +7,8 @@ java_library(
         "//tools/device_broker/java/com/google/android/apps/common/testing:__subpackages__",
     ],
     deps = [
-        "//opensource/auto_value",
         "//tools/device_broker/proto:test_info_pb_java_proto",
+        "//opensource/auto_value",
         "@guava//jar",
         "@jsr305//jar",
     ],

@@ -263,8 +263,10 @@ final class DeviceBrokerAnnotations {
   @BindingAnnotation @Target({FIELD, METHOD, PARAMETER}) @Retention(RUNTIME)
   public @interface TestTimeoutOverride {}
 
-  @BindingAnnotation @Target({FIELD, METHOD, PARAMETER}) @Retention(RUNTIME)
-  public @interface TurboAdbPath {}
+  @BindingAnnotation
+  @Target({FIELD, METHOD, PARAMETER})
+  @Retention(RUNTIME)
+  public @interface DeviceControllerPath {}
 
   @BindingAnnotation @Target({FIELD, METHOD, PARAMETER}) @Retention(RUNTIME)
   public @interface UniquePort {}
@@ -285,6 +287,16 @@ final class DeviceBrokerAnnotations {
   @Target({FIELD, METHOD, PARAMETER})
   @Retention(RUNTIME)
   public @interface Dex2OatOnCloudEnabled {}
+
+  @BindingAnnotation
+  @Target({FIELD, METHOD, PARAMETER})
+  @Retention(RUNTIME)
+  public @interface UseWaterfall {}
+
+  @BindingAnnotation
+  @Target({FIELD, METHOD, PARAMETER})
+  @Retention(RUNTIME)
+  public @interface AdbReporterAnnotation {}
 
   private DeviceBrokerAnnotations() {}
 }

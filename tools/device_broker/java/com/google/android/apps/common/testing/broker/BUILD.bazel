@@ -66,6 +66,7 @@ java_library(
         "AbstractRegexpLineProcessor.java",
         "AdbDevicesLineProcessor.java",
         "AdbInstrumentationListProcessor.java",
+        "AdbReporter.java",
         "AndroidPropertyProcessor.java",
         "InstrumentationTestRunnerProcessor.java",
         "ShellVariableProcessor.java",
@@ -150,6 +151,7 @@ java_library(
     srcs = ["DeviceBrokerFactory.java"],
     visibility = ["//visibility:public"],
     deps = [
+        ":adb_reporter_module",
         ":anno",
         ":base_module",
         ":broker_decorators",
@@ -162,6 +164,21 @@ java_library(
         "@aop_alliance//jar",
         "@guice//jar",
         "@guice_multibindings//jar",
+    ],
+)
+
+java_library(
+    name = "adb_reporter_module",
+    srcs = [
+        "AdbReporter.java",
+        "AdbReporterModule.java",
+        "NoOpAdbReporter.java",
+    ],
+    deps = [
+        ":anno",
+        "@guice//jar",
+        "@jsr305//jar",
+        "@jsr330",
     ],
 )
 
@@ -222,7 +239,7 @@ java_library(
         ":private_impl",
         "//tools/android/emulator:emulator_meta_data_pb_java_proto",
         "@aop_alliance//jar",
-        "@com_google_protobuf_java//:protobuf_java",
+        "@com_google_protobuf//:protobuf_java",
         "@guava//jar",
         "@guice//jar",
         "@guice_multibindings//jar",

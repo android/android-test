@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Throwables.throwIfUnchecked;
 
+import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.AdbReporterAnnotation;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.ExecutorLocation;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.SubprocessExecution;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.SubprocessLogDir;
@@ -30,6 +31,8 @@ import com.google.android.apps.common.testing.broker.shell.CommandResult;
 import com.google.android.apps.common.testing.broker.shell.SimpleKillableObserver;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
+import com.google.common.base.Joiner;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -57,15 +60,21 @@ import javax.inject.Inject;
 
 /** Executes subprocesses and provides a way to send them input and process their output. */
 public class SubprocessCommunicator {
+
+  public static final String PACKAGE_NAMESPACE = "com.google.android.apps.common.testing.broker";
+  public static final String EXEC_NAMESPACE = String.format("%s:%s", PACKAGE_NAMESPACE, "exec");
+
   private static final AtomicInteger SEQ_NUM = new AtomicInteger(0);
   private static final byte[] EMPTY_INPUT = new byte[0];
   private final ExecutorService executor;
   private final String executorLocation;
+  private final String commandBasename;
   private final ImmutableMap<String, String> environment;
   private final long timeout;
   private final TimeUnit unit;
   private final LineProcessor<?> stdoutProcessor;
   private final LineProcessor<?> stderrProcessor;
+  private final AdbReporter adbReporter;
   private File logFile;
   @Nullable private final String input;
   private final AtomicBoolean communicatorCalled = new AtomicBoolean(false);
@@ -78,6 +87,7 @@ public class SubprocessCommunicator {
     environment = ImmutableMap.copyOf(checkNotNull(builder.environment));
     executor = checkNotNull(builder.executor);
     executorLocation = checkNotNull(builder.executorLocation);
+    commandBasename = checkNotNull(builder.commandBasename);
     timeout = builder.timeout;
     checkArgument(0 < timeout, "timeout invalid: %s", timeout);
     unit = checkNotNull(builder.unit);
@@ -86,6 +96,7 @@ public class SubprocessCommunicator {
     stdoutProcessor = builder.stdoutProcessor;
     stderrProcessor = builder.stderrProcessor;
     logFile = builder.logFile;
+    adbReporter = checkNotNull(builder.adbReporter);
   }
 
   /**
@@ -115,13 +126,18 @@ public class SubprocessCommunicator {
         new Command(
             executorArgs.toArray(new String[0]), environment, null /* use current working dir*/);
 
+    Stopwatch startTime = Stopwatch.createStarted();
     int returnCode = innerCommunicate(command);
+    long elapsed = startTime.elapsed(TimeUnit.MILLISECONDS);
+    boolean success = true;
     try {
       Files.asCharSink(logFile, Charsets.UTF_8, FileWriteMode.APPEND)
           .write(String.format("EXIT CODE: %s\n", returnCode));
       // Also encode exit status in log file name to help debugging.
       String newSuffix = "ok.txt";
       if (returnCode != 0) {
+        // Note that we intentionally don't record this as an adb failure.
+        // The command failed, but the execution completed succefully.
         newSuffix = "fail.txt";
       }
       File newName = new File(logFile.getPath().replaceAll("txt$", newSuffix));
@@ -130,7 +146,16 @@ public class SubprocessCommunicator {
           logFile = newName;
         }
       }
-    } catch (IOException ignore) { /* lumber on and let the caller handle the return */ }
+    } catch (IOException ignore) {
+      /* lumber on and let the caller handle the return */
+      success = false;
+    } finally {
+      adbReporter.report(
+          String.format("%s:%s", EXEC_NAMESPACE, commandBasename),
+          Joiner.on(" ").join(arguments),
+          elapsed,
+          success);
+    }
     return returnCode;
   }
 
@@ -205,6 +230,7 @@ public class SubprocessCommunicator {
     private final ExecutorService executor;
     private final File logDir;
     private final String executorLocation;
+    private final AdbReporter adbReporter;
     private List<String> arguments;
     private Map<String, String> environment = Maps.newHashMap();
     private long timeout = 60;
@@ -213,13 +239,18 @@ public class SubprocessCommunicator {
     private LineProcessor<?> stderrProcessor = new NullProcessor<Object>();
     private String input;
     private File logFile;
+    private String commandBasename;
 
     @Inject
-    public Builder(@SubprocessExecution ExecutorService executor, @SubprocessLogDir File logDir,
-                   @ExecutorLocation String executorLocation) {
+    public Builder(
+        @SubprocessExecution ExecutorService executor,
+        @SubprocessLogDir File logDir,
+        @ExecutorLocation String executorLocation,
+        @AdbReporterAnnotation AdbReporter adbReporter) {
       this.executor = executor;
       this.logDir = logDir;
       this.executorLocation = executorLocation;
+      this.adbReporter = adbReporter;
     }
 
     public Builder withArguments(List<String> arguments) {
@@ -254,9 +285,9 @@ public class SubprocessCommunicator {
     }
 
     public SubprocessCommunicator build() {
-      String commandBasename = new File(arguments.get(0)).getName();
+      commandBasename = new File(arguments.get(0)).getName();
       String subCommand = ".";
-      if (commandBasename.equals("adb.turbo")
+      if ((commandBasename.equals("adb.turbo") || commandBasename.equals("adb_bin"))
           && arguments.get(1).equals("-s")) {
         // It should be something like adb.turbo -s localhost:123 shell ls
         subCommand = arguments.get(3);

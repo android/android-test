@@ -31,7 +31,7 @@ load(
     "QEMU",
     "QEMU2",
     "TYPE_TO_EMULATOR",
-    "emulator_type",
+    "emulator_is_qemu2",
     "extra_system_image_contents",
 )
 load(

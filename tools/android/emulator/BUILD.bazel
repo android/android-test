@@ -30,7 +30,7 @@ java_proto_library(
 py_library(
     name = "emulator_meta_data_pb_py_pb2",
     srcs = ["emulator_meta_data_pb2.py"],
-    deps = ["@protobuf_archive//:protobuf_python"],
+    deps = ["@com_google_protobuf//:protobuf_python"],
 )
 
 MOX = "@mox_archive//:mox"
@@ -126,7 +126,7 @@ py_binary(
         ":reporting",
         ":resources",
         ":xserver",
-        "@protobuf_archive//:protobuf_python",
+        "@com_google_protobuf//:protobuf_python",
         PORTPICKER,
     ] + PYGLIB,
 )
