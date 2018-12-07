@@ -62,16 +62,12 @@ import org.junit.runners.model.Statement;
  * the reference returned by {@link #getActivity()} will always point to the current instance of the
  * Activity.
  *
+ * <p>Consider using {@link androidx.test.ext.junit.rules.ActivityScenarioRule} or {@link
+ * androidx.test.core.app.ActivityScenario} instead. They offer a simpler, and safer way of
+ * controlling Activity lifecycles.
+ *
  * @param <T> The Activity class under test
- * @deprecated Use {@link androidx.test.ext.junit.rules.ActivityScenarioRule} or {@link
- *     androidx.test.core.app.ActivityScenario}. If you need to set {@code initialTouchMode}, use
- *     {@link Instrumentation#setInTouchMode(boolean)} directly. If you need to set {@code
- *     launchFlags}, set it to your start activity intent by {@link Intent#addFlags} and pass the
- *     intent to {@link
- *     androidx.test.ext.junit.rules.ActivityScenarioRule#ActivityScenarioRule(Intent)} or {@link
- *     androidx.test.core.app.ActivityScenario#launch(Intent)}.
  */
-@Deprecated
 public class ActivityTestRule<T extends Activity> implements TestRule {
 
   private static final String TAG = "ActivityTestRule";
