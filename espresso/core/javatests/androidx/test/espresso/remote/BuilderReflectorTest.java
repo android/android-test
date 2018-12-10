@@ -26,8 +26,8 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import androidx.test.espresso.proto.TestProtos.GenericTestProto;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
 import com.google.common.collect.Lists;
 import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;

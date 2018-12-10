@@ -22,9 +22,9 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.not;
 
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 import androidx.test.ui.app.LayoutIssuesActivity;
 import androidx.test.ui.app.R;
 import org.junit.Rule;
@@ -40,8 +40,8 @@ import org.junit.runner.RunWith;
 public class LayoutMatchersTest {
 
   @Rule
-  public ActivityScenarioRule<LayoutIssuesActivity> rule =
-      new ActivityScenarioRule<>(LayoutIssuesActivity.class);
+  public ActivityTestRule<LayoutIssuesActivity> rule =
+      new ActivityTestRule<>(LayoutIssuesActivity.class);
 
   @Test
   public void ellipsizedTextMatcher() {

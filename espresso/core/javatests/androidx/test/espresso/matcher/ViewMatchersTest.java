@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.matcher;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.hasBackground;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
@@ -38,7 +38,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.isSelected;
 import static androidx.test.espresso.matcher.ViewMatchers.supportsInputMethods;
-import static androidx.test.espresso.matcher.ViewMatchers.thatMatchesFirst;
 import static androidx.test.espresso.matcher.ViewMatchers.withAlpha;
 import static androidx.test.espresso.matcher.ViewMatchers.withChild;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -87,10 +86,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.test.annotation.UiThreadTest;
 import androidx.test.espresso.matcher.ViewMatchers.Visibility;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.UiThreadTestRule;
+import androidx.test.runner.AndroidJUnit4;
 import androidx.test.ui.app.R;
 import com.google.common.collect.Lists;
 import java.util.List;
@@ -117,7 +116,7 @@ public class ViewMatchersTest {
 
   @Before
   public void setUp() throws Exception {
-    context = getApplicationContext();
+    context = getTargetContext();
   }
 
   @Test

@@ -15,16 +15,14 @@
  */
 package androidx.test;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import android.os.Bundle;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
+import androidx.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -45,12 +43,12 @@ public class InstrumentationRegistryTest {
 
   @Test
   public void verifyTargetContextInjected() {
-    assertNotNull(getApplicationContext());
+    assertNotNull(InstrumentationRegistry.getTargetContext());
   }
 
   @Test
   public void verifyContextInjected() {
-    assertNotNull(getInstrumentation().getContext());
+    assertNotNull(InstrumentationRegistry.getContext());
   }
 
   @Test

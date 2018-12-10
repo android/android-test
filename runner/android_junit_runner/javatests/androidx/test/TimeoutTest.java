@@ -16,14 +16,14 @@
 
 package androidx.test;
 
-import static androidx.test.platform.app.InstrumentationRegistry.getArguments;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.InstrumentationRegistry.getArguments;
+import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.internal.runner.TestRequestBuilder;
+import androidx.test.runner.AndroidJUnit4;
 import java.util.List;
 import junit.framework.TestCase;
 import org.hamcrest.Matcher;

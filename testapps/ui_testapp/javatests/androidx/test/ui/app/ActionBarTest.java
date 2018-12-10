@@ -16,7 +16,6 @@
 
 package androidx.test.ui.app;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.Espresso.openContextualActionModeOverflowMenu;
@@ -25,29 +24,30 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import android.test.ActivityInstrumentationTestCase2;
 import androidx.test.filters.LargeTest;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 /**
- * Demonstrates Espresso with action bar and contextual action mode. {@link
- * openActionBarOverflowOrOptionsMenu()} opens the overflow menu from an action bar. {@link
- * openContextualActionModeOverflowMenu()} opens the overflow menu from an contextual action mode.
+ * Demonstrates Espresso with action bar and contextual action mode. 
+ * {@link openActionBarOverflowOrOptionsMenu()} opens the overflow menu from an action bar.
+ * {@link openContextualActionModeOverflowMenu()} opens the overflow menu from an contextual action
+ * mode.
  */
-@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ActionBarTest {
-
-  @Before
-  public void setUp() throws Exception {
-    // Espresso will not launch our activity for us, we must launch it via ActivityScenario.launch.
-    ActivityScenario.launch(ActionBarTestActivity.class);
+public class ActionBarTest extends ActivityInstrumentationTestCase2<ActionBarTestActivity> {
+  @SuppressWarnings("deprecation")
+  public ActionBarTest() {
+    // This constructor was deprecated - but we want to support lower API levels.
+    super("androidx.test.ui.app", ActionBarTestActivity.class);
   }
 
-  @Test
+  @Override
+  public void setUp() throws Exception {
+    super.setUp();
+    // Espresso will not launch our activity for us, we must launch it via getActivity().
+    getActivity();
+  }
+
   @SuppressWarnings("unchecked")
   public void testClickActionBarItem() {
     onView(withId(R.id.hide_contextual_action_bar))
@@ -60,7 +60,6 @@ public class ActionBarTest {
       .check(matches(withText("Save")));
   }
 
-  @Test
   @SuppressWarnings("unchecked")
   public void testClickActionModeItem() {
     onView(withId(R.id.show_contextual_action_bar))
@@ -73,14 +72,14 @@ public class ActionBarTest {
       .check(matches(withText("Lock")));
   }
 
-  @Test
+
   @SuppressWarnings("unchecked")
   public void testActionBarOverflow() {
     onView(withId(R.id.hide_contextual_action_bar))
       .perform(click());
 
     // Open the overflow menu from action bar
-    openActionBarOverflowOrOptionsMenu(getApplicationContext());
+    openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
 
     onView(withText("World"))
       .perform(click());
@@ -89,7 +88,6 @@ public class ActionBarTest {
       .check(matches(withText("World")));
   }
 
-  @Test
   @SuppressWarnings("unchecked")
   public void testActionModeOverflow() {
     onView(withId(R.id.show_contextual_action_bar))

@@ -9,9 +9,9 @@ android_library(
     name = "matcher",
     srcs = glob(["*.java"]),
     deps = [
-        "//core",
         "//espresso/intents/java/androidx/test/espresso/intent:precondition_checks",
         "//espresso/intents/java/androidx/test/espresso/intent:resolved_intent_interface",
+        "//runner/android_junit_runner",
         "@hamcrest//jar",
     ],
 )

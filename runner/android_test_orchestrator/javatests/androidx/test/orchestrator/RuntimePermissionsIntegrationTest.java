@@ -16,15 +16,15 @@
 
 package androidx.test.orchestrator;
 
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import android.Manifest.permission;
 import android.content.pm.PackageManager;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.InstrumentationRegistry;
 import androidx.test.filters.MediumTest;
 import androidx.test.filters.SdkSuppress;
+import androidx.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -39,14 +39,12 @@ public class RuntimePermissionsIntegrationTest {
   @SdkSuppress(minSdkVersion = 24)
   public void verifyEssentialRuntimePermissionsAreGranted() {
     assertThat(
-        getInstrumentation()
-            .getContext()
+        InstrumentationRegistry.getContext()
             .getPackageManager()
             .checkPermission(permission.READ_EXTERNAL_STORAGE, ORCHESTRATOR_PACKAGE),
         equalTo(PackageManager.PERMISSION_GRANTED));
     assertThat(
-        getInstrumentation()
-            .getContext()
+        InstrumentationRegistry.getContext()
             .getPackageManager()
             .checkPermission(permission.WRITE_EXTERNAL_STORAGE, ORCHESTRATOR_PACKAGE),
         equalTo(PackageManager.PERMISSION_GRANTED));

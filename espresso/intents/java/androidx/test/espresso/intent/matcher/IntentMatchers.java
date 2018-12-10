@@ -16,7 +16,6 @@
 
 package androidx.test.espresso.intent.matcher;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.intent.Checks.checkNotNull;
 import static androidx.test.espresso.intent.matcher.BundleMatchers.hasEntry;
 import static androidx.test.espresso.intent.matcher.BundleMatchers.hasKey;
@@ -30,6 +29,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import androidx.test.InstrumentationRegistry;
 import androidx.test.espresso.intent.ResolvedIntent;
 import java.util.Set;
 import org.hamcrest.Description;
@@ -308,7 +308,7 @@ public final class IntentMatchers {
    * test.
    */
   public static Matcher<Intent> isInternal() {
-    final Context targetContext = getApplicationContext();
+    final Context targetContext = InstrumentationRegistry.getTargetContext();
 
     return new TypeSafeMatcher<Intent>() {
       @Override

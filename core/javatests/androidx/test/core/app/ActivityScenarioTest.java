@@ -25,6 +25,7 @@ import androidx.lifecycle.Lifecycle.State;
 import android.content.Intent;
 import androidx.test.core.app.testing.FinishItselfActivity;
 import androidx.test.core.app.testing.RecreationRecordingActivity;
+import androidx.test.core.app.testing.RedirectingActivity;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
@@ -53,6 +54,12 @@ public final class ActivityScenarioTest {
   public void finishItselfActivityShouldBeLaunchable() throws Exception {
     try (ActivityScenario<FinishItselfActivity> scenario =
         ActivityScenario.launch(FinishItselfActivity.class)) {}
+  }
+
+  @Test
+  public void redirectingActivityShouldBeLaunchable() throws Exception {
+    try (ActivityScenario<RedirectingActivity> scenario =
+        ActivityScenario.launch(RedirectingActivity.class)) {}
   }
 
   @Test

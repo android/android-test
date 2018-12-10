@@ -4,7 +4,6 @@ licenses(["notice"])
 ATO_SHARED_DEPS = [
     "//runner/android_test_orchestrator",
     "//runner/android_junit_runner",
-    "//ext/junit",
 ]
 
 ATO_SHARED_EXTERNAL_DEPS = [

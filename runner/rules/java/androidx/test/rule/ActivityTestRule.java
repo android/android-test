@@ -29,9 +29,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import android.util.Log;
+import androidx.test.InstrumentationRegistry;
 import androidx.test.annotation.UiThreadTest;
 import androidx.test.internal.runner.junit4.statement.UiThreadStatement;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.MonitoringInstrumentation;
 import androidx.test.runner.intercepting.SingleActivityFactory;
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
@@ -62,12 +62,16 @@ import org.junit.runners.model.Statement;
  * the reference returned by {@link #getActivity()} will always point to the current instance of the
  * Activity.
  *
- * <p>Consider using {@link androidx.test.ext.junit.rules.ActivityScenarioRule} or {@link
- * androidx.test.core.app.ActivityScenario} instead. They offer a simpler, and safer way of
- * controlling Activity lifecycles.
- *
  * @param <T> The Activity class under test
+ * @deprecated Use {@link androidx.test.ext.junit.rules.ActivityScenarioRule} or {@link
+ *     androidx.test.core.app.ActivityScenario}. If you need to set {@code initialTouchMode}, use
+ *     {@link Instrumentation#setInTouchMode(boolean)} directly. If you need to set {@code
+ *     launchFlags}, set it to your start activity intent by {@link Intent#addFlags} and pass the
+ *     intent to {@link
+ *     androidx.test.ext.junit.rules.ActivityScenarioRule#ActivityScenarioRule(Intent)} or {@link
+ *     androidx.test.core.app.ActivityScenario#launch(Intent)}.
  */
+@Deprecated
 public class ActivityTestRule<T extends Activity> implements TestRule {
 
   private static final String TAG = "ActivityTestRule";
@@ -145,7 +149,7 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
       Class<T> activityClass, boolean initialTouchMode, boolean launchActivity) {
     this(
         activityClass,
-        InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName(),
+        InstrumentationRegistry.getTargetContext().getPackageName(),
         Intent.FLAG_ACTIVITY_NEW_TASK,
         initialTouchMode,
         launchActivity);

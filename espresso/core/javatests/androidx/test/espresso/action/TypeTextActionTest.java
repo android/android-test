@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.action;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Matchers.isA;
@@ -29,8 +29,8 @@ import android.view.View;
 import androidx.test.espresso.InjectEventSecurityException;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
 import org.hamcrest.CustomTypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Rule;
@@ -53,7 +53,7 @@ public class TypeTextActionTest {
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    view = new View(getApplicationContext());
+    view = new View(getTargetContext());
   }
 
   @Test

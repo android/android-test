@@ -27,26 +27,28 @@ import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import android.test.ActivityInstrumentationTestCase2;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.SdkSuppress;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
-/** Ensures view root ordering works properly. */
-@RunWith(AndroidJUnit4.class)
+/**
+ * Ensures view root ordering works properly.
+ */
 @LargeTest
-public class MenuTest {
+public class MenuTest extends ActivityInstrumentationTestCase2<MenuActivity> {
+  @SuppressWarnings("deprecation")
+  public MenuTest() {
+    // This constructor was deprecated - but we want to support lower API levels.
+    super("androidx.test.ui.app", MenuActivity.class);
+  }
 
-  @Before
+  @Override
   public void setUp() throws Exception {
-    ActivityScenario.launch(MenuActivity.class);
+    super.setUp();
+    getActivity();
   }
 
   // popup menus are post honeycomb.
-  @Test
   @SdkSuppress(minSdkVersion = 11)
   public void testPopupMenu() {
     onView(withText(R.string.popup_item_1_text)).check(doesNotExist());
@@ -56,7 +58,6 @@ public class MenuTest {
     onView(withId(R.id.text_menu_result)).check(matches(withText(R.string.popup_item_1_text)));
   }
 
-  @Test
   public void testContextMenu() {
     onView(withText(R.string.context_item_2_text)).check(doesNotExist());
     onView(withId(R.id.text_context_menu)).perform(longClick());
@@ -65,7 +66,6 @@ public class MenuTest {
     onView(withId(R.id.text_menu_result)).check(matches(withText(R.string.context_item_2_text)));
   }
 
-  @Test
   public void testOptionMenu() {
     onView(withText(R.string.options_item_3_text)).check(doesNotExist());
     onView(isRoot()).perform(pressMenuKey());

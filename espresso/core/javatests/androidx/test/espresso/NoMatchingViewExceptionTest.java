@@ -16,15 +16,15 @@
 
 package androidx.test.espresso;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
 
 import android.view.View;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Before;
@@ -41,7 +41,7 @@ public class NoMatchingViewExceptionTest {
 
   @Before
   public void setUp() throws Exception {
-    testView = new View(getApplicationContext());
+    testView = new View(getTargetContext());
     testView.setId(0);
     alwaysFailingMatcher = nullValue(View.class);
   }

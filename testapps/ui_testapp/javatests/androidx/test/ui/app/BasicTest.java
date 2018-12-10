@@ -33,28 +33,29 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import android.test.ActivityInstrumentationTestCase2;
 import androidx.test.filters.LargeTest;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 /**
  * Highlights basic {@link androidx.test.espresso.Espresso#onView(org.hamcrest.Matcher)}
  * functionality.
  */
-@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class BasicTest {
+public class BasicTest extends ActivityInstrumentationTestCase2<SimpleActivity> {
 
-  @Before
-  public void setUp() throws Exception {
-    // Espresso will not launch our activity for us, we must launch it via ActivityScenario.launch.
-    ActivityScenario.launch(SimpleActivity.class);
+  @SuppressWarnings("deprecation")
+  public BasicTest() {
+    // This constructor was deprecated - but we want to support lower API levels.
+    super("androidx.test.ui.app", SimpleActivity.class);
   }
 
-  @Test
+  @Override
+  public void setUp() throws Exception {
+    super.setUp();
+    // Espresso will not launch our activity for us, we must launch it via getActivity().
+    getActivity();
+  }
+
   public void testSimpleClickAndCheckText() {
     onView(withId(R.id.button_simple))
         .perform(click());
@@ -63,7 +64,6 @@ public class BasicTest {
         .check(matches(withText("Hello Espresso!")));
   }
 
-  @Test
   public void testTypingAndPressBack() {
     onView(withId(R.id.sendtext_simple))
         .check(matches(withHint(R.string.send_hint)));
@@ -90,9 +90,8 @@ public class BasicTest {
         .check(matches(withHint(R.string.send_hint)));
   }
 
-  @Test
   @SuppressWarnings("unchecked")
-  public void testClickOnSpinnerItemAmericano() {
+  public void testClickOnSpinnerItemAmericano(){
     // Open the spinner.
     onView(withId(R.id.spinner_simple))
       .perform(click());
@@ -106,7 +105,6 @@ public class BasicTest {
       .check(matches(withText(containsString("Americano"))));
   }
 
-  @Test
   public void testRelativePositionOfViews() {
     onView(withId(R.id.button_simple))
         .check(isBelow(withId(R.id.spinnertext_simple)));

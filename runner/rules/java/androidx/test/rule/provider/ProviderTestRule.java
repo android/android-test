@@ -32,8 +32,8 @@ import androidx.annotation.VisibleForTesting;
 import android.test.mock.MockContentResolver;
 import android.text.TextUtils;
 import android.util.Log;
+import androidx.test.InstrumentationRegistry;
 import androidx.test.annotation.Beta;
-import androidx.test.platform.app.InstrumentationRegistry;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -474,8 +474,7 @@ public class ProviderTestRule implements TestRule {
       Set<WeakReference<ContentProvider>> mProvidersRef = new HashSet<>();
       MockContentResolver resolver = new MockContentResolver();
       DelegatingContext context =
-          new DelegatingContext(
-              InstrumentationRegistry.getInstrumentation().getTargetContext(), prefix, resolver);
+          new DelegatingContext(InstrumentationRegistry.getTargetContext(), prefix, resolver);
 
       for (Map.Entry<String, Class<? extends ContentProvider>> entry : providerClasses.entrySet()) {
         ContentProvider provider =

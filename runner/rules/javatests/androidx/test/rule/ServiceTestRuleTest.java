@@ -16,7 +16,6 @@
 
 package androidx.test.rule;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -32,8 +31,9 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.SystemClock;
 import androidx.annotation.NonNull;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.InstrumentationRegistry;
 import androidx.test.filters.LargeTest;
+import androidx.test.runner.AndroidJUnit4;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import org.junit.After;
@@ -229,7 +229,8 @@ public class ServiceTestRuleTest {
       thrown.expect(TimeoutException.class);
       thrown.expectMessage("Waited for 50 MILLISECONDS, but service was never connected");
       // TimeoutService takes >= 100 milliseconds to start.
-      serviceRule.startService(new Intent(getApplicationContext(), TimeoutService.class));
+      serviceRule.startService(
+          new Intent(InstrumentationRegistry.getTargetContext(), TimeoutService.class));
     }
 
     @Test
@@ -237,7 +238,8 @@ public class ServiceTestRuleTest {
       thrown.expect(TimeoutException.class);
       thrown.expectMessage("Waited for 50 MILLISECONDS, but service was never connected");
       // TimeoutService takes >= 100 milliseconds to bind.
-      serviceRule.bindService(new Intent(getApplicationContext(), TimeoutService.class));
+      serviceRule.bindService(
+          new Intent(InstrumentationRegistry.getTargetContext(), TimeoutService.class));
     }
   }
 
@@ -252,21 +254,23 @@ public class ServiceTestRuleTest {
 
   @Test
   public void verifySuccessfulServiceStart() throws TimeoutException {
-    serviceRule.startService(new Intent(getApplicationContext(), TestService.class));
+    serviceRule.startService(
+        new Intent(InstrumentationRegistry.getTargetContext(), TestService.class));
     assertTrue("The service was not started", serviceRule.serviceStarted);
     assertTrue("The service was not bound", serviceRule.serviceBound);
   }
 
   @Test
   public void verifySuccessfulServiceBind() throws TimeoutException {
-    serviceRule.bindService(new Intent(getApplicationContext(), TestService.class));
+    serviceRule.bindService(
+        new Intent(InstrumentationRegistry.getTargetContext(), TestService.class));
     assertTrue("The service was not bound", serviceRule.serviceBound);
     assertFalse("The service started instead of bound", serviceRule.serviceStarted);
   }
 
   @Test
   public void serviceCanBeBoundTwice() throws TimeoutException {
-    Intent intent = new Intent(getApplicationContext(), TestService.class);
+    Intent intent = new Intent(InstrumentationRegistry.getTargetContext(), TestService.class);
 
     IBinder firstBinder = serviceRule.bindService(intent);
     assertNotNull("Service failed to bind 1/2", firstBinder);
@@ -277,7 +281,7 @@ public class ServiceTestRuleTest {
 
   @Test
   public void serviceCanBindAfterUnbind() throws TimeoutException {
-    Intent intent = new Intent(getApplicationContext(), TestService.class);
+    Intent intent = new Intent(InstrumentationRegistry.getTargetContext(), TestService.class);
 
     IBinder firstBinder = serviceRule.bindService(intent);
     assertNotNull("Service failed to bind 1/2", firstBinder);
@@ -289,7 +293,8 @@ public class ServiceTestRuleTest {
 
   @Test
   public void serviceThatCantBeBoundTo() {
-    Intent intent = new Intent(getApplicationContext(), ServiceThatCantBeBoundTo.class);
+    Intent intent =
+        new Intent(InstrumentationRegistry.getTargetContext(), ServiceThatCantBeBoundTo.class);
     try {
       serviceRule.startService(intent);
       fail("TimeoutException was not thrown");
@@ -300,7 +305,9 @@ public class ServiceTestRuleTest {
 
   @Test
   public void serviceThatIsNotDefinedInManifest() throws TimeoutException {
-    Intent intent = new Intent(getApplicationContext(), ServiceThatIsNotDefinedInManifest.class);
+    Intent intent =
+        new Intent(
+            InstrumentationRegistry.getTargetContext(), ServiceThatIsNotDefinedInManifest.class);
     assertFalse(serviceRule.bindServiceAndWait(intent, null, 123));
   }
 }

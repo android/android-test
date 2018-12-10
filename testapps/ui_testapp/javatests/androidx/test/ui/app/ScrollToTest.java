@@ -22,28 +22,31 @@ import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.is;
 
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import android.test.ActivityInstrumentationTestCase2;
 import androidx.test.filters.LargeTest;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
-/** Demonstrates the usage of {@link androidx.test.espresso.action.ViewActions#scrollTo()}. */
-@RunWith(AndroidJUnit4.class)
+/**
+ * Demonstrates the usage of {@link androidx.test.espresso.action.ViewActions#scrollTo()}.
+ */
 @LargeTest
-public class ScrollToTest {
+public class ScrollToTest extends ActivityInstrumentationTestCase2<ScrollActivity> {
 
-  @Before
+  @SuppressWarnings("deprecation")
+  public ScrollToTest() {
+    // This constructor was deprecated - but we want to support lower API levels.
+    super("androidx.test.ui.app", ScrollActivity.class);
+  }
+
+  @Override
   public void setUp() throws Exception {
-    // Espresso will not launch our activity for us, we must launch it via ActivityScenario.launch.
-    ActivityScenario.launch(ScrollActivity.class);
+    super.setUp();
+    // Espresso will not launch our activity for us, we must launch it via getActivity().
+    getActivity();
   }
 
   // You can pass more than one action to perform. This is useful if you are performing two actions
   // back-to-back on the same view.
   // Note - scrollTo is a no-op if the view is already displayed on the screen.
-  @Test
   public void testScrollToInScrollView() {
     onView(withId(is(R.id.bottom_left)))
       .perform(scrollTo(), click());

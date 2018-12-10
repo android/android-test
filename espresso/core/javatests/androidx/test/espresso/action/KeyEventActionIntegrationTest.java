@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.action;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static androidx.test.InstrumentationRegistry.getTargetContext;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
@@ -38,13 +38,13 @@ import static org.junit.rules.ExpectedException.none;
 import android.content.Intent;
 import android.view.KeyEvent;
 import android.widget.TextView;
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.NoActivityResumedException;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.FlakyTest;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.Suppress;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 import androidx.test.ui.app.MainActivity;
 import androidx.test.ui.app.R;
 import java.util.Map;
@@ -58,6 +58,10 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class KeyEventActionIntegrationTest {
 
+  @Rule
+  public ActivityTestRule<MainActivity> rule =
+      new ActivityTestRule<>(MainActivity.class, true, false);
+
   @Rule public ExpectedException expectedException = none();
 
   /**
@@ -67,14 +71,14 @@ public class KeyEventActionIntegrationTest {
   @Suppress
   @Test
   public void clickBackOnRootAction() {
-    ActivityScenario.launch(MainActivity.class);
+    rule.launchActivity(null);
     expectedException.expect(NoActivityResumedException.class);
     pressBack();
   }
 
   @Test
   public void clickBackOnNonRootActivityLatte() {
-    ActivityScenario.launch(MainActivity.class);
+    rule.launchActivity(null);
     onData(allOf(instanceOf(Map.class), hasValue("LargeViewActivity"))).perform(click());
     pressBack();
 
@@ -85,7 +89,7 @@ public class KeyEventActionIntegrationTest {
 
   @Test
   public void clickBackOnNonRootActionNoLatte() {
-    ActivityScenario.launch(MainActivity.class);
+    rule.launchActivity(null);
     onData(allOf(instanceOf(Map.class), hasValue("LargeViewActivity"))).perform(click());
     onView(isRoot()).perform(ViewActions.pressBack());
 
@@ -99,9 +103,9 @@ public class KeyEventActionIntegrationTest {
   @FlakyTest
   public void clickOnBackFromFragment() {
     Intent fragmentStack =
-        new Intent().setClassName(getApplicationContext(), "androidx.test.ui.app.FragmentStack");
+        new Intent().setClassName(getTargetContext(), "androidx.test.ui.app.FragmentStack");
     fragmentStack.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    ActivityScenario.launch(MainActivity.class);
+    rule.launchActivity(fragmentStack);
     onView(allOf(withParent(withId(R.id.simple_fragment)), isAssignableFrom(TextView.class)))
         .check(matches(withText(containsString("#1"))));
     try {
@@ -110,7 +114,7 @@ public class KeyEventActionIntegrationTest {
     } catch (NoActivityResumedException ignored) {
       // expected
     }
-    ActivityScenario.launch(MainActivity.class);
+    rule.launchActivity(fragmentStack);
 
     onView(withId(R.id.new_fragment)).perform(click()).perform(click()).perform(click());
 
@@ -142,7 +146,7 @@ public class KeyEventActionIntegrationTest {
 
   @Test
   public void pressKeyWithKeyCode() {
-    ActivityScenario.launch(MainActivity.class);
+    rule.launchActivity(null);
     onData(allOf(instanceOf(Map.class), hasValue("SendActivity"))).perform(click());
     onView(withId(R.id.enter_data_edit_text)).perform(click());
     onView(withId(R.id.enter_data_edit_text)).perform(ViewActions.pressKey(KeyEvent.KEYCODE_X));

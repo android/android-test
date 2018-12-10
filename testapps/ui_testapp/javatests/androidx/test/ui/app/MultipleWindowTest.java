@@ -31,13 +31,9 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import android.test.ActivityInstrumentationTestCase2;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.SdkSuppress;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 /**
  * Demonstrates dealing with multiple windows.
@@ -48,19 +44,24 @@ import org.junit.runner.RunWith;
  * @see androidx.test.espresso.Espresso#onView
  * @see androidx.test.espresso.Espresso#onData
  */
-@RunWith(AndroidJUnit4.class)
 @LargeTest
-public class MultipleWindowTest {
+public class MultipleWindowTest extends ActivityInstrumentationTestCase2<SendActivity> {
 
-  @Before
+  @SuppressWarnings("deprecation")
+  public MultipleWindowTest() {
+    // This constructor was deprecated - but we want to support lower API levels.
+    super("androidx.test.ui.app", SendActivity.class);
+  }
+
+  @Override
   public void setUp() throws Exception {
-    // Espresso will not launch our activity for us, we must launch it via ActivityScenario.launch.
-    ActivityScenario.launch(SendActivity.class);
+    super.setUp();
+    // Espresso will not launch our activity for us, we must launch it via getActivity().
+    getActivity();
   }
 
   // Froyo's AutoCompleteTextBox is broken - do not bother testing with it.
   // b/18916590
-  @Test
   @SdkSuppress(minSdkVersion = 24)
   public void testInteractionsWithAutoCompletePopup() {
     // Android's Window system allows multiple view hierarchies to layer on top of each other.

@@ -15,8 +15,6 @@ ESPRESSO_INTENTS_DEPS = [
     "//espresso/core/java/androidx/test/espresso/matcher",
     "//runner/android_junit_runner",
     "//runner/rules",
-    "//core",
-    "//ext/junit",
 ]
 
 EXTERNAL_DEPS = [

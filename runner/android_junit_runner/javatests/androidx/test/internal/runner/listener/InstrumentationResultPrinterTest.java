@@ -22,8 +22,8 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 import android.os.Bundle;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.Description;

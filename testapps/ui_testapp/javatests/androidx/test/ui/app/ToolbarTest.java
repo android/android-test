@@ -29,27 +29,30 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.endsWith;
 
+import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import org.hamcrest.Matcher;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
-/** Demonstrates Espresso with Toolbar. */
-@RunWith(AndroidJUnit4.class)
+/**
+ * Demonstrates Espresso with Toolbar.
+ */
 @LargeTest
-public class ToolbarTest {
+public class ToolbarTest extends ActivityInstrumentationTestCase2<ToolbarActivity> {
 
-  @Before
-  public void setUp() throws Exception {
-    // Espresso will not launch our activity for us, we must launch it via ActivityScenario.launch.
-    ActivityScenario.launch(ToolbarActivity.class);
+  @SuppressWarnings("deprecation")
+  public ToolbarTest() {
+    // This constructor was deprecated - but we want to support lower API levels.
+    super("androidx.test.ui.app", ToolbarActivity.class);
   }
 
-  @Test
+  @Override
+  public void setUp() throws Exception {
+    super.setUp();
+    // Espresso will not launch our activity for us, we must launch it via getActivity().
+    getActivity();
+  }
+
   @SuppressWarnings("unchecked")
   public void testClickActionbarItem() {
     onView(withId(R.id.action_lock))
@@ -59,7 +62,6 @@ public class ToolbarTest {
         .check(matches(withText("Lock")));
   }
 
-  @Test
   @SuppressWarnings("unchecked")
   public void testActionbarOverflow() {
     // Open the overflow menu from action bar. We need custom matcher, because
@@ -74,7 +76,6 @@ public class ToolbarTest {
         .check(matches(withText("Key")));
   }
 
-  @Test
   @SuppressWarnings("unchecked")
   public void testClickToolbarItem() {
     onView(withId(R.id.action_save)).
@@ -84,7 +85,6 @@ public class ToolbarTest {
         .check(matches(withText("Save")));
   }
 
-  @Test
   @SuppressWarnings("unchecked")
   public void testToolbarOverflow() {
     // Open the overflow menu from tool bar. We need custom matcher, because

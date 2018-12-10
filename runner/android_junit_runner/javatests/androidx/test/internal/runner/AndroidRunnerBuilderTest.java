@@ -20,10 +20,10 @@ import static org.hamcrest.Matchers.typeCompatibleWith;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import androidx.test.internal.runner.junit3.JUnit38ClassRunner;
 import androidx.test.internal.util.AndroidRunnerParams;
+import androidx.test.runner.AndroidJUnit4;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.junit.Before;

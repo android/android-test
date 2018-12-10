@@ -21,8 +21,8 @@ import static androidx.test.espresso.remote.ProtoUtils.getFilteredFieldList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import androidx.test.runner.AndroidJUnit4;
 import com.google.common.collect.Lists;
 import java.lang.reflect.Field;
 import java.util.List;
