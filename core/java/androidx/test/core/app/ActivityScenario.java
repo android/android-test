@@ -15,10 +15,10 @@
  */
 package androidx.test.core.app;
 
-import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.internal.util.Checks.checkNotMainThread;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
@@ -206,7 +206,9 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
 
     activityInvoker.startActivity(scenario.startActivityIntent);
 
-    scenario.waitForActivityToBecomeAnyOf(State.RESUMED, State.DESTROYED);
+    // Accept any steady states. An activity may start another activity in its onCreate method. Such
+    // an activity goes back to created or started state immediately after it is resumed.
+    scenario.waitForActivityToBecomeAnyOf(STEADY_STATES.values().toArray(new State[0]));
 
     return scenario;
   }
@@ -370,6 +372,11 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    *
    * <p>{@link State#DESTROYED} is the terminal state. You cannot move the state to other state
    * after the activity reaches that state.
+   *
+   * <p>The activity must be at the top of the back stack (excluding internal facilitator activities
+   * started by this library), otherwise {@link AssertionError} may be thrown. If the activity
+   * starts another activity (such as DialogActivity), make sure you close these activities and
+   * bring back the original activity foreground before you call this method.
    *
    * <p>This method cannot be called from the main thread except in Robolectric tests.
    *
