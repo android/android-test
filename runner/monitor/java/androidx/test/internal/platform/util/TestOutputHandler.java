@@ -27,4 +27,7 @@ public interface TestOutputHandler {
 
   /** Take a screenshot and store it in test outputs */
   boolean takeScreenshot(String outputName);
+
+  /** Dumps the window hierarchy and stores it in test outputs */
+  boolean captureWindowHierarchy(String outputName);
 }
