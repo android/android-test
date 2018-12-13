@@ -114,4 +114,26 @@ public class IntentSubjectTest {
     intent.addCategory("cat");
     assertThat(intent).categories().containsExactly("cat");
   }
+
+  @Test
+  public void filtersEquallyTo_equal() {
+    Intent intent = new Intent(Intent.ACTION_ASSIST);
+    Intent intentWithExtra = new Intent(Intent.ACTION_ASSIST).putExtra("key", "value");
+
+    assertThat(intent).filtersEquallyTo(new Intent(intent));
+    assertThat(intent).filtersEquallyTo(intentWithExtra);
+  }
+
+  @Test
+  public void filtersEquallyTo_notEqual() {
+    try {
+      assertThat(new Intent("FOO")).filtersEquallyTo(new Intent("BAR"));
+      fail("Should have thrown");
+    } catch (AssertionError e) {
+      Truth.assertThat(e.getMessage())
+          .isEqualTo(
+              "Not true that <Intent { act=FOO }> "
+                  + "is equal for intent filters to <Intent { act=BAR }>");
+    }
+  }
 }
