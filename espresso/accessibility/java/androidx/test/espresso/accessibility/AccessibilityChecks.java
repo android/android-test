@@ -90,19 +90,6 @@ public final class AccessibilityChecks {
   }
 
   /**
-   * Disables accessibility checking as a global ViewAssertion in {@link ViewActions}.
-   *
-   * @throws IllegalStateException if accessibility checking in not enabled.
-   */
-  public static void disable() {
-    if (!checksEnabled) {
-      throw new IllegalStateException("Accessibility checks not enabled!");
-    }
-    checksEnabled = false;
-    ViewActions.removeGlobalAssertion(ACCESSIBILITY_CHECK_ASSERTION);
-  }
-
-  /**
    * @return the backing {@link ViewAssertion} that can be used to explicitly check accessibility
    */
   public static ViewAssertion accessibilityAssertion() {
