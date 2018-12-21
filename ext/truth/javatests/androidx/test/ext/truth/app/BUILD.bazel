@@ -11,6 +11,7 @@ licenses(["notice"])  # Apache License 2.0
 android_local_test(
     name = "NotificationSubjectTest",
     srcs = ["NotificationSubjectTest.java"],
+    manifest = "AndroidManifest_test.xml",
     tags = ["robolectric"],
     deps = [
         "//ext/truth",
@@ -25,6 +26,7 @@ android_local_test(
 android_local_test(
     name = "NotificationActionSubjectTest",
     srcs = ["NotificationActionSubjectTest.java"],
+    manifest = "AndroidManifest_test.xml",
     tags = ["robolectric"],
     deps = [
         "//ext/truth",
