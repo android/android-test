@@ -33,7 +33,7 @@ import java.util.Set;
  *
  * <p>Adapted from tools/tradefederation/..ClassPathScanner
  */
-@VisibleForTesting
+@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
 public class ClassPathScanner {
 
   /**
