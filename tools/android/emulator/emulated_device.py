@@ -237,8 +237,10 @@ _DEFAULT_QEMU_TELNET_PORT = 52222
 _BOOTSTRAP_PKG = 'com.google.android.apps.common.testing.services.bootstrap'
 _DEX2OAT = 'android_test_support/tools/android/emulator/daemon/dex2oat'
 _BOOTSTRAP_PATH = 'android_test_support/tools/android/emulator/daemon/bootstrap.apk'
-_FORWARDER_PATH = 'android_test_support/third_party/h2o/waterfall/forward/forward_bin'
+_FORWARDER_PATH = 'android_test_support/tools/android/emulator/support/forward_bin'
 _FORWARD_BIN = 'forward_bin'
+_PORTS_PATH = 'android_test_support/tools/android/emulator/support/ports_bin'
+_PORTS_BIN = 'ports_bin'
 
 _DEFAULT_BROADCAST_ACTION = 'ACTION_MOBILE_NINJAS_START'
 
@@ -338,7 +340,8 @@ class EmulatedDevice(object):
                phone_number=None,
                source_properties=None,
                use_h2o=False,
-               forward_bin=None):
+               forward_bin=None,
+               ports_bin=None):
     self.adb_server_port = adb_server_port
     self.emulator_adb_port = emulator_adb_port
     self.emulator_telnet_port = emulator_telnet_port
@@ -385,6 +388,7 @@ class EmulatedDevice(object):
     self._phone_number = phone_number
     self._use_h2o = use_h2o
     self._forward_bin = forward_bin
+    self._ports_bin = ports_bin
 
   def _IsUserBuild(self, build_prop):
     """Check if a build is user build from build.prop file."""
@@ -1413,9 +1417,17 @@ class EmulatedDevice(object):
         init_rc.write('    seclabel u:r:shell:s0\n')
       init_rc.write('\n')
 
+      init_rc.write('service waterfall /sbin/waterfall ')
+      init_rc.write('    user root\n')
+      init_rc.write('    group root\n')
+      if self.GetApiVersion() >= 23:
+        init_rc.write('    seclabel u:r:shell:s0\n')
+      init_rc.write('\n')
+
       init_rc.write('on boot\n')
       init_rc.write('   start pipe_traverse\n')
       init_rc.write('   start tn_pipe_traverse\n')
+      init_rc.write('   start waterfall\n')
       init_rc.write('   setprop ro.test_harness '
                     '${ro.kernel.enable_test_harness}\n')
       # if ro.kernel.enable_test_harness is not set, default to 1
@@ -1441,6 +1453,14 @@ class EmulatedDevice(object):
             'android_test_support/'
             'tools/android/emulator/daemon/%s/pipe_traversal' % arch),
         pipe_traversal_path)
+    os.chmod(pipe_traversal_path, stat.S_IRWXU)
+
+    waterfall_path = os.path.join(exploded_temp, 'sbin', 'waterfall')
+    shutil.copy2(
+        resources.GetResourceFilename(
+            'android_test_support/'
+            'tools/android/emulator/daemon/%s/waterfall' % arch),
+        waterfall_path)
     os.chmod(pipe_traversal_path, stat.S_IRWXU)
 
     # FYI: /sbin is only readable by root, so we put g3_activity_controller.jar
@@ -1726,7 +1746,8 @@ class EmulatedDevice(object):
       # https://android.googlesource.com/platform/system/core/+/gingerbread/init/init.c#424
       kernel_args = []
 
-      if not self._enable_g3_monitor:
+      # g3_monitor is not supported in mini_boot mode.
+      if self._mini_boot or not self._enable_g3_monitor:
         kernel_args.append('g3_monitor=0')
 
       kernel_args.append('enable_test_harness=%d' %
@@ -1782,6 +1803,14 @@ class EmulatedDevice(object):
             shutil.copyfileobj(fwdr, o)
             os.chmod(path, stat.S_IRWXU)
             self._forward_bin = path
+      if not self._ports_bin:
+        with contextlib.closing(
+            resources.GetResourceAsFile(_PORTS_PATH)) as ports:
+          path = os.path.join(services_dir, _PORTS_BIN)
+          with open(path, 'w+b') as o:
+            shutil.copyfileobj(ports, o)
+            os.chmod(path, stat.S_IRWXU)
+            self._ports_bin = path
     else:
       with contextlib.closing(
           resources.GetResourceAsFile(
@@ -1896,14 +1925,47 @@ class EmulatedDevice(object):
     sys.stdin = open(os.devnull)
     sys.stdout = open(os.path.join(watchdog_dir, 'watchdog.out'), 'w+b', 0)
     sys.stderr = open(os.path.join(watchdog_dir, 'watchdog.err'), 'w+b', 0)
+
+    def WaterfallForwarder():
+      return self._Forward(
+          services_dir, 'unix:@h2o_localhost:%s' % self.emulator_adb_port,
+          'qemu:%s:sockets/h2o' % self._emulator_exec_dir)
+
+    def WaterfallTelnetForwarder():
+      return self._Forward(
+          services_dir, 'qemu:%s:sockets/qemu.mgmt' % self._emulator_exec_dir,
+          'tcp:localhost:%d' % self.emulator_telnet_port)
+
+    def WaterfallPortForwarder():
+      return self._StartPortForwarderServices(
+          services_dir,
+          'unix:@h2o_localhost:%s_xforward' % self.emulator_adb_port,
+          'unix:@h2o_localhost:%s' % self.emulator_adb_port)
+
+    waterfall_fns = [
+        WaterfallForwarder, WaterfallTelnetForwarder, WaterfallPortForwarder]
+
+    tn_pipe_services_fn = lambda: self._StartTelnetPipeServices(services_dir)
+
+    pids_to_fns = {}
+    killable = {}
     pipe_service_processes = []
-    tn_pipe_service_process = None
-    forwarder_process = None
     if self._use_h2o:
-      forwarder_process = self._StartForwarder(services_dir)
+      logging.info('Starting waterfall processes.')
+      for fn in waterfall_fns:
+        p = fn()
+        pids_to_fns[p.pid] = fn
+        killable[p.pid] = p
+        logging.info('Started waterfall process %d', p.pid)
     else:
+      logging.info('Starting pipe services.')
       pipe_service_processes = self._StartPipeServices(services_dir)
-      tn_pipe_service_process = self._StartTelnetPipeServices(services_dir)
+      for p in pipe_service_processes:
+        killable[p.pid] = p
+      tn_service_process = tn_pipe_services_fn()
+      killable[tn_service_process.pid] = tn_service_process
+      logging.info('Started pipe telnet forwarding service %d.',
+                   tn_service_process.pid)
 
     if self._display:
       # Try starting the Xserver three times before giving up.
@@ -1916,12 +1978,8 @@ class EmulatedDevice(object):
           logging.error('Failed to start XServer..Retrying.. %s', e)
 
     def WatchdogCleanup():
-      killable = [
-          p for p in pipe_service_processes + [tn_pipe_service_process] +
-          [forwarder_process] if p
-      ]
       logging.info('Killing emu services')
-      for p in killable:
+      for p in killable.values():
         try:
           p.terminate()
         except OSError as e:
@@ -1970,33 +2028,31 @@ class EmulatedDevice(object):
         WatchdogCleanup()
         return status
       elif dead_pid in [p.pid for p in pipe_service_processes]:
-        # oh noes.
         try:
           logging.info('Pipe traversal daemon died - attempting to revive')
           for p in pipe_service_processes:
             try:
+              del killable[p.pid]
               p.terminate()
             except OSError as e:
               # ignore.
               pass
           pipe_service_processes = self._StartPipeServices(services_dir)
+          for p in pipe_service_processes:
+            killable[p.pid] = p
           logging.info('restarted Pipe traversal daemon')
         except OSError as e:
           logging.info('Failed to restart pipe traversal daemon. %s', e)
-      elif tn_pipe_service_process and tn_pipe_service_process.pid == dead_pid:
+      elif dead_pid in pids_to_fns:
+        fn = pids_to_fns[dead_pid]
+        del pids_to_fns[dead_pid]
+        del killable[dead_pid]
         try:
-          logging.info('Telnet daemon died - attempting to revive')
-          tn_pipe_service_process = self._StartTelnetPipeServices(services_dir)
-          logging.info('restarted telnet daemon')
+          p = fn()
+          pids_to_fns[p.pid] = fn
+          killable[p.pid] = p
         except OSError as e:
-          logging.info('Failed to restart telnet daemon. %s', e)
-      elif forwarder_process and forwarder_process.pid == dead_pid:
-        try:
-          logging.info('Waterfall forwading daemon died - attempting to revive')
-          forwarder_process = self._StartForwarder(services_dir)
-          logging.info('restarted forwarding daemon')
-        except OSError as e:
-          logging.info('Failed to restart forwarding daemon. %s', e)
+          logging.info('Failed to restart process %d. %s', p.pid, e)
 
   def _StartPipeServices(self, pipe_dir):
     """Starts pipe_traversal services for the host.
@@ -2063,28 +2119,75 @@ class EmulatedDevice(object):
                   close_fds=True,))
       return pipes
 
-  def _StartForwarder(self, services_dir):
-    """Starts the forwarding daemon that forwards grpc requests to the device.
+  def _Forward(self, services_dir, listen_addr, connect_addr):
+    """Starts the forwarding daemon to forward listen_addr <-> connect_addr.
 
     This function is intended to be ran under the process that babysits the
     emulator.
 
     Args:
       services_dir: Directory where logs are stored.
+      listen_addr: listens for incoming connection at this address.
+      connect_addr: connects to this address and forward accepted connections.
+
     Returns:
       the forwarder task.
     """
 
-    log_path = os.path.join(services_dir, 'waterfall_forwarder.log.txt')
+    log_name = 'forwarder_%s_%s.log.txt' % (listen_addr.split(':')[0],
+                                            connect_addr.split(':')[0])
+    log_path = os.path.join(services_dir, log_name)
     test_output_dir = os.environ.get('TEST_UNDECLARED_OUTPUTS_DIR')
     if test_output_dir:
-      log_path = os.path.join(test_output_dir, 'waterfall_forwarder.log.txt')
+      log_path = os.path.join(test_output_dir, log_name)
 
     args = [
-        self._forward_bin, '--connect_addr',
-        'qemu:%s:sockets/h2o' % self._emulator_exec_dir, '--listen_addr',
-        'unix:@h2o_localhost:%s' % self.emulator_adb_port
+        self._forward_bin,
+        '-listen_addr',
+        listen_addr,
+        '-connect_addr',
+        connect_addr,
     ]
+
+    return subprocess.Popen(
+        args,
+        stdin=open('/dev/null'),  # cannot use the _DEV_NULL var,
+        # b/c we close all fds across forks.
+        stderr=subprocess.STDOUT,
+        stdout=open(log_path, 'a+b'),
+        cwd=self._sockets_dir,
+        close_fds=True)
+
+  def _StartPortForwarderServices(self, services_dir, addr, waterfall_addr):
+    """Starts the waterfall port forwarding daemon.
+
+    This function is intended to be ran under the process that babysits the
+    emulator. The daemon manages active port forwarding sessions under
+    waterfall.
+
+    Args:
+      services_dir: Directory where logs are stored.
+      addr: Listens for incoming connection at this address.
+      waterfall_addr: The address where the waterfall service is running.
+
+    Returns:
+      the forwarder task.
+    """
+
+    log_name = 'waterfall_port_forwarder.log.txt'
+    log_path = os.path.join(services_dir, log_name)
+    test_output_dir = os.environ.get('TEST_UNDECLARED_OUTPUTS_DIR')
+    if test_output_dir:
+      log_path = os.path.join(test_output_dir, log_name)
+
+    args = [
+        self._ports_bin,
+        '-addr',
+        addr,
+        '-waterfall_addr',
+        waterfall_addr,
+    ]
+
     return subprocess.Popen(
         args,
         stdin=open('/dev/null'),  # cannot use the _DEV_NULL var,
@@ -2162,7 +2265,8 @@ class EmulatedDevice(object):
           'out': out,
           'error': err,
       })
-      raise Exception('Adb command failed, stdout:%s stderr:%s' % (out, err))
+      self._TransientDeath(
+          'Adb command failed, stdout:%s error:%s' % (out, err))
     return out
 
   def _KillProcess(self, pid):
@@ -2336,6 +2440,7 @@ class EmulatedDevice(object):
       # pipe_traversal is ready.
       if self._mini_boot:
         self.ExecOnDevice(['stop'])
+        self._WaitUntilDataPartitionMounted()
         return
 
       self._DetectFSErrors()
@@ -2434,6 +2539,20 @@ class EmulatedDevice(object):
     self._running = True
     self._KillCrashedProcesses()
   # pylint: enable=too-many-statements
+
+  # Newer MR1 images have a async encryption operation that remounts the data
+  # partition even after we issue a stop command to the device. If we return
+  # too early without waiting for data partition to be correctly mounted,
+  # dex2oat process pushes a file to /data directory which then gets overwritten
+  # by the async encryption process.
+  def _WaitUntilDataPartitionMounted(self):
+    if not self._mini_boot and self.GetApiVersion() != 25:
+      return
+    for _ in range(10):
+      output = self.ExecOnDevice(['mount'])
+      if '/data type ext4' in output:
+        return
+      time.sleep(1)
 
   def _KillCrashedProcesses(self):
     """Kills processes which have crashed or ANR but have not fully died."""
@@ -3274,18 +3393,29 @@ class EmulatedDevice(object):
     telnet.read_all()
 
   def _CyberVillainsCert(self):
-    return resources.GetResourceFilename(
-        os.path.join(self.android_platform.android_sdk,
-                     'tools/lib/pc-bios/cybervillainsCA.cer'))
+    try:
+      return resources.GetResourceFilename(
+          os.path.join(self.android_platform.android_sdk,
+                       'tools/lib/pc-bios/cybervillainsCA.cer'))
+    except IOError:
+      return os.path.join(self.android_platform.android_sdk,
+                          'tools/lib/pc-bios/cybervillainsCA.cer')
 
   def InstallCyberVillainsCert(self):
     """Installs a cybervillainsCA cert certificate to device."""
     api = self.GetApiVersion()
     if api < 14:
-      cert_file = resources.GetResourceFilename(
-          os.path.join(self.android_platform.android_sdk,
-                       'tools/lib/pc-bios/%s-%s-cacerts.bks' % (
-                           api, self._metadata_pb.emulator_architecture[:3])))
+      try:
+        cert_file = resources.GetResourceFilename(
+            os.path.join(
+                self.android_platform.android_sdk,
+                'tools/lib/pc-bios/%s-%s-cacerts.bks' %
+                (api, self._metadata_pb.emulator_architecture[:3])))
+      except IOError:
+        cert_file = os.path.join(
+            self.android_platform.android_sdk,
+            'tools/lib/pc-bios/%s-%s-cacerts.bks' %
+            (api, self._metadata_pb.emulator_architecture[:3]))
       destination_file = '/system/etc/security/cacerts.bks'
       self._Push(cert_file, destination_file)
     else:

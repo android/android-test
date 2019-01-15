@@ -1,0 +1,30 @@
+# Description:
+#   Pixelbook runs from Nougat 7.1
+#   Specs from: https://store.google.com/product/google_pixelbook
+#
+#   target name format:
+#     :google_${api_level}_${arch} for google add-ons
+
+load("//tools/android/emulated_devices:macro/make_device.bzl", "make_device")
+
+package(default_visibility = ["//visibility:public"])
+
+make_device(
+    name = "pixelbook",
+    avd_properties = {
+        "hw.mainKeys": "no",
+    },
+    boot_properties = {
+        "ro.emulator.arc": "true",
+        "ro.product.brand": "google",
+        "ro.product.manufacturer": "google",
+        "ro.product.model": "Pixelbook",
+    },
+    cache = 32,
+    horizontal_resolution = 2400,
+    min_api = 25,
+    ram = 4096,
+    screen_density = 240,
+    vertical_resolution = 1600,
+    vm_heap = 512,
+)

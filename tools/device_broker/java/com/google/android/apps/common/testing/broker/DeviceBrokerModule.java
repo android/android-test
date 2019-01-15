@@ -301,7 +301,10 @@ class DeviceBrokerModule extends AbstractModule {
 
     File controller;
     if (useWaterfall) {
-      controller = new File(dataDir, "third_party/h2o/waterfall/client/adb/adb_bin");
+      controller =
+          new File(
+              dataDir,
+              "tools/android/emulator/support/adb_bin");
     } else {
       controller = new File(dataDir, "tools/android/emulator/support/adb.turbo");
     }
@@ -329,7 +332,8 @@ class DeviceBrokerModule extends AbstractModule {
       List<File> launcherScriptFiles =
           new DirectorySearcher(
                   new File(env.getRunfilesDir()),
-                  "^((android|google|jasper)_\\d+_(arm|arm_v7a|x86))|(.*_(usb|wifi))$")
+                  "^((android|google"
+                      + ")_\\d+_(arm|arm_v7a|x86))|(.*_(usb|wifi))$")
               .findMatches();
       checkState(1 == launcherScriptFiles.size(),
           "Must find 1 launcher script matching. Found: %s", launcherScriptFiles);

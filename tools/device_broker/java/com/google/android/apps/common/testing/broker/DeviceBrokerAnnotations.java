@@ -296,7 +296,7 @@ final class DeviceBrokerAnnotations {
   @BindingAnnotation
   @Target({FIELD, METHOD, PARAMETER})
   @Retention(RUNTIME)
-  public @interface AdbReporterAnnotation {}
+  public @interface ExecReporterAnnotation {}
 
   private DeviceBrokerAnnotations() {}
 }

@@ -120,6 +120,7 @@ flags.DEFINE_string('adb_static', None, 'OBSOLETE: the path to adb.static')
 flags.DEFINE_string('adb_turbo', None, 'The path to turbo adb')
 flags.DEFINE_string('forward_bin', None, 'The path to h2o forwarder binary')
 flags.DEFINE_string('adb_bin', None, 'The path to h2o adb binary')
+flags.DEFINE_string('ports_bin', None, 'The path to h2o port forwarder binary')
 flags.DEFINE_string('emulator_x86_static', None, 'Deprecated. NO-OP.')
 flags.DEFINE_string('emulator_arm_static', None, 'Deprecated. NO-OP.')
 flags.DEFINE_string('empty_snapshot_fs', None, '[bazel ONLY] the path to '
@@ -201,7 +202,8 @@ flags.DEFINE_list('accounts', None, '[START ONLY] a list of strings in format '
 flags.DEFINE_boolean('enable_console_auth', False,
                      'Enable console port auth for security reason')
 flags.DEFINE_boolean('enable_g3_monitor', True,
-                     'Enable g3 monitor for android_test')
+                     'Enable g3 monitor for android_test. This is not '
+                     'supported for --action=mini_boot')
 flags.DEFINE_boolean('enable_gps', True, 'Enable emulator gps simulation')
 flags.DEFINE_integer('retry_attempts', 4,
                      'The retry count when transient failure happens.')
@@ -330,7 +332,8 @@ def _FirstBootAtBuildTimeOnly(
       source_properties=source_properties,
       mini_boot=mini_boot,
       use_h2o=FLAGS.use_h2o,
-      forward_bin=FLAGS.forward_bin)
+      forward_bin=FLAGS.forward_bin,
+      ports_bin=FLAGS.ports_bin)
   device.delete_temp_on_exit = False  # we will do it ourselves.
 
   device.Configure(
@@ -632,7 +635,8 @@ def _Run(adb_server_port,
       phone_number=phone_number,
       source_properties=_ReadSourceProperties(FLAGS.source_properties_file),
       use_h2o=FLAGS.use_h2o,
-      forward_bin=FLAGS.forward_bin)
+      forward_bin=FLAGS.forward_bin,
+      ports_bin=FLAGS.forward_bin)
 
   _RestartDevice(
       device,
@@ -1003,7 +1007,8 @@ def _MakeAndroidPlatform():
     if FLAGS.adb_bin:
       adb_path = FLAGS.adb_bin
     else:
-      adb_path = 'third_party/h2o/waterfall/client/adb/adb_bin'
+      adb_path = (''
+                  'tools/android/emulator/support/adb_bin')
   else:
     if FLAGS.adb_turbo:
       adb_path = FLAGS.adb_turbo
