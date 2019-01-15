@@ -6,23 +6,6 @@ load("//tools/android/emulated_devices:macro/props.bzl", "new_props")
 # down builds, and we plan to get rid of entirely in the near future, so this
 # list should be kept minimal.
 _COMPRESSED_IMAGE_WHITELIST = [
-    "//devtools/bazel/integration:__subpackages__",
-    "//java/com/google/android/apps/auth/test/support:__subpackages__",
-    "//java/com/google/android/apps/dynamite:__subpackages__",
-    "//java/com/google/android/apps/internal/admobsdk/mediumtest:__subpackages__",
-    "//java/com/google/android/apps/play/store:__subpackages__",
-    "//java/com/google/android/libraries/internal/growth:__subpackages__",
-    "//javatests/com/google/android/apps/dynamite:__subpackages__",
-    "//javatests/com/google/android/apps/internal/admobsdk/mediumtest:__subpackages__",
-    "//javatests/com/google/android/apps/play/store:__subpackages__",
-    "//javatests/com/google/android/gmscore/dev/modules/measurement:__subpackages__",
-    "//javatests/com/google/android/gmscore/integ/modules/measurement:__subpackages__",
-    "//javatests/com/google/android/libraries/internal/growth:__subpackages__",
-    "//testing/web/browsers:__subpackages__",
-    "//tools/android/emulator/mpm:__subpackages__",
-    "//tools/android/tab/worker:__subpackages__",
-    "//third_party/java_src/android_app/carrierservices/javatests/com/google/android/ims/mobly/snippets:__subpackages__",
-    "//voice/testing:__subpackages__",
 ]
 
 # TODO: Get rid of compressed images once the whitelist is empty.

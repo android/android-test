@@ -66,8 +66,8 @@ java_library(
         "AbstractRegexpLineProcessor.java",
         "AdbDevicesLineProcessor.java",
         "AdbInstrumentationListProcessor.java",
-        "AdbReporter.java",
         "AndroidPropertyProcessor.java",
+        "ExecReporter.java",
         "InstrumentationTestRunnerProcessor.java",
         "ShellVariableProcessor.java",
         "SimpleLineListProcessor.java",
@@ -151,12 +151,12 @@ java_library(
     srcs = ["DeviceBrokerFactory.java"],
     visibility = ["//visibility:public"],
     deps = [
-        ":adb_reporter_module",
         ":anno",
         ":base_module",
         ":broker_decorators",
         ":broker_intf",
         ":environment",
+        ":exec_reporter_module",
         ":jcommander_support",
         ":local_device",
         ":port_manager_module",
@@ -168,11 +168,11 @@ java_library(
 )
 
 java_library(
-    name = "adb_reporter_module",
+    name = "exec_reporter_module",
     srcs = [
-        "AdbReporter.java",
-        "AdbReporterModule.java",
-        "NoOpAdbReporter.java",
+        "ExecReporter.java",
+        "ExecReporterModule.java",
+        "NoOpExecReporter.java",
     ],
     deps = [
         ":anno",

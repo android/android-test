@@ -135,6 +135,10 @@ public class AdbController {
 
   private static final String ORCHESTRATOR_COMPONENT_NAME =
       "androidx.test.orchestrator/androidx.test.orchestrator.AndroidTestOrchestrator";
+
+  private static final String IO_ERROR_MSG =
+      "List of files from %s could not be retrieved. Most likely and I/O error has occured.";
+
   public static final String ANDROID_TEST_SERVICES_PACKAGE = "androidx.test.services";
 
   private final Provider<Integer> portPicker;
@@ -788,12 +792,21 @@ public class AdbController {
 
     File[] files = hostDestination.listFiles();
     if (files == null) {
-      throw new RuntimeException(
-          String.format(
-              "List of files from %s could not be retrieved. Most likely and I/O error has"
-                  + " occured.",
-              deviceSource));
+      throw new RuntimeException(String.format(IO_ERROR_MSG, deviceSource));
     }
+
+    // Pull behavior was changed to transfer directory as opposed to its contents.
+    // android.googlesource.com/platform/system/core/+/07db1196e7bd5856b5e2ebe4ea6791d2ae8c9e76.
+    // This behavior was copied by adb.turbo and AndroidGoogleTest depends on this behavior
+    // in order to clean test state.
+    // If we pulled a directory, then we return the contents to conform to such expectations.
+    if (files.length == 1 && files[0].isDirectory()) {
+      files = files[0].listFiles();
+      if (files == null) {
+        throw new RuntimeException(String.format(IO_ERROR_MSG, deviceSource));
+      }
+    }
+
     return Lists.newArrayList(files);
   }
 

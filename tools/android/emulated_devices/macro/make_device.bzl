@@ -13,6 +13,7 @@ load(
 load(
     "//tools/android/emulated_devices:macro/emulator.bzl",
     "emulator_default_visibility",
+    "emulator_is_qemu2",
     "emulator_suffix",
     "emulator_tags",
     "supported_arches_for_api",
@@ -31,7 +32,6 @@ load(
     "QEMU",
     "QEMU2",
     "TYPE_TO_EMULATOR",
-    "emulator_is_qemu2",
     "extra_system_image_contents",
 )
 load(
@@ -53,19 +53,6 @@ _property_writer = rule(
 HEAP_GROWTH_LIMIT = "dalvik.vm.heapgrowthlimit"
 
 G3_ACTIVITY_CONTROLLER = "//tools/android/emulator:daemon/g3_activity_controller.jar"
-
-DEX2OAT_PARSER = "//tools/android/emulator:daemon/dex2oat_parser"
-
-TRAVERSAL_BINARIES = [
-    "//tools/android/emulator:daemon/x86/pipe_traversal",
-    "//tools/android/emulator:daemon/armeabi/pipe_traversal",
-    "//tools/android/emulator:daemon/armeabi-v7a/pipe_traversal",
-]
-
-WATERFALL_BINARIES = [
-    "//third_party/h2o/waterfall/prebuilt/x86:waterfall",
-    "//third_party/h2o/waterfall/prebuilt/arm:waterfall",
-]
 
 _ENABLE_SNAPSHOT = True
 _DISABLE_SNAPSHOT = False

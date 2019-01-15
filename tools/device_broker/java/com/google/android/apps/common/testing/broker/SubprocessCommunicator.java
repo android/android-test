@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Throwables.throwIfUnchecked;
 
-import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.AdbReporterAnnotation;
+import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.ExecReporterAnnotation;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.ExecutorLocation;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.SubprocessExecution;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.SubprocessLogDir;
@@ -74,7 +74,7 @@ public class SubprocessCommunicator {
   private final TimeUnit unit;
   private final LineProcessor<?> stdoutProcessor;
   private final LineProcessor<?> stderrProcessor;
-  private final AdbReporter adbReporter;
+  private final ExecReporter adbReporter;
   private File logFile;
   @Nullable private final String input;
   private final AtomicBoolean communicatorCalled = new AtomicBoolean(false);
@@ -136,8 +136,7 @@ public class SubprocessCommunicator {
       // Also encode exit status in log file name to help debugging.
       String newSuffix = "ok.txt";
       if (returnCode != 0) {
-        // Note that we intentionally don't record this as an adb failure.
-        // The command failed, but the execution completed succefully.
+        success = false;
         newSuffix = "fail.txt";
       }
       File newName = new File(logFile.getPath().replaceAll("txt$", newSuffix));
@@ -148,7 +147,6 @@ public class SubprocessCommunicator {
       }
     } catch (IOException ignore) {
       /* lumber on and let the caller handle the return */
-      success = false;
     } finally {
       adbReporter.report(
           String.format("%s:%s", EXEC_NAMESPACE, commandBasename),
@@ -230,7 +228,7 @@ public class SubprocessCommunicator {
     private final ExecutorService executor;
     private final File logDir;
     private final String executorLocation;
-    private final AdbReporter adbReporter;
+    private final ExecReporter adbReporter;
     private List<String> arguments;
     private Map<String, String> environment = Maps.newHashMap();
     private long timeout = 60;
@@ -246,7 +244,7 @@ public class SubprocessCommunicator {
         @SubprocessExecution ExecutorService executor,
         @SubprocessLogDir File logDir,
         @ExecutorLocation String executorLocation,
-        @AdbReporterAnnotation AdbReporter adbReporter) {
+        @ExecReporterAnnotation ExecReporter adbReporter) {
       this.executor = executor;
       this.logDir = logDir;
       this.executorLocation = executorLocation;
