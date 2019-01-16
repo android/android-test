@@ -103,7 +103,7 @@ public class RunnerArgs {
   public final List<String> testPackages;
   public final List<String> notTestPackages;
   public final String testSize;
-  public final String annotation;
+  public final List<String> annotations;
   public final List<String> notAnnotations;
   public final long testTimeout;
   public final List<RunListener> listeners;
@@ -161,7 +161,7 @@ public class RunnerArgs {
     this.testPackages = builder.testPackages;
     this.notTestPackages = builder.notTestPackages;
     this.testSize = builder.testSize;
-    this.annotation = builder.annotation;
+    this.annotations = Collections.unmodifiableList(builder.annotations);
     this.notAnnotations = Collections.unmodifiableList(builder.notAnnotations);
     this.testTimeout = builder.testTimeout;
     this.listeners = Collections.unmodifiableList(builder.listeners);
@@ -194,8 +194,8 @@ public class RunnerArgs {
     private List<String> testPackages = new ArrayList<>();
     private List<String> notTestPackages = new ArrayList<>();
     private String testSize = null;
-    private String annotation = null;
-    private List<String> notAnnotations = new ArrayList<String>();
+    private final List<String> annotations = new ArrayList<>();
+    private final List<String> notAnnotations = new ArrayList<>();
     private long testTimeout = -1;
     private List<RunListener> listeners = new ArrayList<RunListener>();
     private List<Filter> filters = new ArrayList<>();
@@ -247,7 +247,7 @@ public class RunnerArgs {
       this.runnerBuilderClasses.addAll(
           parseAndLoadClasses(bundle.getString(ARGUMENT_RUNNER_BUILDER), RunnerBuilder.class));
       this.testSize = bundle.getString(ARGUMENT_TEST_SIZE);
-      this.annotation = bundle.getString(ARGUMENT_ANNOTATION);
+      this.annotations.addAll(parseStrings(bundle.getString(ARGUMENT_ANNOTATION)));
       this.notAnnotations.addAll(parseStrings(bundle.getString(ARGUMENT_NOT_ANNOTATION)));
       this.testTimeout = parseUnsignedLong(bundle.getString(ARGUMENT_TIMEOUT), ARGUMENT_TIMEOUT);
       this.numShards = parseUnsignedInt(bundle.get(ARGUMENT_NUM_SHARDS), ARGUMENT_NUM_SHARDS);

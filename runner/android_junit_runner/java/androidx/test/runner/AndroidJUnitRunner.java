@@ -68,8 +68,7 @@ import org.junit.runners.model.RunnerBuilder;
  * androidx.test.InstrumentationRegistry} if needed.
  *
  * <p>In an appropriate AndroidManifest.xml, define an instrumentation with android:name set to
- * {@link androidx.test.runner.AndroidJUnitRunner} and the appropriate android:targetPackage
- * set.
+ * {@link androidx.test.runner.AndroidJUnitRunner} and the appropriate android:targetPackage set.
  *
  * <p>
  *
@@ -127,12 +126,15 @@ import org.junit.runners.model.RunnerBuilder;
  * com.android.foo/androidx.test.runner.AndroidJUnitRunner
  *
  * <p><b>Filter test run to tests with given annotation:</b> adb shell am instrument -w -e
- * annotation com.android.foo.MyAnnotation
- * com.android.foo/androidx.test.runner.AndroidJUnitRunner
+ * annotation com.android.foo.MyAnnotation com.android.foo/androidx.test.runner.AndroidJUnitRunner
  *
  * <p>If used with other options, the resulting test run will contain the intersection of the two
  * options. e.g. "-e size large -e annotation com.android.foo.MyAnnotation" will run only tests with
  * both the {@link LargeTest} and "com.android.foo.MyAnnotation" annotations.
+ *
+ * <p><b>Filter test run to tests <i>with all</i> annotations in a list:</b> adb shell am instrument
+ * -w -e annotation com.android.foo.MyAnnotation,com.android.foo.AnotherAnnotation
+ * com.android.foo/androidx.test.runner.AndroidJUnitRunner
  *
  * <p><b>Filter test run to tests <i>without</i> given annotation:</b> adb shell am instrument -w -e
  * notAnnotation com.android.foo.MyAnnotation
@@ -225,16 +227,15 @@ import org.junit.runners.model.RunnerBuilder;
  * under test for each invocation. This allows us to measure both the count of unique packages using
  * this library as well as the volume of usage.
  *
- * <p><b>(Beta)To specify a custom {@link
- * androidx.test.runner.screenshot.ScreenCaptureProcessor} to use when processing a {@link
- * androidx.test.runner.screenshot.ScreenCapture} produced by {@link
+ * <p><b>(Beta)To specify a custom {@link androidx.test.runner.screenshot.ScreenCaptureProcessor} to
+ * use when processing a {@link androidx.test.runner.screenshot.ScreenCapture} produced by {@link
  * androidx.test.runner.screenshot.Screenshot#capture}</b>: -e screenCaptureProcessors
  * com.foo.Processor,com.foo.Processor2
  *
- * <p>If no {@link androidx.test.runner.screenshot.ScreenCaptureProcessor} is provided then
- * the {@link androidx.test.runner.screenshot.BasicScreenCaptureProcessor} is used. If one or
- * more are provided the {@link androidx.test.runner.screenshot.BasicScreenCaptureProcessor}
- * is not used unless it is one of the ones provided.
+ * <p>If no {@link androidx.test.runner.screenshot.ScreenCaptureProcessor} is provided then the
+ * {@link androidx.test.runner.screenshot.BasicScreenCaptureProcessor} is used. If one or more are
+ * provided the {@link androidx.test.runner.screenshot.BasicScreenCaptureProcessor} is not used
+ * unless it is one of the ones provided.
  *
  * <p><b>(Beta) To specify a remote static method for the runner to attempt to call reflectively:
  * </b> adb shell am instrument -w -e remoteMethod com.foo.bar#init

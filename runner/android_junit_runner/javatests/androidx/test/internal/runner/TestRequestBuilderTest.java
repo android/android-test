@@ -26,6 +26,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.FlakyTest;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.MediumTest;
 import androidx.test.filters.RequiresDevice;
@@ -218,6 +219,7 @@ public class TestRequestBuilderTest {
 
     @Test
     @SmallTest
+    @FlakyTest
     public void testSmallSkipped() {
       Assert.fail("should not run");
     }
@@ -844,6 +846,42 @@ public class TestRequestBuilderTest {
     Assert.assertEquals(1, result.getRunCount());
     Assert.assertEquals(
         "testRunThis", result.getFailures().get(0).getDescription().getMethodName());
+  }
+
+  /** Test provided multiple annotations to include. */
+  @Test
+  public void testTestSizeFilter_multipleAnnotation() {
+    Request request =
+        builder
+            .addAnnotationInclusionFilter(SmallTest.class.getName())
+            .addAnnotationInclusionFilter(FlakyTest.class.getName())
+            .addTestClass(SampleRunnerFilterSizeTest.class.getName())
+            .addTestClass(SampleMultipleAnnotation.class.getName())
+            .build();
+    JUnitCore testRunner = new JUnitCore();
+    Result result = testRunner.run(request);
+    // expect 1 test that failed
+    Assert.assertEquals(1, result.getRunCount());
+    Assert.assertEquals(1, result.getFailureCount());
+    Assert.assertEquals(
+        "testSmallSkipped", result.getFailures().get(0).getDescription().getMethodName());
+  }
+
+  /** Test provided both include and exclude annotations. */
+  @Test
+  public void testTestSizeFilter_annotationAndNotAnnotationAtMethod() {
+    Request request =
+        builder
+            .addAnnotationInclusionFilter(SmallTest.class.getName())
+            .addAnnotationExclusionFilter(FlakyTest.class.getName())
+            .addTestClass(SampleRunnerFilterSizeTest.class.getName())
+            .addTestClass(SampleMultipleAnnotation.class.getName())
+            .build();
+    JUnitCore testRunner = new JUnitCore();
+    Result result = testRunner.run(request);
+    // expect 1 test that passed.
+    Assert.assertEquals(1, result.getRunCount());
+    Assert.assertEquals(0, result.getFailureCount());
   }
 
   /** Test the sharding filter. */

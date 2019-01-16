@@ -729,8 +729,8 @@ public class TestRequestBuilder {
     if (runnerArgs.testSize != null) {
       addTestSizeFilter(TestSize.fromString(runnerArgs.testSize));
     }
-    if (runnerArgs.annotation != null) {
-      addAnnotationInclusionFilter(runnerArgs.annotation);
+    for (String annotation : runnerArgs.annotations) {
+      addAnnotationInclusionFilter(annotation);
     }
     for (String notAnnotation : runnerArgs.notAnnotations) {
       addAnnotationExclusionFilter(notAnnotation);
