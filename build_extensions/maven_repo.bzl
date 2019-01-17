@@ -179,18 +179,15 @@ maven_artifact = rule(
     attrs = {
         "src": attr.label(
             mandatory = True,
-            single_file = True,
-            allow_files = [".aar", ".jar", ".apk"],
+            allow_single_file = [".aar", ".jar", ".apk"],
         ),
         "src_jar": attr.label(
             mandatory = True,
-            single_file = True,
-            allow_files = [".jar"],
+            allow_single_file = [".jar"],
         ),
         "javadoc_jar": attr.label(
             mandatory = False,
-            single_file = True,
-            allow_files = [".jar", ".zip"],
+            allow_single_file = [".jar", ".zip"],
         ),
         "group_id": attr.string(mandatory = True),
         "artifact_id": attr.string(mandatory = True),
