@@ -29,5 +29,13 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+    <activity
+        android:name=".ImplicitActivity"
+        android:exported="false">
+      <intent-filter>
+        <action android:name="androidx.test.core.app.testing.TEST_ACTION"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+      </intent-filter>
+    </activity>
   </application>
 </manifest>

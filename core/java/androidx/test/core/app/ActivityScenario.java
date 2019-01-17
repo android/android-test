@@ -296,7 +296,16 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
       new ActivityLifecycleCallback() {
         @Override
         public void onActivityLifecycleChanged(Activity activity, Stage stage) {
-          if (!startActivityIntent.filterEquals(activity.getIntent())) {
+          Intent expectedIntent = new Intent(startActivityIntent);
+          // The Android framework adds the resulting component to implicit intents, which causes
+          // the filterEquals call below to fail for these intents. To work around this, add the
+          // component here manually.
+          expectedIntent.setComponent(
+              expectedIntent.resolveActivity(activity.getApplicationContext().getPackageManager()));
+          android.util.Log.i("AWEILAND", "startActivityIntent=" + startActivityIntent);
+          android.util.Log.i("AWEILAND", "expectedIntent     =" + expectedIntent);
+          android.util.Log.i("AWEILAND", "activityIntent     =" + activity.getIntent());
+          if (!expectedIntent.filterEquals(activity.getIntent())) {
             return;
           }
           lock.lock();

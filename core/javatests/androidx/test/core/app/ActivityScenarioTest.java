@@ -24,6 +24,7 @@ import android.app.Activity;
 import androidx.lifecycle.Lifecycle.State;
 import android.content.Intent;
 import androidx.test.core.app.testing.FinishItselfActivity;
+import androidx.test.core.app.testing.ImplicitActivity;
 import androidx.test.core.app.testing.RecreationRecordingActivity;
 import androidx.test.core.app.testing.RedirectingActivity;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -60,6 +61,14 @@ public final class ActivityScenarioTest {
   public void redirectingActivityShouldBeLaunchable() throws Exception {
     try (ActivityScenario<RedirectingActivity> scenario =
         ActivityScenario.launch(RedirectingActivity.class)) {}
+  }
+
+  @Test
+  public void implicitActivityShouldBeLaunchable() throws Exception {
+    try (ActivityScenario<ImplicitActivity> scenario =
+        ActivityScenario.launch(
+            new Intent("androidx.test.core.app.testing.TEST_ACTION")
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))) {}
   }
 
   @Test
