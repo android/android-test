@@ -42,7 +42,7 @@ load(
 def _property_writer_impl(ctx):
     """Outputs a property file."""
     output = ctx.outputs.out
-    ctx.file_action(output = output, content = ctx.attr.content)
+    ctx.actions.write(output = output, content = ctx.attr.content)
 
 _property_writer = rule(
     attrs = {"content": attr.string()},
