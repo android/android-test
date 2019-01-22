@@ -120,7 +120,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         sim_access_rules_file=None,
         phone_number=None,
         source_properties=None,
-        use_h2o=False,
+        use_waterfall=False,
         forward_bin=None,
         ports_bin=None)
 
@@ -195,7 +195,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         sim_access_rules_file=None,
         phone_number=None,
         source_properties=None,
-        use_h2o=False,
+        use_waterfall=False,
         forward_bin=None,
         ports_bin=None)
 
@@ -266,7 +266,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         sim_access_rules_file=None,
         phone_number=None,
         source_properties=None,
-        use_h2o=False,
+        use_waterfall=False,
         forward_bin=None,
         ports_bin=None)
 
@@ -343,7 +343,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         sim_access_rules_file=None,
         phone_number=None,
         source_properties=None,
-        use_h2o=False,
+        use_waterfall=False,
         forward_bin=None,
         ports_bin=None)
 
@@ -505,7 +505,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_single_step=False,
         source_properties=None,
         mini_boot=False,
-        use_h2o=False,
+        use_waterfall=False,
         forward_bin=None,
         ports_bin=None)
     self.mox.StubOutWithMock(initial_boot_device, 'Configure')
@@ -574,7 +574,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         enable_single_step=False,
         source_properties=None,
         mini_boot=False,
-        use_h2o=False,
+        use_waterfall=False,
         forward_bin=None,
         ports_bin=None)
     self.mox.StubOutWithMock(initial_boot_device, 'Configure')

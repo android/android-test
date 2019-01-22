@@ -61,10 +61,11 @@ filegroup(
     # support dependencies for using the emulator (eg - xvfb, polite adb.)
     srcs = [
         "support/adb.turbo",
-        "support/adb_bin",
         "support/cache.img.tar.gz",
         "support/default_sdcard.256.img.tar.gz",
-        "support/forward_bin",
+        "support/waterfall/forward_bin",
+        "support/waterfall/ports_bin",
+        "support/waterfall/waterfall_bin",
     ],
 )
 

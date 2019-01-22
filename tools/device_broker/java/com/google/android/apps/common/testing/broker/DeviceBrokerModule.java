@@ -304,7 +304,7 @@ class DeviceBrokerModule extends AbstractModule {
       controller =
           new File(
               dataDir,
-              "tools/android/emulator/support/adb_bin");
+              "tools/android/emulator/support/waterfall/waterfall_bin");
     } else {
       controller = new File(dataDir, "tools/android/emulator/support/adb.turbo");
     }

@@ -237,9 +237,9 @@ _DEFAULT_QEMU_TELNET_PORT = 52222
 _BOOTSTRAP_PKG = 'com.google.android.apps.common.testing.services.bootstrap'
 _DEX2OAT = 'android_test_support/tools/android/emulator/daemon/dex2oat'
 _BOOTSTRAP_PATH = 'android_test_support/tools/android/emulator/daemon/bootstrap.apk'
-_FORWARDER_PATH = 'android_test_support/tools/android/emulator/support/forward_bin'
+_FORWARDER_PATH = 'android_test_support/tools/android/emulator/support/waterfall/forward_bin'
 _FORWARD_BIN = 'forward_bin'
-_PORTS_PATH = 'android_test_support/tools/android/emulator/support/ports_bin'
+_PORTS_PATH = 'android_test_support/tools/android/emulator/support/waterfall/ports_bin'
 _PORTS_BIN = 'ports_bin'
 
 _DEFAULT_BROADCAST_ACTION = 'ACTION_MOBILE_NINJAS_START'
@@ -339,7 +339,7 @@ class EmulatedDevice(object):
                sim_access_rules_file=None,
                phone_number=None,
                source_properties=None,
-               use_h2o=False,
+               use_waterfall=False,
                forward_bin=None,
                ports_bin=None):
     self.adb_server_port = adb_server_port
@@ -386,7 +386,7 @@ class EmulatedDevice(object):
     self._sim_access_rules_file = sim_access_rules_file
     self._source_properties = source_properties
     self._phone_number = phone_number
-    self._use_h2o = use_h2o
+    self._use_waterfall = use_waterfall
     self._forward_bin = forward_bin
     self._ports_bin = ports_bin
 
@@ -1794,7 +1794,7 @@ class EmulatedDevice(object):
     self._sockets_dir = os.path.join(exec_dir, 'sockets')
     os.makedirs(self._sockets_dir)
 
-    if self._use_h2o:
+    if self._use_waterfall:
       if not self._forward_bin:
         with contextlib.closing(
             resources.GetResourceAsFile(_FORWARDER_PATH)) as fwdr:
@@ -1846,6 +1846,11 @@ class EmulatedDevice(object):
     self.ExecOnDevice(['setprop', 'qemu.host.socket.dir',
                        str(self._sockets_dir)])
     self.ExecOnDevice(['setprop', 'qemu.host.hostname', socket.gethostname()])
+
+    # TODO: remove once waterfall is default and scuba is fixed
+    # permanently
+    waterfall_on = '1' if self._use_waterfall else '0'
+    self.ExecOnDevice(['setprop', 'mdevx.waterfall', waterfall_on])
     if not loading_from_snapshot:
       # set screen off timeout to 30 minutes.
       self._SetDeviceSetting(self.GetApiVersion(), 'system',
@@ -1950,7 +1955,7 @@ class EmulatedDevice(object):
     pids_to_fns = {}
     killable = {}
     pipe_service_processes = []
-    if self._use_h2o:
+    if self._use_waterfall:
       logging.info('Starting waterfall processes.')
       for fn in waterfall_fns:
         p = fn()
@@ -2422,7 +2427,7 @@ class EmulatedDevice(object):
         if not pipe_traversal_ready:
           continue
 
-      if not waterfall_listening and self._use_h2o:
+      if not waterfall_listening and self._use_waterfall:
         waterfall_listening = attempter.AttemptStep(
             self._WaterfallListeningStep, 'Checking if waterfall is listening.',
             _WATERFALL_LISTENING_CHECK, _WATERFALL_LISTENING_CHECK_FAIL_SLEEP)
@@ -3210,9 +3215,9 @@ class EmulatedDevice(object):
         self._SnapshotFile(),
         self._RamdiskFile()]
 
-    if os.path.exists(self._EncryptionKeyImageFile()):
-      image_files.append(
-          self._EncryptionKeyImageFile() + self._PossibleImgSuffix())
+    encryption_qcow = self._EncryptionKeyImageFile() + self._PossibleImgSuffix()
+    if os.path.exists(encryption_qcow):
+      image_files.append(encryption_qcow)
 
     if os.path.exists(self._VendorFile()):
       image_files.append(self._VendorFile() + self._PossibleImgSuffix())
