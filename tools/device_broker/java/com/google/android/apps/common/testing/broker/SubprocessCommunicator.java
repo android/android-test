@@ -285,7 +285,7 @@ public class SubprocessCommunicator {
     public SubprocessCommunicator build() {
       commandBasename = new File(arguments.get(0)).getName();
       String subCommand = ".";
-      if ((commandBasename.equals("adb.turbo") || commandBasename.equals("adb_bin"))
+      if ((commandBasename.equals("adb.turbo") || commandBasename.equals("waterfall_bin"))
           && arguments.get(1).equals("-s")) {
         // It should be something like adb.turbo -s localhost:123 shell ls
         subCommand = arguments.get(3);

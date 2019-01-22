@@ -119,7 +119,11 @@ flags.DEFINE_string(
 flags.DEFINE_string('adb_static', None, 'OBSOLETE: the path to adb.static')
 flags.DEFINE_string('adb_turbo', None, 'The path to turbo adb')
 flags.DEFINE_string('forward_bin', None, 'The path to h2o forwarder binary')
-flags.DEFINE_string('adb_bin', None, 'The path to h2o adb binary')
+flags.DEFINE_string('adb_bin', None, '[DEPRECATED] do not use. '
+                    'Will be removed within a couple releases. '
+                    '--waterfall_bin should be used instead.')
+flags.DEFINE_string('waterfall_bin', None, 'The path to the waterfall '
+                    'adb binary')
 flags.DEFINE_string('ports_bin', None, 'The path to h2o port forwarder binary')
 flags.DEFINE_string('emulator_x86_static', None, 'Deprecated. NO-OP.')
 flags.DEFINE_string('emulator_arm_static', None, 'Deprecated. NO-OP.')
@@ -227,7 +231,10 @@ flags.DEFINE_string('snapshot_file', None, '[bazel ONLY] The path to the '
                     'snapshot file that was saved in BOOT cycle and is used '
                     'during START cycle.')
 flags.DEFINE_bool(
-    'use_h2o', False, 'Whether to use H2O to control the device. '
+    'use_h2o', False, '[DEPRECATED] this flag will be removed within a couple '
+    'releases. --use_waterfall should be used instead')
+flags.DEFINE_bool(
+    'use_waterfall', False, 'Whether to use waterfall to control the device. '
     'Note that if this option is true, turbo will not be '
     'configured.')
 
@@ -331,7 +338,7 @@ def _FirstBootAtBuildTimeOnly(
       enable_single_step=enable_single_step,
       source_properties=source_properties,
       mini_boot=mini_boot,
-      use_h2o=FLAGS.use_h2o,
+      use_waterfall=FLAGS.use_h2o or FLAGS.use_waterfall,
       forward_bin=FLAGS.forward_bin,
       ports_bin=FLAGS.ports_bin)
   device.delete_temp_on_exit = False  # we will do it ourselves.
@@ -634,7 +641,7 @@ def _Run(adb_server_port,
       sim_access_rules_file=sim_access_rules_file,
       phone_number=phone_number,
       source_properties=_ReadSourceProperties(FLAGS.source_properties_file),
-      use_h2o=FLAGS.use_h2o,
+      use_waterfall=FLAGS.use_h2o or FLAGS.use_waterfall,
       forward_bin=FLAGS.forward_bin,
       ports_bin=FLAGS.forward_bin)
 
@@ -1003,12 +1010,12 @@ def _MakeAndroidPlatform():
   platform.base_emulator_path = base_emulator_path
 
   adb_path = None
-  if FLAGS.use_h2o:
-    if FLAGS.adb_bin:
-      adb_path = FLAGS.adb_bin
+  if FLAGS.use_h2o or FLAGS.use_waterfall:
+    if FLAGS.adb_bin or FLAGS.waterfall_bin:
+      adb_path = FLAGS.adb_bin or FLAGS.waterfall_bin
     else:
       adb_path = (''
-                  'tools/android/emulator/support/adb_bin')
+                  'tools/android/emulator/support/waterfall/waterfall_bin')
   else:
     if FLAGS.adb_turbo:
       adb_path = FLAGS.adb_turbo
