@@ -24,11 +24,13 @@ import android.app.Activity;
 import androidx.lifecycle.Lifecycle.State;
 import android.content.Intent;
 import androidx.test.core.app.testing.FinishItselfActivity;
+import androidx.test.core.app.testing.ImplicitActivity;
 import androidx.test.core.app.testing.RecreationRecordingActivity;
 import androidx.test.core.app.testing.RedirectingActivity;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -60,6 +62,28 @@ public final class ActivityScenarioTest {
   public void redirectingActivityShouldBeLaunchable() throws Exception {
     try (ActivityScenario<RedirectingActivity> scenario =
         ActivityScenario.launch(RedirectingActivity.class)) {}
+  }
+
+  @Test
+  @Ignore // does not work in robolectric
+  public void redirectedActivityShouldBeLaunchable() throws Exception {
+    try (ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(
+            new Intent(ApplicationProvider.getApplicationContext(), RedirectingActivity.class),
+            RecreationRecordingActivity.class::isInstance)) {}
+  }
+
+  @Test
+  public void implicitActivityShouldBeLaunchable() throws Exception {
+    String testAction = "androidx.test.core.app.testing.TEST_ACTION";
+    try (ActivityScenario<ImplicitActivity> scenario =
+        ActivityScenario.launch(
+            new Intent(testAction)
+                .setPackage(ApplicationProvider.getApplicationContext().getPackageName())
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+            activity ->
+                activity instanceof ImplicitActivity
+                    && testAction.equals(activity.getIntent().getAction()))) {}
   }
 
   @Test

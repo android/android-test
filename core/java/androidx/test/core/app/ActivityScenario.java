@@ -140,6 +140,14 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   private final Intent startActivityIntent;
 
   /**
+   * A predicate to identify the desired started activity.
+   *
+   * <p>If not specified, defaults to {@link Intent#filterEquals} comparing the input intent to the
+   * activity's intent.
+   */
+  private final ActivityPredicate startedActivityPredicate;
+
+  /**
    * A current activity stage. This variable is updated by {@link ActivityLifecycleMonitor} from the
    * main thread.
    */
@@ -155,7 +163,8 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   private A currentActivity;
 
   /** Private constructor. Use {@link #launch} to instantiate this class. */
-  private ActivityScenario(Intent startActivityIntent) {
+  private ActivityScenario(Intent startActivityIntent, ActivityPredicate startedActivityPredicate) {
+    android.util.Log.i("AWEILAND", "constructor intent=" + startActivityIntent);
     checkState(
         Settings.System.getInt(
                 getInstrumentation().getTargetContext().getContentResolver(),
@@ -164,6 +173,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
             == 0,
         "\"Don't keep activities\" developer options must be disabled for ActivityScenario");
     this.startActivityIntent = checkNotNull(startActivityIntent);
+    this.startedActivityPredicate = checkNotNull(startedActivityPredicate);
     currentActivityStage = Stage.PRE_ON_CREATE;
   }
 
@@ -186,9 +196,10 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
 
   /**
    * Launches an activity by using a given intent and constructs ActivityScenario with the activity.
-   * Waits for the lifecycle state transitions to be complete.
    *
-   * <p>Normally this would be {@link State#RESUMED}, but may be another state.
+   * <p>Waits for the lifecycle state transitions to be complete for an activity started with an
+   * intent that {@link Intent#filterEquals} the input intent. Normally this would be {@link
+   * State#RESUMED}, but may be another state.
    *
    * <p>This method cannot be called from the main thread except in Robolectric tests.
    *
@@ -197,10 +208,42 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * @return ActivityScenario which you can use to make further state transitions
    */
   public static <A extends Activity> ActivityScenario<A> launch(Intent startActivityIntent) {
+    return launch(
+        startActivityIntent, activity -> startActivityIntent.filterEquals(activity.getIntent()));
+  }
+
+  /**
+   * A functional interface used to identify the desired activity that should be expected to start.
+   *
+   * @see #launch(Intent, ActivityPredicate)
+   */
+  public interface ActivityPredicate {
+    boolean apply(Activity activity);
+  }
+
+  /**
+   * Launches an activity by using a given intent and constructs ActivityScenario with the activity.
+   *
+   * <p>Waits for the lifecycle state transitions to be complete for an activity started with an
+   * intent that satisfies the input {@link ActivityPredicate}. Normally this would be {@link
+   * State#RESUMED}, but may be another state.
+   *
+   * <p>This method cannot be called from the main thread except in Robolectric tests.
+   *
+   * @param startActivityIntent an intent to start the activity
+   * @param startedActivityPredicate a predicate to identify the desired started activity
+   * @throws AssertionError if the lifecycle state transition never completes within the timeout
+   * @return ActivityScenario which you can use to make further state transitions
+   */
+  public static <A extends Activity> ActivityScenario<A> launch(
+      Intent startActivityIntent, ActivityPredicate startedActivityPredicate) {
+    android.util.Log.i("AWEILAND", "launch intent=" + startActivityIntent);
     checkNotMainThread();
     getInstrumentation().waitForIdleSync();
 
-    ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(startActivityIntent));
+    ActivityScenario<A> scenario =
+        new ActivityScenario<>(
+            checkNotNull(startActivityIntent), checkNotNull(startedActivityPredicate));
     ActivityLifecycleMonitorRegistry.getInstance()
         .addLifecycleCallback(scenario.activityLifecycleObserver);
 
@@ -296,7 +339,10 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
       new ActivityLifecycleCallback() {
         @Override
         public void onActivityLifecycleChanged(Activity activity, Stage stage) {
-          if (!startActivityIntent.filterEquals(activity.getIntent())) {
+          android.util.Log.i("AWEILAND", "started intent=" + startActivityIntent);
+          android.util.Log.i("AWEILAND", "activity      =" + activity);
+          android.util.Log.i("AWEILAND", "intent        =" + activity.getIntent());
+          if (!startedActivityPredicate.apply(activity)) {
             return;
           }
           lock.lock();
