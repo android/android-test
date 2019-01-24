@@ -33,11 +33,6 @@ public class TestOutputEmitter {
                 public boolean takeScreenshot(String outputName) {
                   return false;
                 }
-
-                @Override
-                public boolean captureWindowHierarchy(String outputName) {
-                  return false;
-                }
               });
 
   private TestOutputEmitter() {}
@@ -50,10 +45,5 @@ public class TestOutputEmitter {
   /** Output a screenshot back to the execution environment. */
   public static boolean takeScreenshot(String outputName) {
     return debugHandler.takeScreenshot(outputName);
-  }
-
-  /** Output the window hierarchy XML dump to the execution environment. */
-  public static boolean captureWindowHierarchy(String outputName) {
-    return debugHandler.captureWindowHierarchy(outputName);
   }
 }
