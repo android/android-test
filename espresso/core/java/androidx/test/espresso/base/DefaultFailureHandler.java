@@ -50,7 +50,9 @@ public final class DefaultFailureHandler implements FailureHandler {
 
   @Override
   public void handle(Throwable error, Matcher<View> viewMatcher) {
-    TestOutputEmitter.takeScreenshot("view-op-error-" + failureCount.incrementAndGet() + ".png");
+    int count = failureCount.incrementAndGet();
+    TestOutputEmitter.takeScreenshot("view-op-error-" + count + ".png");
+    TestOutputEmitter.captureWindowHierarchy("explore-window-hierarchy-" + count + ".xml");
     if (error instanceof EspressoException
         || error instanceof AssertionFailedError
         || error instanceof AssertionError) {
