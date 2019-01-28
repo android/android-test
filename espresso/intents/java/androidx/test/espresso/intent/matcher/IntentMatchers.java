@@ -168,6 +168,22 @@ public final class IntentMatchers {
     };
   }
 
+  public static Matcher<Intent> hasDataString(final Matcher<String> stringMatcher) {
+    checkNotNull(stringMatcher);
+
+    return new TypeSafeMatcher<Intent>() {
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("has data string: ").appendDescriptionOf(stringMatcher);
+      }
+
+      @Override
+      public boolean matchesSafely(Intent intent) {
+        return stringMatcher.matches(intent.getDataString());
+      }
+    };
+  }
+
   public static Matcher<Intent> hasExtraWithKey(String key) {
     return hasExtraWithKey(is(key));
   }
