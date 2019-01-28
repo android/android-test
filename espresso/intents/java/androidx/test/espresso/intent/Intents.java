@@ -183,6 +183,7 @@ public final class Intents {
   public static void intended(
       final Matcher<Intent> matcher, final VerificationMode verificationMode) {
     Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+    instrumentation.waitForIdleSync();
     if (resumedActivitiesExist(instrumentation)) {
       // Running through Espresso to take advantage of its synchronization mechanism.
       onView(isRoot())
@@ -195,7 +196,6 @@ public final class Intents {
               });
     } else {
       // No activities are resumed, so we don't need Espresso's synchronization.
-      instrumentation.waitForIdleSync();
       PropogatingRunnable intendedRunnable =
           new PropogatingRunnable(
               new Runnable() {
