@@ -22,6 +22,7 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasCategories;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasDataString;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtraWithKey;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtras;
@@ -297,6 +298,7 @@ public class IntentMatchersTest {
     assertTrue(hasData(uri.toString()).matches(intent));
     assertTrue(hasData(uri).matches(intent));
     assertTrue(hasData(equalTo(uri)).matches(intent));
+    assertTrue(hasDataString(equalTo(uri.toString())).matches(intent));
   }
 
   @Test
@@ -311,6 +313,8 @@ public class IntentMatchersTest {
     assertFalse(hasData(Uri.parse("https://www.google.com/search?q=NotMatcher")).matches(intent));
     assertFalse(
         hasData(equalTo(Uri.parse("https://www.google.com/search?q=NotMatcher"))).matches(intent));
+    assertFalse(
+        hasDataString(equalTo("https://www.google.com/search?q=NotMatcher")).matches(intent));
   }
 
   @Test
