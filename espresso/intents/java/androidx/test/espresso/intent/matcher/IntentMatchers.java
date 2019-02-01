@@ -319,6 +319,21 @@ public final class IntentMatchers {
     };
   }
 
+  /** Matches an intent if it {@link Intent#filterEquals(Intent)} the expected intent. */
+  public static Matcher<Intent> filterEquals(Intent expectedIntent) {
+    return new TypeSafeMatcher<Intent>() {
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("filterEquals: ").appendValue(expectedIntent);
+      }
+
+      @Override
+      public boolean matchesSafely(Intent intent) {
+        return expectedIntent.filterEquals(intent);
+      }
+    };
+  }
+
   /**
    * Matches an intent if its package is the same as the target package for the instrumentation
    * test.
