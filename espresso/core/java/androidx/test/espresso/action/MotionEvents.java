@@ -109,7 +109,7 @@ public final class MotionEvents {
         boolean longPress = false;
         if (SystemClock.uptimeMillis() > (downTime + ViewConfiguration.getLongPressTimeout())) {
           longPress = true;
-          Log.e(TAG, "Overslept and turned a tap into a long press");
+          Log.w(TAG, "Overslept and turned a tap into a long press");
         }
 
         if (!injectEventSucceeded) {
