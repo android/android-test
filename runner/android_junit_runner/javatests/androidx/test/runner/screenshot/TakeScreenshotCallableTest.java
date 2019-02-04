@@ -16,7 +16,7 @@
 
 package androidx.test.runner.screenshot;
 
-import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -58,7 +58,7 @@ public final class TakeScreenshotCallableTest {
   }
 
   private void initWithStubbedDrawingCache() {
-    doNothing().when(view).setDrawingCacheEnabled(any(Boolean.class));
+    doNothing().when(view).setDrawingCacheEnabled(anyBoolean());
     doReturn(fakeBitmap).when(view).getDrawingCache();
   }
 }
