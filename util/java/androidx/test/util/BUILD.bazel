@@ -1,0 +1,13 @@
+load("//tools/build_defs/android:rules.bzl", "android_library")
+
+package(
+    default_compatible_with = ["//buildenv/target:android"],
+)
+
+licenses(["notice"])  # Apache 2.0
+
+android_library(
+    name = "util",
+    srcs = ["User.java"],
+    visibility = ["//visibility:public"],
+)

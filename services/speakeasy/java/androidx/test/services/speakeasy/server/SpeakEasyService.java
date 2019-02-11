@@ -29,10 +29,14 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import androidx.core.app.NotificationCompat;
+import android.util.Log;
 import androidx.test.services.speakeasy.SpeakEasyProtocol;
+import androidx.test.util.User;
 
 /** Serves SpeakEasy requests. */
 public class SpeakEasyService extends Service {
+
+  private static final String TAG = "SpeakEasyService";
 
   private Looper backgroundLooper;
   private Handler backgroundHandler;
@@ -46,6 +50,8 @@ public class SpeakEasyService extends Service {
   @Override
   public void onCreate() {
     super.onCreate();
+    Log.d(TAG, "onCreate");
+    User.show();
     HandlerThread backgroundThread = new HandlerThread("SpeakEasyService");
     backgroundThread.start();
     backgroundLooper = backgroundThread.getLooper();
@@ -105,6 +111,8 @@ public class SpeakEasyService extends Service {
   }
 
   private void serveIntent(Intent in, int startId) {
+    Log.d(TAG, "serveIntent intent: " + in);
+    User.show();
     SpeakEasyProtocol sep = SpeakEasyProtocol.fromBundle(in.getExtras());
     if (null == sep) {
       return;

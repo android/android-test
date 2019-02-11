@@ -22,9 +22,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import androidx.test.util.User;
 
 /** Proxies the call method from the ContentProvider to the SpeakEasy service. */
 public class SpeakEasyContentProvider extends ContentProvider {
+
+  private static final String TAG = "SpeakEasyContentProvider";
 
   @Override
   public boolean onCreate() {
@@ -59,6 +63,8 @@ public class SpeakEasyContentProvider extends ContentProvider {
 
   @Override
   public Bundle call(String unusedMethod, String unusedpackageName, Bundle extras) {
+    Log.d(TAG, "call");
+    User.show();
     Intent i = new Intent();
     i.setClass(getContext(), SpeakEasyService.class);
     i.putExtras(extras);

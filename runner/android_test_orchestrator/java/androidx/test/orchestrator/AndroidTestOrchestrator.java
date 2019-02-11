@@ -60,6 +60,7 @@ import androidx.test.services.shellexecutor.ClientNotConnected;
 import androidx.test.services.shellexecutor.ShellExecSharedConstants;
 import androidx.test.services.shellexecutor.ShellExecutor;
 import androidx.test.services.shellexecutor.ShellExecutorImpl;
+import androidx.test.util.User;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -181,6 +182,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
       Debug.waitForDebugger();
       Log.i(TAG, "Debugger connected.");
     }
+    User.show();
 
     if (null == arguments.getString(TARGET_INSTRUMENTATION_ARGUMENT)) {
       throw new IllegalArgumentException("You must provide a target instrumentation.");
@@ -217,6 +219,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
       return;
     }
     Context context = getContext();
+    User.show(context);
     for (String permission : permissions) {
       if (PackageManager.PERMISSION_GRANTED == context.checkCallingOrSelfPermission(permission)) {
         continue;

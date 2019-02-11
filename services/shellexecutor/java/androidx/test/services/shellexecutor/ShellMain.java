@@ -20,6 +20,7 @@ import static android.os.Process.killProcess;
 import static android.os.Process.myPid;
 
 import android.util.Log;
+import androidx.test.util.User;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -43,6 +44,7 @@ class ShellMain {
     boolean cleanExit = "1".equals(System.getenv("SM_EXIT"));
 
     String secretKey = server.start();
+    User.show();
 
     // Append the arguments for the binder key in the second last position, before the
     // instrumentation itself.
