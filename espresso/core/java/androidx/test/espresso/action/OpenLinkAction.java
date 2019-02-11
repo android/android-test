@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.action;
 
-import static androidx.test.espresso.matcher.ViewMatchers.hasLinks;
+import static androidx.test.espresso.matcher.ViewMatchers.hasClickables;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -25,6 +25,7 @@ import static org.hamcrest.Matchers.allOf;
 
 import android.net.Uri;
 import android.text.Spanned;
+import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.view.View;
 import android.widget.TextView;
@@ -53,7 +54,7 @@ public final class OpenLinkAction implements ViewAction {
 
   @Override
   public Matcher<View> getConstraints() {
-    return allOf(isDisplayed(), isAssignableFrom(TextView.class), hasLinks());
+    return allOf(isDisplayed(), isAssignableFrom(TextView.class), hasClickables());
   }
 
   @Override
@@ -65,22 +66,28 @@ public final class OpenLinkAction implements ViewAction {
   public void perform(UiController uiController, View view) {
     TextView textView = (TextView) view;
     String allText = textView.getText().toString();
-    URLSpan[] urls = textView.getUrls();
     Spanned spanned = (Spanned) textView.getText();
+    ClickableSpan[] clickableSpans = spanned.getSpans(0, spanned.length(), ClickableSpan.class);
 
     // TODO: what if we get more than one hit? For now, take the first one...
     // In the future, we may want to support a way to disambiguate (e.g using text around the link).
     List<String> allLinks = Lists.newArrayList();
-    for (URLSpan url : urls) {
-      int start = spanned.getSpanStart(url);
-      checkState(start != -1, "Unable to get start of text associated with url: " + url);
-      int end = spanned.getSpanEnd(url);
-      checkState(end != -1, "Unable to get end of text associated with url: " + url);
+    for (ClickableSpan span : clickableSpans) {
+      int start = spanned.getSpanStart(span);
+      checkState(start != -1, "Unable to get start of text associated with span: " + span);
+      int end = spanned.getSpanEnd(span);
+      checkState(end != -1, "Unable to get end of text associated with span: " + span);
       String linkText = allText.substring(start, end);
       allLinks.add(linkText);
-      if (linkTextMatcher.matches(linkText) && uriMatcher.matches(Uri.parse(url.getURL()))) {
-        url.onClick(view);
-        return;
+      if (linkTextMatcher.matches(linkText)) {
+        Uri uri = Uri.EMPTY;
+        if (span instanceof URLSpan) {
+          uri = Uri.parse(((URLSpan) span).getURL());
+        }
+        if (uriMatcher.matches(uri)) {
+          span.onClick(view);
+          return;
+        }
       }
     }
     throw new PerformException.Builder()
@@ -90,8 +97,8 @@ public final class OpenLinkAction implements ViewAction {
             new RuntimeException(
                 String.format(
                     "Link with text '%s' and uri '%s' not found. List of links found in this view: %s\n"
-                        + "List of uris: %s",
-                    linkTextMatcher, uriMatcher, allLinks, Arrays.asList(urls))))
+                        + "List of links: %s",
+                    linkTextMatcher, uriMatcher, allLinks, Arrays.asList(clickableSpans))))
         .build();
   }
 }

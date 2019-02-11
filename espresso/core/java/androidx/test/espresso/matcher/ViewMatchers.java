@@ -31,6 +31,8 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import android.text.Spanned;
+import android.text.style.ClickableSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
@@ -503,6 +505,11 @@ public final class ViewMatchers {
   /** Returns a matcher that matches {@link TextView TextViews} that have links. */
   public static Matcher<View> hasLinks() {
     return new HasLinksMatcher();
+  }
+
+  /** Returns a matcher that matches {@link TextView TextViews} that have ClickableSpans. */
+  public static Matcher<View> hasClickables() {
+    return new HasClickablesMatcher();
   }
 
   /**
@@ -1563,6 +1570,29 @@ public final class ViewMatchers {
     @Override
     public boolean matchesSafely(TextView textView) {
       return textView.getUrls().length > 0;
+    }
+  }
+
+  @VisibleForTesting
+  static final class HasClickablesMatcher extends BoundedMatcher<View, TextView> {
+    @RemoteMsgConstructor
+    private HasClickablesMatcher() {
+      super(TextView.class);
+    }
+
+    @Override
+    public void describeTo(Description description) {
+      description.appendText("has clickables");
+    }
+
+    @Override
+    public boolean matchesSafely(TextView textView) {
+      CharSequence charSequence = textView.getText();
+      if (charSequence instanceof Spanned) {
+        Spanned spanned = (Spanned) textView.getText();
+        return spanned.getSpans(0, spanned.length(), ClickableSpan.class).length > 0;
+      }
+      return false;
     }
   }
 
