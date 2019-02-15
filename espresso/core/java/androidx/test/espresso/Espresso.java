@@ -16,6 +16,7 @@
 
 package androidx.test.espresso;
 
+import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.pressMenuKey;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -27,6 +28,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.endsWith;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Looper;
@@ -36,7 +38,10 @@ import android.view.ViewConfiguration;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.base.IdlingResourceRegistry;
 import androidx.test.espresso.util.TreeIterables;
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import androidx.test.runner.lifecycle.Stage;
 import com.google.common.util.concurrent.ListenableFutureTask;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -255,6 +260,21 @@ public final class Espresso {
       // either a hardware button exists, or we're on a pre-HC os.
       onView(isRoot()).perform(pressMenuKey());
     }
+
+    // Opens options menu directly for the extra stability. The above method works mostly but
+    // occasionary fails by various reasons. Activity#openOptionsMenu may fail depending on API
+    // level too so we need to keep both methods. As it is documented Activity#openOptionsMenu is
+    // no-op when the menu is displayed already.
+    getInstrumentation()
+        .runOnMainSync(
+            () -> {
+              Collection<Activity> resumedActivities =
+                  ActivityLifecycleMonitorRegistry.getInstance()
+                      .getActivitiesInStage(Stage.RESUMED);
+              for (Activity resumedActivity : resumedActivities) {
+                resumedActivity.openOptionsMenu();
+              }
+            });
   }
 
   /**

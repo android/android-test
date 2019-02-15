@@ -152,6 +152,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
+        "//runner/monitor",
         "@guava//jar",
         "@hamcrest//jar",
         "@jsr305//jar",
