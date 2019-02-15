@@ -29,6 +29,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import android.util.Log;
@@ -337,6 +338,11 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
   /** Starts an Activity using the given intent. */
   @Override
   public void startActivity(Intent intent) {
+    // make sure the intent can resolve an activity
+    ActivityInfo ai = intent.resolveActivityInfo(getTargetContext().getPackageManager(), 0);
+    if (ai == null) {
+      throw new RuntimeException("Unable to resolve activity for: " + intent);
+    }
     // Close empty activities and bootstrap activity if it's running. This might happen if the
     // previous test crashes before it cleans up the state.
     getTargetContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
