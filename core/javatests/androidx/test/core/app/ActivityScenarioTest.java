@@ -19,6 +19,7 @@ package androidx.test.core.app;
 import static android.app.Activity.RESULT_OK;
 import static androidx.test.ext.truth.content.IntentSubject.assertThat;
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.fail;
 
 import android.app.Activity;
 import androidx.lifecycle.Lifecycle.State;
@@ -317,6 +318,18 @@ public final class ActivityScenarioTest {
           });
       assertThat(scenario.getResult().getResultCode()).isEqualTo(RESULT_OK);
       assertThat(scenario.getResult().getResultData()).hasAction(Intent.ACTION_SEND);
+    }
+  }
+
+  @Test
+  public void launch_unknownActivity() {
+    Intent intent = new Intent();
+    intent.setClassName("idontexist", "IdontExistEither");
+    try {
+      ActivityScenario.launch(intent);
+      fail("launching an intent for a non-existing activity did not throw");
+    } catch (RuntimeException e) {
+      // expected
     }
   }
 
