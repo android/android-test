@@ -23,18 +23,24 @@
     android:minSdkVersion="14"
     tools:overrideLibrary="android.support.graphics.drawable, android.support.graphics.drawable.animated, androidx.test.services.speakeasy.server" />
 
-    <application android:label="TestServices" android:directBootAware="true" tools:replace="android:label">
-      <service
-            android:directBootAware="true"
-            android:name="androidx.test.services.speakeasy.server.SpeakEasyService"
-            android:exported="true" >
-        </service>
+   <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS" />
+   <uses-permission android:name="android.permission.ACCESS_CONTENT_PROVIDERS_EXTERNALLY" />
 
-        <provider
-            android:directBootAware="true"
-            android:name="androidx.test.services.speakeasy.server.SpeakEasyContentProvider"
-            android:authorities="androidx_test_services.speak_easy"
-            android:grantUriPermissions="true" />
-    </application>
+   <application android:label="TestServices"
+                android:directBootAware="true"
+                tools:replace="android:label">
+     <service
+         android:directBootAware="true"
+         android:name="androidx.test.services.speakeasy.server.SpeakEasyService"
+         android:exported="true" >
+     </service>
+
+     <provider
+         android:directBootAware="true"
+         android:name="androidx.test.services.speakeasy.server.SpeakEasyContentProvider"
+         android:authorities="androidx_test_services.speak_easy"
+         android:exported="true"
+         android:grantUriPermissions="true" />
+   </application>
 
 </manifest>
