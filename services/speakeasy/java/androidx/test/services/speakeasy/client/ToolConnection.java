@@ -153,10 +153,12 @@ public abstract class ToolConnection implements Connection {
         try {
           Log.i(TAG, "Getting a content provider holder for: " + contentProvider);
           Object cph;
+          int userId = getCurrentUserOrUserZero();
+          Log.d(TAG, "Starting contentProvider as user: " + userId);
           if (getCPEPostP) {
-            cph = getCPEMethod.invoke(getActivityManager(), contentProvider, 0, token, null);
+            cph = getCPEMethod.invoke(getActivityManager(), contentProvider, userId, token, null);
           } else {
-            cph = getCPEMethod.invoke(getActivityManager(), contentProvider, 0, token);
+            cph = getCPEMethod.invoke(getActivityManager(), contentProvider, userId, token);
           }
           if (null == cph) {
             throw new IllegalStateException(
@@ -207,6 +209,17 @@ public abstract class ToolConnection implements Connection {
           | NoSuchFieldException ex) {
         Log.e(TAG, "Connecting to content providers has failed!", ex);
         throw new RuntimeException(ex);
+      }
+    }
+
+    private static int getCurrentUserOrUserZero() {
+      try {
+        Log.d(TAG, "looking up getCurrentUser");
+        Method method = ActivityManager.class.getMethod("getCurrentUser");
+        return (int) method.invoke(null);
+      } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        Log.e(TAG, "looking up getCurrentUser error ", e);
+        return 0;
       }
     }
   }
