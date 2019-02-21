@@ -16,7 +16,6 @@
 
 package androidx.test.internal.runner.intent;
 
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -28,6 +27,7 @@ import androidx.test.runner.intent.IntentCallback;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
+import org.mockito.hamcrest.MockitoHamcrest;
 
 /** IntentMonitorImpl tests. */
 @RunWith(AndroidJUnit4.class)
@@ -60,7 +60,7 @@ public class IntentMonitorImplTest {
   }
 
   private static Intent withAction(final String action) {
-    return argThat(
+    return MockitoHamcrest.argThat(
         new ArgumentMatcher<Intent>() {
           @Override
           public boolean matches(Object intent) {
