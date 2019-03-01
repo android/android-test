@@ -83,6 +83,9 @@ flags.DEFINE_string('image_input_file', None, '[bazel ONLY] causes '
                     'single_image_file')
 flags.DEFINE_integer('adb_server_port', None, '[START/KILL ONLY] the port to '
                      ' start or connect to ADB on.')
+flags.DEFINE_integer('forwarder_port', None, '[START ONLY] the TCP port to '
+                     'listen on for waterfall GRPC requests. Only used when '
+                     '--use_waterfall is true.')
 flags.DEFINE_integer('emulator_port', None, '[START/KILL ONLY] the port the '
                      'emulator admin terminal is on.')
 flags.DEFINE_integer('adb_port', None, '[START/KILL ONLY] the port the '
@@ -108,20 +111,17 @@ flags.DEFINE_string('source_properties_file', None, '[bazel ONLY] the path to '
                     'a source.properties file for this system image')
 flags.DEFINE_string('adb', None, 'The path to ADB')
 flags.DEFINE_string(
-    'custom_emulator', None, '[bazel ONLY] path to a custom '
-    'emulator binary to launch')
+    'emulator_launcher', None, 'The path to the emulator launcher binary, for '
+    ' qemu2 emulators.')
 flags.DEFINE_string(
     'emulator_x86', None, '[bazel ONLY] the path to '
     'emulator_x86. Deprecated, only used for qemu1 emulators.')
 flags.DEFINE_string(
     'emulator_arm', None, '[bazel ONLY] the path to '
-    'emulator_arm Deprecated, only used for qemu1 emulators.')
+    'emulator_arm. Deprecated, only used for qemu1 emulators.')
 flags.DEFINE_string('adb_static', None, 'OBSOLETE: the path to adb.static')
 flags.DEFINE_string('adb_turbo', None, 'The path to turbo adb')
 flags.DEFINE_string('forward_bin', None, 'The path to h2o forwarder binary')
-flags.DEFINE_string('adb_bin', None, '[DEPRECATED] do not use. '
-                    'Will be removed within a couple releases. '
-                    '--waterfall_bin should be used instead.')
 flags.DEFINE_string('waterfall_bin', None, 'The path to the waterfall '
                     'adb binary')
 flags.DEFINE_string('ports_bin', None, 'The path to h2o port forwarder binary')
@@ -231,9 +231,6 @@ flags.DEFINE_string('snapshot_file', None, '[bazel ONLY] The path to the '
                     'snapshot file that was saved in BOOT cycle and is used '
                     'during START cycle.')
 flags.DEFINE_bool(
-    'use_h2o', False, '[DEPRECATED] this flag will be removed within a couple '
-    'releases. --use_waterfall should be used instead')
-flags.DEFINE_bool(
     'use_waterfall', False, 'Whether to use waterfall to control the device. '
     'Note that if this option is true, turbo will not be '
     'configured.')
@@ -313,6 +310,9 @@ def _FirstBootAtBuildTimeOnly(
 
   sysdir = _FindSystemImagesDir(system_images)
   sysimg_path = (
+      # Modified image takes precedence over default. Bazel globs the
+      # entire local sdk ignoring modification to system.img
+      _ExtractSuffixFile(system_images, 'sys/system.img') or
       _ExtractSuffixFile(system_images, 'system.img.tar.gz') or
       _ExtractSuffixFile(system_images, 'system.img'))
   dataimg_path = (_ExtractSuffixFile(system_images, 'userdata.img.tar.gz') or
@@ -338,7 +338,7 @@ def _FirstBootAtBuildTimeOnly(
       enable_single_step=enable_single_step,
       source_properties=source_properties,
       mini_boot=mini_boot,
-      use_waterfall=FLAGS.use_h2o or FLAGS.use_waterfall,
+      use_waterfall=FLAGS.use_waterfall,
       forward_bin=FLAGS.forward_bin,
       ports_bin=FLAGS.ports_bin)
   device.delete_temp_on_exit = False  # we will do it ourselves.
@@ -366,6 +366,7 @@ def _FirstBootAtBuildTimeOnly(
                      save_snapshot=FLAGS.save_snapshot,
                      modified_ramdisk_path=modified_ramdisk_path)
 
+  device.EnableNetwork()
   try:
     device.LogToDevice('Device booted.')
     for apk in boot_time_apks:
@@ -487,6 +488,9 @@ def _RestartDevice(device,
 
   proto.system_image_dir = system_images_dir
   sysimg = (
+      # Modified image takes precedence over default. Bazel globs the
+      # entire local sdk ignoring modification to system.img
+      _ExtractSuffixFile(system_image_files, 'sys/system.img') or
       _ExtractSuffixFile(system_image_files, 'system.img.tar.gz') or
       _ExtractSuffixFile(system_image_files, 'system.img'))
   dataimg = (_ExtractSuffixFile(system_image_files, 'userdata.img.tar.gz') or
@@ -537,6 +541,7 @@ def _TryInstallApks(device, apks, grant_runtime_permissions):
 
 
 def _Run(adb_server_port,
+         forwarder_port,
          emulator_port,
          adb_port,
          enable_display,
@@ -576,6 +581,7 @@ def _Run(adb_server_port,
 
   Args:
     adb_server_port: the adb server port to connect to
+    forwarder_port: the port to connect emulator by TCP.
     emulator_port: the port the emulator will use for its telnet interface
     adb_port: the port the emulator will accept adb connections on
     enable_display: true the emulator starts with display, false otherwise.
@@ -641,9 +647,10 @@ def _Run(adb_server_port,
       sim_access_rules_file=sim_access_rules_file,
       phone_number=phone_number,
       source_properties=_ReadSourceProperties(FLAGS.source_properties_file),
-      use_waterfall=FLAGS.use_h2o or FLAGS.use_waterfall,
+      use_waterfall=FLAGS.use_waterfall,
       forward_bin=FLAGS.forward_bin,
-      ports_bin=FLAGS.forward_bin)
+      ports_bin=FLAGS.forward_bin,
+      forwarder_port=forwarder_port)
 
   _RestartDevice(
       device,
@@ -880,7 +887,7 @@ def EntryPoint(reporter):
       FLAGS.android_corp_libs,
       FLAGS.source_properties_file,
       FLAGS.adb,
-      FLAGS.custom_emulator,
+      FLAGS.emulator_launcher,
       FLAGS.emulator_x86,
       FLAGS.emulator_arm,
       FLAGS.adb_static,
@@ -919,20 +926,20 @@ def EntryPoint(reporter):
         boot_time_apks,
         mini_boot)
   elif FLAGS.action in ['start', 'mini_boot']:
-    _Run(FLAGS.adb_server_port, FLAGS.emulator_port, FLAGS.adb_port,
-         FLAGS.enable_display, FLAGS.start_vnc_on_port, FLAGS.logcat_path,
-         FLAGS.logcat_filter, filtered_system_images, FLAGS.image_input_file,
-         FLAGS.emulator_metadata_path, start_time_apks, FLAGS.system_apks,
-         FLAGS.net_type, FLAGS.export_launch_metadata_path,
-         FLAGS.preverify_apks, FLAGS.launch_in_seperate_session,
-         FLAGS.window_scale,
+    _Run(FLAGS.adb_server_port, FLAGS.forwarder_port, FLAGS.emulator_port,
+         FLAGS.adb_port, FLAGS.enable_display, FLAGS.start_vnc_on_port,
+         FLAGS.logcat_path, FLAGS.logcat_filter, filtered_system_images,
+         FLAGS.image_input_file, FLAGS.emulator_metadata_path, start_time_apks,
+         FLAGS.system_apks, FLAGS.net_type, FLAGS.export_launch_metadata_path,
+         FLAGS.preverify_apks,
+         FLAGS.launch_in_seperate_session, FLAGS.window_scale,
          _ConvertToDict(FLAGS.broadcast_message), FLAGS.initial_locale,
          FLAGS.initial_ime, FLAGS.with_audio, FLAGS.qemu_gdb_port,
          FLAGS.enable_single_step, FLAGS.with_boot_anim, FLAGS.extra_certs,
          _GetTmpDir(), FLAGS.lockdown_level, FLAGS.open_gl_driver,
          FLAGS.allow_experimental_open_gl, FLAGS.add_insecure_cacert,
-         FLAGS.grant_runtime_permissions, FLAGS.accounts, reporter,
-         mini_boot, FLAGS.sim_access_rules_file, FLAGS.phone_number)
+         FLAGS.grant_runtime_permissions, FLAGS.accounts, reporter, mini_boot,
+         FLAGS.sim_access_rules_file, FLAGS.phone_number)
   elif 'kill' == FLAGS.action:
     _Kill(FLAGS.adb_server_port, FLAGS.emulator_port, FLAGS.adb_port)
   elif 'ping' == FLAGS.action:
@@ -991,9 +998,9 @@ def _MakeAndroidPlatform():
   if not os.path.exists(root_dir):
     root_dir = runfiles_base
 
-  if FLAGS.custom_emulator:
+  if FLAGS.emulator_launcher:
     base_emulator_path = os.path.dirname(
-        os.path.join(root_dir, FLAGS.custom_emulator))
+        os.path.join(root_dir, FLAGS.emulator_launcher))
   elif FLAGS.emulator_x86:
     base_emulator_path = os.path.dirname(os.path.join(root_dir,
                                                       FLAGS.emulator_x86))
@@ -1010,9 +1017,9 @@ def _MakeAndroidPlatform():
   platform.base_emulator_path = base_emulator_path
 
   adb_path = None
-  if FLAGS.use_h2o or FLAGS.use_waterfall:
-    if FLAGS.adb_bin or FLAGS.waterfall_bin:
-      adb_path = FLAGS.adb_bin or FLAGS.waterfall_bin
+  if FLAGS.use_waterfall:
+    if FLAGS.waterfall_bin:
+      adb_path = FLAGS.waterfall_bin
     else:
       adb_path = (''
                   'tools/android/emulator/support/waterfall/waterfall_bin')
@@ -1045,8 +1052,8 @@ def _MakeAndroidPlatform():
     platform.mksdcard = FLAGS.mksdcard
     platform.bios_files = filter(lambda e: e, FLAGS.bios_files)
 
-  if FLAGS.custom_emulator:
-    platform.emulator_wrapper_launcher = FLAGS.custom_emulator
+  if FLAGS.emulator_launcher:
+    platform.emulator_wrapper_launcher = FLAGS.emulator_launcher
   else:
     platform.emulator_wrapper_launcher = _ExtractSuffixFile(
         FLAGS.system_images, '/emulator')

@@ -1,0 +1,61 @@
+# The initrc file that should be used by the Android System Image to
+# automatically bring up Pipe Traversal Binary when it launches.
+
+service waterfall /sbin/waterfall
+   # Very Important to set the right security label, otherwise
+   # waterfall binary does not come up on the guest.
+   seclabel u:r:adbd:s0
+   user root
+   group root
+
+service pipe_traverse /sbin/pipe_traversal --action=emu-service
+   # Very Important to set the right security label, otherwise
+   # pipe_traversal binary does not come up on the guest.
+   seclabel u:r:adbd:s0
+   user root
+   group root
+
+service tn_pipe_traverse /sbin/pipe_traversal --action=raw --external_addr=tcp-listen::52222 --relay_addr=qemu-pipe:pipe:unix:sockets/qemu.mgmt --frame_relay
+   # Very Important to set the right security label, otherwise
+   # pipe_traversal binary does not come up on the guest.
+   seclabel u:r:adbd:s0
+   user root
+   group root
+
+on boot
+  start pipe_traverse
+  start tn_pipe_traverse
+  start waterfall
+
+service g3_monitor /system/bin/app_process /system/bin com.google.android.apps.common.testing.services.activitycontroller.ActivityControllerMain
+  setenv CLASSPATH /g3_activity_controller.jar
+  disabled
+  user system
+  group system
+
+# trigger as soon as service manager is ready.
+on property:init.svc.servicemanager=running
+  start g3_monitor
+
+# if zygote dies or restarts, we should restart so we can connect to the
+# new system server.
+on service-exited-zygote
+  stop g3_monitor
+  start g3_monitor
+
+on early-fs
+  setprop service.adb.root 1
+  # TODO: Who is working on supporting custom properties. Until then
+  # for api level 28, assume the minimum heapsize to be 256m otherwise it
+  # defaults to 192M and causes OOM errors in tests. This will unblock other
+  # teams and rollout of api level 28.
+  setprop dalvik.vm.heapsize 256m
+  setprop persist.sys.timezone America/Los_Angeles
+  setprop qemu.sf.fake_camera back
+  setprop ro.initial_se_linux_mode disabled
+  setprop ro.lockscreen.disable.default 1
+  setprop ro.mobile_ninjas.emulator_type qemu2
+  setprop ro.mobile_ninjas.is_emulated true
+  setprop ro.monkey 1
+  setprop ro.setupwizard.mode DISABLED
+

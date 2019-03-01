@@ -194,7 +194,7 @@ def Spawn(args, proc_input=None, proc_output=None, exec_dir=None,
     # proc_output and proc_error are already pointing to the logfiles.
     task = subprocess.Popen(args, stdout=proc_output, stdin=proc_input,
                             env=exec_env, cwd=exec_dir, stderr=proc_err,
-                            close_fds=True)
+                            close_fds=True, **kwargs)
     task.logfile_handle = logfile_handle
 
   task.logged_stdout = ''

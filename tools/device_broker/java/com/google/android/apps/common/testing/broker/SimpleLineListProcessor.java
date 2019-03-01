@@ -21,11 +21,8 @@ import com.google.common.collect.Lists;
 import com.google.common.io.LineProcessor;
 import java.util.List;
 
-/**
- * A {@link LineProcessor} that simply returns all the resulting lines.
- *
- */
-class SimpleLineListProcessor implements LineProcessor<List<String>> {
+/** A {@link LineProcessor} that simply returns all the resulting lines. */
+public class SimpleLineListProcessor implements LineProcessor<List<String>> {
   private final List<String> lines = Lists.newArrayList();
 
   @Override

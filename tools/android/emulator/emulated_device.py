@@ -76,6 +76,8 @@ flags.DEFINE_bool('dex2oat_on_cloud_enabled', False,
                   'Was Dex2oat run in cloud.')
 flags.DEFINE_bool('enable_test_harness', True, 'Whether device should run in '
                   'test_harness mode: ro.test_harness=1')
+flags.DEFINE_bool('enable_opengles3', False, 'Whether device should enable '
+                  'opengles 3')
 
 LoadInfo = collections.namedtuple('LoadInfo', 'timestamp up_time idle_time')
 
@@ -341,7 +343,8 @@ class EmulatedDevice(object):
                source_properties=None,
                use_waterfall=False,
                forward_bin=None,
-               ports_bin=None):
+               ports_bin=None,
+               forwarder_port=None):
     self.adb_server_port = adb_server_port
     self.emulator_adb_port = emulator_adb_port
     self.emulator_telnet_port = emulator_telnet_port
@@ -389,6 +392,7 @@ class EmulatedDevice(object):
     self._use_waterfall = use_waterfall
     self._forward_bin = forward_bin
     self._ports_bin = ports_bin
+    self.forwarder_port = forwarder_port
 
   def _IsUserBuild(self, build_prop):
     """Check if a build is user build from build.prop file."""
@@ -682,7 +686,10 @@ class EmulatedDevice(object):
       init_data = data_image_path
       assert os.path.exists(init_data), '%s: no userdata.img' % data_image_path
       if init_data.endswith('.img'):
-        self._SparseCp(init_data, self._UserdataQemuFile())
+        if 'ext4' in subprocess.check_output(['file',
+                                              self._UserdataQemuFile()]):
+          # only copy if userdata is a valid file
+          self._SparseCp(init_data, self._UserdataQemuFile())
       else:
         assert init_data.endswith('.img.tar.gz'), 'Not known format'
         self._ExtractTarEntry(
@@ -1133,6 +1140,10 @@ class EmulatedDevice(object):
     if default_cores:
       self._metadata_pb.avd_config_property.add(
           name=_CORES_PROP, value=default_cores)
+
+    prop = self._metadata_pb.avd_config_property.add(name='hw.featureflags')
+    prop.value = self._GetProperty(prop.name, default_properties,
+                                   source_properties, '')
 
     prop = self._metadata_pb.avd_config_property.add(name='hw.mainKeys')
     prop.value = self._GetProperty(prop.name, default_properties,
@@ -1638,6 +1649,9 @@ class EmulatedDevice(object):
       self._emulator_start_args.extend(['-feature', 'AllowSnapshotMigration'])
       self._emulator_start_args.extend(['-feature', '-GLDMA'])
       self._emulator_start_args.extend(['-feature', '-OnDemandSnapshotLoad'])
+      self._emulator_start_args.extend(['-feature', '-QuickbootFileBacked'])
+      if FLAGS.enable_opengles3:
+        self._emulator_start_args.extend(['-feature', 'GLESDynamicVersion'])
 
     if os.path.exists(self._VendorFile()):
       self._emulator_start_args.extend(['-vendor', 'vendor.img'])
@@ -1905,27 +1919,35 @@ class EmulatedDevice(object):
     if fork_result != 0:
       return fork_result
     else:
-      res = self._WatchdogLoop(new_process_group, emu_args, emu_env, emu_wd,
-                               services_dir)
-      sys.stdout.flush()
-      sys.stderr.flush()
-      # yes _exit. "The standard way to exit is sys.exit(n). _exit() should
-      # normally only be used in the child process after a fork()."
-      # We do not want to run our parent's exit handlers.
-      os._exit(res)  # pylint: disable=protected-access
+      try:
+        res = self._WatchdogLoop(new_process_group, emu_args, emu_env, emu_wd,
+                                 services_dir)
+        sys.stdout.flush()
+        sys.stderr.flush()
+        # yes _exit. "The standard way to exit is sys.exit(n). _exit() should
+        # normally only be used in the child process after a fork()."
+        # We do not want to run our parent's exit handlers.
+        os._exit(res)  # pylint: disable=protected-access
+      except Exception as e:  # pylint: disable=broad-except
+        sys.stderr = open(os.path.join(self._WatchdogDir(), 'watchdog.err'),
+                          'w+b', 0)
+        logging.error('WatchdogLoop failed: %s', e)
 
   def _WatchdogLoop(self, new_process_group, emu_args, emu_env, emu_wd,
                     services_dir):
     """The main loop of the watchdog process."""
-    if new_process_group:
-      os.setsid()
-    os.closerange(-1, subprocess.MAXFD)
-    watchdog_dir = None
-    if 'TEST_UNDECLARED_OUTPUTS_DIR' in os.environ:
-      watchdog_dir = tempfile.mkdtemp(
-          dir=os.environ['TEST_UNDECLARED_OUTPUTS_DIR'])
-    else:
-      watchdog_dir = self._TempDir('watchdog')
+    try:
+      if new_process_group:
+        os.setsid()
+      os.closerange(-1, subprocess.MAXFD)
+    except OSError as e:
+      sys.stderr = open(os.path.join(self._WatchdogDir(), 'watchdog.err'),
+                        'w+b', 0)
+      logging.error(
+          'Failed to setsid or close all open file descriptors. Error code %d. Error message: %s',
+          e.errno, e.strerror)
+
+    watchdog_dir = self._WatchdogDir()
 
     sys.stdin = open(os.devnull)
     sys.stdout = open(os.path.join(watchdog_dir, 'watchdog.out'), 'w+b', 0)
@@ -1935,6 +1957,11 @@ class EmulatedDevice(object):
       return self._Forward(
           services_dir, 'unix:@h2o_localhost:%s' % self.emulator_adb_port,
           'qemu:%s:sockets/h2o' % self._emulator_exec_dir)
+
+    def WaterfallTcpForwarder():
+      return self._Forward(
+          services_dir, 'tcp:localhost:%s' % self.forwarder_port,
+          'unix:@h2o_localhost:%s' % self.emulator_adb_port)
 
     def WaterfallTelnetForwarder():
       return self._Forward(
@@ -1949,6 +1976,9 @@ class EmulatedDevice(object):
 
     waterfall_fns = [
         WaterfallForwarder, WaterfallTelnetForwarder, WaterfallPortForwarder]
+
+    if self.forwarder_port is not None:
+      waterfall_fns.append(WaterfallTcpForwarder)
 
     tn_pipe_services_fn = lambda: self._StartTelnetPipeServices(services_dir)
 
@@ -2010,6 +2040,7 @@ class EmulatedDevice(object):
           exec_dir=emu_wd,
           proc_input=True,
           proc_output=self._EmulatorLogFile('wb+'))
+      logging.info('Emulator process pid: %s', emu_process.pid)
     except (ValueError, OSError) as e:
       logging.error('Failed to start process: %s', e)
       WatchdogCleanup()
@@ -2058,6 +2089,15 @@ class EmulatedDevice(object):
           killable[p.pid] = p
         except OSError as e:
           logging.info('Failed to restart process %d. %s', p.pid, e)
+
+  def _WatchdogDir(self):
+    watchdog_dir = None
+    if 'TEST_UNDECLARED_OUTPUTS_DIR' in os.environ:
+      watchdog_dir = tempfile.mkdtemp(
+          dir=os.environ['TEST_UNDECLARED_OUTPUTS_DIR'])
+    else:
+      watchdog_dir = self._TempDir('watchdog')
+    return watchdog_dir
 
   def _StartPipeServices(self, pipe_dir):
     """Starts pipe_traversal services for the host.
@@ -3804,6 +3844,12 @@ class EmulatedDevice(object):
     else:
       return True
 
+  def EnableNetwork(self):
+    telnet = self._ConnectToEmulatorConsole()
+    telnet.write('gsm data on\n')
+    telnet.write('exit\n')
+    telnet.read_all()
+
   def EnableLogcat(self):
     """Enable logcat on device."""
     if not self._logcat_filter:
@@ -3903,12 +3949,12 @@ class EmulatedDevice(object):
     except OSError as e:
       logging.error('Emulator failed to launch: %s', e)
       self._ShowEmulatorLog()
-      raise Exception('Emulator has died')
+      self._TransientDeath('Emulator has died: %s', e)
 
     if wait_result != 0:
       self._ShowEmulatorLog()
-      raise Exception('Emulator has died, exit status %d, signal %d' %
-                      (wait_result >> 8, wait_result & 0xF))
+      self._TransientDeath('Emulator has died, exit status %d, signal %d' %
+                           (wait_result >> 8, wait_result & 0xF))
 
 
 class Attempter(object):
@@ -4037,7 +4083,13 @@ class IdleStatus(object):
     """Return the maximum cpu load for the recent minimal_time."""
 
     out = self.device.ExecOnDevice(['cat', '/proc/uptime'])
-    up_time, idle_time = out.split()
+    output = out.split()
+    if len(output) != 2:
+      logging.info('Output of cat /proc/uptime %s Not as expected.', out)
+      logging.warning('Lack of idle data, pretend to be busy.')
+      return 1.0
+
+    up_time, idle_time = output
     up_time = float(up_time)
     idle_time = float(idle_time)
     self.loads.append(LoadInfo(timestamp=time.time(), up_time=up_time,

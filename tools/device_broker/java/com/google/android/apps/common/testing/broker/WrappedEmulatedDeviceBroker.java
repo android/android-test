@@ -47,6 +47,8 @@ import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.Log
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.LongPressTimeout;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.NumberOfCores;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.OpenGl;
+import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.OpenGles3Enabled;
+import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.PhoneNumber;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.PreverifyApks;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.SimAccessRulesFile;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.SubprocessLogDir;
@@ -135,6 +137,8 @@ class WrappedEmulatedDeviceBroker implements DeviceBroker {
   private final boolean enableDex2OatOnCloud;
   private final String simAccessRulesFile;
   private final boolean useWaterfall;
+  private final String phoneNumber;
+  private final boolean enableOpenGles3;
 
   enum ScriptAction {
     START("start"), STOP("kill");
@@ -185,6 +189,8 @@ class WrappedEmulatedDeviceBroker implements DeviceBroker {
       @Dex2OatOnCloudEnabled boolean enableDex2OatOnCloud,
       @SimAccessRulesFile String simAccessRulesFile,
       @UseWaterfall boolean useWaterfall,
+      @PhoneNumber String phoneNumber,
+      @OpenGles3Enabled boolean enableOpenGles3,
       Environment environment) {
     this.emulatorLauncherPath = emulatorLauncherPath;
     this.adbPath = adbPath;
@@ -221,6 +227,8 @@ class WrappedEmulatedDeviceBroker implements DeviceBroker {
     this.enableDex2OatOnCloud = enableDex2OatOnCloud;
     this.simAccessRulesFile = simAccessRulesFile;
     this.useWaterfall = useWaterfall;
+    this.phoneNumber = phoneNumber;
+    this.enableOpenGles3 = enableOpenGles3;
     checkState(!"".equals(emulatorLauncherPath), "No emulator launch script");
   }
 
@@ -307,7 +315,9 @@ class WrappedEmulatedDeviceBroker implements DeviceBroker {
      */
     command = Lists.newArrayList("shell", "chmod", "777", "/dev/alarm", "|| true");
     device.getAdbController().makeAdbCall(command.toArray(new String[command.size()]));
-    device.getAdbController().unlockScreen();
+    if (device.isUnlockScreenNeeded()) {
+      device.getAdbController().unlockScreen();
+    }
     logger.info("About to broadcast ACTION_MOBILE_NINJAS_START");
         Map<String, String> extras = Maps.newHashMap();
     extras.put("initial_locale", initialLocale);
@@ -394,7 +404,9 @@ class WrappedEmulatedDeviceBroker implements DeviceBroker {
     device.getAdbController().adbConnect();
     List<String> command = Lists.newArrayList("shell", "chmod", "755", "/dev/alarm", "|| true");
     device.getAdbController().makeAdbCall(command.toArray(new String[command.size()]));
-    device.getAdbController().unlockScreen();
+    if (device.isUnlockScreenNeeded()) {
+      device.getAdbController().unlockScreen();
+    }
     runEmulatorLaunchScript(
         ScriptAction.STOP,
         device.getAdbServerPort(),
@@ -466,8 +478,8 @@ class WrappedEmulatedDeviceBroker implements DeviceBroker {
             "--grant_runtime_permissions=" + grantRuntimePermissions);
 
     if (useWaterfall) {
-      command.add("--use_h2o=" + useWaterfall);
-      command.add("--adb_bin=" + adbPath);
+      command.add("--use_waterfall=" + useWaterfall);
+      command.add("--waterfall_bin=" + adbPath);
     }
 
     if (logcatFilters != null && !logcatFilters.isEmpty()) {
@@ -481,6 +493,14 @@ class WrappedEmulatedDeviceBroker implements DeviceBroker {
 
     if (!isNullOrEmpty(simAccessRulesFile)) {
       command.add("--sim_access_rules_file=" + simAccessRulesFile);
+    }
+
+    if (!isNullOrEmpty(phoneNumber)) {
+      command.add("--phone_number=" + phoneNumber);
+    }
+
+    if (enableOpenGles3) {
+      command.add("--enable_opengles3");
     }
 
     command.add(enableDisplay ? "--enable_display" : "--noenable_display");

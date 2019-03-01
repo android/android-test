@@ -138,6 +138,11 @@ final class DeviceBrokerAnnotations {
   @Retention(RUNTIME)
   public @interface SimAccessRulesFileFlag {}
 
+  @BindingAnnotation
+  @Target({FIELD, METHOD, PARAMETER})
+  @Retention(RUNTIME)
+  public @interface PhoneNumber {}
+
   @BindingAnnotation @Target({FIELD, METHOD, PARAMETER}) @Retention(RUNTIME)
   public @interface ResourceDexdumpName {}
 
@@ -297,6 +302,11 @@ final class DeviceBrokerAnnotations {
   @Target({FIELD, METHOD, PARAMETER})
   @Retention(RUNTIME)
   public @interface ExecReporterAnnotation {}
+
+  @BindingAnnotation
+  @Target({FIELD, METHOD, PARAMETER})
+  @Retention(RUNTIME)
+  public @interface OpenGles3Enabled {}
 
   private DeviceBrokerAnnotations() {}
 }

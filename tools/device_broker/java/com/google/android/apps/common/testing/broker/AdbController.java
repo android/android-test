@@ -128,7 +128,7 @@ public class AdbController {
   private static final String PROGUARD_KEEP_EMMA = "'-keep %s com.vladium.** {*;}'";
   private static final String PROGUARD_KEEP_JACOCO = "'-keep %s org.jacoco.** {*;}'";
 
-  private static final Pattern PATH_PATTERN = Pattern.compile("^package\\:(.*)");
+  private static final String PATH_PATTERN = "^package\\:(.*)";
 
   private static final Logger logger =
       Logger.getLogger(AdbController.class.getName());
@@ -140,6 +140,8 @@ public class AdbController {
       "List of files from %s could not be retrieved. Most likely and I/O error has occured.";
 
   public static final String ANDROID_TEST_SERVICES_PACKAGE = "androidx.test.services";
+
+  private static final int CMD_MIN_VERSION = 24;
 
   private final Provider<Integer> portPicker;
   private final Provider<SubprocessCommunicator.Builder> communicatorBuilderProvider;
@@ -405,8 +407,12 @@ public class AdbController {
     AdbInstrumentationListProcessor stdoutProcessor = instrumentationListProcessorProvider.get();
     SubprocessCommunicator.Builder builder = communicatorBuilderProvider.get();
     builder.withStdoutProcessor(stdoutProcessor);
-
-    makeAdbCall(builder, getDefaultTimeout(), "shell", "pm", "list", "instrumentation");
+    if (device.getApiVersion() >= CMD_MIN_VERSION) {
+      makeAdbCall(
+          builder, getDefaultTimeout(), "shell", "cmd", "package", "list", "instrumentation");
+    } else {
+      makeAdbCall(builder, getDefaultTimeout(), "shell", "pm", "list", "instrumentation");
+    }
     List<Instrumentation> result =
         stdoutProcessor
             .getResult()
@@ -1355,14 +1361,35 @@ public class AdbController {
   }
 
   private String getApkPathForInstalledApp(String appPackageName) {
-    LineProcessor<String> lineProcessor = regexpProcessorBuilder
-        .withPattern(PATH_PATTERN).buildFirstMatchProcessor();
+    Pattern pathPattern;
+    if (device.getApiVersion() >= CMD_MIN_VERSION) {
+      pathPattern = Pattern.compile(PATH_PATTERN + "=" + appPackageName);
+    } else {
+      pathPattern = Pattern.compile(PATH_PATTERN);
+    }
+    LineProcessor<String> lineProcessor =
+        regexpProcessorBuilder.withPattern(pathPattern).buildFirstMatchProcessor();
     SubprocessCommunicator.Builder builder = communicatorBuilderProvider.get()
         .withStdoutProcessor(lineProcessor)
         .withStderrProcessor(lineProcessor);
 
-    makeAdbCall(
-        builder, getShortDefaultTimeout(), "shell", "pm", "path", appPackageName, "||", "true");
+    if (device.getApiVersion() >= CMD_MIN_VERSION) {
+      makeAdbCall(
+          builder,
+          getShortDefaultTimeout(),
+          "shell",
+          "cmd",
+          "package",
+          "list",
+          "packages",
+          "-f",
+          appPackageName,
+          "||",
+          "true");
+    } else {
+      makeAdbCall(
+          builder, getShortDefaultTimeout(), "shell", "pm", "path", appPackageName, "||", "true");
+    }
     return lineProcessor.getResult();
   }
 

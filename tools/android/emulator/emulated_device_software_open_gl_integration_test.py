@@ -65,10 +65,16 @@ class EmulatedDeviceSoftwareOpenGlIntegrationTest(googletest.TestCase):
             '1024',
             233,
             36,
+            system_image_path=os.path.join(
+                root_dir,
+                'android_test_support/tools/android/emulated_devices/generic_phone/android_%s_x86_sys/system.img'
+                % FLAGS.api_level),
             kvm_present=True,
-            source_properties={'systemimage.abi': 'x86',
-                               'androidversion.apilevel': FLAGS.api_level,
-                               'systemimage.gpusupport': 'yes'},
+            source_properties={
+                'systemimage.abi': 'x86',
+                'androidversion.apilevel': FLAGS.api_level,
+                'systemimage.gpusupport': 'yes'
+            },
             default_properties=default_props)
         device.StartDevice(False, start_vnc_on_port, open_gl_driver='mesa')
         get_prop_output = device.ExecOnDevice(['getprop'])

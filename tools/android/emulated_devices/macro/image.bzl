@@ -14,6 +14,7 @@ def new_image(
         flavor,
         files,
         arch,
+        base_system_image = None,
         device_visibility = None,
         version_string = None,
         props = None,
@@ -23,6 +24,7 @@ def new_image(
     return {
         "api_level": api_level,
         "files": files,
+        "base_system_image": base_system_image,
         "arch": arch,
         "flavor": flavor,
         "device_visibility": device_visibility,
@@ -66,3 +68,8 @@ def image_compressed_suffix(image):
         return "_compressed"
     else:
         return ""
+
+def image_base_system_image(image):
+    if "base_system_image" in image:
+        return image["base_system_image"]
+    return None

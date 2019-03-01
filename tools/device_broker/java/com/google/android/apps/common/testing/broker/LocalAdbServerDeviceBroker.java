@@ -136,6 +136,10 @@ class LocalAdbServerDeviceBroker implements DeviceBroker {
       doExplicitConnect = false;
     } else if (deviceSerialNumber.startsWith("emulator-")) {
       doExplicitConnect = false;
+    } else if (!(deviceSerialNumber.startsWith("localhost:")
+        || deviceSerialNumber.startsWith("127.0.0.1:"))) {
+      // adb behaves badly when connecting to a physical devices.
+      doExplicitConnect = false;
     }
     String logcatPath = logcatFilePathProvider.get();
 

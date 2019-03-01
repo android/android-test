@@ -7,6 +7,10 @@ _IMG_TEMPLATE = (
     "@androidsdk//:emulator_images_%s"
 )
 
+_BASE_SYS_IMG_TEMPLATE = (
+    "@androidsdk//:system-images/android-%s/%s/%s/system.img"
+)
+
 _GOOGLE = "google"
 _ANDROID = "android"
 _WEAR = "wear"
@@ -14,6 +18,7 @@ _WEAR_TESTKEYS = "wear-testkeys"
 _WEAR_LE = "wear-le"
 _WEAR_LE_GFW = "wear-le-gfw"
 _TV = "tv"
+_TV_AMATI = "tv_amati"
 _AUTO = "auto"
 _GO = "go"
 _DAYDREAM = "daydream"
@@ -26,12 +31,22 @@ def _default_images(api_level, flavors, props = None):
         for f in flavors:
             for compressed in (True, False):
                 target = "%s_%s_%s" % (f, api_level, a)
+
+                base_system_image = (
+                    _BASE_SYS_IMG_TEMPLATE % (
+                        api_level,
+                        "default" if f == "android" else "google_apis",
+                        a,
+                    )
+                )
+
                 images.append(
                     new_image(
                         flavor = f,
                         api_level = api_level,
                         arch = a,
                         files = _IMG_TEMPLATE % target,
+                        base_system_image = base_system_image,
                         compressed = compressed,
                         props = props,
                     ),
@@ -84,7 +99,7 @@ _ALL_IMAGES = (
         _DAYDREAM,
         _TV,
     ]) +
-    _default_images(28, [_GOOGLE, _ANDROID, _AUTO, _DAYDREAM, _TV, _WEAR, _WEAR_LE, _WEAR_LE_GFW]) +
+    _default_images(28, [_GOOGLE, _ANDROID, _AUTO, _DAYDREAM, _TV, _TV_AMATI, _WEAR, _WEAR_LE, _WEAR_LE_GFW]) +
     []  # Empty list to make stripping the last element with copybara cleaner.
 )
 

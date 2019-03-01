@@ -1,0 +1,19 @@
+package(
+    default_visibility = [
+        "//tools/android/emulated_devices:__subpackages__",
+        "//tools/android/emulator:__pkg__",
+    ],
+)
+
+sh_binary(
+    name = "modify_system_image",
+    srcs = ["modify_system_image.sh"],
+    data = [
+        "//third_party/java/android/android_sdk_linux/tools:bios",
+        "//tools/android/emulated_devices/macro:init.ats.rc",
+        "//tools/android/emulator:daemon/g3_activity_controller.jar",
+        "//tools/android/emulator:daemon/x86/pipe_traversal",
+        "//tools/android/emulator:daemon/x86/waterfall",
+    ],
+    deps = ["//util/shell/gbash"],
+)

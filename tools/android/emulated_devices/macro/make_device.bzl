@@ -4,6 +4,8 @@ load(
     "//tools/android/emulated_devices:macro/image.bzl",
     "image_api",
     "image_arch",
+    "image_base_system_image",
+    "image_compressed",
     "image_compressed_suffix",
     "image_device_visibility",
     "image_flavor",
@@ -51,6 +53,7 @@ _property_writer = rule(
 )
 
 HEAP_GROWTH_LIMIT = "dalvik.vm.heapgrowthlimit"
+SETUP_WIZARD_KEY = "ro.setupwizard.mode"
 
 G3_ACTIVITY_CONTROLLER = "//tools/android/emulator:daemon/g3_activity_controller.jar"
 
@@ -148,11 +151,13 @@ def _make_property_target(
         emu_suffix,
         hardware,
         image):
+    target_name = _get_property_target_name(name, emu_suffix, image)
     _property_writer(
         name = _get_property_target_name(name, emu_suffix, image),
         content = generate_prop_content(user_props, emulator, hardware, image),
         visibility = ["//visibility:private"],
     )
+    return target_name
 
 def _get_property_target_name(name, emu_suffix, image):
     return "%s_%s_%s_%s%s%s_props" % (
@@ -172,6 +177,76 @@ def _make_system_image_target(name, contents):
         visibility = ["//visibility:private"],
     )
     return ":%s" % target_name
+
+def _modify_system_image(name, image, emu_suffix, props):
+    base = image_base_system_image(image)
+    if not base:
+        # No need to do anything. Image is already modified ()
+        return None
+
+    flavor = image_flavor(image)
+    version_string = image_version_string(image)
+    api = image_api(image)
+    arch = image_arch(image)
+    name = "%s_" % name if name else ""
+    flavor_api_arch_emu = "%s%s_%s_%s%s%s" % (name, flavor, version_string, arch, emu_suffix, image_compressed_suffix(image))
+
+    tool = "//tools/android/emulated_devices/macro:modify_system_image.sh"
+    pipe_traversal = "//tools/android/emulator:daemon/x86/pipe_traversal"
+    waterfall = "//tools/android/emulator:daemon/x86/waterfall"
+    init = "//tools/android/emulated_devices/macro:init.ats.rc"
+
+    srcs = [base, props, init, pipe_traversal, waterfall, G3_ACTIVITY_CONTROLLER]
+
+    # BEGIN-PUBLIC
+    srcs.append("//third_party/java/android/android_sdk_linux/tools:bios")
+    # END-PUBLIC
+
+    uncompressed = "untar_emulator_images_%s_system" % flavor_api_arch_emu
+
+    # Output to subdirectory. There are multiple places where this file is assumend to be called system.img
+    out = "%s_sys/system.img" % flavor_api_arch_emu
+    native.genrule(
+        name = uncompressed,
+        srcs = srcs,
+        outs = [out],
+        cmd = ("""
+base=$(location %s)
+$(location %s) $${base} %s $@ $(location %s) $(location %s) $(location %s) $(location %s) $(location %s)""" % (
+            base,
+            tool,
+            api,
+            props,
+            init,
+            pipe_traversal,
+            waterfall,
+            G3_ACTIVITY_CONTROLLER,
+        )),
+        tools = [tool],
+    )
+
+    # Re-compress modifed system image. The untar genrule above causes
+    # system.img to lose its sparseness, so we create a sparse copy of
+    # it before archiving. A specific --mtime is passed so this genrule is
+    # deterministic.
+    if image_compressed(image):
+        compressed = "retar_emulator_images_%s_system" % flavor_api_arch_emu
+        native.genrule(
+            name = compressed,
+            srcs = [":" + uncompressed],
+            outs = ["%s_sys/modified_system.img.tar.gz" % flavor_api_arch_emu],
+            cmd = """
+tmpdir="$$(mktemp -d)"
+cp --sparse=always $< "$${tmpdir}"/system.img
+ls "$${tmpdir}"
+tar --mtime='1992-03-25' -cSpf $(@D)/modified_system.img.tar -C "$${tmpdir}" system.img &&
+gzip -6 -n $(@D)/modified_system.img.tar -c > $(OUTS)
+""",
+        )
+
+        return compressed
+
+    return uncompressed
 
 def new_devices(
         name,
@@ -236,6 +311,7 @@ def new_devices(
 
 
     for image in images_to_build:
+        base_system_image = image_base_system_image(image)
         api = image_api(image)
         if image_flavor(image) not in requested_flavors:
             continue
@@ -247,7 +323,7 @@ def new_devices(
 
             emu_suffix = emulator_suffix(emulator)
             actual_visibility = visibility or emulator_default_visibility(emulator)
-            _make_property_target(
+            props = _make_property_target(
                 name,
                 user_props,
                 emulator,
@@ -255,12 +331,20 @@ def new_devices(
                 hardware,
                 image,
             )
+
+            modified = None
+            if base_system_image:
+                # We need to modify this a bit. If not present
+                # then its already modified
+                modified = _modify_system_image(name, image, emu_suffix, props)
+
             _new_devices_for_image_and_emulator(
                 name,
                 hardware,
                 boot_apks,
                 actual_visibility,
                 image,
+                modified,
                 emulator,
                 emu_suffix,
             )
@@ -278,7 +362,7 @@ def new_devices(
             # implicit emulator is not, so that we can change the default emulator
             # without breaking visibility.
             actual_visibility = visibility or ["//visibility:public"]
-            _make_property_target(
+            props = _make_property_target(
                 name,
                 user_props,
                 default_emulator_for_image,
@@ -286,12 +370,18 @@ def new_devices(
                 hardware,
                 image,
             )
+
+            modified = None
+            if base_system_image:
+                modified = _modify_system_image(name, image, "", props)
+
             _new_devices_for_image_and_emulator(
                 name,
                 hardware,
                 boot_apks,
                 actual_visibility,
                 image,
+                modified,
                 default_emulator_for_image,
                 "",
             )
@@ -302,6 +392,7 @@ def _new_devices_for_image_and_emulator(
         boot_apks,
         visibility,
         image,
+        modified_system_image,
         emulator,
         emu_suffix):
     tags = emulator_tags(emulator, image)
@@ -330,6 +421,7 @@ def _new_devices_for_image_and_emulator(
         system_image_target,
         tags,
         image,
+        modified_system_image,
         visibility,
         hardware,
         emulator,
@@ -342,15 +434,26 @@ def make_android_device(
         system_image,
         tags,
         image,
+        modified_system_image,
         visibility,
         hardware,
         emulator):
     """Builds android_device targets."""
 
+    srcs = [system_image]
+    if modified_system_image:
+        srcs.append(":%s" % modified_system_image)
+
+
+    image_files = "%s_image_files" % name
+    native.filegroup(
+        name = image_files,
+        srcs = srcs,
+    )
     native.android_device(
         name = name,
         default_properties = default_properties,
-        system_image = system_image,
+        system_image = image_files,
         tags = tags,
         visibility = image_device_visibility(image) or visibility,
         **hardware_device_attributes(hardware)

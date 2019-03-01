@@ -1,6 +1,6 @@
 // Copyright 2012 Google Inc. All Rights Reserved.
 // Author: thomaswk@google.com (Thomas Knych)
-// LINT.IfChange
+
 
 syntax = "proto2";
 
@@ -95,5 +95,4 @@ message TimerPb {
   optional int32 number_of_starts = 2;
   optional int64 accumulated_time = 3;
 }
-// LINT.ThenChange(//depot/android_test_support/\
-//                 tools/android/emulator/emulator_meta_data_pb2.py)
+

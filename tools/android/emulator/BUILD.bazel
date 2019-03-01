@@ -123,6 +123,12 @@ py_binary(
     srcs = ["unified_launcher.py"],
     imports = ["../../.."],
     main = "unified_launcher.py",
+    deps = [":unified_launcher_head_lib"],
+)
+
+py_library(
+    name = "unified_launcher_head_lib",
+    srcs = ["unified_launcher.py"],
     deps = [
         ":emulated_device",
         ":emulator_meta_data_pb_py_pb2",
@@ -226,7 +232,7 @@ py_test(
         ":xvfb_support",
     ],
     deps = [
-        ":unified_launcher_head",
+        ":unified_launcher_head_lib",
         TESTING_PYBASE,
         MOX,
     ],

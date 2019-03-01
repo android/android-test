@@ -101,6 +101,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     vnc_port = 4
     net_type = 'fastnet'
     reporter = reporting.NoOpReporter()
+    forwarder_port = 5
 
     mock_device = emulated_device.EmulatedDevice(
         android_platform=mox.IsA(emulated_device.AndroidPlatform),
@@ -122,7 +123,9 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         source_properties=None,
         use_waterfall=False,
         forward_bin=None,
-        ports_bin=None)
+        ports_bin=None,
+        forwarder_port=forwarder_port
+        )
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device,
@@ -152,6 +155,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
 
     self.assertRaises(Exception, unified_launcher._Run,
                       adb_server_port,
+                      forwarder_port,
                       emulator_port,
                       adb_port,
                       True,
@@ -176,6 +180,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     emulator_port = 3
     vnc_port = 4
     reporter = reporting.NoOpReporter()
+    forwarder_port = 5
 
     mock_device = emulated_device.EmulatedDevice(
         android_platform=mox.IsA(emulated_device.AndroidPlatform),
@@ -197,7 +202,9 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         source_properties=None,
         use_waterfall=False,
         forward_bin=None,
-        ports_bin=None)
+        ports_bin=None,
+        forwarder_port=forwarder_port
+        )
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device,
@@ -224,8 +231,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
 
     self.mox.ReplayAll()
 
-    unified_launcher._Run(adb_server_port, emulator_port, adb_port, True,
-                          vnc_port,
+    unified_launcher._Run(adb_server_port, forwarder_port, emulator_port,
+                          adb_port, True, vnc_port,
                           '/foo/bar', 'FILTER',
                           system_images=None,
                           input_image_file=None,
@@ -247,6 +254,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     emulator_port = 3
     vnc_port = 4
     reporter = reporting.NoOpReporter()
+    forwarder_port = 5
 
     mock_device = emulated_device.EmulatedDevice(
         android_platform=mox.IsA(emulated_device.AndroidPlatform),
@@ -268,7 +276,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         source_properties=None,
         use_waterfall=False,
         forward_bin=None,
-        ports_bin=None)
+        ports_bin=None,
+        forwarder_port=forwarder_port)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device, enable_display=True,
@@ -295,8 +304,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
 
     self.mox.ReplayAll()
 
-    unified_launcher._Run(adb_server_port, emulator_port, adb_port, True,
-                          vnc_port,
+    unified_launcher._Run(adb_server_port, forwarder_port, emulator_port,
+                          adb_port, True, vnc_port,
                           '/foo/bar', 'FILTER',
                           input_image_file=None,
                           emulator_metadata_path=None,
@@ -314,6 +323,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     adb_port = 2
     emulator_port = 3
     vnc_port = 4
+    forwarder_port = 5
     accounts = ['user1:password', 'user2:password']
     extras1 = collections.OrderedDict()
     extras1['account_name'] = 'user1'
@@ -345,7 +355,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
         source_properties=None,
         use_waterfall=False,
         forward_bin=None,
-        ports_bin=None)
+        ports_bin=None,
+        forwarder_port=forwarder_port)
 
     self.mox.StubOutWithMock(unified_launcher, '_RestartDevice')
     unified_launcher._RestartDevice(mock_device, enable_display=True,
@@ -373,8 +384,8 @@ class UnifiedLauncherTest(mox.MoxTestBase):
 
     self.mox.ReplayAll()
 
-    unified_launcher._Run(adb_server_port, emulator_port, adb_port, True,
-                          vnc_port,
+    unified_launcher._Run(adb_server_port, forwarder_port, emulator_port,
+                          adb_port, True, vnc_port,
                           '/foo/bar', 'FILTER',
                           input_image_file=None,
                           emulator_metadata_path=None,
@@ -540,6 +551,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     self.mox.StubOutWithMock(initial_boot_device, 'IsInstalled')
     self.mox.StubOutWithMock(unified_launcher, '_StopDeviceAndOutputState')
 
+    initial_boot_device.EnableNetwork()
     initial_boot_device.LogToDevice('Device booted.')
     initial_boot_device.InstallApk('hello_world.apk')
     unified_launcher._StopDeviceAndOutputState(initial_boot_device, '/foobar')
@@ -608,6 +620,7 @@ class UnifiedLauncherTest(mox.MoxTestBase):
     self.mox.StubOutWithMock(unified_launcher, '_StopDeviceAndOutputState')
     unified_launcher._StopDeviceAndOutputState(initial_boot_device,
                                                '/foobar')
+    initial_boot_device.EnableNetwork()
     initial_boot_device.LogToDevice('Device booted.')
     initial_boot_device.CleanUp()
 

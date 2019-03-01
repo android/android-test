@@ -78,7 +78,7 @@ public class LogcatStreamer {
         adbEnvironment);
   }
 
-  LogcatStreamer(
+  public LogcatStreamer(
       List<String> adbAndDevicePrefix,
       List<Buffer> buffer,
       OutputFormat outputFormat,

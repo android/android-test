@@ -24,11 +24,8 @@ import com.google.common.collect.Lists;
 import com.google.common.io.LineProcessor;
 import java.util.List;
 
-/**
- * Parses the output of adb shell pm list instrumentation.
- *
- */
-class AdbInstrumentationListProcessor implements LineProcessor<List<Instrumentation>> {
+/** Parses the output of adb shell pm list instrumentation. */
+public class AdbInstrumentationListProcessor implements LineProcessor<List<Instrumentation>> {
 
   private static final String HEADER = "instrumentation:";
   private static final String TARGET = "(target=";

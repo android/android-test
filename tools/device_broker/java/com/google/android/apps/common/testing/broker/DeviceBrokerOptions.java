@@ -50,6 +50,8 @@ import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.Log
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.LongPressTimeout;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.NumberOfCores;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.OpenGl;
+import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.OpenGles3Enabled;
+import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.PhoneNumber;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.PrecompiledApksToInstallFlag;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.PreverifyApks;
 import com.google.android.apps.common.testing.broker.DeviceBrokerAnnotations.ReuseApks;
@@ -141,6 +143,8 @@ class DeviceBrokerOptions extends AbstractModule {
   private final Boolean dex2OatOnCloudEnabled;
   private final String simAccessRulesFile;
   private final Boolean useWaterfall;
+  private final String phoneNumber;
+  private final Boolean openGles3Enabled;
 
   @Override
   protected void configure() {
@@ -188,6 +192,8 @@ class DeviceBrokerOptions extends AbstractModule {
     dex2OatOnCloudEnabled = checkNotNull(b.dex2OatOnCloudEnabled);
     useWaterfall = checkNotNull(b.useWaterfall);
     simAccessRulesFile = checkNotNull(b.simAccessRulesFile);
+    phoneNumber = checkNotNull(b.phoneNumber);
+    openGles3Enabled = checkNotNull(b.openGles3Enabled);
   }
 
   @Provides
@@ -326,6 +332,12 @@ class DeviceBrokerOptions extends AbstractModule {
   }
 
   @Provides
+  @PhoneNumber
+  String providePhoneNumber() {
+    return phoneNumber;
+  }
+
+  @Provides
   @GrantRuntimePermissions
   Boolean provideGrantRuntime() {
     return grantRuntimePermissions;
@@ -344,6 +356,12 @@ class DeviceBrokerOptions extends AbstractModule {
   @OpenGl
   OpenGlDriver provideOpenGL() {
     return openGlDriver;
+  }
+
+  @Provides
+  @OpenGles3Enabled
+  Boolean provideOpenGles3Enabled() {
+    return openGles3Enabled;
   }
 
   @Provides
@@ -528,6 +546,18 @@ class DeviceBrokerOptions extends AbstractModule {
 
     Builder withSimAccessRulesFile(String simAccessRulesFile) {
       this.simAccessRulesFile = checkNotNull(simAccessRulesFile);
+      return this;
+    }
+
+    static final String PHONE_NUMBER_FLAG = "phone_number";
+    static final String PHONE_NUMBER_FLAG_DESC =
+        "optional phonenumber to set phonenumber of the emulated device.";
+
+    @Parameter(names = "--" + PHONE_NUMBER_FLAG, description = PHONE_NUMBER_FLAG_DESC)
+    public String phoneNumber = "";
+
+    Builder withPhoneNumber(String phoneNumber) {
+      this.phoneNumber = checkNotNull(phoneNumber);
       return this;
     }
 
@@ -1067,6 +1097,20 @@ class DeviceBrokerOptions extends AbstractModule {
 
     Builder withUseWaterfall(Boolean useWaterfall) {
       this.useWaterfall = checkNotNull(useWaterfall);
+      return this;
+    }
+
+    static final String ENABLE_OPENGLES3_FLAG = "enable_opengles3";
+    static final String ENABLE_OPENGLES3_FLAG_DESC = "Enables emulator to use OpenGL ES 3.0.";
+
+    @Parameter(
+        names = "--" + ENABLE_OPENGLES3_FLAG,
+        description = ENABLE_OPENGLES3_FLAG_DESC,
+        arity = 1)
+    Boolean openGles3Enabled = Boolean.FALSE;
+
+    Builder withOpenGles3Enabled(Boolean enableOpengles3) {
+      this.openGles3Enabled = enableOpengles3;
       return this;
     }
   }

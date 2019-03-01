@@ -64,6 +64,7 @@ public class BrokeredDevice {
       new AtomicReference<ImmutableMap<String, String>>(null);
   private int apiVersion = -1;
   private String servicesPath;
+  private String productName;
 
   /**
    * Indicates the type of the device as known by the device broker.
@@ -280,6 +281,22 @@ public class BrokeredDevice {
     return apiVersion;
   }
 
+  /**
+   * Check if the device needs unlock screen.
+   *
+   * @return True if device needs unlock screen, false otherwise.
+   */
+  public boolean isUnlockScreenNeeded() {
+    if (productName == null) {
+      productName = getDeviceBootProperties().get("ro.product.name");
+    }
+    if (null != productName && productName.contains("_atv_")) {
+      // androidTV does not need unlockScreen
+      return false;
+    }
+    // by default need unlock screen
+    return true;
+  }
 
   /**
    * Provides a map of environment variables accessable to processes on the device.
