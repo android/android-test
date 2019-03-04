@@ -52,6 +52,7 @@ import androidx.test.runner.lifecycle.ApplicationLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.ApplicationStage;
 import androidx.test.runner.lifecycle.Stage;
 import java.io.File;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -132,6 +133,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
 
   private volatile boolean finished = false;
   private volatile InterceptingActivityFactory interceptingActivityFactory;
+  private UncaughtExceptionHandler standardHandler;
 
   /**
    * Sets up lifecycle monitoring, and argument registry.
@@ -258,8 +260,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   }
 
   private void logUncaughtExceptions() {
-    final Thread.UncaughtExceptionHandler standardHandler =
-        Thread.currentThread().getUncaughtExceptionHandler();
+    standardHandler = Thread.currentThread().getUncaughtExceptionHandler();
     Thread.currentThread()
         .setUncaughtExceptionHandler(
             new Thread.UncaughtExceptionHandler() {
@@ -288,6 +289,10 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
                 }
               }
             });
+  }
+
+  private void restoreUncaughtExceptionHandler() {
+    Thread.currentThread().setUncaughtExceptionHandler(standardHandler);
   }
 
   /**
@@ -355,6 +360,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
     long endTime = System.currentTimeMillis();
     Log.i(TAG, String.format("waitForActivitiesToComplete() took: %sms", endTime - startTime));
     ActivityLifecycleMonitorRegistry.registerInstance(null);
+    restoreUncaughtExceptionHandler();
     super.finish(resultCode, results);
   }
 
