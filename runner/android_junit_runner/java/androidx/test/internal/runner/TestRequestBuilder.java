@@ -800,10 +800,6 @@ public class TestRequestBuilder {
     }
     // TODO(b/73905202): consider failing if both test classes and scan paths are given.
     // Right now that is allowed though
-
-    if ((!includedPackages.isEmpty() || !excludedPackages.isEmpty()) && !classNames.isEmpty()) {
-      throw new IllegalArgumentException(AMBIGUOUS_ARGUMENTS_MSG);
-    }
   }
 
   /**

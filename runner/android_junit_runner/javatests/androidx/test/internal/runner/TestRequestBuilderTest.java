@@ -19,11 +19,13 @@ import static androidx.test.internal.runner.TestRequestBuilder.RequiresDeviceFil
 import static androidx.test.internal.runner.TestRequestBuilder.RequiresDeviceFilter.EMULATOR_HARDWARE_RANCHU;
 import static androidx.test.platform.app.InstrumentationRegistry.getArguments;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.FlakyTest;
@@ -35,6 +37,7 @@ import androidx.test.filters.SmallTest;
 import androidx.test.filters.Suppress;
 import androidx.test.internal.runner.TestRequestBuilder.DeviceBuild;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -962,7 +965,7 @@ public class TestRequestBuilderTest {
   public void testSdkSuppress() throws Exception {
     MockitoAnnotations.initMocks(this);
     TestRequestBuilder b = createBuilder(mockDeviceBuild);
-    Mockito.when(mockDeviceBuild.getSdkVersionInt()).thenReturn(16);
+    when(mockDeviceBuild.getSdkVersionInt()).thenReturn(16);
     Request request = b.addTestClass(SampleSdkSuppress.class.getName()).build();
     JUnitCore testRunner = new JUnitCore();
     Result result = testRunner.run(request);
@@ -982,7 +985,7 @@ public class TestRequestBuilderTest {
   public void testRequiresDevice() {
     MockitoAnnotations.initMocks(this);
     TestRequestBuilder b = createBuilder(mockDeviceBuild);
-    Mockito.when(mockDeviceBuild.getHardware())
+    when(mockDeviceBuild.getHardware())
         .thenReturn(EMULATOR_HARDWARE_GOLDFISH, EMULATOR_HARDWARE_RANCHU);
     Request request = b.addTestClass(SampleRequiresDevice.class.getName()).build();
     JUnitCore testRunner = new JUnitCore();
@@ -1306,95 +1309,127 @@ public class TestRequestBuilderTest {
   private static final String EXCEPTION_MESSAGE =
       "Ambiguous arguments: cannot provide both test package and test class(es) to run";
 
-  /** Test exception is thrown when both test package and class has been provided */
+  /** Take intersection of test package and class */
   @Test
   public void testBothPackageAndClass() throws Exception {
-    thrown.expect(IllegalArgumentException.class);
-    thrown.expectMessage(EXCEPTION_MESSAGE);
-    builder
-        .addTestPackage("androidx.test.internal.runner")
-        .addTestClass(SampleJUnit3Test.class.getName())
-        .build();
+    setClassPathScanningResults(
+        SampleRunnerFilterSizeTest.class.getName(), SamplePlatformSizeTest.class.getName());
+
+    List<String> results =
+        runRequest(
+            builder
+                .addTestPackage("androidx.test.internal.runner")
+                .addTestClass(SampleRunnerFilterSizeTest.class.getName())
+                .build());
+
+    assertThat(results)
+        .containsExactly(
+            SampleRunnerFilterSizeTest.class.getName() + "#testSmall",
+            SampleRunnerFilterSizeTest.class.getName() + "#testOther");
   }
 
-  /** Test providing a test package and notClass is allowed */
+  /** Test providing a test package and notClass */
   @Test
-  public void testBothPackageAndNotClass() {
+  public void testBothPackageAndNotClass() throws IOException {
+    // just assert that the correct filters are passed to class path scanner
+    ArgumentCaptor<ClassPathScanner.ClassNameFilter> filterCapture =
+        ArgumentCaptor.forClass(ClassPathScanner.ClassNameFilter.class);
+
     builder
         .addPathToScan("foo")
         .addTestPackage("androidx.test.internal.runner")
         .removeTestClass(SampleRunnerFilterSizeTest.class.getName())
         .build();
-    // TODO(b/37227180): Verify that result from the builder contains expected value.
+
+    verify(mockClassPathScanner).getClassPathEntries(filterCapture.capture());
+    ClassPathScanner.ClassNameFilter filter = filterCapture.getValue();
+    assertThat(filter.accept("androidx.test.internal.runner.IncludeMe")).isTrue();
+    assertThat(filter.accept("androidx.test.excludeme")).isFalse();
+    assertThat(filter.accept(SampleRunnerFilterSizeTest.class.getName())).isFalse();
   }
 
-  /** Test exception is thrown when both test package and method has been provided */
   @Test
   public void testBothPackageAndMethod() throws Exception {
-    thrown.expect(IllegalArgumentException.class);
-    thrown.expectMessage(EXCEPTION_MESSAGE);
-    builder
-        .addTestPackage("androidx.test.internal.runner")
-        .addTestMethod(SampleRunnerFilterSizeTest.class.getName(), "testSmall")
-        .build();
+    setClassPathScanningResults(
+        SampleRunnerFilterSizeTest.class.getName(), SamplePlatformSizeTest.class.getName());
+
+    List<String> results =
+        runRequest(
+            builder
+                .addTestPackage("androidx.test.internal.runner")
+                .addTestMethod(SampleRunnerFilterSizeTest.class.getName(), "testSmall")
+                .build());
+
+    assertThat(results).containsExactly(SampleRunnerFilterSizeTest.class.getName() + "#testSmall");
   }
 
   /** Test providing both test package and notMethod is allowed */
   @Test
-  public void testBothPackageAndNotMethod() {
-    builder
-        .addPathToScan("foo")
-        .addTestPackage("androidx.test.internal.runner")
-        .removeTestMethod(SampleRunnerFilterSizeTest.class.getName(), "testSmall")
-        .build();
-    // TODO(b/37227180): Verify that result from the builder contains expected value.
+  public void testBothPackageAndNotMethod() throws IOException {
+    setClassPathScanningResults(
+        SampleRunnerFilterSizeTest.class.getName(), SamplePlatformSizeTest.class.getName());
+
+    List<String> results =
+        runRequest(
+            builder
+                .addPathToScan("foo")
+                .addTestPackage("androidx.test.internal.runner")
+                .removeTestMethod(SampleRunnerFilterSizeTest.class.getName(), "testSmall")
+                .build());
+
+    assertThat(results)
+        .containsExactly(
+            SampleRunnerFilterSizeTest.class.getName() + "#testOther",
+            SamplePlatformSizeTest.class.getName() + "#testSmall",
+            SamplePlatformSizeTest.class.getName() + "#testOther");
   }
 
-  /** Test exception is thrown when test package, test class and test method has been provided */
   @Test
-  public void testPackageAndClassAndMethod() {
-    thrown.expect(IllegalArgumentException.class);
-    thrown.expectMessage(EXCEPTION_MESSAGE);
-    builder
-        .addTestPackage("androidx.test.internal.runner")
-        .addTestMethod(SampleRunnerFilterSizeTest.class.getName(), "testSmall")
-        .build();
+  public void testPackageAndClassAndMethod() throws IOException {
+    setClassPathScanningResults(
+        SampleRunnerFilterSizeTest.class.getName(), SamplePlatformSizeTest.class.getName());
+
+    List<String> results =
+        runRequest(
+            builder
+                .addPathToScan("foo")
+                .addTestPackage("androidx.test.internal.runner")
+                .addTestMethod(SampleRunnerFilterSizeTest.class.getName(), "testSmall")
+                .build());
+
+    assertThat(results).containsExactly(SampleRunnerFilterSizeTest.class.getName() + "#testSmall");
   }
 
-  /** Test that providing a test package with Class is not allowed */
   @Test
-  public void testPackageAndClassAndNotMethod() {
-    thrown.expect(IllegalArgumentException.class);
-    thrown.expectMessage(EXCEPTION_MESSAGE);
-    builder
-        .addTestPackage("androidx.test.internal.runner")
-        .addTestClass(SampleRunnerFilterSizeTest.class.getName())
-        .removeTestMethod(SampleRunnerFilterSizeTest.class.getName(), "testSmall")
-        .build();
+  public void testPackageAndClassAndNotMethod() throws IOException {
+    setClassPathScanningResults(
+        SampleRunnerFilterSizeTest.class.getName(), SamplePlatformSizeTest.class.getName());
+
+    List<String> results =
+        runRequest(
+            builder
+                .addTestPackage("androidx.test.internal.runner")
+                .addTestClass(SampleRunnerFilterSizeTest.class.getName())
+                .removeTestMethod(SampleRunnerFilterSizeTest.class.getName(), "testSmall")
+                .build());
+
+    assertThat(results).containsExactly(SampleRunnerFilterSizeTest.class.getName() + "#testOther");
   }
 
-  /** Test that providing a test package with test method is not allowed */
   @Test
-  public void testPackageAndNotClassAndMethod() {
-    thrown.expect(IllegalArgumentException.class);
-    thrown.expectMessage(EXCEPTION_MESSAGE);
-    builder
-        .addTestPackage("androidx.test.internal.runner")
-        .removeTestClass(SampleRunnerFilterClassSize.class.getName())
-        .addTestMethod(SampleRunnerFilterSizeTest.class.getName(), "testSmall")
-        .build();
-  }
+  public void testPackageAndNotClassAndMethod() throws IOException {
+    setClassPathScanningResults(
+        SampleRunnerFilterSizeTest.class.getName(), SamplePlatformSizeTest.class.getName());
 
-  /** Test that providing a test package with notClass and test notMethod is allowed */
-  @Test
-  public void testPackageAndNotClassAndNotMethod() {
-    builder
-        .addPathToScan("foo")
-        .addTestPackage("androidx.test.internal.runner")
-        .removeTestClass(SampleRunnerFilterClassSize.class.getName())
-        .removeTestMethod(SampleRunnerFilterSizeTest.class.getName(), "testSmall")
-        .build();
-    // TODO(b/37227180): Verify that result from the builder contains expected value.
+    List<String> results =
+        runRequest(
+            builder
+                .addTestPackage("androidx.test.internal.runner")
+                .removeTestClass(SampleRunnerFilterClassSize.class.getName())
+                .addTestMethod(SamplePlatformSizeTest.class.getName(), "testSmall")
+                .build());
+
+    assertThat(results).containsExactly(SamplePlatformSizeTest.class.getName() + "#testSmall");
   }
 
   @Test
@@ -1820,6 +1855,29 @@ public class TestRequestBuilderTest {
         e.addSuppressed(failure.getException());
       }
       throw e;
+    }
+  }
+
+  /** Runs the test request and gets list of test methods run */
+  private static ArrayList<String> runRequest(Request request) {
+    JUnitCore testRunner = new JUnitCore();
+    RecordingRunListener listener = new RecordingRunListener();
+    testRunner.addListener(listener);
+    testRunner.run(request);
+    return listener.methods;
+  }
+
+  private void setClassPathScanningResults(String... names) throws IOException {
+    when(mockClassPathScanner.getClassPathEntries(Mockito.any()))
+        .thenReturn(new HashSet<>(Arrays.asList(names)));
+  }
+
+  /** Records list of test methods executed */
+  private static class RecordingRunListener extends RunListener {
+    ArrayList<String> methods = new ArrayList<>();
+
+    public void testFinished(Description description) {
+      methods.add(description.getClassName() + "#" + description.getMethodName());
     }
   }
 }
