@@ -2,8 +2,7 @@
 
 licenses(["notice"])  # Apache License 2.0
 
-# This needs to be a java_library instead of an alias, so java_* based rules can reference it
-java_library(
+android_library(
     name = "junit",
     visibility = ["//visibility:public"],
     exports = ["//ext/junit/java/androidx/test/ext/junit"],
