@@ -291,7 +291,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
             });
   }
 
-  private void restoreUncaughtExceptionHandler() {
+  protected void restoreUncaughtExceptionHandler() {
     Thread.currentThread().setUncaughtExceptionHandler(standardHandler);
   }
 
