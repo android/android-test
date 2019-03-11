@@ -1,7 +1,6 @@
 package(default_visibility = ["//:__subpackages__"])
 
 load("//build_extensions:maven_repo.bzl", "maven_repository")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "ANDROIDX_LIFECYCLE_VERSION", "GOOGLE_MATERIAL_VERSION", "ANDROIDX_MULTIDEX_VERSION")
 load("@rules_jvm_external//:defs.bzl", "artifact")
 
 exports_files([
@@ -56,70 +55,70 @@ alias(
 
 alias(
     name = "androidx_appcompat",
-    actual = artifact("androidx.appcompat:appcompat:" + ANDROIDX_VERSION),
+    actual = artifact("androidx.appcompat:appcompat"),
 )
 
 alias(
     name = "google_android_material",
-    actual = artifact("com.google.android.material:material:" + GOOGLE_MATERIAL_VERSION),
+    actual = artifact("com.google.android.material:material"),
 )
 
 alias(
     name = "androidx_multidex",
-    actual = artifact("androidx.multidex:multidex:" + ANDROIDX_MULTIDEX_VERSION),
+    actual = artifact("androidx.multidex:multidex"),
 )
 
 alias(
     name = "androidx_annotation",
-    actual = artifact("androidx.annotation:annotation:" + ANDROIDX_VERSION),
+    actual = artifact("androidx.annotation:annotation"),
 )
 
 alias(
     name = "androidx_lifecycle_common",
-    actual = artifact("androidx.lifecycle:lifecycle-common:" + ANDROIDX_LIFECYCLE_VERSION),
+    actual = artifact("androidx.lifecycle:lifecycle-common"),
 )
 
 alias(
     name = "androidx_core",
-    actual = artifact("androidx.core:core:" + ANDROIDX_VERSION),
+    actual = artifact("androidx.core:core"),
 )
 
 alias(
     name = "androidx_legacy_support_core_ui",
-    actual = artifact("androidx.legacy:legacy-support-core-ui:" + ANDROIDX_VERSION),
+    actual = artifact("androidx.legacy:legacy-support-core-ui"),
 )
 
 alias(
     name = "androidx_legacy_support_core_utils",
-    actual = artifact("androidx.legacy:legacy-support-core-utils:" + ANDROIDX_VERSION),
+    actual = artifact("androidx.legacy:legacy-support-core-utils"),
 )
 
 alias(
     name = "androidx_fragment",
-    actual = artifact("androidx.fragment:fragment:" + ANDROIDX_VERSION),
+    actual = artifact("androidx.fragment:fragment"),
 )
 
 alias(
     name = "androidx_legacy_support_v4",
-    actual = artifact("androidx.legacy:legacy-support-v4:" + ANDROIDX_VERSION),
+    actual = artifact("androidx.legacy:legacy-support-v4"),
 )
 
 alias(
     name = "androidx_recyclerview",
-    actual = artifact("androidx.recyclerview:recyclerview:" + ANDROIDX_VERSION),
+    actual = artifact("androidx.recyclerview:recyclerview"),
 )
 
 alias(
     name = "androidx_viewpager",
-    actual = artifact("androidx.viewpager:viewpager:" + ANDROIDX_VERSION),
+    actual = artifact("androidx.viewpager:viewpager"),
 )
 
 alias(
     name = "androidx_drawerlayout",
-    actual = artifact("androidx.drawerlayout:drawerlayout:" + ANDROIDX_VERSION),
+    actual = artifact("androidx.drawerlayout:drawerlayout"),
 )
 
 alias(
     name = "androidx_cursoradapter",
-    actual = artifact("androidx.cursoradapter:cursoradapter:" + ANDROIDX_VERSION),
+    actual = artifact("androidx.cursoradapter:cursoradapter"),
 )
