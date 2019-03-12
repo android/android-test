@@ -43,30 +43,35 @@ class ActivityScenarioKotlinTest {
   fun basicUseCase() {
     launchActivity<RecreationRecordingActivity>().use { scenario ->
       with(scenario) {
+        assertThat(state).isEqualTo(State.RESUMED)
         onActivity {
           assertThat(it.numberOfRecreations).isEqualTo(0)
           assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
         }
 
         recreate()
+        assertThat(state).isEqualTo(State.RESUMED)
         onActivity {
           assertThat(it.numberOfRecreations).isEqualTo(1)
           assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.RESUMED)
         }
 
         moveToState(State.STARTED)
+        assertThat(state).isEqualTo(State.STARTED)
         onActivity {
           assertThat(it.numberOfRecreations).isEqualTo(1)
           assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.PAUSED)
         }
 
         moveToState(State.CREATED)
+        assertThat(state).isEqualTo(State.CREATED)
         onActivity {
           assertThat(it.numberOfRecreations).isEqualTo(1)
           assertThat(lastLifeCycleTransition(it)).isEqualTo(Stage.STOPPED)
         }
 
         moveToState(State.RESUMED)
+        assertThat(state).isEqualTo(State.RESUMED)
         onActivity {
           it.setResult(RESULT_OK, Intent().setAction(Intent.ACTION_SEND))
           it.finish()

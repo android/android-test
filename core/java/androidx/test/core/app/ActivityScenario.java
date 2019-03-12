@@ -558,4 +558,16 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   public ActivityResult getResult() {
     return activityInvoker.getActivityResult();
   }
+
+  /**
+   * Returns the current activity state. The possible states are {@link State#CREATED}, {@link
+   * State#STARTED}, {@link State#RESUMED}, and {@link State#DESTROYED}.
+   *
+   * <p>This method cannot be called from the main thread except in Robolectric tests.
+   */
+  public State getState() {
+    return checkNotNull(
+        getCurrentActivityState().state,
+        "Could not get current state due to the transition is incomplete.");
+  }
 }
