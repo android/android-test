@@ -119,6 +119,9 @@ import org.junit.runners.model.RunnerBuilder;
  * <p><b>Running all tests except a particular package:</b> adb shell am instrument -w -e notPackage
  * com.android.foo.bar com.android.foo/androidx.test.runner.AndroidJUnitRunner
  *
+ * <p><b>Running all tests matching a given regular expression:</b> adb shell am instrument -w -e
+ * tests_regex BarTest.* com.android.foo/androidx.test.runner.AndroidJUnitRunner
+ *
  * <p><b>To debug your tests, set a break point in your code and pass:</b> -e debug true
  *
  * <p><b>Running a specific test size i.e. annotated with {@link SmallTest} or {@link MediumTest} or

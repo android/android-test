@@ -27,6 +27,8 @@ import androidx.test.internal.runner.ClassPathScanner.ExcludeClassNamesFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExcludePackageNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExternalClassNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.InclusivePackageNamesFilter;
+import androidx.test.internal.runner.filters.ParentFilter;
+import androidx.test.internal.runner.filters.TestsRegExFilter;
 import androidx.test.internal.util.AndroidRunnerParams;
 import androidx.test.internal.util.Checks;
 import java.io.IOException;
@@ -80,13 +82,15 @@ public class TestRequestBuilder {
   private Set<String> includedClasses = new HashSet<>();
   private Set<String> excludedClasses = new HashSet<>();
   private ClassAndMethodFilter classMethodFilter = new ClassAndMethodFilter();
+  private final TestsRegExFilter testsRegExFilter = new TestsRegExFilter();
   private Filter filter =
       new AnnotationExclusionFilter(androidx.test.filters.Suppress.class)
           .intersect(
               new AnnotationExclusionFilter(android.test.suitebuilder.annotation.Suppress.class))
           .intersect(new SdkSuppressFilter())
           .intersect(new RequiresDeviceFilter())
-          .intersect(classMethodFilter);
+          .intersect(classMethodFilter)
+          .intersect(testsRegExFilter);
   private List<Class<? extends RunnerBuilder>> customRunnerBuilderClasses = new ArrayList<>();
   private boolean skipExecution = false;
   private final DeviceBuild deviceBuild;
@@ -126,33 +130,6 @@ public class TestRequestBuilder {
     public String getHardware() {
       return android.os.Build.HARDWARE;
     }
-  }
-
-  /** Helper parent class for {@link Filter} that allows suites to run if any child matches. */
-  private abstract static class ParentFilter extends Filter {
-    /** {@inheritDoc} */
-    @Override
-    public boolean shouldRun(Description description) {
-      if (description.isTest()) {
-        return evaluateTest(description);
-      }
-      // this is a suite, explicitly check if any children should run
-      for (Description each : description.getChildren()) {
-        if (shouldRun(each)) {
-          return true;
-        }
-      }
-      // no children to run, filter this out
-      return false;
-    }
-
-    /**
-     * Determine if given test description matches filter.
-     *
-     * @param description the {@link Description} describing the test
-     * @return <code>true</code> if matched
-     */
-    protected abstract boolean evaluateTest(Description description);
   }
 
   /** Filter that only runs tests whose method or class has been annotated with given filter. */
@@ -635,6 +612,18 @@ public class TestRequestBuilder {
   }
 
   /**
+   * Sets the test name filter regular expression filter.
+   *
+   * <p>Will filter out tests not matching the given regex.
+   *
+   * @param testsRegex a regex for matching against <code>java_package.class#method</code>
+   */
+  public TestRequestBuilder setTestsRegExFilter(String testsRegex) {
+    this.testsRegExFilter.setPattern(testsRegex);
+    return this;
+  }
+
+  /**
    * Run only tests with given size
    *
    * @param forTestSize
@@ -754,6 +743,9 @@ public class TestRequestBuilder {
     }
     for (Class<? extends RunnerBuilder> runnerBuilderClass : runnerArgs.runnerBuilderClasses) {
       addCustomRunnerBuilderClass(runnerBuilderClass);
+    }
+    if (runnerArgs.testsRegEx != null) {
+      setTestsRegExFilter(runnerArgs.testsRegEx);
     }
     return this;
   }

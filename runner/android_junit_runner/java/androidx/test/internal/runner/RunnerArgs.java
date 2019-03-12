@@ -83,6 +83,7 @@ public class RunnerArgs {
   static final String ARGUMENT_LIST_TESTS_FOR_ORCHESTRATOR = "listTestsForOrchestrator";
   static final String ARGUMENT_SHELL_EXEC_BINDER_KEY = "shellExecBinderKey";
   static final String ARGUMENT_RUN_LISTENER_NEW_ORDER = "newRunListenerMode";
+  static final String ARGUMENT_TESTS_REGEX = "tests_regex";
 
   // used to separate multiple fully-qualified test case class names
   private static final String CLASS_SEPARATOR = ",";
@@ -124,6 +125,7 @@ public class RunnerArgs {
   public final boolean listTestsForOrchestrator;
   public final String shellExecBinderKey;
   public final boolean newRunListenerMode;
+  public final String testsRegEx;
 
   /** Encapsulates a test class and optional method. */
   public static class TestArg {
@@ -182,6 +184,7 @@ public class RunnerArgs {
     this.targetProcess = builder.targetProcess;
     this.shellExecBinderKey = builder.shellExecBinderKey;
     this.newRunListenerMode = builder.newRunListenerMode;
+    this.testsRegEx = builder.testsRegEx;
   }
 
   public static class Builder {
@@ -216,6 +219,7 @@ public class RunnerArgs {
     private List<ScreenCaptureProcessor> screenCaptureProcessors = new ArrayList<>();
     public String shellExecBinderKey;
     private boolean newRunListenerMode = false;
+    private String testsRegEx = null;
 
     /**
      * Populate the arg data from the given Bundle.
@@ -277,6 +281,7 @@ public class RunnerArgs {
               null));
       this.shellExecBinderKey = bundle.getString(ARGUMENT_SHELL_EXEC_BINDER_KEY);
       this.newRunListenerMode = parseBoolean(bundle.getString(ARGUMENT_RUN_LISTENER_NEW_ORDER));
+      this.testsRegEx = bundle.getString(ARGUMENT_TESTS_REGEX);
       return this;
     }
 
