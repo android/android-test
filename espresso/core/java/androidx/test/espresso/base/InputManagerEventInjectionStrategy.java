@@ -35,7 +35,7 @@ import java.lang.reflect.Method;
  * supports API level 16 and above.
  */
 final class InputManagerEventInjectionStrategy implements EventInjectionStrategy {
-  private static final String TAG = InputManagerEventInjectionStrategy.class.getSimpleName();
+  private static final String TAG = "EventInjectionStrategy";
   // The delay time to allow the soft keyboard to dismiss.
   private static final long KEYBOARD_DISMISSAL_DELAY_MILLIS = 1000L;
 
