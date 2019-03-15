@@ -252,7 +252,7 @@ public final class ViewMatchers {
    * @param key to match
    * @param objectMatcher Object to match
    */
-  public static Matcher<View> withTagKey(final int key, final Matcher<Object> objectMatcher) {
+  public static Matcher<View> withTagKey(final int key, final Matcher<?> objectMatcher) {
     return new WithTagKeyMatcher(key, checkNotNull(objectMatcher));
   }
 
@@ -712,10 +712,10 @@ public final class ViewMatchers {
     private final int key;
 
     @RemoteMsgField(order = 1)
-    private final Matcher<Object> objectMatcher;
+    private final Matcher<?> objectMatcher;
 
     @RemoteMsgConstructor
-    private WithTagKeyMatcher(int key, Matcher<Object> objectMatcher) {
+    private WithTagKeyMatcher(int key, Matcher<?> objectMatcher) {
       this.key = key;
       this.objectMatcher = objectMatcher;
     }
