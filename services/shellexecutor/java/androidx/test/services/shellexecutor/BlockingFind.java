@@ -46,6 +46,8 @@ final class BlockingFind extends FindResultReceiver {
     latch = new CountDownLatch(1);
   }
 
+  // test
+
   @Override
   protected void handleFindResult(FindResult findResult) {
     this.findResult = findResult;
