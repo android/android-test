@@ -89,19 +89,17 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * Before:
  *   ActivityController<MyActivity> controller = Robolectric.buildActivity(MyActivity.class);
- *   controller.create().start().resume();
- *   controller.get();          // Returns resumed activity.
- *   controller.pause().get();  // Returns paused activity.
- *   controller.stop().get();   // Returns stopped activity.
- *   controller.destroy();      // Destroys activity.
+ *   controller.create().start().resume();  // Moves the activity state to State.RESUMED.
+ *   controller.pause();    // Moves the activity state to State.STARTED. (ON_PAUSE is an event).
+ *   controller.stop();     // Moves the activity state to State.CREATED. (ON_STOP is an event).
+ *   controller.destroy();  // Moves the activity state to State.DESTROYED.
  *
  * After:
  *   try(ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class)) {
- *     scenario.onActivity(activity -> {});  // Your activity is resumed.
- *     scenario.moveTo(State.STARTED);
- *     scenario.onActivity(activity -> {});  // Your activity is paused.
- *     scenario.moveTo(State.CREATED);
- *     scenario.onActivity(activity -> {});  // Your activity is stopped.
+ *     scenario.moveToState(State.RESUMED);    // Moves the activity state to State.RESUMED.
+ *     scenario.moveToState(State.STARTED);    // Moves the activity state to State.STARTED.
+ *     scenario.moveToState(State.CREATED);    // Moves the activity state to State.CREATED.
+ *     scenario.moveToState(State.DESTROYED);  // Moves the activity state to State.DESTROYED.
  *   }
  * }</pre>
  */
