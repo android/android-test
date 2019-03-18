@@ -572,6 +572,7 @@ public class RunnerArgsTest {
         "androidx.test.runner.screenshot.BasicScreenCaptureProcessor");
     b.putString(RunnerArgs.ARGUMENT_RUN_LISTENER_NEW_ORDER, "true");
     b.putString(RunnerArgs.ARGUMENT_CLASSPATH_TO_SCAN, "/foo/baz/f.dex:/foo/bar/f.dex");
+    b.putString(RunnerArgs.ARGUMENT_TESTS_REGEX, "myregex");
 
     RunnerArgs fromBundle =
         new RunnerArgs.Builder()
