@@ -2,7 +2,6 @@
 
 load("//build_extensions:remove_from_jar.bzl", "remove_from_jar")
 load("//build_extensions:add_or_update_file_in_zip.bzl", "add_or_update_file_in_zip")
-load("//build_extensions:jarjar.bzl", "jarjar_binary")
 
 def axt_release_lib(
     name,
