@@ -10,6 +10,7 @@ licenses(["notice"])  # Apache License 2.0
 android_local_test(
     name = "AndroidJUnit4Test",
     srcs = ["AndroidJUnit4Test.java"],
+    manifest = "AndroidManifest_target.xml",
     # TODO: have android_local_test provide this natively?
     jvm_flags = ["-Dandroid.junit.runner=org.robolectric.RobolectricTestRunner"],
     tags = ["robolectric"],
