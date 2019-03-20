@@ -32,6 +32,7 @@ android_local_test(
     name = "ServiceLoaderWrapperTest",
     srcs = ["ServiceLoaderWrapperTest.java"],
     tags = ["robolectric"],
+    manifest = "AndroidManifest_target.xml",
     deps = [
         ":robolectric_config",
         ":service_fixture",

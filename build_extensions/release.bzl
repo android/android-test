@@ -79,15 +79,20 @@ def axt_release_lib(
     expected_output = ":%s_all_proguard.jar" % name
 
   # Step 3. Rename classes via jarjar
+  native.java_binary(
+    name = "jarjar_bin",
+    main_class = "com.tonicsystems.jarjar.Main",
+    runtime_deps = ["@bazel_tools//tools/jdk:JarJar"],
+  )
   native.genrule(
       name = "%s_jarjared" % name,
       srcs = [expected_output],
       outs = ["%s_jarjared.jar" % name],
-      cmd = ("$(location @bazel_tools//third_party/jarjar:jarjar_bin) process " +
+      cmd = ("$(location :jarjar_bin) process " +
                "$(location %s) '$<' '$@'") % jarjar_rules,
       tools = [
           jarjar_rules,
-          "@bazel_tools//third_party/jarjar:jarjar_bin",
+	  ":jarjar_bin",
       ],
   )
 
