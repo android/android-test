@@ -22,6 +22,7 @@ import android.os.Parcelable;
 import com.google.common.truth.BooleanSubject;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.IntegerSubject;
+import com.google.common.truth.LongSubject;
 import com.google.common.truth.StringSubject;
 import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
@@ -63,6 +64,10 @@ public final class BundleSubject extends Subject<BundleSubject, Bundle> {
 
   public IntegerSubject integer(String key) {
     return check("getInt(%s)", key).that(actual().getInt(key));
+  }
+
+  public LongSubject longInt(String key) {
+    return check("getLong(%s)", key).that(actual().getLong(key));
   }
 
   public BooleanSubject bool(String key) {
