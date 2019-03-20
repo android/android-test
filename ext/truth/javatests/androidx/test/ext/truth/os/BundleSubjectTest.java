@@ -66,6 +66,13 @@ public class BundleSubjectTest {
   }
 
   @Test
+  public void longInt() {
+    Bundle bundle = new Bundle();
+    bundle.putLong("foo", 1000000000000L);
+    assertThat(bundle).longInt("foo").isEqualTo(1000000000000L);
+  }
+
+  @Test
   public void bool() {
     Bundle bundle = new Bundle();
     bundle.putBoolean("foo", true);
