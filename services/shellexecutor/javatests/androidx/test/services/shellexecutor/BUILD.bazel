@@ -17,6 +17,8 @@ android_local_test(
         "//runner/android_junit_runner",
         "//services/shellexecutor:exec_client",
         "//services/shellexecutor:exec_server",
+        "@bytebuddyagent//jar",
+        "@bytebuddy//jar",
         "@junit//jar",
         "@mockito//jar",
         "@objenesis//jar",

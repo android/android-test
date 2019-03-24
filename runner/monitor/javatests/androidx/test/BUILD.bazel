@@ -11,6 +11,8 @@ MONITOR_DEPS = [
 
 ROBOLECTRIC_DEPS = [
     "@junit//jar",
+    "@bytebuddy//jar",
+    "@bytebuddyagent//jar",
     "@mockito//jar",
     "@truth//jar",
     "@objenesis//jar",

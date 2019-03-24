@@ -16,7 +16,7 @@
 
 package androidx.test.internal.runner.intent;
 
-import static org.mockito.Matchers.argThat;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -63,7 +63,7 @@ public class IntentMonitorImplTest {
     return argThat(
         new ArgumentMatcher<Intent>() {
           @Override
-          public boolean matches(Object intent) {
+          public boolean matches(Intent intent) {
             return ((Intent) intent).getAction().equals(action);
           }
         });

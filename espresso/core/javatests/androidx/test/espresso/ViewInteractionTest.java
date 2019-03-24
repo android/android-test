@@ -31,7 +31,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMap;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -64,6 +63,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.hamcrest.MockitoHamcrest;
 
 /** Unit tests for {@link ViewInteraction}. */
 @SmallTest
@@ -269,7 +269,7 @@ public class ViewInteractionTest {
     when(mockRemoteInteraction.createRemoteCheckCallable(
             any(Matcher.class),
             any(Matcher.class),
-            argThat(
+            MockitoHamcrest.argThat(
                 allOf(
                     hasEntry(
                         equalTo(RemoteInteraction.BUNDLE_EXECUTION_STATUS),
@@ -304,7 +304,7 @@ public class ViewInteractionTest {
     when(mockRemoteInteraction.createRemoteCheckCallable(
             any(Matcher.class),
             any(Matcher.class),
-            argThat(
+            MockitoHamcrest.argThat(
                 allOf(
                     hasEntry(
                         equalTo(RemoteInteraction.BUNDLE_EXECUTION_STATUS),
@@ -326,7 +326,7 @@ public class ViewInteractionTest {
           .createRemoteCheckCallable(
               any(Matcher.class),
               any(Matcher.class),
-              argThat(
+              MockitoHamcrest.argThat(
                   allOf(
                       hasEntry(
                           equalTo(RemoteInteraction.BUNDLE_EXECUTION_STATUS),
@@ -347,7 +347,7 @@ public class ViewInteractionTest {
         .createRemoteCheckCallable(
             any(Matcher.class),
             any(Matcher.class),
-            argThat(
+            MockitoHamcrest.argThat(
                 allOf(
                     hasEntry(
                         equalTo(RemoteInteraction.BUNDLE_EXECUTION_STATUS),
@@ -372,7 +372,7 @@ public class ViewInteractionTest {
         .createRemotePerformCallable(
             any(Matcher.class),
             any(Matcher.class),
-            argThat(
+            MockitoHamcrest.argThat(
                 allOf(
                     hasEntry(
                         equalTo(RemoteInteraction.BUNDLE_EXECUTION_STATUS),
@@ -402,7 +402,7 @@ public class ViewInteractionTest {
         .createRemoteCheckCallable(
             any(Matcher.class),
             any(Matcher.class),
-            argThat(
+            MockitoHamcrest.argThat(
                 allOf(
                     hasEntry(
                         equalTo(RemoteInteraction.BUNDLE_EXECUTION_STATUS),

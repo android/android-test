@@ -5,17 +5,20 @@ android_library(
     name = "espresso_contrib_test_lib",
     testonly = 1,
     # TODO(b/119839492): need androidx version of accessibility
-    srcs = glob(["**/*.java"], exclude = ["AccessibilityChecksIntegrationTest.java"]),
+    srcs = glob(
+        ["**/*.java"],
+        exclude = ["AccessibilityChecksIntegrationTest.java"],
+    ),
     manifest = "AndroidManifest.xml",
     deps = [
         "//core",
         "//espresso/contrib/java/androidx/test/espresso/contrib:accessibility_checks",
         "//espresso/contrib/java/androidx/test/espresso/contrib:activity_result_matchers",
+        "//espresso/contrib/java/androidx/test/espresso/contrib:androidx_neverlink",
         "//espresso/contrib/java/androidx/test/espresso/contrib:design_lib_actions",
         "//espresso/contrib/java/androidx/test/espresso/contrib:drawer_actions",
         "//espresso/contrib/java/androidx/test/espresso/contrib:recycler_view",
         "//espresso/contrib/java/androidx/test/espresso/contrib:recyclerview_neverlink",
-        "//espresso/contrib/java/androidx/test/espresso/contrib:androidx_neverlink",
         "//espresso/contrib/java/androidx/test/espresso/contrib:view_pager_actions",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",

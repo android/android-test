@@ -28,6 +28,8 @@ ROBOLECTRIC_DEPS = [
 ROBOLECTRIC_EXTERNAL_DEPS = [
     "@guava//jar",
     "@hamcrest//jar",
+    "@bytebuddy//jar",
+    "@bytebuddyagent//jar",
     "@mockito//jar",
     "@objenesis//jar",
     "@robolectric//bazel:robolectric",
