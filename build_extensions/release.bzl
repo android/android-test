@@ -81,8 +81,8 @@ def axt_release_lib(
   # Step 3. Rename classes via jarjar
   native.java_binary(
     name = "jarjar_bin",
-    main_class = "com.tonicsystems.jarjar.Main",
-    runtime_deps = ["@bazel_tools//tools/jdk:JarJar"],
+    main_class = "org.pantsbuild.jarjar.Main",
+    runtime_deps = ["@maven//:org_pantsbuild_jarjar"],
   )
   native.genrule(
       name = "%s_jarjared" % name,

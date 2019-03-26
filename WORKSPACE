@@ -3,9 +3,9 @@ workspace(name = "android_test_support")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-RULES_JVM_EXTERNAL_TAG = "1.0"
+RULES_JVM_EXTERNAL_TAG = "1.2"
 
-RULES_JVM_EXTERNAL_SHA = "48e0f1aab74fabba98feb8825459ef08dcc75618d381dff63ec9d4dd9860deaa"
+RULES_JVM_EXTERNAL_SHA = "e5c68b87f750309a79f59c2b69ead5c3221ffa54ff9496306937bfa1c9c8c86b"
 
 http_archive(
     name = "rules_jvm_external",
@@ -43,6 +43,7 @@ maven_install(
         "androidx.recyclerview:recyclerview:" + ANDROIDX_VERSION,
         "androidx.viewpager:viewpager:" + ANDROIDX_VERSION,
         "com.google.android.material:material:" + GOOGLE_MATERIAL_VERSION,
+        "org.pantsbuild:jarjar:1.7.2",
     ],
     repositories = [
         "https://maven.google.com",
