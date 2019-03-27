@@ -15,13 +15,13 @@
  */
 package androidx.test.ext.truth.content;
 
-import static androidx.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.ext.truth.content.IntentSubject.assertThat;
 import static org.junit.Assert.fail;
 
 import android.content.Intent;
 import android.net.Uri;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.google.common.truth.Truth;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,7 +66,7 @@ public class IntentSubjectTest {
   @Test
   public void hasComponentClass() {
     Intent intent = new Intent();
-    intent.setClassName(getTargetContext(), "Foo");
+    intent.setClassName(getApplicationContext(), "Foo");
     assertThat(intent).hasComponentClass("Foo");
   }
 

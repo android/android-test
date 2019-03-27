@@ -18,8 +18,8 @@ package androidx.test.ext.truth.app;
 import static androidx.test.ext.truth.app.NotificationActionSubject.assertThat;
 
 import android.app.Notification;
-import androidx.test.filters.SdkSuppress;
-import androidx.test.runner.AndroidJUnit4;
+import android.os.Build;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -29,10 +29,11 @@ public class NotificationActionSubjectTest {
   private static final String EXPECTED_TEXT = "Hello World";
 
   @Test
-  @SdkSuppress(minSdkVersion = 16)
   public void hasTitle() {
-    final Notification.Action action = new Notification.Action(0, EXPECTED_TEXT, null);
+    if (Build.VERSION.SDK_INT >= 16) {
+      final Notification.Action action = new Notification.Action(0, EXPECTED_TEXT, null);
 
-    assertThat(action).title().isEqualTo(EXPECTED_TEXT);
+      assertThat(action).title().isEqualTo(EXPECTED_TEXT);
+    }
   }
 }

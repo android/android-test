@@ -30,7 +30,7 @@ public final class ApplicationProviderTest {
 
   @Test
   public void getApplicationContext_asContext() {
-    assertThat(getApplicationContext().getPackageName()).isEqualTo("androidx.test.core.app");
+    assertThat(getApplicationContext().getPackageName()).isEqualTo("androidx.test.core");
   }
 
   @Test

@@ -34,4 +34,7 @@ sh_binary(
 exports_files([
     "noJarJarRules.txt",
     "atslToAxtJarJarRules.txt",
+    "AndroidManifest_target_stub.xml",
+    "AndroidManifest_instrumentation_test_template.xml",
+    "robolectric.properties",
 ])
