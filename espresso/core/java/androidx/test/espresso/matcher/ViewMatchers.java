@@ -1737,6 +1737,6 @@ public final class ViewMatchers {
    * generated.
    */
   private static boolean isViewIdGenerated(int id) {
-    return (id & 0xFF000000) == 0 && (id & 0x00FFFFFF) != 0;
+    return (id & 0xFF000000) != 0 && (id & 0x00FFFFFF) != 0;
   }
 }
