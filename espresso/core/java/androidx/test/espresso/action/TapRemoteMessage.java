@@ -46,8 +46,7 @@ public final class TapRemoteMessage implements EspressoRemoteMessage.To<ClickVie
         return ClickViewActionProto.Tap.DOUBLE;
       default:
         throw new IllegalArgumentException(
-            String.format(
-                Locale.ROOT, "Tap proto enum for general location: %s not found!", tap.toString()));
+            String.format(Locale.ROOT, "Tap proto enum for general location: %s not found!", tap));
     }
   }
 
