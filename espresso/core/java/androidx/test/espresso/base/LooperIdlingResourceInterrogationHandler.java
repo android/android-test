@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.MessageQueue;
 import androidx.test.espresso.IdlingResource;
+import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 
 /** An InterrogationHandler which determines whether a looper is in an idle state. */
@@ -79,7 +80,11 @@ class LooperIdlingResourceInterrogationHandler
 
   static LooperIdlingResourceInterrogationHandler forLooper(Looper l) {
     String name =
-        String.format("LooperIdlingResource-%s-%s", l.getThread().getId(), l.getThread().getName());
+        String.format(
+            Locale.ROOT,
+            "LooperIdlingResource-%s-%s",
+            l.getThread().getId(),
+            l.getThread().getName());
     final LooperIdlingResourceInterrogationHandler ir =
         new LooperIdlingResourceInterrogationHandler(name);
     LooperIdlingResourceInterrogationHandler previous = insts.putIfAbsent(name, ir);

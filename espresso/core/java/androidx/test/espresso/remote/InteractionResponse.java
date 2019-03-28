@@ -33,6 +33,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageLite;
 import java.util.Arrays;
 import java.util.IllegalFormatException;
+import java.util.Locale;
 
 /**
  * Encapsulates a {@link InteractionResultProto} request. Takes care of all the proto packing and
@@ -185,7 +186,7 @@ public final class InteractionResponse implements To<MessageLite> {
       checkState(!TextUtils.isEmpty(description), "description cannot be empty!");
       if (detailedError != null) {
         try {
-          description = String.format(description, errorCode, detailedError);
+          description = String.format(Locale.ROOT, description, errorCode, detailedError);
         } catch (IllegalFormatException ife) {
           Log.w(TAG, "Cannot format remote error description: " + description);
         }

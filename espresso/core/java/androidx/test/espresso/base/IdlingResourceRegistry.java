@@ -33,6 +33,7 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
@@ -216,9 +217,11 @@ public final class IdlingResourceRegistry {
           Log.e(
               TAG,
               String.format(
+                  Locale.ROOT,
                   "Attempted to unregister resource that is not registered: "
                       + "'%s'. Resource list: %s",
-                  resource.getName(), getResources()));
+                  resource.getName(),
+                  getResources()));
         }
       }
       return allUnregisteredSuccessfully;
@@ -491,6 +494,7 @@ public final class IdlingResourceRegistry {
         } else {
           throw new IllegalStateException(
               String.format(
+                  Locale.ROOT,
                   "Resource %s isIdleNow() is returning true, but a message indicating that the "
                       + "resource has transitioned from busy to idle was never sent.",
                   is.resource.getName()));
@@ -509,8 +513,11 @@ public final class IdlingResourceRegistry {
     Log.e(
         TAG,
         String.format(
+            Locale.ROOT,
             "Attempted to register resource with same names:"
                 + " %s. R1: %s R2: %s.\nDuplicate resource registration will be ignored.",
-            newResource.getName(), newResource, oldResource));
+            newResource.getName(),
+            newResource,
+            oldResource));
   }
 }

@@ -24,6 +24,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import androidx.test.espresso.util.EspressoOptional;
 import androidx.test.espresso.util.HumanReadables;
+import java.util.Locale;
 import javax.annotation.Nullable;
 
 /**
@@ -168,7 +169,8 @@ public interface AdapterViewProtocol {
       if (myData instanceof Cursor) {
         myData = HumanReadables.describe((Cursor) myData);
       }
-      return String.format("Data: %s (class: %s) token: %s", myData, itsClass, opaqueToken);
+      return String.format(
+          Locale.ROOT, "Data: %s (class: %s) token: %s", myData, itsClass, opaqueToken);
     }
 
     private AdaptedData(Object data, Object opaqueToken, DataFunction dataFunction) {

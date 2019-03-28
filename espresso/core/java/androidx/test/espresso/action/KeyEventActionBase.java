@@ -37,6 +37,7 @@ import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
 import java.util.Collection;
+import java.util.Locale;
 import org.hamcrest.Matcher;
 
 /** Enables pressing KeyEvents on views. */
@@ -61,7 +62,7 @@ class KeyEventActionBase implements ViewAction {
 
   @Override
   public String getDescription() {
-    return String.format("send %s key event", this.espressoKey);
+    return String.format(Locale.ROOT, "send %s key event", this.espressoKey);
   }
 
   @Override

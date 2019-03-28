@@ -34,6 +34,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import java.util.Iterator;
+import java.util.Locale;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 
@@ -270,6 +271,7 @@ public final class PositionAssertions {
         if (noViewException != null) {
           description.appendText(
               String.format(
+                  Locale.ROOT,
                   "' check could not be performed because view '%s' was not found.\n",
                   noViewException.getViewMatcherDescription()));
           Log.e(TAG, description.toString());

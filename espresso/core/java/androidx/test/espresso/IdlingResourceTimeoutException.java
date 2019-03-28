@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import androidx.test.internal.platform.util.TestOutputEmitter;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Indicates that an {@link IdlingResource}, which has been registered with the framework, has not
@@ -33,7 +34,9 @@ public final class IdlingResourceTimeoutException extends RuntimeException
     implements EspressoException {
 
   public IdlingResourceTimeoutException(List<String> resourceNames) {
-    super(String.format("Wait for %s to become idle timed out", checkNotNull(resourceNames)));
+    super(
+        String.format(
+            Locale.ROOT, "Wait for %s to become idle timed out", checkNotNull(resourceNames)));
     TestOutputEmitter.dumpThreadStates("ThreadState-IdlingResTimeoutExcep.txt");
   }
 }

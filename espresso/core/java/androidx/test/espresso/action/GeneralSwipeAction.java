@@ -24,6 +24,7 @@ import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.util.HumanReadables;
+import java.util.Locale;
 import org.hamcrest.Matcher;
 
 /** Enables swiping across a view. */
@@ -89,6 +90,7 @@ public final class GeneralSwipeAction implements ViewAction {
           .withCause(
               new RuntimeException(
                   String.format(
+                      Locale.ROOT,
                       "Couldn't swipe from: %s,%s to: %s,%s precision: %s, %s . Swiper: %s "
                           + "start coordinate provider: %s precision describer: %s. Tried %s times",
                       startCoordinates[0],

@@ -45,6 +45,7 @@ import java.util.BitSet;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -331,20 +332,23 @@ final class UiControllerImpl
     if (events == null) {
       throw new RuntimeException(
           String.format(
+              Locale.ROOT,
               "Failed to get key events for string %s (i.e. current IME does not understand how to"
                   + " translate the string into key events). As a workaround, you can use"
                   + " replaceText action to set the text directly in the EditText field.",
               str));
     }
 
-    Log.d(TAG, String.format("Injecting string: \"%s\"", str));
+    Log.d(TAG, String.format(Locale.ROOT, "Injecting string: \"%s\"", str));
 
     for (KeyEvent event : events) {
       checkNotNull(
           event,
           String.format(
+              Locale.ROOT,
               "Failed to get event for character (%c) with key code (%s)",
-              event.getKeyCode(), event.getUnicodeChar()));
+              event.getKeyCode(),
+              event.getUnicodeChar()));
 
       eventInjected = false;
       for (int attempts = 0; !eventInjected && attempts < 4; attempts++) {
@@ -361,8 +365,10 @@ final class UiControllerImpl
         Log.e(
             TAG,
             String.format(
+                Locale.ROOT,
                 "Failed to inject event for character (%c) with key code (%s)",
-                event.getUnicodeChar(), event.getKeyCode()));
+                event.getUnicodeChar(),
+                event.getKeyCode()));
         break;
       }
     }
@@ -535,6 +541,7 @@ final class UiControllerImpl
       masterIdlePolicy.handleTimeout(
           idleConditions,
           String.format(
+              Locale.ROOT,
               "Looped for %s iterations over %s %s.",
               interrogation.execCount,
               masterIdlePolicy.getIdleTimeout(),

@@ -23,6 +23,7 @@ import androidx.test.espresso.util.HumanReadables;
 import androidx.test.internal.platform.util.TestOutputEmitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import java.util.Locale;
 import org.hamcrest.Matcher;
 
 /**
@@ -73,11 +74,15 @@ public final class AmbiguousViewMatcherException extends RuntimeException
           HumanReadables.getViewHierarchyErrorMessage(
               builder.rootView,
               Lists.newArrayList(ambiguousViews),
-              String.format("'%s' matches multiple views in the hierarchy.", builder.viewMatcher),
+              String.format(
+                  Locale.ROOT,
+                  "'%s' matches multiple views in the hierarchy.",
+                  builder.viewMatcher),
               "****MATCHES****");
     } else {
       errorMessage =
-          String.format("Multiple Ambiguous Views found for matcher %s", builder.viewMatcher);
+          String.format(
+              Locale.ROOT, "Multiple Ambiguous Views found for matcher %s", builder.viewMatcher);
     }
     return errorMessage;
   }

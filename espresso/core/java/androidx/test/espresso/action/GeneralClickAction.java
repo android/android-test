@@ -28,6 +28,7 @@ import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.util.HumanReadables;
 import com.google.common.base.Optional;
+import java.util.Locale;
 import org.hamcrest.Matcher;
 
 /** Enables clicking on views. */
@@ -139,6 +140,7 @@ public final class GeneralClickAction implements ViewAction {
               TAG,
               "perform: "
                   + String.format(
+                      Locale.ROOT,
                       "%s - At Coordinates: %d, %d and precision: %d, %d",
                       this.getDescription(),
                       (int) coordinates[0],
@@ -150,6 +152,7 @@ public final class GeneralClickAction implements ViewAction {
         throw new PerformException.Builder()
             .withActionDescription(
                 String.format(
+                    Locale.ROOT,
                     "%s - At Coordinates: %d, %d and precision: %d, %d",
                     this.getDescription(),
                     (int) coordinates[0],
@@ -182,9 +185,10 @@ public final class GeneralClickAction implements ViewAction {
           .withCause(
               new RuntimeException(
                   String.format(
-                      "Couldn't "
-                          + "click at: %s,%s precision: %s, %s . Tapper: %s coordinate provider: %s precision "
-                          + "describer: %s. Tried %s times. With Rollback? %s",
+                      Locale.ROOT,
+                      "Couldn't click at: %s,%s precision: %s, %s . Tapper: %s coordinate"
+                          + " provider: %s precision describer: %s. Tried %s times. With Rollback?"
+                          + " %s",
                       coordinates[0],
                       coordinates[1],
                       precision[0],

@@ -32,6 +32,7 @@ import androidx.test.espresso.util.EspressoOptional;
 import androidx.test.espresso.util.HumanReadables;
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.Locale;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 
@@ -110,8 +111,10 @@ public final class AdapterDataLoaderAction implements ViewAction {
               .withCause(
                   new RuntimeException(
                       String.format(
+                          Locale.ROOT,
                           "There are only %d elements that matched but requested %d element.",
-                          matchedDataItemsSize, atPosition.get())))
+                          matchedDataItemsSize,
+                          atPosition.get())))
               .build();
         } else {
           adaptedData = matchedDataItems.get(atPosition.get());

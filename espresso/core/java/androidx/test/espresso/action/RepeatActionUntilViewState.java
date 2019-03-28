@@ -25,6 +25,7 @@ import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.util.HumanReadables;
+import java.util.Locale;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 
@@ -75,7 +76,7 @@ public final class RepeatActionUntilViewState implements ViewAction {
   public String getDescription() {
     StringDescription stringDescription = new StringDescription();
     mDesiredStateMatcher.describeTo(stringDescription);
-    return String.format("%s until: %s", mAction.getDescription(), stringDescription);
+    return String.format(Locale.ROOT, "%s until: %s", mAction.getDescription(), stringDescription);
   }
 
   @Override
@@ -91,7 +92,8 @@ public final class RepeatActionUntilViewState implements ViewAction {
           .withViewDescription(HumanReadables.describe(view))
           .withCause(
               new RuntimeException(
-                  String.format("Failed to achieve view state after %d attempts", mMaxAttempts)))
+                  String.format(
+                      Locale.ROOT, "Failed to achieve view state after %d attempts", mMaxAttempts)))
           .build();
     }
   }

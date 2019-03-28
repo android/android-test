@@ -38,6 +38,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import java.util.List;
+import java.util.Locale;
 
 /** Text converters for various Android objects. */
 public final class HumanReadables {
@@ -65,7 +66,8 @@ public final class HumanReadables {
     StringBuilder errorMessage = new StringBuilder(errorHeader);
     if (problemViewSuffix != null) {
       errorMessage.append(
-          String.format("\nProblem views are marked with '%s' below.", problemViewSuffix));
+          String.format(
+              Locale.ROOT, "\nProblem views are marked with '%s' below.", problemViewSuffix));
     }
 
     errorMessage.append("\n\nView Hierarchy:\n");
@@ -85,6 +87,7 @@ public final class HumanReadables {
                     formatString += "\n|";
 
                     return String.format(
+                        Locale.ROOT,
                         formatString,
                         Strings.padStart(">", viewAndDistance.getDistanceFromRoot() + 1, '-'),
                         HumanReadables.describe(viewAndDistance.getView()));

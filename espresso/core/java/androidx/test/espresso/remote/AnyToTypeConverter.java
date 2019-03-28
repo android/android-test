@@ -25,6 +25,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageLite;
 import com.google.protobuf.Parser;
 import java.lang.reflect.Field;
+import java.util.Locale;
 
 /**
  * Unwraps an {@link Any} proto message to it's target type T, where T must implement the {@link
@@ -55,7 +56,9 @@ final class AnyToTypeConverter<T> implements Converter<Any, T> {
     } catch (RuntimeException re) {
       throw new RemoteProtocolException(
           String.format(
-              "Something went wrong during any conversion " + "for type url: %s", any.getTypeUrl()),
+              Locale.ROOT,
+              "Something went wrong during any conversion " + "for type url: %s",
+              any.getTypeUrl()),
           re);
     }
     return targetType;
@@ -116,8 +119,10 @@ final class AnyToTypeConverter<T> implements Converter<Any, T> {
       RemoteProtocolException rpe =
           new RemoteProtocolException(
               String.format(
+                  Locale.ROOT,
                   "Got type: %s, but expected type: %s instead",
-                  proto.getClass().getName(), expectedType.getName()));
+                  proto.getClass().getName(),
+                  expectedType.getName()));
       throw rpe;
     }
     return expectedType.cast(proto);

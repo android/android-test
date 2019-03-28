@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableList;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Locale;
 import java.util.TreeMap;
 
 /**
@@ -80,7 +81,8 @@ public final class FieldDescriptor {
         int order = remoteMsgFieldAnnotation.order();
         if (targetFields.containsKey(order)) {
           throw new IllegalStateException(
-              String.format("Duplicate field order %s for field %s", order, field.getName()));
+              String.format(
+                  Locale.ROOT, "Duplicate field order %s for field %s", order, field.getName()));
         }
         targetFields.put(order, of(field, remoteMsgFieldAnnotation));
       }

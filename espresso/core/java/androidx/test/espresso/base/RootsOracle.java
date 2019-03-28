@@ -30,6 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import javax.inject.Inject;
 
 /**
@@ -104,16 +105,22 @@ final class RootsOracle implements ActiveRootLister {
       Log.w(
           TAG,
           String.format(
+              Locale.ROOT,
               "Reflective access to %s or %s on %s failed.",
-              viewsField, paramsField, windowManagerObj),
+              viewsField,
+              paramsField,
+              windowManagerObj),
           re);
       return Lists.newArrayList();
     } catch (IllegalAccessException iae) {
       Log.w(
           TAG,
           String.format(
+              Locale.ROOT,
               "Reflective access to %s or %s on %s failed.",
-              viewsField, paramsField, windowManagerObj),
+              viewsField,
+              paramsField,
+              windowManagerObj),
           iae);
       return Lists.newArrayList();
     }
@@ -147,33 +154,45 @@ final class RootsOracle implements ActiveRootLister {
     } catch (InvocationTargetException ite) {
       Log.e(
           TAG,
-          String.format("could not invoke: %s on %s", instanceMethod, accessClass),
+          String.format(Locale.ROOT, "could not invoke: %s on %s", instanceMethod, accessClass),
           ite.getCause());
     } catch (ClassNotFoundException cnfe) {
-      Log.e(TAG, String.format("could not find class: %s", accessClass), cnfe);
+      Log.e(TAG, String.format(Locale.ROOT, "could not find class: %s", accessClass), cnfe);
     } catch (NoSuchFieldException nsfe) {
       Log.e(
           TAG,
           String.format(
+              Locale.ROOT,
               "could not find field: %s or %s on %s",
-              WINDOW_PARAMS_FIELD, VIEWS_FIELD, accessClass),
+              WINDOW_PARAMS_FIELD,
+              VIEWS_FIELD,
+              accessClass),
           nsfe);
     } catch (NoSuchMethodException nsme) {
       Log.e(
-          TAG, String.format("could not find method: %s on %s", instanceMethod, accessClass), nsme);
+          TAG,
+          String.format(
+              Locale.ROOT, "could not find method: %s on %s", instanceMethod, accessClass),
+          nsme);
     } catch (RuntimeException re) {
       Log.e(
           TAG,
           String.format(
+              Locale.ROOT,
               "reflective setup failed using obj: %s method: %s field: %s",
-              accessClass, instanceMethod, VIEWS_FIELD),
+              accessClass,
+              instanceMethod,
+              VIEWS_FIELD),
           re);
     } catch (IllegalAccessException iae) {
       Log.e(
           TAG,
           String.format(
+              Locale.ROOT,
               "reflective setup failed using obj: %s method: %s field: %s",
-              accessClass, instanceMethod, VIEWS_FIELD),
+              accessClass,
+              instanceMethod,
+              VIEWS_FIELD),
           iae);
     }
   }

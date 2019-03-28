@@ -28,6 +28,7 @@ import com.google.common.cache.CacheBuilder;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Locale;
 
 /** Reflectively invokes a method of a declared instance. */
 final class MethodInvocation {
@@ -117,6 +118,7 @@ final class MethodInvocation {
     } catch (NoSuchMethodException nsme) {
       throw new RemoteProtocolException(
           String.format(
+              Locale.ROOT,
               "No method: %s(%s) found for clazz: %s Available methods: %s",
               methodName,
               Arrays.asList(parameterTypes),
@@ -140,8 +142,11 @@ final class MethodInvocation {
     } catch (NoSuchMethodException nsme) {
       throw new RemoteProtocolException(
           String.format(
+              Locale.ROOT,
               "No method: %s found for clazz: %s. Available methods: %s",
-              methodName, clazz.getName(), Arrays.asList(clazz.getMethods())),
+              methodName,
+              clazz.getName(),
+              Arrays.asList(clazz.getMethods())),
           nsme);
     }
   }
@@ -154,15 +159,18 @@ final class MethodInvocation {
     } catch (InvocationTargetException ite) {
       throw new RemoteProtocolException(
           String.format(
+              Locale.ROOT,
               "Cannot invoke method %s with args [%s] on builder %s",
-              method, Arrays.toString(args), clazz.getName()),
+              method,
+              Arrays.toString(args),
+              clazz.getName()),
           ite);
     } catch (IllegalAccessException iae) {
       throw new RemoteProtocolException(
-          String.format("Cannot create instance of %s", clazz.getName()), iae);
+          String.format(Locale.ROOT, "Cannot create instance of %s", clazz.getName()), iae);
     } catch (SecurityException se) {
       throw new RemoteProtocolException(
-          String.format("Method not accessible: %s", method.getName()), se);
+          String.format(Locale.ROOT, "Method not accessible: %s", method.getName()), se);
     } finally {
       logDebug(
           TAG,

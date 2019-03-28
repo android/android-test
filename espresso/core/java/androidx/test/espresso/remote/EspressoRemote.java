@@ -60,6 +60,7 @@ import androidx.test.internal.util.ParcelableIBinder;
 import com.google.common.base.Throwables;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -192,6 +193,7 @@ public final class EspressoRemote implements RemoteInteraction {
             Log.i(
                 TAG,
                 String.format(
+                    Locale.ROOT,
                     "Attempting to run check interaction on a remote process "
                         + "for ViewAssertion: %s",
                     viewAssertion));
@@ -222,6 +224,7 @@ public final class EspressoRemote implements RemoteInteraction {
               Log.i(
                   TAG,
                   String.format(
+                      Locale.ROOT,
                       "Attempting to run perform interaction on a remote "
                           + "processes for ViewAction: %s",
                       viewAction));
@@ -295,7 +298,8 @@ public final class EspressoRemote implements RemoteInteraction {
       int what, @Nullable byte[] data, Map<String, IBinder> iBinders) throws InterruptedException {
     UUID uuid = UUID.randomUUID();
 
-    logDebugWithProcess(TAG, String.format("Sending sync msg [%s] with uuid [%s]", what, uuid));
+    logDebugWithProcess(
+        TAG, String.format(Locale.ROOT, "Sending sync msg [%s] with uuid [%s]", what, uuid));
 
     CountDownLatch latch = new CountDownLatch(1);
     ResponseHolder responseHolder = new ResponseHolder(latch);
@@ -322,7 +326,10 @@ public final class EspressoRemote implements RemoteInteraction {
       Log.w(
           TAG,
           String.format(
-              "Interrupted while waiting for a response from msg [%s] with uuid [%s]", what, uuid),
+              Locale.ROOT,
+              "Interrupted while waiting for a response from msg [%s] with uuid [%s]",
+              what,
+              uuid),
           ie);
       // Send over an empty request to remote Espresso instance and wait for it to return. This
       // insures that all prior messages were served by the remote process before we send over a
@@ -597,7 +604,8 @@ public final class EspressoRemote implements RemoteInteraction {
      */
     private void handleEspressoRequest(Messenger caller, Bundle data) {
       UUID uuid = (UUID) data.getSerializable(BUNDLE_KEY_UUID);
-      logDebugWithProcess(TAG, String.format("handleEspressoRequest for id: %s", uuid));
+      logDebugWithProcess(
+          TAG, String.format(Locale.ROOT, "handleEspressoRequest for id: %s", uuid));
 
       Message msg = getEspressoMessage(MSG_HANDLE_ESPRESSO_RESPONSE);
       Bundle resultData = msg.getData();
