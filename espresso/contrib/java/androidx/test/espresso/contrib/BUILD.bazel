@@ -145,6 +145,22 @@ android_library(
 )
 
 android_library(
+    name = "text_view_actions",
+    testonly = 1,
+    srcs = ["TextViewActions.java"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":androidx_neverlink",
+        ":guava_checks",
+        "//espresso/core/java/androidx/test/espresso",
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "@hamcrest//jar",
+        "@jsr305//jar",
+    ],
+)
+
+android_library(
     name = "guava_checks",
     srcs = ["Checks.java"],
     deps = ["@jsr305//jar"],
@@ -211,6 +227,7 @@ android_library(
         ":guava_checks",
         ":picker_actions",
         ":recycler_view",
+        ":text_view_actions",
         ":view_pager_actions",
     ],
 )
@@ -239,6 +256,7 @@ filegroup(
         ":libdrawer_actions-src.jar",
         ":libpicker_actions-src.jar",
         ":librecycler_view-src.jar",
+        ":libtext_view_actions-src.jar",
         ":libview_pager_actions-src.jar",
     ],
 )
