@@ -43,6 +43,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
@@ -223,7 +224,10 @@ public final class ViewInteraction {
     Log.i(
         TAG,
         String.format(
-            "Performing '%s' action on view %s", viewAction.getDescription(), viewMatcher));
+            Locale.ROOT,
+            "Performing '%s' action on view %s",
+            viewAction.getDescription(),
+            viewMatcher));
     if (!constraints.matches(targetView)) {
       // TODO: update this to describeMismatch once hamcrest 1.4 is available
       StringDescription stringDescription =
@@ -278,7 +282,9 @@ public final class ViewInteraction {
               missingViewException = nsve;
             }
             Log.i(
-                TAG, String.format("Checking '%s' assertion on view %s", viewAssert, viewMatcher));
+                TAG,
+                String.format(
+                    Locale.ROOT, "Checking '%s' assertion on view %s", viewAssert, viewMatcher));
             singleExecutionViewAssertion.check(targetView, missingViewException);
             return null;
           }

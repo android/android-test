@@ -29,6 +29,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Locale;
 
 /** Reflectively invokes the constructor of a declared class. */
 public final class ConstructorInvocation {
@@ -125,24 +126,29 @@ public final class ConstructorInvocation {
     } catch (InvocationTargetException ite) {
       throw new RemoteProtocolException(
           String.format(
+              Locale.ROOT,
               "Cannot invoke constructor %s with constructorParams [%s] on clazz %s",
-              constructor, Arrays.toString(constructorParams), clazz.getName()),
+              constructor,
+              Arrays.toString(constructorParams),
+              clazz.getName()),
           ite);
     } catch (IllegalAccessException iae) {
       throw new RemoteProtocolException(
-          String.format("Cannot create instance of %s", clazz.getName()), iae);
+          String.format(Locale.ROOT, "Cannot create instance of %s", clazz.getName()), iae);
     } catch (InstantiationException ia) {
       throw new RemoteProtocolException(
-          String.format("Cannot create instance of %s", clazz.getName()), ia);
+          String.format(Locale.ROOT, "Cannot create instance of %s", clazz.getName()), ia);
     } catch (NoSuchMethodException nsme) {
       throw new RemoteProtocolException(
           String.format(
+              Locale.ROOT,
               "No constructor found for clazz: %s. Available constructors: %s",
-              clazz.getName(), Arrays.asList(clazz.getConstructors())),
+              clazz.getName(),
+              Arrays.asList(clazz.getConstructors())),
           nsme);
     } catch (SecurityException se) {
       throw new RemoteProtocolException(
-          String.format("Constructor not accessible: %s", constructor.getName()), se);
+          String.format(Locale.ROOT, "Constructor not accessible: %s", constructor.getName()), se);
     } finally {
       logDebug(TAG, "%s(%s)", clazz.getSimpleName(), Arrays.toString(constructorParams));
     }

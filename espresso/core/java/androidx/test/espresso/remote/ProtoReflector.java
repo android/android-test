@@ -22,6 +22,7 @@ import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageLite;
 import java.util.List;
+import java.util.Locale;
 
 /** Reflection helper to invoke methods on a proto message. */
 final class ProtoReflector {
@@ -90,7 +91,7 @@ final class ProtoReflector {
         new MethodInvocation(
                 protoType,
                 messageLite,
-                String.format(methodNameTpl, capitalizeFirstChar(methodSuffix)))
+                String.format(Locale.ROOT, methodNameTpl, capitalizeFirstChar(methodSuffix)))
             .invokeDeclaredMethod());
   }
 }

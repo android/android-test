@@ -26,6 +26,7 @@ import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.util.HumanReadables;
+import java.util.Locale;
 import org.hamcrest.Matcher;
 
 /** Performs whatever editor (IME) action is available on a view. */
@@ -76,7 +77,9 @@ public final class EditorAction implements ViewAction {
           .withCause(
               new RuntimeException(
                   String.format(
-                      "Failed to perform action %#x. Input connection no longer valid", actionId)))
+                      Locale.ROOT,
+                      "Failed to perform action %#x. Input connection no longer valid",
+                      actionId)))
           .build();
     }
   }

@@ -23,6 +23,7 @@ import com.google.protobuf.ByteString;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.Locale;
 
 /** Converts a type T into its {@link ByteString} representation. */
 final class TypeToByteStringConverter<T> implements Converter<T, ByteString> {
@@ -43,7 +44,9 @@ final class TypeToByteStringConverter<T> implements Converter<T, ByteString> {
     } catch (IOException ioe) {
       throw new RemoteProtocolException(
           String.format(
-              "Cannot write object of type: %s to ByteStream", object.getClass().getSimpleName()),
+              Locale.ROOT,
+              "Cannot write object of type: %s to ByteStream",
+              object.getClass().getSimpleName()),
           ioe);
     } finally {
       try {

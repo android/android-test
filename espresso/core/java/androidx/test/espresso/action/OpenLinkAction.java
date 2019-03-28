@@ -35,6 +35,7 @@ import androidx.test.espresso.util.HumanReadables;
 import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import org.hamcrest.Matcher;
 
 /**
@@ -58,7 +59,8 @@ public final class OpenLinkAction implements ViewAction {
 
   @Override
   public String getDescription() {
-    return String.format("open link with text %s and uri %s", linkTextMatcher, uriMatcher);
+    return String.format(
+        Locale.ROOT, "open link with text %s and uri %s", linkTextMatcher, uriMatcher);
   }
 
   @Override
@@ -89,9 +91,14 @@ public final class OpenLinkAction implements ViewAction {
         .withCause(
             new RuntimeException(
                 String.format(
-                    "Link with text '%s' and uri '%s' not found. List of links found in this view: %s\n"
+                    Locale.ROOT,
+                    "Link with text '%s' and uri '%s' not found. List of links found in this view:"
+                        + " %s\n"
                         + "List of uris: %s",
-                    linkTextMatcher, uriMatcher, allLinks, Arrays.asList(urls))))
+                    linkTextMatcher,
+                    uriMatcher,
+                    allLinks,
+                    Arrays.asList(urls))))
         .build();
   }
 }

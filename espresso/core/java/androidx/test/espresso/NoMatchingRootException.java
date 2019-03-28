@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import androidx.test.internal.platform.util.TestOutputEmitter;
 import java.util.List;
+import java.util.Locale;
 import org.hamcrest.Matcher;
 
 /**
@@ -38,6 +39,9 @@ public final class NoMatchingRootException extends RuntimeException implements E
     checkNotNull(roots);
     return new NoMatchingRootException(
         String.format(
-            "Matcher '%s' did not match any of the following roots: %s", rootMatcher, roots));
+            Locale.ROOT,
+            "Matcher '%s' did not match any of the following roots: %s",
+            rootMatcher,
+            roots));
   }
 }

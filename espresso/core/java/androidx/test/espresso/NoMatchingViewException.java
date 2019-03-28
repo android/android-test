@@ -23,6 +23,7 @@ import androidx.test.espresso.util.EspressoOptional;
 import androidx.test.espresso.util.HumanReadables;
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.Locale;
 import org.hamcrest.Matcher;
 
 /**
@@ -73,7 +74,8 @@ public final class NoMatchingViewException extends RuntimeException implements E
     String errorMessage = "";
     if (builder.includeViewHierarchy) {
       String message =
-          String.format("No views in hierarchy found matching: %s", builder.viewMatcher);
+          String.format(
+              Locale.ROOT, "No views in hierarchy found matching: %s", builder.viewMatcher);
       if (builder.adapterViewWarning.isPresent()) {
         message = message + builder.adapterViewWarning.get();
       }
@@ -81,7 +83,8 @@ public final class NoMatchingViewException extends RuntimeException implements E
           HumanReadables.getViewHierarchyErrorMessage(
               builder.rootView, null /* problemViews */, message, null /* problemViewSuffix */);
     } else {
-      errorMessage = String.format("Could not find a view that matches %s", builder.viewMatcher);
+      errorMessage =
+          String.format(Locale.ROOT, "Could not find a view that matches %s", builder.viewMatcher);
     }
     return errorMessage;
   }

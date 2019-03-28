@@ -22,6 +22,7 @@ import android.os.Build;
 import android.view.KeyEvent;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
+import java.util.Locale;
 
 /** Class that wraps the key code and meta state of the desired key press. */
 public final class EspressoKey {
@@ -51,7 +52,7 @@ public final class EspressoKey {
 
   @Override
   public String toString() {
-    return String.format("keyCode: %s, metaState: %s", keyCode, metaState);
+    return String.format(Locale.ROOT, "keyCode: %s, metaState: %s", keyCode, metaState);
   }
 
   /** Builder for the EspressoKey class. */

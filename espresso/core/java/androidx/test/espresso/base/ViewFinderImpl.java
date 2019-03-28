@@ -35,6 +35,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import org.hamcrest.Matcher;
@@ -94,8 +95,10 @@ public final class ViewFinderImpl implements ViewFinder {
 
       String warning =
           String.format(
-              "\nIf the target view is not part of the view hierarchy, you "
-                  + "may need to use Espresso.onData to load it from one of the following AdapterViews:%s",
+              Locale.ROOT,
+              "\n"
+                  + "If the target view is not part of the view hierarchy, you may need to use"
+                  + " Espresso.onData to load it from one of the following AdapterViews:%s",
               Joiner.on("\n- ").join(adapterViews));
       throw new NoMatchingViewException.Builder()
           .withViewMatcher(viewMatcher)

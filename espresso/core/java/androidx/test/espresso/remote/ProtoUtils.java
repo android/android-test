@@ -44,7 +44,10 @@ public final class ProtoUtils {
     }
     throw new IllegalArgumentException(
         String.format(
-            "No such index: %d in enum class: %s", protoEnumIndex, enumClass.getSimpleName()));
+            Locale.ROOT,
+            "No such index: %d in enum class: %s",
+            protoEnumIndex,
+            enumClass.getSimpleName()));
   }
 
   /**

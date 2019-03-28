@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.protobuf.Parser;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Descriptor object containing all the required information to serialize and deserialize a type to
@@ -186,9 +187,11 @@ public final class RemoteDescriptor {
           Log.w(
               TAG,
               String.format(
+                  Locale.ROOT,
                   "RemoteMsgField field annotations found for type: %s. Ignoring"
                       + "field descriptors: %s, registered with RemoteDescriptorRegistry",
-                  instanceType, Joiner.on(",").join(originalFieldDescriptors)));
+                  instanceType,
+                  Joiner.on(",").join(originalFieldDescriptors)));
         }
         // return annotated field descriptors
         return annotatedFieldList;
@@ -327,7 +330,9 @@ public final class RemoteDescriptor {
         }
       } catch (ClassNotFoundException cnfe) {
         throw new IllegalStateException(
-            String.format("Could not load class for name: %s", GENERIC_REMOTE_MESSAGE_CLS), cnfe);
+            String.format(
+                Locale.ROOT, "Could not load class for name: %s", GENERIC_REMOTE_MESSAGE_CLS),
+            cnfe);
       }
 
       checkArgument(protoType != null, "protoType is a mandatory field!");

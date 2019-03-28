@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.test.espresso.proto.action.ViewActions.SwipeViewActionProto;
 import androidx.test.espresso.remote.EspressoRemoteMessage;
 import androidx.test.espresso.remote.ProtoUtils;
+import java.util.Locale;
 
 /**
  * {@link EspressoRemoteMessage.To} and {@link EspressoRemoteMessage.From} implementation of {@link
@@ -59,7 +60,8 @@ public final class SwipeRemoteMessage
         return SwipeViewActionProto.Swipe.SLOW;
       default:
         throw new IllegalArgumentException(
-            String.format("Swipe proto enum for swipe: %s not found!", swipe.toString()));
+            String.format(
+                Locale.ROOT, "Swipe proto enum for swipe: %s not found!", swipe.toString()));
     }
   }
 }

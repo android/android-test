@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
+import java.util.Locale;
 
 /**
  * Reflection helper to invoke methods on a proto message Builder.
@@ -117,7 +118,7 @@ final class BuilderReflector {
     new MethodInvocation(
             builderType,
             builderInstance,
-            String.format(methodNameTpl, capitalizeFirstChar(methodSuffix)),
+            String.format(Locale.ROOT, methodNameTpl, capitalizeFirstChar(methodSuffix)),
             type)
         .invokeDeclaredMethod(args);
     return this;

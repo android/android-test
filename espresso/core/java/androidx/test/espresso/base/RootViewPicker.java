@@ -35,6 +35,7 @@ import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Inject;
@@ -103,6 +104,7 @@ public final class RootViewPicker implements Provider<View> {
 
     throw new RuntimeException(
         String.format(
+            Locale.ROOT,
             "Waited for the root of the view hierarchy to have "
                 + "window focus and not request layout for 10 seconds. If you specified a non "
                 + "default root matcher, it may be picking a root that never takes focus. "
@@ -339,7 +341,10 @@ public final class RootViewPicker implements Provider<View> {
       long waitTime = getBackoffForAttempt();
       Log.d(
           TAG,
-          String.format("No matching root available - waiting: %sms for one to appear.", waitTime));
+          String.format(
+              Locale.ROOT,
+              "No matching root available - waiting: %sms for one to appear.",
+              waitTime));
       return waitTime;
     }
   }
@@ -355,7 +360,10 @@ public final class RootViewPicker implements Provider<View> {
     @Override
     public long getNextBackoffInMillis() {
       long waitTime = getBackoffForAttempt();
-      Log.d(TAG, String.format("Root not ready - waiting: %sms for one to appear.", waitTime));
+      Log.d(
+          TAG,
+          String.format(
+              Locale.ROOT, "Root not ready - waiting: %sms for one to appear.", waitTime));
       return waitTime;
     }
   }

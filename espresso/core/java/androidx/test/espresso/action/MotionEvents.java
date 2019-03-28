@@ -28,6 +28,7 @@ import androidx.test.espresso.InjectEventSecurityException;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import com.google.common.annotations.VisibleForTesting;
+import java.util.Locale;
 
 /** Facilitates sending of motion events to a {@link UiController}. */
 public final class MotionEvents {
@@ -128,7 +129,8 @@ public final class MotionEvents {
       }
     }
     throw new PerformException.Builder()
-        .withActionDescription(String.format("click (after %s attempts)", MAX_CLICK_ATTEMPTS))
+        .withActionDescription(
+            String.format(Locale.ROOT, "click (after %s attempts)", MAX_CLICK_ATTEMPTS))
         .withViewDescription("unknown") // likely to be replaced by FailureHandler
         .build();
   }
@@ -163,6 +165,7 @@ public final class MotionEvents {
         Log.e(
             TAG,
             String.format(
+                Locale.ROOT,
                 "Injection of up event failed (corresponding down event: %s)",
                 downEvent.toString()));
         return false;
@@ -170,7 +173,10 @@ public final class MotionEvents {
     } catch (InjectEventSecurityException e) {
       throw new PerformException.Builder()
           .withActionDescription(
-              String.format("inject up event (corresponding down event: %s)", downEvent.toString()))
+              String.format(
+                  Locale.ROOT,
+                  "inject up event (corresponding down event: %s)",
+                  downEvent.toString()))
           .withViewDescription("unknown") // likely to be replaced by FailureHandler
           .withCause(e)
           .build();
@@ -204,6 +210,7 @@ public final class MotionEvents {
         Log.e(
             TAG,
             String.format(
+                Locale.ROOT,
                 "Injection of cancel event failed (corresponding down event: %s)",
                 downEvent.toString()));
         return;
@@ -212,7 +219,9 @@ public final class MotionEvents {
       throw new PerformException.Builder()
           .withActionDescription(
               String.format(
-                  "inject cancel event (corresponding down event: %s)", downEvent.toString()))
+                  Locale.ROOT,
+                  "inject cancel event (corresponding down event: %s)",
+                  downEvent.toString()))
           .withViewDescription("unknown") // likely to be replaced by FailureHandler
           .withCause(e)
           .build();
@@ -254,6 +263,7 @@ public final class MotionEvents {
         Log.e(
             TAG,
             String.format(
+                Locale.ROOT,
                 "Injection of motion event failed (corresponding down event: %s)",
                 downEvent.toString()));
         return false;
@@ -262,7 +272,9 @@ public final class MotionEvents {
       throw new PerformException.Builder()
           .withActionDescription(
               String.format(
-                  "inject motion event (corresponding down event: %s)", downEvent.toString()))
+                  Locale.ROOT,
+                  "inject motion event (corresponding down event: %s)",
+                  downEvent.toString()))
           .withViewDescription("unknown") // likely to be replaced by FailureHandler
           .withCause(e)
           .build();

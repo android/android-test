@@ -35,6 +35,7 @@ import com.google.common.collect.Iterables;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import junit.framework.AssertionFailedError;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
@@ -94,6 +95,7 @@ public final class ViewAssertions {
       if (noViewException != null) {
         description.appendText(
             String.format(
+                Locale.ROOT,
                 "' check could not be performed because view '%s' was not found.\n",
                 noViewException.getViewMatcherDescription()));
         Log.e(TAG, description.toString());
@@ -106,7 +108,7 @@ public final class ViewAssertions {
 
     @Override
     public String toString() {
-      return String.format("MatchesViewAssertion{viewMatcher=%s}", viewMatcher);
+      return String.format(Locale.ROOT, "MatchesViewAssertion{viewMatcher=%s}", viewMatcher);
     }
   }
 
@@ -169,7 +171,10 @@ public final class ViewAssertions {
             HumanReadables.getViewHierarchyErrorMessage(
                 view,
                 nonMatchingViews,
-                String.format("At least one view did not match the required matcher: %s", matcher),
+                String.format(
+                    Locale.ROOT,
+                    "At least one view did not match the required matcher: %s",
+                    matcher),
                 "****DOES NOT MATCH****");
         throw new AssertionFailedError(errorMessage);
       }
@@ -178,7 +183,10 @@ public final class ViewAssertions {
     @Override
     public String toString() {
       return String.format(
-          "SelectedDescendantsMatchViewAssertion{selector=%s, matcher=%s}", selector, matcher);
+          Locale.ROOT,
+          "SelectedDescendantsMatchViewAssertion{selector=%s, matcher=%s}",
+          selector,
+          matcher);
     }
   }
 }
