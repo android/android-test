@@ -60,8 +60,7 @@ public final class SwipeRemoteMessage
         return SwipeViewActionProto.Swipe.SLOW;
       default:
         throw new IllegalArgumentException(
-            String.format(
-                Locale.ROOT, "Swipe proto enum for swipe: %s not found!", swipe.toString()));
+            String.format(Locale.ROOT, "Swipe proto enum for swipe: %s not found!", swipe));
     }
   }
 }

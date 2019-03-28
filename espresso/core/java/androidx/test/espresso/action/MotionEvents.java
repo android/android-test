@@ -167,16 +167,14 @@ public final class MotionEvents {
             String.format(
                 Locale.ROOT,
                 "Injection of up event failed (corresponding down event: %s)",
-                downEvent.toString()));
+                downEvent));
         return false;
       }
     } catch (InjectEventSecurityException e) {
       throw new PerformException.Builder()
           .withActionDescription(
               String.format(
-                  Locale.ROOT,
-                  "inject up event (corresponding down event: %s)",
-                  downEvent.toString()))
+                  Locale.ROOT, "inject up event (corresponding down event: %s)", downEvent))
           .withViewDescription("unknown") // likely to be replaced by FailureHandler
           .withCause(e)
           .build();
@@ -212,16 +210,14 @@ public final class MotionEvents {
             String.format(
                 Locale.ROOT,
                 "Injection of cancel event failed (corresponding down event: %s)",
-                downEvent.toString()));
+                downEvent));
         return;
       }
     } catch (InjectEventSecurityException e) {
       throw new PerformException.Builder()
           .withActionDescription(
               String.format(
-                  Locale.ROOT,
-                  "inject cancel event (corresponding down event: %s)",
-                  downEvent.toString()))
+                  Locale.ROOT, "inject cancel event (corresponding down event: %s)", downEvent))
           .withViewDescription("unknown") // likely to be replaced by FailureHandler
           .withCause(e)
           .build();
@@ -265,16 +261,14 @@ public final class MotionEvents {
             String.format(
                 Locale.ROOT,
                 "Injection of motion event failed (corresponding down event: %s)",
-                downEvent.toString()));
+                downEvent));
         return false;
       }
     } catch (InjectEventSecurityException e) {
       throw new PerformException.Builder()
           .withActionDescription(
               String.format(
-                  Locale.ROOT,
-                  "inject motion event (corresponding down event: %s)",
-                  downEvent.toString()))
+                  Locale.ROOT, "inject motion event (corresponding down event: %s)", downEvent))
           .withViewDescription("unknown") // likely to be replaced by FailureHandler
           .withCause(e)
           .build();
