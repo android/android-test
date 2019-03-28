@@ -86,14 +86,14 @@ public final class IdlingPolicy {
 
     public Builder() {}
 
-    public IdlingPolicy build() {
-      return new IdlingPolicy(this);
-    }
-
     private Builder(IdlingPolicy copy) {
       this.idleTimeout = copy.idleTimeout;
       this.unit = copy.unit;
       this.errorHandler = copy.errorHandler;
+    }
+
+    public IdlingPolicy build() {
+      return new IdlingPolicy(this);
     }
 
 
