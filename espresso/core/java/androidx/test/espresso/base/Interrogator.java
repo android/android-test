@@ -127,7 +127,7 @@ final class Interrogator {
     checkSanity();
     interrogating.set(Boolean.TRUE);
     boolean stillInterested = true;
-    MessageQueue q = Looper.myLooper().myQueue();
+    MessageQueue q = Looper.myQueue();
     // We may have an identity when we're called - we want to restore it at the end of the fn.
     final long entryIdentity = Binder.clearCallingIdentity();
     try {
