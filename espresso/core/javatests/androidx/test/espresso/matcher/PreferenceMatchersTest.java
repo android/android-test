@@ -48,7 +48,7 @@ public class PreferenceMatchersTest {
     assertThat(pref, withSummary(R.string.something));
     assertThat(pref, not(withSummary(R.string.other_string)));
     assertThat(pref, withSummaryText("Hello World"));
-    assertThat(pref, not(withSummaryText(("Hello Mars"))));
+    assertThat(pref, not(withSummaryText("Hello Mars")));
     assertThat(pref, withSummaryText(is("Hello World")));
   }
 
@@ -61,7 +61,7 @@ public class PreferenceMatchersTest {
     assertThat(pref, withTitle(R.string.other_string));
     assertThat(pref, not(withTitle(R.string.something)));
     assertThat(pref, withTitleText("Goodbye!!"));
-    assertThat(pref, not(withTitleText(("Hello Mars"))));
+    assertThat(pref, not(withTitleText("Hello Mars")));
     assertThat(pref, withTitleText(is("Goodbye!!")));
   }
 

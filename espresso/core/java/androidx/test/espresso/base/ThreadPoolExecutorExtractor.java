@@ -96,7 +96,7 @@ final class ThreadPoolExecutorExtractor {
         latch.await();
       } catch (InterruptedException ie) {
         if (!futureToRun.isDone()) {
-          throw new RuntimeException("Interrupted while waiting for task to complete.");
+          throw new RuntimeException("Interrupted while waiting for task to complete.", ie);
         }
       }
     } else {

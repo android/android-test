@@ -241,7 +241,7 @@ public final class ViewInteraction {
           .appendValue(HumanReadables.describe(targetView));
 
       if (viewAction.getInnerViewAction() instanceof ScrollToAction
-          && isDescendantOfA(isAssignableFrom((AdapterView.class))).matches(targetView)) {
+          && isDescendantOfA(isAssignableFrom(AdapterView.class)).matches(targetView)) {
         stringDescription.appendText(
             "\nFurther Info: ScrollToAction on a view inside an AdapterView will not work. "
                 + "Use Espresso.onData to load the view.");

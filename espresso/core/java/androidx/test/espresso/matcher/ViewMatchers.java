@@ -852,7 +852,7 @@ public final class ViewMatchers {
       // Get action bar height
       TypedValue tv = new TypedValue();
       int actionBarHeight =
-          (view.getContext().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+          view.getContext().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)
               ? TypedValue.complexToDimensionPixelSize(
                   tv.data, view.getContext().getResources().getDisplayMetrics())
               : 0;
