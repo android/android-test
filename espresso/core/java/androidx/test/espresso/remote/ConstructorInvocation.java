@@ -155,7 +155,7 @@ public final class ConstructorInvocation {
     return returnValue;
   }
 
-  private static class ConstructorKey {
+  private static final class ConstructorKey {
     private final Class<?> type;
     private final Class<?>[] parameterTypes;
 

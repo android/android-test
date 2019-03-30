@@ -182,7 +182,7 @@ final class MethodInvocation {
     return returnValue;
   }
 
-  private static class MethodKey {
+  private static final class MethodKey {
     private final Class<?> type;
     private final String methodName;
     private final Class<?>[] parameterTypes;
