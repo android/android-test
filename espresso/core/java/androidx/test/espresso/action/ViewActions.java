@@ -33,6 +33,7 @@ import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewAssertion;
+import androidx.test.espresso.ViewAssertionWithUiController;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import javax.annotation.Nonnull;
@@ -127,7 +128,12 @@ public final class ViewActions {
       public void perform(UiController uic, View view) {
         for (Pair<String, ViewAssertion> vaPair : globalAssertions) {
           Log.i("ViewAssertion", "Asserting " + vaPair.first);
-          vaPair.second.check(view, null);
+          ViewAssertion va = vaPair.second;
+          if (va instanceof ViewAssertionWithUiController) {
+            ((ViewAssertionWithUiController) va).check(view, uic, null);
+          } else {
+            va.check(view, null);
+          }
         }
         viewAction.perform(uic, view);
       }

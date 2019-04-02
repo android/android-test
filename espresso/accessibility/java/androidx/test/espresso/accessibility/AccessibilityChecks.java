@@ -16,11 +16,14 @@
 
 package androidx.test.espresso.accessibility;
 
+import android.os.Build;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAssertion;
+import androidx.test.espresso.ViewAssertionWithUiController;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.util.HumanReadables;
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResult.AccessibilityCheckResultDescriptor;
@@ -45,9 +48,14 @@ public final class AccessibilityChecks {
               });
 
   private static final ViewAssertion ACCESSIBILITY_CHECK_ASSERTION =
-      new ViewAssertion() {
+      new ViewAssertionWithUiController() {
         @Override
         public void check(View view, NoMatchingViewException noViewFoundException) {
+          check(view, null, noViewFoundException);
+        }
+
+        @Override
+        public void check(View view, UiController uiController, NoMatchingViewException noViewFoundException) {
           if (noViewFoundException != null) {
             Log.e(
                 TAG,
@@ -60,6 +68,22 @@ public final class AccessibilityChecks {
           if (view == null) {
             throw new NullPointerException();
           }
+
+          //uiController.loopMainThreadForAtLeast(3000);
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            int msecWaited = 0;
+            for (int i = 0; i < 10 && view.isDirty(); i++) {
+              uiController.loopMainThreadForAtLeast(300);
+              msecWaited += 300;
+            }
+            if (view.isDirty()) {
+              Log.i(TAG, "View has been dirty for over 3 seconds - may have flaky results.");
+            } else {
+              Log.i(TAG, String.format("Waited %d msec for dirty view", msecWaited));
+            }
+          }
+
+          // TODO: Still needed?
           StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
           try {
             CHECK_EXECUTOR.checkAndReturnResults(view);
