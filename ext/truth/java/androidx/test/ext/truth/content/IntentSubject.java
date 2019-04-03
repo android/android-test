@@ -15,6 +15,7 @@
  */
 package androidx.test.ext.truth.content;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import androidx.test.ext.truth.internal.FlagUtil;
@@ -48,6 +49,10 @@ public final class IntentSubject extends Subject<IntentSubject, Intent> {
   public final void hasComponent(String packageName, String className) {
     hasComponentPackage(packageName);
     hasComponentClass(className);
+  }
+
+  public final void hasComponent(ComponentName component) {
+    hasComponent(component.getPackageName(), component.getClassName());
   }
 
   /** @see #hasComponentClass(Class) */
