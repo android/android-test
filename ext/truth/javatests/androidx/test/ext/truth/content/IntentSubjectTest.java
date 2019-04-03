@@ -19,6 +19,7 @@ import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.ext.truth.content.IntentSubject.assertThat;
 import static org.junit.Assert.fail;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -75,6 +76,14 @@ public class IntentSubjectTest {
     Intent intent = new Intent();
     intent.setClassName("com.foo", "Foo");
     assertThat(intent).hasComponentPackage("com.foo");
+  }
+
+  @Test
+  public void hasComponent() {
+    Intent intent = new Intent();
+    intent.setClassName("com.foo", "Foo");
+    assertThat(intent).hasComponent("com.foo", "Foo");
+    assertThat(intent).hasComponent(new ComponentName("com.foo", "Foo"));
   }
 
   @Test
