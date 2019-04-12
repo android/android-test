@@ -167,10 +167,12 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
 
   /**
    * Launches an activity of a given class and constructs ActivityScenario with the activity. Waits
-   * for the lifecycle state transitions to be complete. If you need to supply parameters to the
-   * start activity intent, use {@link #launch(Intent)}.
+   * for the lifecycle state transitions to be complete. Typically the initial state of the activity
+   * is {@link State#RESUMED} but can be in another state. For instance, if your activity calls
+   * {@link Activity#finish} from your {@link Activity#onCreate}, the state is {@link
+   * State#DESTROYED} when this method returns.
    *
-   * <p>Normally this would be {@link State#RESUMED}, but may be another state.
+   * <p>If you need to supply parameters to the start activity intent, use {@link #launch(Intent)}.
    *
    * <p>This method cannot be called from the main thread except in Robolectric tests.
    *
@@ -183,10 +185,11 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   }
 
   /**
-   * Launches an activity by using a given intent and constructs ActivityScenario with the activity.
-   * Waits for the lifecycle state transitions to be complete.
-   *
-   * <p>Normally this would be {@link State#RESUMED}, but may be another state.
+   * Launches an activity by a given intent and constructs ActivityScenario with the activity. Waits
+   * for the lifecycle state transitions to be complete. Typically the initial state of the activity
+   * is {@link State#RESUMED} but can be in another state. For instance, if your activity calls
+   * {@link Activity#finish} from your {@link Activity#onCreate}, the state is {@link
+   * State#DESTROYED} when this method returns.
    *
    * <p>This method cannot be called from the main thread except in Robolectric tests.
    *
