@@ -37,7 +37,7 @@ public final class TestSize {
       new TestSize(
           "small",
           androidx.test.filters.SmallTest.class,
-          android.test.suitebuilder.annotation.SmallTest.class,
+          "android.test.suitebuilder.annotation.SmallTest",
           200 /* in ms */);
 
   /** @see androidx.test.filters.MediumTest */
@@ -45,7 +45,7 @@ public final class TestSize {
       new TestSize(
           "medium",
           androidx.test.filters.MediumTest.class,
-          android.test.suitebuilder.annotation.MediumTest.class,
+          "android.test.suitebuilder.annotation.MediumTest",
           1000 /* in ms */);
 
   /** @see androidx.test.filters.LargeTest */
@@ -53,7 +53,7 @@ public final class TestSize {
       new TestSize(
           "large",
           androidx.test.filters.LargeTest.class,
-          android.test.suitebuilder.annotation.LargeTest.class,
+          "android.test.suitebuilder.annotation.LargeTest",
           Float.MAX_VALUE /* no threshold */);
 
   /**
@@ -77,13 +77,26 @@ public final class TestSize {
   @VisibleForTesting
   public TestSize(
       String sizeQualifierName,
-      Class<? extends Annotation> platformAnnotationClass,
       Class<? extends Annotation> runnerFilterAnnotationClass,
+      String legacyPlatformAnnotationClassName,
       float testSizeRuntimeThreshold) {
     this.sizeQualifierName = sizeQualifierName;
-    this.platformAnnotationClass = platformAnnotationClass;
+    this.platformAnnotationClass = loadPlatformAnnotationClass(legacyPlatformAnnotationClassName);
     this.runnerFilterAnnotationClass = runnerFilterAnnotationClass;
     testSizeRunTimeThreshold = testSizeRuntimeThreshold;
+  }
+
+  private static Class<? extends Annotation> loadPlatformAnnotationClass(
+      String legacyPlatformAnnotationClassName) {
+    if (legacyPlatformAnnotationClassName == null) {
+      return null;
+    }
+    try {
+      return (Class<? extends Annotation>) Class.forName(legacyPlatformAnnotationClassName);
+    } catch (ClassNotFoundException e) {
+      // ignore - not present on boot classpath
+      return null;
+    }
   }
 
   /** @return the test size name */
@@ -115,12 +128,17 @@ public final class TestSize {
       return false;
     }
 
-    if (testClass.isAnnotationPresent(runnerFilterAnnotationClass)
-        || testClass.isAnnotationPresent(platformAnnotationClass)) {
+    if (hasAnnotation(testClass, runnerFilterAnnotationClass)
+        || hasAnnotation(testClass, platformAnnotationClass)) {
       // If the test class is annotated with a test size annotation include it.
       return true;
     }
     return false;
+  }
+
+  private static boolean hasAnnotation(
+      Class<?> testClass, Class<? extends Annotation> annotationClass) {
+    return annotationClass != null && testClass.isAnnotationPresent(annotationClass);
   }
 
   /** @return the suite run time threshold for a given test size. */

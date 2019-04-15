@@ -85,8 +85,6 @@ public class TestRequestBuilder {
   private final TestsRegExFilter testsRegExFilter = new TestsRegExFilter();
   private Filter filter =
       new AnnotationExclusionFilter(androidx.test.filters.Suppress.class)
-          .intersect(
-              new AnnotationExclusionFilter(android.test.suitebuilder.annotation.Suppress.class))
           .intersect(new SdkSuppressFilter())
           .intersect(new RequiresDeviceFilter())
           .intersect(classMethodFilter)
@@ -505,6 +503,20 @@ public class TestRequestBuilder {
     deviceBuild = Checks.checkNotNull(deviceBuildAccessor);
     this.instr = Checks.checkNotNull(instr);
     argsBundle = Checks.checkNotNull(bundle);
+
+    maybeAddLegacySuppressFilter();
+  }
+
+  // add legacy Suppress filer iff it is on classpath
+  private void maybeAddLegacySuppressFilter() {
+    try {
+      Class<? extends Annotation> legacySuppressClass =
+          (Class<? extends Annotation>)
+              Class.forName("android.test.suitebuilder.annotation.Suppress");
+      filter = filter.intersect(new AnnotationExclusionFilter(legacySuppressClass));
+    } catch (ClassNotFoundException e) {
+      // ignore
+    }
   }
 
   /**

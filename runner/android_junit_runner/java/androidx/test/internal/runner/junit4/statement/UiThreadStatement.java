@@ -20,6 +20,7 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 
 import android.os.Looper;
 import android.util.Log;
+import java.lang.annotation.Annotation;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicReference;
@@ -68,23 +69,34 @@ public class UiThreadStatement extends Statement {
   }
 
   public static boolean shouldRunOnUiThread(FrameworkMethod method) {
-    Class<android.test.UiThreadTest> deprecatedUiThreadTestClass = android.test.UiThreadTest.class;
-    if (method.getAnnotation(deprecatedUiThreadTestClass) != null) {
+    Class<? extends Annotation> deprecatedUiThreadTestClass =
+        loadUiThreadClass("android.test.UiThreadTest");
+    if (hasAnnotation(method, deprecatedUiThreadTestClass)) {
       return true;
     } else {
-      try {
-        // to avoid circular dependency on Rules module use the class name directly
-        @SuppressWarnings("unchecked") // reflection
-        Class UiThreadTestClass = Class.forName("androidx.test.annotation.UiThreadTest");
-        if (method.getAnnotation(deprecatedUiThreadTestClass) != null
-            || method.getAnnotation(UiThreadTestClass) != null) {
+      // to avoid circular dependency on Rules module use the class name directly
+      @SuppressWarnings("unchecked") // reflection
+      Class<? extends Annotation> uiThreadTestClass =
+          loadUiThreadClass("androidx.test.annotation.UiThreadTest");
+      if (hasAnnotation(method, deprecatedUiThreadTestClass)
+          || hasAnnotation(method, uiThreadTestClass)) {
           return true;
         }
-      } catch (ClassNotFoundException e) {
-        // ignore, annotation is not used.
-      }
     }
     return false;
+  }
+
+  private static boolean hasAnnotation(
+      FrameworkMethod method, Class<? extends Annotation> annotationClass) {
+    return annotationClass != null && method.getAnnotation(annotationClass) != null;
+  }
+
+  private static Class<? extends Annotation> loadUiThreadClass(String className) {
+    try {
+      return (Class<? extends Annotation>) Class.forName(className);
+    } catch (ClassNotFoundException e) {
+      return null;
+    }
   }
 
   public static void runOnUiThread(final Runnable runnable) throws Throwable {
