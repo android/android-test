@@ -20,6 +20,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import androidx.test.espresso.FailureHandler;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
@@ -195,6 +196,15 @@ public class BaseLayerModule {
   @Singleton
   public ControlledLooper provideControlledLooper() {
     // load a service loaded provided ControlledLooper if available, otherwise return a no-op
-    return ServiceLoaderWrapper.loadSingleService(ControlledLooper.class, () -> () -> {});
+    return ServiceLoaderWrapper.loadSingleService(
+        ControlledLooper.class,
+        () ->
+            new ControlledLooper() {
+              @Override
+              public void drainMainThreadUntilIdle() {}
+
+              @Override
+              public void simulateWindowFocus(View decorView) {}
+            });
   }
 }
