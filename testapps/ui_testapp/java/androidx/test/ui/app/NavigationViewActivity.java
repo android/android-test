@@ -18,7 +18,7 @@ package androidx.test.ui.app;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import com.google.android.material.navigation.NavigationView;
+import android.support.design.widget.NavigationView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
