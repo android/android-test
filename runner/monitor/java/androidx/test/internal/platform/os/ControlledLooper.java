@@ -15,6 +15,8 @@
  */
 package androidx.test.internal.platform.os;
 
+import android.view.View;
+
 /**
  * An API for advancing the looper when its in a paused or controlled state.
  *
@@ -29,4 +31,7 @@ public interface ControlledLooper {
    * <p>Intended to be used in unit test environments where main thread looper is in a paused state.
    */
   void drainMainThreadUntilIdle();
+
+  /** Generate window focus event for given view. */
+  void simulateWindowFocus(View decorView);
 }
