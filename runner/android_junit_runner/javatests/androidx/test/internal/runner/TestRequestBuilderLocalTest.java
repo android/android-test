@@ -21,6 +21,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.when;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SmallTest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,14 +37,17 @@ import org.junit.runner.notification.RunListener;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.robolectric.annotation.Config;
 
 /** Unit tests running on local host for TestRequestBuilder. */
 @RunWith(AndroidJUnit4.class)
+@Config(sdk = Config.ALL_SDKS)
 public class TestRequestBuilderLocalTest {
 
   public static class TestFixture {
 
     @Test
+    @SmallTest
     public void match() {}
 
     @Test
@@ -80,6 +84,16 @@ public class TestRequestBuilderLocalTest {
   public void setTestsRegExFilter_withClassPathScanning() throws IOException {
     builder.setTestsRegExFilter("TestFixture#match").addPathToScan("foo");
     setClassPathScanningResults(TestFixture.class.getName(), "com.android.SomeOtherClass");
+
+    List<String> results = runRequest(builder.build());
+
+    assertThat(results).containsExactly(TestFixture.class.getName() + "#match");
+  }
+
+  @Test
+  public void addTestSizeFilter() throws IOException {
+    builder.addTestSizeFilter(TestSize.SMALL);
+    builder.addTestClass(TestFixture.class.getName());
 
     List<String> results = runRequest(builder.build());
 
