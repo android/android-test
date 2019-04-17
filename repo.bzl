@@ -268,14 +268,35 @@ def android_test_repositories(with_dev_repositories = False):
     # Needed by protobuf
     native.bind(name = "six", actual = "@six_archive//:six")
 
+    # Apr 17, 2019
     http_archive(
         name = "com_google_protobuf",
-        strip_prefix = "protobuf-3.6.1.2",
-        sha256 = "2244b0308846bb22b4ff0bcc675e99290ff9f1115553ae9671eba1030af31bc0",
-        urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.6.1.2.tar.gz"],
+        strip_prefix = "protobuf-1c5e8cbb8fedafbb45f62d28d9d4ff2362168601",
+        sha256 = "c79644ead583c02f2b0d0e761e37cfc4cf74a14639f88e7522abc7f25dcfe3ca",
+        urls = ["https://github.com/protocolbuffers/protobuf/archive/1c5e8cbb8fedafbb45f62d28d9d4ff2362168601.tar.gz"],
     )
 
-    # Open source version of the google python flags library.
+    # Needed by protobuf
+    if "zlib" not in native.existing_rules():
+        http_archive(
+            name = "zlib",
+            build_file = "@com_google_protobuf//:third_party/zlib.BUILD",
+            sha256 = "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1",
+            strip_prefix = "zlib-1.2.11",
+            urls = ["https://zlib.net/zlib-1.2.11.tar.gz"],
+        )
+
+    # Needed by protobuf
+    if "bazel_skylib" not in native.existing_rules():
+        # bazel-skylb 0.8.0 released 2019.03.20 (https://github.com/bazelbuild/bazel-skylib/releases/tag/0.8.0)
+        skylib_version = "0.8.0"
+        http_archive(
+            name = "bazel_skylib",
+            type = "tar.gz",
+            url = "https://github.com/bazelbuild/bazel-skylib/releases/download/{}/bazel-skylib.{}.tar.gz".format(skylib_version, skylib_version),
+            sha256 = "2ef429f5d7ce7111263289644d233707dba35e39696377ebab8b0bc701f7818e",
+        )
+
     http_archive(
         name = "absl_py",
         sha256 = "980ce58c34dfa75a9d20d45c355658191c166557f1de41ab52f208bd00604c2b",
