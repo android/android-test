@@ -27,6 +27,7 @@ import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.espresso.NoMatchingRootException;
 import androidx.test.espresso.Root;
 import androidx.test.espresso.UiController;
+import androidx.test.internal.platform.os.ControlledLooper;
 import androidx.test.internal.util.LogUtil;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.Stage;
@@ -61,17 +62,20 @@ public final class RootViewPicker implements Provider<View> {
   private final ActivityLifecycleMonitor activityLifecycleMonitor;
   private final AtomicReference<Boolean> needsActivity;
   private final RootResultFetcher rootResultFetcher;
+  private final ControlledLooper controlledLooper;
 
   @Inject
   RootViewPicker(
       UiController uiController,
       RootResultFetcher rootResultFetcher,
       ActivityLifecycleMonitor activityLifecycleMonitor,
-      AtomicReference<Boolean> needsActivity) {
+      AtomicReference<Boolean> needsActivity,
+      ControlledLooper controlledLooper) {
     this.uiController = uiController;
     this.rootResultFetcher = rootResultFetcher;
     this.activityLifecycleMonitor = activityLifecycleMonitor;
     this.needsActivity = needsActivity;
+    this.controlledLooper = controlledLooper;
   }
 
   @Override
@@ -98,6 +102,7 @@ public final class RootViewPicker implements Provider<View> {
       if (pickedRoot.isReady()) {
         return pickedRoot;
       } else {
+        controlledLooper.simulateWindowFocus(pickedRoot.getDecorView());
         uiController.loopMainThreadForAtLeast(rootReadyBackoff.getNextBackoffInMillis());
       }
     }
