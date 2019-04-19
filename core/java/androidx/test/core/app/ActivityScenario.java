@@ -15,6 +15,7 @@
  */
 package androidx.test.core.app;
 
+import static androidx.test.internal.util.Checks.checkMainThread;
 import static androidx.test.internal.util.Checks.checkNotMainThread;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
@@ -26,6 +27,7 @@ import androidx.lifecycle.Lifecycle.Event;
 import androidx.lifecycle.Lifecycle.State;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.Settings;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.Nullable;
@@ -517,26 +519,32 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * <p>Throwing an exception from {@code action} makes the Activity to crash. You can inspect the
    * exception in logcat outputs.
    *
-   * <p>This method cannot be called from the main thread except in Robolectric tests.
-   *
    * @throws IllegalStateException if Activity is destroyed, finished or finishing
    */
   public ActivityScenario<A> onActivity(final ActivityAction<A> action) {
-    checkNotMainThread();
-    getInstrumentation().waitForIdleSync();
-    getInstrumentation()
-        .runOnMainSync(
-            () -> {
-              lock.lock();
-              try {
-                checkNotNull(
-                    currentActivity,
-                    "Cannot run onActivity since Activity has been destroyed already");
-                action.perform(currentActivity);
-              } finally {
-                lock.unlock();
-              }
-            });
+    // A runnable to perform given ActivityAction. This runnable should be invoked from the
+    // application main thread.
+    Runnable runnableAction =
+        () -> {
+          checkMainThread();
+
+          lock.lock();
+          try {
+            checkNotNull(
+                currentActivity, "Cannot run onActivity since Activity has been destroyed already");
+            action.perform(currentActivity);
+          } finally {
+            lock.unlock();
+          }
+        };
+
+    if (Looper.myLooper() == Looper.getMainLooper()) {
+      runnableAction.run();
+    } else {
+      getInstrumentation().waitForIdleSync();
+      getInstrumentation().runOnMainSync(runnableAction);
+    }
+
     return this;
   }
 
