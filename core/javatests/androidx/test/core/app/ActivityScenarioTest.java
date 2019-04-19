@@ -24,10 +24,12 @@ import static org.junit.Assert.fail;
 import android.app.Activity;
 import androidx.lifecycle.Lifecycle.State;
 import android.content.Intent;
+import android.os.Looper;
 import androidx.test.core.app.testing.FinishItselfActivity;
 import androidx.test.core.app.testing.RecreationRecordingActivity;
 import androidx.test.core.app.testing.RedirectingActivity;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
 import org.junit.Test;
@@ -356,6 +358,19 @@ public final class ActivityScenarioTest {
       fail("launching an intent for a non-existing activity did not throw");
     } catch (RuntimeException e) {
       // expected
+    }
+  }
+
+  @Test
+  public void onActivityShouldBeCallableFromMainThread() {
+    try (ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class)) {
+      InstrumentationRegistry.getInstrumentation()
+          .runOnMainSync(
+              () ->
+                  scenario.onActivity(
+                      activity ->
+                          assertThat(activity.getMainLooper()).isEqualTo(Looper.myLooper())));
     }
   }
 
