@@ -105,7 +105,7 @@ public final class IntentSubject extends Subject<IntentSubject, Intent> {
 
   public final void filtersEquallyTo(Intent intent) {
     if (!getSubject().filterEquals(intent)) {
-      fail("is equal for intent filters to", intent);
+      failWithActual("expected to be equal for intent filters to", intent);
     }
   }
 }

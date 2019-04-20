@@ -17,6 +17,7 @@ package androidx.test.ext.truth.content;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.ext.truth.content.IntentSubject.assertThat;
+import static com.google.common.truth.ExpectFailure.assertThat;
 import static org.junit.Assert.fail;
 
 import android.content.ComponentName;
@@ -139,10 +140,10 @@ public class IntentSubjectTest {
       assertThat(new Intent("FOO")).filtersEquallyTo(new Intent("BAR"));
       fail("Should have thrown");
     } catch (AssertionError e) {
-      Truth.assertThat(e.getMessage())
-          .isEqualTo(
-              "Not true that <Intent { act=FOO }> "
-                  + "is equal for intent filters to <Intent { act=BAR }>");
+      assertThat(e)
+          .factValue("expected to be equal for intent filters to")
+          .isEqualTo("Intent { act=BAR }");
+      assertThat(e).factValue("but was").isEqualTo("Intent { act=FOO }");
     }
   }
 }
