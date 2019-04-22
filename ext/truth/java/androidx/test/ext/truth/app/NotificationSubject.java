@@ -64,7 +64,7 @@ public class NotificationSubject extends Subject<NotificationSubject, Notificati
   public final void hasFlags(int flags) {
     List<String> actualFlags = FlagUtil.flagNames(actual().flags);
     List<String> expectedFlags = FlagUtil.flagNames(flags);
-    check("flags").that(actualFlags).containsAllIn(expectedFlags);
+    check("flags").that(actualFlags).containsAtLeastElementsIn(expectedFlags);
   }
 
   public final void doesNotHaveFlags(int flags) {

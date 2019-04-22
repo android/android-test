@@ -100,7 +100,7 @@ public final class IntentSubject extends Subject<IntentSubject, Intent> {
   public final void hasFlags(int flag) {
     List<String> actualFlags = FlagUtil.flagNames(actual().getFlags());
     List<String> expectedFlags = FlagUtil.flagNames(flag);
-    check("getFlags()").that(actualFlags).containsAllIn(expectedFlags);
+    check("getFlags()").that(actualFlags).containsAtLeastElementsIn(expectedFlags);
   }
 
   public final void filtersEquallyTo(Intent intent) {
