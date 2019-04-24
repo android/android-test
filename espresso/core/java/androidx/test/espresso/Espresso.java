@@ -252,7 +252,7 @@ public final class Espresso {
     // overflow or it's missing. onPrepareOptionsMenu is called by Choreographer after onResume and
     // view is attached to window. To ensure the options menu is created before we try to open,
     // wait for all processing tasks in this frame to be finished.
-    waitUntilNextFrame();
+    waitUntilNextFrame(2);
 
     if (context.getApplicationInfo().targetSdkVersion < Build.VERSION_CODES.HONEYCOMB) {
       // regardless of the os level of the device, this app will be rendering a menukey
@@ -276,25 +276,30 @@ public final class Espresso {
     // try clicking on overflow menu, the click may delivered to unexpected view which is positioned
     // the same location but under the overflow menu. This happens because the context menu is
     // there in view hierarchy but not rendered yet so Espresso is able to calculate coordinate but
-    // injected motion event goes to the wrong view.
-    waitUntilNextFrame();
+    // injected motion event goes to the wrong view. Waits for two frames because runnable to
+    // display the menu is registered in the current frame and it is executed in the next frame.
+    waitUntilNextFrame(2);
   }
 
-  private static void waitUntilNextFrame() {
+  private static void waitUntilNextFrame(int times) {
     // Choreographer API is added in API 16.
     if (VERSION.SDK_INT < VERSION_CODES.JELLY_BEAN) {
       return;
     }
 
-    CountDownLatch latch = new CountDownLatch(1);
-    InstrumentationRegistry.getInstrumentation()
-        .runOnMainSync(
-            () ->
-                Choreographer.getInstance().postFrameCallback(frameTimeNanos -> latch.countDown()));
-    try {
-      latch.await(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-    } catch (InterruptedException e) {
-      Log.w(TAG, "Waited for the next frame to start but never happened.");
+    for (int i = 0; i < times; ++i) {
+      CountDownLatch latch = new CountDownLatch(1);
+      InstrumentationRegistry.getInstrumentation()
+          .runOnMainSync(
+              () ->
+                  Choreographer.getInstance()
+                      .postFrameCallback(frameTimeNanos -> latch.countDown()));
+      try {
+        latch.await(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+      } catch (InterruptedException e) {
+        Log.w(TAG, "Waited for the next frame to start but never happened.");
+        return;
+      }
     }
   }
 
