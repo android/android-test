@@ -270,6 +270,14 @@ public final class Espresso {
       // either a hardware button exists, or we're on a pre-HC os.
       onView(isRoot()).perform(pressMenuKey());
     }
+
+    // Again, we need to wait for the next rendering frame so that overflow menu is rendered on
+    // screen. This wait is especially important for API 29+ devices. If we skip this wait and you
+    // try clicking on overflow menu, the click may delivered to unexpected view which is positioned
+    // the same location but under the overflow menu. This happens because the context menu is
+    // there in view hierarchy but not rendered yet so Espresso is able to calculate coordinate but
+    // injected motion event goes to the wrong view.
+    waitUntilNextFrame();
   }
 
   private static void waitUntilNextFrame() {
