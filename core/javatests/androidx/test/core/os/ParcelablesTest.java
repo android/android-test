@@ -29,7 +29,7 @@ public final class ParcelablesTest {
   public void testForceParcel() throws Exception {
     Uri value = Uri.parse("content://foo/bar");
     Uri newValue = Parcelables.forceParcel(value, Uri.CREATOR);
-    assertThat(newValue).isNotSameAs(value);
+    assertThat(newValue).isNotSameInstanceAs(value);
     assertThat(newValue).isEqualTo(value);
   }
 }
