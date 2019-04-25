@@ -51,7 +51,7 @@ def _development_repositories():
 
     native.maven_jar(
         name = "truth",
-        artifact = "com.google.truth:truth:0.42",
+        artifact = "com.google.truth:truth:0.44",
     )
 
     native.maven_jar(
