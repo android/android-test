@@ -20,11 +20,14 @@ import static android.app.Activity.RESULT_OK;
 import static androidx.test.ext.truth.content.IntentSubject.assertThat;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
+import static org.robolectric.annotation.LooperMode.Mode.PAUSED;
 
 import android.app.Activity;
 import androidx.lifecycle.Lifecycle.State;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.Looper;
+import androidx.test.core.app.ActivityScenario.ActivityAction;
 import androidx.test.core.app.testing.FinishItselfActivity;
 import androidx.test.core.app.testing.RecreationRecordingActivity;
 import androidx.test.core.app.testing.RedirectingActivity;
@@ -32,14 +35,18 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.annotation.LooperMode;
 
 /**
  * Tests for ActivityScenario's implementation. Verifies ActivityScenario APIs works consistently
  * across multiple different Android framework versions and Robolectric.
  */
 @RunWith(AndroidJUnit4.class)
+@LooperMode(PAUSED)
 public final class ActivityScenarioTest {
   @Test
   public void launchedActivityShouldBeResumed() throws Exception {
@@ -371,6 +378,35 @@ public final class ActivityScenarioTest {
                   scenario.onActivity(
                       activity ->
                           assertThat(activity.getMainLooper()).isEqualTo(Looper.myLooper())));
+    }
+  }
+
+  /**
+   * Verify that onActivity main looper synchronization is consistent between on device and
+   * robolectric.
+   */
+  @Test
+  public void onActivity_sync() {
+    final List<String> events = new ArrayList<>();
+    Handler mainHandler = new Handler(Looper.getMainLooper());
+
+    try (ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class)) {
+
+      mainHandler.post(() -> events.add("before onActivity"));
+      scenario.onActivity(
+          new ActivityAction<RecreationRecordingActivity>() {
+            @Override
+            public void perform(RecreationRecordingActivity activity) {
+              events.add("in onActivity");
+              // as expected, on device tests become flaky and fail deterministically on
+              // Robolectric with this line, as onActivity does not drain the main looper
+              // after runnable executes
+              // mainHandler.post(() -> events.add("post from onActivity"));
+            }
+          });
+
+      assertThat(events).containsExactly("before onActivity", "in onActivity").inOrder();
     }
   }
 

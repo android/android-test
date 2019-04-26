@@ -33,6 +33,7 @@ import androidx.annotation.GuardedBy;
 import androidx.annotation.Nullable;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.app.ActivityInvoker;
+import androidx.test.internal.platform.os.ControlledLooper;
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
@@ -139,6 +140,8 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   /** An intent to start a testing Activity. */
   private final Intent startActivityIntent;
 
+  private final ControlledLooper controlledLooper;
+
   /**
    * A current activity stage. This variable is updated by {@link ActivityLifecycleMonitor} from the
    * main thread.
@@ -165,6 +168,9 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
         "\"Don't keep activities\" developer options must be disabled for ActivityScenario");
     this.startActivityIntent = checkNotNull(startActivityIntent);
     currentActivityStage = Stage.PRE_ON_CREATE;
+    this.controlledLooper =
+        ServiceLoaderWrapper.loadSingleService(
+            ControlledLooper.class, () -> ControlledLooper.NO_OP_CONTROLLED_LOOPER);
   }
 
   /**
@@ -539,6 +545,9 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
         };
 
     if (Looper.myLooper() == Looper.getMainLooper()) {
+      // execute any queued work on main looper, to make behavior consistent between running
+      // on Robolectric with paused main looper and instrumentation
+      controlledLooper.drainMainThreadUntilIdle();
       runnableAction.run();
     } else {
       getInstrumentation().waitForIdleSync();

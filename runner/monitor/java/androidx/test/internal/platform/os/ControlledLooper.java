@@ -34,4 +34,13 @@ public interface ControlledLooper {
 
   /** Generate window focus event for given view. */
   void simulateWindowFocus(View decorView);
+
+  public static final ControlledLooper NO_OP_CONTROLLED_LOOPER =
+      new ControlledLooper() {
+        @Override
+        public void drainMainThreadUntilIdle() {}
+
+        @Override
+        public void simulateWindowFocus(View decorView) {}
+      };
 }
