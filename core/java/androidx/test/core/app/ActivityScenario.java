@@ -31,6 +31,7 @@ import android.os.Looper;
 import android.provider.Settings;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.Nullable;
+import android.util.Log;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.app.ActivityInvoker;
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
@@ -106,11 +107,17 @@ import java.util.concurrent.locks.ReentrantLock;
  * }</pre>
  */
 public final class ActivityScenario<A extends Activity> implements AutoCloseable, Closeable {
+  private static final String TAG = ActivityScenario.class.getSimpleName();
+
   /**
    * The timeout for {@link #waitForActivityToBecomeAnyOf} method. If an Activity doesn't become
-   * requested state after the timeout, we will throw {@link AssertionError} to fail tests.
+   * requested state after the timeout, we will throw {@link AssertionError} to fail tests. Timeout
+   * duration is set to 2 minutes and this is decided heuristically. Be cautious to lower the
+   * threshold, Android framework sometimes take some time to invoke lifecycle callback methods. For
+   * instance, on API level 17, it may take 50 seconds until onResume gets called after onStart is
+   * called.
    */
-  private static final long TIMEOUT_MILLISECONDS = 45000;
+  private static final long TIMEOUT_MILLISECONDS = 120000;
 
   /** An ActivityInvoker to use. Implementation class can be configured by service provider. */
   private static final ActivityInvoker activityInvoker =
@@ -278,17 +285,25 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
       }
 
       if (!expectedStateSet.contains(STEADY_STATES.get(currentActivityStage))) {
-        throw new AssertionError(
-            String.format(
-                "Activity never becomes requested state \"%s\" "
-                    + "(last lifecycle transition = \"%s\")",
-                expectedStateSet, currentActivityStage));
+        AssertionError error =
+            new AssertionError(
+                String.format(
+                    "Activity never becomes requested state \"%s\" "
+                        + "(last lifecycle transition = \"%s\")",
+                    expectedStateSet, currentActivityStage));
+        Log.e(TAG, "waitForActivityToBecomeAnyOf method timed out with an error", error);
+        throw error;
       }
     } catch (InterruptedException e) {
-      throw new AssertionError(
-          String.format(
-              "Activity never becomes requested state \"%s\" (last lifecycle transition = \"%s\")",
-              expectedStateSet, currentActivityStage));
+      AssertionError error =
+          new AssertionError(
+              String.format(
+                  "Activity never becomes requested state \"%s\" (last lifecycle transition ="
+                      + " \"%s\")",
+                  expectedStateSet, currentActivityStage),
+              e);
+      Log.e(TAG, "waitForActivityToBecomeAnyOf method timed out with an error", error);
+      throw error;
     } finally {
       lock.unlock();
     }
@@ -300,6 +315,13 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
         @Override
         public void onActivityLifecycleChanged(Activity activity, Stage stage) {
           if (!startActivityIntent.filterEquals(activity.getIntent())) {
+            Log.i(
+                TAG,
+                String.format(
+                    "Activity lifecycle changed event received but ignored because the intent does"
+                        + " not match. startActivityIntent=%s, activity.getIntent()=%s,"
+                        + " activity=%s",
+                    startActivityIntent, activity.getIntent(), activity));
             return;
           }
           lock.lock();
@@ -311,6 +333,13 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
                 // transition must be to CREATED. Ignore events with non-created stage, which are
                 // likely come from activities that the previous test starts and doesn't clean up.
                 if (stage != Stage.CREATED) {
+                  Log.i(
+                      TAG,
+                      String.format(
+                          "Activity lifecycle changed event received but ignored because the"
+                              + " reported transition was not ON_CREATE while the last known"
+                              + " transition was %s",
+                          currentActivityStage));
                   return;
                 }
                 break;
@@ -322,6 +351,13 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
                 // an activity that is used by the previous test and being destroyed and an activity
                 // that is being resumed.
                 if (currentActivity != activity) {
+                  Log.i(
+                      TAG,
+                      String.format(
+                          "Activity lifecycle changed event received but ignored because the"
+                              + " activity instance does not match. currentActivity=%s,"
+                              + " receivedActivity=%s",
+                          currentActivity, activity));
                   return;
                 }
                 break;
@@ -332,6 +368,12 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
             // activity since the system may reuse the instance or want to garbage collect.
             currentActivityStage = stage;
             currentActivity = (A) (stage != Stage.DESTROYED ? activity : null);
+
+            Log.i(
+                TAG,
+                String.format(
+                    "Update currentActivityStage to %s, currentActivity=%s",
+                    currentActivityStage, currentActivity));
 
             stateChangedCondition.signal();
           } finally {
