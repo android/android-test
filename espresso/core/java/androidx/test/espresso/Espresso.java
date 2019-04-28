@@ -294,6 +294,7 @@ public final class Espresso {
               () ->
                   Choreographer.getInstance()
                       .postFrameCallback(frameTimeNanos -> latch.countDown()));
+      BASE.controlledLooper().drainMainThreadUntilIdle();
       try {
         latch.await(TIMEOUT_SECONDS, TimeUnit.SECONDS);
       } catch (InterruptedException e) {
