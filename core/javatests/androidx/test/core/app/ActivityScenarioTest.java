@@ -21,6 +21,7 @@ import static androidx.test.ext.truth.content.IntentSubject.assertThat;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
 import static org.robolectric.annotation.LooperMode.Mode.PAUSED;
+import static org.robolectric.annotation.TextLayoutMode.Mode.REALISTIC;
 
 import android.app.Activity;
 import androidx.lifecycle.Lifecycle.State;
@@ -28,7 +29,9 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.test.core.app.ActivityScenario.ActivityAction;
+import androidx.test.core.app.testing.AsyncRecordingActivity;
 import androidx.test.core.app.testing.FinishItselfActivity;
+import androidx.test.core.app.testing.RecordingActivity;
 import androidx.test.core.app.testing.RecreationRecordingActivity;
 import androidx.test.core.app.testing.RedirectingActivity;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -40,6 +43,7 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.annotation.LooperMode;
+import org.robolectric.annotation.TextLayoutMode;
 
 /**
  * Tests for ActivityScenario's implementation. Verifies ActivityScenario APIs works consistently
@@ -47,6 +51,7 @@ import org.robolectric.annotation.LooperMode;
  */
 @RunWith(AndroidJUnit4.class)
 @LooperMode(PAUSED)
+@TextLayoutMode(REALISTIC)
 public final class ActivityScenarioTest {
   @Test
   public void launchedActivityShouldBeResumed() throws Exception {
@@ -408,6 +413,49 @@ public final class ActivityScenarioTest {
 
       assertThat(events).containsExactly("before onActivity", "in onActivity").inOrder();
     }
+  }
+
+  @Test
+  public void launch_callbackSequence() {
+    ActivityScenario<RecordingActivity> activityScenario =
+        ActivityScenario.launch(RecordingActivity.class);
+    activityScenario.onActivity(
+        activity ->
+            assertThat(activity.getCallbacks())
+                .containsExactly(
+                    "onCreate",
+                    "onStart",
+                    "onPostCreate",
+                    "onResume",
+                    "onPostResume",
+                    "onAttachedToWindow",
+                    "onWindowFocusChanged true")
+                .inOrder());
+  }
+
+  @Test
+  public void launch_postingCallbackSequence() {
+    ActivityScenario<AsyncRecordingActivity> activityScenario =
+        ActivityScenario.launch(AsyncRecordingActivity.class);
+    activityScenario.onActivity(
+        activity ->
+            assertThat(activity.getCallbacks())
+                .containsExactly(
+                    "onCreate",
+                    "onStart",
+                    "onPostCreate",
+                    "onResume",
+                    "onPostResume",
+                    "post from onCreate",
+                    "post from onStart",
+                    "post from onPostCreate",
+                    "post from onResume",
+                    "post from onPostResume",
+                    "onAttachedToWindow",
+                    "post from onAttachedToWindow",
+                    "onWindowFocusChanged true",
+                    "post from onWindowFocusChanged true")
+                .inOrder());
   }
 
   private static Stage lastLifeCycleTransition(Activity activity) {
