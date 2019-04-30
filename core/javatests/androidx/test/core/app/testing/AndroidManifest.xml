@@ -13,6 +13,22 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+        <activity
+        android:name=".RecordingActivity"
+        android:exported="false">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+        <activity
+        android:name=".AsyncRecordingActivity"
+        android:exported="false">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
     <activity
         android:name=".FinishItselfActivity"
         android:exported="false">
