@@ -421,6 +421,23 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   }
 
   @Override
+  public void runOnMainSync(Runnable runner) {
+    FutureTask<Void> wrapped = new FutureTask<>(runner, null);
+    super.runOnMainSync(wrapped);
+    try {
+      wrapped.get();
+    } catch (InterruptedException e) {
+      Log.e(TAG, "An execution is interrupted", e);
+    } catch (ExecutionException e) {
+      if (e.getCause() instanceof AssertionError) {
+        throw (AssertionError) e.getCause();
+      } else {
+        Log.e(TAG, "An exception is thrown from the runnable posted to the main thread", e);
+      }
+    }
+  }
+
+  @Override
   public Activity startActivitySync(final Intent intent) {
     checkNotMainThread();
     long lastIdleTimeBeforeLaunch = lastIdleTime.get();
