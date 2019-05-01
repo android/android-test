@@ -100,6 +100,22 @@ public class MonitoringInstrumentationTest {
     assertThat(activity.get(), not(sameInstance((Activity) myTestActivity)));
   }
 
+  @Test
+  public void runOnMainSyncShouldRethrowAssertionException() {
+    final String errorMessage =
+        "AssertionError thrown in the runnable should be re-thrown in the instrumentation thread.";
+    try {
+      instrumentation.runOnMainSync(
+          () -> fail("This AssertionError should be re-thrown by runOnMainSync() method."));
+      fail(errorMessage);
+    } catch (AssertionError e) {
+      if (errorMessage.equals(e.getMessage())) {
+        throw e;
+      }
+      // pass
+    }
+  }
+
   private void retrieveActivityOnMainThread(
       final Class<TestActivity> activityClass,
       final AtomicReference<Activity> activityAtomicReference) {
