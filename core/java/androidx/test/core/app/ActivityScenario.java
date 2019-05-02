@@ -113,11 +113,6 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    */
   private static final long TIMEOUT_MILLISECONDS = 45000;
 
-  /** An ActivityInvoker to use. Implementation class can be configured by service provider. */
-  private static final ActivityInvoker activityInvoker =
-      ServiceLoaderWrapper.loadSingleService(
-          ActivityInvoker.class, () -> new InstrumentationActivityInvoker());
-
   /**
    * A map to lookup steady {@link State} by {@link Stage}. Transient stages such as {@link
    * Stage#CREATED}, {@link Stage#STARTED} and {@link Stage#RESTARTED} are not included in the map.
@@ -140,14 +135,21 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   /** An intent to start a testing Activity. */
   private final Intent startActivityIntent;
 
-  private final ControlledLooper controlledLooper;
+  /** An ActivityInvoker to use. Implementation class can be configured by service provider. */
+  private final ActivityInvoker activityInvoker =
+      ServiceLoaderWrapper.loadSingleService(
+          ActivityInvoker.class, () -> new InstrumentationActivityInvoker());
+
+  private final ControlledLooper controlledLooper =
+      ServiceLoaderWrapper.loadSingleService(
+          ControlledLooper.class, () -> ControlledLooper.NO_OP_CONTROLLED_LOOPER);
 
   /**
    * A current activity stage. This variable is updated by {@link ActivityLifecycleMonitor} from the
    * main thread.
    */
   @GuardedBy("lock")
-  private Stage currentActivityStage;
+  private Stage currentActivityStage = Stage.PRE_ON_CREATE;
 
   /**
    * A current activity. This variable is updated by {@link ActivityLifecycleMonitor} from the main
@@ -159,18 +161,13 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
 
   /** Private constructor. Use {@link #launch} to instantiate this class. */
   private ActivityScenario(Intent startActivityIntent) {
-    checkState(
-        Settings.System.getInt(
-                getInstrumentation().getTargetContext().getContentResolver(),
-                Settings.Global.ALWAYS_FINISH_ACTIVITIES,
-                0)
-            == 0,
-        "\"Don't keep activities\" developer options must be disabled for ActivityScenario");
     this.startActivityIntent = checkNotNull(startActivityIntent);
-    currentActivityStage = Stage.PRE_ON_CREATE;
-    this.controlledLooper =
-        ServiceLoaderWrapper.loadSingleService(
-            ControlledLooper.class, () -> ControlledLooper.NO_OP_CONTROLLED_LOOPER);
+  }
+
+  /** Private constructor. Use {@link #launch} to instantiate this class. */
+  private ActivityScenario(Class<A> activityClass) {
+    this.startActivityIntent =
+        checkNotNull(activityInvoker.getIntentForActivity(checkNotNull(activityClass)));
   }
 
   /**
@@ -189,7 +186,9 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * @return ActivityScenario which you can use to make further state transitions
    */
   public static <A extends Activity> ActivityScenario<A> launch(Class<A> activityClass) {
-    return launch(activityInvoker.getIntentForActivity(checkNotNull(activityClass)));
+    ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(activityClass));
+    scenario.launchInternal();
+    return scenario;
   }
 
   /**
@@ -206,20 +205,34 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * @return ActivityScenario which you can use to make further state transitions
    */
   public static <A extends Activity> ActivityScenario<A> launch(Intent startActivityIntent) {
+    ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(startActivityIntent));
+    scenario.launchInternal();
+    return scenario;
+  }
+
+  /**
+   * An internal helper method to perform initial launch operation for the given scenario instance
+   * along with preconditions checks around device's configuration.
+   */
+  private void launchInternal() {
+    checkState(
+        Settings.System.getInt(
+                getInstrumentation().getTargetContext().getContentResolver(),
+                Settings.Global.ALWAYS_FINISH_ACTIVITIES,
+                0)
+            == 0,
+        "\"Don't keep activities\" developer options must be disabled for ActivityScenario");
+
     checkNotMainThread();
     getInstrumentation().waitForIdleSync();
 
-    ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(startActivityIntent));
-    ActivityLifecycleMonitorRegistry.getInstance()
-        .addLifecycleCallback(scenario.activityLifecycleObserver);
+    ActivityLifecycleMonitorRegistry.getInstance().addLifecycleCallback(activityLifecycleObserver);
 
-    activityInvoker.startActivity(scenario.startActivityIntent);
+    activityInvoker.startActivity(startActivityIntent);
 
     // Accept any steady states. An activity may start another activity in its onCreate method. Such
     // an activity goes back to created or started state immediately after it is resumed.
-    scenario.waitForActivityToBecomeAnyOf(STEADY_STATES.values().toArray(new State[0]));
-
-    return scenario;
+    waitForActivityToBecomeAnyOf(STEADY_STATES.values().toArray(new State[0]));
   }
 
   /**
@@ -521,9 +534,6 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    *
    * <p>Note that you should never keep Activity reference passed into your {@code action} because
    * it can be recreated at anytime during state transitions.
-   *
-   * <p>Throwing an exception from {@code action} makes the Activity to crash. You can inspect the
-   * exception in logcat outputs.
    *
    * @throws IllegalStateException if Activity is destroyed, finished or finishing
    */
