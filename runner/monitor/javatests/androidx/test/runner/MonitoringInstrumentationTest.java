@@ -18,9 +18,11 @@ package androidx.test.runner;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
@@ -102,17 +104,16 @@ public class MonitoringInstrumentationTest {
 
   @Test
   public void runOnMainSyncShouldRethrowAssertionException() {
-    final String errorMessage =
-        "AssertionError thrown in the runnable should be re-thrown in the instrumentation thread.";
+    final String expectedErrorMessage =
+        "This AssertionError should be re-thrown by runOnMainSync() method.";
     try {
-      instrumentation.runOnMainSync(
-          () -> fail("This AssertionError should be re-thrown by runOnMainSync() method."));
-      fail(errorMessage);
-    } catch (AssertionError e) {
-      if (errorMessage.equals(e.getMessage())) {
-        throw e;
-      }
-      // pass
+      instrumentation.runOnMainSync(() -> fail(expectedErrorMessage));
+      fail(
+          "AssertionError thrown in the runnable should be re-thrown in the instrumentation"
+              + " thread.");
+    } catch (RuntimeException e) {
+      assertThat(e.getCause(), is(instanceOf(AssertionError.class)));
+      assertEquals(expectedErrorMessage, e.getCause().getMessage());
     }
   }
 

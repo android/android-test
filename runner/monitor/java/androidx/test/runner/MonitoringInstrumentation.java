@@ -420,20 +420,25 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
     applicationMonitor.signalLifecycleChange(app, ApplicationStage.CREATED);
   }
 
+  /**
+   * Posts a runnable to the main thread and blocks the caller's thread until the runnable is
+   * executed. When an exception is thrown in the runnable, the exception is propagated back to the
+   * caller's thread and it will be rethrown as {@link RuntimeException}.
+   *
+   * @param runnable a runnable to be executed on the main thread
+   */
   @Override
-  public void runOnMainSync(Runnable runner) {
-    FutureTask<Void> wrapped = new FutureTask<>(runner, null);
+  public void runOnMainSync(Runnable runnable) {
+    FutureTask<Void> wrapped = new FutureTask<>(runnable, null);
     super.runOnMainSync(wrapped);
     try {
       wrapped.get();
     } catch (InterruptedException e) {
       Log.e(TAG, "An execution is interrupted", e);
+      throw new RuntimeException(e);
     } catch (ExecutionException e) {
-      if (e.getCause() instanceof AssertionError) {
-        throw (AssertionError) e.getCause();
-      } else {
-        Log.e(TAG, "An exception is thrown from the runnable posted to the main thread", e);
-      }
+      Log.e(TAG, "An exception is thrown from the runnable posted to the main thread", e);
+      throw new RuntimeException(e.getCause());
     }
   }
 
