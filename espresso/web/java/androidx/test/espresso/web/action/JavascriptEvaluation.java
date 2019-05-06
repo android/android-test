@@ -119,8 +119,11 @@ final class JavascriptEvaluation {
 
   /** Ensures the WebView meetings minimum sanity guidelines. */
   private static class SanitizerTask extends AbstractFuture<UnpreparedScript> implements Runnable {
+    // Defines as a JavaScript function to avoid the "unsafe_eval" error when strict CSP is defined.
     private static final String DOC_ELEMENT_PRESENT =
-        "return document.documentElement != null && document.readyState === 'complete'";
+        "function checkDocElement() {return document.documentElement != null &&"
+            + " document.readyState === 'complete';}";
+
     private static final int DELAY = 100;
     private final UnpreparedScript unprepared;
     private String sanityMessage = "";
@@ -341,7 +344,14 @@ final class JavascriptEvaluation {
         toExecute.append("null;");
       }
       toExecute.append("return (").append(EvaluationAtom.EXECUTE_SCRIPT_ANDROID).append(")(");
-      escapeAndQuote(toExecute, script)
+      if (isFunctionDefinition(script)) {
+        // Simply passes the script in if it's a JavaScript function.
+        toExecute.append(script);
+      } else {
+        // The script defines a function body.
+        toExecute = escapeAndQuote(toExecute, script);
+      }
+      toExecute
           .append(",")
           .append(ModelCodec.encode(args))
           .append(",")
@@ -366,11 +376,6 @@ final class JavascriptEvaluation {
 
     private StringBuilder escapeAndQuote(StringBuilder scriptBuffer, String toWrap) {
       scriptBuffer.append("\"");
-      boolean isFunction = isFunctionDefinition(toWrap);
-      if (isFunction) {
-        scriptBuffer.append("return (");
-      }
-
       for (int i = 0; i < toWrap.length(); i++) {
         char c = toWrap.charAt(i);
         switch (c) {
@@ -395,10 +400,6 @@ final class JavascriptEvaluation {
             scriptBuffer.append(c);
         }
       }
-      if (isFunction) {
-        scriptBuffer.append(").apply(null,arguments);");
-      }
-
       scriptBuffer.append("\"");
       return scriptBuffer;
     }
@@ -426,7 +427,7 @@ final class JavascriptEvaluation {
         return in.conduit.getResult();
       }
     }
-  };
+  }
 
   private static final class AsyncJavascriptEvaluation
       implements AsyncFunction<PreparedScript, String> {
