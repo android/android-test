@@ -35,40 +35,43 @@ public class NotificationSubject extends Subject<NotificationSubject, Notificati
     return NotificationSubject::new;
   }
 
+  private final Notification actual;
+
   NotificationSubject(FailureMetadata failureMetadata, Notification subject) {
     super(failureMetadata, subject);
+    this.actual = subject;
   }
 
   public final BundleSubject extras() {
-    return check("extras").about(BundleSubject.bundles()).that(actual().extras);
+    return check("extras").about(BundleSubject.bundles()).that(actual.extras);
   }
 
   public final PendingIntentSubject contentIntent() {
     return check("contentIntent")
         .about(PendingIntentSubject.pendingIntents())
-        .that(actual().contentIntent);
+        .that(actual.contentIntent);
   }
 
   public final PendingIntentSubject deleteIntent() {
     return check("deleteIntent")
         .about(PendingIntentSubject.pendingIntents())
-        .that(actual().deleteIntent);
+        .that(actual.deleteIntent);
   }
 
   public final StringSubject tickerText() {
     return check("tickerText")
-        .that(actual().tickerText != null ? actual().tickerText.toString() : null);
+        .that(actual.tickerText != null ? actual.tickerText.toString() : null);
   }
 
   /** Assert that the notification has the given flags set. */
   public final void hasFlags(int flags) {
-    List<String> actualFlags = FlagUtil.flagNames(actual().flags);
+    List<String> actualFlags = FlagUtil.flagNames(actual.flags);
     List<String> expectedFlags = FlagUtil.flagNames(flags);
     check("flags").that(actualFlags).containsAtLeastElementsIn(expectedFlags);
   }
 
   public final void doesNotHaveFlags(int flags) {
-    List<String> actualFlags = FlagUtil.flagNames(actual().flags);
+    List<String> actualFlags = FlagUtil.flagNames(actual.flags);
     List<String> expectedFlags = FlagUtil.flagNames(flags);
     check("flags").that(actualFlags).containsNoneIn(expectedFlags);
   }

@@ -33,21 +33,24 @@ public final class PointerPropertiesSubject
     return PointerPropertiesSubject::new;
   }
 
+  private final PointerProperties actual;
+
   private PointerPropertiesSubject(
       FailureMetadata failureMetadata, @Nullable PointerProperties pointerProperties) {
     super(failureMetadata, pointerProperties);
+    this.actual = pointerProperties;
   }
 
   public void hasId(int id) {
-    check("id").that(actual().id).isEqualTo(id);
+    check("id").that(actual.id).isEqualTo(id);
   }
 
   public void hasToolType(int toolType) {
-    check("toolType").that(actual().toolType).isEqualTo(toolType);
+    check("toolType").that(actual.toolType).isEqualTo(toolType);
   }
 
   public void isEqualTo(PointerProperties other) {
-    check("id").that(actual().id).isEqualTo(other.id);
-    check("toolType").that(actual().toolType).isEqualTo(other.toolType);
+    check("id").that(actual.id).isEqualTo(other.id);
+    check("toolType").that(actual.toolType).isEqualTo(other.toolType);
   }
 }

@@ -37,8 +37,11 @@ public final class IntentSubject extends Subject<IntentSubject, Intent> {
     return IntentSubject::new;
   }
 
+  private final Intent actual;
+
   private IntentSubject(FailureMetadata failureMetadata, Intent subject) {
     super(failureMetadata, subject);
+    this.actual = subject;
   }
 
   /** @see #hasComponentClass(String) */
@@ -58,22 +61,22 @@ public final class IntentSubject extends Subject<IntentSubject, Intent> {
   /** @see #hasComponentClass(Class) */
   public final void hasComponentClass(String className) {
     check("getComponent().getClassName()")
-        .that(actual().getComponent().getClassName())
+        .that(actual.getComponent().getClassName())
         .isEqualTo(className);
   }
 
   public final void hasComponentPackage(String packageName) {
     check("getComponent().getPackageName()")
-        .that(actual().getComponent().getPackageName())
+        .that(actual.getComponent().getPackageName())
         .isEqualTo(packageName);
   }
 
   public final void hasPackage(String packageName) {
-    check("getPackage()").that(actual().getPackage()).isEqualTo(packageName);
+    check("getPackage()").that(actual.getPackage()).isEqualTo(packageName);
   }
 
   public final void hasAction(String action) {
-    check("getAction()").that(actual().getAction()).isEqualTo(action);
+    check("getAction()").that(actual.getAction()).isEqualTo(action);
   }
 
   public final void hasNoAction() {
@@ -81,30 +84,30 @@ public final class IntentSubject extends Subject<IntentSubject, Intent> {
   }
 
   public final void hasData(Uri uri) {
-    check("getData()").that(actual().getData()).isEqualTo(uri);
+    check("getData()").that(actual.getData()).isEqualTo(uri);
   }
 
   public final void hasType(String type) {
-    check("getType()").that(actual().getType()).isEqualTo(type);
+    check("getType()").that(actual.getType()).isEqualTo(type);
   }
 
   public final BundleSubject extras() {
-    return check("getExtras()").about(BundleSubject.bundles()).that(actual().getExtras());
+    return check("getExtras()").about(BundleSubject.bundles()).that(actual.getExtras());
   }
 
   public final IterableSubject categories() {
-    return check("getCategories()").that(actual().getCategories());
+    return check("getCategories()").that(actual.getCategories());
   }
 
   /** Assert that the intent has the given flag set. */
   public final void hasFlags(int flag) {
-    List<String> actualFlags = FlagUtil.flagNames(actual().getFlags());
+    List<String> actualFlags = FlagUtil.flagNames(actual.getFlags());
     List<String> expectedFlags = FlagUtil.flagNames(flag);
     check("getFlags()").that(actualFlags).containsAtLeastElementsIn(expectedFlags);
   }
 
   public final void filtersEquallyTo(Intent intent) {
-    if (!getSubject().filterEquals(intent)) {
+    if (!actual.filterEquals(intent)) {
       failWithActual("expected to be equal for intent filters to", intent);
     }
   }
