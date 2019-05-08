@@ -82,8 +82,8 @@ public class ServiceTestRule implements TestRule {
   private IBinder binder;
   private Intent serviceIntent;
   private ServiceConnection serviceConn;
-  private long timeout;
-  private TimeUnit timeUnit;
+  private final long timeout;
+  private final TimeUnit timeUnit;
 
   boolean serviceStarted = false;
   boolean serviceBound = false;
@@ -91,6 +91,11 @@ public class ServiceTestRule implements TestRule {
   /** Creates a {@link ServiceTestRule} with a default timeout of 5 seconds */
   public ServiceTestRule() {
     this(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+  }
+
+  protected ServiceTestRule(long timeout, TimeUnit timeUnit) {
+    this.timeout = timeout;
+    this.timeUnit = timeUnit;
   }
 
   /**
@@ -102,11 +107,6 @@ public class ServiceTestRule implements TestRule {
    */
   public static ServiceTestRule withTimeout(long timeout, TimeUnit timeUnit) {
     return new ServiceTestRule(timeout, timeUnit);
-  }
-
-  private ServiceTestRule(long timeout, TimeUnit timeUnit) {
-    this.timeout = timeout;
-    this.timeUnit = timeUnit;
   }
 
   /**
