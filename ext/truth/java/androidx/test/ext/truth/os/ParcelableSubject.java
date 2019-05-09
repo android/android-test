@@ -35,12 +35,15 @@ public final class ParcelableSubject<T extends Parcelable>
     return ParcelableSubject<T>::new;
   }
 
+  private final T actual;
+
   ParcelableSubject(FailureMetadata failureMetadata, T subject) {
     super(failureMetadata, subject);
+    this.actual = subject;
   }
 
   public void recreatesEqual(Creator<T> creator) {
-    T recreated = forceParcel(actual(), creator);
-    check("recreatesEqual()").that(actual()).isEqualTo(recreated);
+    T recreated = forceParcel(actual, creator);
+    check("recreatesEqual()").that(actual).isEqualTo(recreated);
   }
 }
