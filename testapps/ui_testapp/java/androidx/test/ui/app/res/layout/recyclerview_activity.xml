@@ -33,7 +33,7 @@
     </LinearLayout>
 
     <!-- Sessions fragments showing each day of the conference -->
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/rv_view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"

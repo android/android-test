@@ -21,20 +21,20 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 import 	androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 import androidx.test.ui.app.RecyclerViewFragment.LayoutManagerType;
+import androidx.viewpager.widget.ViewPager;
 import com.google.common.annotations.VisibleForTesting;
 
 /**
- * Simple RecylcerViewActivity which hosts a {@link androidx.viewpager.widget.ViewPager} that contains
- * three {@link androidx.fragment.app.Fragment}s. Each Fragment contains a
- * {@link androidx.recyclerview.widget.RecyclerView} with a different layout manager,
- * {@link androidx.recyclerview.widget.LinearLayoutManager},
- * {@link androidx.recyclerview.widget.GridLayoutManager} and {@link StaggeredGridLayoutManager}
+ * Simple RecylcerViewActivity which hosts a {@link androidx.viewpager.widget.ViewPager} that
+ * contains three {@link androidx.fragment.app.Fragment}s. Each Fragment contains a {@link
+ * androidx.recyclerview.widget.RecyclerView} with a different layout manager, {@link
+ * androidx.recyclerview.widget.LinearLayoutManager}, {@link
+ * androidx.recyclerview.widget.GridLayoutManager} and {@link StaggeredGridLayoutManager}
  */
 public class RecyclerViewActivity extends FragmentActivity {
 

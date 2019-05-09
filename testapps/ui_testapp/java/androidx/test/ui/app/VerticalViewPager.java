@@ -17,10 +17,10 @@
 package androidx.test.ui.app;
 
 import android.content.Context;
-import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * Vertical ViewPager which overrides onTouchEvent to swap the MotionEvent
