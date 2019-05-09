@@ -17,7 +17,7 @@ android_library(
     deps = [
         "//:androidx_annotation",
         "//core",
-        "@guava//jar",
+        "@guava_jar//jar",
         "@truth//jar",
     ],
 )

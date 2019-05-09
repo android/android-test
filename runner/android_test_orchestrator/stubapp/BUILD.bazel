@@ -15,7 +15,7 @@ android_binary(
     deps = [
         "//runner/android_junit_runner",
         "//runner/android_test_orchestrator",
-        "@guava//jar",
+        "@guava_jar//jar",
         "@junit//jar",
     ],
 )

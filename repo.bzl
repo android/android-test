@@ -55,8 +55,14 @@ def _development_repositories():
     )
 
     native.maven_jar(
-        name = "guava",
+        name = "guava_jar",
         artifact = "com.google.guava:guava:25.1-android",
+    )
+
+    # Needed by @com_google_protobuf//:protobuf_java_util
+    native.bind(
+        name = "guava",
+        actual = "@guava_jar//jar",
     )
 
     native.maven_jar(
@@ -174,6 +180,17 @@ java_import(
     native.maven_jar(
         name = "accessibility",
         artifact = "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.0",
+    )
+
+    native.maven_jar(
+        name = "gson_jar",
+        artifact = "com.google.code.gson:gson:2.8.5",
+    )
+
+    # Needed by @com_google_protobuf//:protobuf_java_util
+    native.bind(
+        name = "gson",
+        actual = "@gson_jar//jar",
     )
 
 # These dependencies are for *users* of the Android Test repo,

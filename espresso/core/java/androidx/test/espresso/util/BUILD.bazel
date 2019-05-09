@@ -10,6 +10,6 @@ android_library(
     srcs = glob(["*.java"]),
     deps = [
         "//runner/android_junit_runner",
-        "@guava//jar",
+        "@guava_jar//jar",
     ],
 )

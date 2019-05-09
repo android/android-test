@@ -41,7 +41,7 @@ android_library(
         "//runner/rules",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
-        "@guava//jar",
+        "@guava_jar//jar",
         "@hamcrest//jar",
         "@junit//jar",
     ],

@@ -19,7 +19,7 @@ android_library(
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
         "//services/speakeasy/java/androidx/test/services/speakeasy/client",
         "//services/speakeasy/java/androidx/test/services/speakeasy/client:tool_connection",
-        "@guava//jar",
+        "@guava_jar//jar",
     ],
 )
 

@@ -22,7 +22,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/core/java/androidx/test/espresso/util",
-        "@guava//jar",
+        "@guava_jar//jar",
         "@hamcrest//jar",
         "@junit//jar",
     ],
@@ -40,6 +40,6 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
         "//espresso/core/java/androidx/test/espresso/remote:registry",
-        "@guava//jar",
+        "@guava_jar//jar",
     ],
 )

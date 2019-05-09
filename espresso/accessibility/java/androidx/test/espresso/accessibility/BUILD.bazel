@@ -17,7 +17,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso",
         "//runner/android_junit_runner/java/androidx/test:runner",
         "@accessibility//jar",
-        "@guava//jar",
+        "@guava_jar//jar",
         "@hamcrest//jar",
     ],
 )

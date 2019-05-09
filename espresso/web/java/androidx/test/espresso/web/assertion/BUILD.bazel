@@ -29,7 +29,7 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/action",
         "//espresso/web/java/androidx/test/espresso/web/model",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
-        "@guava//jar",
+        "@guava_jar//jar",
         "@hamcrest//jar",
         "@tagsoup//jar",
     ],
@@ -51,6 +51,6 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/proto/assertion:web_assertions_proto_android_pb3",
         "//runner/android_junit_runner/java/androidx/test:runner",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
-        "@guava//jar",
+        "@guava_jar//jar",
     ],
 )

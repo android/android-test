@@ -36,7 +36,7 @@ EXTERNAL_DEPS = [
     "@javax_inject//jar",
     "@hamcrest//jar",
     "@jsr305//jar",
-    "@guava//jar",
+    "@guava_jar//jar",
     "@junit//jar",
 ]
 

@@ -21,7 +21,7 @@ java_plugin(
         "@dagger_producers//jar",
         "@errorprone_javac_shaded//jar",
         "@googlejavaformat//jar",
-        "@guava//jar",
+        "@guava_jar//jar",
         "@javapoet//jar",
         "@javax_annotation//jar",
         "@javax_inject//jar",
