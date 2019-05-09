@@ -38,6 +38,7 @@ public class IdlingScheduledThreadPoolExecutorTest {
 
   private IdlingScheduledThreadPoolExecutor executor;
   @Mock private IdlingResource.ResourceCallback mockCallback;
+  private static final long TIMEOUT_MS = 200;
 
   @Before
   public void setUp() {
@@ -67,7 +68,7 @@ public class IdlingScheduledThreadPoolExecutorTest {
     r.waitForExecution();
     assertThat(this.executor.isIdleNow()).isFalse();
     r.release();
-    verify(mockCallback, timeout(100)).onTransitionToIdle();
+    verify(mockCallback, timeout(TIMEOUT_MS)).onTransitionToIdle();
     assertThat(this.executor.isIdleNow()).isTrue();
   }
 
@@ -88,7 +89,7 @@ public class IdlingScheduledThreadPoolExecutorTest {
     r2.release();
     assertThat(this.executor.isIdleNow()).isFalse();
     r3.release();
-    verify(mockCallback, timeout(100)).onTransitionToIdle();
+    verify(mockCallback, timeout(TIMEOUT_MS)).onTransitionToIdle();
     assertThat(this.executor.isIdleNow()).isTrue();
   }
 
@@ -98,7 +99,7 @@ public class IdlingScheduledThreadPoolExecutorTest {
     ErrorRunnable r = new ErrorRunnable();
     this.executor.execute(r);
     r.waitForExecution();
-    verify(mockCallback, timeout(100)).onTransitionToIdle();
+    verify(mockCallback, timeout(TIMEOUT_MS)).onTransitionToIdle();
     assertThat(this.executor.isIdleNow()).isTrue();
   }
 
@@ -118,7 +119,7 @@ public class IdlingScheduledThreadPoolExecutorTest {
     assertThat(this.executor.isIdleNow()).isFalse();
     r.waitForExecution();
     r.release();
-    verify(mockCallback, timeout(100)).onTransitionToIdle();
+    verify(mockCallback, timeout(TIMEOUT_MS)).onTransitionToIdle();
     assertThat(this.executor.isIdleNow()).isTrue();
   }
 
