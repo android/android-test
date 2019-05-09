@@ -1,5 +1,5 @@
 # Bazel
-bazel*
+bazel-*
 
 # Android Studio
 .aswb

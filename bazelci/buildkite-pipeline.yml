@@ -1,0 +1,13 @@
+# Buildkite CI configuration file
+---
+platforms:
+  ubuntu1804:
+    build_targets:
+    - "//..."
+    build_flags:
+    - "--build_tag_filters=robolectric" # Build only robolectric tests for now
+    test_flags:
+    - "--local_test_jobs=8" # Run at most 8 tests in parallel
+    - "--test_tag_filters=robolectric" # Run only robolectric tests for now
+    test_targets:
+    - "//..."
