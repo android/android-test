@@ -21,7 +21,7 @@ ROBOLECTRIC_TEST_SRCS = [
 ]
 
 ROBOLECTRIC_DEPS = [
-    "@guava//jar",
+    "@guava_jar//jar",
     "@robolectric//bazel:robolectric",
 ]
 

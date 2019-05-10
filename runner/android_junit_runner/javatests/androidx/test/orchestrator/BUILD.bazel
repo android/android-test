@@ -26,7 +26,7 @@ ROBOLECTRIC_DEPS = [
 ]
 
 ROBOLECTRIC_EXTERNAL_DEPS = [
-    "@guava//jar",
+    "@guava_jar//jar",
     "@hamcrest//jar",
     "@bytebuddy//jar",
     "@bytebuddyagent//jar",

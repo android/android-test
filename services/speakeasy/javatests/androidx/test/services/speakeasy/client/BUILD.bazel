@@ -22,7 +22,7 @@ SE_CLIENT_DEPS = [
 ]
 
 EXTERNAL_DEPS = [
-    "@guava//jar",
+    "@guava_jar//jar",
     "@jsr305//jar",
     "@junit//jar",
     "@truth//jar",

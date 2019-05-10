@@ -53,7 +53,7 @@ EXTERNAL_DEPS = [
     "@com_google_protobuf_javalite//:protobuf_java_lite",
     "@dexmaker//jar",
     "@dexmaker_mockito//jar",
-    "@guava//jar",
+    "@guava_jar//jar",
     "@hamcrest//jar",
     "@javax_inject//jar",
     "@jsr305//jar",

@@ -13,7 +13,7 @@ UTIL_SRCS = [
 
 EXTERNAL_DEPS = [
     "@com_google_protobuf_javalite//:protobuf_java_lite",
-    "@guava//jar",
+    "@guava_jar//jar",
     "@hamcrest//jar",
     "@junit//jar",
 ]

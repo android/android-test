@@ -40,7 +40,7 @@ android_library(
         "//runner/rules",
         "//services/shellexecutor:exec_client",
         "//services/shellexecutor:exec_server",
-        "@guava//jar",
+        "@guava_jar//jar",
         "@hamcrest//jar",
         "@jsr305//jar",
         "@junit//jar",

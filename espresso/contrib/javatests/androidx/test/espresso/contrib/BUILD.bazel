@@ -32,7 +32,7 @@ android_library(
         "@accessibility//jar",
         "@dexmaker//jar",
         "@dexmaker_mockito//jar",
-        "@guava//jar",
+        "@guava_jar//jar",
         "@hamcrest//jar",
         "@javax_inject//jar",
         "@jsr305//jar",

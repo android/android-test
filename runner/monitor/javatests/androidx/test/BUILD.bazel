@@ -51,7 +51,7 @@ EXTERNAL_DEPS = [
     "@mockito//jar",
     "@objenesis//jar",
     "@truth//jar",
-    "@guava//jar",
+    "@guava_jar//jar",
 ]
 
 java_library(

@@ -24,7 +24,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
-        "@guava//jar",
+        "@guava_jar//jar",
         "@jsr305//jar",
     ],
 )
@@ -43,6 +43,6 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote:registry",
         "//espresso/web/java/androidx/test/espresso/web/proto/model:remote_web_model_atoms_proto_android_pb3",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
-        "@guava//jar",
+        "@guava_jar//jar",
     ],
 )

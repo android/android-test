@@ -12,7 +12,7 @@ android_library(
     srcs = ["SpeakEasy.java"],
     deps = [
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
-        "@guava//jar",
+        "@guava_jar//jar",
     ],
 )
 
@@ -32,7 +32,7 @@ android_library(
         ":speak_easy_core",
         "//:androidx_core",
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
-        "@guava//jar",
+        "@guava_jar//jar",
     ],
 )
 
