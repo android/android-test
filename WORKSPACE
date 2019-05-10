@@ -24,6 +24,7 @@ load(
     "CORE_VERSION",
     "GOOGLE_MATERIAL_VERSION",
     "RUNNER_VERSION",
+    "UIAUTOMATOR_VERSION",
 )
 
 maven_install(
@@ -41,6 +42,7 @@ maven_install(
         "androidx.lifecycle:lifecycle-common:" + ANDROIDX_LIFECYCLE_VERSION,
         "androidx.multidex:multidex:" + ANDROIDX_MULTIDEX_VERSION,
         "androidx.recyclerview:recyclerview:" + ANDROIDX_VERSION,
+        "androidx.test.uiautomator:uiautomator:" + UIAUTOMATOR_VERSION,        
         "androidx.viewpager:viewpager:" + ANDROIDX_VERSION,
         "com.google.android.material:material:" + GOOGLE_MATERIAL_VERSION,
         "org.pantsbuild:jarjar:1.7.2",
