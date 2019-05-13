@@ -122,3 +122,8 @@ alias(
     name = "androidx_cursoradapter",
     actual = artifact("androidx.cursoradapter:cursoradapter"),
 )
+
+alias(
+    name = "uiautomator",
+    actual = artifact("androidx.test.uiautomator:uiautomator"),
+)
