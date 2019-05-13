@@ -39,10 +39,10 @@ import static org.hamcrest.Matchers.allOf;
 
 import android.content.res.Resources.NotFoundException;
 import com.google.android.material.navigation.NavigationView;
-import androidx.drawerlayout.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;

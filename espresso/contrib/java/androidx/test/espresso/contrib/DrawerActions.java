@@ -24,9 +24,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
+import android.view.View;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener;
-import android.view.View;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.PerformException;
