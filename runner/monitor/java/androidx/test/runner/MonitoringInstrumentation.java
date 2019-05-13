@@ -250,12 +250,14 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
     // frameworks/base/core/java/android/app/LoadedApk.java
     ClassLoader newClassLoader = getTargetContext().getClassLoader();
 
-    Log.i(
-        TAG,
-        String.format(
-            "Setting context classloader to '%s', Original: '%s'",
-            newClassLoader.toString(), originalClassLoader.toString()));
-    Thread.currentThread().setContextClassLoader(newClassLoader);
+    if (originalClassLoader != newClassLoader) {
+      Log.i(
+          TAG,
+          String.format(
+              "Setting context classloader to '%s', Original: '%s'",
+              newClassLoader, originalClassLoader));
+      Thread.currentThread().setContextClassLoader(newClassLoader);
+    }
     isDexmakerClassLoaderInitialized.set(Boolean.TRUE);
   }
 
