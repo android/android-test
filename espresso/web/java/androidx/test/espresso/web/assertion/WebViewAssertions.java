@@ -78,7 +78,9 @@ public final class WebViewAssertions {
   public static WebAssertion<Document> webContent(final Matcher<Document> domMatcher) {
     checkNotNull(domMatcher);
     return webMatches(
-        transform(script("return document.documentElement.outerHTML;"), new DocumentParserAtom()),
+        transform(
+            script("function getHtml() {return document.documentElement.outerHTML;}"),
+            new DocumentParserAtom()),
         domMatcher,
         new WebContentResultDescriber());
   }
