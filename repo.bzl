@@ -193,6 +193,31 @@ java_import(
         actual = "@gson_jar//jar",
     )
 
+    native.maven_jar(
+        name = "joda_time",
+        artifact = "joda-time:joda-time:2.10.1",
+    )
+
+    native.maven_jar(
+        name = "checker_compat_qual",
+        artifact = "org.checkerframework:checker-compat-qual:2.5.5",
+    )
+
+    native.maven_jar(
+        name = "flogger",
+        artifact = "com.google.flogger:flogger:0.4",
+    )
+
+    native.maven_jar(
+        name = "flogger_google",
+        artifact = "com.google.flogger:google-extensions:0.4",
+    )
+
+    native.maven_jar(
+        name = "flogger_system_backend",
+        artifact = "com.google.flogger:flogger-system-backend:0.4",
+    )
+
 # These dependencies are for *users* of the Android Test repo,
 # i.e. specifying this repository as @androidx_test in their
 # WORKSPACE using a repository_rule like git_repository or http_archive.
