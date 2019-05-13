@@ -40,11 +40,11 @@ java_library(
         "//runner/rules",
         "@dexmaker//jar",
         "@dexmaker_mockito//jar",
-        "@hamcrest//jar",
-        "@junit//jar",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:junit_junit",
         "@mockito//jar",
         "@objenesis//jar",
-        "@truth//jar",
+        "@maven//:com_google_truth_truth",
     ],
 )
 

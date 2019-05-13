@@ -22,10 +22,10 @@ SE_CLIENT_DEPS = [
 ]
 
 EXTERNAL_DEPS = [
-    "@guava_jar//jar",
-    "@jsr305//jar",
-    "@junit//jar",
-    "@truth//jar",
+    "@maven//:com_google_guava_guava",
+    "@maven//:com_google_code_findbugs_jsr305",
+    "@maven//:junit_junit",
+    "@maven//:com_google_truth_truth",
 ]
 
 java_library(

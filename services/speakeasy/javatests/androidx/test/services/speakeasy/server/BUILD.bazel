@@ -20,9 +20,9 @@ SE_SERVER_DEPS = [
 ]
 
 EXTERNAL_DEPS = [
-    "@jsr305//jar",
-    "@junit//jar",
-    "@truth//jar",
+    "@maven//:com_google_code_findbugs_jsr305",
+    "@maven//:junit_junit",
+    "@maven//:com_google_truth_truth",
 ]
 
 java_library(

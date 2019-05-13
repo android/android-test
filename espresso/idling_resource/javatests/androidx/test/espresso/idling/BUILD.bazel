@@ -16,7 +16,7 @@ IDLING_DEPS = [
 ]
 
 EXTERNAL_DEPS = [
-    "@junit//jar",
+    "@maven//:junit_junit",
     "@dexmaker//jar",
     "@dexmaker_mockito//jar",
     "@mockito//jar",

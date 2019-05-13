@@ -16,9 +16,9 @@ android_library(
         "//ext/junit",
         "//runner/android_junit_runner",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
-        "@accessibility//jar",
-        "@hamcrest//jar",
-        "@junit//jar",
+        "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:junit_junit",
     ],
 )
 

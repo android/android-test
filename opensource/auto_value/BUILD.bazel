@@ -3,7 +3,7 @@ java_plugin(
     processor_class = "com.google.auto.value.processor.AutoValueProcessor",
     deps = [
         "@auto_value_value//jar",
-        "@guava_jar//jar",
+        "@maven//:com_google_guava_guava",
     ],
 )
 

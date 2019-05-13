@@ -15,9 +15,9 @@ android_library(
         "//:androidx_legacy_support_v4",
         "//runner/android_junit_runner",
         "//services/shellexecutor:exec_client",
-        "@guava_jar//jar",
-        "@junit//jar",
-        "@kxml//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:net_sf_kxml_kxml2",
     ],
 )
 

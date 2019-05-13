@@ -41,8 +41,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "@hamcrest//jar",
-        "@jsr305//jar",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -58,8 +58,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "@hamcrest//jar",
-        "@jsr305//jar",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -78,8 +78,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "@hamcrest//jar",
-        "@jsr305//jar",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -90,7 +90,7 @@ android_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "@hamcrest//jar",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 
@@ -105,8 +105,8 @@ android_library(
         ":guava_checks",
         "//espresso/core/java/androidx/test/espresso",
         "//runner/android_junit_runner",
-        "@accessibility//jar",
-        "@hamcrest//jar",
+        "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 
@@ -124,8 +124,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "@hamcrest//jar",
-        "@jsr305//jar",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -140,14 +140,14 @@ android_library(
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/action",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "@hamcrest//jar",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 
 android_library(
     name = "guava_checks",
     srcs = ["Checks.java"],
-    deps = ["@jsr305//jar"],
+    deps = ["@maven//:com_google_code_findbugs_jsr305"],
 )
 
 android_library(

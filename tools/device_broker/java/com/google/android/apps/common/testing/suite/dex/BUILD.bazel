@@ -10,6 +10,6 @@ java_library(
         "//tools/device_broker/proto:test_info_pb_java_proto",
         "//opensource/auto_value",
         "@guava//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )

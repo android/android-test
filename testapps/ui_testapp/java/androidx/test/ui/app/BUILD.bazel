@@ -28,7 +28,7 @@ android_library(
         "//:androidx_cursoradapter",
         "//:androidx_viewpager",
         "//:androidx_drawerlayout",
-        "@guava_jar//jar",
+        "@maven//:com_google_guava_guava",
     ],
 )
 

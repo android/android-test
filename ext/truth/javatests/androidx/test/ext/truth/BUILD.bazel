@@ -17,8 +17,8 @@ android_library_instrumentation_tests(
         "//ext/truth",
         "//runner/android_junit_runner",
         "//runner/rules",
-        "@junit//jar",
-        "@truth//jar",
+        "@maven//:junit_junit",
+        "@maven//:com_google_truth_truth",
     ],
 )
 
@@ -31,7 +31,7 @@ android_library_local_tests(
         "//ext/junit",
         "//ext/truth",
         "//runner/rules",
-        "@junit//jar",
-        "@truth//jar",
+        "@maven//:junit_junit",
+        "@maven//:com_google_truth_truth",
     ],
 )

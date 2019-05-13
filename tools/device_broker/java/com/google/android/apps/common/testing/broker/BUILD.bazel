@@ -16,7 +16,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//opensource/auto_value",
-        "@jsr305//jar",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -44,7 +44,7 @@ java_library(
         "@aop_alliance//jar",
         "@guava//jar",
         "@guice//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -79,8 +79,8 @@ java_library(
         ":struct",
         "//tools/device_broker/java/com/google/android/apps/common/testing/broker/shell",
         "@guava//jar",
-        "@javax_inject//jar",
-        "@jsr305//jar",
+        "@maven//:javax_inject_javax_inject",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -95,7 +95,7 @@ java_library(
         "@aop_alliance//jar",
         "@guava//jar",
         "@guice//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -141,7 +141,7 @@ java_library(
         "@aop_alliance//jar",
         "@guava//jar",
         "@guice//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_code_findbugs_jsr305",
         "@jsr330",
     ],
 )
@@ -177,7 +177,7 @@ java_library(
     deps = [
         ":anno",
         "@guice//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_code_findbugs_jsr305",
         "@jsr330",
     ],
 )
@@ -196,7 +196,7 @@ java_library(
         "@guava//jar",
         "@guice//jar",
         "@guice_multibindings//jar",
-        "@javax_inject//jar",
+        "@maven//:javax_inject_javax_inject",
     ],
 )
 
@@ -243,7 +243,7 @@ java_library(
         "@guava//jar",
         "@guice//jar",
         "@guice_multibindings//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -274,7 +274,7 @@ java_library(
         "@guava//jar",
         "@guice//jar",
         "@guice_multibindings//jar",
-        "@javax_inject//jar",
+        "@maven//:javax_inject_javax_inject",
     ],
 )
 
@@ -292,6 +292,6 @@ java_library(
         "@guava//jar",
         "@guice//jar",
         "@jcommander//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )

@@ -13,8 +13,8 @@ RULES_DEPS = [
 
 EXTERNAL_DEPS = [
     "//:androidx_annotation",
-    "@hamcrest//jar",
-    "@junit//jar",
+    "@maven//:org_hamcrest_hamcrest_all",
+    "@maven//:junit_junit",
     "@mockito//jar",
     "@dexmaker//jar",
     "@dexmaker_mockito//jar",

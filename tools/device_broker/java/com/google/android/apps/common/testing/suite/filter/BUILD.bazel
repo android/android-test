@@ -13,6 +13,6 @@ java_library(
         "//tools/device_broker/proto:test_info_pb_java_proto",
         "@guava//jar",
         "@jcommander//jar",
-        "@junit//jar",
+        "@maven//:junit_junit",
     ],
 )

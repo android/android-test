@@ -33,9 +33,9 @@ kt_android_library(
         "//ktx/core",
         "//runner/android_junit_runner",
         "//runner/monitor",
-        "@guava_jar//jar",
-        "@junit//jar",
-        "@truth//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:com_google_truth_truth",
     ],
 )
 
@@ -53,9 +53,9 @@ android_binary(
         "//ktx/core",
         "//runner/android_junit_runner",
         "//runner/monitor",
-        "@guava_jar//jar",
-        "@junit//jar",
-        "@truth//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:com_google_truth_truth",
     ],
 )
 

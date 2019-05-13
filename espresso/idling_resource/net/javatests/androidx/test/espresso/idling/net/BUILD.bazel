@@ -12,8 +12,8 @@ IDLING_NET_DEPS = [
 ]
 
 EXTERNAL_DEPS = [
-    "@hamcrest//jar",
-    "@junit//jar",
+    "@maven//:org_hamcrest_hamcrest_all",
+    "@maven//:junit_junit",
     "@dexmaker//jar",
     "@dexmaker_mockito//jar",
     "@mockito//jar",
