@@ -51,15 +51,15 @@ ESPRESSO_DEPS = [
 EXTERNAL_DEPS = [
     "//:androidx_annotation",
     "@com_google_protobuf_javalite//:protobuf_java_lite",
-    "@dexmaker//jar",
-    "@dexmaker_mockito//jar",
+    "@maven//:com_linkedin_dexmaker_dexmaker",
+    "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
     "@maven//:com_google_guava_guava",
     "@maven//:org_hamcrest_hamcrest_all",
     "@maven//:javax_inject_javax_inject",
     "@maven//:com_google_code_findbugs_jsr305",
     "@maven//:junit_junit",
-    "@mockito//jar",
-    "@objenesis//jar",
+    "@maven//:org_mockito_mockito_core",
+    "@maven//:org_objenesis_objenesis",
 ] + ESPRESSO_DEPS
 
 java_library(

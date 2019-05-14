@@ -11,11 +11,11 @@ MONITOR_DEPS = [
 
 ROBOLECTRIC_DEPS = [
     "@maven//:junit_junit",
-    "@bytebuddy//jar",
-    "@bytebuddyagent//jar",
-    "@mockito//jar",
+    "@maven//:net_bytebuddy_byte_buddy",
+    "@maven//:net_bytebuddy_byte_buddy_agent",
+    "@maven//:org_mockito_mockito_core",
     "@maven//:com_google_truth_truth",
-    "@objenesis//jar",
+    "@maven//:org_objenesis_objenesis",
     "@robolectric//bazel:robolectric",
 ]
 
@@ -46,10 +46,10 @@ EXTERNAL_DEPS = [
     "@maven//:org_hamcrest_hamcrest_all",
     "@maven//:javax_inject_javax_inject",
     "@maven//:junit_junit",
-    "@dexmaker//jar",
-    "@dexmaker_mockito//jar",
-    "@mockito//jar",
-    "@objenesis//jar",
+    "@maven//:com_linkedin_dexmaker_dexmaker",
+    "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
+    "@maven//:org_mockito_mockito_core",
+    "@maven//:org_objenesis_objenesis",
     "@maven//:com_google_truth_truth",
     "@maven//:com_google_guava_guava",
 ]

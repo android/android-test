@@ -11,11 +11,11 @@ IDLING_CONCURRENT_SHARED_DEPS = [
 
 EXTERNAL_DEPS = [
     "@maven//:junit_junit",
-    "@bytebuddy//jar",
-    "@bytebuddyagent//jar",
-    "@mockito//jar",
+    "@maven//:net_bytebuddy_byte_buddy",
+    "@maven//:net_bytebuddy_byte_buddy_agent",
+    "@maven//:org_mockito_mockito_core",
     "@maven//:com_google_truth_truth",
-    "@objenesis//jar",
+    "@maven//:org_objenesis_objenesis",
     "@robolectric//bazel:robolectric",
 ] + IDLING_CONCURRENT_SHARED_DEPS
 

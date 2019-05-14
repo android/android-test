@@ -28,10 +28,10 @@ ROBOLECTRIC_DEPS = [
 ROBOLECTRIC_EXTERNAL_DEPS = [
     "@maven//:com_google_guava_guava",
     "@maven//:org_hamcrest_hamcrest_all",
-    "@bytebuddy//jar",
-    "@bytebuddyagent//jar",
-    "@mockito//jar",
-    "@objenesis//jar",
+    "@maven//:net_bytebuddy_byte_buddy",
+    "@maven//:net_bytebuddy_byte_buddy_agent",
+    "@maven//:org_mockito_mockito_core",
+    "@maven//:org_objenesis_objenesis",
     "@robolectric//bazel:robolectric",
 ]
 
