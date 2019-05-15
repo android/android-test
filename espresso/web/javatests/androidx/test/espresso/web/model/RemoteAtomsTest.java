@@ -141,7 +141,8 @@ public class RemoteAtomsTest {
   public void getTitle_transformationFromProto() {
     TransformingAtom getTitleAtomFromProto =
         transformingAtom_transformationFromProto(Atoms.getTitle());
-    assertThat(getTitleAtomFromProto.getScript(), equalTo("return document.title;"));
+    assertThat(
+        getTitleAtomFromProto.getScript(), equalTo("function getTitle() {return document.title;}"));
   }
 
   @Test
@@ -153,6 +154,8 @@ public class RemoteAtomsTest {
   public void getCurrentUrl_transformationFromProto() {
     TransformingAtom getCurrentUrlAtomProto =
         transformingAtom_transformationFromProto(Atoms.getCurrentUrl());
-    assertThat(getCurrentUrlAtomProto.getScript(), equalTo("return document.location.href;"));
+    assertThat(
+        getCurrentUrlAtomProto.getScript(),
+        equalTo("function getCurrentUrl() {return document.location.href;}"));
   }
 }

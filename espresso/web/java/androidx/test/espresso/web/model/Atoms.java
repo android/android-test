@@ -58,12 +58,13 @@ public final class Atoms {
 
   /** Returns the value of document.location.href. */
   public static Atom<String> getCurrentUrl() {
-    return script("return document.location.href;", castOrDie(String.class));
+    return script(
+        "function getCurrentUrl() {return document.location.href;}", castOrDie(String.class));
   }
 
   /** Returns the value of document.title. */
   public static Atom<String> getTitle() {
-    return script("return document.title;", castOrDie(String.class));
+    return script("function getTitle() {return document.title;}", castOrDie(String.class));
   }
 
   /**
