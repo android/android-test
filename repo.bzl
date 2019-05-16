@@ -13,7 +13,7 @@ def _development_repositories():
     # Needed by @com_google_protobuf//:protobuf_java_util
     native.bind(
         name = "gson",
-        actual = "@maven//com_google_code_gson_gson",
+        actual = "@maven//:com_google_code_gson_gson",
     )
 
     http_archive(
