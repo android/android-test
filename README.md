@@ -18,3 +18,22 @@ Please see the
 [AndroidX Test Discuss mailing list](https://groups.google.com/forum/#!forum/androidx-test-discuss)
 for general questions and discussion, and please direct specific questions to
 [Stack Overflow](https://stackoverflow.com/questions/tagged/androidx-test).
+
+## Bazel integration
+
+To depend on this repository in Bazel, add the following snippet to your WORKSPACE file:
+
+```
+ATS_TAG = "<commit>"
+http_archive(
+    name = "android_test_support",
+    sha256 = "<sha256>",
+    strip_prefix = "android-test-%s" % ATS_TAG,
+    urls = ["https://github.com/android/android-test/archive/%s.tar.gz" % ATS_TAG],
+)
+load("@android_test_support//:repo.bzl", "android_test_repositories")
+android_test_repositories()
+
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+protobuf_deps()
+```
