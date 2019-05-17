@@ -1,7 +1,6 @@
 """Skylark rules to setup the WORKSPACE in the opensource bazel world."""
 
 
-load("@com_google_protobuf//:protobuf_deps.bzl", _protobuf_deps = "protobuf_deps")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # These dependencies are required for *developing* this project.
@@ -143,17 +142,17 @@ def android_test_repositories(with_dev_repositories = False):
     native.bind(name = "six", actual = "@six_archive//:six")
 
     http_archive(
-        name = "bazel_skylib",
-        url = "https://github.com/bazelbuild/bazel-skylib/releases/download/0.8.0/bazel-skylib.0.8.0.tar.gz",
-        sha256 = "2ef429f5d7ce7111263289644d233707dba35e39696377ebab8b0bc701f7818e",
-    )
-
-    http_archive(
         name = "com_google_protobuf",
         sha256 = "d82eb0141ad18e98de47ed7ed415daabead6d5d1bef1b8cccb6aa4d108a9008f",
         strip_prefix = "protobuf-b4f193788c9f0f05d7e0879ea96cd738630e5d51",
         # Commit from 2019-05-15, update to protobuf 3.8 when available.
         url = "https://github.com/protocolbuffers/protobuf/archive/b4f193788c9f0f05d7e0879ea96cd738630e5d51.tar.gz",
+    )
+
+    http_archive(
+        name = "bazel_skylib",
+        url = "https://github.com/bazelbuild/bazel-skylib/releases/download/0.8.0/bazel-skylib.0.8.0.tar.gz",
+        sha256 = "2ef429f5d7ce7111263289644d233707dba35e39696377ebab8b0bc701f7818e",
     )
 
     # Open source version of the google python flags library.
