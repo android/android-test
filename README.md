@@ -33,7 +33,4 @@ http_archive(
 )
 load("@android_test_support//:repo.bzl", "android_test_repositories")
 android_test_repositories()
-
-load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
-protobuf_deps()
 ```
