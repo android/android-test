@@ -138,7 +138,7 @@ def android_test_repositories(with_dev_repositories = False):
         url = "https://pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz",
     )
 
-    # Protobuf dependency start
+    # Protobuf
     http_archive(
         name = "com_google_protobuf",
         sha256 = "d82eb0141ad18e98de47ed7ed415daabead6d5d1bef1b8cccb6aa4d108a9008f",
@@ -146,6 +146,8 @@ def android_test_repositories(with_dev_repositories = False):
         # Commit from 2019-05-15, update to protobuf 3.8 when available.
         url = "https://github.com/protocolbuffers/protobuf/archive/b4f193788c9f0f05d7e0879ea96cd738630e5d51.tar.gz",
     )
+
+    # Protobuf's dependencies
 
     # Inlined protobuf's deps so we don't need users to add protobuf_deps() to their local WORKSPACE.
     # From load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps").
@@ -157,7 +159,6 @@ def android_test_repositories(with_dev_repositories = False):
             strip_prefix = "zlib-1.2.11",
             urls = ["https://zlib.net/zlib-1.2.11.tar.gz"],
         )
-    # Protobuf dependency end
 
     http_archive(
         name = "bazel_skylib",
