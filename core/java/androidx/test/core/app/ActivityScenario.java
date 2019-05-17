@@ -300,25 +300,18 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
       }
 
       if (!expectedStateSet.contains(STEADY_STATES.get(currentActivityStage))) {
-        AssertionError error =
-            new AssertionError(
-                String.format(
-                    "Activity never becomes requested state \"%s\" "
-                        + "(last lifecycle transition = \"%s\")",
-                    expectedStateSet, currentActivityStage));
-        Log.e(TAG, "waitForActivityToBecomeAnyOf method timed out with an error", error);
-        throw error;
+        throw new AssertionError(
+            String.format(
+                "Activity never becomes requested state \"%s\" (last lifecycle transition ="
+                    + " \"%s\")",
+                expectedStateSet, currentActivityStage));
       }
     } catch (InterruptedException e) {
-      AssertionError error =
-          new AssertionError(
-              String.format(
-                  "Activity never becomes requested state \"%s\" (last lifecycle transition ="
-                      + " \"%s\")",
-                  expectedStateSet, currentActivityStage),
-              e);
-      Log.e(TAG, "waitForActivityToBecomeAnyOf method timed out with an error", error);
-      throw error;
+      throw new AssertionError(
+          String.format(
+              "Activity never becomes requested state \"%s\" (last lifecycle transition = \"%s\")",
+              expectedStateSet, currentActivityStage),
+          e);
     } finally {
       lock.unlock();
     }
@@ -330,7 +323,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
         @Override
         public void onActivityLifecycleChanged(Activity activity, Stage stage) {
           if (!startActivityIntent.filterEquals(activity.getIntent())) {
-            Log.i(
+            Log.v(
                 TAG,
                 String.format(
                     "Activity lifecycle changed event received but ignored because the intent does"
@@ -348,7 +341,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
                 // transition must be to CREATED. Ignore events with non-created stage, which are
                 // likely come from activities that the previous test starts and doesn't clean up.
                 if (stage != Stage.CREATED) {
-                  Log.i(
+                  Log.v(
                       TAG,
                       String.format(
                           "Activity lifecycle changed event received but ignored because the"
@@ -366,7 +359,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
                 // an activity that is used by the previous test and being destroyed and an activity
                 // that is being resumed.
                 if (currentActivity != activity) {
-                  Log.i(
+                  Log.v(
                       TAG,
                       String.format(
                           "Activity lifecycle changed event received but ignored because the"
@@ -384,7 +377,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
             currentActivityStage = stage;
             currentActivity = (A) (stage != Stage.DESTROYED ? activity : null);
 
-            Log.i(
+            Log.v(
                 TAG,
                 String.format(
                     "Update currentActivityStage to %s, currentActivity=%s",
