@@ -13,9 +13,9 @@ UTIL_SRCS = [
 
 EXTERNAL_DEPS = [
     "@com_google_protobuf_javalite//:protobuf_java_lite",
-    "@guava_jar//jar",
-    "@hamcrest//jar",
-    "@junit//jar",
+    "@maven//:com_google_guava_guava",
+    "@maven//:org_hamcrest_hamcrest_all",
+    "@maven//:junit_junit",
 ]
 
 android_library(

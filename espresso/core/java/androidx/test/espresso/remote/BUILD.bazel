@@ -32,7 +32,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
-        "@guava_jar//jar",
+        "@maven//:com_google_guava_guava",
     ],
 )
 
@@ -48,8 +48,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
-        "@guava_jar//jar",
-        "@hamcrest//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 
@@ -67,7 +67,7 @@ android_library(
         "//:androidx_annotation",
         "//runner/android_junit_runner/java/androidx/test:runner",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
-        "@guava_jar//jar",
+        "@maven//:com_google_guava_guava",
     ],
 )
 
@@ -115,8 +115,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//runner/android_junit_runner/java/androidx/test:runner",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
-        "@guava_jar//jar",
-        "@hamcrest//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 
@@ -178,8 +178,8 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/webdriver:remote_webdriver_atoms",
         "//runner/android_junit_runner",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
-        "@guava_jar//jar",
-        "@hamcrest//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 

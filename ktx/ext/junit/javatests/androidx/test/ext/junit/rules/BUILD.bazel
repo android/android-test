@@ -35,9 +35,9 @@ kt_android_library(
         "//ktx/ext/junit",
         "//runner/android_junit_runner",
         "//runner/monitor",
-        "@guava_jar//jar",
-        "@junit//jar",
-        "@truth//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:com_google_truth_truth",
     ],
 )
 
@@ -54,10 +54,10 @@ android_local_test(
         "//ktx/core",
         "//ktx/ext/junit",
         "//runner/monitor",
-        "@guava_jar//jar",
-        "@junit//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
         "@robolectric//bazel:robolectric",
-        "@truth//jar",
+        "@maven//:com_google_truth_truth",
     ],
 )
 
@@ -75,9 +75,9 @@ android_binary(
         "//ktx/ext/junit",
         "//runner/android_junit_runner",
         "//runner/monitor",
-        "@guava_jar//jar",
-        "@junit//jar",
-        "@truth//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:com_google_truth_truth",
     ],
 )
 
@@ -106,9 +106,9 @@ kt_android_library(
         "//ktx/ext/junit",
         "//runner/android_junit_runner",
         "//runner/monitor",
-        "@guava_jar//jar",
-        "@junit//jar",
-        "@truth//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:com_google_truth_truth",
     ],
 )
 
@@ -128,9 +128,9 @@ android_binary(
         "//ktx/ext/junit",
         "//runner/android_junit_runner",
         "//runner/monitor",
-        "@guava_jar//jar",
-        "@junit//jar",
-        "@truth//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:com_google_truth_truth",
     ],
 )
 

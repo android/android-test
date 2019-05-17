@@ -24,7 +24,7 @@ android_library(
         ":legacy-test-neverlink",
         "//:androidx_annotation",
         "//runner/monitor",
-        "@junit//jar",
+        "@maven//:junit_junit",
     ],
 )
 

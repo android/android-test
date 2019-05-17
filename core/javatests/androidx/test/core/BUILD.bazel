@@ -34,9 +34,9 @@ android_app_instrumentation_tests(
         "//ext/junit",
         "//ext/truth",
         "//runner/android_junit_runner",
-        "@guava_jar//jar",
-        "@junit//jar",
-        "@truth//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:com_google_truth_truth",
     ],
 )
 
@@ -51,9 +51,9 @@ android_library_instrumentation_tests(
         "//core",
         "//ext/junit",
         "//runner/android_junit_runner",
-        "@guava_jar//jar",
-        "@junit//jar",
-        "@truth//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:com_google_truth_truth",
     ],
 )
 
@@ -70,8 +70,8 @@ android_library_local_tests(
         "//ext/junit",
         "//ext/truth",
         "//runner/monitor/java/androidx/test:monitor",
-        "@guava_jar//jar",
-        "@junit//jar",
-        "@truth//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:com_google_truth_truth",
     ],
 )

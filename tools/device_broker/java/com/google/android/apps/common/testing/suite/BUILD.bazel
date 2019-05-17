@@ -23,10 +23,10 @@ java_library(
         "//tools/device_broker/java/com/google/android/apps/common/testing/suite/filter",
         "//tools/device_broker/java/com/google/android/apps/common/testing/testrunner/testsuitepbutil",
         "//tools/device_broker/proto:test_info_pb_java_proto",
-        "@guava//jar",
-        "@jcommander//jar",
-        "@jsr305//jar",
-        "@junit//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_beust_jcommander",
+        "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:junit_junit",
     ],
 )
 
@@ -35,7 +35,7 @@ java_library(
     testonly = 1,
     srcs = ["SuiteCreationFailureException.java"],
     visibility = ["//visibility:public"],
-    deps = ["@jsr305//jar"],
+    deps = ["@maven//:com_google_code_findbugs_jsr305"],
 )
 
 java_test(

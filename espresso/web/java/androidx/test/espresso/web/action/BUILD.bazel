@@ -30,9 +30,9 @@ android_library(
         "//opensource/java_lib:EvaluationAtom",
         "//opensource/java_lib:webbridge",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
-        "@guava_jar//jar",
-        "@hamcrest//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 

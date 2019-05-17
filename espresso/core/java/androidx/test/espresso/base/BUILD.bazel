@@ -27,11 +27,11 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource",
         "//runner/android_junit_runner",
-        "@dagger_api//jar",
-        "@guava_jar//jar",
-        "@hamcrest//jar",
-        "@javax_inject//jar",
-        "@junit//jar",
+        "@maven//:com_google_dagger_dagger",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:javax_inject_javax_inject",
+        "@maven//:junit_junit",
     ],
 )
 
@@ -54,10 +54,10 @@ android_library(
     deps = [
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource",
-        "@dagger_api//jar",
-        "@guava_jar//jar",
-        "@javax_annotation//jar",
-        "@javax_inject//jar",
+        "@maven//:com_google_dagger_dagger",
+        "@maven//:com_google_guava_guava",
+        "@maven//:javax_annotation_javax_annotation_api",
+        "@maven//:javax_inject_javax_inject",
     ],
 )
 
@@ -78,12 +78,12 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/internal/inject",
         "//runner/monitor/java/androidx/test:monitor",
-        "@dagger_api//jar",
-        "@guava_jar//jar",
-        "@hamcrest//jar",
-        "@javax_annotation//jar",
-        "@javax_inject//jar",
-        "@junit//jar",
+        "@maven//:com_google_dagger_dagger",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:javax_annotation_javax_annotation_api",
+        "@maven//:javax_inject_javax_inject",
+        "@maven//:junit_junit",
     ],
 )
 

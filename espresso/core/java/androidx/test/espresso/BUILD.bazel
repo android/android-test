@@ -60,7 +60,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/proto/matcher:ui_interaction_view_matchers_android_pb3",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote:registry",
-        "@guava_jar//jar",
+        "@maven//:com_google_guava_guava",
     ],
 )
 
@@ -83,9 +83,9 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//opensource/dagger",
         "//runner/android_junit_runner/java/androidx/test:runner",
-        "@guava_jar//jar",
-        "@hamcrest//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -106,8 +106,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//opensource/dagger",
         "//runner/android_junit_runner",
-        "@guava_jar//jar",
-        "@hamcrest//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 
@@ -153,9 +153,9 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//runner/monitor",
-        "@guava_jar//jar",
-        "@hamcrest//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -165,7 +165,7 @@ android_library(
     deps = [
         ":interface",
         "//espresso/core/java/androidx/test/espresso/util",
-        "@hamcrest//jar",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 
@@ -177,9 +177,9 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//runner/monitor",
-        "@guava_jar//jar",
-        "@hamcrest//jar",
-        "@junit//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:junit_junit",
     ],
 )
 
@@ -203,7 +203,7 @@ android_binary(
         "//:androidx_core",
         "//:androidx_recyclerview",
         "//opensource/java_lib:webbridge",
-        "@tagsoup//jar",
+        "@maven//:org_ccil_cowan_tagsoup_tagsoup",
     ],
 )
 

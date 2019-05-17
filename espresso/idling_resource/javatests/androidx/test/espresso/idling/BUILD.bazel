@@ -16,11 +16,11 @@ IDLING_DEPS = [
 ]
 
 EXTERNAL_DEPS = [
-    "@junit//jar",
-    "@dexmaker//jar",
-    "@dexmaker_mockito//jar",
-    "@mockito//jar",
-    "@objenesis//jar",
+    "@maven//:junit_junit",
+    "@maven//:com_linkedin_dexmaker_dexmaker",
+    "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
+    "@maven//:org_mockito_mockito_core",
+    "@maven//:org_objenesis_objenesis",
 ]
 
 ALL_DEPS = EXTERNAL_DEPS + IDLING_DEPS

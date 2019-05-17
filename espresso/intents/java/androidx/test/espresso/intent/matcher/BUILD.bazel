@@ -12,6 +12,6 @@ android_library(
         "//core",
         "//espresso/intents/java/androidx/test/espresso/intent:precondition_checks",
         "//espresso/intents/java/androidx/test/espresso/intent:resolved_intent_interface",
-        "@hamcrest//jar",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )

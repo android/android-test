@@ -16,7 +16,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//opensource/auto_value",
-        "@jsr305//jar",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -29,8 +29,8 @@ java_library(
     name = "anno",
     srcs = ["DeviceBrokerAnnotations.java"],
     deps = [
-        "@aop_alliance//jar",
-        "@guice//jar",
+        "@maven//:aopalliance_aopalliance",
+        "@maven//:com_google_inject_guice",
     ],
 )
 
@@ -41,10 +41,10 @@ java_library(
         "EnvironmentModule.java",
     ],
     deps = [
-        "@aop_alliance//jar",
-        "@guava//jar",
-        "@guice//jar",
-        "@jsr305//jar",
+        "@maven//:aopalliance_aopalliance",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_inject_guice",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -78,9 +78,9 @@ java_library(
         ":anno",
         ":struct",
         "//tools/device_broker/java/com/google/android/apps/common/testing/broker/shell",
-        "@guava//jar",
-        "@javax_inject//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:javax_inject_javax_inject",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -92,10 +92,10 @@ java_library(
     ],
     deps = [
         ":anno",
-        "@aop_alliance//jar",
-        "@guava//jar",
-        "@guice//jar",
-        "@jsr305//jar",
+        "@maven//:aopalliance_aopalliance",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_inject_guice",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -109,7 +109,7 @@ java_library(
         "//tools/device_broker/java/com/google/android/apps/common/testing/broker/shell",
         "//tools/device_broker/java/com/google/android/apps/common/testing/suite/dex",
         "//tools/device_broker/proto:test_info_pb_java_proto",
-        "@guava//jar",
+        "@maven//:com_google_guava_guava",
         "@jsr330",
     ],
 )
@@ -138,10 +138,10 @@ java_library(
         ":test_info",
         "//tools/device_broker/java/com/google/android/apps/common/testing/broker/shell",
         "//tools/device_broker/proto:test_info_pb_java_proto",
-        "@aop_alliance//jar",
-        "@guava//jar",
-        "@guice//jar",
-        "@jsr305//jar",
+        "@maven//:aopalliance_aopalliance",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_inject_guice",
+        "@maven//:com_google_code_findbugs_jsr305",
         "@jsr330",
     ],
 )
@@ -161,9 +161,9 @@ java_library(
         ":local_device",
         ":port_manager_module",
         ":wrapped_device",
-        "@aop_alliance//jar",
-        "@guice//jar",
-        "@guice_multibindings//jar",
+        "@maven//:aopalliance_aopalliance",
+        "@maven//:com_google_inject_guice",
+        "@maven//:com_google_inject_extensions_guice_multibindings",
     ],
 )
 
@@ -176,8 +176,8 @@ java_library(
     ],
     deps = [
         ":anno",
-        "@guice//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_inject_guice",
+        "@maven//:com_google_code_findbugs_jsr305",
         "@jsr330",
     ],
 )
@@ -192,11 +192,11 @@ java_library(
         ":anno",
         ":broker_intf",
         ":private_impl",
-        "@aop_alliance//jar",
-        "@guava//jar",
-        "@guice//jar",
-        "@guice_multibindings//jar",
-        "@javax_inject//jar",
+        "@maven//:aopalliance_aopalliance",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_inject_guice",
+        "@maven//:com_google_inject_extensions_guice_multibindings",
+        "@maven//:javax_inject_javax_inject",
     ],
 )
 
@@ -214,10 +214,10 @@ java_library(
         ":anno",  # ready
         ":broker_intf",  # logcat filter :(
         ":struct",  # ready
-        "@aop_alliance//jar",
-        "@guava//jar",
-        "@guice//jar",
-        "@guice_multibindings//jar",
+        "@maven//:aopalliance_aopalliance",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_inject_guice",
+        "@maven//:com_google_inject_extensions_guice_multibindings",
         "@jsr330",
     ],
 )
@@ -238,12 +238,12 @@ java_library(
         ":environment",
         ":private_impl",
         "//tools/android/emulator:emulator_meta_data_pb_java_proto",
-        "@aop_alliance//jar",
+        "@maven//:aopalliance_aopalliance",
         "@com_google_protobuf//:protobuf_java",
-        "@guava//jar",
-        "@guice//jar",
-        "@guice_multibindings//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_inject_guice",
+        "@maven//:com_google_inject_extensions_guice_multibindings",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -270,11 +270,11 @@ java_library(
         ":enum",
         ":environment",
         ":private_impl",
-        "@aop_alliance//jar",
-        "@guava//jar",
-        "@guice//jar",
-        "@guice_multibindings//jar",
-        "@javax_inject//jar",
+        "@maven//:aopalliance_aopalliance",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_inject_guice",
+        "@maven//:com_google_inject_extensions_guice_multibindings",
+        "@maven//:javax_inject_javax_inject",
     ],
 )
 
@@ -289,9 +289,9 @@ java_library(
         ":anno",
         ":broker_intf",
         ":enum",
-        "@guava//jar",
-        "@guice//jar",
-        "@jcommander//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_inject_guice",
+        "@maven//:com_beust_jcommander",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )

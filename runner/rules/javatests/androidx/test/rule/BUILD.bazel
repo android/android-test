@@ -13,12 +13,12 @@ RULES_DEPS = [
 
 EXTERNAL_DEPS = [
     "//:androidx_annotation",
-    "@hamcrest//jar",
-    "@junit//jar",
-    "@mockito//jar",
-    "@dexmaker//jar",
-    "@dexmaker_mockito//jar",
-    "@objenesis//jar",
+    "@maven//:org_hamcrest_hamcrest_all",
+    "@maven//:junit_junit",
+    "@maven//:org_mockito_mockito_core",
+    "@maven//:com_linkedin_dexmaker_dexmaker",
+    "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
+    "@maven//:org_objenesis_objenesis",
     ":legacy-test-neverlink",
 ]
 

@@ -10,12 +10,12 @@ MONITOR_DEPS = [
 ]
 
 ROBOLECTRIC_DEPS = [
-    "@junit//jar",
-    "@bytebuddy//jar",
-    "@bytebuddyagent//jar",
-    "@mockito//jar",
-    "@truth//jar",
-    "@objenesis//jar",
+    "@maven//:junit_junit",
+    "@maven//:net_bytebuddy_byte_buddy",
+    "@maven//:net_bytebuddy_byte_buddy_agent",
+    "@maven//:org_mockito_mockito_core",
+    "@maven//:com_google_truth_truth",
+    "@maven//:org_objenesis_objenesis",
     "@robolectric//bazel:robolectric",
 ]
 
@@ -43,15 +43,15 @@ MONITOR_TEST_SRCS = glob(
 
 EXTERNAL_DEPS = [
     "//:androidx_annotation",
-    "@hamcrest//jar",
-    "@javax_inject//jar",
-    "@junit//jar",
-    "@dexmaker//jar",
-    "@dexmaker_mockito//jar",
-    "@mockito//jar",
-    "@objenesis//jar",
-    "@truth//jar",
-    "@guava_jar//jar",
+    "@maven//:org_hamcrest_hamcrest_all",
+    "@maven//:javax_inject_javax_inject",
+    "@maven//:junit_junit",
+    "@maven//:com_linkedin_dexmaker_dexmaker",
+    "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
+    "@maven//:org_mockito_mockito_core",
+    "@maven//:org_objenesis_objenesis",
+    "@maven//:com_google_truth_truth",
+    "@maven//:com_google_guava_guava",
 ]
 
 java_library(

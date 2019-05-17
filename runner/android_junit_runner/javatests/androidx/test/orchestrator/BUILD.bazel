@@ -9,7 +9,7 @@ java_library(
     testonly = 1,
     srcs = ["SampleJUnitTest.java"],
     deps = [
-        "@junit//jar",
+        "@maven//:junit_junit",
     ],
 )
 
@@ -26,12 +26,12 @@ ROBOLECTRIC_DEPS = [
 ]
 
 ROBOLECTRIC_EXTERNAL_DEPS = [
-    "@guava_jar//jar",
-    "@hamcrest//jar",
-    "@bytebuddy//jar",
-    "@bytebuddyagent//jar",
-    "@mockito//jar",
-    "@objenesis//jar",
+    "@maven//:com_google_guava_guava",
+    "@maven//:org_hamcrest_hamcrest_all",
+    "@maven//:net_bytebuddy_byte_buddy",
+    "@maven//:net_bytebuddy_byte_buddy_agent",
+    "@maven//:org_mockito_mockito_core",
+    "@maven//:org_objenesis_objenesis",
     "@robolectric//bazel:robolectric",
 ]
 

@@ -11,8 +11,8 @@ java_library(
         "//tools/device_broker/java/com/google/android/apps/common/testing/broker:broker_intf",
         "//tools/device_broker/java/com/google/android/apps/common/testing/suite:exceptions",
         "//tools/device_broker/proto:test_info_pb_java_proto",
-        "@guava//jar",
-        "@jcommander//jar",
-        "@junit//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_beust_jcommander",
+        "@maven//:junit_junit",
     ],
 )

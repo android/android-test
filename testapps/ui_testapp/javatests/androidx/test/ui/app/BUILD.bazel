@@ -31,13 +31,13 @@ TESTAPP_DEPS = [
 ]
 
 EXTERNAL_DEPS = [
-    "@accessibility//jar",
+    "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework",
     "//:androidx_annotation",
-    "@javax_inject//jar",
-    "@hamcrest//jar",
-    "@jsr305//jar",
-    "@guava_jar//jar",
-    "@junit//jar",
+    "@maven//:javax_inject_javax_inject",
+    "@maven//:org_hamcrest_hamcrest_all",
+    "@maven//:com_google_code_findbugs_jsr305",
+    "@maven//:com_google_guava_guava",
+    "@maven//:junit_junit",
 ]
 
 ALL_DEPS = EXTERNAL_DEPS + TESTAPP_DEPS

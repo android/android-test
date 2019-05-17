@@ -16,8 +16,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/core/java/androidx/test/espresso/util",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
-        "@guava_jar//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -46,9 +46,9 @@ android_library(
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//runner/android_junit_runner",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
-        "@guava_jar//jar",
-        "@hamcrest//jar",
-        "@jsr305//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -70,7 +70,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote:registry",
         "//espresso/core/java/androidx/test/espresso/util",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
-        "@guava_jar//jar",
-        "@hamcrest//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )

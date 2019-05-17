@@ -13,8 +13,8 @@ MPE_ALL_DEPS = [
     "//espresso/core/java/androidx/test/espresso/matcher",
     "//runner/android_junit_runner/java/androidx/test:runner",
     "//runner/rules/java/androidx/test:rules",
-    "@junit//jar",
-    "@hamcrest//jar",
+    "@maven//:junit_junit",
+    "@maven//:org_hamcrest_hamcrest_all",
 ]
 
 # Tests

@@ -17,7 +17,7 @@ android_library(
         "//:androidx_annotation",
         "//core",
         "//runner/monitor",
-        "@junit//jar",
+        "@maven//:junit_junit",
     ],
 )
 

@@ -4,95 +4,16 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # These dependencies are required for *developing* this project.
 def _development_repositories():
-    native.maven_jar(
-        name = "jcommander",
-        artifact = "com.beust:jcommander:1.72",
-    )
-
-    native.maven_jar(
-        name = "junit",
-        artifact = "junit:junit:4.12",
-    )
-
-    native.maven_jar(
-        name = "hamcrest",
-        artifact = "org.hamcrest:hamcrest-all:1.3",
-    )
-
-    native.maven_jar(
-        name = "bytebuddy",
-        artifact = "net.bytebuddy:byte-buddy:1.9.11",
-    )
-
-    native.maven_jar(
-        name = "bytebuddyagent",
-        artifact = "net.bytebuddy:byte-buddy-agent:1.9.11",
-    )
-
-    native.maven_jar(
-        name = "mockito",
-        artifact = "org.mockito:mockito-core:2.25.0",
-    )
-
-    native.maven_jar(
-        name = "objenesis",
-        artifact = "org.objenesis:objenesis:2.1",
-    )
-
-    native.maven_jar(
-        name = "dexmaker",
-        artifact = "com.linkedin.dexmaker:dexmaker:2.25.0",
-    )
-
-    native.maven_jar(
-        name = "dexmaker_mockito",
-        artifact = "com.linkedin.dexmaker:dexmaker-mockito:jar:2.25.0",
-    )
-
-    native.maven_jar(
-        name = "truth",
-        artifact = "com.google.truth:truth:0.44",
-    )
-
-    native.maven_jar(
-        name = "guava_jar",
-        artifact = "com.google.guava:guava:25.1-android",
+    # Needed by @com_google_protobuf//:protobuf_java_util
+    native.bind(
+        name = "guava",
+        actual = "@maven//:com_google_guava_guava",
     )
 
     # Needed by @com_google_protobuf//:protobuf_java_util
     native.bind(
-        name = "guava",
-        actual = "@guava_jar//jar",
-    )
-
-    native.maven_jar(
-        name = "guice",
-        artifact = "com.google.inject:guice:4.1.0",
-    )
-
-    native.maven_jar(
-        name = "guice_multibindings",
-        artifact = "com.google.inject.extensions:guice-multibindings:4.1.0",
-    )
-
-    native.maven_jar(
-        name = "jsr305",
-        artifact = "com.google.code.findbugs:jsr305:3.0.2",
-    )
-
-    native.maven_jar(
-        name = "javax_inject",
-        artifact = "javax.inject:javax.inject:1",
-    )
-
-    native.maven_jar(
-        name = "javax_annotation",
-        artifact = "javax.annotation:javax.annotation-api:1.3.1",
-    )
-
-    native.maven_jar(
-        name = "tagsoup",
-        artifact = "org.ccil/cowan.tagsoup:tagsoup:1.2",
+        name = "gson",
+        actual = "@maven//:com_google_code_gson_gson",
     )
 
     http_archive(
@@ -116,21 +37,6 @@ def _development_repositories():
         urls = ["https://github.com/google/protobuf/archive/javalite.zip"],
     )
 
-    native.maven_jar(
-        name = "auto_value_value",
-        artifact = "com.google.auto.value:auto-value:1.5.1",
-    )
-
-    native.maven_jar(
-        name = "kxml",
-        artifact = "net.sf.kxml:kxml2:jar:2.3.0",
-    )
-
-    native.maven_jar(
-        name = "aop_alliance",
-        artifact = "aopalliance:aopalliance:1.0",
-    )
-
     http_archive(
         name = "jsr330",
         build_file_content = """
@@ -140,82 +46,6 @@ java_import(
     jars = ["javax.inject.jar"],
 )""",
         url = "https://github.com/javax-inject/javax-inject/releases/download/1/javax.inject.zip",
-    )
-
-    native.maven_jar(
-        name = "dagger_api",
-        artifact = "com.google.dagger:dagger:2.10",
-    )
-
-    native.maven_jar(
-        name = "dagger_compiler",
-        artifact = "com.google.dagger:dagger-compiler:2.11",
-    )
-
-    native.maven_jar(
-        name = "dagger_producers",
-        artifact = "com.google.dagger:dagger-producers:2.11",
-    )
-
-    native.maven_jar(
-        name = "googlejavaformat",
-        artifact = "com.google.googlejavaformat:google-java-format:1.4",
-    )
-
-    native.maven_jar(
-        name = "errorprone_javac_shaded",
-        artifact = "com.google.errorprone:javac-shaded:9-dev-r4023-3",
-    )
-
-    native.maven_jar(
-        name = "javapoet",
-        artifact = "com.squareup:javapoet:1.9.0",
-    )
-
-    native.maven_jar(
-        name = "jarjar",
-        artifact = "com.googlecode.jarjar:jarjar:1.3",
-    )
-
-    native.maven_jar(
-        name = "accessibility",
-        artifact = "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.0",
-    )
-
-    native.maven_jar(
-        name = "gson_jar",
-        artifact = "com.google.code.gson:gson:2.8.5",
-    )
-
-    # Needed by @com_google_protobuf//:protobuf_java_util
-    native.bind(
-        name = "gson",
-        actual = "@gson_jar//jar",
-    )
-
-    native.maven_jar(
-        name = "joda_time",
-        artifact = "joda-time:joda-time:2.10.1",
-    )
-
-    native.maven_jar(
-        name = "checker_compat_qual",
-        artifact = "org.checkerframework:checker-compat-qual:2.5.5",
-    )
-
-    native.maven_jar(
-        name = "flogger",
-        artifact = "com.google.flogger:flogger:0.4",
-    )
-
-    native.maven_jar(
-        name = "flogger_google",
-        artifact = "com.google.flogger:google-extensions:0.4",
-    )
-
-    native.maven_jar(
-        name = "flogger_system_backend",
-        artifact = "com.google.flogger:flogger-system-backend:0.4",
     )
 
 # These dependencies are for *users* of the Android Test repo,

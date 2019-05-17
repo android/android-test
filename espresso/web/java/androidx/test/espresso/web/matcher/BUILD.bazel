@@ -18,8 +18,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//opensource/java_lib:webbridge",
-        "@guava_jar//jar",
-        "@hamcrest//jar",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 

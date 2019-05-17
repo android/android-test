@@ -8,8 +8,8 @@ ATO_SHARED_DEPS = [
 ]
 
 ATO_SHARED_EXTERNAL_DEPS = [
-    "@hamcrest//jar",
-    "@junit//jar",
+    "@maven//:org_hamcrest_hamcrest_all",
+    "@maven//:junit_junit",
 ]
 
 # Robolectric tests
@@ -21,7 +21,7 @@ ROBOLECTRIC_TEST_SRCS = [
 ]
 
 ROBOLECTRIC_DEPS = [
-    "@guava_jar//jar",
+    "@maven//:com_google_guava_guava",
     "@robolectric//bazel:robolectric",
 ]
 

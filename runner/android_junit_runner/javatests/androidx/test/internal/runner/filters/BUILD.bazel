@@ -7,6 +7,6 @@ android_local_test(
     deps = [
         "//ext/junit",
         "//runner/android_junit_runner",
-        "@truth//jar",
+        "@maven//:com_google_truth_truth",
     ],
 )

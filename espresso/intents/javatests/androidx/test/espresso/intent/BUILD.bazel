@@ -21,10 +21,10 @@ ESPRESSO_INTENTS_DEPS = [
 
 EXTERNAL_DEPS = [
     "//:androidx_annotation",
-    "@guava_jar//jar",
-    "@hamcrest//jar",
-    "@junit//jar",
-    "@truth//jar",
+    "@maven//:com_google_guava_guava",
+    "@maven//:org_hamcrest_hamcrest_all",
+    "@maven//:junit_junit",
+    "@maven//:com_google_truth_truth",
 ] + ESPRESSO_INTENTS_DEPS
 
 java_library(

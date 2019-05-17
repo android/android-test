@@ -40,6 +40,6 @@ android_local_test(
         "//ext/junit",
         "//runner/monitor",
         "@robolectric//bazel:robolectric",
-        "@truth//jar",
+        "@maven//:com_google_truth_truth",
     ],
 )
