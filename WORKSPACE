@@ -60,6 +60,7 @@ maven_install(
         "com.google.flogger:google-extensions:0.4",
         "com.google.googlejavaformat:google-java-format:1.4",
         "com.google.guava:guava:25.1-android",
+        "com.google.guava:guava-testlib:25.1-android",
         "com.google.inject.extensions:guice-multibindings:4.1.0",
         "com.google.inject:guice:4.1.0",
         "com.google.truth:truth:0.44",
