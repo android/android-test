@@ -24,10 +24,10 @@ for general questions and discussion, and please direct specific questions to
 To depend on this repository in Bazel, add the following snippet to your WORKSPACE file:
 
 ```
-ATS_TAG = "<commit>"
+ATS_TAG = "<release-tag>"
 http_archive(
     name = "android_test_support",
-    sha256 = "<sha256>",
+    sha256 = "<sha256 of release>",
     strip_prefix = "android-test-%s" % ATS_TAG,
     urls = ["https://github.com/android/android-test/archive/%s.tar.gz" % ATS_TAG],
 )
