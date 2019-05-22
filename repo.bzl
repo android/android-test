@@ -137,6 +137,9 @@ def android_test_repositories(with_dev_repositories = False):
         url = "https://pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz",
     )
 
+    # Needed by protobuf
+    native.bind(name = "six", actual = "@six_archive//:six")
+
     # Protobuf
     http_archive(
         name = "com_google_protobuf",
