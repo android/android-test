@@ -35,8 +35,8 @@ import org.junit.rules.ExternalResource;
  *
  * <pre>{@code
  * Example:
- *  }{@literal @Rule}{@code
- *   ActivityScenarioRule<MyActivity> rule = new ActivityScenarioRule<>(MyActivity.class);
+ *  }{@literal @Rule} {@code
+ *   public ActivityScenarioRule<MyActivity> rule = new ActivityScenarioRule<>(MyActivity.class);
  *
  *  }{@literal @Test}{@code
  *   public void myTest() {

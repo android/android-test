@@ -259,8 +259,8 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    *
    *  Option 2, use ActivityScenarioRule:
    *
-   * }{@literal @Rule}{@code
-   *  ActivityScenarioRule<MyActivity> rule = new ActivityScenarioRule<>(MyActivity.class);
+   * }{@literal @Rule} {@code
+   *  public ActivityScenarioRule<MyActivity> rule = new ActivityScenarioRule<>(MyActivity.class);
    *
    * }{@literal @Test}{@code
    *  public void myTest() {
