@@ -137,14 +137,31 @@ def android_test_repositories(with_dev_repositories = False):
         url = "https://pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz",
     )
 
-    # Needed by protobuf
-    native.bind(name = "six", actual = "@six_archive//:six")
-
+    # Protobuf
     http_archive(
         name = "com_google_protobuf",
-        strip_prefix = "protobuf-3.6.1.2",
-        sha256 = "2244b0308846bb22b4ff0bcc675e99290ff9f1115553ae9671eba1030af31bc0",
-        urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.6.1.2.tar.gz"],
+        sha256 = "d82eb0141ad18e98de47ed7ed415daabead6d5d1bef1b8cccb6aa4d108a9008f",
+        strip_prefix = "protobuf-b4f193788c9f0f05d7e0879ea96cd738630e5d51",
+        # Commit from 2019-05-15, update to protobuf 3.8 when available.
+        url = "https://github.com/protocolbuffers/protobuf/archive/b4f193788c9f0f05d7e0879ea96cd738630e5d51.tar.gz",
+    )
+
+    # Protobuf's dependencies
+
+    # Inlined protobuf's deps so we don't need users to add protobuf_deps() to their local WORKSPACE.
+    # From load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps").
+    http_archive(
+        name = "zlib",
+        build_file = "@com_google_protobuf//:third_party/zlib.BUILD",
+        sha256 = "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1",
+        strip_prefix = "zlib-1.2.11",
+        urls = ["https://zlib.net/zlib-1.2.11.tar.gz"],
+    )
+
+    http_archive(
+        name = "bazel_skylib",
+        url = "https://github.com/bazelbuild/bazel-skylib/releases/download/0.8.0/bazel-skylib.0.8.0.tar.gz",
+        sha256 = "2ef429f5d7ce7111263289644d233707dba35e39696377ebab8b0bc701f7818e",
     )
 
     # Open source version of the google python flags library.

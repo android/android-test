@@ -95,16 +95,13 @@ android_sdk_repository(
 )
 
 load("//:repo.bzl", "android_test_repositories")
-
 android_test_repositories(with_dev_repositories = True)
 
 load("@robolectric//bazel:robolectric.bzl", "robolectric_repositories")
-
 robolectric_repositories()
 
 # Kotlin toolchains
 rules_kotlin_version = "4c71740a1b63b785fc90afd8d4d4d5bfda527107"
-
 http_archive(
     name = "io_bazel_rules_kotlin",
     sha256 = "c0ca7b66d9f466067635482592634703bf0a648d51ec958f41796d43ca8256b3",
@@ -112,9 +109,6 @@ http_archive(
     type = "zip",
     urls = ["https://github.com/bazelbuild/rules_kotlin/archive/%s.zip" % rules_kotlin_version],
 )
-
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
-
 kotlin_repositories()
-
 kt_register_toolchains()
