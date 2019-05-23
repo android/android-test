@@ -9,6 +9,7 @@ java_plugin(
 
 java_library(
     name = "auto_value",
+    neverlink = 1,
     exported_plugins = [":auto_value_plugin"],
     visibility = ["//visibility:public"],
     exports = ["@maven//:com_google_auto_value_auto_value"],
