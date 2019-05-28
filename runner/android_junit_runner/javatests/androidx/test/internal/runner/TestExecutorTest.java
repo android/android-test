@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -54,8 +55,8 @@ public class TestExecutorTest {
     executor.execute(mockRequest);
     Mockito.verify(mockListener)
         .instrumentationRunFinished(
-            (PrintStream) Mockito.anyObject(),
-            (Bundle) Mockito.anyObject(),
-            (Result) Mockito.anyObject());
+            (PrintStream) ArgumentMatchers.any(),
+            (Bundle) ArgumentMatchers.any(),
+            (Result) ArgumentMatchers.any());
   }
 }

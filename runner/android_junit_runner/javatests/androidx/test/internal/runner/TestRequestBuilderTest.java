@@ -65,8 +65,8 @@ import org.junit.runners.JUnit4;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Suite;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /** Unit tests for {@link TestRequestBuilder}. */
@@ -1868,7 +1868,7 @@ public class TestRequestBuilderTest {
   }
 
   private void setClassPathScanningResults(String... names) throws IOException {
-    when(mockClassPathScanner.getClassPathEntries(Mockito.any()))
+    when(mockClassPathScanner.getClassPathEntries(ArgumentMatchers.any()))
         .thenReturn(new HashSet<>(Arrays.asList(names)));
   }
 

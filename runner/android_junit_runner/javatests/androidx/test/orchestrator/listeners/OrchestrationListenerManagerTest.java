@@ -20,7 +20,7 @@ import static androidx.test.orchestrator.junit.BundleJUnitUtils.getFailure;
 import static androidx.test.orchestrator.junit.BundleJUnitUtils.getResult;
 import static androidx.test.orchestrator.listeners.OrchestrationListenerManager.KEY_TEST_EVENT;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
