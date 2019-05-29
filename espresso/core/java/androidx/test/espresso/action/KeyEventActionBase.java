@@ -131,11 +131,14 @@ class KeyEventActionBase implements ViewAction {
       // The activity transition hasn't happened yet, wait for it.
       controller.loopMainThreadForAtLeast(BACK_ACTIVITY_TRANSITION_MILLIS_DELAY);
       if (isActivityResumed(initialActivity)) {
-        Log.e(
+        Log.i(
             TAG,
             "Back was pressed but there was no Activity stage transition in "
                 + BACK_ACTIVITY_TRANSITION_MILLIS_DELAY
-                + "ms, possibly due to a delay calling super.onBackPressed() from your Activity.");
+                + "ms. Pressing back may trigger an activity stage transition if the activity is"
+                + " finished as a result. However, the activity may handle the back behavior in"
+                + " any number of other ways internally as well, such as popping the fragment back"
+                + " stack, dismissing a dialog, otherwise manually transacting fragments, etc.");
       }
     }
   }
