@@ -73,6 +73,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -99,6 +100,9 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
 
   private static final String TAG = "MonitoringInstr";
 
+  private static final long MILLIS_TO_WAIT_FOR_ACTIVITY_TO_STOP = TimeUnit.SECONDS.toMillis(2);
+  private static final long MILLIS_TO_POLL_FOR_ACTIVITY_STOP =
+      MILLIS_TO_WAIT_FOR_ACTIVITY_TO_STOP / 40;
   private static final int START_ACTIVITY_TIMEOUT_SECONDS = 45;
   private ActivityLifecycleMonitorImpl lifecycleMonitor = new ActivityLifecycleMonitorImpl();
   private ApplicationLifecycleMonitorImpl applicationMonitor =
@@ -108,6 +112,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   private Handler handlerForMainLooper;
   private AtomicBoolean anActivityHasBeenLaunched = new AtomicBoolean(false);
   private AtomicLong lastIdleTime = new AtomicLong(0);
+  private AtomicInteger startedActivityCounter = new AtomicInteger(0);
   private String jsBridgeClassName;
   private AtomicBoolean isJsBridgeLoaded = new AtomicBoolean(false);
 
@@ -362,11 +367,42 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   }
 
   /**
+   * Ensures we've onStopped() all activities which were onStarted().
+   *
+   * <p>According to Activity's contract, the process is not killable between onStart and onStop.
+   * Breaking this contract (which finish() will if you let it) can cause bad behaviour (including a
+   * full restart of system_server).
+   *
+   * <p>We give the app 2 seconds to stop all its activities, then we proceed.
    *
    * <p>This should never be run on the main thread.
    */
   protected void waitForActivitiesToComplete() {
+    if (Looper.getMainLooper() == Looper.myLooper()) {
+      throw new IllegalStateException("Cannot be called from main thread!");
+    }
 
+    long endTime = System.currentTimeMillis() + MILLIS_TO_WAIT_FOR_ACTIVITY_TO_STOP;
+    int currentActivityCount = startedActivityCounter.get();
+    while (currentActivityCount > 0 && System.currentTimeMillis() < endTime) {
+      try {
+        Log.i(TAG, "Unstopped activity count: " + currentActivityCount);
+        Thread.sleep(MILLIS_TO_POLL_FOR_ACTIVITY_STOP);
+        currentActivityCount = startedActivityCounter.get();
+      } catch (InterruptedException ie) {
+        Log.i(TAG, "Abandoning activity wait due to interruption.", ie);
+        break;
+      }
+    }
+
+    if (currentActivityCount > 0) {
+      dumpThreadStateToOutputs("ThreadState-unstopped.txt");
+      Log.w(
+          TAG,
+          String.format(
+              "Still %s activities active after waiting %s ms.",
+              currentActivityCount, MILLIS_TO_WAIT_FOR_ACTIVITY_TO_STOP));
+    }
   }
 
   @Override
@@ -675,14 +711,24 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   // that would impact a subsequent test run.
   @Override
   public void callActivityOnStart(Activity activity) {
-    super.callActivityOnStart(activity);
-    lifecycleMonitor.signalLifecycleChange(Stage.STARTED, activity);
+    startedActivityCounter.incrementAndGet();
+    try {
+      super.callActivityOnStart(activity);
+      lifecycleMonitor.signalLifecycleChange(Stage.STARTED, activity);
+    } catch (RuntimeException re) {
+      startedActivityCounter.decrementAndGet();
+      throw re;
+    }
   }
 
   @Override
   public void callActivityOnStop(Activity activity) {
-    super.callActivityOnStop(activity);
-    lifecycleMonitor.signalLifecycleChange(Stage.STOPPED, activity);
+    try {
+      super.callActivityOnStop(activity);
+      lifecycleMonitor.signalLifecycleChange(Stage.STOPPED, activity);
+    } finally {
+      startedActivityCounter.decrementAndGet();
+    }
   }
 
   @Override
