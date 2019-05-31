@@ -285,7 +285,7 @@ public final class RecyclerViewActions {
       uiController.loopMainThreadUntilIdle();
 
       @SuppressWarnings("unchecked")
-      VH viewHolderForPosition = (VH) recyclerView.findViewHolderForPosition(position);
+      VH viewHolderForPosition = (VH) recyclerView.findViewHolderForAdapterPosition(position);
       if (null == viewHolderForPosition) {
         throw new PerformException.Builder()
             .withActionDescription(this.toString())
