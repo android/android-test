@@ -43,6 +43,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.RunListener;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Captor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -146,14 +147,20 @@ public class AndroidJUnitRunnerTest {
     androidJUnitRunner.addListeners(args, executorBuilder);
 
     InOrder order = Mockito.inOrder(executorBuilder);
-    order.verify(executorBuilder).addRunListener(Mockito.isA(LogRunListener.class));
-    order.verify(executorBuilder).addRunListener(Mockito.isA(InstrumentationResultPrinter.class));
-    order.verify(executorBuilder).addRunListener(Mockito.isA(ActivityFinisherRunListener.class));
-    order.verify(executorBuilder).addRunListener(Mockito.isA(DelayInjector.class));
-    order.verify(executorBuilder).addRunListener(Mockito.isA(CoverageListener.class));
+    order.verify(executorBuilder).addRunListener(ArgumentMatchers.isA(LogRunListener.class));
+    order
+        .verify(executorBuilder)
+        .addRunListener(ArgumentMatchers.isA(InstrumentationResultPrinter.class));
+    order
+        .verify(executorBuilder)
+        .addRunListener(ArgumentMatchers.isA(ActivityFinisherRunListener.class));
+    order.verify(executorBuilder).addRunListener(ArgumentMatchers.isA(DelayInjector.class));
+    order.verify(executorBuilder).addRunListener(ArgumentMatchers.isA(CoverageListener.class));
     // Two extra user added listeners
-    order.verify(executorBuilder).addRunListener(Mockito.isA(LogRunListener.class));
-    order.verify(executorBuilder).addRunListener(Mockito.isA(InstrumentationResultPrinter.class));
+    order.verify(executorBuilder).addRunListener(ArgumentMatchers.isA(LogRunListener.class));
+    order
+        .verify(executorBuilder)
+        .addRunListener(ArgumentMatchers.isA(InstrumentationResultPrinter.class));
   }
 
   /**
@@ -179,14 +186,20 @@ public class AndroidJUnitRunnerTest {
 
     InOrder order = Mockito.inOrder(executorBuilder);
     // Two extra user added listeners go first
-    order.verify(executorBuilder).addRunListener(Mockito.isA(LogRunListener.class));
-    order.verify(executorBuilder).addRunListener(Mockito.isA(InstrumentationResultPrinter.class));
+    order.verify(executorBuilder).addRunListener(ArgumentMatchers.isA(LogRunListener.class));
+    order
+        .verify(executorBuilder)
+        .addRunListener(ArgumentMatchers.isA(InstrumentationResultPrinter.class));
     // Default listeners added in AndroidJUnitRunner
-    order.verify(executorBuilder).addRunListener(Mockito.isA(LogRunListener.class));
-    order.verify(executorBuilder).addRunListener(Mockito.isA(DelayInjector.class));
-    order.verify(executorBuilder).addRunListener(Mockito.isA(CoverageListener.class));
-    order.verify(executorBuilder).addRunListener(Mockito.isA(InstrumentationResultPrinter.class));
-    order.verify(executorBuilder).addRunListener(Mockito.isA(ActivityFinisherRunListener.class));
+    order.verify(executorBuilder).addRunListener(ArgumentMatchers.isA(LogRunListener.class));
+    order.verify(executorBuilder).addRunListener(ArgumentMatchers.isA(DelayInjector.class));
+    order.verify(executorBuilder).addRunListener(ArgumentMatchers.isA(CoverageListener.class));
+    order
+        .verify(executorBuilder)
+        .addRunListener(ArgumentMatchers.isA(InstrumentationResultPrinter.class));
+    order
+        .verify(executorBuilder)
+        .addRunListener(ArgumentMatchers.isA(ActivityFinisherRunListener.class));
   }
 
   /** Ensure classpathToScan paths are added to the runner. */

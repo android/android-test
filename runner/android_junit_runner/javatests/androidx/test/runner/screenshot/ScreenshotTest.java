@@ -19,7 +19,7 @@ package androidx.test.runner.screenshot;
 import static android.graphics.Bitmap.Config.ARGB_8888;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;

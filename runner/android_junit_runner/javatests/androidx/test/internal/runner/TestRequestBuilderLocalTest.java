@@ -34,8 +34,8 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.RunListener;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.annotation.Config;
 
@@ -101,7 +101,7 @@ public class TestRequestBuilderLocalTest {
   }
 
   private void setClassPathScanningResults(String... names) throws IOException {
-    when(mockClassPathScanner.getClassPathEntries(Mockito.any()))
+    when(mockClassPathScanner.getClassPathEntries(ArgumentMatchers.any()))
         .thenReturn(new HashSet<>(Arrays.asList(names)));
   }
 

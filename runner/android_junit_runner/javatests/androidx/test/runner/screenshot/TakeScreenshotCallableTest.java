@@ -16,7 +16,7 @@
 
 package androidx.test.runner.screenshot;
 
-import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
