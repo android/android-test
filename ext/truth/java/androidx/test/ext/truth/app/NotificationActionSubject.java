@@ -26,7 +26,7 @@ import com.google.common.truth.Truth;
  *
  * <p>Only supports on Android APIs >= 16
  */
-public class NotificationActionSubject extends Subject<NotificationActionSubject, Action> {
+public class NotificationActionSubject extends Subject {
 
   public static NotificationActionSubject assertThat(Action action) {
     return Truth.assertAbout(notificationActions()).that(action);

@@ -28,7 +28,7 @@ import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
 
 /** {@link Subject} for {@link MotionEvent}. */
-public final class MotionEventSubject extends Subject<MotionEventSubject, MotionEvent> {
+public final class MotionEventSubject extends Subject {
 
   public static MotionEventSubject assertThat(MotionEvent event) {
     return Truth.assertAbout(motionEvents()).that(event);

@@ -24,7 +24,7 @@ import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
 
 /** Subject for making assertions about {@link Location}s. */
-public class LocationSubject extends Subject<LocationSubject, Location> {
+public class LocationSubject extends Subject {
 
   public static LocationSubject assertThat(Location location) {
     return Truth.assertAbout(locations()).that(location);

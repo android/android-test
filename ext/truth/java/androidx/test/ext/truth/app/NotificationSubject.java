@@ -25,7 +25,7 @@ import com.google.common.truth.Truth;
 import java.util.List;
 
 /** Subject for making assertions about {@link android.app.Notification}s. */
-public class NotificationSubject extends Subject<NotificationSubject, Notification> {
+public class NotificationSubject extends Subject {
 
   public static NotificationSubject assertThat(Notification notification) {
     return Truth.assertAbout(notifications()).that(notification);

@@ -27,7 +27,7 @@ import com.google.common.truth.Truth;
 import java.util.List;
 
 /** Subject for making assertions about {@link Intent}s. */
-public final class IntentSubject extends Subject<IntentSubject, Intent> {
+public final class IntentSubject extends Subject {
 
   public static IntentSubject assertThat(Intent intent) {
     return Truth.assertAbout(intents()).that(intent);

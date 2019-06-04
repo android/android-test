@@ -21,7 +21,7 @@ import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
 
 /** Subject for making assertions about {@link android.app.PendingIntent}s. */
-public class PendingIntentSubject extends Subject<PendingIntentSubject, PendingIntent> {
+public class PendingIntentSubject extends Subject {
 
   public static PendingIntentSubject assertThat(PendingIntent intent) {
     return Truth.assertAbout(pendingIntents()).that(intent);

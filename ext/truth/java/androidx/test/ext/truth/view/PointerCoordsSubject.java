@@ -24,7 +24,7 @@ import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
 
 /** {@link Subject} for {@link PointerProperties} */
-public final class PointerCoordsSubject extends Subject<PointerCoordsSubject, PointerCoords> {
+public final class PointerCoordsSubject extends Subject {
 
   public static PointerCoordsSubject assertThat(PointerCoords other) {
     return Truth.assertAbout(pointerCoords()).that(other);

@@ -28,7 +28,7 @@ import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
 
 /** Subject for making assertions about {@link Bundle}s. */
-public final class BundleSubject extends Subject<BundleSubject, Bundle> {
+public final class BundleSubject extends Subject {
 
   public static BundleSubject assertThat(Bundle bundle) {
     return Truth.assertAbout(bundles()).that(bundle);
@@ -83,7 +83,7 @@ public final class BundleSubject extends Subject<BundleSubject, Bundle> {
         .that(actual.<T>getParcelable(key));
   }
 
-  public <T extends Parcelable, SubjectT extends Subject<SubjectT, T>> SubjectT parcelableAsType(
+  public <T extends Parcelable, SubjectT extends Subject> SubjectT parcelableAsType(
       String key, Subject.Factory<SubjectT, T> subjectFactory) {
     return check("getParcelable(%s)", key).about(subjectFactory).that(actual.<T>getParcelable(key));
   }

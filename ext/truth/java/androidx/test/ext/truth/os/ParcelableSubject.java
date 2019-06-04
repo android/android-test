@@ -24,8 +24,7 @@ import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
 
 /** Testing subject for {@link Parcelable}s. */
-public final class ParcelableSubject<T extends Parcelable>
-    extends Subject<ParcelableSubject<T>, T> {
+public final class ParcelableSubject<T extends Parcelable> extends Subject {
 
   public static <T extends Parcelable> ParcelableSubject<T> assertThat(T parcelable) {
     return Truth.assertAbout(ParcelableSubject.<T>parcelables()).that(parcelable);
