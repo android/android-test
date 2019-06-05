@@ -25,6 +25,9 @@ android_binary(
 android_app_instrumentation_tests(
     name = "ActivityScenarioTest_instrumentation",
     srcs = glob(["**/ActivityScenarioTest.java"]),
+    args = [
+        "--enable_file_backed_snapshot=true",
+    ],
     binary_target = ":ActivityScenarioTest_target",
     target_devices = DEVICES,
     deps = [
