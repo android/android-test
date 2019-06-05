@@ -26,6 +26,8 @@ import static org.hamcrest.Matchers.anyOf;
 
 import android.os.Build;
 import android.util.Log;
+import android.view.InputDevice;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SearchView;
 import androidx.test.espresso.InjectEventSecurityException;
@@ -36,6 +38,7 @@ import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import androidx.test.espresso.util.HumanReadables;
 import java.util.Locale;
+import javax.annotation.Nullable;
 import org.hamcrest.Matcher;
 
 /** Enables typing text on views. */
@@ -48,6 +51,9 @@ public final class TypeTextAction implements ViewAction {
   @RemoteMsgField(order = 1)
   final boolean tapToFocus;
 
+  // The click action to use when tapping to focus is needed before typing in text.
+  @Nullable final GeneralClickAction clickAction;
+
   /**
    * Constructs {@link TypeTextAction} with given string. If the string is empty it results in no-op
    * (nothing is typed). By default this action sends a tap event to the center of the view to
@@ -56,7 +62,7 @@ public final class TypeTextAction implements ViewAction {
    * @param stringToBeTyped String To be typed by {@link TypeTextAction}
    */
   public TypeTextAction(String stringToBeTyped) {
-    this(stringToBeTyped, true);
+    this(stringToBeTyped, true, defaultClickAction());
   }
 
   /**
@@ -68,9 +74,25 @@ public final class TypeTextAction implements ViewAction {
    */
   @RemoteMsgConstructor
   public TypeTextAction(String stringToBeTyped, boolean tapToFocus) {
+    this(stringToBeTyped, tapToFocus, null);
+  }
+
+  /**
+   * Constructs {@link TypeTextAction} with given string. If the string is empty it results in no-op
+   * (nothing is typed).
+   *
+   * @param stringToBeTyped String To be typed by {@link TypeTextAction}
+   * @param tapToFocus indicates whether a tap should be sent to the underlying view before typing.
+   * @param clickAction the click action instance to use when tapping to focus. Can be {@code null}
+   *     if {@code tapToFocus} is false. If {@code tapToFocus} is true but no {@code clickAction} is
+   *     specified, a default click action will be used for tapping.
+   */
+  public TypeTextAction(
+      String stringToBeTyped, boolean tapToFocus, GeneralClickAction clickAction) {
     checkNotNull(stringToBeTyped);
     this.stringToBeTyped = stringToBeTyped;
     this.tapToFocus = tapToFocus;
+    this.clickAction = clickAction;
   }
 
   @SuppressWarnings("unchecked")
@@ -100,8 +122,12 @@ public final class TypeTextAction implements ViewAction {
 
     if (tapToFocus) {
       // Perform a click.
-      new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER, Press.FINGER)
-          .perform(uiController, view);
+      if (clickAction == null) {
+        // Uses the default click action if none is specified.
+        defaultClickAction().perform(uiController, view);
+      } else {
+        clickAction.perform(uiController, view);
+      }
       uiController.loopMainThreadUntilIdle();
     }
 
@@ -127,5 +153,14 @@ public final class TypeTextAction implements ViewAction {
   @Override
   public String getDescription() {
     return String.format(Locale.ROOT, "type text(%s)", stringToBeTyped);
+  }
+
+  private static GeneralClickAction defaultClickAction() {
+    return new GeneralClickAction(
+        Tap.SINGLE,
+        GeneralLocation.CENTER,
+        Press.FINGER,
+        InputDevice.SOURCE_UNKNOWN,
+        MotionEvent.BUTTON_PRIMARY);
   }
 }
