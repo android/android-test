@@ -35,6 +35,7 @@ import android.os.MessageQueue.IdleHandler;
 import android.os.UserHandle;
 import androidx.annotation.Nullable;
 import android.util.Log;
+import androidx.test.internal.platform.app.ActivityLifecycleTimeout;
 import androidx.test.internal.runner.InstrumentationConnection;
 import androidx.test.internal.runner.hidden.ExposedInstrumentationApi;
 import androidx.test.internal.runner.intent.IntentMonitorImpl;
@@ -103,7 +104,6 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   private static final long MILLIS_TO_WAIT_FOR_ACTIVITY_TO_STOP = TimeUnit.SECONDS.toMillis(2);
   private static final long MILLIS_TO_POLL_FOR_ACTIVITY_STOP =
       MILLIS_TO_WAIT_FOR_ACTIVITY_TO_STOP / 40;
-  private static final int START_ACTIVITY_TIMEOUT_SECONDS = 45;
   private ActivityLifecycleMonitorImpl lifecycleMonitor = new ActivityLifecycleMonitorImpl();
   private ApplicationLifecycleMonitorImpl applicationMonitor =
       new ApplicationLifecycleMonitorImpl();
@@ -475,7 +475,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
             });
 
     try {
-      return startedActivity.get(START_ACTIVITY_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+      return startedActivity.get(ActivityLifecycleTimeout.getMillis(), TimeUnit.MILLISECONDS);
     } catch (TimeoutException te) {
       dumpThreadStateToOutputs("ThreadState-startActivityTimeout.txt");
       startedActivity.cancel(true);
@@ -490,7 +490,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
                   + "went idle was: %s. If these numbers are the same your activity might be "
                   + "hogging the event queue.",
               intent,
-              START_ACTIVITY_TIMEOUT_SECONDS,
+              ActivityLifecycleTimeout.getMillis(),
               lastIdleTimeBeforeLaunch,
               lastIdleTime.get()));
     } catch (ExecutionException ee) {
