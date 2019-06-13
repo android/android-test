@@ -432,6 +432,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
       builder.addRunListener(new LogRunListener());
       if (orchestratorListener != null) {
         builder.addRunListener(orchestratorListener);
+        builder.addRunListener(getInstrumentationResultPrinter());
       } else {
         builder.addRunListener(getInstrumentationResultPrinter());
       }
