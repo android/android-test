@@ -28,9 +28,9 @@ public final class UsageTrackerRegistry {
   /** Contains versions for AXT libraries */
   public interface AxtVersions {
     // Espresso version includes: Espresso, Espresso-Web, Intents, Espresso-MPE
-    String ESPRESSO_VERSION = "3.2.0";
+    String ESPRESSO_VERSION = "3.2.1-alpha01";
     // Runner version includes: Runner, Rules, ATO, Monitor
-    String RUNNER_VERSION = "1.2.0";
+    String RUNNER_VERSION = "1.2.1-alpha01";
   }
 
 
