@@ -16,10 +16,10 @@
 
 package androidx.test.core.app;
 
-import static androidx.test.InstrumentationRegistry.getInstrumentation;
-import static androidx.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
@@ -34,6 +34,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import android.util.Log;
 import androidx.test.internal.platform.app.ActivityInvoker;
+import androidx.test.internal.platform.app.ActivityLifecycleTimeout;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
 import java.util.Arrays;
@@ -51,13 +52,6 @@ import java.util.concurrent.TimeUnit;
  * activity state to be desired state.
  */
 class InstrumentationActivityInvoker implements ActivityInvoker {
-
-  /**
-   * The timeout for waiting an arbitrary condition to be met. If the condition isn't satisfied
-   * before the timeout, {@link AssertionError} will be thrown.
-   */
-  private static final long TIMEOUT_SECONDS = 45;
-
   /** A bundle key to retrieve an intent to start test target activity in extras bundle. */
   private static final String TARGET_ACTIVITY_INTENT_KEY =
       "androidx.test.core.app.InstrumentationActivityInvoker.START_TARGET_ACTIVITY_INTENT_KEY";
@@ -244,12 +238,14 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
      */
     public ActivityResult getActivityResult() {
       try {
-        latch.await(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        latch.await(ActivityLifecycleTimeout.getMillis(), TimeUnit.MILLISECONDS);
       } catch (InterruptedException e) {
         Log.i(TAG, "Waiting activity result was interrupted", e);
       }
       checkNotNull(
-          activityResult, "onActivityResult never be called after %d seconds", TIMEOUT_SECONDS);
+          activityResult,
+          "onActivityResult never be called after %d milliseconds",
+          ActivityLifecycleTimeout.getMillis());
       return activityResult;
     }
   }
@@ -339,29 +335,29 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
   @Override
   public void startActivity(Intent intent) {
     // make sure the intent can resolve an activity
-    ActivityInfo ai = intent.resolveActivityInfo(getTargetContext().getPackageManager(), 0);
+    ActivityInfo ai = intent.resolveActivityInfo(getApplicationContext().getPackageManager(), 0);
     if (ai == null) {
       throw new RuntimeException("Unable to resolve activity for: " + intent);
     }
     // Close empty activities and bootstrap activity if it's running. This might happen if the
     // previous test crashes before it cleans up the state.
-    getTargetContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
-    getTargetContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
+    getApplicationContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
+    getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
 
-    activityResultWaiter = new ActivityResultWaiter(getTargetContext());
+    activityResultWaiter = new ActivityResultWaiter(getApplicationContext());
 
     // Note: Instrumentation.startActivitySync(Intent) cannot be used here because BootstrapActivity
     // may start in different process. Also, we use PendingIntent because the target activity may
     // set "exported" attribute to false so that it prohibits starting the activity outside of their
     // package. With PendingIntent we delegate the authority to BootstrapActivity.
-    getTargetContext()
+    getApplicationContext()
         .startActivity(
             getIntentForActivity(BootstrapActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 .putExtra(
                     TARGET_ACTIVITY_INTENT_KEY,
                     PendingIntent.getActivity(
-                        getTargetContext(),
+                        getApplicationContext(),
                         /*requestCode=*/ 0,
                         intent,
                         /*flags=*/ PendingIntent.FLAG_UPDATE_CURRENT)));
@@ -376,7 +372,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
   @Override
   public void resumeActivity(Activity activity) {
     checkActivityStageIsIn(activity, Stage.RESUMED, Stage.PAUSED, Stage.STOPPED);
-    getTargetContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
+    getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
   }
 
   /**
@@ -398,22 +394,22 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
             latch.countDown();
           }
         };
-    getTargetContext()
+    getApplicationContext()
         .registerReceiver(receiver, new IntentFilter(EMPTY_FLOATING_ACTIVITY_RESUMED));
 
     // Starting an arbitrary Activity (android:windowIsFloating = true) forces the tested Activity
     // to the paused state.
-    getTargetContext()
+    getApplicationContext()
         .startActivity(
             getIntentForActivity(EmptyFloatingActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 
     try {
-      latch.await(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+      latch.await(ActivityLifecycleTimeout.getMillis(), TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
       throw new AssertionError("Failed to pause activity", e);
     } finally {
-      getTargetContext().unregisterReceiver(receiver);
+      getApplicationContext().unregisterReceiver(receiver);
     }
   }
 
@@ -433,20 +429,20 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
             latch.countDown();
           }
         };
-    getTargetContext().registerReceiver(receiver, new IntentFilter(EMPTY_ACTIVITY_RESUMED));
+    getApplicationContext().registerReceiver(receiver, new IntentFilter(EMPTY_ACTIVITY_RESUMED));
 
     // Starting an arbitrary Activity (android:windowIsFloating = false) forces the tested Activity
     // to the stopped state.
-    getTargetContext()
+    getApplicationContext()
         .startActivity(
             getIntentForActivity(EmptyActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 
     try {
-      latch.await(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+      latch.await(ActivityLifecycleTimeout.getMillis(), TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
       throw new AssertionError("Failed to stop activity", e);
     } finally {
-      getTargetContext().unregisterReceiver(receiver);
+      getApplicationContext().unregisterReceiver(receiver);
     }
   }
 
@@ -479,10 +475,10 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     // for the API level above 19.
     startEmptyActivitySync();
     getInstrumentation().runOnMainSync(() -> activity.finish());
-    getTargetContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
+    getApplicationContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
     startEmptyActivitySync();
     getInstrumentation().runOnMainSync(() -> activity.finish());
-    getTargetContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
+    getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
   }
 
   private static void checkActivityStageIsIn(Activity activity, Stage... expected) {
