@@ -38,7 +38,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static org.hamcrest.Matchers.allOf;
 
 import android.content.res.Resources.NotFoundException;
-import com.google.android.material.navigation.NavigationView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +47,7 @@ import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.espresso.util.HumanReadables;
+import com.google.android.material.navigation.NavigationView;
 import org.hamcrest.Matcher;
 
 /** View actions for interacting with {@link NavigationView} */
