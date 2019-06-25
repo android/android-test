@@ -18,8 +18,10 @@ package androidx.test.espresso.intent.matcher;
 
 import static androidx.test.espresso.intent.Checks.checkNotNull;
 import static org.hamcrest.Matchers.any;
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import android.os.Bundle;
 import org.hamcrest.Description;
@@ -57,6 +59,27 @@ public final class BundleMatchers {
       description.appendText(" value: ");
       description.appendDescriptionOf(valueMatcher);
     }
+  }
+
+  private static final class EmptyBundleMatcher extends TypeSafeMatcher<Bundle> {
+
+    @Override
+    protected boolean matchesSafely(Bundle bundle) {
+      return bundle.isEmpty();
+    }
+
+    @Override
+    public void describeTo(Description description) {
+      description.appendText("is empty bundle");
+    }
+  }
+
+  public static Matcher<Bundle> isEmpty() {
+    return new EmptyBundleMatcher();
+  }
+
+  public static Matcher<Bundle> isEmptyOrNull() {
+    return anyOf(nullValue(), isEmpty());
   }
 
   public static <T> Matcher<Bundle> hasEntry(String key, T value) {
