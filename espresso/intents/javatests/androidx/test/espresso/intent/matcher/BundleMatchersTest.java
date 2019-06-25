@@ -19,6 +19,8 @@ package androidx.test.espresso.intent;
 import static androidx.test.espresso.intent.matcher.BundleMatchers.hasEntry;
 import static androidx.test.espresso.intent.matcher.BundleMatchers.hasKey;
 import static androidx.test.espresso.intent.matcher.BundleMatchers.hasValue;
+import static androidx.test.espresso.intent.matcher.BundleMatchers.isEmpty;
+import static androidx.test.espresso.intent.matcher.BundleMatchers.isEmptyOrNull;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertFalse;
@@ -34,6 +36,36 @@ import org.junit.runner.RunWith;
 @SmallTest
 @RunWith(AndroidJUnit4.class)
 public class BundleMatchersTest {
+
+  @Test
+  public void isEmptyTesting() {
+    assertTrue(isEmpty().matches(new Bundle()));
+    assertTrue(isEmpty().matches(Bundle.EMPTY));
+  }
+
+  @Test
+  public void isEmptyDoesNotMatch() {
+    Bundle bundle = new Bundle();
+    bundle.putInt("key", 1);
+
+    assertFalse(isEmpty().matches(bundle));
+    assertFalse(isEmpty().matches(null));
+  }
+
+  @Test
+  public void isEmptyOrNullTesting() {
+    assertTrue(isEmptyOrNull().matches(new Bundle()));
+    assertTrue(isEmptyOrNull().matches(Bundle.EMPTY));
+    assertTrue(isEmptyOrNull().matches(null));
+  }
+
+  @Test
+  public void isEmptyOrNullDoesNotMatch() {
+    Bundle bundle = new Bundle();
+    bundle.putInt("key", 1);
+
+    assertFalse(isEmptyOrNull().matches(bundle));
+  }
 
   @Test
   public void hasEntryTesting() {
