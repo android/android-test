@@ -171,7 +171,7 @@ class KeyEventActionBase implements ViewAction {
     }
 
     if (pendingForegroundActivities) {
-      Log.e(
+      Log.w(
           TAG,
           "Back was pressed and left the application in an inconsistent state even after "
               + (CLEAR_TRANSITIONING_ACTIVITIES_MILLIS_DELAY
