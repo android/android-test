@@ -206,8 +206,7 @@ public final class RootViewPicker implements Provider<View> {
     }
 
     private static boolean isTopmostRoot(Root topMostRoot, Root root) {
-      return root.getWindowLayoutParams().get().type
-          > topMostRoot.getWindowLayoutParams().get().type;
+      return root.getWindowLayoutParams().type > topMostRoot.getWindowLayoutParams().type;
     }
 
     public State getState() {
