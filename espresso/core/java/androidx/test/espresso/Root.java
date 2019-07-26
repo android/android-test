@@ -16,15 +16,9 @@
 
 package androidx.test.espresso;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
-import androidx.test.espresso.util.EspressoOptional;
-import androidx.test.espresso.util.HumanReadables;
-import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Represents a root view in the application and optionally the layout params of the window holding
@@ -35,18 +29,23 @@ import com.google.common.base.MoreObjects.ToStringHelper;
  */
 public final class Root {
   private final View decorView;
-  private final EspressoOptional<LayoutParams> windowLayoutParams;
+  private final LayoutParams windowLayoutParams;
+  private final ViewDescriber viewDescriber;
 
-  private Root(Builder builder) {
-    this.decorView = checkNotNull(builder.decorView);
-    this.windowLayoutParams = EspressoOptional.fromNullable(builder.windowLayoutParams);
+  private Root(Builder builder, ViewDescriber viewDescriber) {
+    if (builder.decorView == null) {
+      throw new NullPointerException();
+    }
+    this.decorView = builder.decorView;
+    this.windowLayoutParams = builder.windowLayoutParams;
+    this.viewDescriber = viewDescriber;
   }
 
   public View getDecorView() {
     return decorView;
   }
 
-  public EspressoOptional<WindowManager.LayoutParams> getWindowLayoutParams() {
+  public WindowManager.LayoutParams getWindowLayoutParams() {
     return windowLayoutParams;
   }
 
@@ -58,7 +57,7 @@ public final class Root {
    */
   public boolean isReady() {
     if (!decorView.isLayoutRequested()) {
-      int flags = windowLayoutParams.get().flags;
+      int flags = windowLayoutParams.flags;
       return decorView.hasWindowFocus()
           || (flags & WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
               == WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
@@ -68,30 +67,42 @@ public final class Root {
 
   @Override
   public String toString() {
-    ToStringHelper helper =
-        toStringHelper(this)
-            .add("application-window-token", decorView.getApplicationWindowToken())
-            .add("window-token", decorView.getWindowToken())
-            .add("has-window-focus", decorView.hasWindowFocus());
-    if (windowLayoutParams.isPresent()) {
-      helper
-          .add("layout-params-type", windowLayoutParams.get().type)
-          .add("layout-params-string", windowLayoutParams.get());
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder
+        .append(this.hashCode())
+        .append(": application-window-token=")
+        .append(decorView.getApplicationWindowToken())
+        .append("window-token=")
+        .append(decorView.getWindowToken())
+        .append("has-window-focus=")
+        .append(decorView.hasWindowFocus());
+    if (windowLayoutParams != null) {
+      stringBuilder
+          .append("layout-params-type=")
+          .append(windowLayoutParams.type)
+          .append("layout-params-string=")
+          .append(windowLayoutParams);
     }
-    helper.add("decor-view-string", HumanReadables.describe(decorView));
-    return helper.toString();
+    stringBuilder.append("decor-view-string=").append(viewDescriber.describeView(decorView));
+    return stringBuilder.toString();
   }
 
   public static class Builder {
     private View decorView;
     private WindowManager.LayoutParams windowLayoutParams;
+    private ViewDescriber viewDescriber;
 
     public Root build() {
-      return new Root(this);
+      return new Root(this, viewDescriber);
     }
 
     public Builder withDecorView(View view) {
       this.decorView = view;
+      return this;
+    }
+
+    public Builder withViewDescriber(ViewDescriber viewDescriber) {
+      this.viewDescriber = viewDescriber;
       return this;
     }
 
