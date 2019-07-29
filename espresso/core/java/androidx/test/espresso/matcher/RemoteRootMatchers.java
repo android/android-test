@@ -16,15 +16,15 @@
  */
 package androidx.test.espresso.matcher;
 
-import androidx.test.espresso.matcher.RootMatchers.HasWindowFocus;
-import androidx.test.espresso.matcher.RootMatchers.HasWindowLayoutParams;
-import androidx.test.espresso.matcher.RootMatchers.IsDialog;
-import androidx.test.espresso.matcher.RootMatchers.IsFocusable;
 import androidx.test.espresso.matcher.RootMatchers.IsPlatformPopup;
-import androidx.test.espresso.matcher.RootMatchers.IsSubwindowOfCurrentActivity;
 import androidx.test.espresso.matcher.RootMatchers.IsSystemAlertWindow;
 import androidx.test.espresso.matcher.RootMatchers.IsTouchable;
-import androidx.test.espresso.matcher.RootMatchers.WithDecorView;
+import androidx.test.espresso.matcher.RootMatchersCore.HasWindowFocus;
+import androidx.test.espresso.matcher.RootMatchersCore.HasWindowLayoutParams;
+import androidx.test.espresso.matcher.RootMatchersCore.IsDialog;
+import androidx.test.espresso.matcher.RootMatchersCore.IsFocusable;
+import androidx.test.espresso.matcher.RootMatchersCore.IsSubwindowOfCurrentActivity;
+import androidx.test.espresso.matcher.RootMatchersCore.WithDecorView;
 import androidx.test.espresso.proto.matcher.RootMatchers.HasWindowFocusProto;
 import androidx.test.espresso.proto.matcher.RootMatchers.HasWindowLayoutParamsProto;
 import androidx.test.espresso.proto.matcher.RootMatchers.IsDialogProto;
