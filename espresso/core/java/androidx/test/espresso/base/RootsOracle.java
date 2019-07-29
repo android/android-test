@@ -16,18 +16,17 @@
 
 package androidx.test.espresso.base;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import android.os.Build;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import androidx.test.espresso.Root;
-import com.google.common.collect.Lists;
+import androidx.test.espresso.ViewDescriber;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -57,20 +56,24 @@ final class RootsOracle implements ActiveRootLister {
   private static final String GET_GLOBAL_INSTANCE = "getInstance";
 
   private final Looper mainLooper;
+  private final ViewDescriber viewDescriber;
   private boolean initialized;
   private Object windowManagerObj;
   private Field viewsField;
   private Field paramsField;
 
   @Inject
-  RootsOracle(Looper mainLooper) {
+  public RootsOracle(Looper mainLooper, ViewDescriber viewDescriber) {
     this.mainLooper = mainLooper;
+    this.viewDescriber = viewDescriber;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<Root> listActiveRoots() {
-    checkState(mainLooper.equals(Looper.myLooper()), "must be called on main thread.");
+    if (!mainLooper.equals(Looper.myLooper())) {
+      throw new IllegalStateException("must be called on main thread.");
+    }
 
     if (!initialized) {
       initialize();
@@ -78,16 +81,16 @@ final class RootsOracle implements ActiveRootLister {
 
     if (null == windowManagerObj) {
       Log.w(TAG, "No reflective access to windowmanager object.");
-      return Lists.newArrayList();
+      return new ArrayList<>();
     }
 
     if (null == viewsField) {
       Log.w(TAG, "No reflective access to mViews");
-      return Lists.newArrayList();
+      return new ArrayList<>();
     }
     if (null == paramsField) {
       Log.w(TAG, "No reflective access to mParams");
-      return Lists.newArrayList();
+      return new ArrayList<>();
     }
 
     List<View> views = null;
@@ -111,7 +114,7 @@ final class RootsOracle implements ActiveRootLister {
               paramsField,
               windowManagerObj),
           re);
-      return Lists.newArrayList();
+      return new ArrayList<>();
     } catch (IllegalAccessException iae) {
       Log.w(
           TAG,
@@ -122,15 +125,16 @@ final class RootsOracle implements ActiveRootLister {
               paramsField,
               windowManagerObj),
           iae);
-      return Lists.newArrayList();
+      return new ArrayList<>();
     }
 
-    List<Root> roots = Lists.newArrayList();
+    List<Root> roots = new ArrayList<>();
     for (int i = views.size() - 1; i > -1; i--) {
       roots.add(
           new Root.Builder()
               .withDecorView(views.get(i))
               .withWindowLayoutParams(params.get(i))
+              .withViewDescriber(viewDescriber)
               .build());
     }
 

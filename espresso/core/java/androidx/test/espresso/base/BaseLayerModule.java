@@ -20,10 +20,13 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import androidx.test.espresso.FailureHandler;
 import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.ViewDescriber;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
 import androidx.test.espresso.internal.inject.TargetContext;
+import androidx.test.espresso.util.HumanReadables;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.os.ControlledLooper;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -54,6 +57,16 @@ public class BaseLayerModule {
   @Provides
   public ActivityLifecycleMonitor provideLifecycleMonitor() {
     return ActivityLifecycleMonitorRegistry.getInstance();
+  }
+
+  @Provides
+  public ViewDescriber provideViewDescriber() {
+    return new ViewDescriber() {
+      @Override
+      public String describeView(View view) {
+        return HumanReadables.describe(view);
+      }
+    };
   }
 
   @Provides

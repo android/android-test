@@ -141,7 +141,7 @@ public final class RootMatchers {
 
     @Override
     public boolean matchesSafely(Root root) {
-      int flags = root.getWindowLayoutParams().get().flags;
+      int flags = root.getWindowLayoutParams().flags;
       // return true if FLAG_NOT_FOCUSABLE flag is not set
       return (flags & WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
           != WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
@@ -159,7 +159,7 @@ public final class RootMatchers {
 
     @Override
     public boolean matchesSafely(Root root) {
-      int flags = root.getWindowLayoutParams().get().flags;
+      int flags = root.getWindowLayoutParams().flags;
       // return true if FLAG_NOT_TOUCHABLE flag is not set
       return (flags & WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
           != WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
@@ -177,7 +177,7 @@ public final class RootMatchers {
 
     @Override
     public boolean matchesSafely(Root root) {
-      int type = root.getWindowLayoutParams().get().type;
+      int type = root.getWindowLayoutParams().type;
       if ((type != WindowManager.LayoutParams.TYPE_BASE_APPLICATION
           && type < WindowManager.LayoutParams.LAST_APPLICATION_WINDOW)) {
         IBinder windowToken = root.getDecorView().getWindowToken();
@@ -204,7 +204,7 @@ public final class RootMatchers {
 
     @Override
     public boolean matchesSafely(Root root) {
-      int type = root.getWindowLayoutParams().get().type;
+      int type = root.getWindowLayoutParams().type;
       // System-specific window types live between FIRST_SYSTEM_WINDOW and LAST_SYSTEM_WINDOW
       if ((WindowManager.LayoutParams.FIRST_SYSTEM_WINDOW < type
           && WindowManager.LayoutParams.LAST_SYSTEM_WINDOW > type)) {
@@ -287,7 +287,7 @@ public final class RootMatchers {
 
     @Override
     public boolean matchesSafely(Root root) {
-      return root.getWindowLayoutParams().isPresent();
+      return root.getWindowLayoutParams() != null;
     }
   }
 
