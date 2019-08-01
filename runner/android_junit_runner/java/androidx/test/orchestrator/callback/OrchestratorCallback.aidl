@@ -17,8 +17,9 @@
 package androidx.test.orchestrator.callback;
 
 /**
- * Defines an interface for remote {@link Instrumentation} service to speak to the
- * {@link AndroidTestOrchestrator]
+ * Defines an interface for this {@link Instrumentation} to speak to the remote
+ * {@link AndroidTestOrchestrator} service.
+ *
  */
 interface OrchestratorCallback {
   /**
@@ -34,3 +35,4 @@ interface OrchestratorCallback {
    */
   void sendTestNotification(in Bundle bundle);
 }
+

@@ -40,11 +40,10 @@ import androidx.test.internal.runner.listener.LogRunListener;
 import androidx.test.internal.runner.listener.SuiteAssignmentPrinter;
 import androidx.test.internal.runner.tracker.AnalyticsBasedUsageTracker;
 import androidx.test.internal.runner.tracker.UsageTrackerRegistry.AxtVersions;
-import androidx.test.orchestrator.instrumentationlistener.OrchestratedInstrumentationListener;
-import androidx.test.orchestrator.instrumentationlistener.OrchestratedInstrumentationListener.OnConnectListener;
+import androidx.test.orchestrator.client.OrchestratorClient;
+import androidx.test.orchestrator.client.OrchestratorConnection.OnConnectListener;
 import androidx.test.runner.lifecycle.ApplicationLifecycleCallback;
 import androidx.test.runner.lifecycle.ApplicationLifecycleMonitorRegistry;
-import androidx.test.runner.screenshot.ScreenCaptureProcessor;
 import androidx.test.runner.screenshot.Screenshot;
 import java.util.HashSet;
 import org.junit.runner.Request;
@@ -271,7 +270,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
       new InstrumentationResultPrinter();
   private RunnerArgs runnerArgs;
   private UsageTrackerFacilitator usageTrackerFacilitator;
-  private OrchestratedInstrumentationListener orchestratorListener;
+  private final OrchestratorClient orchestrator = new OrchestratorClient();
 
   @Override
   public void onCreate(Bundle arguments) {
@@ -299,11 +298,10 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
 
     addScreenCaptureProcessors(runnerArgs);
 
-    if (runnerArgs.orchestratorService != null && isPrimaryInstrProcess(runnerArgs.targetProcess)) {
+    if (orchestrator.connect(this, runnerArgs, this::isPrimaryInstrProcess)) {
       // If orchestratorService is provided, and we are the primary process
       // we await onOrchestratorConnect() before we start().
-      orchestratorListener = new OrchestratedInstrumentationListener(this);
-      orchestratorListener.connect(getContext());
+      Log.v(LOG_TAG, "Waiting to connect to the Orchestrator service...");
     } else {
       // If no orchestration service is given, or we are not the primary process we can
       // start() immediately.
@@ -362,11 +360,11 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
      * The orchestrator cannot collect the list of tests as it is running in a different process
      * than the test app.  On first run, the Orchestrator will ask AJUR to list the tests
      * out that would be run for a given class parameter.  AJUR will then be successively
-     * called with whatever it passes back to the orchestratorListener.
+     * called for each test case it passes back to the orchestrator.
      */
-    if (runnerArgs.listTestsForOrchestrator && isPrimaryInstrProcess(runnerArgs.targetProcess)) {
+    if (orchestrator.isDiscoveryServiceConnected()) {
       Request testRequest = buildRequest(runnerArgs, getArguments());
-      orchestratorListener.addTests(testRequest.getRunner().getDescription());
+      orchestrator.addTests(testRequest.getRunner().getDescription());
       finish(Activity.RESULT_OK, new Bundle());
       return;
     }
@@ -384,13 +382,9 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
     Bundle results = new Bundle();
     try {
       TestExecutor.Builder executorBuilder = new TestExecutor.Builder(this);
-
       addListeners(runnerArgs, executorBuilder);
-
       Request testRequest = buildRequest(runnerArgs, getArguments());
-
       results = executorBuilder.build().execute(testRequest);
-
     } catch (RuntimeException e) {
       final String msg = "Fatal exception when running tests";
       Log.e(LOG_TAG, msg, e);
@@ -430,8 +424,8 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
       builder.addRunListener(new SuiteAssignmentPrinter());
     } else {
       builder.addRunListener(new LogRunListener());
-      if (orchestratorListener != null) {
-        builder.addRunListener(orchestratorListener);
+      if (orchestrator.isNotificationServiceConnected()) {
+        builder.addRunListener(orchestrator.getNotificationRunListener());
       } else {
         builder.addRunListener(getInstrumentationResultPrinter());
       }
@@ -468,8 +462,8 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
       builder.addRunListener(new LogRunListener());
       addDelayListener(args, builder);
       addCoverageListener(args, builder);
-      if (orchestratorListener != null) {
-        builder.addRunListener(orchestratorListener);
+      if (orchestrator.isNotificationServiceConnected()) {
+        builder.addRunListener(orchestrator.getNotificationRunListener());
       } else {
         builder.addRunListener(getInstrumentationResultPrinter());
       }
@@ -489,8 +483,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
   }
 
   private void addScreenCaptureProcessors(RunnerArgs args) {
-    Screenshot.addScreenCaptureProcessors(
-        new HashSet<ScreenCaptureProcessor>(args.screenCaptureProcessors));
+    Screenshot.addScreenCaptureProcessors(new HashSet<>(args.screenCaptureProcessors));
   }
 
   private void addCoverageListener(RunnerArgs args, TestExecutor.Builder builder) {

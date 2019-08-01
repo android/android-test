@@ -34,7 +34,7 @@ public class TestIdentifier {
    */
   public TestIdentifier(String className, String testName) {
     if (className == null || testName == null) {
-      throw new IllegalArgumentException("className and testName must " + "be non-null");
+      throw new IllegalArgumentException("className and testName must be non-null");
     }
     this.className = className;
     this.testName = testName;
@@ -54,8 +54,8 @@ public class TestIdentifier {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((className == null) ? 0 : className.hashCode());
-    result = prime * result + ((testName == null) ? 0 : testName.hashCode());
+    result = prime * result + className.hashCode();
+    result = prime * result + testName.hashCode();
     return result;
   }
 
@@ -64,28 +64,14 @@ public class TestIdentifier {
     if (this == obj) {
       return true;
     }
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
+    if (!(obj instanceof TestIdentifier)) {
       return false;
     }
     TestIdentifier other = (TestIdentifier) obj;
-    if (className == null) {
-      if (other.className != null) {
-        return false;
-      }
-    } else if (!className.equals(other.className)) {
+    if (!className.equals(other.className)) {
       return false;
     }
-    if (testName == null) {
-      if (other.testName != null) {
-        return false;
-      }
-    } else if (!testName.equals(other.testName)) {
-      return false;
-    }
-    return true;
+    return testName.equals(other.testName);
   }
 
   @Override

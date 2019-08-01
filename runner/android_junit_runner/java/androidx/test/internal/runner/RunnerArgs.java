@@ -81,6 +81,8 @@ public class RunnerArgs {
   static final String ARGUMENT_SCREENSHOT_PROCESSORS = "screenCaptureProcessors";
   static final String ARGUMENT_ORCHESTRATOR_SERVICE = "orchestratorService";
   static final String ARGUMENT_LIST_TESTS_FOR_ORCHESTRATOR = "listTestsForOrchestrator";
+  static final String ARGUMENT_ORCHESTRATOR_DISCOVERY_SERVICE = "testDiscoveryService";
+  static final String ARGUMENT_ORCHESTRATOR_NOTIFICATION_SERVICE = "testNotificationService";
   static final String ARGUMENT_SHELL_EXEC_BINDER_KEY = "shellExecBinderKey";
   static final String ARGUMENT_RUN_LISTENER_NEW_ORDER = "newRunListenerMode";
   static final String ARGUMENT_TESTS_REGEX = "tests_regex";
@@ -123,6 +125,8 @@ public class RunnerArgs {
   public final List<ScreenCaptureProcessor> screenCaptureProcessors;
   public final String orchestratorService;
   public final boolean listTestsForOrchestrator;
+  public final String testDiscoveryService;
+  public final String testNotificationService;
   public final String shellExecBinderKey;
   public final boolean newRunListenerMode;
   public final String testsRegEx;
@@ -180,6 +184,8 @@ public class RunnerArgs {
     this.remoteMethod = builder.remoteMethod;
     this.orchestratorService = builder.orchestratorService;
     this.listTestsForOrchestrator = builder.listTestsForOrchestrator;
+    this.testDiscoveryService = builder.testDiscoveryService;
+    this.testNotificationService = builder.testNotificationService;
     this.screenCaptureProcessors = Collections.unmodifiableList(builder.screenCaptureProcessors);
     this.targetProcess = builder.targetProcess;
     this.shellExecBinderKey = builder.shellExecBinderKey;
@@ -215,6 +221,8 @@ public class RunnerArgs {
     private TestArg remoteMethod = null;
     private String orchestratorService = null;
     private boolean listTestsForOrchestrator = false;
+    private String testDiscoveryService = null;
+    private String testNotificationService = null;
     private String targetProcess = null;
     private List<ScreenCaptureProcessor> screenCaptureProcessors = new ArrayList<>();
     public String shellExecBinderKey;
@@ -273,6 +281,8 @@ public class RunnerArgs {
       this.orchestratorService = bundle.getString(ARGUMENT_ORCHESTRATOR_SERVICE);
       this.listTestsForOrchestrator =
           parseBoolean(bundle.getString(ARGUMENT_LIST_TESTS_FOR_ORCHESTRATOR));
+      this.testDiscoveryService = bundle.getString(ARGUMENT_ORCHESTRATOR_DISCOVERY_SERVICE);
+      this.testNotificationService = bundle.getString(ARGUMENT_ORCHESTRATOR_NOTIFICATION_SERVICE);
       this.targetProcess = bundle.getString(ARGUMENT_TARGET_PROCESS);
       this.screenCaptureProcessors.addAll(
           parseLoadAndInstantiateClasses(

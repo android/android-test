@@ -566,6 +566,8 @@ public class RunnerArgsTest {
     b.putString(RunnerArgs.ARGUMENT_TARGET_PROCESS, "con.foo.bar");
     b.putString(RunnerArgs.ARGUMENT_ORCHESTRATOR_SERVICE, "test.orchestratorService");
     b.putString(RunnerArgs.ARGUMENT_LIST_TESTS_FOR_ORCHESTRATOR, "true");
+    b.putString(RunnerArgs.ARGUMENT_ORCHESTRATOR_DISCOVERY_SERVICE, "test.DiscoveryService");
+    b.putString(RunnerArgs.ARGUMENT_ORCHESTRATOR_NOTIFICATION_SERVICE, "test.NotificationService");
     b.putString(RunnerArgs.ARGUMENT_SHELL_EXEC_BINDER_KEY, "secret");
     b.putString(
         RunnerArgs.ARGUMENT_SCREENSHOT_PROCESSORS,
@@ -579,10 +581,9 @@ public class RunnerArgsTest {
             .fromBundle(InstrumentationRegistry.getInstrumentation(), b)
             .build();
 
-    Set<String> exceptions = new HashSet<>();
     // Parsing of testFile requires a real file on the disk, same for classloader leave those
     // ones out.
-    exceptions.addAll(Arrays.asList("testFile", "classLoader"));
+    Set<String> exceptions = new HashSet<>(Arrays.asList("testFile", "classLoader"));
 
     for (Field field : RunnerArgs.class.getDeclaredFields()) {
       if (Modifier.isStatic(field.getModifiers()) || exceptions.contains(field.getName())) {

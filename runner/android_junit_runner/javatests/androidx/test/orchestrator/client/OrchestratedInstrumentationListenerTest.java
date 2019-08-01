@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.orchestrator.instrumentationlistener;
+package androidx.test.orchestrator.client;
 
-import static junit.framework.Assert.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verify;
@@ -23,7 +22,6 @@ import static org.mockito.Mockito.verify;
 import android.os.Bundle;
 import android.os.RemoteException;
 import androidx.test.orchestrator.SampleJUnitTest;
-import androidx.test.orchestrator.callback.OrchestratorCallback;
 import androidx.test.orchestrator.junit.BundleJUnitUtils;
 import androidx.test.orchestrator.junit.ParcelableDescription;
 import androidx.test.orchestrator.junit.ParcelableFailure;
@@ -40,12 +38,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-/** Unit tests for {@link OrchestrationListenerManager}. */
+/** Unit tests for {@link OrchestratedInstrumentationListener}. */
 @RunWith(RobolectricTestRunner.class)
 public class OrchestratedInstrumentationListenerTest
-    implements OrchestratedInstrumentationListener.OnConnectListener {
+    implements OrchestratorConnection.OnConnectListener {
 
-  @Mock OrchestratorCallback mockCallback;
+  @Mock TestNotificationService notificationService;
 
   private OrchestratedInstrumentationListener listener;
   private Description jUnitDescription;
@@ -60,8 +58,7 @@ public class OrchestratedInstrumentationListenerTest
   @Before
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
-    listener = new OrchestratedInstrumentationListener(this);
-    listener.odoCallback = mockCallback;
+    listener = new OrchestratedInstrumentationListener(notificationService);
 
     Class<SampleJUnitTest> testClass = SampleJUnitTest.class;
     jUnitDescription = Description.createTestDescription(testClass, "sampleTest");
@@ -74,21 +71,10 @@ public class OrchestratedInstrumentationListenerTest
   }
 
   @Test
-  public void nullCallbackThrowsException() {
-    try {
-      listener.odoCallback = null;
-      listener.testRunStarted(jUnitDescription);
-      fail("Listener should throw an error if the callback is null");
-    } catch (IllegalStateException e) {
-      // as expected
-    }
-  }
-
-  @Test
   public void testRunStarted() throws RemoteException {
     listener.testRunStarted(jUnitDescription);
     ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
-    verify(mockCallback).sendTestNotification(argument.capture());
+    verify(notificationService).sendTestNotification(argument.capture());
 
     ParcelableDescription description = BundleJUnitUtils.getDescription(argument.getValue());
     compareDescription(description, jUnitDescription);
@@ -98,7 +84,7 @@ public class OrchestratedInstrumentationListenerTest
   public void testRunFinished() throws RemoteException {
     listener.testRunFinished(jUnitResult);
     ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
-    verify(mockCallback).sendTestNotification(argument.capture());
+    verify(notificationService).sendTestNotification(argument.capture());
 
     ParcelableResult result = BundleJUnitUtils.getResult(argument.getValue());
     assertThat(result.wasSuccessful(), is(jUnitResult.wasSuccessful()));
@@ -108,7 +94,7 @@ public class OrchestratedInstrumentationListenerTest
   public void testStarted() throws RemoteException {
     listener.testStarted(jUnitDescription);
     ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
-    verify(mockCallback).sendTestNotification(argument.capture());
+    verify(notificationService).sendTestNotification(argument.capture());
 
     ParcelableDescription description = BundleJUnitUtils.getDescription(argument.getValue());
     compareDescription(description, jUnitDescription);
@@ -118,7 +104,7 @@ public class OrchestratedInstrumentationListenerTest
   public void testFinished() throws RemoteException {
     listener.testFinished(jUnitDescription);
     ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
-    verify(mockCallback).sendTestNotification(argument.capture());
+    verify(notificationService).sendTestNotification(argument.capture());
 
     ParcelableDescription description = BundleJUnitUtils.getDescription(argument.getValue());
     compareDescription(description, jUnitDescription);
@@ -128,7 +114,7 @@ public class OrchestratedInstrumentationListenerTest
   public void testFailure() throws RemoteException {
     listener.testFailure(jUnitFailure);
     ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
-    verify(mockCallback).sendTestNotification(argument.capture());
+    verify(notificationService).sendTestNotification(argument.capture());
 
     ParcelableFailure failure = BundleJUnitUtils.getFailure(argument.getValue());
     compareFailure(failure, jUnitFailure);
@@ -138,7 +124,7 @@ public class OrchestratedInstrumentationListenerTest
   public void testAssumptionFailure() throws RemoteException {
     listener.testAssumptionFailure(jUnitFailure);
     ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
-    verify(mockCallback).sendTestNotification(argument.capture());
+    verify(notificationService).sendTestNotification(argument.capture());
 
     ParcelableFailure failure = BundleJUnitUtils.getFailure(argument.getValue());
     compareFailure(failure, jUnitFailure);
@@ -148,16 +134,10 @@ public class OrchestratedInstrumentationListenerTest
   public void testIgnored() throws RemoteException {
     listener.testIgnored(jUnitDescription);
     ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
-    verify(mockCallback).sendTestNotification(argument.capture());
+    verify(notificationService).sendTestNotification(argument.capture());
 
     ParcelableDescription description = BundleJUnitUtils.getDescription(argument.getValue());
     compareDescription(description, jUnitDescription);
-  }
-
-  @Test
-  public void addTest() throws RemoteException {
-    listener.addTest("exampleTest");
-    verify(mockCallback).addTest("exampleTest");
   }
 
   private static void compareDescription(

@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-package androidx.test.orchestrator.instrumentationlistener;
+package androidx.test.orchestrator.client;
 
 import static androidx.test.orchestrator.listeners.OrchestrationListenerManager.KEY_TEST_EVENT;
 
-import android.app.Service;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
-import androidx.test.orchestrator.callback.OrchestratorCallback;
 import androidx.test.orchestrator.junit.BundleJUnitUtils;
 import androidx.test.orchestrator.listeners.OrchestrationListenerManager.TestEvent;
 import org.junit.runner.Description;
@@ -36,56 +29,16 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
 /**
- * A {@link RunListener} for the orchestrated instrumentation to communicate information back to the
- * {@link androidx.test.orchestrator.OrchestratorService}. Not to be attached to {@link
- * androidx.test.orchestrator.AndroidTestOrchestrator} itself.
+ * A {@link RunListener} for the orchestrated instrumentation to communicate test run notifications
+ * back to the {@link androidx.test.orchestrator.OrchestratorService}.
  */
 public final class OrchestratedInstrumentationListener extends RunListener {
-
   private static final String TAG = "OrchestrationListener";
+  private final TestNotificationService notificationService;
 
-  private static final String ORCHESTRATOR_PACKAGE = "androidx.test.orchestrator";
-
-  private static final String ODO_SERVICE_PACKAGE =
-      "androidx.test.orchestrator.OrchestratorService";
-
-  private final OnConnectListener listener;
-
-  OrchestratorCallback odoCallback;
-
-  /** Interface to notify when the listener has connected to the orchestrator. */
-  public interface OnConnectListener {
-    void onOrchestratorConnect();
-  }
-
-  public OrchestratedInstrumentationListener(OnConnectListener listener) {
+  public OrchestratedInstrumentationListener(TestNotificationService notificationService) {
     super();
-    this.listener = listener;
-  }
-
-  private final ServiceConnection connection =
-      new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-          odoCallback = OrchestratorCallback.Stub.asInterface(service);
-          Log.i(TAG, "OrchestrationListener connected to service");
-          listener.onOrchestratorConnect();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName className) {
-          odoCallback = null;
-          Log.i(TAG, "OrchestrationListener disconnected from service");
-        }
-      };
-
-  public void connect(Context context) {
-    Intent intent = new Intent(ODO_SERVICE_PACKAGE);
-    intent.setPackage(ORCHESTRATOR_PACKAGE);
-
-    if (!context.bindService(intent, connection, Service.BIND_AUTO_CREATE)) {
-      throw new RuntimeException("Cannot connect to " + ODO_SERVICE_PACKAGE);
-    }
+    this.notificationService = notificationService;
   }
 
   @Override
@@ -158,38 +111,8 @@ public final class OrchestratedInstrumentationListener extends RunListener {
     }
   }
 
-  public void sendTestNotification(TestEvent type, Bundle bundle) throws RemoteException {
-    if (null == odoCallback) {
-      throw new IllegalStateException("Unable to send notification, callback is null");
-    }
+  private void sendTestNotification(TestEvent type, Bundle bundle) throws RemoteException {
     bundle.putString(KEY_TEST_EVENT, type.toString());
-
-    odoCallback.sendTestNotification(bundle);
-  }
-
-  public void addTests(Description description) {
-    if (description.isEmpty()) {
-      return;
-    }
-
-    if (description.isTest()) {
-      addTest(description.getClassName() + "#" + description.getMethodName());
-    } else {
-      for (Description child : description.getChildren()) {
-        addTests(child);
-      }
-    }
-  }
-
-  public void addTest(String test) {
-    if (null == odoCallback) {
-      throw new IllegalStateException("Unable to send test, callback is null");
-    }
-
-    try {
-      odoCallback.addTest(test);
-    } catch (RemoteException e) {
-      Log.e(TAG, "Unable to send test", e);
-    }
+    notificationService.sendTestNotification(bundle);
   }
 }
