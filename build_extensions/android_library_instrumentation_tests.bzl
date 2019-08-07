@@ -9,7 +9,7 @@ load(
     "infer_android_package_name",
 )
 
-def android_library_instrumentation_tests(name, srcs, deps, target_devices, **kwargs):
+def android_library_instrumentation_tests(name, srcs, deps, target_devices, android_package_name = None, **kwargs):
     """A rule for an instrumentation test whose target under test is an android_library.
 
     Will generate a 'self-instrumentating' test binary and other associated rules
@@ -31,10 +31,12 @@ def android_library_instrumentation_tests(name, srcs, deps, target_devices, **kw
       srcs: the test sources to generate rules for
       deps: the build dependencies to use for the generated test binary
       target_devices: array of device targets to execute on
+      android_package_name: Optional. Package name of the library. It could be inferred if unset
       **kwargs: arguments to pass to generated android_instrumentation_test rules
     """
     library_name = name
-    android_package_name = infer_android_package_name()
+    if android_package_name == None:
+        android_package_name = infer_android_package_name()
     native.android_binary(
         name = "target_stub_binary",
         manifest = "//build_extensions:AndroidManifest_target_stub.xml",
