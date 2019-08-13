@@ -24,15 +24,10 @@ import androidx.test.services.events.TestCase;
  * Denotes that test discovery has found a test case. The {@link TestCase} is provided along with
  * the event.
  */
-public class TestFoundEvent implements Parcelable {
+public class TestFoundEvent extends TestDiscoveryEvent {
+  public final TestCase testCase;
 
-  private final TestCase testCase;
-
-  public TestCase getTestCase() {
-    return testCase;
-  }
-
-  TestFoundEvent(TestCase testCase) {
+  public TestFoundEvent(TestCase testCase) {
     this.testCase = testCase;
   }
 
@@ -41,13 +36,8 @@ public class TestFoundEvent implements Parcelable {
   }
 
   @Override
-  public int describeContents() {
-    return 0;
-  }
-
-  @Override
   public void writeToParcel(Parcel parcel, int i) {
-    testCase.writeToParcel(parcel, 0);
+    testCase.writeToParcel(parcel, i);
   }
 
   public static final Parcelable.Creator<TestFoundEvent> CREATOR =

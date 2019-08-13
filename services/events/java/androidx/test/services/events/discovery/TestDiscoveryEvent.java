@@ -21,8 +21,7 @@ import android.os.Parcelable;
 
 /** Base class for different test discovery events to implement. */
 public class TestDiscoveryEvent implements Parcelable {
-
-  TestDiscoveryEvent(Parcel source) {}
+  TestDiscoveryEvent() {}
 
   @Override
   public int describeContents() {
@@ -36,7 +35,7 @@ public class TestDiscoveryEvent implements Parcelable {
       new Parcelable.Creator<TestDiscoveryEvent>() {
         @Override
         public TestDiscoveryEvent createFromParcel(Parcel source) {
-          return new TestDiscoveryEvent(source);
+          return new TestDiscoveryEvent();
         }
 
         @Override

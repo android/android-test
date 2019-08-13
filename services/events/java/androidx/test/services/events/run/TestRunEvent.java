@@ -18,38 +18,11 @@ package androidx.test.services.events.run;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.test.services.events.TestCase;
 
-/**
- * Base class for all [TestRunEvent]s to implement. Every {@link TestRunEvent} must have a {@link
- * TestCase} for it to be identified.
- */
+/** Base class for all other {@code TestRunEvents} to extend. */
 public class TestRunEvent implements Parcelable {
-
-  /** Returns the {@link TestCase} this event is associated to. */
-  public TestCase getTestCase() {
-    return testCase;
-  }
-
-  private final TestCase testCase;
-
-  /**
-   * Creates a {@link TestRunEvent} from an {@link Parcel}.
-   *
-   * @param source Android {@link Parcel} to read from.
-   */
-  TestRunEvent(Parcel source) {
-    testCase = new TestCase(source);
-  }
-
-  /**
-   * Constructor to create a {@link TestRunEvent}
-   *
-   * @param testCase the test case this event represents,
-   */
-  public TestRunEvent(TestCase testCase) {
-    this.testCase = testCase;
-  }
+  /** Creates a {@link TestRunEvent}. */
+  TestRunEvent() {}
 
   @Override
   public int describeContents() {
@@ -58,14 +31,13 @@ public class TestRunEvent implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel parcel, int i) {
-    testCase.writeToParcel(parcel, 0);
   }
 
   public static final Parcelable.Creator<TestRunEvent> CREATOR =
       new Parcelable.Creator<TestRunEvent>() {
         @Override
         public TestRunEvent createFromParcel(Parcel source) {
-          return new TestRunEvent(source);
+          return new TestRunEvent();
         }
 
         @Override

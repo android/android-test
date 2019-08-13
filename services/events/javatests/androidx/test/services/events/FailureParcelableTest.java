@@ -17,6 +17,7 @@
 package androidx.test.services.events;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Collections.emptyList;
 
 import android.os.Parcel;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -32,11 +33,11 @@ public class FailureParcelableTest {
 
   @Test
   public void failureToParcelableTest_basicException() {
-
     String stackTrace = "DummyTrace";
     String exceptionType = "NullPointerException";
     String message = "message";
-    Failure failure = new Failure(message, exceptionType, stackTrace);
+    TestCase testCase = new TestCase("MyTest", "testFoo", emptyList(), emptyList());
+    Failure failure = new Failure(message, exceptionType, stackTrace, testCase);
     Parcel parcel = Parcel.obtain();
     failure.writeToParcel(parcel, 0);
 
@@ -44,8 +45,10 @@ public class FailureParcelableTest {
 
     Failure failureFromParcel = Failure.CREATOR.createFromParcel(parcel);
 
-    assertThat(failureFromParcel.getFailureMessage()).isEqualTo(message);
-    assertThat(failureFromParcel.getFailureType()).isEqualTo(exceptionType);
-    assertThat(failureFromParcel.getStackTrace()).isEqualTo(stackTrace);
+    assertThat(failureFromParcel.failureMessage).isEqualTo(message);
+    assertThat(failureFromParcel.failureType).isEqualTo(exceptionType);
+    assertThat(failureFromParcel.stackTrace).isEqualTo(stackTrace);
+    assertThat(failureFromParcel.testCase.className).isEqualTo("MyTest");
+    assertThat(failureFromParcel.testCase.methodName).isEqualTo("testFoo");
   }
 }

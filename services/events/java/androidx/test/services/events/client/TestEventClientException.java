@@ -16,21 +16,15 @@
 
 package androidx.test.services.events.client;
 
-import android.os.RemoteException;
-import androidx.test.services.events.discovery.TestDiscoveryEvent;
+import androidx.test.services.events.TestEventException;
 
-/**
- * Base interface implemented by the test discovery client connection.
- *
- * @see TestDiscoveryConnectionImpl
- */
-public interface TestDiscoveryService {
-  /**
-   * Sends a TestDiscoveryEvent what have the test case to the {@link
-   * androidx.test.services.events.discovery.ITestDiscoveryEvent} service.
-   *
-   * @param testDiscoveryEvent TestDiscoveryEvent parcelable
-   * @throws RemoteException throws an exception if the connection to the Orchestrator fails
-   */
-  void addTest(TestDiscoveryEvent testDiscoveryEvent) throws RemoteException;
+/** A checked {@link Exception} indicating that a service call failed. */
+public final class TestEventClientException extends TestEventException {
+  public TestEventClientException(String message) {
+    super(message);
+  }
+
+  public TestEventClientException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

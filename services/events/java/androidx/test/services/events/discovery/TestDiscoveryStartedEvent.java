@@ -21,24 +21,11 @@ import android.os.Parcelable;
 
 /** Denotes that test discovery has started */
 public class TestDiscoveryStartedEvent extends TestDiscoveryEvent {
-
-  TestDiscoveryStartedEvent(Parcel source) {
-    super(source);
-  }
-
-  @Override
-  public int describeContents() {
-    return 0;
-  }
-
-  @Override
-  public void writeToParcel(Parcel parcel, int i) {}
-
   public static final Parcelable.Creator<TestDiscoveryStartedEvent> CREATOR =
       new Parcelable.Creator<TestDiscoveryStartedEvent>() {
         @Override
         public TestDiscoveryStartedEvent createFromParcel(Parcel source) {
-          return new TestDiscoveryStartedEvent(source);
+          return new TestDiscoveryStartedEvent();
         }
 
         @Override

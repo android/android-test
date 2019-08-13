@@ -16,20 +16,22 @@
 
 package androidx.test.services.events.client;
 
-import android.os.RemoteException;
+import androidx.annotation.NonNull;
 import androidx.test.services.events.run.TestRunEvent;
 
 /**
- * Base interface implemented by the test run service client connection, e.g. {@link
- * TestRunConnectionImpl}.
+ * Base interface implemented by the test notification client connection, e.g. {@link
+ * TestRunEventServiceConnection} and {@code LegacyOrchestratorConnection}.
  */
-public interface TestRunService {
+public interface TestRunEventService {
   /**
-   * Sends a test status event and related {@link androidx.test.services.events.TestCase} and {@link
-   * androidx.test.services.events.Failure} parcelables.
+   * Sends a test status event and its related {@link androidx.test.services.events.TestCase} and
+   * {@link androidx.test.services.events.Failure} parcelables.
    *
-   * @param testRunEvent parcelable with the {@link androidx.test.services.events.TestCase}
-   *     information.
+   * @param event an object that extends {@link androidx.test.services.events.run.TestRunEvent} to
+   *     indicate the test run progress and status
+   * @throws TestEventClientException throws an exception if the connection to the Orchestrator
+   *     fails
    */
-  void send(TestRunEvent testRunEvent) throws RemoteException;
+  void send(@NonNull TestRunEvent event) throws TestEventClientException;
 }

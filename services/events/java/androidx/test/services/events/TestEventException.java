@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package androidx.test.services.events.discovery;
+package androidx.test.services.events;
 
-import androidx.test.services.events.TestCase;
-import androidx.test.services.events.discovery.TestDiscoveryEvent;
+/** A checked {@link Exception} indicating that a test event operation failed. */
+public class TestEventException extends Exception {
+  public TestEventException(String message) {
+    super(message);
+  }
 
-/**
- * Defines an interface for {@link Instrumentation} (e.g. {@code AndroidJUnitRunner} to
- * communicate with the remote Orchestrator test discovery service.
- */
-interface ITestDiscoveryEvent {
-
-  /**
-   * Sends back notifications for the status of test discovery.
-   */
-  void send(in TestDiscoveryEvent testDiscoveryEvent);
+  public TestEventException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

@@ -21,27 +21,22 @@ import android.os.Parcelable;
 import androidx.test.services.events.TestCase;
 
 /**
- * Denotes that the test ended with a TEST_STARTED. It has the {@link TestCase} object to denote
- * which case this event is associated to.
+ * Denotes that the test ended with a TEST_STARTED. It has the {@link TestCase} object that this
+ * event is associated with.
  */
-public class TestStartedEvent extends TestRunEvent {
+public class TestStartedEvent extends TestRunEventWithTestCase {
 
   /**
-   * Constructor to create an {@link TestRunEvent} from an Android Parcel.
+   * Creates a {@link TestStartedEvent}.
    *
-   * @param source Android {@link Parcel} to read from.
+   * @param testCase the test case that this event is for
    */
-  TestStartedEvent(Parcel source) {
-    super(source);
+  public TestStartedEvent(TestCase testCase) {
+    super(testCase);
   }
 
-  /**
-   * Constructor to create {@link TestStartedEvent}.
-   *
-   * @param testCase the test case that this event is for.
-   */
-  TestStartedEvent(TestCase testCase) {
-    super(testCase);
+  private TestStartedEvent(Parcel source) {
+    super(source);
   }
 
   public static final Parcelable.Creator<TestStartedEvent> CREATOR =

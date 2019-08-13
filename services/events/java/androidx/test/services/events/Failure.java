@@ -18,6 +18,7 @@ package androidx.test.services.events;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import androidx.annotation.NonNull;
 
 /**
  * Denotes an android test failure, has details of the failure including stack trace / type and
@@ -26,31 +27,27 @@ import android.os.Parcelable;
 public final class Failure implements Parcelable {
 
   /** The failure message associated with the failure. */
-  private final String failureMessage;
+  public final String failureMessage;
 
   /** The Type of failure exception. E.g NullPointerException */
-  private final String failureType;
+  public final String failureType;
 
   /** The stack trace associated with the failure. */
-  private final String stackTrace;
+  public final String stackTrace;
 
-  public String getFailureMessage() {
-    return failureMessage;
-  }
-
-  public String getFailureType() {
-    return failureType;
-  }
-
-  public String getStackTrace() {
-    return stackTrace;
-  }
+  /** Test test that caused the failure. */
+  public final TestCase testCase;
 
   /** Constructor to create a {@link Failure}. */
-  public Failure(String failureMessage, String failureType, String stackTrace) {
+  public Failure(
+      @NonNull String failureMessage,
+      @NonNull String failureType,
+      @NonNull String stackTrace,
+      @NonNull TestCase testCase) {
     this.failureMessage = failureMessage;
     this.failureType = failureType;
     this.stackTrace = stackTrace;
+    this.testCase = testCase;
   }
 
   /**
@@ -62,6 +59,7 @@ public final class Failure implements Parcelable {
     failureMessage = source.readString();
     failureType = source.readString();
     stackTrace = source.readString();
+    testCase = source.readParcelable(TestCase.class.getClassLoader());
   }
 
   @Override
@@ -71,10 +69,10 @@ public final class Failure implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel parcel, int i) {
-
     parcel.writeString(failureMessage);
     parcel.writeString(failureType);
     parcel.writeString(stackTrace);
+    parcel.writeParcelable(testCase, i);
   }
 
   public static final Parcelable.Creator<Failure> CREATOR =
