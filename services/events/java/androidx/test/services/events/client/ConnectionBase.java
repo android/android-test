@@ -23,11 +23,13 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.IInterface;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 /**
- * The base interface that service connections have to extend. Handles connection to the service
- * proxy and callbacks to the caller.
+ * The base class that service connections have to extend. Handles connection to the service proxy
+ * and callbacks to the caller.
  */
 public class ConnectionBase<T extends IInterface> implements OrchestratorConnection {
   private static final String TAG = "OrchestratorConnection";
@@ -36,7 +38,7 @@ public class ConnectionBase<T extends IInterface> implements OrchestratorConnect
   private final ServiceFromBinder<T> serviceFromBinder;
   private final String serviceName;
   private final String servicePackage;
-  public T service = null;
+  @Nullable public T service = null;
 
   /** An interface to match the signature of {@link IInterface#asBinder()}. */
   public interface ServiceFromBinder<T extends IInterface> {
@@ -50,8 +52,7 @@ public class ConnectionBase<T extends IInterface> implements OrchestratorConnect
         public void onServiceConnected(ComponentName className, IBinder binder) {
           ConnectionBase.this.service = serviceFromBinder.asInterface(binder);
           Log.i(TAG, "Connected to " + serviceName);
-
-          // Callback the caller E.g. {@link AndroidJunitRunner} to start instrumentation since
+          // Notify the caller e.g. {@code AndroidJunitRunner} to start instrumentation since
           // service connection succeeded.
           listener.onTestEventClientConnect();
         }
@@ -63,11 +64,11 @@ public class ConnectionBase<T extends IInterface> implements OrchestratorConnect
         }
       };
 
-  ConnectionBase(
-      String serviceName,
-      String servicePackage,
-      ServiceFromBinder<T> serviceFromBinder,
-      TestEventClientConnectListener listener) {
+  public ConnectionBase(
+      @NonNull String serviceName,
+      @NonNull String servicePackage,
+      @NonNull ServiceFromBinder<T> serviceFromBinder,
+      @NonNull TestEventClientConnectListener listener) {
     this.serviceName = serviceName;
     this.servicePackage = servicePackage;
     this.listener = listener;
@@ -76,11 +77,11 @@ public class ConnectionBase<T extends IInterface> implements OrchestratorConnect
 
   /** {@inheritDoc} */
   @Override
-  public void connect(Context context) {
+  public void connect(@NonNull Context context) {
     Intent intent = new Intent(serviceName);
     intent.setPackage(servicePackage);
     if (!context.bindService(intent, connection, Service.BIND_AUTO_CREATE)) {
-      throw new RuntimeException("Cannot connect to " + serviceName);
+      throw new IllegalStateException("Cannot connect to " + serviceName);
     }
   }
 }

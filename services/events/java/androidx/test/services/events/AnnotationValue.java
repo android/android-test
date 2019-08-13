@@ -24,37 +24,14 @@ import java.util.List;
  * Represents a field value on an {@link java.lang.annotation.Annotation}. See <a
  * href="https://developer.android.com/reference/android/os/Parcelable.html">Android Parcelable </a>
  */
-public class AnnotationValue implements Parcelable {
+public final class AnnotationValue implements Parcelable {
 
-  private final String fieldName;
-  private List<String> fieldValues = new ArrayList<>();
-  private final String valueType;
-
-  public String getFieldName() {
-    return fieldName;
-  }
-
-  public List<String> getFieldValues() {
-    return fieldValues;
-  }
-
-  public String getValueType() {
-    return valueType;
-  }
+  public final String fieldName;
+  public final List<String> fieldValues;
+  public final String valueType;
 
   /**
-   * Constructor to create an {@link AnnotationValue} given an Android Parcel.
-   *
-   * @param source Android {@link Parcel} to read from.
-   */
-  public AnnotationValue(Parcel source) {
-    fieldName = source.readString();
-    source.readStringList(fieldValues);
-    valueType = source.readString();
-  }
-
-  /**
-   * ] Contructor to create an {@link AnnotationValue}.
+   * Constructor to create an {@link AnnotationValue}.
    *
    * @param fieldName Name of the field in a {@link java.lang.annotation.Annotation}
    * @param fieldValues Values of the annotations field represent as {@link String}
@@ -64,6 +41,13 @@ public class AnnotationValue implements Parcelable {
     this.fieldName = fieldName;
     this.fieldValues = fieldValues;
     this.valueType = valueType;
+  }
+
+  private AnnotationValue(Parcel source) {
+    fieldName = source.readString();
+    fieldValues = new ArrayList<>();
+    source.readStringList(fieldValues);
+    valueType = source.readString();
   }
 
   @Override

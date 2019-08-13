@@ -25,23 +25,8 @@ import androidx.test.services.events.TestCase;
  * Denotes that the test ended with a TEST_FAILURE. It has the {@link Failure} object to denote what
  * was the cause of the failure/error.
  */
-public class TestFailureEvent extends TestRunEvent {
-
-  public Failure getFailure() {
-    return failure;
-  }
-
-  private final Failure failure;
-
-  /**
-   * Constructor to create an {@link TestRunEvent} from an Android Parcel.
-   *
-   * @param source Android {@link Parcel} to read from.
-   */
-  TestFailureEvent(Parcel source) {
-    super(source);
-    failure = new Failure(source);
-  }
+public class TestFailureEvent extends TestRunEventWithTestCase {
+  public final Failure failure;
 
   /**
    * Constructor to create {@link TestFailureEvent}.
@@ -52,6 +37,11 @@ public class TestFailureEvent extends TestRunEvent {
   public TestFailureEvent(TestCase testCase, Failure failure) {
     super(testCase);
     this.failure = failure;
+  }
+
+  TestFailureEvent(Parcel source) {
+    super(source);
+    failure = new Failure(source);
   }
 
   @Override

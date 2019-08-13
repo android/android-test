@@ -23,24 +23,18 @@ import androidx.test.services.events.TestCase;
  * Denotes that the test ended with a TEST_FINISHED. It has the {@link TestCase} object to denote
  * which case this event is associated to.
  */
-public class TestFinishedEvent extends TestRunEvent {
-
-  /**
-   * Constructor to create an {@link TestRunEvent} from an Android Parcel.
-   *
-   * @param source Android {@link Parcel} to read from.
-   */
-  TestFinishedEvent(Parcel source) {
-    super(source);
-  }
-
+public class TestFinishedEvent extends TestRunEventWithTestCase {
   /**
    * Constructor to create {@link TestFinishedEvent}.
    *
    * @param testCase the test case that this event is for.
    */
-  TestFinishedEvent(TestCase testCase) {
+  public TestFinishedEvent(TestCase testCase) {
     super(testCase);
+  }
+
+  private TestFinishedEvent(Parcel source) {
+    super(source);
   }
 
   public static final Creator<TestFinishedEvent> CREATOR =

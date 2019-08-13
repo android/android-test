@@ -26,28 +26,28 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * Class to test parcelable {@link TestRunEvent}. We write and read from the parcel to test if every
- * thing is done correctly.
+ * Unit tests for the {@link TestRunEventWithTestCase} parcelable. We write and read from the parcel
+ * to test if every thing is done correctly.
  */
 @RunWith(AndroidJUnit4.class)
-public class TestRunEventParcelableTest {
+public class TestRunEventWithTestCaseTest {
 
   @Test
   public void testEventToParcelableTest_basicTestCaseParcelable() {
-
     String className = "Class";
     String methodName = "Method";
     TestCase testCase = new TestCase(className, methodName, new ArrayList<>(), new ArrayList<>());
 
-    TestRunEvent testRunEvent = new TestRunEvent(testCase);
+    TestRunEventWithTestCase testRunEvent = new TestRunEventWithTestCase(testCase);
     Parcel parcel = Parcel.obtain();
     testRunEvent.writeToParcel(parcel, 0);
 
     parcel.setDataPosition(0);
 
-    TestRunEvent testRunEventFromParcel = TestRunEvent.CREATOR.createFromParcel(parcel);
+    TestRunEventWithTestCase testRunEventFromParcel =
+        TestRunEventWithTestCase.CREATOR.createFromParcel(parcel);
 
-    assertThat(testRunEventFromParcel.getTestCase().getClassName()).isEqualTo(className);
-    assertThat(testRunEventFromParcel.getTestCase().getMethodName()).isEqualTo(methodName);
+    assertThat(testRunEventFromParcel.testCase.className).isEqualTo(className);
+    assertThat(testRunEventFromParcel.testCase.methodName).isEqualTo(methodName);
   }
 }

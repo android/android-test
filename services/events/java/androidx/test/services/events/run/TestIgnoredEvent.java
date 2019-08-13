@@ -23,24 +23,18 @@ import androidx.test.services.events.TestCase;
  * Denotes that the test ended with a TEST_IGNORED. It has the {@link TestCase} object to denote
  * which case this event is associated to.
  */
-public class TestIgnoredEvent extends TestRunEvent {
-
-  /**
-   * Constructor to create an {@link TestRunEvent} from an Android Parcel.
-   *
-   * @param source Android {@link Parcel} to read from.
-   */
-  TestIgnoredEvent(Parcel source) {
-    super(source);
-  }
-
+public class TestIgnoredEvent extends TestRunEventWithTestCase {
   /**
    * Constructor to create {@link TestFinishedEvent}.
    *
    * @param testCase the test case that this event is for.
    */
-  TestIgnoredEvent(TestCase testCase) {
+  public TestIgnoredEvent(TestCase testCase) {
     super(testCase);
+  }
+
+  private TestIgnoredEvent(Parcel source) {
+    super(source);
   }
 
   public static final Creator<TestIgnoredEvent> CREATOR =

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.orchestrator.instrumentationlistener;
+package androidx.test.services.events.client;
 
-import static junit.framework.Assert.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verify;
@@ -23,6 +22,7 @@ import static org.mockito.Mockito.verify;
 import android.os.Bundle;
 import android.os.RemoteException;
 import androidx.test.orchestrator.SampleJUnitTest;
+import androidx.test.orchestrator.callback.LegacyOrchestratorConnection;
 import androidx.test.orchestrator.callback.OrchestratorCallback;
 import androidx.test.orchestrator.junit.BundleJUnitUtils;
 import androidx.test.orchestrator.junit.ParcelableDescription;
@@ -40,28 +40,23 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-/** Unit tests for {@link OrchestrationListenerManager}. */
+/** Unit tests for {@link OrchestratedInstrumentationListener}. */
 @RunWith(RobolectricTestRunner.class)
-public class OrchestratedInstrumentationListenerTest
-    implements OrchestratedInstrumentationListener.OnConnectListener {
-
+public class OrchestratedInstrumentationListenerTest {
   @Mock OrchestratorCallback mockCallback;
+  @Mock TestEventClientConnectListener mockConnectListener;
 
   private OrchestratedInstrumentationListener listener;
   private Description jUnitDescription;
   private Failure jUnitFailure;
   private Result jUnitResult;
 
-  @Override
-  public void onOrchestratorConnect() {
-    // Do nothing
-  }
-
   @Before
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
-    listener = new OrchestratedInstrumentationListener(this);
-    listener.odoCallback = mockCallback;
+    LegacyOrchestratorConnection connection = new LegacyOrchestratorConnection(mockConnectListener);
+    connection.service = mockCallback;
+    listener = new OrchestratedInstrumentationListener(connection);
 
     Class<SampleJUnitTest> testClass = SampleJUnitTest.class;
     jUnitDescription = Description.createTestDescription(testClass, "sampleTest");
@@ -71,17 +66,6 @@ public class OrchestratedInstrumentationListenerTest
     jUnitListener.testRunStarted(jUnitDescription);
     jUnitListener.testStarted(jUnitDescription);
     jUnitListener.testFinished(jUnitDescription);
-  }
-
-  @Test
-  public void nullCallbackThrowsException() {
-    try {
-      listener.odoCallback = null;
-      listener.testRunStarted(jUnitDescription);
-      fail("Listener should throw an error if the callback is null");
-    } catch (IllegalStateException e) {
-      // as expected
-    }
   }
 
   @Test
@@ -152,12 +136,6 @@ public class OrchestratedInstrumentationListenerTest
 
     ParcelableDescription description = BundleJUnitUtils.getDescription(argument.getValue());
     compareDescription(description, jUnitDescription);
-  }
-
-  @Test
-  public void addTest() throws RemoteException {
-    listener.addTest("exampleTest");
-    verify(mockCallback).addTest("exampleTest");
   }
 
   private static void compareDescription(
