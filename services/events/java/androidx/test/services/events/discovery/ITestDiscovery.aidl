@@ -16,7 +16,7 @@
 
 package androidx.test.services.events.discovery;
 
-import androidx.test.services.events.discovery.TestCase;
+import androidx.test.services.events.TestCase;
 import androidx.test.services.events.discovery.TestDiscoveryEvent;
 
 /**

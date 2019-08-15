@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-package androidx.test.services.events.discovery;
+package androidx.test.services.events;
 
 parcelable TestCase;

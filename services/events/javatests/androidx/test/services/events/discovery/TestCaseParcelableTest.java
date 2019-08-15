@@ -20,6 +20,7 @@ import static org.junit.Assert.fail;
 
 import android.os.Parcel;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.services.events.TestCase;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,8 +29,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * Class to test parcelable {@link TestCase}. We write and read from the parcel to test every thing
- * done correctly.
+ * Class to test parcelable {@link androidx.test.services.events.TestCase}. We write and read from
+ * the parcel to test every thing done correctly.
  */
 @RunWith(AndroidJUnit4.class)
 public class TestCaseParcelableTest {
@@ -41,13 +42,16 @@ public class TestCaseParcelableTest {
   @Test
   public void testCaseToParcelableTest_basicClassNameAndMethodNameGiven() {
 
-    TestCase testCase = new TestCase(className, methodName, new ArrayList<>(), new ArrayList<>());
+    androidx.test.services.events.TestCase testCase =
+        new androidx.test.services.events.TestCase(
+            className, methodName, new ArrayList<>(), new ArrayList<>());
     Parcel parcel = Parcel.obtain();
     testCase.writeToParcel(parcel, 0);
 
     parcel.setDataPosition(0);
 
-    TestCase testCaseFromParcel = TestCase.CREATOR.createFromParcel(parcel);
+    androidx.test.services.events.TestCase testCaseFromParcel =
+        androidx.test.services.events.TestCase.CREATOR.createFromParcel(parcel);
 
     assertThat(testCaseFromParcel.getClassName()).isEqualTo(className);
     assertThat(testCaseFromParcel.getMethodName()).isEqualTo(methodName);
@@ -72,13 +76,16 @@ public class TestCaseParcelableTest {
       fail(e.toString());
     }
 
-    TestCase testCase = new TestCase(className, methodName, annotations, new ArrayList<>());
+    androidx.test.services.events.TestCase testCase =
+        new androidx.test.services.events.TestCase(
+            className, methodName, annotations, new ArrayList<>());
     Parcel parcel = Parcel.obtain();
     testCase.writeToParcel(parcel, 0);
 
     parcel.setDataPosition(0);
 
-    TestCase testCaseFromParcel = TestCase.CREATOR.createFromParcel(parcel);
+    androidx.test.services.events.TestCase testCaseFromParcel =
+        TestCase.CREATOR.createFromParcel(parcel);
 
     assertThat(testCaseFromParcel.getClassName()).isEqualTo(className);
     assertThat(testCaseFromParcel.getMethodName()).isEqualTo(methodName);
