@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.services.events.discovery;
+package androidx.test.services.events;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
 
 import android.os.Parcel;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.services.events.TestCase;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,8 +28,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * Class to test parcelable {@link androidx.test.services.events.TestCase}. We write and read from
- * the parcel to test every thing done correctly.
+ * Class to test parcelable {@link TestCase}. We write and read from the parcel to test every thing
+ * done correctly.
  */
 @RunWith(AndroidJUnit4.class)
 public class TestCaseParcelableTest {
@@ -42,16 +41,13 @@ public class TestCaseParcelableTest {
   @Test
   public void testCaseToParcelableTest_basicClassNameAndMethodNameGiven() {
 
-    androidx.test.services.events.TestCase testCase =
-        new androidx.test.services.events.TestCase(
-            className, methodName, new ArrayList<>(), new ArrayList<>());
+    TestCase testCase = new TestCase(className, methodName, new ArrayList<>(), new ArrayList<>());
     Parcel parcel = Parcel.obtain();
     testCase.writeToParcel(parcel, 0);
 
     parcel.setDataPosition(0);
 
-    androidx.test.services.events.TestCase testCaseFromParcel =
-        androidx.test.services.events.TestCase.CREATOR.createFromParcel(parcel);
+    TestCase testCaseFromParcel = TestCase.CREATOR.createFromParcel(parcel);
 
     assertThat(testCaseFromParcel.getClassName()).isEqualTo(className);
     assertThat(testCaseFromParcel.getMethodName()).isEqualTo(methodName);
@@ -76,16 +72,13 @@ public class TestCaseParcelableTest {
       fail(e.toString());
     }
 
-    androidx.test.services.events.TestCase testCase =
-        new androidx.test.services.events.TestCase(
-            className, methodName, annotations, new ArrayList<>());
+    TestCase testCase = new TestCase(className, methodName, annotations, new ArrayList<>());
     Parcel parcel = Parcel.obtain();
     testCase.writeToParcel(parcel, 0);
 
     parcel.setDataPosition(0);
 
-    androidx.test.services.events.TestCase testCaseFromParcel =
-        TestCase.CREATOR.createFromParcel(parcel);
+    TestCase testCaseFromParcel = TestCase.CREATOR.createFromParcel(parcel);
 
     assertThat(testCaseFromParcel.getClassName()).isEqualTo(className);
     assertThat(testCaseFromParcel.getMethodName()).isEqualTo(methodName);
@@ -93,7 +86,7 @@ public class TestCaseParcelableTest {
     // Assertion for the inserted method annotation
     assertThat(testCaseFromParcel.getMethodAnnotations()).isNotEmpty();
     assertThat(testCaseFromParcel.getMethodAnnotations().get(0).getName())
-        .isEqualTo("androidx.test.services.events.discovery.DummyAnnotation");
+        .isEqualTo("androidx.test.services.events.DummyAnnotation");
     assertThat(testCaseFromParcel.getMethodAnnotations().get(0).getValues().get(0).getFieldName())
         .isEqualTo("foo");
     assertThat(testCaseFromParcel.getMethodAnnotations().get(0).getValues().get(0).getFieldValues())

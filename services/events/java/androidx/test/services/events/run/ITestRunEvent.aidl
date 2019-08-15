@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.services.events.discovery;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package androidx.test.services.events.run;
+
+import androidx.test.services.events.run.TestRunEvent;
 
 /**
- * Dummy annotation to test if the annotations are parsed and converted into parcelables correctly.
+ * Defines an interface for remote {@link Instrumentation} service to send notifications / run
+ * events to the Test Runner.
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
-public @interface DummyAnnotation {
-  String foo();
+interface ITestRunEvent {
+
+  /**
+   * Sends back notifications for the status of test execution.
+   */
+  void send(in TestRunEvent testRunEvent);
 }
