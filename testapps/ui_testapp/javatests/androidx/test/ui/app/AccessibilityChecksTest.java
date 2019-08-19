@@ -147,14 +147,8 @@ public class AccessibilityChecksTest {
   }
 
   @Test
-  public void testEnableAccessibilityChecksTwice_throwsIllegalStateException() {
+  public void enableIsIdempotent() {
     AccessibilityChecks.enable();
-    try {
-      AccessibilityChecks.enable();
-    } catch (IllegalStateException e) {
-      // expected exception
-      return;
-    }
-    fail("Should have thrown an IllegalStateException for enabling checks while already enabled.");
+    AccessibilityChecks.enable();
   }
 }
