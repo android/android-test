@@ -23,15 +23,10 @@ import androidx.test.services.events.discovery.TestDiscoveryEvent;
  * Defines an interface for remote {@link Instrumentation} service to speak to the
  * Test Runner.
  */
-interface ITestDiscovery {
-  /**
-   * Test runner, when given the parameter to discover tests, adds the discovered
-   * tests to the service.
-   */
-  void addTestCase(in TestCase testCase);
+interface ITestDiscoveryEvent {
 
   /**
    * Sends back notifications for the status of test discovery.
    */
-  void sendDiscoveryNotification(in TestDiscoveryEvent testDiscoveryEvent);
+  void send(in TestDiscoveryEvent testDiscoveryEvent);
 }
