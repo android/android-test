@@ -82,10 +82,11 @@ public final class AccessibilityChecks {
    */
   public static AccessibilityValidator enable() {
     if (checksEnabled) {
-      throw new IllegalStateException("Accessibility checks already enabled!");
+      Log.w(TAG, "Accessibility checks already enabled.");
+    } else {
+      checksEnabled = true;
+      ViewActions.addGlobalAssertion("Accessibility Checks", ACCESSIBILITY_CHECK_ASSERTION);
     }
-    checksEnabled = true;
-    ViewActions.addGlobalAssertion("Accessibility Checks", ACCESSIBILITY_CHECK_ASSERTION);
     return CHECK_EXECUTOR;
   }
 

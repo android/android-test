@@ -84,9 +84,12 @@ public final class AccessibilityChecks {
    *     set
    */
   public static AccessibilityValidator enable() {
-    Checks.checkState(!checksEnabled, "Accessibility checks already enabled!");
-    checksEnabled = true;
-    ViewActions.addGlobalAssertion("Accessibility Checks", ACCESSIBILITY_CHECK_ASSERTION);
+    if (checksEnabled) {
+      Log.w(TAG, "Accessibility checks already enabled.");
+    } else {
+      checksEnabled = true;
+      ViewActions.addGlobalAssertion("Accessibility Checks", ACCESSIBILITY_CHECK_ASSERTION);
+    }
     return CHECK_EXECUTOR;
   }
 
