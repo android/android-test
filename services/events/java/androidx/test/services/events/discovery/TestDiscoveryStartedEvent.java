@@ -19,10 +19,12 @@ package androidx.test.services.events.discovery;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/** Base class for different test discovery events to implement. */
-public class TestDiscoveryEvent implements Parcelable {
+/** Denotes that test discovery has started */
+public class TestDiscoveryStartedEvent extends TestDiscoveryEvent {
 
-  TestDiscoveryEvent(Parcel source) {}
+  TestDiscoveryStartedEvent(Parcel source) {
+    super(source);
+  }
 
   @Override
   public int describeContents() {
@@ -32,16 +34,16 @@ public class TestDiscoveryEvent implements Parcelable {
   @Override
   public void writeToParcel(Parcel parcel, int i) {}
 
-  public static final Parcelable.Creator<TestDiscoveryEvent> CREATOR =
-      new Parcelable.Creator<TestDiscoveryEvent>() {
+  public static final Parcelable.Creator<TestDiscoveryStartedEvent> CREATOR =
+      new Parcelable.Creator<TestDiscoveryStartedEvent>() {
         @Override
-        public TestDiscoveryEvent createFromParcel(Parcel source) {
-          return new TestDiscoveryEvent(source);
+        public TestDiscoveryStartedEvent createFromParcel(Parcel source) {
+          return new TestDiscoveryStartedEvent(source);
         }
 
         @Override
-        public TestDiscoveryEvent[] newArray(int size) {
-          return new TestDiscoveryEvent[size];
+        public TestDiscoveryStartedEvent[] newArray(int size) {
+          return new TestDiscoveryStartedEvent[size];
         }
       };
 }
