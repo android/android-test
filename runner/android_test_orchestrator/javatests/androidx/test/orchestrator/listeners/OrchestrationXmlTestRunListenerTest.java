@@ -55,7 +55,7 @@ public class OrchestrationXmlTestRunListenerTest {
 
   @Before
   public void setUp() throws Exception {
-
+    this.reportDir = createTmpDir(); // TODO: use mock file dir instead
     outputStream = new ByteArrayOutputStream();
     resultReporter =
         new OrchestrationXmlTestRunListener() {
@@ -69,9 +69,7 @@ public class OrchestrationXmlTestRunListenerTest {
             return "ignore";
           }
         };
-    // TODO: use mock file dir instead
-    this.reportDir = createTmpDir();
-    resultReporter.setReportDir(this.reportDir);
+    resultReporter.reportDir = this.reportDir;
   }
 
   private File createTmpDir() throws IOException {

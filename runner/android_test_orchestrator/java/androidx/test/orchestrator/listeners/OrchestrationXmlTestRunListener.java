@@ -73,7 +73,6 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
 
   private static final String TESTSUITE = "testsuite";
   private static final String TESTCASE = "testcase";
-  private static final String ERROR = "error";
   private static final String FAILURE = "failure";
   private static final String SKIPPED_TAG = "skipped";
   private static final String ATTR_NAME = "name";
@@ -83,12 +82,8 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
   private static final String ATTR_ERRORS = "errors";
   private static final String ATTR_FAILURES = "failures";
   private static final String ATTR_SKIPPED = "skipped";
-  private static final String ATTR_ASSERTIOMS = "assertions";
   private static final String ATTR_TESTS = "tests";
-  // private static final String ATTR_TYPE = "type";
-  // private static final String ATTR_MESSAGE = "message";
   private static final String PROPERTIES = "properties";
-  private static final String PROPERTY = "property";
   private static final String ATTR_CLASSNAME = "classname";
   private static final String TIMESTAMP = "timestamp";
   private static final String HOSTNAME = "hostname";
@@ -96,45 +91,22 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
   /** the XML namespace */
   private static final String ns = null;
 
-  private String hostName = "localhost";
+  private static final String REPORT_DIRECTORY_NAME = "odo";
 
-  public static final String REPORT_DIRECTORY_NAME = "odo";
-
-  private File reportDir =
+  protected File reportDir =
       new File(Environment.getExternalStorageDirectory(), REPORT_DIRECTORY_NAME);
 
-  private String reportPath = "";
+  private String reportPath;
 
   private TestRunResult runResult = new TestRunResult();
 
-  private int numTests = 0;
   private long startTime;
-  private long finishTime;
-
-  /** Sets the report file to use. */
-  public void setReportDir(File file) {
-    reportDir = file;
-  }
-
-  public void setHostName(String hostName) {
-    this.hostName = hostName;
-  }
-
-  /**
-   * Returns the {@link TestRunResult}
-   *
-   * @return the test run results.
-   */
-  public TestRunResult getRunResult() {
-    return runResult;
-  }
 
   @Override
   public void orchestrationRunStarted(int testCount) {
     startTime = System.currentTimeMillis();
     runResult = new androidx.test.orchestrator.listeners.result.TestRunResult();
-    numTests = testCount;
-    runResult.testRunStarted("", numTests);
+    runResult.testRunStarted("", testCount);
   }
 
   @Override
@@ -172,7 +144,7 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
   public void testProcessFinished(String message) {}
 
   public void orchestrationRunFinished() {
-    finishTime = System.currentTimeMillis();
+    long finishTime = System.currentTimeMillis();
     long elapsedTime = finishTime - startTime;
     runResult.testRunEnded(elapsedTime, new HashMap<String, String>());
     generateDocument(reportDir, elapsedTime);
@@ -225,8 +197,7 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
     TimeZone gmt = TimeZone.getTimeZone("UTC");
     dateFormat.setTimeZone(gmt);
     dateFormat.setLenient(true);
-    String timestamp = dateFormat.format(new Date());
-    return timestamp;
+    return dateFormat.format(new Date());
   }
 
   /**
@@ -234,13 +205,12 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
    *
    * @param reportDir the root directory of the report.
    * @return a file
-   * @throws IOException
+   * @throws IOException if the report file could not be written
    */
-  protected File getResultFile(File reportDir) throws IOException {
+  private File getResultFile(File reportDir) throws IOException {
     File reportFile =
         File.createTempFile(TEST_RESULT_FILE_PREFIX, TEST_RESULT_FILE_SUFFIX, reportDir);
     Log.i(LOG_TAG, String.format("Created xml report file at %s", reportFile.getAbsolutePath()));
-
     return reportFile;
   }
 
@@ -250,7 +220,9 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
       // TODO: Add Support for directBoot mode for FTL.
       // Right now it returns back a empty OutputStream if the device is in directBootMode.
       if (Build.VERSION.SDK_INT >= 24) {
-        if (!((UserManager) getInstrumentation().getContext().getSystemService(UserManager.class))
+        if (!getInstrumentation()
+            .getContext()
+            .getSystemService(UserManager.class)
             .isUserUnlocked()) {
           Log.e(LOG_TAG, "Currently no way to write output streams in direct boot mode.");
           return ByteStreams.nullOutputStream();
@@ -263,11 +235,11 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
     return new BufferedOutputStream(new FileOutputStream(reportFile));
   }
 
-  protected String getTestSuiteName() {
+  private String getTestSuiteName() {
     return runResult.getName();
   }
 
-  void printTestResults(KXmlSerializer serializer, String timestamp, long elapsedTime)
+  private void printTestResults(KXmlSerializer serializer, String timestamp, long elapsedTime)
       throws IOException {
     serializer.startTag(ns, TESTSUITE);
     String name = getTestSuiteName();
@@ -283,6 +255,7 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
 
     serializer.attribute(ns, ATTR_TIME, Double.toString((double) elapsedTime / 1000.f));
     serializer.attribute(ns, TIMESTAMP, timestamp);
+    String hostName = "localhost";
     serializer.attribute(ns, HOSTNAME, hostName);
 
     serializer.startTag(ns, PROPERTIES);
@@ -296,11 +269,11 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
     serializer.endTag(ns, TESTSUITE);
   }
 
-  protected String getTestName(TestIdentifier testId) {
+  private String getTestName(TestIdentifier testId) {
     return testId.getTestName();
   }
 
-  void print(KXmlSerializer serializer, TestIdentifier testId, TestResult testResult)
+  private void print(KXmlSerializer serializer, TestIdentifier testId, TestResult testResult)
       throws IOException {
 
     serializer.startTag(ns, TESTCASE);
