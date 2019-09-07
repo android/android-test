@@ -9,7 +9,7 @@ load(
     "infer_android_package_name",
 )
 
-def android_app_instrumentation_tests(name, binary_target, srcs, deps, target_devices, **kwargs):
+def android_app_instrumentation_tests(name, binary_target, srcs, deps, target_devices, custom_package = None, **kwargs):
     """A rule for an instrumentation test whose target under test is an android_binary.
 
     The intent of this wrapper is to simplify the build API for creating instrumentation test rules
@@ -25,14 +25,17 @@ def android_app_instrumentation_tests(name, binary_target, srcs, deps, target_de
     Args:
       name: the name to use for the generated android_library rule. This is needed for build_cleaner to
         manage dependencies
-      binary_target: the android_binary under test  
+      binary_target: the android_binary under test
       srcs: the test sources to generate rules for
       deps: the build dependencies to use for the generated test binary
       target_devices: array of device targets to execute on
+      custom_package: Optional. Package name of the library. It could be inferred if unset
       **kwargs: arguments to pass to generated android_instrumentation_test rules
     """
     library_name = name
-    android_package_name = infer_android_package_name()
+    android_package_name = custom_package
+    if android_package_name == None:
+        android_package_name = infer_android_package_name()
 
     native.android_library(
         name = library_name,

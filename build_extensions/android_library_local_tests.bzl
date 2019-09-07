@@ -16,7 +16,7 @@ SRC="$<"
 $${JAR} -cf "$@" -C "$$(dirname "$${SRC}")" "$$(basename "$${SRC}")"
 """
 
-def android_library_local_tests(name, srcs, deps, **kwargs):
+def android_library_local_tests(name, srcs, deps, custom_package = None, **kwargs):
     """A rule for generating android_local_tests whose target under test is an android_library.
 
     Intended to have similar semantics as android_library_instrumentation_tests
@@ -31,10 +31,13 @@ def android_library_local_tests(name, srcs, deps, **kwargs):
         manage dependencies
       srcs: the test sources to generate rules for
       deps: the build dependencies to use for the generated local test
+      custom_package: Optional. Package name of the library. It could be inferred if unset
       **kwargs: arguments to pass to generated android_local_test rules
     """
 
-    android_package_name = infer_android_package_name()
+    android_package_name = custom_package
+    if android_package_name == None:
+        android_package_name = infer_android_package_name()
     library_name = name
     _robolectric_config(
         name = "%s_config" % library_name,
