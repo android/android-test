@@ -17,15 +17,21 @@ package androidx.test.ext.junit.rules
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Bundle
 
 /**
  * Constructs an [ActivityScenarioRule] of a given class.
  *
  * @param intent an intent to start activity or null to use the default one
+ * @param activityOptions an activity options bundle to be passed along with the intent to start
+ *        activity
  * @return ActivityScenarioRule which you can use to access to [ActivityScenario] from your tests
  */
-inline fun <reified A : Activity> activityScenarioRule(intent: Intent? = null):
-        ActivityScenarioRule<A> = when (intent) {
-          null -> ActivityScenarioRule(A::class.java)
-          else -> ActivityScenarioRule(intent)
-        }
+inline fun <reified A : Activity> activityScenarioRule(
+  intent: Intent? = null,
+  activityOptions: Bundle? = null
+):
+ActivityScenarioRule<A> = when (intent) {
+  null -> ActivityScenarioRule(A::class.java, activityOptions)
+  else -> ActivityScenarioRule(intent, activityOptions)
+}

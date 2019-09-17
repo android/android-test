@@ -190,7 +190,19 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    */
   public static <A extends Activity> ActivityScenario<A> launch(Class<A> activityClass) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(activityClass));
-    scenario.launchInternal();
+    scenario.launchInternal(/*activityOptions=*/ null);
+    return scenario;
+  }
+
+  /**
+   * @see #launch(Class)
+   * @param activityOptions an activity options bundle to be passed along with the intent to start
+   *     activity.
+   */
+  public static <A extends Activity> ActivityScenario<A> launch(
+      Class<A> activityClass, @Nullable Bundle activityOptions) {
+    ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(activityClass));
+    scenario.launchInternal(activityOptions);
     return scenario;
   }
 
@@ -209,15 +221,29 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    */
   public static <A extends Activity> ActivityScenario<A> launch(Intent startActivityIntent) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(startActivityIntent));
-    scenario.launchInternal();
+    scenario.launchInternal(/*activityOptions=*/ null);
+    return scenario;
+  }
+
+  /**
+   * @see #launch(Intent)
+   * @param activityOptions an activity options bundle to be passed along with the intent to start
+   *     activity.
+   */
+  public static <A extends Activity> ActivityScenario<A> launch(
+      Intent startActivityIntent, @Nullable Bundle activityOptions) {
+    ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(startActivityIntent));
+    scenario.launchInternal(activityOptions);
     return scenario;
   }
 
   /**
    * An internal helper method to perform initial launch operation for the given scenario instance
    * along with preconditions checks around device's configuration.
+   *
+   * @param activityOptions activity options bundle to be passed when launching this activity
    */
-  private void launchInternal() {
+  private void launchInternal(@Nullable Bundle activityOptions) {
     checkState(
         Settings.System.getInt(
                 getInstrumentation().getTargetContext().getContentResolver(),
@@ -231,7 +257,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
 
     ActivityLifecycleMonitorRegistry.getInstance().addLifecycleCallback(activityLifecycleObserver);
 
-    activityInvoker.startActivity(startActivityIntent);
+    activityInvoker.startActivity(startActivityIntent, activityOptions);
 
     // Accept any steady states. An activity may start another activity in its onCreate method. Such
     // an activity goes back to created or started state immediately after it is resumed.

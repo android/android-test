@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import android.util.Log;
@@ -55,6 +56,10 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
   /** A bundle key to retrieve an intent to start test target activity in extras bundle. */
   private static final String TARGET_ACTIVITY_INTENT_KEY =
       "androidx.test.core.app.InstrumentationActivityInvoker.START_TARGET_ACTIVITY_INTENT_KEY";
+
+  /** A bundle key to retrieve an options bundle to start test target activity in extras bundle. */
+  private static final String TARGET_ACTIVITY_OPTIONS_BUNDLE_KEY =
+      "androidx.test.core.app.InstrumentationActivityInvoker.TARGET_ACTIVITY_OPTIONS_BUNDLE_KEY";
 
   /**
    * An intent action broadcasted by {@link BootstrapActivity} notifying the activity receives
@@ -142,22 +147,34 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
         isTargetActivityStarted = true;
         PendingIntent startTargetActivityIntent =
             checkNotNull(getIntent().getParcelableExtra(TARGET_ACTIVITY_INTENT_KEY));
+        Bundle options = getIntent().getBundleExtra(TARGET_ACTIVITY_OPTIONS_BUNDLE_KEY);
         try {
-          // Override and disable FLAG_ACTIVITY_NEW_TASK flag by flagsMask and flagsValue.
-          // PendingIntentRecord#sendInner() will mask the original intent flag with the flagsMask
-          // then override those bits with the new flagsValue specified here. This override is
-          // necessary because if the activity is started as a new task ActivityStarter disposes
-          // the originator information and the result is never be delivered. Instead you will get
-          // an error "Activity is launching as a new task, so cancelling activity result." and
-          // #onActivityResult() will be invoked immediately with result code
-          // Activity#RESULT_CANCELED.
-          startIntentSenderForResult(
-              startTargetActivityIntent.getIntentSender(),
-              /*requestCode=*/ 0,
-              /*fillInIntent=*/ null,
-              /*flagsMask=*/ Intent.FLAG_ACTIVITY_NEW_TASK,
-              /*flagsValues=*/ 0,
-              /*extraFlags=*/ 0);
+          if (options == null || Build.VERSION.SDK_INT < 16) {
+            // Override and disable FLAG_ACTIVITY_NEW_TASK flag by flagsMask and flagsValue.
+            // PendingIntentRecord#sendInner() will mask the original intent flag with the flagsMask
+            // then override those bits with the new flagsValue specified here. This override is
+            // necessary because if the activity is started as a new task ActivityStarter disposes
+            // the originator information and the result is never be delivered. Instead you will get
+            // an error "Activity is launching as a new task, so cancelling activity result." and
+            // #onActivityResult() will be invoked immediately with result code
+            // Activity#RESULT_CANCELED.
+            startIntentSenderForResult(
+                startTargetActivityIntent.getIntentSender(),
+                /*requestCode=*/ 0,
+                /*fillInIntent=*/ null,
+                /*flagsMask=*/ Intent.FLAG_ACTIVITY_NEW_TASK,
+                /*flagsValues=*/ 0,
+                /*extraFlags=*/ 0);
+          } else {
+            startIntentSenderForResult(
+                startTargetActivityIntent.getIntentSender(),
+                /*requestCode=*/ 0,
+                /*fillInIntent=*/ null,
+                /*flagsMask=*/ Intent.FLAG_ACTIVITY_NEW_TASK,
+                /*flagsValues=*/ 0,
+                /*extraFlags=*/ 0,
+                options);
+          }
         } catch (IntentSender.SendIntentException e) {
           Log.e(TAG, "Failed to start target activity.", e);
           throw new RuntimeException(e);
@@ -234,7 +251,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
      * Waits for the activity result to be available until the timeout and returns the result.
      *
      * @throws NullPointerException if the result doesn't become available after the timeout
-     * @return activity result of which {@link #startActivity(Intent)} starts
+     * @return activity result of which {@link #startActivity} starts
      */
     public ActivityResult getActivityResult() {
       try {
@@ -328,12 +345,12 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     }
   }
 
-  /** A waiter to observe activity result that is started by {@link #startActivity(Intent)}. */
+  /** A waiter to observe activity result that is started by {@link #startActivity}. */
   @Nullable private ActivityResultWaiter activityResultWaiter;
 
   /** Starts an Activity using the given intent. */
   @Override
-  public void startActivity(Intent intent) {
+  public void startActivity(Intent intent, @Nullable Bundle activityOptions) {
     // make sure the intent can resolve an activity
     ActivityInfo ai = intent.resolveActivityInfo(getApplicationContext().getPackageManager(), 0);
     if (ai == null) {
@@ -360,7 +377,8 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
                         getApplicationContext(),
                         /*requestCode=*/ 0,
                         intent,
-                        /*flags=*/ PendingIntent.FLAG_UPDATE_CURRENT)));
+                        /*flags=*/ PendingIntent.FLAG_UPDATE_CURRENT))
+                .putExtra(TARGET_ACTIVITY_OPTIONS_BUNDLE_KEY, activityOptions));
   }
 
   @Override
