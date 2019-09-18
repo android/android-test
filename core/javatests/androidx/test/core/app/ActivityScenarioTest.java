@@ -24,6 +24,7 @@ import static org.robolectric.annotation.LooperMode.Mode.PAUSED;
 import static org.robolectric.annotation.TextLayoutMode.Mode.REALISTIC;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import androidx.lifecycle.Lifecycle.State;
 import android.content.Intent;
 import android.os.Handler;
@@ -35,6 +36,7 @@ import androidx.test.core.app.testing.RecordingActivity;
 import androidx.test.core.app.testing.RecreationRecordingActivity;
 import androidx.test.core.app.testing.RedirectingActivity;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
@@ -456,6 +458,18 @@ public final class ActivityScenarioTest {
                     "onWindowFocusChanged true",
                     "post from onWindowFocusChanged true")
                 .inOrder());
+  }
+
+  @Test
+  @SdkSuppress(minSdkVersion = 16) // ActivityOptions is added in API 16.
+  public void launch_withActivityOptionsBundle() throws Exception {
+    try (ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(
+            RecreationRecordingActivity.class,
+            ActivityOptions.makeCustomAnimation(ApplicationProvider.getApplicationContext(), 0, 0)
+                .toBundle())) {
+      assertThat(scenario.getState()).isEqualTo(State.RESUMED);
+    }
   }
 
   private static Stage lastLifeCycleTransition(Activity activity) {

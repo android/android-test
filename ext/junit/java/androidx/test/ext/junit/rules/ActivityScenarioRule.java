@@ -19,6 +19,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.test.core.app.ActivityScenario;
 import org.junit.rules.ExternalResource;
@@ -69,12 +70,31 @@ public final class ActivityScenarioRule<A extends Activity> extends ExternalReso
   }
 
   /**
-   * Constructs ActivityScenarioRule for a given activity class and intent.
+   * @see #ActivityScenarioRule(Class)
+   * @param activityOptions an activity options bundle to be passed along with the intent to start
+   *     activity.
+   */
+  public ActivityScenarioRule(Class<A> activityClass, @Nullable Bundle activityOptions) {
+    scenarioSupplier = () -> ActivityScenario.launch(checkNotNull(activityClass), activityOptions);
+  }
+
+  /**
+   * Constructs ActivityScenarioRule with a given intent.
    *
-   * @param startActivityIntent an intent to start the activity
+   * @param startActivityIntent an intent to start an activity
    */
   public ActivityScenarioRule(Intent startActivityIntent) {
     scenarioSupplier = () -> ActivityScenario.launch(checkNotNull(startActivityIntent));
+  }
+
+  /**
+   * @see #ActivityScenarioRule(Intent)
+   * @param activityOptions an activity options bundle to be passed along with the intent to start
+   *     activity.
+   */
+  public ActivityScenarioRule(Intent startActivityIntent, @Nullable Bundle activityOptions) {
+    scenarioSupplier =
+        () -> ActivityScenario.launch(checkNotNull(startActivityIntent), activityOptions);
   }
 
   @Override
