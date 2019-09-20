@@ -86,7 +86,7 @@ public enum GeneralLocation implements CoordinatesProvider {
    * Translates the given coordinates by the given distances. The distances are given in term of the
    * view's size -- 1.0 means to translate by an amount equivalent to the view's length.
    */
-  static CoordinatesProvider translate(
+  public static CoordinatesProvider translate(
       final CoordinatesProvider coords, final float dx, final float dy) {
     return new TranslatedCoordinatesProvider(coords, dx, dy);
   }
