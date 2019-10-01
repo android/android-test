@@ -481,7 +481,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       startedActivity.cancel(true);
       throw new RuntimeException(
           String.format(
-              "Could not launch intent %s within %s seconds."
+              "Could not launch intent %s within %s milliseconds."
                   + " Perhaps the main thread has not gone idle within a reasonable amount of "
                   + "time? There could be an animation or something constantly repainting the "
                   + "screen. Or the activity is doing network calls on creation? See the "
