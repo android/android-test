@@ -77,7 +77,8 @@ class TestLoader {
         logDebug(String.format("Skipping class %s: not a valid test", loadedClass.getName()));
         runner = null;
       }
-    } catch (ClassNotFoundException e) {
+      // Can get NoClassDefFoundError on Android L when a class extends a non-existent class.
+    } catch (ClassNotFoundException | NoClassDefFoundError e) {
       String errMsg = String.format("Could not find class: %s", className);
       Log.e(LOG_TAG, errMsg);
       Description description = Description.createSuiteDescription(className);
