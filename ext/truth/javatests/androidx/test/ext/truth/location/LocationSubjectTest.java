@@ -39,6 +39,8 @@ public class LocationSubjectTest {
     Location other = new Location(location);
 
     assertThat(location).isEqualTo(other);
+
+    assertThat((Location) null).isEqualTo(null);
   }
 
   @Test
@@ -59,6 +61,14 @@ public class LocationSubjectTest {
     } catch (AssertionError e) {
       assertThat(e).factValue("expected").isEqualTo("3");
       assertThat(e).factValue("but was").isEqualTo("2");
+    }
+
+    try {
+      assertThat(location).isEqualTo(null);
+      fail("Should have thrown");
+    } catch (AssertionError e) {
+      assertThat(e).factValue("expected").isEqualTo("null");
+      assertThat(e).factValue("but was").isEqualTo(location.toString());
     }
   }
 

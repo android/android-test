@@ -18,6 +18,7 @@ package androidx.test.ext.truth.location;
 import android.location.Location;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
+import androidx.annotation.Nullable;
 import androidx.test.ext.truth.os.BundleSubject;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.Subject;
@@ -36,12 +37,27 @@ public class LocationSubject extends Subject {
 
   private final Location actual;
 
-  private LocationSubject(FailureMetadata failureMetadata, Location subject) {
+  private LocationSubject(FailureMetadata failureMetadata, @Nullable Location subject) {
     super(failureMetadata, subject);
     this.actual = subject;
   }
 
-  public void isEqualTo(Location other) {
+  @Override
+  public void isEqualTo(@Nullable Object other) {
+    if (other instanceof Location) {
+      isEqualTo((Location) other);
+      return;
+    }
+
+    super.isEqualTo(other);
+  }
+
+  public void isEqualTo(@Nullable Location other) {
+    if (actual == null || other == null) {
+      super.isEqualTo(other);
+      return;
+    }
+
     check("getProvider()").that(actual.getProvider()).isEqualTo(other.getProvider());
     check("getTime()").that(actual.getTime()).isEqualTo(other.getTime());
     if (Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {

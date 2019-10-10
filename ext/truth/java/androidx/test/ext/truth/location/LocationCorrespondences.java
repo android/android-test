@@ -32,6 +32,12 @@ public final class LocationCorrespondences {
   public static Correspondence<Location, Location> equality() {
     return Correspondence.from(
         (actual, expected) -> {
+          if (actual == expected) {
+            return true;
+          }
+          if (actual == null || expected == null) {
+            return false;
+          }
           if (!Objects.equal(actual.getProvider(), expected.getProvider())) {
             return false;
           }
