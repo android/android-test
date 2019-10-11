@@ -38,6 +38,9 @@ public class TestOutputEmitter {
                 public boolean captureWindowHierarchy(String outputName) {
                   return false;
                 }
+
+                @Override
+                public void dumpStackTrace(String outputName, Throwable exception) {}
               });
 
   private TestOutputEmitter() {}
@@ -55,5 +58,9 @@ public class TestOutputEmitter {
   /** Output the window hierarchy XML dump to the execution environment. */
   public static boolean captureWindowHierarchy(String outputName) {
     return debugHandler.captureWindowHierarchy(outputName);
+  }
+
+  public static void dumpStackTrace(String outputName, Throwable exception) {
+    debugHandler.dumpStackTrace(outputName, exception);
   }
 }

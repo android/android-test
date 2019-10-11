@@ -29,11 +29,13 @@ import android.util.Log;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.MediumTest;
 import androidx.test.filters.SmallTest;
+import androidx.test.internal.platform.util.TestOutputEmitter;
 import androidx.test.internal.runner.RunnerArgs;
 import androidx.test.internal.runner.TestExecutor;
 import androidx.test.internal.runner.TestRequestBuilder;
 import androidx.test.internal.runner.listener.ActivityFinisherRunListener;
 import androidx.test.internal.runner.listener.CoverageListener;
+import androidx.test.internal.runner.listener.CrashDumperListener;
 import androidx.test.internal.runner.listener.DelayInjector;
 import androidx.test.internal.runner.listener.InstrumentationResultPrinter;
 import androidx.test.internal.runner.listener.LogRunListener;
@@ -430,6 +432,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
       builder.addRunListener(new SuiteAssignmentPrinter());
     } else {
       builder.addRunListener(new LogRunListener());
+      builder.addRunListener(new CrashDumperListener());
       if (orchestratorListener != null) {
         builder.addRunListener(orchestratorListener);
       } else {
@@ -466,6 +469,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
       builder.addRunListener(new SuiteAssignmentPrinter());
     } else {
       builder.addRunListener(new LogRunListener());
+      builder.addRunListener(new CrashDumperListener());
       addDelayListener(args, builder);
       addCoverageListener(args, builder);
       if (orchestratorListener != null) {
@@ -518,11 +522,14 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
 
   @Override
   public boolean onException(Object obj, Throwable e) {
+    Log.w(LOG_TAG, "Instrumentation process crashed.");
     InstrumentationResultPrinter instResultPrinter = getInstrumentationResultPrinter();
     if (instResultPrinter != null) {
       // report better error message back to Instrumentation results.
       instResultPrinter.reportProcessCrash(e);
     }
+    TestOutputEmitter.dumpStackTrace("stacktrace.pb", e);
+    TestOutputEmitter.dumpStackTrace("stacktrace.txt", e);
     return super.onException(obj, e);
   }
 

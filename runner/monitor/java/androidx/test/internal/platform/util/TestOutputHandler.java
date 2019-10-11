@@ -30,4 +30,12 @@ public interface TestOutputHandler {
 
   /** Dump the window hierarchy and store it in test outputs */
   boolean captureWindowHierarchy(String outputName);
+
+  /**
+   * Dump the stack trace of the given {@code exception} to file.
+   *
+   * @param outputName the output file name.
+   * @param exception the exception whose stack trace shall be written to file.
+   */
+  void dumpStackTrace(String outputName, Throwable exception);
 }

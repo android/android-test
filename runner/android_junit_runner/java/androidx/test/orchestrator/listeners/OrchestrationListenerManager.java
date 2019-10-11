@@ -85,7 +85,8 @@ public final class OrchestrationListenerManager {
             new ParcelableFailure(
                 lastDescription,
                 new Throwable(
-                    "Test instrumentation process crashed. Check " + outputFile + " for details")));
+                    "Test instrumentation process crashed. Check the stacktrace.txt file for"
+                        + " details.")));
         listener.testFinished(lastDescription);
       }
     }
