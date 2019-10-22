@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.ext.truth.content.IntentSubject;
+import com.google.common.collect.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -93,5 +94,21 @@ public class BundleSubjectTest {
     Intent intent = new Intent("bar");
     bundle.putParcelable("foo", intent);
     assertThat(bundle).parcelableAsType("foo", IntentSubject.intents()).hasAction("bar");
+  }
+
+  @Test
+  public void stringArrayList() {
+    Bundle bundle = new Bundle();
+    bundle.putStringArrayList("foo", Lists.newArrayList("bar", "baz"));
+    assertThat(bundle).stringArrayList("foo").containsExactly("bar", "baz").inOrder();
+  }
+
+  @Test
+  public void parcelableArrayList() {
+    Bundle bundle = new Bundle();
+    Intent intent1 = new Intent("bar");
+    Intent intent2 = new Intent("baz");
+    bundle.putParcelableArrayList("foo", Lists.newArrayList(intent1, intent2));
+    assertThat(bundle).parcelableArrayList("foo").containsExactly(intent1, intent2).inOrder();
   }
 }

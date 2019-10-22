@@ -22,6 +22,7 @@ import android.os.Parcelable;
 import com.google.common.truth.BooleanSubject;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.IntegerSubject;
+import com.google.common.truth.IterableSubject;
 import com.google.common.truth.LongSubject;
 import com.google.common.truth.StringSubject;
 import com.google.common.truth.Subject;
@@ -86,6 +87,14 @@ public final class BundleSubject extends Subject {
   public <T extends Parcelable, SubjectT extends Subject> SubjectT parcelableAsType(
       String key, Subject.Factory<SubjectT, T> subjectFactory) {
     return check("getParcelable(%s)", key).about(subjectFactory).that(actual.<T>getParcelable(key));
+  }
+
+  public IterableSubject stringArrayList(String key) {
+    return check("getStringArrayList(%s)", key).that(actual.getStringArrayList(key));
+  }
+
+  public IterableSubject parcelableArrayList(String key) {
+    return check("getParcelableArrayList(%s)", key).that(actual.getParcelableArrayList(key));
   }
 
   public void containsKey(String key) {
