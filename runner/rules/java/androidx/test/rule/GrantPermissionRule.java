@@ -19,6 +19,7 @@ package androidx.test.rule;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.Manifest.permission;
+import android.os.Build.VERSION;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.annotation.Beta;
@@ -97,6 +98,7 @@ public class GrantPermissionRule implements TestRule {
 
   private void grantPermissions(String... permissions) {
     Set<String> permissionSet = satisfyPermissionDependencies(permissions);
+    permissionSet = removeUnsupportedPermissions(permissionSet);
     permissionGranter.addPermissions(permissionSet.toArray(new String[permissionSet.size()]));
   }
 
@@ -108,6 +110,14 @@ public class GrantPermissionRule implements TestRule {
       permissionList.add(permission.READ_EXTERNAL_STORAGE);
     }
     return permissionList;
+  }
+
+  @VisibleForTesting
+  Set<String> removeUnsupportedPermissions(Set<String> permissions) {
+    if (VERSION.SDK_INT < 29) {
+      permissions.remove(permission.ACCESS_BACKGROUND_LOCATION);
+    }
+    return permissions;
   }
 
   @Override

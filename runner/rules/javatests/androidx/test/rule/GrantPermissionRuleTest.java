@@ -26,8 +26,11 @@ import static org.mockito.Mockito.verify;
 
 import android.Manifest.permission;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
 import androidx.test.runner.permission.PermissionRequester;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,5 +87,43 @@ public class GrantPermissionRuleTest {
     assertThat(
         grantPermissionRule.satisfyPermissionDependencies(RUNTIME_PERMISSION1),
         not(contains(permission.READ_EXTERNAL_STORAGE)));
+  }
+
+  @Test
+  @SdkSuppress(minSdkVersion = 29)
+  public void removeUnsupportPermissions_api29AndUp_doesNotRemoveBackgroundLocation() {
+    GrantPermissionRule grantPermissionRule = new GrantPermissionRule(permissionRequester);
+    Set<String> permissions =
+        new HashSet<>(
+            Arrays.asList(permission.ACCESS_BACKGROUND_LOCATION, permission.ACCESS_FINE_LOCATION));
+    Set<String> supportedPermissions =
+        grantPermissionRule.removeUnsupportedPermissions(permissions);
+    assertThat(supportedPermissions, hasSize(2));
+    assertThat(
+        supportedPermissions,
+        containsInAnyOrder(permission.ACCESS_BACKGROUND_LOCATION, permission.ACCESS_FINE_LOCATION));
+  }
+
+  @Test
+  @SdkSuppress(maxSdkVersion = 28)
+  public void removeUnsupportedPermissions_api28AndBelow_removesBackgroundLocation() {
+    GrantPermissionRule grantPermissionRule = new GrantPermissionRule(permissionRequester);
+    Set<String> permissions =
+        new HashSet<>(
+            Arrays.asList(permission.ACCESS_BACKGROUND_LOCATION, permission.ACCESS_FINE_LOCATION));
+    Set<String> supportedPermissions =
+        grantPermissionRule.removeUnsupportedPermissions(permissions);
+    assertThat(supportedPermissions, hasSize(1));
+    assertThat(supportedPermissions, containsInAnyOrder(permission.ACCESS_FINE_LOCATION));
+  }
+
+  @Test
+  public void removeUnsupportedPermissions_doesNotRemoveSupportedPermissions() {
+    GrantPermissionRule grantPermissionRule = new GrantPermissionRule(permissionRequester);
+    Set<String> permissions = new HashSet<>(Arrays.asList(permission.CAMERA));
+    Set<String> supportedPermissions =
+        grantPermissionRule.removeUnsupportedPermissions(permissions);
+    assertThat(supportedPermissions, hasSize(1));
+    assertThat(supportedPermissions, containsInAnyOrder(permission.CAMERA));
   }
 }
