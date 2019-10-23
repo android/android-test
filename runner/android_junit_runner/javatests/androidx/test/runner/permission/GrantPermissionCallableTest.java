@@ -68,8 +68,21 @@ public class GrantPermissionCallableTest {
     assertThat(grantCallable.call(), equalTo(Result.FAILURE));
   }
 
+  @Test
+  public void grantPermissionCallable_safeGrantingFailure() throws Exception {
+    RequestPermissionCallable grantCallable = withSafeGrantPermissionsCallable(RUNTIME_PERMISSION1);
+    when(targetContext.checkCallingOrSelfPermission(RUNTIME_PERMISSION1))
+        .thenReturn(PackageManager.PERMISSION_DENIED);
+
+    assertThat(grantCallable.call(), equalTo(Result.SUCCESS));
+  }
+
   private RequestPermissionCallable withGrantPermissionCallable(String permission) {
     return new GrantPermissionCallable(shellCommand, targetContext, permission);
+  }
+
+  private RequestPermissionCallable withSafeGrantPermissionsCallable(String permission) {
+    return new GrantPermissionCallable(shellCommand, targetContext, permission, Result.SUCCESS);
   }
 
   private void withStubbedTargetPackage() {

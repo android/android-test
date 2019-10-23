@@ -82,8 +82,8 @@ public class GrantPermissionRule implements TestRule {
   /**
    * Static factory method that grants the requested permissions.
    *
-   * <p>Permissions will be granted before any methods annotated with {@code &#64;Before} but before
-   * any test method execution.
+   * <p>Permissions will be granted before any methods annotated with {@code @Before} but before any
+   * test method execution.
    *
    * @param permissions a variable list of Android permissions
    * @return {@link GrantPermissionRule}
@@ -95,9 +95,31 @@ public class GrantPermissionRule implements TestRule {
     return grantPermissionRule;
   }
 
+  /**
+   * Static factory method that attempts to grant the requested permissions.
+   *
+   * <p>Permissions will be granted before any methods annotated with {@code @Before} but before any
+   * test method execution. Failures to grant any permission will be ignored.
+   *
+   * @param permissions a variable list of Android permissions
+   * @return {@link GrantPermissionRule}
+   * @see android.Manifest.permission
+   */
+  public static GrantPermissionRule safeGrant(String... permissions) {
+    GrantPermissionRule grantPermissionRule = new GrantPermissionRule();
+    grantPermissionRule.safeGrantPermissions(permissions);
+    return grantPermissionRule;
+  }
+
   private void grantPermissions(String... permissions) {
     Set<String> permissionSet = satisfyPermissionDependencies(permissions);
     permissionGranter.addPermissions(permissionSet.toArray(new String[permissionSet.size()]));
+  }
+
+  private void safeGrantPermissions(String... permissions) {
+    Set<String> permissionSet = satisfyPermissionDependencies(permissions);
+    permissionGranter.addOptionalPermissions(
+        permissionSet.toArray(new String[permissionSet.size()]));
   }
 
   @VisibleForTesting

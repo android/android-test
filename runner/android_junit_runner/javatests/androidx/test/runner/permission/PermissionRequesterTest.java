@@ -91,9 +91,39 @@ public class PermissionRequesterTest {
 
   @Test
   @SdkSuppress(minSdkVersion = 23)
-  public void duplicatePermissionThrows() {
+  public void permissionAddsOptionalPermissionToSet() {
+    RequestPermissionCallable requestPermissionCallable1 =
+        withSafeGrantPermissionCallable(RUNTIME_PERMISSION1);
+    RequestPermissionCallable requestPermissionCallable2 =
+        withSafeGrantPermissionCallable(RUNTIME_PERMISSION2);
+    RequestPermissionCallable requestPermissionCallable3 =
+        withSafeGrantPermissionCallable(RUNTIME_PERMISSION3);
+
+    permissionRequester.addPermissions(RUNTIME_PERMISSION1);
+    permissionRequester.addPermissions(RUNTIME_PERMISSION2);
+    permissionRequester.addPermissions(RUNTIME_PERMISSION3);
+
+    assertThat(permissionRequester.requestedPermissions, hasSize(3));
+    assertThat(
+        permissionRequester.requestedPermissions,
+        containsInAnyOrder(
+            equalTo(requestPermissionCallable1),
+            equalTo(requestPermissionCallable2),
+            equalTo(requestPermissionCallable3)));
+  }
+
+  @Test
+  @SdkSuppress(minSdkVersion = 23)
+  public void addPermissions_duplicatePermissionThrows() {
     expected.expect(IllegalStateException.class);
     permissionRequester.addPermissions(RUNTIME_PERMISSION1, RUNTIME_PERMISSION1);
+  }
+
+  @Test
+  @SdkSuppress(minSdkVersion = 23)
+  public void addOptionalPermissions_duplicatePermissionThrows() {
+    expected.expect(IllegalStateException.class);
+    permissionRequester.addOptionalPermissions(RUNTIME_PERMISSION1, RUNTIME_PERMISSION1);
   }
 
   @Test
@@ -150,6 +180,10 @@ public class PermissionRequesterTest {
 
   private RequestPermissionCallable withGrantPermissionCallable(String permission) {
     return new GrantPermissionCallable(shellCommand, targetContext, permission);
+  }
+
+  private RequestPermissionCallable withSafeGrantPermissionCallable(String permission) {
+    return new GrantPermissionCallable(shellCommand, targetContext, permission, Result.SUCCESS);
   }
 
   private RequestPermissionCallable withStubbedCallable(Result result) throws Exception {

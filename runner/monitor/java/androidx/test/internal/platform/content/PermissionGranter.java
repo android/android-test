@@ -38,6 +38,17 @@ public interface PermissionGranter {
   void addPermissions(@NonNull String... permissions);
 
   /**
+   * Adds a permission to the list of permissions which will be requested when {@link
+   * #requestPermissions()} is called, and whose failure will be ignored.
+   *
+   * <p>Precondition: This method does nothing when called on an API level lower than {@link
+   * Build.VERSION_CODES#M}.
+   *
+   * @param permissions a list of Android runtime permissions.
+   */
+  void addOptionalPermissions(@NonNull String... permissions);
+
+  /**
    * Request all permissions previously added using {@link #addPermissions(String...)}
    *
    * <p>Precondition: This method does nothing when called on an API level lower than {@link

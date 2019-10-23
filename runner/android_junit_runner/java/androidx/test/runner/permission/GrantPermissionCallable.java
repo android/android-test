@@ -25,10 +25,22 @@ class GrantPermissionCallable extends RequestPermissionCallable {
 
   private static final String TAG = "GrantPermissionCallable";
 
+  private final Result permissionNotGrantedResult;
+
   GrantPermissionCallable(
       @NonNull ShellCommand shellCommand, @NonNull Context context, String permission) {
-    super(shellCommand, context, permission);
+    this(shellCommand, context, permission, Result.FAILURE);
   }
+
+  GrantPermissionCallable(
+      @NonNull ShellCommand shellCommand,
+      @NonNull Context context,
+      String permission,
+      Result permissionNotGrantedResult) {
+    super(shellCommand, context, permission);
+    this.permissionNotGrantedResult = permissionNotGrantedResult;
+  }
+
 
   @Override
   public Result call() throws Exception {
@@ -45,7 +57,7 @@ class GrantPermissionCallable extends RequestPermissionCallable {
         Thread.sleep(1000);
         if (!isPermissionGranted()) {
           Log.e(TAG, "Permission: " + getPermission() + " cannot be granted!");
-          return Result.FAILURE;
+          return permissionNotGrantedResult;
         }
       }
     }

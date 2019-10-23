@@ -33,6 +33,7 @@ import androidx.test.internal.platform.content.PermissionGranter;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.permission.UiAutomationShellCommand.PmCommand;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Requests a runtime permission on devices running Android M (API 23) and above.
@@ -60,8 +61,7 @@ public class PermissionRequester implements PermissionGranter {
 
   @NonNull private final Context targetContext;
 
-  @VisibleForTesting
-  final HashSet<RequestPermissionCallable> requestedPermissions = new HashSet<>();
+  @VisibleForTesting final Set<RequestPermissionCallable> requestedPermissions = new HashSet<>();
 
   public PermissionRequester() {
     this(InstrumentationRegistry.getInstrumentation().getTargetContext());
@@ -81,6 +81,7 @@ public class PermissionRequester implements PermissionGranter {
    *
    * @param permissions a list of Android runtime permissions.
    */
+  @Override
   public void addPermissions(@NonNull String... permissions) {
     checkNotNull(permissions, "permissions cannot be null!");
     if (deviceSupportsRuntimePermissions()) {
@@ -93,6 +94,33 @@ public class PermissionRequester implements PermissionGranter {
                 targetContext,
                 permission);
         checkState(requestedPermissions.add(requestPermissionCallable));
+      }
+    }
+  }
+
+  /**
+   * Adds a permission to the list of permissions which will be requested when {@link
+   * #requestPermissions()} is called, and whose failure will be ignored.
+   *
+   * <p>Precondition: This method does nothing when called on an API level lower than {@link
+   * Build.VERSION_CODES#M}.
+   *
+   * @param permissions a list of Android runtime permissions.
+   */
+  @Override
+  public void addOptionalPermissions(@NonNull String... permissions) {
+    checkNotNull(permissions, "permissions cannot be null!");
+    if (deviceSupportsRuntimePermissions()) {
+      for (String permission : permissions) {
+        assertFalse("Permission String is empty or null!", TextUtils.isEmpty(permission));
+        GrantPermissionCallable requestPermissionCalalble =
+            new GrantPermissionCallable(
+                new UiAutomationShellCommand(
+                    targetContext.getPackageName(), permission, PmCommand.GRANT_PERMISSION),
+                targetContext,
+                permission,
+                RequestPermissionCallable.Result.SUCCESS);
+        checkState(requestedPermissions.add(requestPermissionCalalble));
       }
     }
   }

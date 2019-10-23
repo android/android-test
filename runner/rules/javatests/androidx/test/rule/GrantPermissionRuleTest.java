@@ -67,6 +67,19 @@ public class GrantPermissionRuleTest {
   }
 
   @Test
+  public void applyingRuleRunsSafePermissionRunsTest() throws Throwable {
+    Statement mockBaseStatement = mock(Statement.class);
+    Description mockDescription = mock(Description.class);
+    GrantPermissionRule grantPermissionRule = GrantPermissionRule.safeGrant(RUNTIME_PERMISSION1);
+    grantPermissionRule.setPermissionGranter(permissionRequester);
+
+    grantPermissionRule.apply(mockBaseStatement, mockDescription).evaluate();
+
+    verify(mockBaseStatement).evaluate();
+    verify(permissionRequester).requestPermissions();
+  }
+
+  @Test
   public void requestingWriteExternalStoragePermission_addsReadExternalStoragePermission()
       throws Throwable {
     GrantPermissionRule grantPermissionRule = new GrantPermissionRule(permissionRequester);
