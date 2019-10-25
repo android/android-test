@@ -14,6 +14,33 @@ http_archive(
     url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_TAG,
 )
 
+http_archive(
+    name = "com_google_protobuf",
+    sha256 = "1e622ce4b84b88b6d2cdf1db38d1a634fe2392d74f0b7b74ff98f3a51838ee53",
+    strip_prefix = "protobuf-3.8.0",
+    urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.8.0.zip"],
+)
+
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+protobuf_deps()
+
+http_archive(
+    name = "com_google_protobuf_java",
+    sha256 = "1e622ce4b84b88b6d2cdf1db38d1a634fe2392d74f0b7b74ff98f3a51838ee53",
+    strip_prefix = "protobuf-3.8.0",
+    urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.8.0.zip"],
+)
+
+# javalite toolchain is only available in javalite branch and there's no release tags in javalite
+# so here we just use the head as of June 12, 2019.
+http_archive(
+    name = "com_google_protobuf_javalite",
+    sha256 = "3537c1324883dd6f3b08ab78239738dea618d6251b588f6bbee878762959f194",
+    strip_prefix = "protobuf-3cf3be9959928bf8a7133d323eaf6a5a8d5afdd7",
+    urls = ["https://github.com/protocolbuffers/protobuf/archive/3cf3be9959928bf8a7133d323eaf6a5a8d5afdd7.zip"],
+)
+
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 load(
     "//build_extensions:axt_versions.bzl",

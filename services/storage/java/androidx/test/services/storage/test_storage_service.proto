@@ -1,0 +1,20 @@
+// Protos for the storage service.
+syntax = "proto3";
+
+package androidx.test.services.storage;
+
+option java_package = "androidx.test.services.storage";
+option java_outer_classname = 'TestStorageServiceProto';
+
+// Defines the test argument passed to the tests.
+message TestArgument {
+  // Name of the test argument.
+  string name = 1;
+  // Value of the test argument.
+  string value = 2;
+}
+
+// Defines all the test arguments passed to the tests.
+message TestArguments {
+  repeated TestArgument arg = 1;
+}
