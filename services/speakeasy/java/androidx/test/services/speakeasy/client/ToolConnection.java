@@ -191,7 +191,11 @@ public abstract class ToolConnection implements Connection {
             Log.i(TAG, "Invoking modern call method");
             call.invoke(provider, null, null, null, b);
           } else if (call.getParameterTypes().length == 5) {
+            Log.i(TAG, "Invoking Android Q call method");
             call.invoke(provider, null, CONTENT_PROVIDER, null, null, b);
+          } else if (call.getParameterTypes().length == 6) {
+            Log.i(TAG, "Invoking Android R call method");
+            call.invoke(provider, null, null, CONTENT_PROVIDER, null, null, b);
           } else {
             Log.i(TAG, "Invoking legacy call method");
             call.invoke(provider, null, null, b);
