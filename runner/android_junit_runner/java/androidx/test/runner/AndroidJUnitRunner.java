@@ -47,6 +47,7 @@ import androidx.test.runner.lifecycle.ApplicationLifecycleMonitorRegistry;
 import androidx.test.runner.screenshot.ScreenCaptureProcessor;
 import androidx.test.runner.screenshot.Screenshot;
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 import org.junit.runner.Request;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.notification.RunListener;
@@ -265,6 +266,8 @@ import org.junit.runners.model.RunnerBuilder;
 public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnConnectListener {
 
   private static final String LOG_TAG = "AndroidJUnitRunner";
+
+  private static final long MILLIS_TO_WAIT_FOR_TEST_FINISH = TimeUnit.SECONDS.toMillis(20);
 
   private Bundle arguments;
   private InstrumentationResultPrinter instrumentationResultPrinter =
@@ -518,11 +521,31 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
 
   @Override
   public boolean onException(Object obj, Throwable e) {
+    Log.e(LOG_TAG, "An unhandled exception was thrown by the app.");
     InstrumentationResultPrinter instResultPrinter = getInstrumentationResultPrinter();
     if (instResultPrinter != null) {
       // report better error message back to Instrumentation results.
       instResultPrinter.reportProcessCrash(e);
     }
+    if (orchestratorListener != null) {
+      // Waits until the orchestrator gets a chance to handle the test failure (if any) before
+      // bringing down the entire Instrumentation process.
+      //
+      // It's also possible that the process crashes in the middle of a test, so no TestFinish event
+      // will be received. In this case, it will wait until MILLIS_TO_WAIT_FOR_TEST_FINISH millis
+      // is reached.
+      orchestratorListener.waitUntilTestFinished(MILLIS_TO_WAIT_FOR_TEST_FINISH);
+
+      // Need to report the process crashed event to the orchestrator.
+      // This is to handle the case when the test body finishes but process crashes during
+      // Instrumentation cleanup (e.g. stopping the app). Otherwise, the test will be marked as
+      // passed.
+      if (!orchestratorListener.isTestFailed()) {
+        Log.i(LOG_TAG, "No test failure has been reported. Report the process crash.");
+        orchestratorListener.reportProcessCrash(e);
+      }
+    }
+    Log.i(LOG_TAG, "Bringing down the entire Instrumentation process.");
     return super.onException(obj, e);
   }
 

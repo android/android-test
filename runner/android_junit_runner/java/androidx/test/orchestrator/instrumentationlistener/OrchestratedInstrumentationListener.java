@@ -24,12 +24,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.ConditionVariable;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 import androidx.test.orchestrator.callback.OrchestratorCallback;
 import androidx.test.orchestrator.junit.BundleJUnitUtils;
 import androidx.test.orchestrator.listeners.OrchestrationListenerManager.TestEvent;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -50,6 +52,10 @@ public final class OrchestratedInstrumentationListener extends RunListener {
       "androidx.test.orchestrator.OrchestratorService";
 
   private final OnConnectListener listener;
+  private final ConditionVariable testFinishedCondition = new ConditionVariable();
+  private final AtomicBoolean isTestFailed = new AtomicBoolean(false);
+  // Cached test description
+  private Description description = Description.EMPTY;
 
   OrchestratorCallback odoCallback;
 
@@ -110,6 +116,7 @@ public final class OrchestratedInstrumentationListener extends RunListener {
 
   @Override
   public void testStarted(Description description) {
+    this.description = description; // Caches the test description in case of a crash
     try {
       sendTestNotification(
           TestEvent.TEST_STARTED, BundleJUnitUtils.getBundleFromDescription(description));
@@ -123,6 +130,7 @@ public final class OrchestratedInstrumentationListener extends RunListener {
     try {
       sendTestNotification(
           TestEvent.TEST_FINISHED, BundleJUnitUtils.getBundleFromDescription(description));
+      testFinishedCondition.open();
     } catch (RemoteException e) {
       Log.e(TAG, "Unable to send TestFinished Status to Orchestrator", e);
     }
@@ -130,10 +138,19 @@ public final class OrchestratedInstrumentationListener extends RunListener {
 
   @Override
   public void testFailure(Failure failure) {
-    try {
-      sendTestNotification(TestEvent.TEST_FAILURE, BundleJUnitUtils.getBundleFromFailure(failure));
-    } catch (RemoteException e) {
-      throw new IllegalStateException("Unable to send TestFailure status, terminating", e);
+    // This block can be called by the JUnit test framework when a failure happened in the test,
+    // or {@link #reportProcessCrash(Throwable)} when we'd like to report a process crash as a
+    // failure.
+    // We'd like to make sure only one failure gets sent so that the isTestFailed variable is
+    // checked and set without possibly racing between two thread calls.
+    if (isTestFailed.compareAndSet(false, true)) {
+      Log.d(TAG, "Sending TestFailure event " + failure.getException().getMessage());
+      try {
+        sendTestNotification(
+            TestEvent.TEST_FAILURE, BundleJUnitUtils.getBundleFromFailure(failure));
+      } catch (RemoteException e) {
+        throw new IllegalStateException("Unable to send TestFailure status, terminating", e);
+      }
     }
   }
 
@@ -191,5 +208,31 @@ public final class OrchestratedInstrumentationListener extends RunListener {
     } catch (RemoteException e) {
       Log.e(TAG, "Unable to send test", e);
     }
+  }
+
+  /**
+   * Blocks until the test running within this Instrumentation has finished, whether the test
+   * succeeds or fails.
+   *
+   * <p>We consider a test finished when the {@link #testFinished(Description)} method has been
+   * called.
+   */
+  public void waitUntilTestFinished(long timeoutMs) {
+    testFinishedCondition.block(timeoutMs);
+  }
+
+  /**
+   * Returns whether the test has failed.
+   *
+   * <p>We consider a test failed if the {@link #testFailure(Failure)} method has been called.
+   */
+  public boolean isTestFailed() {
+    return isTestFailed.get();
+  }
+
+  /** Reports the process crash event with a given exception. */
+  public void reportProcessCrash(Throwable t) {
+    testFailure(new Failure(description, t));
+    testFinished(description);
   }
 }
