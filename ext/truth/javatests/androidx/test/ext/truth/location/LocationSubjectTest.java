@@ -137,6 +137,38 @@ public class LocationSubjectTest {
   }
 
   @Test
+  public void isFaraway() {
+    Location location = new Location(LocationManager.GPS_PROVIDER);
+    location.setLatitude(1);
+    location.setLongitude(-1);
+
+    Location other = new Location(LocationManager.GPS_PROVIDER);
+    other.setLatitude(1.1);
+    other.setLongitude(-1.1);
+
+    assertThat(location).isFaraway(other, 10);
+  }
+
+  @Test
+  public void isFaraway_notFaraway() {
+    Location location = new Location(LocationManager.GPS_PROVIDER);
+    location.setLatitude(1);
+    location.setLongitude(-1);
+
+    Location other = new Location(LocationManager.GPS_PROVIDER);
+    other.setLatitude(1.1);
+    other.setLongitude(-1.1);
+
+    try {
+      assertThat(location).isFaraway(other, 100000);
+      fail();
+    } catch (AssertionError e) {
+      assertThat(e).factValue("expected to be at least").isEqualTo("100000.0");
+      assertThat(e).factValue("but was").isEqualTo("15689.056");
+    }
+  }
+
+  @Test
   public void extras() {
     Bundle bundle = new Bundle();
     bundle.putInt("extra", 2);
