@@ -15,9 +15,11 @@
  */
 package androidx.test.orchestrator.instrumentationlistener;
 
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 
 import android.os.Bundle;
@@ -40,7 +42,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 
-/** Unit tests for {@link OrchestrationListenerManager}. */
+/** Unit tests for {@link OrchestratedInstrumentationListener}. */
 @RunWith(RobolectricTestRunner.class)
 public class OrchestratedInstrumentationListenerTest
     implements OrchestratedInstrumentationListener.OnConnectListener {
@@ -92,6 +94,7 @@ public class OrchestratedInstrumentationListenerTest
 
     ParcelableDescription description = BundleJUnitUtils.getDescription(argument.getValue());
     compareDescription(description, jUnitDescription);
+    assertFalse(listener.isTestFailed());
   }
 
   @Test
@@ -102,6 +105,7 @@ public class OrchestratedInstrumentationListenerTest
 
     ParcelableResult result = BundleJUnitUtils.getResult(argument.getValue());
     assertThat(result.wasSuccessful(), is(jUnitResult.wasSuccessful()));
+    assertFalse(listener.isTestFailed());
   }
 
   @Test
@@ -112,6 +116,7 @@ public class OrchestratedInstrumentationListenerTest
 
     ParcelableDescription description = BundleJUnitUtils.getDescription(argument.getValue());
     compareDescription(description, jUnitDescription);
+    assertFalse(listener.isTestFailed());
   }
 
   @Test
@@ -122,6 +127,7 @@ public class OrchestratedInstrumentationListenerTest
 
     ParcelableDescription description = BundleJUnitUtils.getDescription(argument.getValue());
     compareDescription(description, jUnitDescription);
+    assertFalse(listener.isTestFailed());
   }
 
   @Test
@@ -132,6 +138,7 @@ public class OrchestratedInstrumentationListenerTest
 
     ParcelableFailure failure = BundleJUnitUtils.getFailure(argument.getValue());
     compareFailure(failure, jUnitFailure);
+    assertTrue(listener.isTestFailed());
   }
 
   @Test
@@ -142,6 +149,7 @@ public class OrchestratedInstrumentationListenerTest
 
     ParcelableFailure failure = BundleJUnitUtils.getFailure(argument.getValue());
     compareFailure(failure, jUnitFailure);
+    assertFalse(listener.isTestFailed());
   }
 
   @Test
@@ -152,6 +160,7 @@ public class OrchestratedInstrumentationListenerTest
 
     ParcelableDescription description = BundleJUnitUtils.getDescription(argument.getValue());
     compareDescription(description, jUnitDescription);
+    assertFalse(listener.isTestFailed());
   }
 
   @Test
