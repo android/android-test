@@ -36,7 +36,9 @@ import static org.hamcrest.Matchers.is;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import com.google.android.apps.common.testing.accessibility.framework.integrations.regression.MinionAccessibilityChecksRule;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -47,6 +49,10 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class BasicTest {
+
+  @Rule
+  public final MinionAccessibilityChecksRule a11yResults =
+      MinionAccessibilityChecksRule.builder().build();
 
   @Before
   public void setUp() throws Exception {
