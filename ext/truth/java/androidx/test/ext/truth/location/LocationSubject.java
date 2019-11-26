@@ -84,13 +84,20 @@ public class LocationSubject extends Subject {
     }
   }
 
+  /** Verifies that the location is centered on the same latitude/longitude as another location. */
   public void isAt(Location other) {
     check("getLatitude()").that(actual.getLatitude()).isEqualTo(other.getLatitude());
     check("getLongitude()").that(actual.getLongitude()).isEqualTo(other.getLongitude());
   }
 
+  /** Verifies that the location is at most {@code distanceM} meters away from another location. */
   public void isNearby(Location other, float distanceM) {
     check("distanceTo()").that(actual.distanceTo(other)).isAtMost(distanceM);
+  }
+
+  /** Verifies that the location is at least {@code distanceM} meters away from another location. */
+  public void isFaraway(Location other, float distanceM) {
+    check("distanceTo()").that(actual.distanceTo(other)).isAtLeast(distanceM);
   }
 
   public void hasAltitude() {
