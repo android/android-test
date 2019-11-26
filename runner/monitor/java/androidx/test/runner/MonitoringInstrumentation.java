@@ -355,15 +355,22 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       finished = true;
     }
 
-    handlerForMainLooper.post(new ActivityFinisher());
-
-    long startTime = System.currentTimeMillis();
-    waitForActivitiesToComplete();
-    long endTime = System.currentTimeMillis();
-    Log.i(TAG, String.format("waitForActivitiesToComplete() took: %sms", endTime - startTime));
+    if (shouldWaitForActivitiesToComplete()) {
+      handlerForMainLooper.post(new ActivityFinisher());
+      long startTime = System.currentTimeMillis();
+      waitForActivitiesToComplete();
+      long endTime = System.currentTimeMillis();
+      Log.i(TAG, String.format("waitForActivitiesToComplete() took: %sms", endTime - startTime));
+    }
     ActivityLifecycleMonitorRegistry.registerInstance(null);
     restoreUncaughtExceptionHandler();
     super.finish(resultCode, results);
+  }
+
+  protected boolean shouldWaitForActivitiesToComplete() {
+    // TODO(b/72831103): default this argument to false in a future release
+    return Boolean.parseBoolean(
+        InstrumentationRegistry.getArguments().getString("waitForActivitiesToComplete", "true"));
   }
 
   /**

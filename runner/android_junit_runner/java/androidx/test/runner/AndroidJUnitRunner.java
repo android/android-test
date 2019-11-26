@@ -438,18 +438,21 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
       } else {
         builder.addRunListener(getInstrumentationResultPrinter());
       }
-      builder.addRunListener(
-          new ActivityFinisherRunListener(
-              this,
-              new MonitoringInstrumentation.ActivityFinisher(),
-              new Runnable() {
-                // Yes, this is terrible and weird but avoids adding a new public API
-                // outside the internal package.
-                @Override
-                public void run() {
-                  waitForActivitiesToComplete();
-                }
-              }));
+
+      if (shouldWaitForActivitiesToComplete()) {
+        builder.addRunListener(
+            new ActivityFinisherRunListener(
+                this,
+                new MonitoringInstrumentation.ActivityFinisher(),
+                new Runnable() {
+                  // Yes, this is terrible and weird but avoids adding a new public API
+                  // outside the internal package.
+                  @Override
+                  public void run() {
+                    waitForActivitiesToComplete();
+                  }
+                }));
+      }
       addDelayListener(args, builder);
       addCoverageListener(args, builder);
     }
@@ -476,18 +479,20 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
       } else {
         builder.addRunListener(getInstrumentationResultPrinter());
       }
-      builder.addRunListener(
-          new ActivityFinisherRunListener(
-              this,
-              new MonitoringInstrumentation.ActivityFinisher(),
-              new Runnable() {
-                // Yes, this is terrible and weird but avoids adding a new public API
-                // outside the internal package.
-                @Override
-                public void run() {
-                  waitForActivitiesToComplete();
-                }
-              }));
+      if (shouldWaitForActivitiesToComplete()) {
+        builder.addRunListener(
+            new ActivityFinisherRunListener(
+                this,
+                new MonitoringInstrumentation.ActivityFinisher(),
+                new Runnable() {
+                  // Yes, this is terrible and weird but avoids adding a new public API
+                  // outside the internal package.
+                  @Override
+                  public void run() {
+                    waitForActivitiesToComplete();
+                  }
+                }));
+      }
     }
   }
 
