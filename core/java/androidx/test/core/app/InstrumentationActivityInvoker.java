@@ -382,6 +382,11 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
   }
 
   @Override
+  public void startActivity(Intent intent) {
+    startActivity(intent, null);
+  }
+
+  @Override
   public ActivityResult getActivityResult() {
     return checkNotNull(activityResultWaiter, "You must start Activity first").getActivityResult();
   }

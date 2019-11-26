@@ -55,6 +55,9 @@ public interface ActivityInvoker {
    */
   void startActivity(Intent intent, @Nullable Bundle activityOptions);
 
+  /** Convenience method to retain backwards compatibility */
+  void startActivity(Intent intent);
+
   /**
    * Returns activity result that is started by {@link #startActivity}. Unlike other methods this
    * method blocks execution until the result becomes available.

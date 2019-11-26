@@ -257,7 +257,13 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
 
     ActivityLifecycleMonitorRegistry.getInstance().addLifecycleCallback(activityLifecycleObserver);
 
-    activityInvoker.startActivity(startActivityIntent, activityOptions);
+    // prefer the single argument variant for startActivity for backwards compatibility with older
+    // Robolectric versions
+    if (activityOptions == null) {
+      activityInvoker.startActivity(startActivityIntent);
+    } else {
+      activityInvoker.startActivity(startActivityIntent, activityOptions);
+    }
 
     // Accept any steady states. An activity may start another activity in its onCreate method. Such
     // an activity goes back to created or started state immediately after it is resumed.
