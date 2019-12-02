@@ -9,7 +9,7 @@ TESTAPP_TEST_SRCS = glob(
 
 TESTAPP_DEPS = [
     "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
-    "//espresso/contrib/java/androidx/test/espresso/contrib:accessibility_checks",
+    "//espresso/accessibility/java/androidx/test/espresso/accessibility:accessibility_checks",
     "//espresso/contrib/java/androidx/test/espresso/contrib:activity_result_matchers",
     "//espresso/contrib/java/androidx/test/espresso/contrib:drawer_actions",
     "//espresso/contrib/java/androidx/test/espresso/contrib:picker_actions",
