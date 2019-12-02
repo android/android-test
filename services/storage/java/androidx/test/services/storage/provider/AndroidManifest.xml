@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2019 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="androidx.test.services.storage">
+
+  <application
+      android:label="AndroidStorageService"
+      android:requestLegacyExternalStorage="true">
+    <provider
+        android:name="androidx.test.services.storage.provider.TestDataContentProvider"
+        android:authorities="androidx.test.services.storage.runfiles"
+        android:directBootAware="true"
+        android:exported="true"
+        android:grantUriPermissions="true" />
+    <provider
+        android:name="androidx.test.services.storage.provider.TestArgsContentProvider"
+        android:authorities="androidx.test.services.storage.testargs"
+        android:directBootAware="true"
+        android:exported="true" />
+    <provider
+        android:name="androidx.test.services.storage.provider.TestOutputFilesContentProvider"
+        android:authorities="androidx.test.services.storage.outputfiles"
+        android:directBootAware="true"
+        android:exported="true"
+        android:grantUriPermissions="true" />
+    <provider
+        android:name="androidx.test.services.storage.provider.InternalUseOnlyFilesContentProvider"
+        android:authorities="androidx.test.services.storage._internal_use_files"
+        android:directBootAware="true"
+        android:exported="true"
+        android:grantUriPermissions="true" />
+    <provider
+        android:name="androidx.test.services.storage.provider.ExportTestPropertiesContentProvider"
+        android:authorities="androidx.test.services.storage.properties"
+        android:directBootAware="true"
+        android:exported="true"
+        android:grantUriPermissions="true" />
+  </application>
+
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-sdk
+      android:minSdkVersion="15"
+      android:targetSdkVersion="29" />
+
+</manifest>
