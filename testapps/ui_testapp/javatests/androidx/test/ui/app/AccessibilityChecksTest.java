@@ -31,7 +31,7 @@ import android.widget.LinearLayout.LayoutParams;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.contrib.AccessibilityChecks;
+import androidx.test.espresso.accessibility.AccessibilityChecks;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import com.google.android.apps.common.testing.accessibility.framework.integrations.AccessibilityViewCheckException;
