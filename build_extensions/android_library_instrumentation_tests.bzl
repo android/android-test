@@ -9,7 +9,7 @@ load(
     "infer_android_package_name",
 )
 
-def android_library_instrumentation_tests(name, srcs, deps, target_devices, custom_package = None, **kwargs):
+def android_library_instrumentation_tests(name, srcs, deps, target_devices, custom_package = None, nocompress_extensions = None, **kwargs):
     """A rule for an instrumentation test whose target under test is an android_library.
 
     Will generate a 'self-instrumentating' test binary and other associated rules
@@ -32,6 +32,7 @@ def android_library_instrumentation_tests(name, srcs, deps, target_devices, cust
       deps: the build dependencies to use for the generated test binary
       target_devices: array of device targets to execute on
       custom_package: Optional. Package name of the library. It could be inferred if unset
+      nocompress_extensions: Optional. A list of file extensions to leave uncompressed in the resource apk.
       **kwargs: arguments to pass to generated android_instrumentation_test rules
     """
     library_name = name
@@ -59,6 +60,7 @@ def android_library_instrumentation_tests(name, srcs, deps, target_devices, cust
             "applicationId": android_package_name,
             "instrumentationTargetPackage": android_package_name,
         },
+        nocompress_extensions = nocompress_extensions,
         testonly = 1,
         deps = [name],
     )
