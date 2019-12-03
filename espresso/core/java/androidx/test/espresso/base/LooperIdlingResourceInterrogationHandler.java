@@ -106,6 +106,14 @@ class LooperIdlingResourceInterrogationHandler
   }
 
   @Override
+  public void setMessage(String m) {}
+
+  @Override
+  public String getMessage() {
+    return null;
+  }
+
+  @Override
   public void quitting() {
     transitionToIdle();
   }
