@@ -116,6 +116,8 @@ public final class OrchestratedInstrumentationListener extends RunListener {
 
   @Override
   public void testStarted(Description description) {
+    testFinishedCondition.close();
+    isTestFailed.set(false);
     this.description = description; // Caches the test description in case of a crash
     try {
       sendTestNotification(
@@ -144,7 +146,12 @@ public final class OrchestratedInstrumentationListener extends RunListener {
     // We'd like to make sure only one failure gets sent so that the isTestFailed variable is
     // checked and set without possibly racing between two thread calls.
     if (isTestFailed.compareAndSet(false, true)) {
-      Log.d(TAG, "Sending TestFailure event " + failure.getException().getMessage());
+      if (Description.TEST_MECHANISM.equals(failure.getDescription())) {
+        // If an internal test runner exception occurred, the Description is "Test mechanism",
+        // so replace it with the test description previously received in testStarted().
+        failure = new Failure(description, failure.getException());
+      }
+      Log.d(TAG, "Sending TestFailure event: " + failure.getException().getMessage());
       try {
         sendTestNotification(
             TestEvent.TEST_FAILURE, BundleJUnitUtils.getBundleFromFailure(failure));

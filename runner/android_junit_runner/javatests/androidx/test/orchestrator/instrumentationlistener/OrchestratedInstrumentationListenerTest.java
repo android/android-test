@@ -20,6 +20,8 @@ import static junit.framework.Assert.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import android.os.Bundle;
@@ -120,6 +122,15 @@ public class OrchestratedInstrumentationListenerTest
   }
 
   @Test
+  public void testStarted_resetsIsTestFailed() throws RemoteException {
+    listener.testFailure(jUnitFailure);
+    assertTrue(listener.isTestFailed());
+
+    listener.testStarted(jUnitDescription);
+    assertFalse(listener.isTestFailed());
+  }
+
+  @Test
   public void testFinished() throws RemoteException {
     listener.testFinished(jUnitDescription);
     ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
@@ -139,6 +150,27 @@ public class OrchestratedInstrumentationListenerTest
     ParcelableFailure failure = BundleJUnitUtils.getFailure(argument.getValue());
     compareFailure(failure, jUnitFailure);
     assertTrue(listener.isTestFailed());
+  }
+
+  @Test
+  public void testFailure_calledTwice_onlyOneNotificationSent() throws RemoteException {
+    listener.testFailure(jUnitFailure);
+    listener.testFailure(jUnitFailure);
+    verify(mockCallback, times(1)).sendTestNotification(any());
+  }
+
+  @Test
+  public void testFailure_testMechanismFailure_useCachedTestDescription() throws RemoteException {
+    listener.testStarted(jUnitDescription); // Cache the description...
+
+    Failure jUnitInternalFailure =
+        new Failure(Description.TEST_MECHANISM, jUnitFailure.getException());
+    ArgumentCaptor<Bundle> argument = ArgumentCaptor.forClass(Bundle.class);
+    listener.testFailure(jUnitInternalFailure);
+    verify(mockCallback, times(2)).sendTestNotification(argument.capture());
+
+    ParcelableFailure failure = BundleJUnitUtils.getFailure(argument.getValue());
+    compareFailure(failure, jUnitFailure);
   }
 
   @Test
