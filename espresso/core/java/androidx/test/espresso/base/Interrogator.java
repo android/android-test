@@ -115,7 +115,12 @@ final class Interrogator {
 
     /** Called when the looper / message queue being interrogated is about to quit. */
     public void quitting();
+
+    public void setMessage(Message m);
+
+    public String getMessage();
   }
+
 
   /**
    * Loops the main thread and informs the interrogation handler at interesting points in the exec
@@ -137,7 +142,8 @@ final class Interrogator {
         // run until the observer is no longer interested.
         stillInterested = interrogateQueueState(q, handler);
         if (stillInterested) {
-          final Message m = getNextMessage();
+          Message m = getNextMessage();
+
           // the observer cannot stop us from dispatching this message - but we need to let it know
           // that we're about to dispatch.
           if (null == m) {
@@ -145,6 +151,7 @@ final class Interrogator {
             return handler.get();
           }
           stillInterested = handler.beforeTaskDispatch();
+          handler.setMessage(m);
           m.getTarget().dispatchMessage(m);
 
           // ensure looper invariants

@@ -18,6 +18,7 @@ package androidx.test.espresso.base;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.os.MessageQueue;
 import androidx.test.espresso.IdlingResource;
 import java.util.Locale;
@@ -103,6 +104,14 @@ class LooperIdlingResourceInterrogationHandler
             });
 
     return ir;
+  }
+
+  @Override
+  public void setMessage(Message m) {}
+
+  @Override
+  public String getMessage() {
+    return null;
   }
 
   @Override

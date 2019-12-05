@@ -538,6 +538,11 @@ final class UiControllerImpl
           idleConditions.add(condition.name());
         }
       }
+      if (idleConditions.isEmpty()) {
+        // Formatted to look consistent with other idling conditions.
+        idleConditions.add(
+            "MAIN_LOOPER_HAS_IDLED(last message: " + interrogation.getMessage() + ")");
+      }
       masterIdlePolicy.handleTimeout(
           idleConditions,
           String.format(
@@ -576,6 +581,7 @@ final class UiControllerImpl
     private final EnumSet<IdleCondition> conditions;
     private final BitSet conditionSet;
     private final long giveUpAtMs;
+    private String lastMessage;
 
     private InterrogationStatus status = InterrogationStatus.COMPLETED;
     private int execCount = 0;
@@ -585,6 +591,22 @@ final class UiControllerImpl
       this.conditions = conditions;
       this.conditionSet = conditionSet;
       this.giveUpAtMs = giveUpAtMs;
+    }
+
+    @Override
+    public void setMessage(Message m) {
+      try {
+        lastMessage = m.toString();
+      } catch (NullPointerException npe) {
+        // toString can fail with an NPE on getClass()
+        // This field is just for diagnosing Espresso test failures; suppress the error.
+        lastMessage = "NPE calling message toString(): " + npe;
+      }
+    }
+
+    @Override
+    public String getMessage() {
+      return lastMessage;
     }
 
     @Override
