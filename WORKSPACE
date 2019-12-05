@@ -140,3 +140,11 @@ http_archive(
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
 kotlin_repositories()
 kt_register_toolchains()
+
+# Android bazel rules
+http_archive(
+    name = "build_bazel_rules_android",
+    urls = ["https://github.com/bazelbuild/rules_android/archive/v0.1.1.zip"],
+    sha256 = "cd06d15dd8bb59926e4d65f9003bfc20f9da4b2519985c27e190cddc8b7a7806",
+    strip_prefix = "rules_android-0.1.1",
+)
