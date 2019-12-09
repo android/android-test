@@ -25,6 +25,7 @@ android_binary(
         "//services/shellexecutor:exec_server",
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
         "//services/speakeasy/java/androidx/test/services/speakeasy/server",
+        "//services/storage/java/androidx/test/services/storage/provider:storage_content_providers",
     ],
 )
 
@@ -38,6 +39,7 @@ combine_jars(
         "//services/shellexecutor:shellexecuter_src",
         "//services/speakeasy/java/androidx/test/services/speakeasy:libprotocol-src.jar",
         "//services/speakeasy/java/androidx/test/services/speakeasy/server:libspeak_easy_service-src.jar",
+        "//services/storage/java/androidx/test/services/storage/provider:libstorage_content_providers-src.jar",
     ],
 )
 
@@ -46,7 +48,7 @@ maven_artifact(
     src = ":test_services.apk",
     artifact_id = "test-services",
     group_id = "androidx.test.services",
-    last_updated = "20170622000000",
+    last_updated = "20191210000000",
     src_jar = ":test_services_jars.jar",
     version = "%s" % RUNNER_VERSION,
 )
