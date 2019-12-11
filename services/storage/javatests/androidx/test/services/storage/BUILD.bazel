@@ -1,0 +1,69 @@
+# Description:
+#   Tests for the test storage.
+load("@build_bazel_rules_android//android:rules.bzl", "android_library", "android_binary", "android_instrumentation_test")
+
+licenses(["notice"])
+
+DEVICE_MODEL = [
+    "android_15_x86",
+    "android_16_x86",
+    "android_17_x86",
+    "android_19_x86",
+    "android_21_x86",
+    "android_23_x86",
+]
+
+android_library(
+    name = "dummy_app_lib",
+    testonly = 1,
+    srcs = ["testapp/DummyActivity.java"],
+    manifest = "testapp/AndroidManifest_stub.xml",
+)
+
+android_binary(
+    name = "dummy_app_binary",
+    testonly = 1,
+    manifest = "testapp/AndroidManifest_stub.xml",
+    deps = [
+        ":dummy_app_lib",
+    ],
+)
+
+android_library(
+    name = "test_lib",
+    testonly = 1,
+    srcs = ["TestStorageTest.java"],
+    manifest = "AndroidManifest_opensource.xml",
+    deps = [
+        ":dummy_app_lib",
+        "//core/java/androidx/test/core",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//services/storage/java/androidx/test/services/storage",
+        "//services/storage/java/androidx/test/services/storage/file",
+        "@androidsdk//:legacy_test-28",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+    ],
+)
+
+android_binary(
+    name = "test_binary",
+    testonly = 1,
+    instruments = ":dummy_app_binary",
+    manifest = "AndroidManifest_opensource.xml",
+    deps = [
+        ":test_lib",
+    ],
+)
+
+[android_instrumentation_test(
+    name = "TestStorageTest_%s" % device_model,
+    size = "large",
+    args = [
+        "--clear_package_data",
+        "--install_test_services=True",
+    ],
+    target_device = "//tools/android/emulated_devices/generic_phone:%s" % (device_model),
+    test_app = ":test_binary",
+) for device_model in DEVICE_MODEL]

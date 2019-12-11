@@ -25,6 +25,8 @@
 
    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS" />
    <uses-permission android:name="android.permission.ACCESS_CONTENT_PROVIDERS_EXTERNALLY" />
+   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
    <application android:label="TestServices"
                 android:directBootAware="true"
@@ -41,6 +43,35 @@
          android:authorities="androidx_test_services.speak_easy"
          android:exported="true"
          android:grantUriPermissions="true" />
+    <provider
+        android:name="androidx.test.services.storage.provider.TestDataContentProvider"
+        android:authorities="androidx.test.services.storage.runfiles"
+        android:directBootAware="true"
+        android:exported="true"
+        android:grantUriPermissions="true" />
+    <provider
+        android:name="androidx.test.services.storage.provider.TestArgsContentProvider"
+        android:authorities="androidx.test.services.storage.testargs"
+        android:directBootAware="true"
+        android:exported="true" />
+    <provider
+        android:name="androidx.test.services.storage.provider.TestOutputFilesContentProvider"
+        android:authorities="androidx.test.services.storage.outputfiles"
+        android:directBootAware="true"
+        android:exported="true"
+        android:grantUriPermissions="true" />
+    <provider
+        android:name="androidx.test.services.storage.provider.InternalUseOnlyFilesContentProvider"
+        android:authorities="androidx.test.services.storage._internal_use_files"
+        android:directBootAware="true"
+        android:exported="true"
+        android:grantUriPermissions="true" />
+    <provider
+        android:name="androidx.test.services.storage.provider.ExportTestPropertiesContentProvider"
+        android:authorities="androidx.test.services.storage.properties"
+        android:directBootAware="true"
+        android:exported="true"
+        android:grantUriPermissions="true" />
    </application>
 
 </manifest>
