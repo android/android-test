@@ -17,6 +17,7 @@ package androidx.test.services.events;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,39 +27,22 @@ import java.util.List;
  * serialize and send java test case information between test runners. See <a
  * href="https://developer.android.com/reference/android/os/Parcelable.html">Android Parcelable </a>
  */
-public class TestCase implements Parcelable {
-  private final String className;
-  private final String methodName;
-  private List<Annotation> methodAnnotations = new ArrayList<>();
-  private List<Annotation> classAnnotations = new ArrayList<>();
-
-  public String getClassName() {
-    return className;
-  }
-
-  public String getMethodName() {
-    return methodName;
-  }
-
-  public List<Annotation> getMethodAnnotations() {
-    return methodAnnotations;
-  }
-
-  public List<Annotation> getClassAnnotations() {
-    return classAnnotations;
-  }
+public final class TestCase implements Parcelable {
+  public final String className;
+  public final String methodName;
+  public final List<Annotation> methodAnnotations;
+  public final List<Annotation> classAnnotations;
 
   /**
    * Constructor to create an {@link Annotation} given an Android Parcel.
    *
    * @param source Android {@link Parcel} to read from.
    */
-  public TestCase(Parcel source) {
+  public TestCase(@NonNull Parcel source) {
     className = source.readString();
     methodName = source.readString();
     methodAnnotations = new ArrayList<>();
     source.readTypedList(methodAnnotations, Annotation.CREATOR);
-
     classAnnotations = new ArrayList<>();
     source.readTypedList(classAnnotations, Annotation.CREATOR);
   }
@@ -68,27 +52,23 @@ public class TestCase implements Parcelable {
    *
    * @param className Name of the test class.
    * @param methodName Name of the test method.
-   * @param methodJavaAnnotations Annotations on the test method.
-   * @param classJavaAnnotations Annotations on the test class.
+   * @param methodAnnotations Annotations on the test method.
+   * @param classAnnotations Annotations on the test class.
    */
   public TestCase(
-      String className,
-      String methodName,
-      List<java.lang.annotation.Annotation> methodJavaAnnotations,
-      List<java.lang.annotation.Annotation> classJavaAnnotations) {
+      @NonNull String className,
+      @NonNull String methodName,
+      @NonNull List<Annotation> methodAnnotations,
+      @NonNull List<Annotation> classAnnotations) {
     this.className = className;
     this.methodName = methodName;
-    AnnotationToParcelableParser annotationToParcelableParser = new AnnotationToParcelableParser();
+    this.classAnnotations = classAnnotations;
+    this.methodAnnotations = methodAnnotations;
+  }
 
-    for (java.lang.annotation.Annotation annotation : methodJavaAnnotations) {
-      annotationToParcelableParser.setJavaAnnotation(annotation);
-      methodAnnotations.add(annotationToParcelableParser.parse());
-    }
-
-    for (java.lang.annotation.Annotation annotation : classJavaAnnotations) {
-      annotationToParcelableParser.setJavaAnnotation(annotation);
-      classAnnotations.add(annotationToParcelableParser.parse());
-    }
+  @NonNull
+  public String getClassAndMethodName() {
+    return className + "#" + methodName;
   }
 
   @Override

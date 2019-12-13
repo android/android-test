@@ -17,6 +17,7 @@
 package androidx.test.services.events.client;
 
 import android.content.Context;
+import androidx.annotation.NonNull;
 
 /**
  * Connects to the remote service E.g. {@code androidx.test.orchestrator.OrchestratorService} and
@@ -32,5 +33,5 @@ public interface OrchestratorConnection {
    *
    * @param context the instrumentation {@link Context} to use for binding to the service
    */
-  void connect(Context context);
+  void connect(@NonNull Context context);
 }

@@ -17,6 +17,7 @@
 package androidx.test.services.events.run;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 import androidx.test.services.events.Failure;
 import androidx.test.services.events.TestCase;
 
@@ -24,44 +25,23 @@ import androidx.test.services.events.TestCase;
  * Denotes that the test ended with a TEST_ASSUMPTION_FAILURE. It has the {@link Failure} object to
  * denote what was the cause of the failure/error.
  */
-public class TestAssumptionFailureEvent extends TestRunEvent {
-
-  public Failure getFailure() {
-    return failure;
-  }
-
-  private final Failure failure;
-
+public class TestAssumptionFailureEvent extends TestFailureEvent {
   /**
-   * Constructor to create a {@link TestAssumptionFailureEvent} from {@link Parcel}.
-   *
-   * @param source Android {@link Parcel} to read from.
-   */
-  TestAssumptionFailureEvent(Parcel source) {
-    super(source);
-    failure = new Failure(source);
-  }
-
-  /**
-   * Constructor to create {@link TestAssumptionFailureEvent} from {@link TestCase} sand {@link
-   * Failure}.
+   * Creates a {@link TestAssumptionFailureEvent} from {@link TestCase} and {@link Failure}.
    *
    * @param testCase the test case that this event is for.
    * @param failure the failure associated with the test case.
    */
-  TestAssumptionFailureEvent(TestCase testCase, Failure failure) {
-    super(testCase);
-    this.failure = failure;
+  public TestAssumptionFailureEvent(TestCase testCase, Failure failure) {
+    super(testCase, failure);
   }
 
-  @Override
-  public void writeToParcel(Parcel parcel, int i) {
-    super.writeToParcel(parcel, 0);
-    failure.writeToParcel(parcel, 0);
+  private TestAssumptionFailureEvent(Parcel source) {
+    super(source);
   }
 
-  public static final Creator<TestAssumptionFailureEvent> CREATOR =
-      new Creator<TestAssumptionFailureEvent>() {
+  public static final Parcelable.Creator<TestAssumptionFailureEvent> CREATOR =
+      new Parcelable.Creator<TestAssumptionFailureEvent>() {
         @Override
         public TestAssumptionFailureEvent createFromParcel(Parcel source) {
           return new TestAssumptionFailureEvent(source);

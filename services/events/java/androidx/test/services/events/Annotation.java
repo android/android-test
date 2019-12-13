@@ -28,25 +28,7 @@ import java.util.List;
 public final class Annotation implements Parcelable {
 
   public final String name;
-  public List<AnnotationValue> values = new ArrayList<>();
-
-  public String getName() {
-    return name;
-  }
-
-  public List<AnnotationValue> getValues() {
-    return values;
-  }
-
-  /**
-   * Constructor to create an {@link Annotation} given an Android Parcel.
-   *
-   * @param source Android {@link Parcel} to read from.
-   */
-  public Annotation(Parcel source) {
-    name = source.readString();
-    source.readTypedList(values, AnnotationValue.CREATOR);
-  }
+  public final List<AnnotationValue> values;
 
   /**
    * Constructor to create an {@link Annotation}.
@@ -57,6 +39,12 @@ public final class Annotation implements Parcelable {
   public Annotation(String annotationName, List<AnnotationValue> annotationValues) {
     this.name = annotationName;
     this.values = annotationValues;
+  }
+
+  private Annotation(Parcel source) {
+    name = source.readString();
+    values = new ArrayList<>();
+    source.readTypedList(values, AnnotationValue.CREATOR);
   }
 
   @Override

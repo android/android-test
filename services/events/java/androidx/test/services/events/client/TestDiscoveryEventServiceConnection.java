@@ -17,24 +17,29 @@
 package androidx.test.services.events.client;
 
 import android.os.RemoteException;
+import androidx.annotation.NonNull;
 import androidx.test.services.events.discovery.ITestDiscoveryEvent;
 import androidx.test.services.events.discovery.TestDiscoveryEvent;
 
-/** The Connection implementation of the new {@link ITestDiscoveryEvent} service. */
-public class TestDiscoveryConnectionImpl extends ConnectionBase<ITestDiscoveryEvent>
-    implements TestDiscoveryService {
+/** Handles the connection to the remote {@link ITestDiscoveryEvent} service. */
+public class TestDiscoveryEventServiceConnection extends ConnectionBase<ITestDiscoveryEvent>
+    implements TestDiscoveryEventService {
 
-  TestDiscoveryConnectionImpl(
-      String serviceName,
-      String servicePackage,
-      ServiceFromBinder<ITestDiscoveryEvent> serviceFromBinder,
-      TestEventClientConnectListener listener) {
-    super(serviceName, servicePackage, serviceFromBinder, listener);
+  TestDiscoveryEventServiceConnection(
+      @NonNull String serviceName, @NonNull TestEventClientConnectListener listener) {
+    super(serviceName, ITestDiscoveryEvent.Stub::asInterface, listener);
   }
 
   /** {@inheritDoc} */
   @Override
-  public void addTest(TestDiscoveryEvent testDiscoveryEvent) throws RemoteException {
-    service.send(testDiscoveryEvent);
+  public void send(@NonNull TestDiscoveryEvent testDiscoveryEvent) throws TestEventClientException {
+    if (service == null) {
+      throw new TestEventClientException("Can't add test, service not connected");
+    }
+    try {
+      service.send(testDiscoveryEvent);
+    } catch (RemoteException e) {
+      throw new TestEventClientException("Failed to send test case", e);
+    }
   }
 }

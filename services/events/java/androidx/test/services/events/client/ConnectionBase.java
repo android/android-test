@@ -23,20 +23,23 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.IInterface;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 
 /**
- * The base interface that service connections have to extend. Handles connection to the service
- * proxy and callbacks to the caller.
+ * The base class that service connections have to extend. Handles connection to the service proxy
+ * and callbacks to the caller.
  */
 public class ConnectionBase<T extends IInterface> implements OrchestratorConnection {
   private static final String TAG = "OrchestratorConnection";
 
-  private final TestEventClientConnectListener listener;
-  private final ServiceFromBinder<T> serviceFromBinder;
-  private final String serviceName;
-  private final String servicePackage;
-  public T service = null;
+  @NonNull private final TestEventClientConnectListener listener;
+  @NonNull private final ServiceFromBinder<T> serviceFromBinder;
+  @NonNull private final String serviceName;
+  @Nullable private final String servicePackageName;
+  @Nullable public T service = null;
 
   /** An interface to match the signature of {@link IInterface#asBinder()}. */
   public interface ServiceFromBinder<T extends IInterface> {
@@ -50,8 +53,7 @@ public class ConnectionBase<T extends IInterface> implements OrchestratorConnect
         public void onServiceConnected(ComponentName className, IBinder binder) {
           ConnectionBase.this.service = serviceFromBinder.asInterface(binder);
           Log.i(TAG, "Connected to " + serviceName);
-
-          // Callback the caller E.g. {@link AndroidJunitRunner} to start instrumentation since
+          // Notify the caller e.g. {@code AndroidJunitRunner} to start instrumentation since
           // service connection succeeded.
           listener.onTestEventClientConnect();
         }
@@ -63,24 +65,50 @@ public class ConnectionBase<T extends IInterface> implements OrchestratorConnect
         }
       };
 
-  ConnectionBase(
-      String serviceName,
-      String servicePackage,
-      ServiceFromBinder<T> serviceFromBinder,
-      TestEventClientConnectListener listener) {
-    this.serviceName = serviceName;
-    this.servicePackage = servicePackage;
+  public ConnectionBase(
+      @NonNull String serviceName,
+      @NonNull ServiceFromBinder<T> serviceFromBinder,
+      @NonNull TestEventClientConnectListener listener) {
+    this.serviceName = getServiceNameOnly(serviceName);
+    this.servicePackageName = getServicePackage(serviceName);
     this.listener = listener;
     this.serviceFromBinder = serviceFromBinder;
   }
 
   /** {@inheritDoc} */
   @Override
-  public void connect(Context context) {
+  public void connect(@NonNull Context context) {
     Intent intent = new Intent(serviceName);
-    intent.setPackage(servicePackage);
-    if (!context.bindService(intent, connection, Service.BIND_AUTO_CREATE)) {
-      throw new RuntimeException("Cannot connect to " + serviceName);
+    if (servicePackageName != null) {
+      intent.setPackage(servicePackageName);
     }
+    if (!context.bindService(intent, connection, Service.BIND_AUTO_CREATE)) {
+      throw new IllegalStateException("Cannot connect to " + serviceName);
+    }
+  }
+
+  /**
+   * Splits the package name and service name parts from a string in the format
+   * "com.sample.package/.foo.Service". The package name is optional. If the service name starts
+   * with '.' then the package name is prepended to get the full service class name.
+   */
+  @NonNull
+  @VisibleForTesting
+  static String getServiceNameOnly(@NonNull String serviceName) {
+    String[] parts = serviceName.split("/");
+    if (parts.length == 2) {
+      return parts[1].startsWith(".") ? parts[0] + parts[1] : parts[1];
+    } else if (parts.length == 1) {
+      return parts[0];
+    } else {
+      throw new IllegalArgumentException("Invalid serviceName [" + serviceName + "]");
+    }
+  }
+
+  @Nullable
+  @VisibleForTesting
+  static String getServicePackage(@NonNull String serviceName) {
+    String[] parts = serviceName.split("/");
+    return parts.length >= 2 ? parts[0] : null;
   }
 }
