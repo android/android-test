@@ -58,6 +58,7 @@ maven_install(
     name = "maven",
     artifacts = [
         "androidx.annotation:annotation:" + ANDROIDX_VERSION,
+        "androidx.annotation:annotation-experimental:jar:" + ANDROIDX_VERSION,
         "androidx.appcompat:appcompat:" + ANDROIDX_VERSION,
         "androidx.core:core:" + ANDROIDX_VERSION,
         "androidx.cursoradapter:cursoradapter:" + ANDROIDX_VERSION,
