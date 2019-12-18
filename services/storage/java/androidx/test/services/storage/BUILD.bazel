@@ -12,12 +12,14 @@ licenses(["notice"])
 android_library(
     name = "storage",
     srcs = [
+        "ExperimentalTestStorage.java",
         "TestStorage.java",
         "TestStorageException.java",
     ],
     deps = [
         "//runner/monitor",
         "//services/storage/java/androidx/test/services/storage/file",
+        "@maven//:androidx_annotation_annotation_experimental",
         "@maven//:com_google_code_findbugs_jsr305",
     ],
 )

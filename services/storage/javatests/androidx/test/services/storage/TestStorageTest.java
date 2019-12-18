@@ -15,12 +15,6 @@
  */
 package androidx.test.services.storage;
 
-import static androidx.test.services.storage.TestStorage.addOutputProperties;
-import static androidx.test.services.storage.TestStorage.getInputArg;
-import static androidx.test.services.storage.TestStorage.getInputArgs;
-import static androidx.test.services.storage.TestStorage.getInputStream;
-import static androidx.test.services.storage.TestStorage.openInputFile;
-import static androidx.test.services.storage.TestStorage.openOutputFile;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 
@@ -50,6 +44,8 @@ public final class TestStorageTest {
 
   private static final String OUTPUT_PATH = "parent_dir/output_file";
 
+  private final TestStorage testStorage = new TestStorage();
+
   @Before
   public void setUp() {
     ActivityScenario.launch(DummyActivity.class);
@@ -58,7 +54,7 @@ public final class TestStorageTest {
   @Test
   public void testReadNonExistentFile() {
     try {
-      openInputFile("not/here");
+      testStorage.openInputFile("not/here");
       fail("Should throw FileNotFoundException.");
     } catch (FileNotFoundException e) {
       // Exception excepted.
@@ -67,7 +63,7 @@ public final class TestStorageTest {
 
   @Test
   public void testWriteFile() throws Exception {
-    OutputStream rawStream = openOutputFile(OUTPUT_PATH);
+    OutputStream rawStream = testStorage.openOutputFile(OUTPUT_PATH);
     Writer writer = new BufferedWriter(new OutputStreamWriter(rawStream));
     try {
       writer.write("Four score and 7 years ago\n");
@@ -82,15 +78,15 @@ public final class TestStorageTest {
     Map<String, Serializable> propertyMap = new HashMap<String, Serializable>();
     propertyMap.put("property-a", "test");
     // Pass in a cloned copy since addStatsToSponge may modify the propertyMap instance.
-    addOutputProperties(new HashMap<String, Serializable>(propertyMap));
+    testStorage.addOutputProperties(new HashMap<String, Serializable>(propertyMap));
     propertyMap.put("property-b", "test");
-    addOutputProperties(new HashMap<String, Serializable>(propertyMap));
+    testStorage.addOutputProperties(new HashMap<String, Serializable>(propertyMap));
     // Test property value updated.
     propertyMap.put("property-b", "test-updated");
-    addOutputProperties(new HashMap<String, Serializable>(propertyMap));
+    testStorage.addOutputProperties(new HashMap<String, Serializable>(propertyMap));
 
     Uri dataUri = HostedFile.buildUri(HostedFile.FileHost.EXPORT_PROPERTIES, "properties.dat");
-    InputStream rawStream = getInputStream(dataUri);
+    InputStream rawStream = testStorage.getInputStream(dataUri);
 
     ObjectInputStream in = null;
     try {
