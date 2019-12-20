@@ -29,6 +29,7 @@ import androidx.test.services.storage.file.HostedFile;
 import androidx.test.services.storage.file.PropertyFile;
 import androidx.test.services.storage.file.PropertyFile.Authority;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -207,7 +208,10 @@ public final class TestStorage {
     Uri propertyFileUri = getPropertyFileUri();
     ObjectOutputStream objectOutputStream = null;
     try {
-      objectOutputStream = new ObjectOutputStream(getOutputStream(propertyFileUri));
+      // Buffered to improve performance and avoid the unbuffered IO violation when running under
+      // strict mode.
+      OutputStream outputStream = new BufferedOutputStream(getOutputStream(propertyFileUri));
+      objectOutputStream = new ObjectOutputStream(outputStream);
       objectOutputStream.writeObject(allProperties);
     } catch (FileNotFoundException ex) {
       throw new TestStorageException("Unable to create file", ex);
@@ -339,6 +343,9 @@ public final class TestStorage {
 
   /**
    * Gets the output stream for a given Uri.
+   *
+   * <p>The returned OutputStream is essentially a {@link java.io.FileOutputStream} which likely
+   * should be buffered to avoid {@code UnbufferedIoViolation} when running under strict mode.
    *
    * @param uri The Uri for which the OutputStream is required.
    */
