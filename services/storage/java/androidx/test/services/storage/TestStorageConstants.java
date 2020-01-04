@@ -15,10 +15,8 @@
  */
 package androidx.test.services.storage;
 
-import androidx.test.annotation.Beta;
-
 /** Holds constants that are shared between on-device and host-side testing infrastructure. */
-@Beta
+@ExperimentalTestStorage
 public final class TestStorageConstants {
 
   // TODO(b/144868098): Rename to "androidx_test".
@@ -28,18 +26,38 @@ public final class TestStorageConstants {
   /** The folder for internal use. */
   public static final String ON_DEVICE_PATH_INTERNAL_USE = ON_DEVICE_PATH_ROOT + "internal_use/";
 
+  /** The provider authority for internal use. */
+  public static final String INTERNAL_USE_PROVIDER_AUTHORITY =
+      "androidx.test.services.storage._internal_use_files";
+
   /** The folder where the test output files are written. */
   public static final String ON_DEVICE_PATH_TEST_OUTPUT = ON_DEVICE_PATH_ROOT + "test_outputfiles/";
+
+  /** The provider authority for test output files. */
+  public static final String TEST_OUTPUT_PROVIDER_AUTHORITY =
+      "androidx.test.services.storage.outputfiles";
 
   /** The folder for test properties that shall be exported to the testing infra. */
   public static final String ON_DEVICE_PATH_TEST_PROPERTIES =
       ON_DEVICE_PATH_ROOT + "test_exportproperties/";
+
+  /** The provider authority for output properties. */
+  public static final String OUTPUT_PROPERTIES_PROVIDER_AUTHORITY =
+      "androidx.test.services.storage.properties";
 
   /** The folder where the fixture test scripts are pushed on device. */
   public static final String ON_DEVICE_FIXTURE_SCRIPTS = ON_DEVICE_PATH_ROOT + "fixture_scripts/";
 
   /** The folder where files needed in test runtime are pushed. */
   public static final String ON_DEVICE_TEST_RUNFILES = ON_DEVICE_PATH_ROOT + "test_runfiles/";
+
+  /** The provider authority for files needed in test runtime. */
+  public static final String TEST_RUNFILES_PROVIDER_AUTHORITY =
+      "androidx.test.services.storage.runfiles";
+
+  /** The provider authority for test arguments. */
+  public static final String TEST_ARGS_PROVIDER_AUTHORITY =
+      "androidx.test.services.storage.testargs";
 
   /** The name of the file where test arguments are stored. */
   public static final String TEST_ARGS_FILE_NAME = "test_args.dat";

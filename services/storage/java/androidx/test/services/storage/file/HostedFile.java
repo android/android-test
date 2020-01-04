@@ -17,6 +17,7 @@ package androidx.test.services.storage.file;
 
 import android.net.Uri;
 import android.provider.OpenableColumns;
+import androidx.test.services.storage.TestStorageConstants;
 
 /** Constants to access hosted file data and convenience methods for building Uris. */
 public final class HostedFile {
@@ -95,10 +96,10 @@ public final class HostedFile {
 
   /** An enum containing all known storage services. */
   public enum FileHost {
-    TEST_FILE("androidx.test.services.storage.runfiles", false),
-    EXPORT_PROPERTIES("androidx.test.services.storage.properties", true),
-    OUTPUT("androidx.test.services.storage.outputfiles", true),
-    INTERNAL_USE_ONLY("androidx.test.services.storage._internal_use_files", true);
+    TEST_FILE(TestStorageConstants.TEST_RUNFILES_PROVIDER_AUTHORITY, false),
+    EXPORT_PROPERTIES(TestStorageConstants.OUTPUT_PROPERTIES_PROVIDER_AUTHORITY, true),
+    OUTPUT(TestStorageConstants.TEST_OUTPUT_PROVIDER_AUTHORITY, true),
+    INTERNAL_USE_ONLY(TestStorageConstants.INTERNAL_USE_PROVIDER_AUTHORITY, true);
 
     private final String authority;
     private final boolean writeable;

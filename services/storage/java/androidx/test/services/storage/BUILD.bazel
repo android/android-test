@@ -9,17 +9,24 @@ package(
 
 licenses(["notice"])
 
+java_library(
+    name = "experimental_storage_annotation",
+    srcs = ["ExperimentalTestStorage.java"],
+    deps = [
+        "@maven//:androidx_annotation_annotation_experimental",
+    ],
+)
+
 android_library(
     name = "storage",
     srcs = [
-        "ExperimentalTestStorage.java",
         "TestStorage.java",
         "TestStorageException.java",
     ],
     deps = [
+        ":experimental_storage_annotation",
         "//runner/monitor",
         "//services/storage/java/androidx/test/services/storage/file",
-        "@maven//:androidx_annotation_annotation_experimental",
         "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
@@ -30,6 +37,7 @@ java_library(
    name = "test_storage_constants",
    srcs = ["TestStorageConstants.java"],
    deps = [
+      ":experimental_storage_annotation",
       "//runner/monitor",
    ],
 )
