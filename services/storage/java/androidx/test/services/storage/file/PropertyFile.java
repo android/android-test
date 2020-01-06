@@ -18,6 +18,7 @@ package androidx.test.services.storage.file;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.net.Uri;
+import androidx.test.services.storage.TestStorageConstants;
 
 /**
  * Constants to access property file data (holding name/value pairs) and convenience methods for
@@ -58,7 +59,7 @@ public final class PropertyFile {
 
   /** Enumerates authorities for property-based (i.e. key/value pair) content providers. */
   public enum Authority {
-    TEST_ARGS("androidx.test.services.storage.testargs");
+    TEST_ARGS(TestStorageConstants.TEST_ARGS_PROVIDER_AUTHORITY);
 
     private final String authority;
 
