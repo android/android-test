@@ -38,7 +38,6 @@ java_library(
    srcs = ["TestStorageConstants.java"],
    deps = [
       ":experimental_storage_annotation",
-      "//runner/monitor",
    ],
 )
 
