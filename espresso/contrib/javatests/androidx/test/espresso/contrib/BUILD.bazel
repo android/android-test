@@ -48,6 +48,7 @@ android_binary(
     testonly = 1,
     instruments = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
     manifest = "AndroidManifest.xml",
+    multidex = "legacy",
     deps = [":espresso_contrib_test_lib"],
 )
 
