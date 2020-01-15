@@ -31,6 +31,8 @@ public final class UsageTrackerRegistry {
     String ESPRESSO_VERSION = "3.3.0-alpha03";
     // Runner version includes: Runner, Rules, ATO, Monitor
     String RUNNER_VERSION = "1.3.0-alpha03";
+    // Test services version.
+    String SERVICES_VERSION = RUNNER_VERSION;
   }
 
 
