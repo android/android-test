@@ -30,7 +30,7 @@ android_binary(
 )
 
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION")
+load("//build_extensions:axt_versions.bzl", "SERVICES_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 combine_jars(
@@ -50,5 +50,5 @@ maven_artifact(
     group_id = "androidx.test.services",
     last_updated = "20191210000000",
     src_jar = ":test_services_jars.jar",
-    version = "%s" % RUNNER_VERSION,
+    version = "%s" % SERVICES_VERSION,
 )

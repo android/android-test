@@ -24,6 +24,8 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import android.util.Log;
+import androidx.test.internal.runner.tracker.UsageTrackerRegistry;
+import androidx.test.internal.runner.tracker.UsageTrackerRegistry.AxtVersions;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.services.storage.file.HostedFile;
 import androidx.test.services.storage.file.PropertyFile;
@@ -47,6 +49,11 @@ import javax.annotation.Nonnull;
  */
 @ExperimentalTestStorage
 public final class TestStorage {
+  static {
+    UsageTrackerRegistry.getInstance()
+        .trackUsage("Test Storage Service-API", AxtVersions.SERVICES_VERSION);
+  }
+
   private static final String TAG = TestStorage.class.getSimpleName();
   private static final String PROPERTIES_FILE_NAME = "properties.dat";
 
