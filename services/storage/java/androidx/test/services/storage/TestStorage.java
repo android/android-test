@@ -150,8 +150,9 @@ public final class TestStorage {
     checkNotNull(argName);
 
     Uri testArgUri = PropertyFile.buildUri(Authority.TEST_ARGS, argName);
-    Cursor cursor = doQuery(contentResolver, testArgUri);
+    Cursor cursor = null;
     try {
+      cursor = doQuery(contentResolver, testArgUri);
       if (cursor.getCount() == 0) {
         throw new TestStorageException(
             String.format(
@@ -166,7 +167,9 @@ public final class TestStorage {
       cursor.moveToFirst();
       return cursor.getString(PropertyFile.Column.VALUE.getPosition());
     } finally {
-      cursor.close();
+      if (cursor != null) {
+        cursor.close();
+      }
     }
   }
 
@@ -175,10 +178,15 @@ public final class TestStorage {
    */
   public Map<String, String> getInputArgs() {
     Uri testArgUri = PropertyFile.buildUri(Authority.TEST_ARGS);
-    Cursor cursor = doQuery(contentResolver, testArgUri);
-    Map<String, String> result = getProperties(cursor);
-    cursor.close();
-    return result;
+    Cursor cursor = null;
+    try {
+      cursor = doQuery(contentResolver, testArgUri);
+      return getProperties(cursor);
+    } finally {
+      if (cursor != null) {
+        cursor.close();
+      }
+    }
   }
 
   /**
@@ -277,6 +285,10 @@ public final class TestStorage {
     return providerClient;
   }
 
+  /**
+   * Caller of this method is responsible for closing the cursor instance to avoid possible resource
+   * leaks.
+   */
   private static Cursor doQuery(ContentResolver resolver, Uri uri) {
     checkNotNull(resolver);
     checkNotNull(uri);
@@ -334,8 +346,9 @@ public final class TestStorage {
   InputStream getInputStream(Uri uri) throws FileNotFoundException {
     checkNotNull(uri);
 
-    ContentProviderClient providerClient = makeContentProviderClient(contentResolver, uri);
+    ContentProviderClient providerClient = null;
     try {
+      providerClient = makeContentProviderClient(contentResolver, uri);
       // Assignment to a variable is required. Do not inline.
       ParcelFileDescriptor pfd = providerClient.openFile(uri, "r");
       // Buffered to improve performance.
@@ -343,8 +356,10 @@ public final class TestStorage {
     } catch (RemoteException re) {
       throw new TestStorageException("Unable to access content provider: " + uri, re);
     } finally {
-      // Uses #release() to be compatible with API < 24.
-      providerClient.release();
+      if (providerClient != null) {
+        // Uses #release() to be compatible with API < 24.
+        providerClient.release();
+      }
     }
   }
 
@@ -359,14 +374,17 @@ public final class TestStorage {
   OutputStream getOutputStream(Uri uri) throws FileNotFoundException {
     checkNotNull(uri);
 
-    ContentProviderClient providerClient = makeContentProviderClient(contentResolver, uri);
+    ContentProviderClient providerClient = null;
     try {
+      providerClient = makeContentProviderClient(contentResolver, uri);
       return new ParcelFileDescriptor.AutoCloseOutputStream(providerClient.openFile(uri, "w"));
     } catch (RemoteException re) {
       throw new TestStorageException("Unable to access content provider: " + uri, re);
     } finally {
-      // Uses #release() to be compatible with API < 24.
-      providerClient.release();
+      if (providerClient != null) {
+        // Uses #release() to be compatible with API < 24.
+        providerClient.release();
+      }
     }
   }
 }
