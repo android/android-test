@@ -16,7 +16,9 @@
 
 package androidx.test.ext.junit.runners;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -46,11 +48,6 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
     delegate = loadRunner(klass);
   }
 
-  private static Runner loadRunner(Class<?> testClass) throws InitializationError {
-    String runnerClassName = getRunnerClassName();
-    return loadRunner(testClass, runnerClassName);
-  }
-
   private static String getRunnerClassName() {
     String runnerClassName = System.getProperty("android.junit.runner", null);
     if (runnerClassName == null) {
@@ -64,34 +61,79 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
     return runnerClassName;
   }
 
-  private static Runner loadRunner(Class<?> testClass, String className)
+  private static Runner loadRunner(Class<?> testClass) throws InitializationError {
+    String runnerClassName = getRunnerClassName();
+    return loadRunner(testClass, runnerClassName);
+  }
+
+  @SuppressWarnings("unchecked")
+  private static Runner loadRunner(Class<?> testClass, String runnerClassName)
       throws InitializationError {
+
+    Class<? extends Runner> runnerClass = null;
     try {
-      @SuppressWarnings("unchecked")
-      Class<? extends Runner> runnerClass = (Class<? extends Runner>) Class.forName(className);
-      return runnerClass.getConstructor(Class.class).newInstance(testClass);
+      runnerClass = (Class<? extends Runner>) Class.forName(runnerClassName);
     } catch (ClassNotFoundException e) {
-      throwInitializationError(className, e);
+      throwInitializationError(
+          String.format(
+              "Delegate runner %s for AndroidJUnit4 could not be found.\n", runnerClassName),
+          e);
+    }
+
+    Constructor<? extends Runner> constructor = null;
+    try {
+      constructor = runnerClass.getConstructor(Class.class);
     } catch (NoSuchMethodException e) {
-      throwInitializationError(className, e);
+      throwInitializationError(
+          String.format(
+              "Delegate runner %s for AndroidJUnit4 requires a public constructor that takes a"
+                  + " Class<?>.\n",
+              runnerClassName),
+          e);
+    }
+
+    try {
+      return constructor.newInstance(testClass);
     } catch (IllegalAccessException e) {
-      throwInitializationError(className, e);
+      throwInitializationError(
+          String.format("Illegal constructor access for test runner %s\n", runnerClassName), e);
     } catch (InstantiationException e) {
-      throwInitializationError(className, e);
+      throwInitializationError(
+          String.format("Failed to instantiate test runner %s\n", runnerClassName), e);
     } catch (InvocationTargetException e) {
-      throwInitializationError(className, e);
+      String details = getInitializationErrorDetails(e, testClass);
+      throwInitializationError(
+          String.format("Failed to instantiate test runner %s\n%s\n", runnerClass, details), e);
     }
     throw new IllegalStateException("Should never reach here");
   }
 
-  private static void throwInitializationError(String delegateRunner, Throwable cause)
+  private static void throwInitializationError(String details, Throwable cause)
       throws InitializationError {
-    // wrap the cause in a RuntimeException with a more detailed error message
-    throw new InitializationError(
-        new RuntimeException(
-            String.format(
-                "Delegate runner '%s' for AndroidJUnit4 could not be loaded.", delegateRunner),
-            cause));
+    throw new InitializationError(new RuntimeException(details, cause));
+  }
+
+  private static String getInitializationErrorDetails(Throwable throwable, Class<?> testClass) {
+    StringBuilder innerCause = new StringBuilder();
+    final Throwable cause = throwable.getCause();
+
+    if (cause == null) {
+      return "";
+    }
+
+    final Class<? extends Throwable> causeClass = cause.getClass();
+    if (causeClass == InitializationError.class) {
+      final InitializationError initializationError = (InitializationError) cause;
+      final List<Throwable> testClassProblemList = initializationError.getCauses();
+      innerCause.append(
+          String.format(
+              "Test class %s is malformed. (%s problems):\n",
+              testClass, testClassProblemList.size()));
+      for (Throwable testClassProblem : testClassProblemList) {
+        innerCause.append(testClassProblem).append("\n");
+      }
+    }
+    return innerCause.toString();
   }
 
   @Override
