@@ -9,7 +9,7 @@ load(
     "infer_android_package_name",
 )
 
-def android_app_instrumentation_tests(name, binary_target, srcs, deps, target_devices, custom_package = None, **kwargs):
+def android_app_instrumentation_tests(name, binary_target, srcs, deps, target_devices, custom_package = None, manifest_values = {}, **kwargs):
     """A rule for an instrumentation test whose target under test is an android_binary.
 
     The intent of this wrapper is to simplify the build API for creating instrumentation test rules
@@ -30,6 +30,7 @@ def android_app_instrumentation_tests(name, binary_target, srcs, deps, target_de
       deps: the build dependencies to use for the generated test binary
       target_devices: array of device targets to execute on
       custom_package: Optional. Package name of the library. It could be inferred if unset
+      manifest_values: Optional. A dictionary of values to be overridden in the manifest
       **kwargs: arguments to pass to generated android_instrumentation_test rules
     """
     library_name = name
@@ -43,14 +44,17 @@ def android_app_instrumentation_tests(name, binary_target, srcs, deps, target_de
         testonly = 1,
         deps = deps,
     )
+
+    _manifest_values = {
+        "applicationId": android_package_name + ".tests",
+        "instrumentationTargetPackage": android_package_name,
+    }
+    _manifest_values.update(manifest_values)
     native.android_binary(
         name = "%s_binary" % library_name,
         instruments = binary_target,
         manifest = "//build_extensions:AndroidManifest_instrumentation_test_template.xml",
-        manifest_values = {
-            "applicationId": android_package_name + ".tests",
-            "instrumentationTargetPackage": android_package_name,
-        },
+        manifest_values = _manifest_values,
         testonly = 1,
         deps = [name],
     )
