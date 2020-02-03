@@ -9,7 +9,7 @@ load(
     "infer_android_package_name",
 )
 
-def android_library_instrumentation_tests(name, srcs, deps, target_devices, custom_package = None, nocompress_extensions = None, **kwargs):
+def android_library_instrumentation_tests(name, srcs, deps, target_devices, custom_package = None, nocompress_extensions = None, manifest_values = {}, **kwargs):
     """A rule for an instrumentation test whose target under test is an android_library.
 
     Will generate a 'self-instrumentating' test binary and other associated rules
@@ -33,6 +33,7 @@ def android_library_instrumentation_tests(name, srcs, deps, target_devices, cust
       target_devices: array of device targets to execute on
       custom_package: Optional. Package name of the library. It could be inferred if unset
       nocompress_extensions: Optional. A list of file extensions to leave uncompressed in the resource apk.
+      manifest_values: Optional. A dictionary of values to be overridden in the manifest
       **kwargs: arguments to pass to generated android_instrumentation_test rules
     """
     library_name = name
@@ -52,14 +53,17 @@ def android_library_instrumentation_tests(name, srcs, deps, target_devices, cust
         testonly = 1,
         deps = deps,
     )
+
+    _manifest_values = {
+            "applicationId": android_package_name,
+            "instrumentationTargetPackage": android_package_name,
+    }
+    _manifest_values.update(manifest_values)
     native.android_binary(
         name = "%s_binary" % library_name,
         instruments = ":target_stub_binary",
         manifest = "//build_extensions:AndroidManifest_instrumentation_test_template.xml",
-        manifest_values = {
-            "applicationId": android_package_name,
-            "instrumentationTargetPackage": android_package_name,
-        },
+        manifest_values = _manifest_values,
         nocompress_extensions = nocompress_extensions,
         testonly = 1,
         deps = [name],
