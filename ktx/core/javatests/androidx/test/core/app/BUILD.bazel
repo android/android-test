@@ -1,12 +1,12 @@
 # Description: Tests for androidx.test.core Kotlin extension
 
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library")
+
 package(
     default_testonly = 1,
 )
 
 licenses(["notice"])  # Apache License 2.0
-
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library")
 
 android_binary(
     name = "target_stub",
@@ -34,8 +34,8 @@ kt_android_library(
         "//runner/android_junit_runner",
         "//runner/monitor",
         "@maven//:com_google_guava_guava",
-        "@maven//:junit_junit",
         "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
     ],
 )
 
@@ -54,8 +54,8 @@ android_binary(
         "//runner/android_junit_runner",
         "//runner/monitor",
         "@maven//:com_google_guava_guava",
-        "@maven//:junit_junit",
         "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
     ],
 )
 
@@ -65,6 +65,6 @@ android_instrumentation_test(
         "--clear_package_data",
         "--install_test_services=True",  # required for Bazel 0.11, can be removed in 0.12
     ],
-    target_device = "//tools/android/emulated_devices/generic_phone:android_23_x86_qemu2",
+    target_device = "//tools/android/emulated_devices/generic_phone:android_23_x86",
     test_app = ":ActivityScenarioKotlinTest_test_apk",
 )

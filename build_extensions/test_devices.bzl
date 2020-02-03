@@ -5,7 +5,7 @@ DEVICES = [
     #"//tools/android/emulated_devices/generic_phone:android_16_x86",
     #"//tools/android/emulated_devices/generic_phone:android_17_x86",
     #"//tools/android/emulated_devices/generic_phone:android_18_x86",
-    "//tools/android/emulated_devices/generic_phone:android_19_x86_qemu2"
+    "//tools/android/emulated_devices/generic_phone:android_19_x86"
     #"//tools/android/emulated_devices/generic_phone:android_21_x86",
     #"//tools/android/emulated_devices/generic_phone:android_22_x86",
     #"//tools/android/emulated_devices/generic_phone:android_23_x86",
