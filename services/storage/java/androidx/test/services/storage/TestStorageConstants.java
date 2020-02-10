@@ -19,7 +19,6 @@ package androidx.test.services.storage;
 @ExperimentalTestStorage
 public final class TestStorageConstants {
 
-  // TODO(b/144868098): Rename to "androidx_test".
   /** The parent folder name for all the test related files. */
   public static final String ON_DEVICE_PATH_ROOT = "googletest/";
 
