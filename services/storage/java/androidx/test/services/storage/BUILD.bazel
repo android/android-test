@@ -1,9 +1,14 @@
 # Description:
 #   Exposes sd card storage to tests regardless of permissions.
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:release.bzl", "axt_release_lib")
+load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION", "SERVICES_VERSION")
 
 package(
-    default_visibility = ["//services:__subpackages__"],
+    default_visibility = [
+        "//visibility:public",
+    ],
     features = ["-android_resources_strict_deps"],
 )
 
@@ -34,11 +39,11 @@ android_library(
 # Constants shared between on-device (android) and host-side (java code) testing
 # infrastructure for the storage service.
 java_library(
-   name = "test_storage_constants",
-   srcs = ["TestStorageConstants.java"],
-   deps = [
-      ":experimental_storage_annotation",
-   ],
+    name = "test_storage_constants",
+    srcs = ["TestStorageConstants.java"],
+    deps = [
+        ":experimental_storage_annotation",
+    ],
 )
 
 proto_library(
@@ -55,4 +60,27 @@ java_lite_proto_library(
 java_proto_library(
     name = "storage_service_pb_java_proto",
     deps = [":storage_service_pb"],
+)
+
+# Generate release artifacts for the test storage.
+axt_release_lib(
+    name = "test_storage_release",
+    keep_spec = "androidx/test/services/storage",
+    deps = [
+        ":storage",
+    ],
+)
+
+maven_artifact(
+    name = "test_storage_maven_artifact",
+    src = ":test_storage_release.aar",
+    artifact_deps = [
+        "androidx.test:runner:%s" % RUNNER_VERSION,
+        "com.google.code.findbugs:jsr305:2.0.1",
+    ],
+    artifact_id = "storage",
+    group_id = "androidx.test.services",
+    last_updated = "2020020700000",
+    src_jar = ":libstorage-src.jar",
+    version = "%s" % SERVICES_VERSION,
 )
