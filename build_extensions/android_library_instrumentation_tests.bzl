@@ -66,6 +66,7 @@ def android_library_instrumentation_tests(name, srcs, deps, target_devices, cust
         manifest_values = _manifest_values,
         nocompress_extensions = nocompress_extensions,
         testonly = 1,
+        multidex = kwargs.pop("multidex", "off"),
         deps = [name],
     )
     android_multidevice_instrumentation_test(
