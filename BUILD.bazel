@@ -32,6 +32,7 @@ maven_repository(
         "//runner/monitor/java/androidx/test:monitor_maven_artifact",
         "//runner/rules/java/androidx/test:rules_maven_artifact",
         "//services:test_services_maven_artifact",
+        "//services/storage/java/androidx/test/services/storage:test_storage_maven_artifact",
     ],
 )
 
