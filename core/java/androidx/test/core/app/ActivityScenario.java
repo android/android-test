@@ -63,8 +63,9 @@ import java.util.concurrent.locks.ReentrantLock;
  * <p>{@link ActivityScenario#moveToState(State)} allows you to transition your Activity's state to
  * {@link State#CREATED}, {@link State#STARTED}, {@link State#RESUMED}, or {@link State#DESTROYED}.
  * There are two paths for an Activity to reach {@link State#CREATED}: after {@link Event#ON_CREATE}
- * happens but before {@link Event#ON_START}, and after {@link Event#ON_STOP}. ActivityScenario
- * always moves the Activity's state to the second one. The same applies to {@link State#STARTED}.
+ * happens but before {@link Event#ON_START}, or after {@link Event#ON_STOP}. ActivityScenario
+ * always moves the Activity's state using the second path. The same applies to {@link
+ * State#STARTED}.
  *
  * <p>{@link State#DESTROYED} is the terminal state. You cannot move your Activity to other state
  * once it reaches to that state. If you want to test recreation of Activity instance, use {@link
