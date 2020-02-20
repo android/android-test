@@ -75,7 +75,6 @@ maven_artifact(
         "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
         "androidx.test:monitor:%s" % RUNNER_VERSION,
         "junit:junit:%s" % JUNIT_VERSION,
-        "net.sf.kxml:kxml2:2.3.0",
     ],
     artifact_id = "runner",
     group_id = "androidx.test",

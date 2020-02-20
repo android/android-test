@@ -15,10 +15,12 @@
  */
 package androidx.test.orchestrator.listeners;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.orchestrator.junit.ParcelableDescription;
 import androidx.test.orchestrator.junit.ParcelableFailure;
 import androidx.test.orchestrator.junit.ParcelableResult;
@@ -39,11 +41,10 @@ import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
-import org.robolectric.RobolectricTestRunner;
 import org.xml.sax.InputSource;
 
 /** Unit tests for {@link OrchestrationXmlTestRunListener}. */
-@RunWith(RobolectricTestRunner.class)
+@RunWith(AndroidJUnit4.class)
 public class OrchestrationXmlTestRunListenerTest {
 
   private OrchestrationXmlTestRunListener resultReporter;
@@ -76,7 +77,8 @@ public class OrchestrationXmlTestRunListenerTest {
 
   private File createTmpDir() throws IOException {
     // create a temp file with unique name, then make it a directory
-    File tmpDir = File.createTempFile("foo", "dir");
+    File outputDir = getApplicationContext().getCacheDir();
+    File tmpDir = File.createTempFile("foo", "dir", outputDir);
     tmpDir.delete();
     if (!tmpDir.mkdirs()) {
       throw new IOException("unable to create directory");
