@@ -28,8 +28,8 @@ import com.google.android.apps.common.testing.accessibility.framework.integratio
 
 /**
  * A class to enable automated accessibility checks in Espresso tests. These checks will run as a
- * global {@code ViewAssertion}, and cover a variety of accessibility issues (see {@link
- * com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckPreset#LATEST}
+ * global {@code ViewAssertion}, and cover a variety of accessibility issues (see <a
+ * href="https://github.com/google/Accessibility-Test-Framework-for-Android/blob/master/src/main/java/com/google/android/apps/common/testing/accessibility/framework/AccessibilityCheckPreset.java">AccessibilityCheckPreset#LATEST</a>
  * to see which checks are run).
  */
 public final class AccessibilityChecks {
