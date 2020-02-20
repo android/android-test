@@ -39,7 +39,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
-import org.kxml2.io.KXmlSerializer;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlpull.v1.XmlSerializer;
 
 /**
  * Writes JUnit results to an XML files in a format consistent with Ant's XMLJUnitResultFormatter.
@@ -189,7 +191,7 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
     OutputStream stream = null;
     try {
       stream = createOutputResultStream(reportDir);
-      KXmlSerializer serializer = new KXmlSerializer();
+      XmlSerializer serializer = XmlPullParserFactory.newInstance().newSerializer();
       serializer.setOutput(stream, UTF_8);
       serializer.startDocument(UTF_8, null);
       serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
@@ -201,7 +203,7 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
               "XML test result file generated at %s. %s",
               getAbsoluteReportPath(), runResult.getTextSummary());
       Log.i(LOG_TAG, msg);
-    } catch (IOException e) {
+    } catch (IOException | XmlPullParserException e) {
       Log.e(LOG_TAG, "Failed to generate report data", e);
       // TODO: consider throwing exception
     } finally {
@@ -267,7 +269,7 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
     return runResult.getName();
   }
 
-  void printTestResults(KXmlSerializer serializer, String timestamp, long elapsedTime)
+  void printTestResults(XmlSerializer serializer, String timestamp, long elapsedTime)
       throws IOException {
     serializer.startTag(ns, TESTSUITE);
     String name = getTestSuiteName();
@@ -300,7 +302,7 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
     return testId.getTestName();
   }
 
-  void print(KXmlSerializer serializer, TestIdentifier testId, TestResult testResult)
+  void print(XmlSerializer serializer, TestIdentifier testId, TestResult testResult)
       throws IOException {
 
     serializer.startTag(ns, TESTCASE);
@@ -330,7 +332,7 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
     serializer.endTag(ns, TESTCASE);
   }
 
-  private void printFailedTest(KXmlSerializer serializer, String tag, String stack)
+  private void printFailedTest(XmlSerializer serializer, String tag, String stack)
       throws IOException {
     serializer.startTag(ns, tag);
     // TODO: get message of stack trace ?
