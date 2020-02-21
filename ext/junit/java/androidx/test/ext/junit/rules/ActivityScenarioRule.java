@@ -34,17 +34,18 @@ import org.junit.rules.ExternalResource;
  * <p>This rule is an upgraded version of {@link androidx.test.rule.ActivityTestRule}. The previous
  * version will be deprecated and eventually be removed from the library in the future.
  *
- * <pre>{@code
- * Example:
- *  }{@literal @Rule} {@code
+ * <p>Example:
+ *
+ * <pre>
+ *   &#64;Rule
  *   public ActivityScenarioRule<MyActivity> rule = new ActivityScenarioRule<>(MyActivity.class);
  *
- *  }{@literal @Test}{@code
+ *   &#64;Test
  *   public void myTest() {
  *     ActivityScenario<MyActivity> scenario = rule.getScenario();
  *     // Your test code goes here.
  *   }
- * }</pre>
+ * </pre>
  */
 public final class ActivityScenarioRule<A extends Activity> extends ExternalResource {
 
