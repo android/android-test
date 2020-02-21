@@ -28,8 +28,8 @@ import java.lang.annotation.Target;
  * <p>This annotation will only take effect for {@link org.junit.Test}, {@link org.junit.Before} or
  * {@link org.junit.After} methods.
  *
- * @see androidx.test.rule.ActivityTestRule#runOnUiThread(Runnable) if you need to switch in
- *     and out of the UI thread within your method.
+ * <p>Use {@link android.app.Instrumentation#runOnMainSync(Runnable)} if you need to switch in and
+ * out of the UI thread within your method.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
