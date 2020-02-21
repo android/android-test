@@ -48,6 +48,9 @@ import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.test.internal.runner.tracker.AnalyticsBasedUsageTracker;
+import androidx.test.internal.runner.tracker.CompositeUsageTracker;
+import androidx.test.internal.runner.tracker.LocalUsageTracker;
+import androidx.test.internal.runner.tracker.UsageTracker;
 import androidx.test.internal.runner.tracker.UsageTrackerRegistry.AxtVersions;
 import androidx.test.orchestrator.TestRunnable.RunFinishedListener;
 import androidx.test.orchestrator.junit.ParcelableDescription;
@@ -515,10 +518,12 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     usageTrackerFacilitator = new UsageTrackerFacilitator(shouldTrackUsage(arguments));
     Context targetContext = getTargetContext();
     if (targetContext != null) {
-      usageTrackerFacilitator.registerUsageTracker(
+      UsageTracker analyticsUsageTracker =
           new AnalyticsBasedUsageTracker.Builder(targetContext)
               .withTargetPackage(getTargetInstrPackage(arguments))
-              .buildIfPossible());
+              .buildIfPossible();
+      CompositeUsageTracker compositeTracker = new CompositeUsageTracker(analyticsUsageTracker);
+      usageTrackerFacilitator.registerUsageTracker(compositeTracker);
     }
   }
 

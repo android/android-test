@@ -39,6 +39,9 @@ import androidx.test.internal.runner.listener.InstrumentationResultPrinter;
 import androidx.test.internal.runner.listener.LogRunListener;
 import androidx.test.internal.runner.listener.SuiteAssignmentPrinter;
 import androidx.test.internal.runner.tracker.AnalyticsBasedUsageTracker;
+import androidx.test.internal.runner.tracker.CompositeUsageTracker;
+import androidx.test.internal.runner.tracker.LocalUsageTracker;
+import androidx.test.internal.runner.tracker.UsageTracker;
 import androidx.test.internal.runner.tracker.UsageTrackerRegistry.AxtVersions;
 import androidx.test.orchestrator.instrumentationlistener.OrchestratedInstrumentationListener;
 import androidx.test.orchestrator.instrumentationlistener.OrchestratedInstrumentationListener.OnConnectListener;
@@ -578,8 +581,10 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
   private void registerUserTracker() {
     Context targetContext = getTargetContext();
     if (targetContext != null) {
-      usageTrackerFacilitator.registerUsageTracker(
-          new AnalyticsBasedUsageTracker.Builder(targetContext).buildIfPossible());
+      UsageTracker analyticsUsageTracker =
+          new AnalyticsBasedUsageTracker.Builder(targetContext).buildIfPossible();
+      CompositeUsageTracker compositeTracker = new CompositeUsageTracker(analyticsUsageTracker);
+      usageTrackerFacilitator.registerUsageTracker(compositeTracker);
     }
   }
 

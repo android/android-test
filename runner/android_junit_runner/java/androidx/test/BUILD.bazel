@@ -24,6 +24,7 @@ android_library(
         ":legacy-test-neverlink",
         "//:androidx_annotation",
         "//runner/monitor",
+        "//services/storage/java/androidx/test/services/storage",
         "@maven//:junit_junit",
     ],
 )
@@ -65,7 +66,7 @@ axt_release_lib(
 )
 
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "JUNIT_VERSION", "RUNNER_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "JUNIT_VERSION", "RUNNER_VERSION", "SERVICES_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 maven_artifact(
@@ -74,6 +75,7 @@ maven_artifact(
     artifact_deps = [
         "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
         "androidx.test:monitor:%s" % RUNNER_VERSION,
+        "androidx.test.services:storage:%s" % SERVICES_VERSION,
         "junit:junit:%s" % JUNIT_VERSION,
     ],
     artifact_id = "runner",
