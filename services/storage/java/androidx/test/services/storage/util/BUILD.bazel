@@ -1,0 +1,14 @@
+# Description: utilities for the storage service.
+
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
+
+licenses(["notice"])
+
+package(
+    default_visibility = ["//services/storage:__subpackages__"],
+)
+
+android_library(
+    name = "util",
+    srcs = glob(["*.java"]),
+)

@@ -12,7 +12,7 @@ android_library(
     name = "file",
     srcs = glob(["*.java"]),
     deps = [
-        "//runner/monitor",
         "//services/storage/java/androidx/test/services/storage:test_storage_constants",
+        "//services/storage/java/androidx/test/services/storage/util",
     ],
 )

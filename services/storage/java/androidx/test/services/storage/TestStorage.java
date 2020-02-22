@@ -15,7 +15,7 @@
  */
 package androidx.test.services.storage;
 
-import static androidx.test.internal.util.Checks.checkNotNull;
+import static androidx.test.services.storage.util.Checks.checkNotNull;
 
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
@@ -24,9 +24,6 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import android.util.Log;
-import androidx.test.internal.runner.tracker.UsageTrackerRegistry;
-import androidx.test.internal.runner.tracker.UsageTrackerRegistry.AxtVersions;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.services.storage.file.HostedFile;
 import androidx.test.services.storage.file.PropertyFile;
 import androidx.test.services.storage.file.PropertyFile.Authority;
@@ -49,26 +46,11 @@ import javax.annotation.Nonnull;
  */
 @ExperimentalTestStorage
 public final class TestStorage {
-  static {
-    UsageTrackerRegistry.getInstance()
-        .trackUsage("Test Storage Service-API", AxtVersions.SERVICES_VERSION);
-  }
 
   private static final String TAG = TestStorage.class.getSimpleName();
   private static final String PROPERTIES_FILE_NAME = "properties.dat";
 
   private final ContentResolver contentResolver;
-
-  /**
-   * Default constructor.
-   *
-   * <p>This class is supposed to be used mostly in the Instrumentation process, e.g. in an Android
-   * Instrumentation test. Thus by default, we use the content resolver of the app under test as the
-   * one to resolve a URI in this storage service.
-   */
-  public TestStorage() {
-    this(InstrumentationRegistry.getInstrumentation().getTargetContext().getContentResolver());
-  }
 
   /**
    * Constructor.

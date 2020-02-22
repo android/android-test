@@ -30,8 +30,8 @@ android_library(
     ],
     deps = [
         ":experimental_storage_annotation",
-        "//runner/android_junit_runner",
         "//services/storage/java/androidx/test/services/storage/file",
+        "//services/storage/java/androidx/test/services/storage/util",
         "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
@@ -75,7 +75,6 @@ maven_artifact(
     name = "test_storage_maven_artifact",
     src = ":test_storage_release.aar",
     artifact_deps = [
-        "androidx.test:runner:%s" % RUNNER_VERSION,
         "com.google.code.findbugs:jsr305:2.0.1",
     ],
     artifact_id = "storage",

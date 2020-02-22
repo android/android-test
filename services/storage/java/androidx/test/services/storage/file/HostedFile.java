@@ -15,6 +15,8 @@
  */
 package androidx.test.services.storage.file;
 
+import static androidx.test.services.storage.util.Checks.checkNotNull;
+
 import android.net.Uri;
 import android.provider.OpenableColumns;
 import androidx.test.services.storage.TestStorageConstants;
@@ -126,13 +128,6 @@ public final class HostedFile {
         .authority(host.getAuthority())
         .path(fileName)
         .build();
-  }
-
-  private static <T> T checkNotNull(T reference) {
-    if (reference == null) {
-      throw new NullPointerException();
-    }
-    return reference;
   }
 
   private HostedFile() {}

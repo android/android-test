@@ -15,7 +15,7 @@
  */
 package androidx.test.services.storage.file;
 
-import static androidx.test.internal.util.Checks.checkNotNull;
+import static androidx.test.services.storage.util.Checks.checkNotNull;
 
 import android.net.Uri;
 import androidx.test.services.storage.TestStorageConstants;

@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 import android.net.Uri;
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.services.storage.file.HostedFile;
 import androidx.test.services.storage.testapp.DummyActivity;
 import java.io.BufferedWriter;
@@ -44,7 +45,9 @@ public final class TestStorageTest {
 
   private static final String OUTPUT_PATH = "parent_dir/output_file";
 
-  private final TestStorage testStorage = new TestStorage();
+  private final TestStorage testStorage =
+      new TestStorage(
+          InstrumentationRegistry.getInstrumentation().getContext().getContentResolver());
 
   @Before
   public void setUp() {
@@ -75,7 +78,7 @@ public final class TestStorageTest {
 
   @Test
   public void testAddOutputProperties() throws Exception {
-    Map<String, Serializable> propertyMap = new HashMap<String, Serializable>();
+    Map<String, Serializable> propertyMap = new HashMap<>();
     propertyMap.put("property-a", "test");
     // Pass in a cloned copy since addStatsToSponge may modify the propertyMap instance.
     testStorage.addOutputProperties(new HashMap<String, Serializable>(propertyMap));
