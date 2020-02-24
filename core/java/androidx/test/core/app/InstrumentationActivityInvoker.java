@@ -137,6 +137,16 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
       isTargetActivityStarted =
           (savedInstanceState != null
               && savedInstanceState.getBoolean(IS_TARGET_ACTIVITY_STARTED_KEY, false));
+
+      // disable starting animations
+      overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public void finish() {
+      super.finish();
+      // disable closing animations
+      overridePendingTransition(0, 0);
     }
 
     @Override
@@ -291,6 +301,16 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       registerReceiver(receiver, new IntentFilter(FINISH_EMPTY_ACTIVITIES));
+
+      // disable starting animations
+      overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public void finish() {
+      super.finish();
+      // disable closing animations
+      overridePendingTransition(0, 0);
     }
 
     @Override
@@ -330,6 +350,16 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       registerReceiver(receiver, new IntentFilter(FINISH_EMPTY_ACTIVITIES));
+
+      // disable starting animations
+      overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public void finish() {
+      super.finish();
+      // disable closing animations
+      overridePendingTransition(0, 0);
     }
 
     @Override
