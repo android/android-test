@@ -56,7 +56,7 @@ public class TestCaseParcelableTest {
   }
 
   @DummyAnnotation(foo = "bar")
-  public void testMethodToGetAnnotations() {}
+  private void dummyMethodToGetAnnotations() {}
 
   @Test
   public void testCaseToParcelableTest_withMethodAnnotations() {
@@ -65,7 +65,7 @@ public class TestCaseParcelableTest {
       annotations =
           Arrays.asList(
               TestCaseParcelableTest.class
-                  .getDeclaredMethod("testMethodToGetAnnotations")
+                  .getDeclaredMethod("dummyMethodToGetAnnotations")
                   .getDeclaredAnnotations());
 
     } catch (NoSuchMethodException e) {
