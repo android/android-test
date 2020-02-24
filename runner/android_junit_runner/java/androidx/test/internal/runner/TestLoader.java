@@ -78,7 +78,7 @@ class TestLoader {
         runner = null;
       }
       // Can get NoClassDefFoundError on Android L when a class extends a non-existent class.
-    } catch (ClassNotFoundException | NoClassDefFoundError e) {
+    } catch (ClassNotFoundException | LinkageError e) {
       String errMsg = String.format("Could not find class: %s", className);
       Log.e(LOG_TAG, errMsg);
       Description description = Description.createSuiteDescription(className);
