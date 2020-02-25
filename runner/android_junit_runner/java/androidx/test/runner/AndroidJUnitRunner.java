@@ -278,6 +278,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
 
   @Override
   public void onCreate(Bundle arguments) {
+    super.onCreate(arguments);
     this.arguments = arguments;
     parseRunnerArgs(this.arguments);
 
@@ -294,7 +295,6 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
       usageTrackerFacilitator = new UsageTrackerFacilitator(false);
     }
 
-    super.onCreate(arguments);
 
     for (ApplicationLifecycleCallback listener : runnerArgs.appListeners) {
       ApplicationLifecycleMonitorRegistry.getInstance().addLifecycleCallback(listener);
