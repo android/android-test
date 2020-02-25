@@ -157,21 +157,20 @@ public final class RootViewPicker implements Provider<View> {
       resumedActivities = activityLifecycleMonitor.getActivitiesInStage(Stage.RESUMED);
     }
     if (resumedActivities.isEmpty()) {
-      List<Activity> activities = Lists.newArrayList();
-      for (long waitTime : CREATED_WAIT_TIMES) {
-        // wait for Activities to be scheduled by the platform before assuming there are none
-        // and failing the test.
-        for (Stage s : EnumSet.range(Stage.PRE_ON_CREATE, Stage.RESTARTED)) {
-          activities.addAll(activityLifecycleMonitor.getActivitiesInStage(s));
+      List<Activity> activities = getAllActiveActivities();
+      if (activities.isEmpty()) {
+        for (long waitTime : CREATED_WAIT_TIMES) {
+          // wait for Activities to be scheduled by the platform before assuming there are none
+          // and failing the test.
+          Log.w(TAG, "No activities found - waiting: " + waitTime + "ms for one to appear.");
+          uiController.loopMainThreadForAtLeast(waitTime);
+          activities = getAllActiveActivities();
+          if (!activities.isEmpty()) {
+            // found at least one activity in the pipeline
+            break;
+          }
         }
-        if (!activities.isEmpty()) {
-          // found at least one activity in the pipeline
-          break;
-        }
-        Log.w(TAG, "No activities found - waiting: " + waitTime + "ms for one to appear.");
-        uiController.loopMainThreadForAtLeast(waitTime);
       }
-
       if (activities.isEmpty()) {
         throw new RuntimeException(
             "No activities found. Did you forget to launch the activity "
@@ -192,6 +191,15 @@ public final class RootViewPicker implements Provider<View> {
           "No activities in stage RESUMED. Did you forget to "
               + "launch the activity. (test.getActivity() or similar)?");
     }
+  }
+
+  /** Returns the list of all non-destroyed activities. */
+  private List<Activity> getAllActiveActivities() {
+    List<Activity> activities = Lists.newArrayList();
+    for (Stage s : EnumSet.range(Stage.PRE_ON_CREATE, Stage.RESTARTED)) {
+      activities.addAll(activityLifecycleMonitor.getActivitiesInStage(s));
+    }
+    return activities;
   }
 
   private static class RootResults {
