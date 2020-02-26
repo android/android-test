@@ -15,11 +15,12 @@ android_library_instrumentation_tests(
         "//:androidx_lifecycle_common",
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
+        "//core/javatests/androidx/test/core/app/testing:manifest",
         "//ext/junit",
         "//ext/truth",
         "//runner/android_junit_runner",
-        "@maven//:junit_junit",
         "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
     ],
 )
 
@@ -33,7 +34,7 @@ android_library_local_tests(
         "//ext/junit",
         "//ext/truth",
         "//runner/monitor/java/androidx/test:monitor",
-        "@maven//:junit_junit",
         "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
     ],
 )
