@@ -97,7 +97,8 @@ public final class DefaultFailureHandler implements FailureHandler {
     return error;
   }
 
-  private static final class AssertionFailedWithCauseError extends AssertionFailedError {
+  private static final class AssertionFailedWithCauseError extends AssertionFailedError
+      implements EspressoException {
     /* junit hides the cause constructor. */
     public AssertionFailedWithCauseError(String message, Throwable cause) {
       super(message);
