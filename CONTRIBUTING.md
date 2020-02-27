@@ -31,8 +31,8 @@ AndroidX Test uses the [bazel](https://bazel.build) build system.
     on PATH.
 *   Install the [Android SDK](https://developer.android.com/studio/install) and
     run the following command to ensure you have the necessary components:
-    `./tools/bin/sdkmanager --install 'build-tools;28.0.3'
-    'platforms;android-28' 'emulator' 'platform-tools'
+    `./tools/bin/sdkmanager --install 'build-tools;29.0.3'
+    'platforms;android-29' 'emulator' 'platform-tools'
     'system-images;android-19;default;x86'
     'system-images;android-21;default;x86'
     'system-images;android-22;default;x86'

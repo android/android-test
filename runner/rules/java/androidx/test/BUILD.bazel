@@ -1,3 +1,8 @@
+load("//build_extensions:release.bzl", "axt_release_lib")
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
 # Description: Build rules for building androidx.test from source
 licenses(["notice"])  # Apache License 2.0
 
@@ -26,11 +31,9 @@ java_library(
     name = "legacy-test-neverlink",
     neverlink = 1,
     exports = [
-        "@androidsdk//:legacy_test-28",
+        "@androidsdk//:legacy_test-29",
     ],
 )
-
-load("//build_extensions:release.bzl", "axt_release_lib")
 
 # Generate rules for the release artifacts. This generates two file: runner_release_no_dep.jar
 # and runner_release.aar
@@ -46,10 +49,6 @@ axt_release_lib(
         ":rules",
     ],
 )
-
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 filegroup(
     name = "rules_src",

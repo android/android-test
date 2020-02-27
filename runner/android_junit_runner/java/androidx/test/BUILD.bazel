@@ -1,3 +1,7 @@
+load("//build_extensions:release.bzl", "axt_release_lib")
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "JUNIT_VERSION", "RUNNER_VERSION")
+
 # Description: Build rules for building androidx.test from source
 licenses(["notice"])  # Apache License 2.0
 
@@ -28,16 +32,14 @@ android_library(
     ],
 )
 
-# TODO(b/117464840): remove when legacy_test-28 is a neverlink target
+# TODO(b/117464840): remove when legacy_test-29 is a neverlink target
 java_library(
     name = "legacy-test-neverlink",
     neverlink = 1,
     exports = [
-        "@androidsdk//:legacy_test-28",
+        "@androidsdk//:legacy_test-29",
     ],
 )
-
-load("//build_extensions:release.bzl", "axt_release_lib")
 
 # group of targets to use to produce release binary + docs
 android_library(
@@ -63,10 +65,6 @@ axt_release_lib(
         ":runner_release_lib",
     ],
 )
-
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "JUNIT_VERSION", "RUNNER_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 maven_artifact(
     name = "runner_maven_artifact",
