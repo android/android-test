@@ -12,9 +12,7 @@ RUN \
     zip \
     wget && \
 
-    # download and extract sdk
+    # download and extract sdk while suppressing the progress bar output
     wget -nv https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip && \
     unzip -q sdk-tools-linux-4333796.zip -d $ANDROID_HOME && \
-    yes | sdkmanager --install 'build-tools;28.0.3' 'platforms;android-28' \
-    # silence sdkmanager progress bars (consisting of '=' characters)
-    grep -v = || true
+    yes | sdkmanager --install 'build-tools;28.0.3' 'platforms;android-28' | grep -v = || true
