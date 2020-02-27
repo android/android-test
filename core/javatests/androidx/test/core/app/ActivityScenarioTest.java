@@ -27,11 +27,13 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import androidx.lifecycle.Lifecycle.State;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.test.core.app.ActivityScenario.ActivityAction;
 import androidx.test.core.app.testing.AsyncRecordingActivity;
 import androidx.test.core.app.testing.FinishItselfActivity;
+import androidx.test.core.app.testing.IntentActivity;
 import androidx.test.core.app.testing.RecordingActivity;
 import androidx.test.core.app.testing.RecreationRecordingActivity;
 import androidx.test.core.app.testing.RedirectingActivity;
@@ -470,6 +472,14 @@ public final class ActivityScenarioTest {
                 .toBundle())) {
       assertThat(scenario.getState()).isEqualTo(State.RESUMED);
     }
+  }
+
+  @Test
+  public void launch_intentWithAction() {
+    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("scenario://test"));
+
+    ActivityScenario<IntentActivity> activityScenario = ActivityScenario.launch(intent);
+    assertThat(activityScenario).isNotNull();
   }
 
   private static Stage lastLifeCycleTransition(Activity activity) {

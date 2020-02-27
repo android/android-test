@@ -9,10 +9,17 @@ licenses(["notice"])  # Apache License 2.0
 android_library(
     name = "testing",
     srcs = glob(["**/*.java"]),
-    exports_manifest = 1,
-    manifest = "AndroidManifest.xml",
     visibility = ["//visibility:public"],
     deps = [
         "//:androidx_annotation",
     ],
+)
+
+# keep the activity manifest entries in a separate target, so they are not
+# present in both binary_under_test and test apk
+android_library(
+    name = "manifest",
+    exports_manifest = 1,
+    manifest = "AndroidManifest.xml",
+    visibility = ["//visibility:public"],
 )

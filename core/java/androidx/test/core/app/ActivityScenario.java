@@ -26,6 +26,7 @@ import android.app.Instrumentation.ActivityResult;
 import androidx.lifecycle.Lifecycle.Event;
 import androidx.lifecycle.Lifecycle.State;
 import android.content.Intent;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
@@ -355,7 +356,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
       new ActivityLifecycleCallback() {
         @Override
         public void onActivityLifecycleChanged(Activity activity, Stage stage) {
-          if (!startActivityIntent.filterEquals(activity.getIntent())) {
+          if (!activityMatchesIntent(startActivityIntent, activity)) {
             Log.v(
                 TAG,
                 String.format(
@@ -422,6 +423,50 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
           }
         }
       };
+
+  /** Determine if the intent matches the given activity. */
+  private static boolean activityMatchesIntent(
+      Intent startActivityIntent, Activity launchedActivity) {
+    // The logic here is almost the same as Intent.filterEquals
+    // but we need to handle case where startActivityIntent does not have component specified
+    // (aka is implicit intent). The launchedActivity intent will always have component specified,
+    // since
+    // the framework populates it
+
+    Intent activityIntent = launchedActivity.getIntent();
+    if (!equals(startActivityIntent.getAction(), activityIntent.getAction())) {
+      return false;
+    }
+    if (!equals(startActivityIntent.getData(), activityIntent.getData())) {
+      return false;
+    }
+    if (!equals(startActivityIntent.getType(), activityIntent.getType())) {
+      return false;
+    }
+    if (!equals(startActivityIntent.getPackage(), activityIntent.getPackage())) {
+      return false;
+    }
+    if (startActivityIntent.getComponent() != null) {
+      if (!equals(startActivityIntent.getComponent(), activityIntent.getComponent())) {
+        return false;
+      }
+    }
+    if (!equals(startActivityIntent.getCategories(), activityIntent.getCategories())) {
+      return false;
+    }
+    if (VERSION.SDK_INT >= 29) {
+      if (!equals(startActivityIntent.getIdentifier(), activityIntent.getIdentifier())) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  // reimplementation of Objects.equals since it is only available on APIs >= 19
+  private static boolean equals(Object a, Object b) {
+    return (a == b) || (a != null && a.equals(b));
+  }
 
   /**
    * ActivityState is a state class that holds a snapshot of an Activity's current state and a

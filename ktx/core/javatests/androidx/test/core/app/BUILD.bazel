@@ -13,6 +13,7 @@ android_binary(
     manifest = "AndroidManifest_target.xml",
     deps = [
         "//core/javatests/androidx/test/core/app/testing",
+        "//core/javatests/androidx/test/core/app/testing:manifest",
     ],
 )
 
