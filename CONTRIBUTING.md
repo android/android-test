@@ -25,7 +25,7 @@ AndroidX Test uses the [bazel](https://bazel.build) build system.
     [clone](https://help.github.com/articles/cloning-a-repository/) the
     [AndroidX Test repo](https://github.com/android/android-test)
 *   Install [bazel](https://docs.bazel.build/versions/master/install.html).
-    Version 0.19 is recommended. Ensure your environment meets the following
+    Version 1.2.1 is recommended. Ensure your environment meets the following
     [prerequisites](https://docs.bazel.build/versions/master/android-instrumentation-test.html#prerequisites)
 *   Install [maven](http://maven.apache.org/install.html) and make it available
     on PATH.

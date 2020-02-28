@@ -130,10 +130,10 @@ load("@robolectric//bazel:robolectric.bzl", "robolectric_repositories")
 robolectric_repositories()
 
 # Kotlin toolchains
-rules_kotlin_version = "4c71740a1b63b785fc90afd8d4d4d5bfda527107"
+rules_kotlin_version = "686518ffd8e58609a21f258616d154ba2934a8e8"
 http_archive(
     name = "io_bazel_rules_kotlin",
-    sha256 = "c0ca7b66d9f466067635482592634703bf0a648d51ec958f41796d43ca8256b3",
+    sha256 = "0237910a921ad492aa8520bf88923c42d745d74522d3507a34c9bfd39b4e295c",
     strip_prefix = "rules_kotlin-%s" % rules_kotlin_version,
     type = "zip",
     urls = ["https://github.com/bazelbuild/rules_kotlin/archive/%s.zip" % rules_kotlin_version],
