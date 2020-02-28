@@ -16,7 +16,8 @@ SE_DEPS = [
 EXTERNAL_DEPS = [
     "@maven//:junit_junit",
     "@maven//:com_google_truth_truth",
-    "@robolectric//bazel:robolectric",
+    "@robolectric//bazel:android-all",
+    "@maven//:org_robolectric_robolectric",
 ]
 
 java_library(

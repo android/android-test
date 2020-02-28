@@ -2,6 +2,7 @@
 licenses(["notice"])
 
 ATO_SHARED_DEPS = [
+    "//core/java/androidx/test/core",
     "//runner/android_test_orchestrator",
     "//runner/android_junit_runner",
     "//ext/junit",
@@ -22,7 +23,9 @@ ROBOLECTRIC_TEST_SRCS = [
 
 ROBOLECTRIC_DEPS = [
     "@maven//:com_google_guava_guava",
-    "@robolectric//bazel:robolectric",
+    "@maven//:org_robolectric_robolectric",
+    "@maven//:org_robolectric_shadows_framework",
+    "@robolectric//bazel:android-all",
 ]
 
 java_library(

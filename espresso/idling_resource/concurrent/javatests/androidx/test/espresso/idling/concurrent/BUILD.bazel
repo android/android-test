@@ -16,7 +16,8 @@ EXTERNAL_DEPS = [
     "@maven//:org_mockito_mockito_core",
     "@maven//:com_google_truth_truth",
     "@maven//:org_objenesis_objenesis",
-    "@robolectric//bazel:robolectric",
+    "@maven//:org_robolectric_robolectric",
+    "@robolectric//bazel:android-all",
 ] + IDLING_CONCURRENT_SHARED_DEPS
 
 ALL_DEPS = EXTERNAL_DEPS

@@ -49,7 +49,8 @@ def android_library_local_tests(name, srcs, deps, custom_package = None, **kwarg
         testonly = 1,
         deps = deps + [
         ":%s_config" % library_name,
-        "@robolectric//bazel:robolectric",
+        "@maven//:org_robolectric_robolectric",
+        "@robolectric//bazel:android-all",
         ],
     )
     for src in srcs:

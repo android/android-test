@@ -1,10 +1,10 @@
+load("//build_extensions:java_service_map.bzl", "java_service_map")
+
 package(
     default_testonly = 1,
 )
 
 licenses(["notice"])  # Apache License 2.0
-
-load("//build_extensions:java_service_map.bzl", "java_service_map")
 
 java_library(
     name = "service_fixture_impl",
@@ -31,15 +31,16 @@ java_library(
 android_local_test(
     name = "ServiceLoaderWrapperTest",
     srcs = ["ServiceLoaderWrapperTest.java"],
-    tags = ["robolectric"],
     manifest = "AndroidManifest_target.xml",
+    tags = ["robolectric"],
     deps = [
         ":robolectric_config",
         ":service_fixture",
         ":service_fixture_impl",
         "//ext/junit",
         "//runner/monitor",
-        "@robolectric//bazel:robolectric",
         "@maven//:com_google_truth_truth",
+        "@maven//:org_robolectric_robolectric",
+        "@robolectric//bazel:android-all",
     ],
 )
