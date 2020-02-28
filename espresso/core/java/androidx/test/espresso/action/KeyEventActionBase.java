@@ -114,7 +114,12 @@ class KeyEventActionBase implements ViewAction {
       injected =
           controller.injectKeyEvent(
               new KeyEvent(
-                  eventTime, eventTime, KeyEvent.ACTION_UP, this.espressoKey.getKeyCode(), 0));
+                  eventTime,
+                  eventTime,
+                  KeyEvent.ACTION_UP,
+                  this.espressoKey.getKeyCode(),
+                  0,
+                  this.espressoKey.getMetaState()));
     }
 
     return injected;
