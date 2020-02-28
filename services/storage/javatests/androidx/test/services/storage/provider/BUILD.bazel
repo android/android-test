@@ -1,6 +1,6 @@
 # Description:
 #   Tests for the sdcard data content providers
-load("@build_bazel_rules_android//android:rules.bzl", "android_library", "android_binary", "android_instrumentation_test")
+load("@build_bazel_rules_android//android:rules.bzl", "android_binary", "android_instrumentation_test", "android_library")
 
 licenses(["notice"])
 
@@ -21,11 +21,11 @@ android_library(
     manifest = "AndroidManifest_opensource.xml",
     deps = [
         "//runner/android_junit_runner",
-        "//services/storage/java/androidx/test/services/storage/file",
-        "//services/storage/java/androidx/test/services/storage/provider:storage_content_providers",
         "//services/storage/java/androidx/test/services/storage:storage_service_pb_java_proto_lite",
         "//services/storage/java/androidx/test/services/storage:test_storage_constants",
-        "@androidsdk//:legacy_test-28",
+        "//services/storage/java/androidx/test/services/storage/file",
+        "//services/storage/java/androidx/test/services/storage/provider:storage_content_providers",
+        "@androidsdk//:legacy_test-29",
         "@maven//:com_google_guava_guava",
     ],
 )
