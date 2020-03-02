@@ -160,7 +160,7 @@ def _maven_repository_impl(ctx):
     """Generates maven repository for multiple artifacts."""
     source_files = []
     for src in ctx.attr.srcs:
-        source_files.extend(list(src.files))
+        source_files.extend(src.files.to_list())
     ctx.action(
         inputs = source_files,
         outputs = [ctx.outputs.m2repository],
