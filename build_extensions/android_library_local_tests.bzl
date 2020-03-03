@@ -59,7 +59,6 @@ def android_library_local_tests(name, srcs, deps, custom_package = None, **kwarg
         native.android_local_test(
             name = name,
             tags = ["robolectric"],
-            aapt_version = "aapt2",
             manifest = "//build_extensions:AndroidManifest_target_stub.xml",
             manifest_values = {"applicationId": android_package_name},
             deps = [
