@@ -62,7 +62,10 @@ android_library_local_tests(
     name = "local_tests",
     srcs = glob(
         ["**/*.java"],
-        exclude = ["**/ActivityScenarioTest.java"],
+        exclude = [
+            "**/ActivityScenarioTest.java",
+            "**/app/ActivityScenarioSharedTest.java",  # currently broken due to AXT/Roboelctric version mismatch
+        ],
     ),
     deps = [
         "//:androidx_lifecycle_common",

@@ -32,7 +32,8 @@ ROBOLECTRIC_EXTERNAL_DEPS = [
     "@maven//:net_bytebuddy_byte_buddy_agent",
     "@maven//:org_mockito_mockito_core",
     "@maven//:org_objenesis_objenesis",
-    "@robolectric//bazel:robolectric",
+    "@maven//:org_robolectric_robolectric",
+    "@robolectric//bazel:android-all",
 ]
 
 java_library(
