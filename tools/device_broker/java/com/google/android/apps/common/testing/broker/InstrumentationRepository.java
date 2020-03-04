@@ -114,7 +114,7 @@ class InstrumentationRepository {
                 "Ignoring instrumentation class: %s/%s",
                 instrumentation.getAndroidPackage(), instrumentation.getInstrumentationClass()));
       } else if (AdbController.SUPPORTED_INSTRUMENTATION_NAMES.contains(
-          instrumentation.getInstrumentationClass())) {
+          instrumentation.getFullInstrumentationClass())) {
         filteredInstrumentations.add(instrumentation);
 
         // Assume the first supported non-bootstrap instrumentation found also contains the tests.
