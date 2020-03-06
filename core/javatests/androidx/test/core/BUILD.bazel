@@ -48,7 +48,9 @@ android_library_instrumentation_tests(
     ),
     target_devices = DEVICES,
     deps = [
+        "//:androidx_lifecycle_common",
         "//core",
+        "//core/javatests/androidx/test/core/app/testing",
         "//ext/junit",
         "//runner/android_junit_runner",
         "@maven//:com_google_guava_guava",
