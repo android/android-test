@@ -9,7 +9,7 @@ exports_files([
     "repo.bzl",
 ])
 
-# Creates maven repository release repository
+# Creates maven release repository
 maven_repository(
     name = "axt_m2repository",
     srcs = [
