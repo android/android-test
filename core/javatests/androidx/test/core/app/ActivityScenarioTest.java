@@ -20,8 +20,6 @@ import static android.app.Activity.RESULT_OK;
 import static androidx.test.ext.truth.content.IntentSubject.assertThat;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
-import static org.robolectric.annotation.LooperMode.Mode.PAUSED;
-import static org.robolectric.annotation.TextLayoutMode.Mode.REALISTIC;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -46,16 +44,12 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.annotation.LooperMode;
-import org.robolectric.annotation.TextLayoutMode;
 
 /**
  * Tests for ActivityScenario's implementation. Verifies ActivityScenario APIs works consistently
  * across multiple different Android framework versions and Robolectric.
  */
 @RunWith(AndroidJUnit4.class)
-@LooperMode(PAUSED)
-@TextLayoutMode(REALISTIC)
 public final class ActivityScenarioTest {
   @Test
   public void launchedActivityShouldBeResumed() throws Exception {

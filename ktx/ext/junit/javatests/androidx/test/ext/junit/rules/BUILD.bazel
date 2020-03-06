@@ -59,7 +59,8 @@ android_local_test(
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
-        "@robolectric//bazel:robolectric",
+        "@maven//:org_robolectric_robolectric",
+        "@robolectric//bazel:android-all",
     ],
 )
 

@@ -102,8 +102,8 @@ def _create_metadata_string(ctx):
 
 def _rename_artifact(ctx, tpl_string, src_file, packaging_type):
     """Rename the artifact to match maven naming conventions."""
-    artifact = ctx.new_file(ctx.bin_dir, tpl_string % (ctx.attr.artifact_id, ctx.attr.version, packaging_type))
-    ctx.action(
+    artifact = ctx.actions.declare_file(tpl_string % (ctx.attr.artifact_id, ctx.attr.version, packaging_type))
+    ctx.actions.run_shell(
         inputs = [src_file],
         outputs = [artifact],
         command = "cp %s %s" % (src_file.path, artifact.path),
@@ -112,14 +112,13 @@ def _rename_artifact(ctx, tpl_string, src_file, packaging_type):
 
 def _maven_artifact_impl(ctx):
     """Generates maven repository for a single artifact."""
-    pom = ctx.new_file(
-        ctx.bin_dir,
-        "%s-%s.pom" % (ctx.attr.artifact_id, ctx.attr.version),
+    pom = ctx.actions.declare_file(
+        "%s-%s.pom" % (ctx.attr.artifact_id, ctx.attr.version)
     )
-    ctx.file_action(output = pom, content = _create_pom_string(ctx))
+    ctx.actions.write(output = pom, content = _create_pom_string(ctx))
 
-    metadata = ctx.new_file(ctx.bin_dir, "maven-metadata.xml")
-    ctx.file_action(output = metadata, content = _create_metadata_string(ctx))
+    metadata = ctx.actions.declare_file("maven-metadata.xml")
+    ctx.actions.write(output = metadata, content = _create_metadata_string(ctx))
 
     # Rename binary artifact to artifact_id-version.packaging_type
     artifact = _rename_artifact(ctx, "%s-%s.%s", ctx.file.src, _packaging_type(ctx.file.src))
@@ -143,10 +142,10 @@ def _maven_artifact_impl(ctx):
     if ctx.file.javadoc_jar != None:
         # Rename javadoc jar artifact to artifact_id-version-javadoc.jar
         javadoc = _rename_artifact(ctx, "%s-%s-javadoc.%s", ctx.file.javadoc_jar, "jar")
-        arguments += ["--javadoc=%s" % javadoc.path]
-        inputs += [javadoc]
+        arguments.append("--javadoc=%s" % javadoc.path)
+        inputs.append(javadoc)
 
-    ctx.action(
+    ctx.actions.run(
         inputs = inputs,
         outputs = [ctx.outputs.m2repository],
         arguments = arguments,
@@ -160,8 +159,8 @@ def _maven_repository_impl(ctx):
     """Generates maven repository for multiple artifacts."""
     source_files = []
     for src in ctx.attr.srcs:
-        source_files.extend(list(src.files))
-    ctx.action(
+        source_files.extend(src.files.to_list())
+    ctx.actions.run(
         inputs = source_files,
         outputs = [ctx.outputs.m2repository],
         arguments = [

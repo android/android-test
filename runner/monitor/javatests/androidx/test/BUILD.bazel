@@ -16,7 +16,9 @@ ROBOLECTRIC_DEPS = [
     "@maven//:org_mockito_mockito_core",
     "@maven//:com_google_truth_truth",
     "@maven//:org_objenesis_objenesis",
-    "@robolectric//bazel:robolectric",
+    "@maven//:org_robolectric_robolectric",
+    "@maven//:org_robolectric_shadows_framework",
+    "@robolectric//bazel:android-all",
 ]
 
 ROBOLECTRIC_TEST_SRCS = glob(["**/LogUtilsTest.java"])

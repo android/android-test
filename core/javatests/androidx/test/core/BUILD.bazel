@@ -15,7 +15,6 @@ licenses(["notice"])  # Apache License 2.0
 # separate target binary, since that is how most users tests will be setup
 android_binary(
     name = "ActivityScenarioTest_target",
-    aapt_version = "aapt",
     manifest = "AndroidManifest_target.xml",
     deps = [
         "//core/javatests/androidx/test/core/app/testing",
@@ -49,7 +48,9 @@ android_library_instrumentation_tests(
     ),
     target_devices = DEVICES,
     deps = [
+        "//:androidx_lifecycle_common",
         "//core",
+        "//core/javatests/androidx/test/core/app/testing",
         "//ext/junit",
         "//runner/android_junit_runner",
         "@maven//:com_google_guava_guava",
@@ -62,7 +63,10 @@ android_library_local_tests(
     name = "local_tests",
     srcs = glob(
         ["**/*.java"],
-        exclude = ["**/ActivityScenarioTest.java"],
+        exclude = [
+            "**/ActivityScenarioTest.java",
+            "**/app/ActivityScenarioSharedTest.java",  # currently broken due to AXT/Roboelctric version mismatch
+        ],
     ),
     deps = [
         "//:androidx_lifecycle_common",

@@ -1,5 +1,5 @@
 # start from docker image with bazel installed
-FROM l.gcr.io/google/bazel:1.2.1
+FROM l.gcr.io/google/bazel:2.2.0
 
 ENV ANDROID_HOME /android-sdk
 ENV PATH ${ANDROID_HOME}/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools/bin:/bin:$PATH

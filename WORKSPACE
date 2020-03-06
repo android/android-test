@@ -33,12 +33,11 @@ http_archive(
 )
 
 # javalite toolchain is only available in javalite branch and there's no release tags in javalite
-# so here we just use the head as of June 12, 2019.
 http_archive(
     name = "com_google_protobuf_javalite",
-    sha256 = "3537c1324883dd6f3b08ab78239738dea618d6251b588f6bbee878762959f194",
-    strip_prefix = "protobuf-3cf3be9959928bf8a7133d323eaf6a5a8d5afdd7",
-    urls = ["https://github.com/protocolbuffers/protobuf/archive/3cf3be9959928bf8a7133d323eaf6a5a8d5afdd7.zip"],
+    sha256 = "a8cb9b8db16aff743a4bc8193abec96cf6ac0b0bc027121366b43ae8870f6fd3",
+    strip_prefix = "protobuf-fa08222434bc58d743e8c2cc716bc219c3d0f44e",
+    urls = ["https://github.com/protocolbuffers/protobuf/archive/fa08222434bc58d743e8c2cc716bc219c3d0f44e.zip"],
 )
 
 load("@rules_jvm_external//:defs.bzl", "maven_install")
@@ -109,6 +108,9 @@ maven_install(
         "org.mockito:mockito-core:2.25.0",
         "org.objenesis:objenesis:2.1",
         "org.pantsbuild:jarjar:1.7.2",
+        "org.robolectric:robolectric:4.0.1",
+        "org.robolectric:shadowapi:4.0.1",
+        "org.robolectric:shadows-framework:4.0.1",
     ],
     repositories = [
         "https://maven.google.com",
