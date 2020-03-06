@@ -7,7 +7,7 @@
   <application>
     <activity
         android:name=".RecreationRecordingActivity"
-        android:exported="false">
+        android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
@@ -15,7 +15,7 @@
     </activity>
         <activity
         android:name=".RecordingActivity"
-        android:exported="false">
+        android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
@@ -23,7 +23,7 @@
     </activity>
         <activity
         android:name=".AsyncRecordingActivity"
-        android:exported="false">
+        android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
@@ -31,7 +31,7 @@
     </activity>
     <activity
         android:name=".FinishItselfActivity"
-        android:exported="false">
+        android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
@@ -39,7 +39,7 @@
     </activity>
     <activity
         android:name=".RedirectingActivity"
-        android:exported="false">
+        android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

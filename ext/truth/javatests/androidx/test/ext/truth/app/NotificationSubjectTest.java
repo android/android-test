@@ -21,8 +21,8 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import androidx.test.core.app.testing.RecreationRecordingActivity;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,27 +32,34 @@ import org.junit.runner.RunWith;
 public class NotificationSubjectTest {
 
   @Rule
-  public ActivityTestRule<RecreationRecordingActivity> activityTestRule =
-      new ActivityTestRule<>(RecreationRecordingActivity.class);
+  public ActivityScenarioRule<RecreationRecordingActivity> activityScenarioRule =
+      new ActivityScenarioRule<>(RecreationRecordingActivity.class);
 
   @Test
   public void contentIntent() {
-    PendingIntent pendingIntent =
-        PendingIntent.getActivity(activityTestRule.getActivity(), 0, new Intent(), 0);
-    Notification notification = new Notification();
-    notification.contentIntent = pendingIntent;
-
-    assertThat(notification).contentIntent().isEqualTo(pendingIntent);
+    activityScenarioRule
+        .getScenario()
+        .onActivity(
+            activity -> {
+              PendingIntent pendingIntent = PendingIntent.getActivity(activity, 0, new Intent(), 0);
+              Notification notification = new Notification();
+              notification.contentIntent = pendingIntent;
+              assertThat(notification).contentIntent().isEqualTo(pendingIntent);
+            });
   }
 
   @Test
   public void deleteIntent() {
-    PendingIntent pendingIntent =
-        PendingIntent.getActivity(activityTestRule.getActivity(), 0, new Intent(), 0);
-    Notification notification = new Notification();
-    notification.deleteIntent = pendingIntent;
+    activityScenarioRule
+        .getScenario()
+        .onActivity(
+            activity -> {
+              PendingIntent pendingIntent = PendingIntent.getActivity(activity, 0, new Intent(), 0);
+              Notification notification = new Notification();
+              notification.deleteIntent = pendingIntent;
 
-    assertThat(notification).deleteIntent().isEqualTo(pendingIntent);
+              assertThat(notification).deleteIntent().isEqualTo(pendingIntent);
+            });
   }
 
   @Test
