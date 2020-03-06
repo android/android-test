@@ -93,8 +93,10 @@ public class AdbController {
       ImmutableList.<String>builder()
           .addAll(GOOGLE_INSTRUMENTATION_NAMES)
           .add("com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner")
+          .add(".GoogleInstrumentationTestRunner")
           .add("androidx.test.runner.AndroidJUnitRunner")
           .add("android.support.test.runner.AndroidJUnitRunner")
+          .add(".AndroidJUnitRunner")
           .build();
 
   /**
