@@ -26,7 +26,7 @@ android_local_test(
     name = "IdlingScheduledThreadPoolExecutorTest",
     size = "small",
     srcs = ["IdlingScheduledThreadPoolExecutorTest.java"],
-    tags = ["robolectric"],
+    tags = ["robolectric", "gcb_ignore"],
     deps = ALL_DEPS + [
         "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:scheduled_thread_pool_idling_resource",
     ],
@@ -36,7 +36,7 @@ android_local_test(
     name = "IdlingThreadPoolExecutorTest",
     size = "small",
     srcs = ["IdlingThreadPoolExecutorTest.java"],
-    tags = ["robolectric"],
+    tags = ["robolectric", "gcb_ignore"],
     deps = ALL_DEPS + [
         "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:thread_pool_idling_resource",
     ],
