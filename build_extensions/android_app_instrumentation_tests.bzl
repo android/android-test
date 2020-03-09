@@ -41,6 +41,7 @@ def android_app_instrumentation_tests(name, binary_target, srcs, deps, target_de
     native.android_library(
         name = library_name,
         srcs = srcs,
+        javacopts = kwargs.pop("javacopts", []),
         testonly = 1,
         deps = deps,
     )
