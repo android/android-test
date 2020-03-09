@@ -116,6 +116,9 @@ public class TestRequestBuilder {
 
     /** Returns the hardware type of the current device. */
     String getHardware();
+
+    /** Returns whether the current device use prerelease SDK. */
+    int getPreviewSDKInt();
   }
 
   private static class DeviceBuildImpl implements DeviceBuild {
@@ -127,6 +130,11 @@ public class TestRequestBuilder {
     @Override
     public String getHardware() {
       return android.os.Build.HARDWARE;
+    }
+
+    @Override
+    public int getPreviewSDKInt() {
+      return android.os.Build.VERSION.PREVIEW_SDK_INT;
     }
   }
 
@@ -253,7 +261,8 @@ public class TestRequestBuilder {
       final SdkSuppress sdkSuppress = getAnnotationForTest(description);
       if (sdkSuppress != null) {
         if (getDeviceSdkInt() >= sdkSuppress.minSdkVersion()
-            && getDeviceSdkInt() <= sdkSuppress.maxSdkVersion()) {
+            && getDeviceSdkInt() <= sdkSuppress.maxSdkVersion()
+            && getPreviewSDKInt() == sdkSuppress.prereleaseSDK()) {
           return true; // run the test
         }
         return false; // don't run the test
@@ -885,5 +894,9 @@ public class TestRequestBuilder {
 
   private String getDeviceHardware() {
     return deviceBuild.getHardware();
+  }
+
+  private int getPreviewSDKInt() {
+    return deviceBuild.getPreviewSDKInt();
   }
 }
