@@ -1,8 +1,8 @@
 """A rule wrapper for generating android_local_tests for an android library."""
 
 load(
-    "//build_extensions:infer_android_package_name.bzl",
-    "infer_android_package_name",
+    "//build_extensions:infer_java_package_name.bzl",
+    "infer_java_package_name",
 )
 
 _CONFIG_JAR_COMMAND = """
@@ -16,7 +16,7 @@ SRC="$<"
 $${JAR} -cf "$@" -C "$$(dirname "$${SRC}")" "$$(basename "$${SRC}")"
 """
 
-def android_library_local_tests(name, srcs, deps, custom_package = None, **kwargs):
+def android_library_local_tests(name, srcs, deps, test_java_package = None, **kwargs):
     """A rule for generating android_local_tests whose target under test is an android_library.
 
     Intended to have similar semantics as android_library_instrumentation_tests
@@ -28,16 +28,15 @@ def android_library_local_tests(name, srcs, deps, custom_package = None, **kwarg
 
     Args:
       name: the name to use for the generated android_library rule. This is needed for build_cleaner to
-        manage dependencies
+          manage dependencies
       srcs: the test sources to generate rules for
       deps: the build dependencies to use for the generated local test
-      custom_package: Optional. Package name of the library. It could be inferred if unset
+      test_java_package_name: Optional. The root java package name of the tests. Inferred based on
+          the current directory if unset
       **kwargs: arguments to pass to generated android_local_test rules
     """
 
-    android_package_name = custom_package
-    if android_package_name == None:
-        android_package_name = infer_android_package_name()
+    test_java_package_name = test_java_package if test_java_package else infer_java_package_name()
     library_name = name
     _robolectric_config(
         name = "%s_config" % library_name,
@@ -60,7 +59,7 @@ def android_library_local_tests(name, srcs, deps, custom_package = None, **kwarg
             name = name,
             tags = ["robolectric"],
             manifest = "//build_extensions:AndroidManifest_target_stub.xml",
-            manifest_values = {"applicationId": android_package_name},
+            manifest_values = {"applicationId": test_java_package_name},
             deps = [
                 library_name,
             ],

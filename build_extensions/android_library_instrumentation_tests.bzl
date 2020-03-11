@@ -1,16 +1,18 @@
 """A rule wrapper for an instrumentation test for an android library."""
 
 load(
-    "//build_extensions:android_multidevice_instrumentation_test.bzl",
-    "android_multidevice_instrumentation_test",
+    "//build_extensions:generate_instrumentation_tests.bzl",
+    "generate_instrumentation_tests",
 )
 load(
-    "//build_extensions:infer_android_package_name.bzl",
-    "infer_android_package_name",
+    "//build_extensions:infer_java_package_name.bzl",
+    "infer_java_package_name",
 )
 
-def android_library_instrumentation_tests(name, srcs, deps, target_devices, custom_package = None, nocompress_extensions = None, manifest_values = {}, **kwargs):
-    """A rule for an instrumentation test whose target under test is an android_library.
+def android_library_instrumentation_tests(name, srcs, deps, target_devices,
+                                          test_java_package = None, library_args = {},
+                                          binary_args = {}, **kwargs):
+    """A macro for an instrumentation test whose target under test is an android_library.
 
     Will generate a 'self-instrumentating' test binary and other associated rules
 
@@ -18,12 +20,12 @@ def android_library_instrumentation_tests(name, srcs, deps, target_devices, cust
     for simple cases, while still supporting build_cleaner for automatic dependency management.
 
     This will generate:
-      - a stub target binary. Essentially unused but blaze/bazel require it
+      - an unused stub android_binary under test, to placate bazel
       - a test_lib android_library, containing all sources and dependencies
       - a test_binary android_binary (soon to be android_application)
       - the manifest to use for the test library.
-      - for each device:
-         - a android_instrumentation_test rule
+      - for each device combination:
+         - an android_instrumentation_test rule)
 
     Args:
       name: the name to use for the generated android_library rule. This is needed for build_cleaner to
@@ -31,48 +33,40 @@ def android_library_instrumentation_tests(name, srcs, deps, target_devices, cust
       srcs: the test sources to generate rules for
       deps: the build dependencies to use for the generated test binary
       target_devices: array of device targets to execute on
-      custom_package: Optional. Package name of the library. It could be inferred if unset
-      nocompress_extensions: Optional. A list of file extensions to leave uncompressed in the resource apk.
-      manifest_values: Optional. A dictionary of values to be overridden in the manifest
+      test_java_package: Optional. A custom root package name to use for the tests. If unset
+          will be derived based on current path to a java source root
+      library_args: additional arguments to pass to generated android_library
+      binary_args: additional arguments to pass to generated android_binary
       **kwargs: arguments to pass to generated android_instrumentation_test rules
     """
-    library_name = name
-    android_package_name = custom_package
-    if android_package_name == None:
-        android_package_name = infer_android_package_name()
+    library_name = "%s_library" % name
+    test_java_package_name = test_java_package if test_java_package else infer_java_package_name()
+
     native.android_binary(
         name = "target_stub_binary",
         manifest = "//build_extensions:AndroidManifest_target_stub.xml",
-        manifest_values = {"applicationId": android_package_name},
+        # use the same package name as the test package, so it gets overridden
+        manifest_values = {"applicationId": test_java_package_name},
         testonly = 1,
     )
 
     native.android_library(
         name = library_name,
         srcs = srcs,
-        javacopts = kwargs.pop("javacopts", []),
         testonly = 1,
         deps = deps,
+        **library_args
     )
 
-    _manifest_values = {
-            "applicationId": android_package_name,
-            "instrumentationTargetPackage": android_package_name,
-    }
-    _manifest_values.update(manifest_values)
-    native.android_binary(
-        name = "%s_binary" % library_name,
-        instruments = ":target_stub_binary",
-        manifest = "//build_extensions:AndroidManifest_instrumentation_test_template.xml",
-        manifest_values = _manifest_values,
-        nocompress_extensions = nocompress_extensions,
-        testonly = 1,
-        multidex = kwargs.pop("multidex", "off"),
-        deps = [name],
-    )
-    android_multidevice_instrumentation_test(
-        name = "%s_tests" % library_name,
+    generate_instrumentation_tests(
+        name = name,
+        srcs = srcs,
+        deps = [library_name],
         target_devices = target_devices,
-        test_app = ":%s_binary" % library_name,
+        test_java_package_name = test_java_package_name,
+        test_android_package_name = test_java_package_name,
+        instrumentation_target_package = test_java_package_name,
+        instruments = ":target_stub_binary",
+        binary_args = binary_args,
         **kwargs
     )
