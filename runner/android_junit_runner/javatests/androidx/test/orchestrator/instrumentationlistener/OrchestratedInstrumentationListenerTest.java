@@ -26,6 +26,7 @@ import static org.mockito.Mockito.verify;
 
 import android.os.Bundle;
 import android.os.RemoteException;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.orchestrator.SampleJUnitTest;
 import androidx.test.orchestrator.callback.OrchestratorCallback;
 import androidx.test.orchestrator.junit.BundleJUnitUtils;
@@ -42,10 +43,9 @@ import org.junit.runner.notification.RunListener;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricTestRunner;
 
 /** Unit tests for {@link OrchestratedInstrumentationListener}. */
-@RunWith(RobolectricTestRunner.class)
+@RunWith(AndroidJUnit4.class)
 public class OrchestratedInstrumentationListenerTest
     implements OrchestratedInstrumentationListener.OnConnectListener {
 

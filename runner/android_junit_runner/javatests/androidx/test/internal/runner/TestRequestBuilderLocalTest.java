@@ -37,11 +37,9 @@ import org.junit.runner.notification.RunListener;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.annotation.Config;
 
 /** Unit tests running on local host for TestRequestBuilder. */
 @RunWith(AndroidJUnit4.class)
-@Config(sdk = Config.ALL_SDKS)
 public class TestRequestBuilderLocalTest {
 
   public static class TestFixture {

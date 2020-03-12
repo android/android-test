@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.not;
 
 import android.os.Bundle;
 import android.os.Parcel;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.orchestrator.SampleJUnitTest;
 import org.junit.Test;
 import org.junit.runner.Description;
@@ -28,10 +29,9 @@ import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
-import org.robolectric.RobolectricTestRunner;
 
 /** Unit tests for {@link BundleJUnitUtils}. */
-@RunWith(RobolectricTestRunner.class)
+@RunWith(AndroidJUnit4.class)
 public class BundleJUnitUtilsTest {
 
   @Test
@@ -134,6 +134,7 @@ public class BundleJUnitUtilsTest {
     parcel.setDataPosition(0);
     Bundle out = Bundle.CREATOR.createFromParcel(parcel);
 
+    out.setClassLoader(this.getClass().getClassLoader());
     // Sanity check that the robolectric shadows haven't done something tricky like give us
     // the same object back instead of a reconstructed bundle.
     assertThat(in, is(not(out)));

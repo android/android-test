@@ -26,6 +26,7 @@ import static org.mockito.Mockito.verify;
 
 import android.app.Instrumentation;
 import android.os.Bundle;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.orchestrator.junit.BundleJUnitUtils;
 import androidx.test.orchestrator.listeners.OrchestrationListenerManager.TestEvent;
 import org.junit.Before;
@@ -36,10 +37,9 @@ import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricTestRunner;
 
 /** Unit tests for {@link OrchestrationListenerManager}. */
-@RunWith(RobolectricTestRunner.class)
+@RunWith(AndroidJUnit4.class)
 public class OrchestrationListenerManagerTest {
 
   @Mock Instrumentation mockInstrumentation;
