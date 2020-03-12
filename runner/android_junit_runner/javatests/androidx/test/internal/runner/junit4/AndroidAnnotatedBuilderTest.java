@@ -102,24 +102,6 @@ public class AndroidAnnotatedBuilderTest {
   }
 
   @Test(expected = InvocationTargetException.class)
-  public void failCreatingAndroidRunner() throws Exception {
-    AndroidAnnotatedBuilder ab =
-        new AndroidAnnotatedBuilder(mockRunnerBuilder, mockAndroidRunnerParams) {
-          @Override
-          public Runner buildAndroidRunner(Class<? extends Runner> runnerClass, Class<?> testClass)
-              throws Exception {
-            assertEquals(runnerClass, AndroidJUnit4.class);
-            assertEquals(testClass, RunWithAndroidJUnit4Class.class);
-            // Simulate runner creation failure, should fall back to default
-            // implementation that should throw an Exception
-            throw new NoSuchMethodException();
-          }
-        };
-    // attempt to create a runner for a class annotated with @RunWith(AndroidJUnit4.class)
-    ab.runnerForClass(RunWithAndroidJUnit4Class.class);
-  }
-
-  @Test(expected = InvocationTargetException.class)
   public void nonAndroidJUnit4RunWithAnnotation_DefaultsToDefaultAnnotatedBuilder()
       throws Exception {
     AndroidAnnotatedBuilder ab =

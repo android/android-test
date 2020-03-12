@@ -22,6 +22,7 @@ import androidx.test.filters.SmallTest;
 import androidx.test.internal.runner.ClassPathScanner.ExcludePackageNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExternalClassNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.InclusivePackageNamesFilter;
+import androidx.test.platform.app.InstrumentationRegistry;
 import dalvik.system.DexFile;
 import java.io.IOException;
 import java.util.Arrays;
@@ -44,12 +45,18 @@ public class ClassPathScannerTest {
   @Before
   public void setUp() throws Exception {
     classPathScanner =
-        new ClassPathScanner(getApplicationContext().getPackageCodePath()) {
+        new ClassPathScanner(getClassPathToScan()) {
           @Override
           Enumeration<String> getDexEntries(DexFile dexFile) {
             return dexEntries;
           }
         };
+  }
+
+  private static String getClassPathToScan() {
+    String classpathToScan =
+        InstrumentationRegistry.getArguments().getString(RunnerArgs.ARGUMENT_CLASSPATH_TO_SCAN);
+    return classpathToScan != null ? classpathToScan : getApplicationContext().getPackageCodePath();
   }
 
   @Test

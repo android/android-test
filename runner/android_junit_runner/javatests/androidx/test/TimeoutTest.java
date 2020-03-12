@@ -18,13 +18,13 @@ package androidx.test;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getArguments;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.internal.runner.TestRequestBuilder;
 import androidx.test.testing.fixtures.JUnit3StyleTimeoutClass;
+import java.util.ArrayList;
 import java.util.List;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -37,6 +37,7 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
+import org.junit.runner.notification.Failure;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -58,8 +59,8 @@ public class TimeoutTest {
             .build();
     JUnitCore junitCore = new JUnitCore();
     Result result = junitCore.run(request);
-    assertThat(result.getFailures(), isEmpty());
-    assertEquals(2, result.getRunCount());
+    assertThat(result.getFailures()).isEmpty();
+    assertThat(result.getRunCount()).isEqualTo(2);
   }
 
   @Test
@@ -71,8 +72,8 @@ public class TimeoutTest {
             .build();
     JUnitCore junitCore = new JUnitCore();
     Result result = junitCore.run(request);
-    assertThat(result.getFailures(), isEmpty());
-    assertEquals(2, result.getRunCount());
+    assertThat(result.getFailures()).isEmpty();
+    assertThat(result.getRunCount()).isEqualTo(2);
   }
 
   /** Ensure that the combination of timing out and passing tests are all reported correctly */
@@ -85,19 +86,16 @@ public class TimeoutTest {
             .build();
     JUnitCore junitCore = new JUnitCore();
     Result result = junitCore.run(request);
-    assertEquals(3, result.getFailures().size());
-    assertEquals(
-        String.format(
-            "Test timed out after %s milliseconds", JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT),
-        result.getFailures().get(0).getMessage());
-    assertEquals(
-        String.format(
-            "Test timed out after %s milliseconds", JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT),
-        result.getFailures().get(1).getMessage());
-    assertEquals(
-        String.format(
-            "Test timed out after %s milliseconds", JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT),
-        result.getFailures().get(2).getMessage());
+    assertThat(result.getFailures()).hasSize(3);
+    assertThat(getFailureMessages(result.getFailures()))
+        .containsExactly(
+            String.format(
+                "Test timed out after %s milliseconds", JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT),
+            String.format(
+                "Test timed out after %s milliseconds", JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT),
+            String.format(
+                "Test timed out after %s milliseconds",
+                JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT));
   }
 
   /**
@@ -113,9 +111,17 @@ public class TimeoutTest {
             .build();
     JUnitCore junitCore = new JUnitCore();
     Result result = junitCore.run(request);
-    assertEquals(2, result.getFailures().size());
-    assertEquals("This is a failing Test", result.getFailures().get(0).getMessage());
-    assertEquals("Test threw RuntimeException", result.getFailures().get(1).getMessage());
+    assertThat(result.getFailures()).hasSize(2);
+    assertThat(getFailureMessages(result.getFailures()))
+        .containsExactly("This is a failing Test", "Test threw RuntimeException");
+  }
+
+  private static List<String> getFailureMessages(List<Failure> failures) {
+    List<String> messages = new ArrayList<>(failures.size());
+    for (Failure failure : failures) {
+      messages.add(failure.getMessage());
+    }
+    return messages;
   }
 
   private Matcher<List<?>> isEmpty() {
