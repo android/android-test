@@ -15,7 +15,7 @@ steps:
   args: ['build', '//:axt_m2repository']
 # run the robolectric tests
 - name: gcr.io/$PROJECT_ID/bazel-android
-  args: ['test', '...', '--test_tag_filters=robolectric', '--build_tag_filters=robolectric', '--test_output=all']
+  args: ['test', '...', '--test_tag_filters=robolectric,-gcb_ignore', '--build_tag_filters=robolectric', '--test_output=all']
 
 timeout: '1200s'
 

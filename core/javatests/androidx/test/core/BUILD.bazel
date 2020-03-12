@@ -44,7 +44,7 @@ android_library_instrumentation_tests(
     name = "instrumentation_tests",
     srcs = glob(
         ["**/*.java"],
-        exclude = ["**/ActivityScenarioTest.java"],
+        exclude = ["**/ActivityScenario*Test.java"],
     ),
     target_devices = DEVICES,
     deps = [

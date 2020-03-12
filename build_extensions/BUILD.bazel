@@ -1,3 +1,5 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
 licenses(["notice"])  # Apache License 2.0
 
 package(default_visibility = [
@@ -38,3 +40,9 @@ exports_files([
     "AndroidManifest_instrumentation_test_template.xml",
     "robolectric.properties",
 ])
+
+bzl_library(
+    name = "remove_from_jar_lib",
+    testonly = True,
+    srcs = ["remove_from_jar.bzl"],
+)

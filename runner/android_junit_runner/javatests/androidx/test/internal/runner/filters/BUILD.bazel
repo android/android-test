@@ -8,5 +8,7 @@ android_local_test(
         "//ext/junit",
         "//runner/android_junit_runner",
         "@maven//:com_google_truth_truth",
+        "@maven//:org_robolectric_robolectric",
+        "@robolectric//bazel:android-all",
     ],
 )
