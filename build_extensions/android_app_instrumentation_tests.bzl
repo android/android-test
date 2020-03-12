@@ -42,7 +42,7 @@ def android_app_instrumentation_tests(name, binary_target, srcs, deps, target_de
       **kwargs: arguments to pass to generated android_instrumentation_test rules
     """
     library_name = "%s_library" % name
-    test_java_package_name = test_java_package_name if test_java_package_name else infer_java_package_name()
+    test_java_package_name = test_java_package if test_java_package else infer_java_package_name()
     instrumentation_target_package = binary_target_package if binary_target_package else infer_java_package_name_from_label(binary_target)
 
     native.android_library(
