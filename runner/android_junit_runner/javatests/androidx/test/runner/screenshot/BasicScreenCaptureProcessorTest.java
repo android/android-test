@@ -17,6 +17,7 @@
 package androidx.test.runner.screenshot;
 
 import static android.graphics.Bitmap.CompressFormat.JPEG;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.junit.Assert.assertTrue;
 
 import android.graphics.Bitmap;
@@ -35,7 +36,7 @@ import org.junit.runners.JUnit4;
 @MediumTest
 public final class BasicScreenCaptureProcessorTest {
 
-  @Rule public TemporaryFolder folder = new TemporaryFolder();
+  @Rule public TemporaryFolder folder = new TemporaryFolder(getApplicationContext().getCacheDir());
   private Bitmap mStubBitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
   private File mTmpFolder;
 

@@ -1,39 +1,85 @@
-# Description: Runs all test runner tests
+# Description: Tests for Runner
+
+load(
+    "//build_extensions:android_library_instrumentation_tests.bzl",
+    "android_library_instrumentation_tests",
+)
+load(
+    "//build_extensions:test_devices.bzl",
+    "DEVICES",
+)
+
 package(
     default_testonly = 1,
-    default_visibility = [
-        "//visibility:public",
-    ],
 )
 
 licenses(["notice"])  # Apache License 2.0
 
-ANDROID_TEST_SRCS = glob(
-    ["**/*.java"],
-    exclude = [
-        # Tests currently not supported by android_instrumentation_test
-        "JUnitTestSuiteTest.java",
-        "MyTestSuiteBuilder.java",
-        # performance/profiling test
-        "JUnit3HogTest.java",
-        "JUnit4HogTest.java",
-        # empty tests not supported
-        "MyEmptyTest.java",
-        # parameterized tests not supported in Google
-        "MyParameterizedTest.java",
-        "AndroidLogOnlyBuilderTest.java",
-        "**/**/AndroidLogOnlyBuilder*Test.java",
-        "**/**/TestLoader*Test.java",
-        # suppressed
-        "TheoriesAndTestsTogether.java",
+android_library(
+    name = "legacy_test_manifest",
+    exports_manifest = 1,
+    manifest = "AndroidManifest.xml",
+)
+
+PARAMETERIZED_SRCS = [
+    "internal/runner/AndroidLogOnlyBuilderTest.java",
+    "internal/runner/TestLoaderTest.java",
+]
+
+# TODO(b/26110951) - remove when these classes are standalone parameterized tests
+android_library(
+    name = "parameterized",
+    srcs = PARAMETERIZED_SRCS,
+    deps = [
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_mockito_mockito_core",
     ],
 )
 
+# TODO(b/117464840): remove when legacy_test-29 is a neverlink target
 java_library(
-    name = "test_deps",
-    visibility = ["//visibility:public"],
+    name = "legacy-test-neverlink",
+    neverlink = 1,
     exports = [
+        "@androidsdk//:legacy_test-29",
+    ],
+)
+
+android_library_instrumentation_tests(
+    name = "android_junit_runner_tests",
+    size = "large",
+    srcs = glob(
+        ["**/*.java"],
+        exclude = [
+            # suites not supported in Google3
+            "JUnitTestSuiteTest.java",
+            "MyTestSuiteBuilder.java",
+            # performance/profiling test
+            "JUnit3HogTest.java",
+            "JUnit4HogTest.java",
+            # empty tests not supported
+            "MyEmptyTest.java",
+            # parameterized tests not supported
+            "MyParameterizedTest.java",
+            # suppressed
+            "TheoriesAndTestsTogether.java",
+        ] + PARAMETERIZED_SRCS,
+    ),
+    args = [
+        "--test_filter_spec",
+        "-TEST_NAME",
+        "--test_package_names",
+        "androidx.test.testing",
+    ],
+    target_devices = DEVICES,
+    deps = [
         ":legacy-test-neverlink",
+        ":legacy_test_manifest",
+        ":parameterized",
         "//core",
         "//ext/junit",
         "//runner/android_junit_runner",
@@ -48,53 +94,3 @@ java_library(
         "@maven//:org_objenesis_objenesis",
     ],
 )
-
-# TODO(b/117464840): remove when legacy_test-29 is a neverlink target
-java_library(
-    name = "legacy-test-neverlink",
-    neverlink = 1,
-    exports = [
-        "@androidsdk//:legacy_test-29",
-    ],
-)
-
-android_library(
-    name = "runner_test_lib",
-    srcs = ANDROID_TEST_SRCS,
-    manifest = "AndroidManifest_opensource.xml",
-    deps = [":test_deps"],
-)
-
-android_binary(
-    name = "runner_apk",
-    manifest = "AndroidManifest_opensource_stub.xml",
-)
-
-android_binary(
-    name = "runner_test_apk",
-    instruments = ":runner_apk",
-    manifest = "AndroidManifest_opensource.xml",
-    deps = [":runner_test_lib"],
-)
-
-API_LEVELS = [
-    "19_x86",
-    "21_x86",
-    "22_x86",
-    "23_x86",
-]
-
-[android_instrumentation_test(
-    name = "runner_tests_%s" % api_level,
-    size = "large",
-    args = [
-        "--clear_package_data",
-        "--install_test_services=True",
-        "--test_filter_spec",
-        "-TEST_NAME",
-        "--test_package_names",
-        "androidx.test.testing.fixtures",
-    ],
-    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
-    test_app = ":runner_test_apk",
-) for api_level in API_LEVELS]

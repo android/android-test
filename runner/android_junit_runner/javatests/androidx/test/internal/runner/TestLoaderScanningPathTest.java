@@ -15,11 +15,15 @@
  */
 package androidx.test.internal.runner;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import org.junit.runner.RunWith;
+
 /**
  * Work around for lack of support for Parameterized tests in Google 3.
  *
  * <p>TODO(b/26110951) remove when super class can be Parameterized.
  */
+@RunWith(AndroidJUnit4.class)
 public class TestLoaderScanningPathTest extends TestLoaderTest {
 
   public TestLoaderScanningPathTest() {

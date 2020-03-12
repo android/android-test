@@ -15,6 +15,7 @@
  */
 package androidx.test.internal.runner;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -53,6 +54,10 @@ import org.junit.runners.model.RunnerBuilder;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class RunnerArgsTest {
+
+  /** Temp file used for testing */
+  @Rule
+  public TemporaryFolder tmpFolder = new TemporaryFolder(getApplicationContext().getCacheDir());
 
   /** Simple test for parsing test class name */
   @Test
@@ -230,9 +235,6 @@ public class RunnerArgsTest {
     assertEquals("ClassName1", args.notTests.get(0).testClassName);
     assertEquals("method", args.notTests.get(0).methodName);
   }
-
-  /** Temp file used for testing */
-  @Rule public TemporaryFolder tmpFolder = new TemporaryFolder();
 
   /**
    * Test parsing bundle when package names, class names, and method names are provided within a
