@@ -114,7 +114,11 @@ class InstrumentationRepository {
                 "Ignoring instrumentation class: %s/%s",
                 instrumentation.getAndroidPackage(), instrumentation.getInstrumentationClass()));
       } else if (AdbController.SUPPORTED_INSTRUMENTATION_NAMES.contains(
-          instrumentation.getInstrumentationClass())) {
+              instrumentation.getFullInstrumentationClass())
+          ||
+          // TODO(b/150524968): remove support for custom runner classes
+          AdbController.SUPPORTED_INSTRUMENTATION_NAMES.contains(
+              instrumentation.getInstrumentationClass())) {
         filteredInstrumentations.add(instrumentation);
 
         // Assume the first supported non-bootstrap instrumentation found also contains the tests.

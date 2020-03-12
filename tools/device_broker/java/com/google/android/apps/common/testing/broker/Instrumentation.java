@@ -48,6 +48,16 @@ public abstract class Instrumentation {
     return getAndroidPackage() + "/" + getInstrumentationClass();
   }
 
+  /**
+   * Return the fully qualified class name of the instrumentation.
+   */
+  public String getFullInstrumentationClass() {
+    if (getInstrumentationClass().startsWith(".")) {
+      return getAndroidPackage() + getInstrumentationClass();
+    }
+    return getInstrumentationClass();
+  }
+
   @Override
   public String toString() {
     return getFullName();
