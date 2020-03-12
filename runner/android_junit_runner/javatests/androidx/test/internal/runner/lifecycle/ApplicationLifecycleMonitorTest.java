@@ -21,8 +21,8 @@ import static org.junit.Assert.assertEquals;
 import android.util.Pair;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import androidx.test.internal.runner.AppLifecycleListener;
 import androidx.test.runner.lifecycle.ApplicationStage;
+import androidx.test.testing.fixtures.AppLifecycleListener;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

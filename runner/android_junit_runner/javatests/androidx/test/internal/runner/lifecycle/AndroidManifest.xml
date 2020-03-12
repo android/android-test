@@ -23,7 +23,7 @@
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="28"/>
 
     <application android:label="AndroidJUnitRunner"
-                 android:name="androidx.test.internal.runner.MyApplication" >
+                 android:name="androidx.test.testing.fixtures.MyApplication" >
         <uses-library android:name="android.test.runner"/>
     </application>
 
@@ -32,7 +32,7 @@
       android:targetPackage="androidx.test.internal.runner.lifecycle.tests">
       <meta-data
           android:name="appListener"
-          android:value="androidx.test.internal.runner.AppLifecycleListener" />
+          android:value="androidx.test.testing.fixtures.AppLifecycleListener" />
     </instrumentation>
 
 </manifest>

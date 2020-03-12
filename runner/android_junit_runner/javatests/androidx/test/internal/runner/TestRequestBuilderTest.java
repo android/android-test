@@ -36,6 +36,17 @@ import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
 import androidx.test.filters.Suppress;
 import androidx.test.internal.runner.TestRequestBuilder.DeviceBuild;
+import androidx.test.testing.fixtures.BrokenRunnerBuilder;
+import androidx.test.testing.fixtures.CustomRunnerBuilder;
+import androidx.test.testing.fixtures.CustomTestFilter;
+import androidx.test.testing.fixtures.JUnit3FailingTestCase;
+import androidx.test.testing.fixtures.JUnit3FailingTestSuite;
+import androidx.test.testing.fixtures.JUnit3SuiteWithTest;
+import androidx.test.testing.fixtures.JUnit4Failing;
+import androidx.test.testing.fixtures.JUnit4Ignored;
+import androidx.test.testing.fixtures.RunWithAndroidJUnit4Failing;
+import androidx.test.testing.fixtures.RunWithJUnit4Failing;
+import androidx.test.testing.fixtures.SampleJUnit3Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +72,6 @@ import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
-import org.junit.runners.JUnit4;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Suite;
 import org.mockito.ArgumentCaptor;
@@ -119,17 +129,6 @@ public class TestRequestBuilderTest {
     public void testOther() {}
 
     public void testOther2() {}
-  }
-
-  public static class SampleJUnit3Test extends TestCase {
-
-    @SmallTest
-    public void testSmall() {}
-
-    @SmallTest
-    public void testSmall2() {}
-
-    public void testOther() {}
   }
 
   @SmallTest
@@ -352,17 +351,6 @@ public class TestRequestBuilderTest {
     }
   }
 
-  /** Test fixture for verifying support for suite() methods with tests. */
-  public static class JUnit3SuiteWithTest extends TestCase {
-    public static junit.framework.Test suite() {
-      TestSuite suite = new TestSuite();
-      suite.addTestSuite(SampleJUnit3Test.class);
-      return suite;
-    }
-
-    public void testPass() {}
-  }
-
   public static class JUnit4TestInitFailure {
 
     // this is an invalid method - trying to run test will fail with init error
@@ -371,50 +359,6 @@ public class TestRequestBuilderTest {
 
     @Test
     public void testWillFailOnClassInit() {}
-  }
-
-  public static class JUnit4Failing {
-    @Test
-    public void testBroken() {
-      fail("broken");
-    }
-  }
-
-  @Ignore
-  public static class JUnit4Ignored {
-    @Test
-    public void testBroken() {
-      fail("expected this test to be ignored");
-    }
-  }
-
-  @RunWith(JUnit4.class)
-  public static class RunWithJUnit4Failing {
-    @Test
-    public void testBroken() {
-      fail("broken");
-    }
-  }
-
-  @RunWith(AndroidJUnit4.class)
-  public static class RunWithAndroidJUnit4Failing {
-    @Test
-    public void testBroken() {
-      fail("broken");
-    }
-  }
-
-  public static class JUnit3FailingTestCase extends TestCase {
-    public void testBroken() {
-      fail("broken");
-    }
-  }
-
-  public static class JUnit3FailingTestSuite extends TestSuite {
-
-    public JUnit3FailingTestSuite() {
-      addTestSuite(JUnit3FailingTestCase.class);
-    }
   }
 
   public static class JUnit3FailingCustomTest implements junit.framework.Test {
@@ -1306,8 +1250,6 @@ public class TestRequestBuilderTest {
   }
 
   @Rule public ExpectedException thrown = ExpectedException.none();
-  private static final String EXCEPTION_MESSAGE =
-      "Ambiguous arguments: cannot provide both test package and test class(es) to run";
 
   /** Take intersection of test package and class */
   @Test

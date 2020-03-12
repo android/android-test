@@ -24,15 +24,13 @@ import static org.hamcrest.Matchers.typeCompatibleWith;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.SmallTest;
 import androidx.test.internal.runner.junit3.JUnit38ClassRunner;
 import androidx.test.internal.util.AndroidRunnerParams;
-import java.util.Arrays;
-import java.util.Collection;
+import androidx.test.testing.fixtures.JUnit3FailingTestCase;
+import androidx.test.testing.fixtures.JUnit3FailingTestSuiteWithSuite;
+import androidx.test.testing.fixtures.JUnit4Failing;
+import androidx.test.testing.fixtures.JUnit4ParameterizedTest;
 import java.util.Collections;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -41,7 +39,6 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
-import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.Suite;
@@ -51,7 +48,6 @@ import org.mockito.MockitoAnnotations;
 
 // TODO(b/26110951) not supported yet (note this class is ignored in BUILD file as well)
 // @RunWith(Parameterized.class)
-@SmallTest
 public abstract class AndroidLogOnlyBuilderTest {
 
   @Mock private AndroidRunnerParams mockAndroidRunnerParams;
@@ -69,27 +65,7 @@ public abstract class AndroidLogOnlyBuilderTest {
     return new Object[] {true, false};
   }
 
-  public static class JUnit4Test {
-    @Test
-    public void testFoo() {
-      fail("broken");
-    }
-  }
-
   public static class AnotherJUnit4Test {
-    @Test
-    public void testFoo() {
-      fail("broken");
-    }
-  }
-
-  @RunWith(Parameterized.class)
-  public static class JUnit4ParameterizedTest {
-    @Parameterized.Parameters(name = "{index}: foo({0})={1}")
-    public static Collection<Object[]> data() {
-      return Arrays.asList(new Object[][] {{0, 0}, {1, 1}, {2, 2}});
-    }
-
     @Test
     public void testFoo() {
       fail("broken");
@@ -107,31 +83,8 @@ public abstract class AndroidLogOnlyBuilderTest {
   }
 
   @RunWith(Suite.class)
-  @Suite.SuiteClasses({JUnit4Test.class, AnotherJUnit4Test.class})
+  @Suite.SuiteClasses({JUnit4Failing.class, AnotherJUnit4Test.class})
   public static class JUnit4TestSuite {}
-
-  public static class JUnit3Test extends TestCase {
-    public void testFoo() {
-      fail("broken");
-    }
-  }
-
-  public static class JUnit3Suite {
-    public static junit.framework.Test suite() {
-      TestSuite testSuite = new TestSuite();
-      testSuite.addTestSuite(JUnit3Test.class);
-      return testSuite;
-    }
-  }
-
-  @RunWith(AndroidJUnit4.class)
-  public static class JUnit4Class {
-
-    @Test
-    public void someTest() {
-      fail("broken");
-    }
-  }
 
   public static class NotATest {}
 
@@ -159,7 +112,7 @@ public abstract class AndroidLogOnlyBuilderTest {
 
   @Test
   public void builderHandlesJUnit3Tests() throws Throwable {
-    Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit3Test.class);
+    Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit3FailingTestCase.class);
     assertThat(selectedRunner, notNullValue());
     assertThat(selectedRunner.getClass(), typeCompatibleWith(JUnit38ClassRunner.class));
     runWithRunner(selectedRunner, 1, 0);
@@ -167,7 +120,8 @@ public abstract class AndroidLogOnlyBuilderTest {
 
   @Test
   public void builderHandlesJUnit3TestSuites() throws Throwable {
-    Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit3Suite.class);
+    Runner selectedRunner =
+        androidLogOnlyBuilder.runnerForClass(JUnit3FailingTestSuiteWithSuite.class);
     assertThat(selectedRunner, notNullValue());
     assertThat(selectedRunner.getClass(), typeCompatibleWith(JUnit38ClassRunner.class));
     runWithRunner(selectedRunner, 1, 0);
@@ -175,7 +129,7 @@ public abstract class AndroidLogOnlyBuilderTest {
 
   @Test
   public void builderHandlesJUnit4Tests() throws Throwable {
-    Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit4Test.class);
+    Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit4Failing.class);
     assertThat(selectedRunner, notNullValue());
     assertThat(selectedRunner.getClass(), typeCompatibleWith(NonExecutingRunner.class));
     runWithRunner(selectedRunner, 1, 0);

@@ -37,6 +37,7 @@ java_library(
         "//core",
         "//ext/junit",
         "//runner/android_junit_runner",
+        "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
         "//runner/rules",
         "@maven//:com_google_truth_truth",
         "@maven//:com_linkedin_dexmaker_dexmaker",
@@ -76,8 +77,6 @@ android_binary(
     deps = [":runner_test_lib"],
 )
 
-FILTER_INNER_TEST_CLASS_NAMES = "androidx.test.TimeoutTest$$JUnit3StyleClass,androidx.test.internal.runner.AndroidLogOnlyBuilderTest$$JUnit4Class,androidx.test.internal.runner.AndroidLogOnlyBuilderTest$$JUnit4ParameterizedTest,androidx.test.internal.runner.AndroidLogOnlyBuilderTest$$JUnit3Test,androidx.test.internal.runner.TestRequestBuilderTest$$JUnit3SuiteWithTest,androidx.test.internal.runner.TestRequestBuilderTest$$RunWithJUnit4Failing,androidx.test.internal.runner.TestRequestBuilderTest$$JUnit3FailingTestCase,androidx.test.internal.runner.TestRequestBuilderTest$$RunWithAndroidJUnit4Failing"
-
 API_LEVELS = [
     "19_x86",
     "21_x86",
@@ -93,8 +92,8 @@ API_LEVELS = [
         "--install_test_services=True",
         "--test_filter_spec",
         "-TEST_NAME",
-        "--test_class_names",
-        FILTER_INNER_TEST_CLASS_NAMES,
+        "--test_package_names",
+        "androidx.test.testing.fixtures",
     ],
     target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
     test_app = ":runner_test_apk",

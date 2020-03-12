@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.internal.runner;
+package androidx.test.testing.fixtures;
 
 import android.app.Application;
 import android.util.Pair;

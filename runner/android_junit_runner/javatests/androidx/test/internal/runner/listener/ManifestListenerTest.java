@@ -19,6 +19,7 @@ import static org.junit.Assert.assertTrue;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import androidx.test.testing.fixtures.ManifestListener;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

@@ -31,7 +31,7 @@
       android:targetPackage="androidx.test.internal.runner.listener.tests">
       <meta-data
           android:name="listener"
-          android:value="androidx.test.internal.runner.listener.ManifestListener" />
+          android:value="androidx.test.testing.fixtures.ManifestListener" />
     </instrumentation>
 
 </manifest>

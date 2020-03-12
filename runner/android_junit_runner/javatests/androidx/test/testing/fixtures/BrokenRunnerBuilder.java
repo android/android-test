@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,26 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package androidx.test.testing.fixtures;
 
-package androidx.test.internal.runner;
+import org.junit.runner.Runner;
+import org.junit.runners.model.RunnerBuilder;
 
-import android.app.Application;
-import androidx.test.runner.lifecycle.ApplicationStage;
+/** A custom builder that does not have a valid constructor. */
+public class BrokenRunnerBuilder extends RunnerBuilder {
 
-/**
- * Application fixture used to verify {@link
- * androidx.test.runner.lifecycle.ApplicationLifecycleCallback}
- */
-public class MyApplication extends Application {
-  private static volatile ApplicationStage stage = ApplicationStage.PRE_ON_CREATE;
+  private BrokenRunnerBuilder() {}
 
   @Override
-  public void onCreate() {
-    super.onCreate();
-    stage = ApplicationStage.CREATED;
-  }
-
-  public static ApplicationStage getStage() {
-    return stage;
+  public Runner runnerForClass(Class<?> testClass) throws Throwable {
+    return null;
   }
 }

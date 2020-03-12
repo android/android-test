@@ -24,8 +24,8 @@ import static org.junit.Assert.assertThat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.internal.runner.TestRequestBuilder;
+import androidx.test.testing.fixtures.JUnit3StyleTimeoutClass;
 import java.util.List;
-import junit.framework.TestCase;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
@@ -41,10 +41,6 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class TimeoutTest {
-  private static final int GLOBAL_ARG_TIMEOUT = 100;
-  private static final int GLOBAL_RULE_TIMEOUT = 50;
-  private static final int TEST_TIMEOUT = 25;
-  private static final int WAIT_FOR_TIMEOUT = 25;
 
   private TestRequestBuilder builder;
 
@@ -58,7 +54,7 @@ public class TimeoutTest {
     Request request =
         builder
             .addTestClass(JUnit4WithRuleClass.class.getName())
-            .setPerTestTimeout(GLOBAL_ARG_TIMEOUT)
+            .setPerTestTimeout(JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT)
             .build();
     JUnitCore junitCore = new JUnitCore();
     Result result = junitCore.run(request);
@@ -71,7 +67,7 @@ public class TimeoutTest {
     Request request =
         builder
             .addTestClass(JUnit4NoRuleClass.class.getName())
-            .setPerTestTimeout(GLOBAL_ARG_TIMEOUT)
+            .setPerTestTimeout(JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT)
             .build();
     JUnitCore junitCore = new JUnitCore();
     Result result = junitCore.run(request);
@@ -84,20 +80,23 @@ public class TimeoutTest {
   public void testTimeoutInJUnit3Style() {
     Request request =
         builder
-            .addTestClass(JUnit3StyleClass.class.getName())
-            .setPerTestTimeout(GLOBAL_ARG_TIMEOUT)
+            .addTestClass(JUnit3StyleTimeoutClass.class.getName())
+            .setPerTestTimeout(JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT)
             .build();
     JUnitCore junitCore = new JUnitCore();
     Result result = junitCore.run(request);
     assertEquals(3, result.getFailures().size());
     assertEquals(
-        String.format("Test timed out after %s milliseconds", GLOBAL_ARG_TIMEOUT),
+        String.format(
+            "Test timed out after %s milliseconds", JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT),
         result.getFailures().get(0).getMessage());
     assertEquals(
-        String.format("Test timed out after %s milliseconds", GLOBAL_ARG_TIMEOUT),
+        String.format(
+            "Test timed out after %s milliseconds", JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT),
         result.getFailures().get(1).getMessage());
     assertEquals(
-        String.format("Test timed out after %s milliseconds", GLOBAL_ARG_TIMEOUT),
+        String.format(
+            "Test timed out after %s milliseconds", JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT),
         result.getFailures().get(2).getMessage());
   }
 
@@ -108,7 +107,10 @@ public class TimeoutTest {
   @Test
   public void testJUnit3TimeoutTestsThatFailButNotTimeout() {
     Request request =
-        builder.addTestClass(JUnit3StyleClass.class.getName()).setPerTestTimeout(200).build();
+        builder
+            .addTestClass(JUnit3StyleTimeoutClass.class.getName())
+            .setPerTestTimeout(200)
+            .build();
     JUnitCore junitCore = new JUnitCore();
     Result result = junitCore.run(request);
     assertEquals(2, result.getFailures().size());
@@ -135,19 +137,19 @@ public class TimeoutTest {
    * the Android specific runner should be used.
    */
   public static class JUnit4WithRuleClass {
-    @Rule public Timeout globalTimeout = new Timeout(GLOBAL_RULE_TIMEOUT);
+    @Rule public Timeout globalTimeout = new Timeout(JUnit3StyleTimeoutClass.GLOBAL_RULE_TIMEOUT);
     @Rule public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void checkGlobalRuleTimeoutInterruptsOverArgTimeout() throws InterruptedException {
-      thrown.expectMessage(getTimeoutExceptionMessage(GLOBAL_RULE_TIMEOUT));
-      Thread.sleep(GLOBAL_ARG_TIMEOUT);
+      thrown.expectMessage(getTimeoutExceptionMessage(JUnit3StyleTimeoutClass.GLOBAL_RULE_TIMEOUT));
+      Thread.sleep(JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT);
     }
 
-    @Test(timeout = TEST_TIMEOUT)
+    @Test(timeout = JUnit3StyleTimeoutClass.TEST_TIMEOUT)
     public void checkTestTimeoutInterruptsOverAllOthers() throws InterruptedException {
-      thrown.expectMessage(getTimeoutExceptionMessage(TEST_TIMEOUT));
-      Thread.sleep(GLOBAL_RULE_TIMEOUT);
+      thrown.expectMessage(getTimeoutExceptionMessage(JUnit3StyleTimeoutClass.TEST_TIMEOUT));
+      Thread.sleep(JUnit3StyleTimeoutClass.GLOBAL_RULE_TIMEOUT);
     }
 
     private String getTimeoutExceptionMessage(int millis) {
@@ -164,14 +166,15 @@ public class TimeoutTest {
 
     @Test
     public void checkArgTimeoutInterrupts() throws InterruptedException {
-      thrown.expectMessage(getTimeoutExceptionMessage(GLOBAL_ARG_TIMEOUT));
-      Thread.sleep(GLOBAL_ARG_TIMEOUT + WAIT_FOR_TIMEOUT);
+      thrown.expectMessage(getTimeoutExceptionMessage(JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT));
+      Thread.sleep(
+          JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT + JUnit3StyleTimeoutClass.WAIT_FOR_TIMEOUT);
     }
 
-    @Test(timeout = TEST_TIMEOUT)
+    @Test(timeout = JUnit3StyleTimeoutClass.TEST_TIMEOUT)
     public void checkTestTimeoutInterruptsOverArgTimeout() throws InterruptedException {
-      thrown.expectMessage(getTimeoutExceptionMessage(TEST_TIMEOUT));
-      Thread.sleep(GLOBAL_ARG_TIMEOUT);
+      thrown.expectMessage(getTimeoutExceptionMessage(JUnit3StyleTimeoutClass.TEST_TIMEOUT));
+      Thread.sleep(JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT);
     }
 
     private String getTimeoutExceptionMessage(int millis) {
@@ -179,24 +182,4 @@ public class TimeoutTest {
     }
   }
 
-  /** Fixture to test timeout functionality for a JUnit3 style test. */
-  public static class JUnit3StyleClass extends TestCase {
-    public void testArgTimeoutInterrupts() throws InterruptedException {
-      Thread.sleep(GLOBAL_ARG_TIMEOUT + WAIT_FOR_TIMEOUT);
-    }
-
-    public void testArgTimeoutInterruptsThatThrows() throws InterruptedException {
-      Thread.sleep(GLOBAL_ARG_TIMEOUT + WAIT_FOR_TIMEOUT);
-      throw new RuntimeException("Test threw RuntimeException");
-    }
-
-    public void testArgTimeoutInterruptsThatFails() throws InterruptedException {
-      Thread.sleep(GLOBAL_ARG_TIMEOUT + WAIT_FOR_TIMEOUT);
-      fail("This is a failing Test");
-    }
-
-    public void testPassingTest() {
-      // pass
-    }
-  }
 }

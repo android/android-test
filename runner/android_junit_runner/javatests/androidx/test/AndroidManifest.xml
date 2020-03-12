@@ -15,20 +15,24 @@
 -->
 
 <manifest
-    package="androidx.test.tests"
+    package="androidx.test"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="28"/>
-
-    <application android:label="AndroidJUnitRunner">
+    <application android:label="AndroidJUnitRunner" android:name="androidx.test.testing.fixtures.MyApplication" >
         <uses-library android:name="android.test.runner"/>
     </application>
 
     <instrumentation
       android:name="androidx.test.runner.AndroidJUnitRunner"
-      android:targetPackage="androidx.test.tests">
+      android:targetPackage="androidx.test">
+      <meta-data
+          android:name="appListener"
+          android:value="androidx.test.testing.fixtures.AppLifecycleListener" />
+       <meta-data
+          android:name="listener"
+          android:value="androidx.test.testing.fixtures.ManifestListener" />
     </instrumentation>
 
 </manifest>

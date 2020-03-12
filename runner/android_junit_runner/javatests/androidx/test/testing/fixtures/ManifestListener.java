@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.internal.runner.listener;
+package androidx.test.testing.fixtures;
 
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunListener;

@@ -13,35 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.internal.runner;
+package androidx.test.testing.fixtures;
 
-import android.os.Bundle;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 
 /**
  * A custom filter used for testing support for specifying custom {@link Filter} classes through the
- * runner args, takes a {@link Bundle}.
+ * runner args.
  */
-public class CustomTestFilterTakesBundle extends Filter {
-
-  private final String test;
-
-  public CustomTestFilterTakesBundle(Bundle bundle) {
-    this.test = bundle.getString(CustomTestFilterTakesBundle.class.getName());
-  }
-
-  public String getTest() {
-    return test;
-  }
+public class CustomTestFilter extends Filter {
 
   @Override
   public boolean shouldRun(Description description) {
-    return !description.isTest() || test.equals(description.getMethodName());
+    return !description.isTest() || "testOther".equals(description.getMethodName());
   }
 
   @Override
   public String describe() {
-    return "custom filter (" + test + ")";
+    return "custom filter";
   }
 }
