@@ -15,6 +15,7 @@
  */
 package androidx.test.orchestrator;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWith;
@@ -23,6 +24,7 @@ import static org.hamcrest.Matchers.startsWith;
 
 import android.content.Context;
 import android.os.Bundle;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.google.common.base.Joiner;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -32,11 +34,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 
 /** Unit tests for {@link TestRunnable}. */
-@RunWith(RobolectricTestRunner.class)
+@RunWith(AndroidJUnit4.class)
 public class TestRunnableTest {
 
   private Bundle arguments;
@@ -99,7 +99,7 @@ public class TestRunnableTest {
     arguments.putString("arg1", "val1");
 
     outputStream = new ByteArrayOutputStream();
-    context = RuntimeEnvironment.application;
+    context = getApplicationContext();
   }
 
   @Test
