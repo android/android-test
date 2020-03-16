@@ -1,0 +1,54 @@
+# Description:
+#   Tests for espresso actions
+
+load(
+    "//build_extensions:android_app_instrumentation_tests.bzl",
+    "android_app_instrumentation_tests",
+)
+load(
+    "//build_extensions:test_devices.bzl",
+    "DEVICES",
+)
+
+android_app_instrumentation_tests(
+    name = "instrumentation_tests",
+    srcs = glob(
+        ["*.java"],
+        exclude = [
+            # exclude flaky b/63597999
+            "SwipeActionIntegrationTest.java",
+        ],
+    ),
+    binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+    target_devices = DEVICES,
+    deps = [
+        "//:androidx_annotation",
+        "//core",
+        "//espresso/core/java/androidx/test/espresso",
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//espresso/core/java/androidx/test/espresso/action:remote_view_actions",
+        "//espresso/core/java/androidx/test/espresso/assertion",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/matcher:remote_hamcrest_v1_3_core_matchers",
+        "//espresso/core/java/androidx/test/espresso/proto/action:ui_interaction_view_actions_android_pb3",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/core/java/androidx/test/espresso/remote:registry",
+        "//espresso/intents/java/androidx/test/espresso/intent:intents",
+        "//espresso/intents/java/androidx/test/espresso/intent/matcher",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/rules",
+        "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "//testapps/ui_testapp/javatests/androidx/test/ui/app:test_resources",
+        "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_linkedin_dexmaker_dexmaker",
+        "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
+        "@maven//:javax_inject_javax_inject",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_mockito_mockito_core",
+        "@maven//:org_objenesis_objenesis",
+    ],
+)
