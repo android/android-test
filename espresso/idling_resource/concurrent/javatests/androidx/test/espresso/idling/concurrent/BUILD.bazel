@@ -5,30 +5,27 @@ licenses(["notice"])  # Apache License 2.0
 
 ## Robolectric tests
 
-IDLING_CONCURRENT_SHARED_DEPS = [
-    "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
-]
-
-EXTERNAL_DEPS = [
-    "@maven//:junit_junit",
-    "@maven//:net_bytebuddy_byte_buddy",
-    "@maven//:net_bytebuddy_byte_buddy_agent",
-    "@maven//:org_mockito_mockito_core",
-    "@maven//:com_google_truth_truth",
-    "@maven//:org_objenesis_objenesis",
-    "@maven//:org_robolectric_robolectric",
-    "@robolectric//bazel:android-all",
-] + IDLING_CONCURRENT_SHARED_DEPS
-
-ALL_DEPS = EXTERNAL_DEPS
-
 android_local_test(
     name = "IdlingScheduledThreadPoolExecutorTest",
     size = "small",
     srcs = ["IdlingScheduledThreadPoolExecutorTest.java"],
-    tags = ["robolectric", "gcb_ignore"],
-    deps = ALL_DEPS + [
+    manifest_values = {"minSdkVersion": "14"},
+    tags = [
+        "gcb_ignore",
+        "robolectric",
+    ],
+    deps = [
         "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:scheduled_thread_pool_idling_resource",
+        "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
+        "//ext/junit",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+        "@maven//:net_bytebuddy_byte_buddy",
+        "@maven//:net_bytebuddy_byte_buddy_agent",
+        "@maven//:org_mockito_mockito_core",
+        "@maven//:org_objenesis_objenesis",
+        "@maven//:org_robolectric_robolectric",
+        "@robolectric//bazel:android-all",
     ],
 )
 
@@ -36,8 +33,22 @@ android_local_test(
     name = "IdlingThreadPoolExecutorTest",
     size = "small",
     srcs = ["IdlingThreadPoolExecutorTest.java"],
-    tags = ["robolectric", "gcb_ignore"],
-    deps = ALL_DEPS + [
+    manifest_values = {"minSdkVersion": "14"},
+    tags = [
+        "gcb_ignore",
+        "robolectric",
+    ],
+    deps = [
         "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:thread_pool_idling_resource",
+        "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
+        "//ext/junit",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+        "@maven//:net_bytebuddy_byte_buddy",
+        "@maven//:net_bytebuddy_byte_buddy_agent",
+        "@maven//:org_mockito_mockito_core",
+        "@maven//:org_objenesis_objenesis",
+        "@maven//:org_robolectric_robolectric",
+        "@robolectric//bazel:android-all",
     ],
 )
