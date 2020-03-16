@@ -1,99 +1,58 @@
-# Description: Tests for Monitor
+# Description: Monitor
+
+load(
+    "//build_extensions:android_library_instrumentation_tests.bzl",
+    "android_library_instrumentation_tests",
+)
+load(
+    "//build_extensions:android_library_local_tests.bzl",
+    "android_library_local_tests",
+)
+load(
+    "//build_extensions:test_devices.bzl",
+    "DEVICES",
+)
+
+package(
+    default_testonly = 1,
+)
+
 licenses(["notice"])  # Apache License 2.0
 
-MONITOR_DEPS = [
-    "//runner/android_junit_runner",
-    "//runner/monitor",
-    "//runner/rules",
-    "//ext/junit",
-    "//core",
-]
-
-ROBOLECTRIC_DEPS = [
-    "@maven//:junit_junit",
-    "@maven//:net_bytebuddy_byte_buddy",
-    "@maven//:net_bytebuddy_byte_buddy_agent",
-    "@maven//:org_mockito_mockito_core",
-    "@maven//:com_google_truth_truth",
-    "@maven//:org_objenesis_objenesis",
-    "@maven//:org_robolectric_robolectric",
-    "@maven//:org_robolectric_shadows_framework",
-    "@robolectric//bazel:android-all",
-]
-
-ROBOLECTRIC_TEST_SRCS = glob(["**/LogUtilsTest.java"])
-
-java_library(
-    name = "robolectric_test_deps",
-    exports = MONITOR_DEPS + ROBOLECTRIC_DEPS,
-)
-
-#Robolectric tests
-android_local_test(
-    name = "LogUtilsTest",
-    size = "small",
-    srcs = ROBOLECTRIC_TEST_SRCS,
-    tags = ["robolectric"],
-    deps = [":robolectric_test_deps"],
-)
-
-#Instrumentation tests
-MONITOR_TEST_SRCS = glob(
-    ["**/*.java"],
-    exclude = ROBOLECTRIC_TEST_SRCS,
-)
-
-EXTERNAL_DEPS = [
-    "//:androidx_annotation",
-    "@maven//:org_hamcrest_hamcrest_all",
-    "@maven//:javax_inject_javax_inject",
-    "@maven//:junit_junit",
-    "@maven//:com_linkedin_dexmaker_dexmaker",
-    "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
-    "@maven//:org_mockito_mockito_core",
-    "@maven//:org_objenesis_objenesis",
-    "@maven//:com_google_truth_truth",
-    "@maven//:com_google_guava_guava",
-]
-
-java_library(
-    name = "test_deps",
-    exports = MONITOR_DEPS + EXTERNAL_DEPS,
-)
-
-android_library(
-    name = "monitor_test_lib",
-    srcs = MONITOR_TEST_SRCS,
-    manifest = "AndroidManifest_opensource.xml",
-    deps = [":test_deps"],
-)
-
-android_binary(
-    name = "monitor_stub_binary",
-    manifest = "AndroidManifest_opensource_stub.xml",
-)
-
-android_binary(
-    name = "monitor_test_binary",
-    instruments = ":monitor_stub_binary",
-    manifest = "AndroidManifest_opensource.xml",
-    deps = [":monitor_test_lib"],
-)
-
-API_LEVELS = [
-    "19_x86",
-    "21_x86",
-    "22_x86",
-    "23_x86",
-]
-
-[android_instrumentation_test(
-    name = "monitor_tests_%s" % api_level,
-    size = "large",
-    args = [
-        "--clear_package_data",
-        "--install_test_services=True",  # required for Bazel 0.11, can be removed in 0.12
+android_library_local_tests(
+    name = "monitor_robolectric_tests",
+    srcs = ["internal/util/LogUtilsTest.java"],
+    deps = [
+        "//runner/monitor",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+        "@maven//:org_robolectric_shadows_framework",
     ],
-    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
-    test_app = ":monitor_test_binary",
-) for api_level in API_LEVELS]
+)
+
+android_library_instrumentation_tests(
+    name = "monitor_tests",
+    srcs = glob(
+        ["**/*.java"],
+        exclude = [
+            "internal/util/LogUtilsTest.java",
+        ],
+    ),
+    target_devices = DEVICES,
+    deps = [
+        "//:androidx_annotation",
+        "//core",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/monitor",
+        "//runner/monitor/javatests/androidx/test/internal/platform:fixtures",
+        "//runner/rules",
+        "@maven//:com_google_truth_truth",
+        "@maven//:com_linkedin_dexmaker_dexmaker",
+        "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_mockito_mockito_core",
+        "@maven//:org_objenesis_objenesis",
+    ],
+)
