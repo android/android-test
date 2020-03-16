@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.espresso.intent;
+package androidx.test.espresso.intent.matcher;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.intent.matcher.BundleMatchers.hasEntry;
@@ -48,6 +48,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import androidx.test.espresso.intent.ResolvedIntent;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import java.util.HashSet;
@@ -66,7 +67,6 @@ public class IntentMatchersTest {
 
   private final Uri uri = Uri.parse("https://www.google.com/search?q=Matcher");
 
-  @SuppressWarnings("unchecked")
   @Test
   public void matchesTesting() {
     Matcher<Intent> matcher =
@@ -88,7 +88,6 @@ public class IntentMatchersTest {
     assertTrue(matcher.matches(intent));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void matchesIntentWithNoTypeAndMatcherWithType() {
     Matcher<Intent> matcher =
@@ -138,7 +137,6 @@ public class IntentMatchersTest {
                 .setDataAndType(uri, Context.ACTIVITY_SERVICE)));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void matchesIntentWithOneExtraAndMatcherWithNoExtra() {
     Matcher<Intent> matcher =
@@ -159,7 +157,6 @@ public class IntentMatchersTest {
                 .putExtra("key", "value")));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void matchesIntentWithMultipleExtraAndMatcherWithMultipleExtra() {
     Matcher<Intent> matcher =

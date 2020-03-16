@@ -277,7 +277,6 @@ public class IntentsIntegrationTest {
     intended(
         allOf(
             hasAction(Intent.ACTION_VIEW),
-            anyOf(toPackage("com.android.browser"), toPackage("com.android.chrome")),
             hasData(
                 allOf(
                     hasHost("www.google.com"),
@@ -299,8 +298,7 @@ public class IntentsIntegrationTest {
             hasAction(Intent.ACTION_VIEW),
             hasCategories(hasItem(Intent.CATEGORY_BROWSABLE)),
             hasData(hasHost("www.google.com")),
-            hasExtras(allOf(hasEntry("key1", "value1"), hasEntry("key2", "value2"))),
-            anyOf(toPackage("com.android.browser"), toPackage("com.android.chrome"))));
+            hasExtras(allOf(hasEntry("key1", "value1"), hasEntry("key2", "value2")))));
     assertOnSendActivity();
   }
 

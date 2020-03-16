@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.espresso.intent;
+package androidx.test.espresso.intent.matcher;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName;

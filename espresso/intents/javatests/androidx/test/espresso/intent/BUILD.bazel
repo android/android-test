@@ -1,70 +1,38 @@
 # Description: Tests for espresso intents
-licenses(["notice"])  # Apache License 2.0
 
-ESPRESSO_INTENTS_TEST_SRCS = glob(["**/*.java"])
-
-ESPRESSO_INTENTS_DEPS = [
-    "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
-    "//espresso/intents/java/androidx/test/espresso/intent:intents",
-    "//espresso/intents/java/androidx/test/espresso/intent:resolved_intent_interface",
-    "//espresso/intents/java/androidx/test/espresso/intent/matcher",
-    "//espresso/intents/java/androidx/test/espresso/intent/rule",
-    "//espresso/core/java/androidx/test/espresso",
-    "//espresso/core/java/androidx/test/espresso/action",
-    "//espresso/core/java/androidx/test/espresso/assertion",
-    "//espresso/core/java/androidx/test/espresso/matcher",
-    "//runner/android_junit_runner",
-    "//runner/rules",
-    "//core",
-    "//ext/junit",
-]
-
-EXTERNAL_DEPS = [
-    "//:androidx_annotation",
-    "@maven//:com_google_guava_guava",
-    "@maven//:org_hamcrest_hamcrest_all",
-    "@maven//:junit_junit",
-    "@maven//:com_google_truth_truth",
-] + ESPRESSO_INTENTS_DEPS
-
-java_library(
-    name = "test_deps",
-    testonly = 1,
-    visibility = ["//visibility:public"],
-    exports = EXTERNAL_DEPS,
+load(
+    "//build_extensions:android_app_instrumentation_tests.bzl",
+    "android_app_instrumentation_tests",
+)
+load(
+    "//build_extensions:test_devices.bzl",
+    "DEVICES",
 )
 
-android_library(
-    name = "espresso_intents_test_lib",
-    testonly = 1,
-    srcs = ESPRESSO_INTENTS_TEST_SRCS,
-    manifest = "AndroidManifest_opensource.xml",
-    deps = [":test_deps"],
-)
-
-android_binary(
-    name = "espresso_intents_tests",
-    testonly = 1,
-    instruments = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
-    manifest = "AndroidManifest_opensource.xml",
-    deps = [":espresso_intents_test_lib"],
-)
-
-API_LEVELS = [
-    "19_x86",
-    "21_x86",
-    "22_x86",
-    "23_x86",
-]
-
-[android_instrumentation_test(
-    name = "espresso_intents_tests_%s" % api_level,
-    size = "large",
-    args = [
-        "--clear_package_data",
-        # Install test services, this is required as the services are not part of the image
-        "--install_test_services=True",  # Required for Bazel 0.11, can be removed in 0.12
+android_app_instrumentation_tests(
+    name = "instrumentation_tests",
+    srcs = glob(["**/*.java"]),
+    args = ["--clear_package_data"],
+    binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+    target_devices = DEVICES,
+    deps = [
+        "//:androidx_annotation",
+        "//core",
+        "//espresso/core/java/androidx/test/espresso",
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//espresso/core/java/androidx/test/espresso/assertion",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/intents/java/androidx/test/espresso/intent:intents",
+        "//espresso/intents/java/androidx/test/espresso/intent:resolved_intent_interface",
+        "//espresso/intents/java/androidx/test/espresso/intent/matcher",
+        "//espresso/intents/java/androidx/test/espresso/intent/rule",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/rules",
+        "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
-    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
-    test_app = ":espresso_intents_tests",
-) for api_level in API_LEVELS]
+)
