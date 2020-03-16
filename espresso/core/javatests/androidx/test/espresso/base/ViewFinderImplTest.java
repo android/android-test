@@ -33,7 +33,6 @@ import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewFinder;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
-import androidx.test.rule.UiThreadTestRule;
 import javax.inject.Provider;
 import org.junit.Before;
 import org.junit.Rule;
@@ -54,8 +53,6 @@ public class ViewFinderImplTest {
   private View child4;
   private View nestedChild;
   private Context mTargetContext;
-
-  @Rule public UiThreadTestRule uiThreadTestRule = new UiThreadTestRule();
 
   @Rule public ExpectedException expectedException = none();
 
