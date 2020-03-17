@@ -62,12 +62,12 @@ import org.junit.runners.model.Statement;
  * the reference returned by {@link #getActivity()} will always point to the current instance of the
  * Activity.
  *
- * <p>Consider using {@link androidx.test.ext.junit.rules.ActivityScenarioRule} or {@link
- * androidx.test.core.app.ActivityScenario} instead. They offer a simpler, and safer way of
- * controlling Activity lifecycles.
- *
  * @param <T> The Activity class under test
+ * @deprecated use {@link androidx.test.core.app.ActivityScenario} or {@link
+ *     androidx.test.ext.junit.rules.ActivityScenarioRule} instead. They offer a simpler, and safer
+ *     way of controlling Activity lifecycles.
  */
+@Deprecated
 public class ActivityTestRule<T extends Activity> implements TestRule {
 
   private static final String TAG = "ActivityTestRule";

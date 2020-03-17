@@ -35,7 +35,11 @@ import androidx.test.rule.ActivityTestRule;
  * </ul>
  *
  * @param <T> The activity to test
+ * @deprecated Use {@link androidx.test.espresso.intent.Intents.init()}, in conjunction with {@link
+ *     androidx.test.core.app.ActivityScenario} or {@link
+ *     androidx.test.ext.junit.rules.ActivityScenarioRule} instead.
  */
+@Deprecated
 public class IntentsTestRule<T extends Activity> extends ActivityTestRule<T> {
 
   private boolean isInitialized;
