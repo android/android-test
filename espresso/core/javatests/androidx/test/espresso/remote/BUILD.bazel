@@ -1,6 +1,13 @@
 # Helper artifacts for espresso remote tests
 
-licenses(["notice"])  # Apache License 2.0
+load(
+    "//build_extensions:android_app_instrumentation_tests.bzl",
+    "android_app_instrumentation_tests",
+)
+load(
+    "//build_extensions:test_devices.bzl",
+    "DEVICES",
+)
 
 package(default_visibility = ["//espresso/core/java/androidx/test/espresso:espresso_pkg"])
 
@@ -9,13 +16,6 @@ UTIL_SRCS = [
     "StubRootMatcher.java",
     "TestTypes.java",
     "TestTypeRemoteMessage.java",
-]
-
-EXTERNAL_DEPS = [
-    "@com_google_protobuf_javalite//:protobuf_java_lite",
-    "@maven//:com_google_guava_guava",
-    "@maven//:org_hamcrest_hamcrest_all",
-    "@maven//:junit_junit",
 ]
 
 android_library(
@@ -30,5 +30,51 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/core/javatests/androidx/test/espresso/proto:test_protos_android_pb3",
         "//espresso/web/java/androidx/test/espresso/web/model",
-    ] + EXTERNAL_DEPS,
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
+    ],
+)
+
+android_app_instrumentation_tests(
+    name = "instrumentation_tests",
+    srcs = glob(
+        ["*.java"],
+        exclude = UTIL_SRCS,
+    ),
+    binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+    target_devices = DEVICES,
+    deps = [
+        ":util",
+        "//core",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//espresso/core/java/androidx/test/espresso/action:remote_view_actions",
+        "//espresso/core/java/androidx/test/espresso/assertion",
+        "//espresso/core/java/androidx/test/espresso/assertion:remote_view_assertions",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/matcher:remote_hamcrest_v1_3_core_matchers",
+        "//espresso/core/java/androidx/test/espresso/matcher:remote_view_matchers",
+        "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
+        "//espresso/core/java/androidx/test/espresso/remote",
+        "//espresso/core/java/androidx/test/espresso/remote:bindable",
+        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//espresso/core/javatests/androidx/test/espresso/proto:test_protos_android_pb3",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_linkedin_dexmaker_dexmaker",
+        "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_mockito_mockito_core",
+        "@maven//:org_objenesis_objenesis",
+    ],
 )
