@@ -89,7 +89,6 @@ import androidx.test.espresso.matcher.ViewMatchers.Visibility;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
 import androidx.test.filters.SdkSuppress;
-import androidx.test.rule.UiThreadTestRule;
 import androidx.test.ui.app.R;
 import com.google.common.collect.Lists;
 import java.util.List;
@@ -111,8 +110,6 @@ public class ViewMatchersTest {
   private Context context;
 
   @Rule public ExpectedException expectedException = none();
-
-  @Rule public UiThreadTestRule uiThreadTestRule = new UiThreadTestRule();
 
   @Before
   public void setUp() throws Exception {
