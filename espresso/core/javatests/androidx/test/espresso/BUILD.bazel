@@ -1,108 +1,47 @@
 # Description: Tests for espresso core
+# Description:
+#   Tests for espresso core
+
+load(
+    "//build_extensions:android_app_instrumentation_tests.bzl",
+    "android_app_instrumentation_tests",
+)
+load(
+    "//build_extensions:test_devices.bzl",
+    "DEVICES",
+)
+
 licenses(["notice"])  # Apache License 2.0
 
-ESPRESSO_TEST_SRCS = glob(["**/*.java"])
-
-PROTO_DEPS = [
-    "//espresso/core/javatests/androidx/test/espresso/proto:test_protos_android_pb3",
-    "//espresso/core/java/androidx/test/espresso/proto/action:ui_interaction_view_actions_android_pb3",
-    "//espresso/core/java/androidx/test/espresso/proto/assertion:ui_interaction_view_assertions_android_pb3",
-    "//espresso/core/java/androidx/test/espresso/proto/matcher:hamcrest_matchers_v1_3_android_pb3",
-    "//espresso/core/java/androidx/test/espresso/proto/matcher:ui_interaction_view_matchers_android_pb3",
-    "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
-]
-
-ESPRESSO_REMOTE_DEPS = [
-    "//espresso/core/java/androidx/test/espresso/action:remote_view_actions",
-    "//espresso/core/java/androidx/test/espresso/assertion:remote_view_assertions",
-    "//espresso/core/java/androidx/test/espresso/matcher:remote_view_matchers",
-    "//espresso/core/java/androidx/test/espresso/matcher:remote_hamcrest_v1_3_core_matchers",
-    "//espresso/core/java/androidx/test/espresso/remote",
-    "//espresso/core/java/androidx/test/espresso/remote:bindable",
-    "//espresso/core/java/androidx/test/espresso/remote:exceptions",
-    "//espresso/core/java/androidx/test/espresso/remote:registry",
-    "//espresso/core/java/androidx/test/espresso/remote:interface",
-    "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
-    "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
-    "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
-] + PROTO_DEPS
-
-ESPRESSO_DEPS = [
-    "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
-    "//core",
-    "//espresso/intents/java/androidx/test/espresso/intent:intents",
-    "//espresso/intents/java/androidx/test/espresso/intent/matcher",
-    "//espresso/core/java/androidx/test/espresso",
-    "//espresso/core/java/androidx/test/espresso:data-interaction-remote",
-    "//espresso/core/java/androidx/test/espresso:framework",
-    "//espresso/core/java/androidx/test/espresso:interface",
-    "//espresso/core/java/androidx/test/espresso/action",
-    "//espresso/core/java/androidx/test/espresso/assertion",
-    "//espresso/core/java/androidx/test/espresso/base",
-    "//espresso/core/java/androidx/test/espresso/base:idling_resource_registry",
-    "//espresso/core/java/androidx/test/espresso/matcher",
-    "//espresso/core/java/androidx/test/espresso/util",
-    "//espresso/web/java/androidx/test/espresso/web/model",
-    "//ext/junit",
-    "//runner/android_junit_runner",
-    "//runner/rules",
-] + ESPRESSO_REMOTE_DEPS
-
-EXTERNAL_DEPS = [
-    "//:androidx_annotation",
-    "@com_google_protobuf_javalite//:protobuf_java_lite",
-    "@maven//:com_linkedin_dexmaker_dexmaker",
-    "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
-    "@maven//:com_google_guava_guava",
-    "@maven//:org_hamcrest_hamcrest_all",
-    "@maven//:javax_inject_javax_inject",
-    "@maven//:com_google_code_findbugs_jsr305",
-    "@maven//:junit_junit",
-    "@maven//:org_mockito_mockito_core",
-    "@maven//:org_objenesis_objenesis",
-] + ESPRESSO_DEPS
-
-java_library(
-    name = "test_deps",
-    testonly = 1,
-    visibility = ["//visibility:public"],
-    exports = EXTERNAL_DEPS,
-)
-
-android_library(
-    name = "espresso_test_lib",
-    testonly = 1,
-    srcs = ESPRESSO_TEST_SRCS,
-    manifest = "AndroidManifest_opensource.xml",
-    deps = [":test_deps"],
-)
-
-android_binary(
-    name = "espresso_core_tests",
-    testonly = 1,
-    instruments = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
-    manifest = "AndroidManifest_opensource.xml",
-    deps = [":espresso_test_lib"],
-)
-
-API_LEVELS = [
-    "19_x86",
-    "21_x86",
-    "22_x86",
-    "23_x86",
-]
-
-[android_instrumentation_test(
-    name = "espresso_core_tests_%s" % api_level,
-    size = "large",
-    # Increase timeout, as all tests run in one test target, see:
-    # https://docs.bazel.build/versions/master/test-encyclopedia.html#role-of-the-test-runner
-    timeout = "eternal",
-    args = [
-        "--clear_package_data",
-        # Install test services, this is required as the services are not part of the image
-        "--install_test_services=True",  # Required for Bazel 0.11, can be removed in 0.12
+android_app_instrumentation_tests(
+    name = "instrumentation_tests",
+    srcs = glob(["*.java"]),
+    binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+    target_devices = DEVICES,
+    deps = [
+        "//core",
+        "//espresso/core/java/androidx/test/espresso",
+        "//espresso/core/java/androidx/test/espresso:data-interaction-remote",
+        "//espresso/core/java/androidx/test/espresso/action:remote_view_actions",
+        "//espresso/core/java/androidx/test/espresso/base",
+        "//espresso/core/java/androidx/test/espresso/matcher:remote_hamcrest_v1_3_core_matchers",
+        "//espresso/core/java/androidx/test/espresso/matcher:remote_view_matchers",
+        "//espresso/core/java/androidx/test/espresso/proto/matcher:ui_interaction_view_matchers_android_pb3",
+        "//espresso/core/java/androidx/test/espresso/remote:bindable",
+        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/core/java/androidx/test/espresso/remote:registry",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/rules",
+        "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_linkedin_dexmaker_dexmaker",
+        "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_mockito_mockito_core",
+        "@maven//:org_objenesis_objenesis",
     ],
-    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
-    test_app = ":espresso_core_tests",
-) for api_level in API_LEVELS]
+)
