@@ -1,11 +1,22 @@
 # Description: Tests for espresso web
+
+load(
+    "//build_extensions:android_app_instrumentation_tests.bzl",
+    "android_app_instrumentation_tests",
+)
+load(
+    "//build_extensions:test_devices.bzl",
+    "DEVICES",
+)
+
 licenses(["notice"])  # Apache License 2.0
 
-android_library(
-    name = "espresso_web_test_lib",
+android_app_instrumentation_tests(
+    name = "instrumentation_tests",
     testonly = 1,
     srcs = glob(["**/*.java"]),
-    manifest = "AndroidManifest_opensource.xml",
+    binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+    target_devices = DEVICES,
     deps = [
         "//core",
         "//espresso/core/java/androidx/test/espresso",
@@ -42,33 +53,7 @@ android_library(
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
         "@com_google_protobuf_javalite//:protobuf_java_lite",
         "@maven//:com_google_guava_guava",
-        "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
-
-android_binary(
-    name = "espresso_web_tests",
-    testonly = 1,
-    instruments = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
-    manifest = "AndroidManifest_opensource.xml",
-    deps = [":espresso_web_test_lib"],
-)
-
-API_LEVELS = [
-    "19_x86",
-    "21_x86",
-    "22_x86",
-    "23_x86",
-]
-
-[android_instrumentation_test(
-    name = "espresso_web_tests_%s" % api_level,
-    size = "large",
-    args = [
-        "--clear_package_data",
-        "--install_test_services=True",  # Required for Bazel 0.11, can be removed in 0.12
-    ],
-    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
-    test_app = ":espresso_web_tests",
-) for api_level in API_LEVELS]
