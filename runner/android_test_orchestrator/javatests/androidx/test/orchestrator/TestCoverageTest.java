@@ -10,11 +10,11 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.fail;
 
 import android.os.Bundle;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 
-@RunWith(RobolectricTestRunner.class)
+@RunWith(AndroidJUnit4.class)
 public class TestCoverageTest {
 
   @Test
