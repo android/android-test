@@ -29,18 +29,17 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.view.View;
 import android.widget.ListView;
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.filters.SdkSuppress;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import org.hamcrest.Matcher;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -49,11 +48,9 @@ import org.junit.runner.RunWith;
 @LargeTest
 public class MainActivityTest {
 
-  @Before
-  public void setUp() throws Exception {
-    // Espresso will not launch our activity for us, we must launch it via ActivityScenario.launch.
-    ActivityScenario.launch(MainActivity.class);
-  }
+  @Rule
+  public ActivityScenarioRule<MainActivity> activityScenarioRule =
+      new ActivityScenarioRule<>(MainActivity.class);
 
   private static class ScrapeListView implements ViewAction {
 
@@ -90,7 +87,6 @@ public class MainActivityTest {
   }
 
   @Test
-  @SdkSuppress(maxSdkVersion = 23) // b/29833613
   @SuppressWarnings("unchecked")
   public void testOpenAllActivities() throws Exception {
     ScrapeListView slv = new ScrapeListView();
