@@ -6,7 +6,7 @@ load(
 )
 load(
     "//build_extensions:test_devices.bzl",
-    "DEVICES",
+    "devices",
 )
 
 package(
@@ -75,7 +75,7 @@ android_library_instrumentation_tests(
         "--test_package_names",
         "androidx.test.testing",
     ],
-    target_devices = DEVICES,
+    target_devices = devices(),
     deps = [
         ":legacy-test-neverlink",
         ":legacy_test_manifest",

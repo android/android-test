@@ -6,7 +6,7 @@ load(
 )
 load(
     "//build_extensions:test_devices.bzl",
-    "DEVICES",
+    "devices",
 )
 
 package(default_visibility = ["//espresso/core/java/androidx/test/espresso:espresso_pkg"])
@@ -44,7 +44,7 @@ android_app_instrumentation_tests(
         exclude = UTIL_SRCS,
     ),
     binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
-    target_devices = DEVICES,
+    target_devices = devices(),
     deps = [
         ":util",
         "//core",

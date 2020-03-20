@@ -2,7 +2,7 @@ licenses(["notice"])  # Apache License 2.0
 
 load("//build_extensions:android_library_instrumentation_tests.bzl", "android_library_instrumentation_tests")
 load("//build_extensions:android_library_local_tests.bzl", "android_library_local_tests")
-load("//build_extensions:test_devices.bzl", "DEVICES")
+load("//build_extensions:test_devices.bzl", "devices")
 
 android_library_instrumentation_tests(
     name = "instrumentation_tests",
@@ -10,7 +10,7 @@ android_library_instrumentation_tests(
         ["**/*.java"],
         exclude = ["**/ActivityScenarioTest.java"],
     ),
-    target_devices = DEVICES,
+    target_devices = devices(),
     deps = [
         "//:androidx_lifecycle_common",
         "//core",

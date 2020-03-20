@@ -10,7 +10,7 @@ load(
 )
 load(
     "//build_extensions:test_devices.bzl",
-    "DEVICES",
+    "devices",
 )
 
 package(
@@ -38,7 +38,7 @@ android_library_instrumentation_tests(
             "internal/util/LogUtilsTest.java",
         ],
     ),
-    target_devices = DEVICES,
+    target_devices = devices(),
     deps = [
         "//:androidx_annotation",
         "//core",
