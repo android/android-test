@@ -1,24 +1,66 @@
-# Description: Tests for espresso contrib
-licenses(["notice"])  # Apache License 2.0
+# Description:
+#   Tests for espresso contrib classes
+
+load(
+    "//build_extensions:android_app_instrumentation_tests.bzl",
+    "android_app_instrumentation_tests",
+)
+load(
+    "//build_extensions:test_devices.bzl",
+    "DEVICES",
+)
+
+## Android tests
+
+UTIL_SRC = ["RecyclerViewIntegrationTest.java"]
 
 android_library(
-    name = "espresso_contrib_test_lib",
+    name = "util",
     testonly = 1,
-    # TODO(b/119839492): need androidx version of accessibility
-    srcs = glob(
-        ["**/*.java"],
-        exclude = ["AccessibilityChecksIntegrationTest.java"],
-    ),
-    manifest = "AndroidManifest.xml",
+    srcs = UTIL_SRC,
     deps = [
+        "//:androidx_recyclerview",
+        "//core",
+        "//espresso/contrib/java/androidx/test/espresso/contrib:recycler_view",
+        "//espresso/core/java/androidx/test/espresso",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//espresso/core/java/androidx/test/espresso/assertion",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//runner/android_junit_runner",
+        "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
+    ],
+)
+
+android_app_instrumentation_tests(
+    name = "instrumentation_tests",
+    srcs = glob(
+        ["*.java"],
+        exclude = UTIL_SRC + [
+            # does not support androidx
+            "AccessibilityChecksIntegrationTest.java",
+            # TODO(b/151977929): time out
+            "NavigationViewActionsIntegrationTest.java",
+            "RecyclerViewGridLayoutManagerTest.java",
+            "RecyclerViewLinearLayoutManagerTest.java",
+            "RecyclerViewStaggeredGridLayoutManagerTest.java",
+        ],
+    ),
+    binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+    target_devices = DEVICES,
+    deps = [
+        ":util",
+        "//:androidx_core",
+        "//:androidx_recyclerview",
         "//core",
         "//espresso/contrib/java/androidx/test/espresso/contrib:accessibility_checks",
         "//espresso/contrib/java/androidx/test/espresso/contrib:activity_result_matchers",
-        "//espresso/contrib/java/androidx/test/espresso/contrib:androidx_neverlink",
         "//espresso/contrib/java/androidx/test/espresso/contrib:design_lib_actions",
         "//espresso/contrib/java/androidx/test/espresso/contrib:drawer_actions",
         "//espresso/contrib/java/androidx/test/espresso/contrib:recycler_view",
-        "//espresso/contrib/java/androidx/test/espresso/contrib:recyclerview_neverlink",
         "//espresso/contrib/java/androidx/test/espresso/contrib:view_pager_actions",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
@@ -30,41 +72,15 @@ android_library(
         "//runner/rules",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
         "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework",
+        "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_truth_truth",
         "@maven//:com_linkedin_dexmaker_dexmaker",
         "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
-        "@maven//:com_google_guava_guava",
-        "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:javax_inject_javax_inject",
-        "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:org_mockito_mockito_core",
         "@maven//:org_objenesis_objenesis",
-        "@maven//:com_google_truth_truth",
     ],
 )
-
-android_binary(
-    name = "espresso_contrib_tests",
-    testonly = 1,
-    instruments = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
-    manifest = "AndroidManifest.xml",
-    deps = [":espresso_contrib_test_lib"],
-)
-
-API_LEVELS = [
-    "19_x86",
-    "21_x86",
-    "22_x86",
-    "23_x86",
-]
-
-[android_instrumentation_test(
-    name = "espresso_contrib_tests_%s" % api_level,
-    size = "large",
-    args = [
-        "--clear_package_data",
-        "--install_test_services=True",  # Required for Bazel 0.11, can be removed in 0.12
-    ],
-    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
-    test_app = ":espresso_contrib_tests",
-) for api_level in API_LEVELS]

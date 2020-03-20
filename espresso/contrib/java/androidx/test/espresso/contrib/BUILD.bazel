@@ -36,13 +36,15 @@ android_library(
     srcs = ["PickerActions.java"],
     visibility = ["//visibility:public"],
     deps = [
-        ":androidx_neverlink",
+        "//:androidx_annotation",
+        "//:androidx_core",
+        "//:androidx_legacy_support_core_ui",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 
@@ -51,15 +53,17 @@ android_library(
     srcs = ["RecyclerViewActions.java"],
     visibility = ["//visibility:public"],
     deps = [
-        ":androidx_neverlink",
         ":guava_checks",
-        ":recyclerview_neverlink",
+        "//:androidx_annotation",
+        "//:androidx_core",
+        "//:androidx_legacy_support_core_ui",
+        "//:androidx_recyclerview",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 
@@ -72,14 +76,16 @@ android_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        ":androidx_neverlink",
-        ":drawerlayout_neverlink",
+        "//:androidx_annotation",
+        "//:androidx_core",
+        "//:androidx_drawerlayout",
+        "//:androidx_legacy_support_core_ui",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 
@@ -116,16 +122,18 @@ android_library(
     srcs = ["NavigationViewActions.java"],
     visibility = ["//visibility:public"],
     deps = [
-        ":androidx_neverlink",
-        ":designlib_neverlink",
-        ":drawerlayout_neverlink",
-        ":recyclerview_neverlink",
+        "//:androidx_annotation",
+        "//:androidx_core",
+        "//:androidx_drawerlayout",
+        "//:androidx_legacy_support_core_ui",
+        "//:androidx_recyclerview",
+        "//:google_android_material",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 
@@ -135,8 +143,10 @@ android_library(
     srcs = ["ViewPagerActions.java"],
     visibility = ["//visibility:public"],
     deps = [
-        ":androidx_neverlink",
-        ":view_pager_neverlink",
+        "//:androidx_annotation",
+        "//:androidx_core",
+        "//:androidx_legacy_support_core_ui",
+        "//:androidx_viewpager",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/action",
         "//espresso/core/java/androidx/test/espresso/matcher",
@@ -148,54 +158,6 @@ android_library(
     name = "guava_checks",
     srcs = ["Checks.java"],
     deps = ["@maven//:com_google_code_findbugs_jsr305"],
-)
-
-android_library(
-    name = "androidx_neverlink",
-    exports_manifest = 0,
-    manifest = "AndroidManifest.xml",
-    neverlink = 1,
-    exports = [
-        "//:androidx_annotation",
-        "//:androidx_core",
-        "//:androidx_legacy_support_core_ui",
-    ],
-)
-
-android_library(
-    name = "recyclerview_neverlink",
-    exports_manifest = 0,
-    manifest = "AndroidManifest.xml",
-    neverlink = 1,
-    exports = ["//:androidx_recyclerview"],
-)
-
-android_library(
-    name = "designlib_neverlink",
-    exports_manifest = 0,
-    manifest = "AndroidManifest.xml",
-    neverlink = 1,
-    exports = ["//:google_android_material"],
-)
-
-android_library(
-    name = "view_pager_neverlink",
-    exports_manifest = 0,
-    manifest = "AndroidManifest.xml",
-    neverlink = 1,
-    exports = [
-        "//:androidx_viewpager",
-    ],
-)
-
-android_library(
-    name = "drawerlayout_neverlink",
-    exports_manifest = 0,
-    manifest = "AndroidManifest.xml",
-    neverlink = 1,
-    exports = [
-        "//:androidx_drawerlayout",
-    ],
 )
 
 load("//build_extensions:release.bzl", "axt_release_lib")
@@ -219,14 +181,14 @@ axt_release_lib(
     name = "espresso_contrib_release",
     keep_spec = "androidx/test/espresso/contrib",
     multidex = "native",
-    remove_spec = "androidx/test/espresso/contrib/R[$$\.]",
+    remove_spec = "androidx/test/espresso/contrib/R[$$\\.]",
     deps = [
         ":espresso_contrib_release_lib",
     ],
 )
 
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION", "ANDROIDX_VERSION", "GOOGLE_MATERIAL_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "ESPRESSO_VERSION", "GOOGLE_MATERIAL_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 filegroup(
