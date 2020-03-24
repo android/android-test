@@ -7,7 +7,7 @@ load(
 )
 load(
     "//build_extensions:test_devices.bzl",
-    "DEVICES",
+    "devices",
 )
 
 licenses(["notice"])  # Apache License 2.0
@@ -17,7 +17,7 @@ android_app_instrumentation_tests(
     size = "large",
     srcs = glob(["*.java"]),
     binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
-    target_devices = DEVICES,
+    target_devices = devices(),
     deps = [
         "//:androidx_annotation",
         "//core",

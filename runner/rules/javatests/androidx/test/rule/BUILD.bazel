@@ -6,7 +6,7 @@ load(
 )
 load(
     "//build_extensions:test_devices.bzl",
-    "DEVICES",
+    "devices",
 )
 
 package(
@@ -33,7 +33,7 @@ java_library(
 android_library_instrumentation_tests(
     name = "rules_tests",
     srcs = glob(["*.java"]),
-    target_devices = DEVICES,
+    target_devices = devices(),
     deps = [
         ":legacy-test-neverlink",
         ":manifest",

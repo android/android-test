@@ -9,13 +9,13 @@ load(
 )
 load(
     "//build_extensions:test_devices.bzl",
-    "DEVICES",
+    "devices",
 )
 
 android_library_instrumentation_tests(
     name = "instrumentation_tests",
     srcs = glob(["**/*.java"]),
-    target_devices = DEVICES,
+    target_devices = devices(),
     deps = [
         "//core",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",

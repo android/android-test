@@ -6,7 +6,7 @@ load(
 )
 load(
     "//build_extensions:test_devices.bzl",
-    "DEVICES",
+    "devices",
 )
 
 android_library_instrumentation_tests(
@@ -14,20 +14,19 @@ android_library_instrumentation_tests(
     srcs = [
         "AndroidTestOrchestratorTest.java",
         "TestCoverageTest.java",
-        "TestRunnableTest.java"
+        "TestRunnableTest.java",
     ],
+    target_devices = devices(),
     deps = [
         "//core/java/androidx/test/core",
-        "//runner/android_test_orchestrator",
-        "//runner/android_junit_runner",
         "//ext/junit",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "//runner/android_junit_runner",
+        "//runner/android_test_orchestrator",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
-    target_devices = DEVICES,
 )
 
 # omit tests for RuntimePermissionsIntegrationTest for now, since it requires
 # api >= 24
 # "RuntimePermissionsIntegrationTest.java",
-

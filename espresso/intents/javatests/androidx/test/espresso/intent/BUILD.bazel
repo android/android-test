@@ -6,7 +6,7 @@ load(
 )
 load(
     "//build_extensions:test_devices.bzl",
-    "DEVICES",
+    "devices",
 )
 
 android_app_instrumentation_tests(
@@ -14,7 +14,7 @@ android_app_instrumentation_tests(
     srcs = glob(["**/*.java"]),
     args = ["--clear_package_data"],
     binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
-    target_devices = DEVICES,
+    target_devices = devices(),
     deps = [
         "//:androidx_annotation",
         "//core",
