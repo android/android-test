@@ -33,4 +33,15 @@ public @interface SdkSuppress {
   int minSdkVersion() default 1;
   /** The maximum API level to execute (inclusive) */
   int maxSdkVersion() default Integer.MAX_VALUE;
+  /**
+   * The {@link android.os.Build.VERSION.CODENAME} to execute on. This is intended to be used to run
+   * on a pre-release SDK, where the {@link android.os.Build.VERSION.SDK_INT} has not yet been
+   * finalized. This is treated as an OR operation with respect to the minSdkVersion and
+   * maxSdkVersion attributes.
+   *
+   * <p>For example, to filter a test so it runs on only the prerelease R SDK: <code>
+   * {@literal @}SdkSuppress(minSdkVersion = Build.VERSION_CODES.R, codeName = "R")
+   * </code>
+   */
+  String codeName() default "unset";
 }

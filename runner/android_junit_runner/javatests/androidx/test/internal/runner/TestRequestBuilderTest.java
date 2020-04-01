@@ -296,6 +296,18 @@ public class TestRequestBuilderTest {
     public void min14max16() {
       fail("min14max16");
     }
+
+    @SdkSuppress(minSdkVersion = 29, codeName = "R")
+    @Test
+    public void min29CodeNameR() {
+      fail("min29CodeNameR");
+    }
+
+    @SdkSuppress(minSdkVersion = 20, codeName = "R")
+    @Test
+    public void min20CodeNameR() {
+      fail("min20CodeNameR");
+    }
   }
 
   public static class DollarMethod {
@@ -910,12 +922,36 @@ public class TestRequestBuilderTest {
     MockitoAnnotations.initMocks(this);
     TestRequestBuilder b = createBuilder(mockDeviceBuild);
     when(mockDeviceBuild.getSdkVersionInt()).thenReturn(16);
+    when(mockDeviceBuild.getCodeName()).thenReturn("REL");
     Request request = b.addTestClass(SampleSdkSuppress.class.getName()).build();
     JUnitCore testRunner = new JUnitCore();
     Result result = testRunner.run(request);
 
     Set<String> expected =
         new HashSet<>(Arrays.asList("min15", "min16", "noSdkSuppress", "max19", "min14max16"));
+    Assert.assertEquals(expected.size(), result.getRunCount());
+    for (Failure f : result.getFailures()) {
+      assertTrue(
+          "Fail! " + expected + " doesn't contain \"" + f.getMessage() + "\" ",
+          expected.contains(f.getMessage()));
+    }
+  }
+
+  /** Test that {@link SdkSuppress} filters tests as appropriate when codeName specified */
+  @Test
+  public void testSdkSuppress_codeName() throws Exception {
+    MockitoAnnotations.initMocks(this);
+    TestRequestBuilder b = createBuilder(mockDeviceBuild);
+    when(mockDeviceBuild.getSdkVersionInt()).thenReturn(29);
+    when(mockDeviceBuild.getCodeName()).thenReturn("R");
+    Request request = b.addTestClass(SampleSdkSuppress.class.getName()).build();
+    JUnitCore testRunner = new JUnitCore();
+    Result result = testRunner.run(request);
+
+    Set<String> expected =
+        new HashSet<>(
+            Arrays.asList(
+                "min29CodeNameR", "min20CodeNameR", "noSdkSuppress", "min15", "min16", "min17"));
     Assert.assertEquals(expected.size(), result.getRunCount());
     for (Failure f : result.getFailures()) {
       assertTrue(

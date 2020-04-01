@@ -116,6 +116,9 @@ public class TestRequestBuilder {
 
     /** Returns the hardware type of the current device. */
     String getHardware();
+
+    /** Returns the version code name of the current device. */
+    String getCodeName();
   }
 
   private static class DeviceBuildImpl implements DeviceBuild {
@@ -127,6 +130,11 @@ public class TestRequestBuilder {
     @Override
     public String getHardware() {
       return android.os.Build.HARDWARE;
+    }
+
+    @Override
+    public String getCodeName() {
+      return android.os.Build.VERSION.CODENAME;
     }
   }
 
@@ -252,8 +260,9 @@ public class TestRequestBuilder {
     protected boolean evaluateTest(Description description) {
       final SdkSuppress sdkSuppress = getAnnotationForTest(description);
       if (sdkSuppress != null) {
-        if (getDeviceSdkInt() >= sdkSuppress.minSdkVersion()
-            && getDeviceSdkInt() <= sdkSuppress.maxSdkVersion()) {
+        if ((getDeviceSdkInt() >= sdkSuppress.minSdkVersion()
+                && getDeviceSdkInt() <= sdkSuppress.maxSdkVersion())
+            || getDeviceCodeName().equals(sdkSuppress.codeName())) {
           return true; // run the test
         }
         return false; // don't run the test
@@ -885,5 +894,9 @@ public class TestRequestBuilder {
 
   private String getDeviceHardware() {
     return deviceBuild.getHardware();
+  }
+
+  private String getDeviceCodeName() {
+    return deviceBuild.getCodeName();
   }
 }
