@@ -51,14 +51,22 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
   private static String getRunnerClassName() {
     String runnerClassName = System.getProperty("android.junit.runner", null);
     if (runnerClassName == null) {
-      // TODO: remove this logic when nitrogen is hooked up to always pass this property
-      if (System.getProperty("java.runtime.name").toLowerCase().contains("android")) {
-        return "androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner";
-      } else {
+      if (!System.getProperty("java.runtime.name").toLowerCase().contains("android")
+          && hasClass("org.robolectric.RobolectricTestRunner")) {
         return "org.robolectric.RobolectricTestRunner";
+      } else {
+        return "androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner";
       }
     }
     return runnerClassName;
+  }
+
+  private static boolean hasClass(String className) {
+    try {
+      return Class.forName(className) != null;
+    } catch (ClassNotFoundException e) {
+      return false;
+    }
   }
 
   private static Runner loadRunner(Class<?> testClass) throws InitializationError {
