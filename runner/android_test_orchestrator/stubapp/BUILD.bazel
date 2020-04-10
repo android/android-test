@@ -9,7 +9,6 @@ android_binary(
     name = "stubapp",
     srcs = ["src/androidx/test/orchestrator/Orchestrator.java"],
     custom_package = "androidx.test.orchestrator.stubapp",
-    licenses = (["notice"]),
     manifest = "src/AndroidManifest.xml",
     visibility = ["//visibility:public"],
     deps = [
