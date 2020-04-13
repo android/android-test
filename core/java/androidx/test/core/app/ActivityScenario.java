@@ -703,8 +703,12 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * <p>This method cannot be called from the main thread except in Robolectric tests.
    */
   public State getState() {
+    ActivityState<A> currentActivityState = getCurrentActivityState();
     return checkNotNull(
-        getCurrentActivityState().state,
-        "Could not get current state due to the transition is incomplete.");
+        currentActivityState.state,
+        "Could not get current state of activity %s due to the transition is incomplete. Current"
+            + " stage = %s",
+        currentActivityState.activity,
+        currentActivityState.stage);
   }
 }
