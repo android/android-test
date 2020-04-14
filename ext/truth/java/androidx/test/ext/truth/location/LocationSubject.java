@@ -43,20 +43,12 @@ public class LocationSubject extends Subject {
   }
 
   @Override
-  public void isEqualTo(@Nullable Object other) {
-    if (other instanceof Location) {
-      isEqualTo((Location) other);
+  public void isEqualTo(@Nullable Object otherObj) {
+    if (actual == null || !(otherObj instanceof Location)) {
+      super.isEqualTo(otherObj);
       return;
     }
-
-    super.isEqualTo(other);
-  }
-
-  public void isEqualTo(@Nullable Location other) {
-    if (actual == null || other == null) {
-      super.isEqualTo(other);
-      return;
-    }
+    Location other = (Location) otherObj;
 
     check("getProvider()").that(actual.getProvider()).isEqualTo(other.getProvider());
     check("getTime()").that(actual.getTime()).isEqualTo(other.getTime());
