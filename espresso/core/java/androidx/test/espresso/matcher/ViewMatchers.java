@@ -52,6 +52,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.regex.Pattern;
 import junit.framework.AssertionFailedError;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -61,6 +62,7 @@ import org.hamcrest.TypeSafeMatcher;
 
 /** A collection of hamcrest matchers that match {@link View}s. */
 public final class ViewMatchers {
+  private static final Pattern RESOURCE_ID_PATTERN = Pattern.compile("\\d+");
 
   private ViewMatchers() {}
 
@@ -621,19 +623,27 @@ public final class ViewMatchers {
       this.viewIdMatcher = integerMatcher;
     }
 
+    @SuppressWarnings("JdkObsolete") // java.util.regex.Matcher requires the use of StringBuffer
     @Override
     public void describeTo(Description description) {
-      String idDescription = viewIdMatcher.toString().replaceAll("\\D+", "");
-      int id = Integer.parseInt(idDescription);
-      if (resources != null) {
-        try {
-          idDescription = resources.getResourceName(id);
-        } catch (Resources.NotFoundException e) {
-          // No big deal, will just use the int value.
-          idDescription = String.format(Locale.ROOT, "%s (resource name not found)", idDescription);
+      String idDescription = viewIdMatcher.toString();
+      java.util.regex.Matcher matcher = RESOURCE_ID_PATTERN.matcher(idDescription);
+      StringBuffer buffer = new StringBuffer(idDescription.length());
+      while (matcher.find()) {
+        if (resources != null) {
+          String idString = matcher.group();
+          int id = Integer.parseInt(idString);
+          try {
+            matcher.appendReplacement(buffer, resources.getResourceName(id));
+          } catch (Resources.NotFoundException e) {
+            // No big deal, will just use the int value.
+            matcher.appendReplacement(
+                buffer, String.format(Locale.ROOT, "%s (resource name not found)", idString));
+          }
         }
       }
-      description.appendText("with id: " + idDescription);
+      matcher.appendTail(buffer);
+      description.appendText("with id ").appendText(buffer.toString());
     }
 
     @Override

@@ -207,7 +207,7 @@ public class ViewMatchersTest {
 
   @Test
   public void withId_describeWithNoResourceLookup() {
-    assertThat(withId(5).toString(), is("with id: 5"));
+    assertThat(withId(5).toString(), is("with id is <5>"));
   }
 
   @Test
@@ -216,7 +216,7 @@ public class ViewMatchersTest {
     Matcher<View> matcher = withId(5);
     // Running matches will allow withId to grab resources from view Context
     matcher.matches(view);
-    assertThat(matcher.toString(), is("with id: 5 (resource name not found)"));
+    assertThat(matcher.toString(), is("with id is <5 (resource name not found)>"));
   }
 
   @Test
