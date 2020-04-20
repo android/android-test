@@ -39,7 +39,7 @@ import javax.inject.Singleton;
 final class ThreadPoolExecutorExtractor {
   private static final String ASYNC_TASK_CLASS_NAME = "android.os.AsyncTask";
   private static final String MODERN_ASYNC_TASK_CLASS_NAME =
-      "android.support.v4.content.ModernAsyncTask";
+      "androidx.loader.content.ModernAsyncTask";
   private static final String MODERN_ASYNC_TASK_FIELD_NAME = "THREAD_POOL_EXECUTOR";
   private static final String LEGACY_ASYNC_TASK_FIELD_NAME = "sExecutor";
   private final Handler mainHandler;
