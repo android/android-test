@@ -128,6 +128,11 @@ public final class ViewMatchers {
     return new IsFocusableMatcher();
   }
 
+  /** Returns a matcher that matches {@link View Views} that are focused. */
+  public static Matcher<View> isFocused() {
+    return new IsFocusedMatcher();
+  }
+
   /** Returns a matcher that matches {@link View Views} currently have focus. */
   public static Matcher<View> hasFocus() {
     return new HasFocusMatcher();
@@ -898,6 +903,21 @@ public final class ViewMatchers {
     @Override
     public boolean matchesSafely(View view) {
       return view.isFocusable();
+    }
+  }
+
+  static final class IsFocusedMatcher extends TypeSafeMatcher<View> {
+    @RemoteMsgConstructor
+    private IsFocusedMatcher() {}
+
+    @Override
+    public void describeTo(Description description) {
+      description.appendText("is focused");
+    }
+
+    @Override
+    public boolean matchesSafely(View view) {
+      return view.isFocused();
     }
   }
 

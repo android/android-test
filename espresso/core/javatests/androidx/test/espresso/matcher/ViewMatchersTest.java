@@ -34,6 +34,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.isFocusable;
+import static androidx.test.espresso.matcher.ViewMatchers.isFocused;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.isSelected;
@@ -493,6 +494,18 @@ public class ViewMatchersTest {
     notFocusable.setFocusable(false);
     assertTrue(isFocusable().matches(focusable));
     assertFalse(isFocusable().matches(notFocusable));
+  }
+
+  @Test
+  public void isFocusedTest() {
+    View focused = new View(context);
+    focused.setFocusable(true);
+    focused.setFocusableInTouchMode(true);
+    focused.requestFocus();
+    View notFocused = new View(context);
+    assertTrue(focused.isFocused());
+    assertTrue(isFocused().matches(focused));
+    assertFalse(isFocused().matches(notFocused));
   }
 
   @Test
