@@ -138,7 +138,9 @@ public final class Intents {
 
   /** Clears Intents state. Must be called after each test case. */
   public static void release() {
-    defaultInstance.internalRelease();
+    if (defaultInstance != null) {
+      defaultInstance.internalRelease();
+    }
   }
 
   /**
