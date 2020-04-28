@@ -18,7 +18,6 @@ package androidx.test.services.speakeasy.client;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.IBinder;
 import androidx.test.services.speakeasy.SpeakEasyProtocol;
 import java.security.SecureRandom;
@@ -53,7 +52,7 @@ public final class AppConnection implements Connection {
     String key = Long.toHexString(random.nextLong());
     Intent intent = makeIntent();
     intent.putExtras(SpeakEasyProtocol.Publish.asBundle(key, binder, rr));
-    startForegroundService(context, intent);
+    context.startService(intent);
   }
 
   @Override
@@ -62,7 +61,7 @@ public final class AppConnection implements Connection {
     checkNotNull(rr);
     Intent intent = makeIntent();
     intent.putExtras(SpeakEasyProtocol.Find.asBundle(key, rr));
-    startForegroundService(context, intent);
+    context.startService(intent);
   }
 
   private Intent makeIntent() {
@@ -76,15 +75,5 @@ public final class AppConnection implements Connection {
       throw new NullPointerException();
     }
     return ref;
-  }
-
-  // copy of ContentCompat.startForegroundService
-  private static void startForegroundService(Context context, Intent intent) {
-    if (Build.VERSION.SDK_INT >= 26) {
-      context.startForegroundService(intent);
-    } else {
-      // Pre-O behavior.
-      context.startService(intent);
-    }
   }
 }
