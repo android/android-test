@@ -29,14 +29,6 @@ def _development_repositories():
     #    path = "~/robogithub/robolectric-bazel/",
     #)
 
-    # java_lite_proto_library rules implicitly depend on @com_google_protobuf_javalite//:javalite_toolchain,
-    # which is the JavaLite proto runtime (base classes and common utilities).
-    http_archive(
-        name = "com_google_protobuf_javalite",
-        strip_prefix = "protobuf-javalite",
-        urls = ["https://github.com/google/protobuf/archive/javalite.zip"],
-    )
-
     http_archive(
         name = "jsr330",
         build_file_content = """
