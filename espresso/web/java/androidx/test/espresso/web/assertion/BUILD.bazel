@@ -28,7 +28,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/web/java/androidx/test/espresso/web/action",
         "//espresso/web/java/androidx/test/espresso/web/model",
-        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_guava_guava",
         "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:org_ccil_cowan_tagsoup_tagsoup",
@@ -50,7 +50,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote:registry",
         "//espresso/web/java/androidx/test/espresso/web/proto/assertion:web_assertions_proto_android_pb3",
         "//runner/android_junit_runner/java/androidx/test:runner",
-        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_guava_guava",
     ],
 )

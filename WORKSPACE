@@ -29,12 +29,12 @@ load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_
 rules_proto_dependencies()
 rules_proto_toolchains()
 
-# javalite toolchain is only available in javalite branch and there's no release tags in javalite
+# The 'com_google_protobuf_javalite' package is required for Bazel 2.x and below.
 http_archive(
     name = "com_google_protobuf_javalite",
-    sha256 = "a8cb9b8db16aff743a4bc8193abec96cf6ac0b0bc027121366b43ae8870f6fd3",
-    strip_prefix = "protobuf-fa08222434bc58d743e8c2cc716bc219c3d0f44e",
-    urls = ["https://github.com/protocolbuffers/protobuf/archive/fa08222434bc58d743e8c2cc716bc219c3d0f44e.zip"],
+    sha256 = "832c476bb442ca98a59c2291b8a504648d1c139b74acc15ef667a0e8f5e984e7",
+    strip_prefix = "protobuf-3.11.3",
+    urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.11.3.zip"],
 )
 
 load("@rules_jvm_external//:defs.bzl", "maven_install")

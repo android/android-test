@@ -31,7 +31,7 @@ android_library(
         "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
-        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_guava_guava",
     ],
 )
@@ -47,7 +47,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
-        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_guava_guava",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
@@ -66,7 +66,7 @@ android_library(
         ":exceptions",
         "//:androidx_annotation",
         "//runner/android_junit_runner/java/androidx/test:runner",
-        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_guava_guava",
     ],
 )
@@ -95,7 +95,7 @@ android_library(
     idl_import_root = "idls",
     idl_srcs = glob(["idls/**"]),
     visibility = ["//visibility:public"],
-    deps = ["@com_google_protobuf_javalite//:protobuf_java_lite"],
+    deps = ["@com_google_protobuf//:protobuf_javalite"],
 )
 
 android_library(
@@ -114,7 +114,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//runner/android_junit_runner/java/androidx/test:runner",
-        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_guava_guava",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
@@ -132,7 +132,7 @@ android_library(
     visibility = ["//visibility:public"],
     deps = [
         "//espresso/core/java/androidx/test/espresso:interface",
-        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@com_google_protobuf//:protobuf_javalite",
     ],
 )
 
@@ -143,7 +143,7 @@ BINDABLE = [
 android_library(
     name = "bindable",
     srcs = BINDABLE,
-    deps = ["@com_google_protobuf_javalite//:protobuf_java_lite"],
+    deps = ["@com_google_protobuf//:protobuf_javalite"],
 )
 
 android_library(
@@ -177,7 +177,7 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/sugar:remote_sugar",
         "//espresso/web/java/androidx/test/espresso/web/webdriver:remote_webdriver_atoms",
         "//runner/android_junit_runner",
-        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_guava_guava",
         "@maven//:org_hamcrest_hamcrest_all",
     ],

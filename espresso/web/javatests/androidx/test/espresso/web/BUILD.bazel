@@ -51,7 +51,7 @@ android_app_instrumentation_tests(
         "//runner/android_junit_runner",
         "//runner/rules",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
-        "@com_google_protobuf_javalite//:protobuf_java_lite",
+        "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_all",
