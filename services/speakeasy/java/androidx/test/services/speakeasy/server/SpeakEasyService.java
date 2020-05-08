@@ -19,10 +19,13 @@ package androidx.test.services.speakeasy.server;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -123,10 +126,20 @@ public class SpeakEasyService extends Service {
     if (!runningInForeground) {
       Intent launcher = new Intent(Intent.ACTION_MAIN);
       launcher.addCategory(Intent.CATEGORY_HOME);
+      // from https://developer.android.com/training/notify-user/channels
+      String channelid = "test_services_channel_id";
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        NotificationChannel channel =
+            new NotificationChannel(
+                channelid, "AndroidX Test Services", NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationManager manager =
+            (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.createNotificationChannel(channel);
+      }
       Notification notif =
-          new NotificationCompat.Builder(this)
+          new NotificationCompat.Builder(this, channelid)
               .setSmallIcon(R.drawable.ic_shortcut_axt_logo)
-              .setContentTitle("Testing")
+              .setContentTitle("AndroidX Test Services")
               .setContentText("SpeakEasy Binder Registry")
               .setContentIntent(PendingIntent.getActivity(getApplicationContext(), 0, launcher, 0))
               .build();
