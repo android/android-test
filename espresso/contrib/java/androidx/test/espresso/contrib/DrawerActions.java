@@ -22,17 +22,15 @@ import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
-import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import android.view.View;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.drawerlayout.widget.DrawerLayout.DrawerListener;
-import androidx.test.espresso.Espresso;
+import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener;
+import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
-import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
-import java.lang.reflect.Field;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.hamcrest.Matcher;
 
 /**
@@ -42,12 +40,24 @@ import org.hamcrest.Matcher;
  *     drawer design guide</a>
  */
 public final class DrawerActions {
+  private static final AtomicInteger nextId = new AtomicInteger();
+
+  private static final int TAG = getTag();
+
+  private static int getTag() {
+    try {
+      return R.id.androidx_test_espresso_contrib_drawer_layout_tag;
+    } catch (NoClassDefFoundError e) {
+      // If the caller of this class is compiled as the src of an android_test rule, it may not
+      // generate the R file, which leads to a NoClassDefFoundError at runtime. In this case, fall
+      // back to a randomly chosen value that hopefully won't conflict with any other tags.
+      return 0xFF3DE250;
+    }
+  }
 
   private DrawerActions() {
     // forbid instantiation
   }
-
-  private static Field listenerField;
 
   private abstract static class DrawerAction implements ViewAction {
 
@@ -64,22 +74,23 @@ public final class DrawerActions {
         return;
       }
 
-      DrawerListener listener = getDrawerListener(drawer);
+      Object tag = drawer.getTag(TAG);
       IdlingDrawerListener idlingListener;
-      if (listener instanceof IdlingDrawerListener) {
-        idlingListener = (IdlingDrawerListener) listener;
+      if (tag instanceof IdlingDrawerListener) {
+        idlingListener = (IdlingDrawerListener) tag;
       } else {
-        idlingListener = IdlingDrawerListener.getInstance(listener);
-        drawer.setDrawerListener(idlingListener);
-        Espresso.registerIdlingResources(idlingListener);
+        idlingListener = new IdlingDrawerListener();
+        drawer.setTag(TAG, idlingListener);
+        drawer.addDrawerListener(idlingListener);
+        IdlingRegistry.getInstance().register(idlingListener);
       }
 
       performAction(uiController, drawer);
       uiController.loopMainThreadUntilIdle();
 
-      Espresso.unregisterIdlingResources(idlingListener);
-      drawer.setDrawerListener(idlingListener.parentListener);
-      idlingListener.parentListener = null;
+      IdlingRegistry.getInstance().unregister(idlingListener);
+      drawer.removeDrawerListener(idlingListener);
+      drawer.setTag(TAG, null);
     }
 
     protected abstract Matcher<View> checkAction();
@@ -194,76 +205,15 @@ public final class DrawerActions {
     };
   }
 
-  /**
-   * Pries the current {@link DrawerListener} loose from the cold dead hands of the given {@link
-   * DrawerLayout}. Uses reflection.
-   */
-  @Nullable
-  private static DrawerListener getDrawerListener(DrawerLayout drawer) {
-    try {
-      if (listenerField == null) {
-        // lazy initialization of reflected field.
-        listenerField = DrawerLayout.class.getDeclaredField("mListener");
-        listenerField.setAccessible(true);
-      }
-      return (DrawerListener) listenerField.get(drawer);
-    } catch (IllegalArgumentException ex) {
-      // Pity we can't use Java 7 multi-catch for all of these.
-      throw new PerformException.Builder().withCause(ex).build();
-    } catch (IllegalAccessException ex) {
-      throw new PerformException.Builder().withCause(ex).build();
-    } catch (NoSuchFieldException ex) {
-      throw new PerformException.Builder().withCause(ex).build();
-    } catch (SecurityException ex) {
-      throw new PerformException.Builder().withCause(ex).build();
-    }
-  }
+  /** Drawer listener that functions as an {@link IdlingResource} for Espresso. */
+  private static final class IdlingDrawerListener extends SimpleDrawerListener
+      implements IdlingResource {
 
-  /**
-   * Drawer listener that wraps an existing {@link DrawerListener}, and functions as an {@link
-   * IdlingResource} for Espresso.
-   */
-  private static class IdlingDrawerListener implements DrawerListener, IdlingResource {
+    private final int id = nextId.getAndIncrement();
 
-    private static IdlingDrawerListener instance;
-
-    private static IdlingDrawerListener getInstance(DrawerListener parentListener) {
-      if (instance == null) {
-        instance = new IdlingDrawerListener();
-      }
-      instance.setParentListener(parentListener);
-      return instance;
-    }
-
-    @Nullable private DrawerListener parentListener;
     private ResourceCallback callback;
     // Idle state is only accessible from main thread.
     private boolean idle = true;
-
-    public void setParentListener(@Nullable DrawerListener parentListener) {
-      this.parentListener = parentListener;
-    }
-
-    @Override
-    public void onDrawerClosed(View drawer) {
-      if (parentListener != null) {
-        parentListener.onDrawerClosed(drawer);
-      }
-    }
-
-    @Override
-    public void onDrawerOpened(View drawer) {
-      if (parentListener != null) {
-        parentListener.onDrawerOpened(drawer);
-      }
-    }
-
-    @Override
-    public void onDrawerSlide(View drawer, float slideOffset) {
-      if (parentListener != null) {
-        parentListener.onDrawerSlide(drawer, slideOffset);
-      }
-    }
 
     @Override
     public void onDrawerStateChanged(int newState) {
@@ -275,14 +225,11 @@ public final class DrawerActions {
       } else {
         idle = false;
       }
-      if (parentListener != null) {
-        parentListener.onDrawerStateChanged(newState);
-      }
     }
 
     @Override
     public String getName() {
-      return "IdlingDrawerListener";
+      return "IdlingDrawerListener::" + id;
     }
 
     @Override

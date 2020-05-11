@@ -13,6 +13,12 @@ package(
 )
 
 android_library(
+    name = "resources",
+    manifest = "AndroidManifest.xml",
+    resource_files = glob(["res/**"]),
+)
+
+android_library(
     name = "counting_idling_resource",
     visibility = ["//visibility:public"],
     exports = [
@@ -81,15 +87,13 @@ android_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        ":resources",
         "//:androidx_annotation",
         "//:androidx_core",
         "//:androidx_drawerlayout",
         "//:androidx_legacy_support_core_ui",
         "//espresso/core/java/androidx/test/espresso",
-        "//espresso/core/java/androidx/test/espresso:framework",
-        "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
