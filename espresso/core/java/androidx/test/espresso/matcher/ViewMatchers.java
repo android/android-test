@@ -120,27 +120,52 @@ public final class ViewMatchers {
 
   /** Returns a matcher that matches {@link View Views} that are enabled. */
   public static Matcher<View> isEnabled() {
-    return new IsEnabledMatcher();
+    return new IsEnabledMatcher(true);
+  }
+
+  /** Returns a matcher that matches {@link View Views} that are not enabled. */
+  public static Matcher<View> isNotEnabled() {
+    return new IsEnabledMatcher(false);
   }
 
   /** Returns a matcher that matches {@link View Views} that are focusable. */
   public static Matcher<View> isFocusable() {
-    return new IsFocusableMatcher();
+    return new IsFocusableMatcher(true);
+  }
+
+  /** Returns a matcher that matches {@link View Views} that are not focusable. */
+  public static Matcher<View> isNotFocusable() {
+    return new IsFocusableMatcher(false);
   }
 
   /** Returns a matcher that matches {@link View Views} that are focused. */
   public static Matcher<View> isFocused() {
-    return new IsFocusedMatcher();
+    return new IsFocusedMatcher(true);
+  }
+
+  /** Returns a matcher that matches {@link View Views} that are not focused. */
+  public static Matcher<View> isNotFocused() {
+    return new IsFocusedMatcher(false);
   }
 
   /** Returns a matcher that matches {@link View Views} currently have focus. */
   public static Matcher<View> hasFocus() {
-    return new HasFocusMatcher();
+    return new HasFocusMatcher(true);
+  }
+
+  /** Returns a matcher that matches {@link View Views} currently do not have focus. */
+  public static Matcher<View> doesNotHaveFocus() {
+    return new HasFocusMatcher(false);
   }
 
   /** Returns a matcher that matches {@link View Views} that are selected. */
   public static Matcher<View> isSelected() {
-    return new IsSelectedMatcher();
+    return new IsSelectedMatcher(true);
+  }
+
+  /** Returns a matcher that matches {@link View Views} that are not selected. */
+  public static Matcher<View> isNotSelected() {
+    return new IsSelectedMatcher(false);
   }
 
   /**
@@ -396,7 +421,12 @@ public final class ViewMatchers {
 
   /** Returns a matcher that matches {@link View Views} that are clickable. */
   public static Matcher<View> isClickable() {
-    return new IsClickableMatcher();
+    return new IsClickableMatcher(true);
+  }
+
+  /** Returns a matcher that matches {@link View Views} that are not clickable. */
+  public static Matcher<View> isNotClickable() {
+    return new IsClickableMatcher(false);
   }
 
   /**
@@ -877,77 +907,102 @@ public final class ViewMatchers {
   }
 
   static final class IsEnabledMatcher extends TypeSafeMatcher<View> {
+    @RemoteMsgField(order = 0)
+    private final boolean isEnabled;
+
     @RemoteMsgConstructor
-    private IsEnabledMatcher() {}
+    private IsEnabledMatcher(boolean isEnabled) {
+      this.isEnabled = isEnabled;
+    }
 
     @Override
     public void describeTo(Description description) {
-      description.appendText("is enabled");
+      description.appendText("is enabled ").appendValue(isEnabled);
     }
 
     @Override
     public boolean matchesSafely(View view) {
-      return view.isEnabled();
+      return view.isEnabled() == isEnabled;
     }
   }
 
   static final class IsFocusableMatcher extends TypeSafeMatcher<View> {
+    @RemoteMsgField(order = 0)
+    private final boolean isFocusable;
+
     @RemoteMsgConstructor
-    private IsFocusableMatcher() {}
+    private IsFocusableMatcher(boolean isFocusable) {
+      this.isFocusable = isFocusable;
+    }
 
     @Override
     public void describeTo(Description description) {
-      description.appendText("is focusable");
+      description.appendText("is focusable ").appendValue(isFocusable);
     }
 
     @Override
     public boolean matchesSafely(View view) {
-      return view.isFocusable();
+      return view.isFocusable() == isFocusable;
     }
   }
 
   static final class IsFocusedMatcher extends TypeSafeMatcher<View> {
+    @RemoteMsgField(order = 0)
+    private final boolean isFocused;
+
     @RemoteMsgConstructor
-    private IsFocusedMatcher() {}
+    private IsFocusedMatcher(boolean isFocused) {
+      this.isFocused = isFocused;
+    }
 
     @Override
     public void describeTo(Description description) {
-      description.appendText("is focused");
+      description.appendText("is focused ").appendValue(isFocused);
     }
 
     @Override
     public boolean matchesSafely(View view) {
-      return view.isFocused();
+      return view.isFocused() == isFocused;
     }
   }
 
   static final class HasFocusMatcher extends TypeSafeMatcher<View> {
+    @RemoteMsgField(order = 0)
+    private final boolean hasFocus;
+
     @RemoteMsgConstructor
-    private HasFocusMatcher() {}
+    private HasFocusMatcher(boolean hasFocus) {
+      this.hasFocus = hasFocus;
+    }
 
     @Override
     public void describeTo(Description description) {
-      description.appendText("has focus on the screen to the user");
+      description.appendText("has focus on the screen to the user ").appendValue(hasFocus);
     }
 
     @Override
     public boolean matchesSafely(View view) {
-      return view.hasFocus();
+      return view.hasFocus() == hasFocus;
     }
   }
 
   static final class IsSelectedMatcher extends TypeSafeMatcher<View> {
+    @RemoteMsgField(order = 0)
+    private final boolean isSelected;
+
     @RemoteMsgConstructor
-    private IsSelectedMatcher() {}
+    private IsSelectedMatcher(boolean isSelected) {
+      this.isSelected = isSelected;
+    }
 
     @Override
     public void describeTo(Description description) {
-      description.appendText("is selected");
+      description.appendText("is selected ").appendValue(isSelected);
     }
 
     @Override
     public boolean matchesSafely(View view) {
-      return view.isSelected();
+      return view.isSelected() == isSelected;
     }
   }
 
@@ -1256,17 +1311,22 @@ public final class ViewMatchers {
 
   @VisibleForTesting
   static final class IsClickableMatcher extends TypeSafeMatcher<View> {
+    @RemoteMsgField(order = 0)
+    private final boolean isClickable;
+
     @RemoteMsgConstructor
-    private IsClickableMatcher() {}
+    private IsClickableMatcher(boolean isClickable) {
+      this.isClickable = isClickable;
+    }
 
     @Override
     public void describeTo(Description description) {
-      description.appendText("is clickable");
+      description.appendText("is clickable ").appendValue(isClickable);
     }
 
     @Override
     public boolean matchesSafely(View view) {
-      return view.isClickable();
+      return view.isClickable() == isClickable;
     }
   }
 

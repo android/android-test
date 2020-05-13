@@ -3,9 +3,9 @@ syntax = "proto3";
 
 package google.test.remote.ui.matcher;
 
-option java_package = "androidx.test.espresso.proto.matcher";
-
 import "google/protobuf/any.proto";
+
+option java_package = "androidx.test.espresso.proto.matcher";
 
 // Note: the proto field name must match the parameter name, if used in
 // combination with GenericRemoteMessage
@@ -60,18 +60,22 @@ message IsDisplayingAtLeastMatcherProto {
 
 message IsEnabledMatcherProto {
   string id = 1;
+  bytes is_enabled = 2;
 }
 
 message IsFocusableMatcherProto {
   string id = 1;
+  bytes is_focusable = 2;
 }
 
 message HasFocusMatcherProto {
   string id = 1;
+  bytes has_focus = 2;
 }
 
 message IsSelectedMatcherProto {
   string id = 1;
+  bytes is_selected = 2;
 }
 
 message HasSiblingMatcherProto {
@@ -121,6 +125,7 @@ message HasDescendantMatcherProto {
 
 message IsClickableMatcherProto {
   string id = 1;
+  bytes is_clickable = 2;
 }
 
 message IsDescendantOfAMatcherProto {
