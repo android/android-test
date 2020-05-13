@@ -27,9 +27,9 @@ import org.junit.rules.ExternalResource;
 /**
  * ActivityScenarioRule launches a given activity before the test starts and closes after the test.
  *
- * <p>You can access to scenario interface via {@link #getScenario()} method. You may finish your
- * activity manually in your test, it will not cause any problems and this rule does nothing after
- * the test in such cases.
+ * <p>You can access the {@link androidx.test.core.app.ActivityScenario} instance via {@link
+ * #getScenario()}. You may finish your activity manually in your test, it will not cause any
+ * problems and this rule does nothing after the test in such cases.
  *
  * <p>This rule is an upgraded version of {@link androidx.test.rule.ActivityTestRule}. The previous
  * version will be deprecated and eventually be removed from the library in the future.
