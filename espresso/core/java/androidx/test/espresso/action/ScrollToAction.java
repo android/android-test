@@ -24,6 +24,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 
 import android.graphics.Rect;
+import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.View;
 import android.widget.HorizontalScrollView;
@@ -47,6 +48,7 @@ public final class ScrollToAction implements ViewAction {
         withEffectiveVisibility(Visibility.VISIBLE),
         isDescendantOfA(
             anyOf(
+                isAssignableFrom(NestedScrollView.class),
                 isAssignableFrom(ScrollView.class),
                 isAssignableFrom(HorizontalScrollView.class),
                 isAssignableFrom(ListView.class))));
