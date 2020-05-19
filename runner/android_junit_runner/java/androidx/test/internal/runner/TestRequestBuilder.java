@@ -467,14 +467,16 @@ public class TestRequestBuilder {
 
       // Parameterized tests append "[#]" at the end of the method names.
       // For instance, "getFoo" would become "getFoo[0]".
-      methodName = stripParameterizedSuffix(methodName);
-      if (excludedMethods.contains(methodName)) {
+      // Method filters should be applied against both the parameterized name and root name
+      String rootMethodName = stripParameterizedSuffix(methodName);
+      if (excludedMethods.contains(methodName) || excludedMethods.contains(rootMethodName)) {
         return false;
       }
       // don't filter out descriptions with method name "initializationError", since
       // Junit will generate such descriptions in error cases, See ErrorReportingRunner
       return includedMethods.isEmpty()
           || includedMethods.contains(methodName)
+          || includedMethods.contains(rootMethodName)
           || methodName.equals("initializationError");
     }
 

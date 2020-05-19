@@ -91,9 +91,6 @@ public class RunnerArgs {
   private static final String CLASSPATH_SEPARATOR = ":";
   // used to separate fully-qualified test case class name, and one of its methods
   private static final char METHOD_SEPARATOR = '#';
-  // pattern used to identify java class names conforming to java naming conventions
-  private static final String CLASS_OR_METHOD_REGEX =
-      "^([\\p{L}_$][\\p{L}\\p{N}_$]*\\.)*[\\p{Lu}_$][\\p{L}\\p{N}_$]*(#[\\p{L}_$][\\p{L}\\p{N}_$]*)?$";
 
   public final boolean debug;
   public final boolean suiteAssignment;
@@ -489,7 +486,13 @@ public class RunnerArgs {
      */
     @VisibleForTesting
     static boolean isClassOrMethod(String line) {
-      return line.matches(CLASS_OR_METHOD_REGEX);
+      for (int i = 0; i < line.length(); i++) {
+        char c = line.charAt(i);
+        if (c == '#' || Character.isUpperCase(c)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     /**

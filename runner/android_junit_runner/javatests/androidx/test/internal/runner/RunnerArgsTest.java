@@ -391,26 +391,22 @@ public class RunnerArgsTest {
     assertTrue(RunnerArgs.Builder.isClassOrMethod("Bar"));
     assertTrue(RunnerArgs.Builder.isClassOrMethod("Bar#method_$1"));
     assertTrue(RunnerArgs.Builder.isClassOrMethod("pkg.foo_1.foo$.Bar2#m"));
+
+    // test parameterized name
+    assertTrue(RunnerArgs.Builder.isClassOrMethod("pkg.foo.Bar#method[0]"));
   }
 
-  /**
-   * Test static method isClassOrMethod in RunnerArgs.Builder with package names or invalid names
-   */
+  /** Test static method isClassOrMethod in RunnerArgs.Builder */
   @Test
   public void notClassOrMethod() throws Exception {
     // test valid package names
     assertFalse(RunnerArgs.Builder.isClassOrMethod("pkg.foo.bar"));
     assertFalse(RunnerArgs.Builder.isClassOrMethod("pkg"));
     assertFalse(RunnerArgs.Builder.isClassOrMethod("pkg1.foo_2.bar$3"));
+
     // invalid names should not register as class or method names
     assertFalse(RunnerArgs.Builder.isClassOrMethod(""));
-    assertFalse(RunnerArgs.Builder.isClassOrMethod(".pkg.foo.Bar"));
-    assertFalse(RunnerArgs.Builder.isClassOrMethod("pkg..foo.Bar"));
-    assertFalse(RunnerArgs.Builder.isClassOrMethod("pkg.foo.Bar."));
-    assertFalse(RunnerArgs.Builder.isClassOrMethod("2pkg.foo.Bar"));
-    assertFalse(RunnerArgs.Builder.isClassOrMethod("pkg.foo.Bar#method.1"));
-    assertFalse(RunnerArgs.Builder.isClassOrMethod("pkg.foo.Bar#method1%"));
-    assertFalse(RunnerArgs.Builder.isClassOrMethod("pkg.foo&.Bar#method1"));
+    assertFalse(RunnerArgs.Builder.isClassOrMethod("$^$%^"));
   }
 
   /** Test parsing bundle when test timeout is provided */
