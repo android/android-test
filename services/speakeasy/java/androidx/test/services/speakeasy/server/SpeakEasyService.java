@@ -151,7 +151,17 @@ public class SpeakEasyService extends Service {
     public void binderDeath(String key, IBinder dead) {
       Intent msg = new Intent(context, SpeakEasyService.class);
       msg.putExtras(SpeakEasyProtocol.Remove.asBundle(key));
-      context.startService(msg);
+      startForegroundService(context, msg);
+    }
+  }
+
+  // copy of ContentCompat.startForegroundService
+  private static void startForegroundService(Context context, Intent intent) {
+    if (Build.VERSION.SDK_INT >= 26) {
+      context.startForegroundService(intent);
+    } else {
+      // Pre-O behavior.
+      context.startService(intent);
     }
   }
 }

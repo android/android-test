@@ -18,9 +18,11 @@ package androidx.test.services.speakeasy.server;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 /** Proxies the call method from the ContentProvider to the SpeakEasy service. */
@@ -63,7 +65,17 @@ public class SpeakEasyContentProvider extends ContentProvider {
     i.setClass(getContext(), SpeakEasyService.class);
     i.putExtras(extras);
 
-    getContext().startService(i);
+    startForegroundService(getContext(), i);
     return new Bundle();
+  }
+
+  // copy of ContentCompat.startForegroundService
+  private static void startForegroundService(Context context, Intent intent) {
+    if (Build.VERSION.SDK_INT >= 26) {
+      context.startForegroundService(intent);
+    } else {
+      // Pre-O behavior.
+      context.startService(intent);
+    }
   }
 }
