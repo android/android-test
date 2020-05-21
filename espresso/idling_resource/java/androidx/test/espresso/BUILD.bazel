@@ -53,6 +53,7 @@ load("//build_extensions:release.bzl", "axt_release_lib")
 # espresso_idling_resource_release_no_deps.jar and espresso_idling_resource_release.aar
 axt_release_lib(
     name = "espresso_idling_resource_release",
+    custom_package = "androidx.test.espresso.idling.concurrent",
     keep_spec = "androidx/test/espresso",
     deps = [
         ":idling_resource",

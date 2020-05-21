@@ -51,6 +51,7 @@ android_library(
 # a java_library target librunner_release_no_deps
 axt_release_lib(
     name = "monitor_release",
+    custom_package = "androidx.test.monitor",
     jarjar_rules = "release_jarjar_rules.txt",
     keep_spec = "androidx/test",
     proguard_library = ":proguard_library.cfg",
@@ -60,7 +61,7 @@ axt_release_lib(
 )
 
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION", "ANDROIDX_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "RUNNER_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 maven_artifact(

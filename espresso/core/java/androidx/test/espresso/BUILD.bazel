@@ -83,9 +83,9 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//opensource/dagger",
         "//runner/android_junit_runner/java/androidx/test:runner",
+        "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_guava_guava",
         "@maven//:org_hamcrest_hamcrest_all",
-        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -153,9 +153,9 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//runner/monitor",
+        "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_guava_guava",
         "@maven//:org_hamcrest_hamcrest_all",
-        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -178,8 +178,8 @@ android_library(
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//runner/monitor",
         "@maven//:com_google_guava_guava",
-        "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 
@@ -211,6 +211,7 @@ load("//build_extensions:release.bzl", "axt_release_lib")
 
 axt_release_lib(
     name = "espresso_core_release",
+    custom_package = "androidx.test.espresso.core",
     jarjar_rules = "release_jarjar_rules.txt",
     keep_spec = "androidx/test/espresso",
     overlapping_jars = [
@@ -227,7 +228,7 @@ axt_release_lib(
 )
 
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION", "ESPRESSO_VERSION", "HAMCREST_VERSION")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION", "HAMCREST_VERSION", "RUNNER_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 load("//build_extensions:remove_from_jar.bzl", "remove_from_jar")
 
