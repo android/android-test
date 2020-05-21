@@ -44,6 +44,7 @@ axt_release_lib(
         "//runner/android_junit_runner/java/androidx/test:runner_release_no_deps.jar",
         "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
     ],
+    custom_package = "androidx.test.rules",
     proguard_library = "proguard.cfg",
     deps = [
         ":rules",

@@ -55,6 +55,7 @@ android_library(
 # a java_library target librunner_release_no_deps
 axt_release_lib(
     name = "runner_release",
+    custom_package = "androidx.test.runner",
     jarjar_rules = "release_jarjar_rules.txt",
     keep_spec = "androidx/test",
     overlapping_jars = [
