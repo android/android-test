@@ -19,6 +19,8 @@ again.
 
 AndroidX Test uses the [bazel](https://bazel.build) build system.
 
+Currently only Linux is supported.
+
 ### One time setup
 
 *   [Fork](https://help.github.com/articles/fork-a-repo/) and
