@@ -155,7 +155,8 @@ public final class Intents {
    * @return {@link OngoingStubbing} object to set stubbed response
    */
   public static OngoingStubbing intending(Matcher<Intent> matcher) {
-    return defaultInstance.internalIntending(matcher);
+    return checkNotNull(defaultInstance, "Intents not initialized. Did you forget to call init()?")
+        .internalIntending(matcher);
   }
 
   /**
@@ -184,6 +185,7 @@ public final class Intents {
    */
   public static void intended(
       final Matcher<Intent> matcher, final VerificationMode verificationMode) {
+    checkNotNull(defaultInstance, "Intents not initialized. Did you forget to call init()?");
     Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
     instrumentation.waitForIdleSync();
     if (resumedActivitiesExist(instrumentation)) {
