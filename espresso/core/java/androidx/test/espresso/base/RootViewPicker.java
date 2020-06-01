@@ -172,7 +172,7 @@ public final class RootViewPicker implements Provider<View> {
         }
       }
       if (activities.isEmpty()) {
-        throw new RuntimeException(
+        throw new NoActivityResumedException(
             "No activities found. Did you forget to launch the activity "
                 + "by calling getActivity() or startActivitySync or similar?");
       }
