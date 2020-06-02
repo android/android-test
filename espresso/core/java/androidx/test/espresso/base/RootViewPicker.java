@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import androidx.test.espresso.EspressoException;
 import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.espresso.NoMatchingRootException;
 import androidx.test.espresso.Root;
@@ -107,7 +108,7 @@ public final class RootViewPicker implements Provider<View> {
       }
     }
 
-    throw new RuntimeException(
+    throw new RootViewWithoutFocusException(
         String.format(
             Locale.ROOT,
             "Waited for the root of the view hierarchy to have "
@@ -378,6 +379,14 @@ public final class RootViewPicker implements Provider<View> {
           String.format(
               Locale.ROOT, "Root not ready - waiting: %sms for one to appear.", waitTime));
       return waitTime;
+    }
+  }
+
+  private static final class RootViewWithoutFocusException extends RuntimeException
+      implements EspressoException {
+
+    private RootViewWithoutFocusException(String message) {
+      super(message);
     }
   }
 }
