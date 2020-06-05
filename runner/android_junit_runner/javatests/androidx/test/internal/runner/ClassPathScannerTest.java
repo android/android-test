@@ -24,6 +24,7 @@ import androidx.test.internal.runner.ClassPathScanner.ExternalClassNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.InclusivePackageNamesFilter;
 import androidx.test.platform.app.InstrumentationRegistry;
 import dalvik.system.DexFile;
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -53,10 +54,14 @@ public class ClassPathScannerTest {
         };
   }
 
-  private static String getClassPathToScan() {
-    String classpathToScan =
+  private static String[] getClassPathToScan() {
+    String classpathArg =
         InstrumentationRegistry.getArguments().getString(RunnerArgs.ARGUMENT_CLASSPATH_TO_SCAN);
-    return classpathToScan != null ? classpathToScan : getApplicationContext().getPackageCodePath();
+    if (classpathArg != null) {
+      return classpathArg.split(File.pathSeparator);
+    } else {
+      return new String[] {getApplicationContext().getPackageCodePath()};
+    }
   }
 
   @Test
