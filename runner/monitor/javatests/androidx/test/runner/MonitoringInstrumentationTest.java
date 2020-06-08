@@ -111,9 +111,9 @@ public class MonitoringInstrumentationTest {
       fail(
           "AssertionError thrown in the runnable should be re-thrown in the instrumentation"
               + " thread.");
-    } catch (RuntimeException e) {
-      assertThat(e.getCause(), is(instanceOf(AssertionError.class)));
-      assertEquals(expectedErrorMessage, e.getCause().getMessage());
+    } catch (Throwable t) {
+      assertThat(t, is(instanceOf(AssertionError.class)));
+      assertEquals(expectedErrorMessage, t.getMessage());
     }
   }
 

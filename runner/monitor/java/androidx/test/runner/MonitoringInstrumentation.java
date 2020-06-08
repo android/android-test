@@ -431,8 +431,9 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
 
   /**
    * Posts a runnable to the main thread and blocks the caller's thread until the runnable is
-   * executed. When an exception is thrown in the runnable, the exception is propagated back to the
-   * caller's thread and it will be rethrown as {@link RuntimeException}.
+   * executed. When a Throwable is thrown in the runnable, the exception is propagated back to the
+   * caller's thread. If it is an unchecked throwable, it will be rethrown as is. If it is a checked
+   * exception, it will be rethrown as a {@link RuntimeException}.
    *
    * @param runnable a runnable to be executed on the main thread
    */
@@ -443,11 +444,15 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
     try {
       wrapped.get();
     } catch (InterruptedException e) {
-      Log.e(TAG, "An execution is interrupted", e);
       throw new RuntimeException(e);
     } catch (ExecutionException e) {
-      Log.e(TAG, "An exception is thrown from the runnable posted to the main thread", e);
-      throw new RuntimeException(e.getCause());
+      Throwable cause = e.getCause();
+      if (cause instanceof RuntimeException) {
+        throw (RuntimeException) cause;
+      } else if (cause instanceof Error) {
+        throw (Error) cause;
+      }
+      throw new RuntimeException(cause);
     }
   }
 
