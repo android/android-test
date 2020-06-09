@@ -14,8 +14,8 @@ android_library(
     exports = ["//services/shellexecutor/java/androidx/test/services/shellexecutor:exec_client"],
 )
 
-# Whitelist packages allowed to access to server exec server.
-# Rather than adding to this whitelist, please invoke via AndroidTestUtil.executeShellCommand()
+# List any packages allowed to access to server exec server.
+# Rather than adding to this allowlist, please invoke via AndroidTestUtil.executeShellCommand()
 package_group(
     name = "server_access",
     packages = [
