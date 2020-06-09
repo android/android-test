@@ -94,7 +94,7 @@ public final class ResettingStubberImpl implements ResettingStubber {
 
   // package private, so that Intents can use this to resolve intents as it records them.
   ResolvedIntent resolveIntent(Intent intent) {
-    // Crazy Android API. Setting flags param to zero per discussion here:
+    // Android API is setting flags param to zero per discussion here:
     // http://stackoverflow.com/questions/9623079/
     // why-does-the-flag-specified-in-queryintentactivities-method-is-set-to-zero and
     // http://developer.android.com/training/basics/intents/sending.html
