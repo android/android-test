@@ -25,12 +25,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 
 /**
  * Runtime Permissions Activity that request {@link Manifest.permission#READ_PHONE_STATE
