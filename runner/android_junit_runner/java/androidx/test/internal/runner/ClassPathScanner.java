@@ -63,7 +63,7 @@ public class ClassPathScanner {
 
   /** A {@link ClassNameFilter} that chains one or more filters together */
   public static class ChainedClassNameFilter implements ClassNameFilter {
-    private final List<ClassNameFilter> filters = new ArrayList<ClassNameFilter>();
+    private final List<ClassNameFilter> filters = new ArrayList<>();
 
     public void add(ClassNameFilter filter) {
       filters.add(filter);
@@ -146,7 +146,7 @@ public class ClassPathScanner {
 
   static class ExcludeClassNamesFilter implements ClassNameFilter {
 
-    private Set<String> excludedClassNames;
+    private final Set<String> excludedClassNames;
 
     public ExcludeClassNamesFilter(Set<String> excludedClassNames) {
       this.excludedClassNames = excludedClassNames;
@@ -188,7 +188,7 @@ public class ClassPathScanner {
     DexFile dexFile = null;
     try {
       dexFile = new DexFile(path);
-      Enumeration<String> classNames = getDexEntries(dexFile);
+      Enumeration<String> classNames = dexFile.entries();
       while (classNames.hasMoreElements()) {
         String className = classNames.nextElement();
         if (filter.accept(className)) {
@@ -203,24 +203,13 @@ public class ClassPathScanner {
   }
 
   /**
-   * Retrieves the entry names from given {@link DexFile}.
-   *
-   * @param dexFile
-   * @return {@link Enumeration} of {@link String}s
-   */
-  @VisibleForTesting
-  Enumeration<String> getDexEntries(DexFile dexFile) {
-    return dexFile.entries();
-  }
-
-  /**
    * Retrieves set of classpath entries that match given {@link ClassNameFilter}.
    *
    * @throws IOException
    */
   public Set<String> getClassPathEntries(ClassNameFilter filter) throws IOException {
     // use LinkedHashSet for predictable order
-    Set<String> entryNames = new LinkedHashSet<String>();
+    Set<String> entryNames = new LinkedHashSet<>();
     for (String path : classPath) {
       addEntriesFromPath(entryNames, path, filter);
     }

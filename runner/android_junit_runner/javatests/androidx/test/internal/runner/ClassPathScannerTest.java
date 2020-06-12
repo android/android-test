@@ -16,21 +16,16 @@
 package androidx.test.internal.runner;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static com.google.common.truth.Truth.assertThat;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import androidx.test.internal.runner.ClassPathScanner.ExcludePackageNameFilter;
-import androidx.test.internal.runner.ClassPathScanner.ExternalClassNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.InclusivePackageNamesFilter;
 import androidx.test.platform.app.InstrumentationRegistry;
-import dalvik.system.DexFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.Set;
-import java.util.Vector;
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,17 +36,10 @@ import org.junit.runner.RunWith;
 public class ClassPathScannerTest {
 
   private ClassPathScanner classPathScanner;
-  private Enumeration<String> dexEntries;
 
   @Before
   public void setUp() throws Exception {
-    classPathScanner =
-        new ClassPathScanner(getClassPathToScan()) {
-          @Override
-          Enumeration<String> getDexEntries(DexFile dexFile) {
-            return dexEntries;
-          }
-        };
+    classPathScanner = new ClassPathScanner(getClassPathToScan());
   }
 
   private static String[] getClassPathToScan() {
@@ -65,39 +53,11 @@ public class ClassPathScannerTest {
   }
 
   @Test
-  public void externalClassNameFilter() throws IOException {
-    dexEntries = createEntries("com.example.MyName", "com.example.MyName$Inner");
-    Set<String> result = classPathScanner.getClassPathEntries(new ExternalClassNameFilter());
-    Assert.assertEquals(1, result.size());
-    Assert.assertTrue(result.contains("com.example.MyName"));
-  }
-
-  @Test
   public void inclusivePackageNamesFilter() throws IOException {
-    dexEntries = createEntries("com.example.MyName", "com.exclude.Excluded", "com.example2.MyName");
     Set<String> result =
         classPathScanner.getClassPathEntries(
-            new InclusivePackageNamesFilter(Arrays.asList("com.example")));
-    Assert.assertEquals(1, result.size());
-    Assert.assertTrue(result.contains("com.example.MyName"));
-  }
-
-  @Test
-  public void exclusivePackageNameFilter() throws IOException {
-    dexEntries =
-        createEntries("com.example.MyName", "com.exclude.Excluded", "com.exclude2.Excluded");
-    Set<String> result =
-        classPathScanner.getClassPathEntries(new ExcludePackageNameFilter("com.exclude"));
-    Assert.assertEquals(2, result.size());
-    Assert.assertTrue(result.contains("com.example.MyName"));
-    Assert.assertTrue(result.contains("com.exclude2.Excluded"));
-  }
-
-  private Enumeration<String> createEntries(String... entries) {
-    Vector<String> v = new Vector<String>(entries.length);
-    for (String entry : entries) {
-      v.add(entry);
-    }
-    return v.elements();
+            new InclusivePackageNamesFilter(Arrays.asList("androidx.test.annotation")));
+    assertThat(result).hasSize(1);
+    assertThat(result).contains("androidx.test.annotation.Beta");
   }
 }
