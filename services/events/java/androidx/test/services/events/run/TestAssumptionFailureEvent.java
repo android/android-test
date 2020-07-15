@@ -17,59 +17,31 @@
 package androidx.test.services.events.run;
 
 import android.os.Parcel;
-import androidx.test.services.events.Failure;
-import androidx.test.services.events.TestCase;
+import androidx.annotation.NonNull;
+import androidx.test.services.events.FailureInfo;
+import androidx.test.services.events.TestCaseInfo;
 
 /**
- * Denotes that the test ended with a TEST_ASSUMPTION_FAILURE. It has the {@link Failure} object to
- * denote what was the cause of the failure/error.
+ * Denotes that the test ended with a TEST_ASSUMPTION_FAILURE. It has the {@link FailureInfo} object
+ * to denote what was the cause of the failure/error.
  */
-public class TestAssumptionFailureEvent extends TestRunEvent {
-
-  public Failure getFailure() {
-    return failure;
-  }
-
-  private final Failure failure;
-
+public class TestAssumptionFailureEvent extends TestFailureEvent {
   /**
-   * Constructor to create a {@link TestAssumptionFailureEvent} from {@link Parcel}.
-   *
-   * @param source Android {@link Parcel} to read from.
-   */
-  TestAssumptionFailureEvent(Parcel source) {
-    super(source);
-    failure = new Failure(source);
-  }
-
-  /**
-   * Constructor to create {@link TestAssumptionFailureEvent} from {@link TestCase} sand {@link
-   * Failure}.
+   * Creates a {@link TestAssumptionFailureEvent} from {@link TestCaseInfo} and {@link FailureInfo}.
    *
    * @param testCase the test case that this event is for.
    * @param failure the failure associated with the test case.
    */
-  TestAssumptionFailureEvent(TestCase testCase, Failure failure) {
-    super(testCase);
-    this.failure = failure;
+  public TestAssumptionFailureEvent(@NonNull TestCaseInfo testCase, @NonNull FailureInfo failure) {
+    super(testCase, failure);
+  }
+
+  TestAssumptionFailureEvent(Parcel source) {
+    super(source);
   }
 
   @Override
-  public void writeToParcel(Parcel parcel, int i) {
-    super.writeToParcel(parcel, 0);
-    failure.writeToParcel(parcel, 0);
+  EventType instanceType() {
+    return EventType.TEST_ASSUMPTION_FAILURE;
   }
-
-  public static final Creator<TestAssumptionFailureEvent> CREATOR =
-      new Creator<TestAssumptionFailureEvent>() {
-        @Override
-        public TestAssumptionFailureEvent createFromParcel(Parcel source) {
-          return new TestAssumptionFailureEvent(source);
-        }
-
-        @Override
-        public TestAssumptionFailureEvent[] newArray(int size) {
-          return new TestAssumptionFailureEvent[size];
-        }
-      };
 }

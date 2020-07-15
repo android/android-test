@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.services.events;
+package androidx.test.services.events.discovery;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -24,28 +24,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * Class to test parcelable {@link Failure}. We write and read from the parcel to test every thing
- * done correctly.
+ * Unit tests for the {@link TestDiscoveryStartedEvent} parcelable. We write and read from the
+ * parcel to verify that {@link TestDiscoveryEvent#CREATOR} instantiates it correctly.
  */
 @RunWith(AndroidJUnit4.class)
-public class FailureParcelableTest {
+public class TestDiscoveryStartedEventTest {
 
   @Test
-  public void failureToParcelableTest_basicException() {
+  public void testDiscoveryStartedEvent_created_by_createFromParcel() {
+    TestDiscoveryStartedEvent testDiscoveryStartedEvent = new TestDiscoveryStartedEvent();
 
-    String stackTrace = "DummyTrace";
-    String exceptionType = "NullPointerException";
-    String message = "message";
-    Failure failure = new Failure(message, exceptionType, stackTrace);
     Parcel parcel = Parcel.obtain();
-    failure.writeToParcel(parcel, 0);
+    testDiscoveryStartedEvent.writeToParcel(parcel, 0);
 
     parcel.setDataPosition(0);
-
-    Failure failureFromParcel = Failure.CREATOR.createFromParcel(parcel);
-
-    assertThat(failureFromParcel.getFailureMessage()).isEqualTo(message);
-    assertThat(failureFromParcel.getFailureType()).isEqualTo(exceptionType);
-    assertThat(failureFromParcel.getStackTrace()).isEqualTo(stackTrace);
+    TestDiscoveryEvent testDiscoveryEventFromParcel =
+        TestDiscoveryEvent.CREATOR.createFromParcel(parcel);
+    assertThat(testDiscoveryEventFromParcel).isInstanceOf(TestDiscoveryStartedEvent.class);
   }
 }

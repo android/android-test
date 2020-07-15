@@ -16,4 +16,17 @@
 
 package androidx.test.services.events;
 
-parcelable TestCase;
+import androidx.annotation.NonNull;
+
+/** A checked {@link Exception} indicating that a test event operation failed. */
+public class TestEventException extends Exception {
+  /** Creates a new {@link TestEventException} with the given message. */
+  public TestEventException(@NonNull String message) {
+    super(message);
+  }
+
+  /** Creates a new {@link TestEventException} with the given message and original exception. */
+  public TestEventException(@NonNull String message, @NonNull Throwable cause) {
+    super(message, cause);
+  }
+}

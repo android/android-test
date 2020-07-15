@@ -16,34 +16,10 @@
 
 package androidx.test.services.events.discovery;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /** Denotes that test discovery has finished */
 public class TestDiscoveryFinishedEvent extends TestDiscoveryEvent {
-
-  TestDiscoveryFinishedEvent(Parcel source) {
-    super(source);
-  }
-
   @Override
-  public int describeContents() {
-    return 0;
+  EventType instanceType() {
+    return EventType.FINISHED;
   }
-
-  @Override
-  public void writeToParcel(Parcel parcel, int i) {}
-
-  public static final Parcelable.Creator<TestDiscoveryFinishedEvent> CREATOR =
-      new Parcelable.Creator<TestDiscoveryFinishedEvent>() {
-        @Override
-        public TestDiscoveryFinishedEvent createFromParcel(Parcel source) {
-          return new TestDiscoveryFinishedEvent(source);
-        }
-
-        @Override
-        public TestDiscoveryFinishedEvent[] newArray(int size) {
-          return new TestDiscoveryFinishedEvent[size];
-        }
-      };
 }

@@ -16,32 +16,19 @@
 
 package androidx.test.services.events.run;
 
+import static androidx.test.internal.util.Checks.checkNotNull;
+
 import android.os.Parcel;
-import android.os.Parcelable;
-import androidx.test.services.events.Failure;
-import androidx.test.services.events.TestCase;
+import androidx.annotation.NonNull;
+import androidx.test.services.events.FailureInfo;
+import androidx.test.services.events.TestCaseInfo;
 
 /**
- * Denotes that the test ended with a TEST_FAILURE. It has the {@link Failure} object to denote what
- * was the cause of the failure/error.
+ * Denotes that the test ended with a TEST_FAILURE. It has the {@link FailureInfo} object to denote
+ * what was the cause of the failure/error.
  */
-public class TestFailureEvent extends TestRunEvent {
-
-  public Failure getFailure() {
-    return failure;
-  }
-
-  private final Failure failure;
-
-  /**
-   * Constructor to create an {@link TestRunEvent} from an Android Parcel.
-   *
-   * @param source Android {@link Parcel} to read from.
-   */
-  TestFailureEvent(Parcel source) {
-    super(source);
-    failure = new Failure(source);
-  }
+public class TestFailureEvent extends TestRunEventWithTestCase {
+  @NonNull public final FailureInfo failure;
 
   /**
    * Constructor to create {@link TestFailureEvent}.
@@ -49,9 +36,20 @@ public class TestFailureEvent extends TestRunEvent {
    * @param testCase the test case that this event is for.
    * @param failure the failure associated with the test case.
    */
-  public TestFailureEvent(TestCase testCase, Failure failure) {
+  public TestFailureEvent(@NonNull TestCaseInfo testCase, @NonNull FailureInfo failure) {
     super(testCase);
+    checkNotNull(failure, "failure cannot be null");
     this.failure = failure;
+  }
+
+  TestFailureEvent(Parcel source) {
+    super(source);
+    failure = new FailureInfo(source);
+  }
+
+  @Override
+  EventType instanceType() {
+    return EventType.TEST_FAILURE;
   }
 
   @Override
@@ -59,17 +57,4 @@ public class TestFailureEvent extends TestRunEvent {
     super.writeToParcel(parcel, 0);
     failure.writeToParcel(parcel, 0);
   }
-
-  public static final Parcelable.Creator<TestFailureEvent> CREATOR =
-      new Parcelable.Creator<TestFailureEvent>() {
-        @Override
-        public TestFailureEvent createFromParcel(Parcel source) {
-          return new TestFailureEvent(source);
-        }
-
-        @Override
-        public TestFailureEvent[] newArray(int size) {
-          return new TestFailureEvent[size];
-        }
-      };
 }

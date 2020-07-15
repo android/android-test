@@ -20,9 +20,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /** Base class for different test discovery events to implement. */
-public class TestDiscoveryEvent implements Parcelable {
+public abstract class TestDiscoveryEvent implements Parcelable {
+  TestDiscoveryEvent() {}
 
-  TestDiscoveryEvent(Parcel source) {}
+  /** Each derived class will return its corresponding EventType in {@link #instanceType()}. */
+  enum EventType {
+    STARTED,
+    TEST_FOUND,
+    FINISHED
+  }
 
   @Override
   public int describeContents() {
@@ -30,18 +36,28 @@ public class TestDiscoveryEvent implements Parcelable {
   }
 
   @Override
-  public void writeToParcel(Parcel parcel, int i) {}
+  public void writeToParcel(Parcel parcel, int i) {
+    // The first entry in the Parcel is the EventType enum value to identify the derived class type.
+    parcel.writeString(instanceType().name());
+  }
+
+  /**
+   * The {@code ITestDiscoveryEvent#send(TestDiscoveryEvent)} service method receives an instance of
+   * the {@link TestDiscoveryEvent} base class, so the {@link #CREATOR} factory in this class is
+   * being used to create the event instances, not the {@code CREATOR} of one of its derived
+   * instances.
+   *
+   * <p>Therefore the {@code createFromParcel} method first needs to read a String containing the
+   * EventType enum value of the correct derived type to instantiate. Derived classes should
+   * override this method to return the applicable event type.
+   *
+   * <p>Also note that this means only this base class provides a {@code CREATOR}, since the derived
+   * classes don't need one.
+   *
+   * @return the EventType of the final derived event class that extends this base class
+   */
+  abstract EventType instanceType();
 
   public static final Parcelable.Creator<TestDiscoveryEvent> CREATOR =
-      new Parcelable.Creator<TestDiscoveryEvent>() {
-        @Override
-        public TestDiscoveryEvent createFromParcel(Parcel source) {
-          return new TestDiscoveryEvent(source);
-        }
-
-        @Override
-        public TestDiscoveryEvent[] newArray(int size) {
-          return new TestDiscoveryEvent[size];
-        }
-      };
+      new TestDiscoveryEventFactory();
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.services.events.discovery;
+package androidx.test.services.events.run;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 
@@ -22,30 +22,33 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.test.services.events.TestCaseInfo;
 
-/**
- * Denotes that test discovery has found a test case. The {@link TestCaseInfo} is provided along
- * with the event.
- */
-public class TestFoundEvent extends TestDiscoveryEvent {
+/** Represents a {@link TestRunEvent} with an associated {@link TestCaseInfo}. */
+public abstract class TestRunEventWithTestCase extends TestRunEvent {
+  /** The {@link TestCaseInfo} this event is associated with. */
   @NonNull public final TestCaseInfo testCase;
 
-  public TestFoundEvent(@NonNull TestCaseInfo testCase) {
-    checkNotNull(testCase, "testCase cannot be null");
-    this.testCase = testCase;
+  /**
+   * Creates a {@link TestRunEventWithTestCase} from an {@link Parcel}.
+   *
+   * @param source {@link Parcel} to create the {@link TestCaseInfo} from
+   */
+  TestRunEventWithTestCase(Parcel source) {
+    testCase = new TestCaseInfo(source);
   }
 
-  TestFoundEvent(Parcel source) {
-    this.testCase = new TestCaseInfo(source);
+  /**
+   * Creates a {@link TestRunEventWithTestCase}.
+   *
+   * @param testCase the test case this event represents,
+   */
+  TestRunEventWithTestCase(@NonNull TestCaseInfo testCase) {
+    checkNotNull(testCase, "testCase cannot be null");
+    this.testCase = testCase;
   }
 
   @Override
   public void writeToParcel(Parcel parcel, int i) {
     super.writeToParcel(parcel, i);
     testCase.writeToParcel(parcel, i);
-  }
-
-  @Override
-  EventType instanceType() {
-    return EventType.TEST_FOUND;
   }
 }

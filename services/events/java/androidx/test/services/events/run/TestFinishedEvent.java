@@ -17,42 +17,29 @@
 package androidx.test.services.events.run;
 
 import android.os.Parcel;
-import androidx.test.services.events.TestCase;
+import androidx.annotation.NonNull;
+import androidx.test.services.events.TestCaseInfo;
 
 /**
- * Denotes that the test ended with a TEST_FINISHED. It has the {@link TestCase} object to denote
- * which case this event is associated to.
+ * Denotes that the test ended with a TEST_FINISHED. It has the {@link TestCaseInfo} object to
+ * denote which case this event is associated to.
  */
-public class TestFinishedEvent extends TestRunEvent {
-
-  /**
-   * Constructor to create an {@link TestRunEvent} from an Android Parcel.
-   *
-   * @param source Android {@link Parcel} to read from.
-   */
-  TestFinishedEvent(Parcel source) {
-    super(source);
-  }
-
+public class TestFinishedEvent extends TestRunEventWithTestCase {
   /**
    * Constructor to create {@link TestFinishedEvent}.
    *
    * @param testCase the test case that this event is for.
    */
-  TestFinishedEvent(TestCase testCase) {
+  public TestFinishedEvent(@NonNull TestCaseInfo testCase) {
     super(testCase);
   }
 
-  public static final Creator<TestFinishedEvent> CREATOR =
-      new Creator<TestFinishedEvent>() {
-        @Override
-        public TestFinishedEvent createFromParcel(Parcel source) {
-          return new TestFinishedEvent(source);
-        }
+  TestFinishedEvent(Parcel source) {
+    super(source);
+  }
 
-        @Override
-        public TestFinishedEvent[] newArray(int size) {
-          return new TestFinishedEvent[size];
-        }
-      };
+  @Override
+  EventType instanceType() {
+    return EventType.TEST_FINISHED;
+  }
 }

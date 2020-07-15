@@ -20,8 +20,8 @@ import androidx.test.services.events.TestCase;
 import androidx.test.services.events.discovery.TestDiscoveryEvent;
 
 /**
- * Defines an interface for remote {@link Instrumentation} service to speak to the
- * Test Runner.
+ * Defines an interface for {@link Instrumentation} (e.g. {@code AndroidJUnitRunner} to
+ * communicate with the remote Orchestrator test discovery service.
  */
 interface ITestDiscoveryEvent {
 

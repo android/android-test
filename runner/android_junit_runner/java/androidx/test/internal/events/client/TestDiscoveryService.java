@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.services.events.client;
+package androidx.test.internal.events.client;
 
 import android.os.RemoteException;
 import androidx.test.services.events.discovery.TestDiscoveryEvent;
@@ -27,7 +27,7 @@ import androidx.test.services.events.discovery.TestDiscoveryEvent;
 public interface TestDiscoveryService {
   /**
    * Sends a TestDiscoveryEvent what have the test case to the {@link
-   * androidx.test.services.events.discovery.ITestDiscoveryEvent} service.
+   * androidx.test.services.internal.discovery.ITestDiscoveryEvent} service.
    *
    * @param testDiscoveryEvent TestDiscoveryEvent parcelable
    * @throws RemoteException throws an exception if the connection to the Orchestrator fails

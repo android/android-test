@@ -17,42 +17,29 @@
 package androidx.test.services.events.run;
 
 import android.os.Parcel;
-import androidx.test.services.events.TestCase;
+import androidx.annotation.NonNull;
+import androidx.test.services.events.TestCaseInfo;
 
 /**
- * Denotes that the test ended with a TEST_IGNORED. It has the {@link TestCase} object to denote
+ * Denotes that the test ended with a TEST_IGNORED. It has the {@link TestCaseInfo} object to denote
  * which case this event is associated to.
  */
-public class TestIgnoredEvent extends TestRunEvent {
-
-  /**
-   * Constructor to create an {@link TestRunEvent} from an Android Parcel.
-   *
-   * @param source Android {@link Parcel} to read from.
-   */
-  TestIgnoredEvent(Parcel source) {
-    super(source);
-  }
-
+public class TestIgnoredEvent extends TestRunEventWithTestCase {
   /**
    * Constructor to create {@link TestFinishedEvent}.
    *
    * @param testCase the test case that this event is for.
    */
-  TestIgnoredEvent(TestCase testCase) {
+  public TestIgnoredEvent(@NonNull TestCaseInfo testCase) {
     super(testCase);
   }
 
-  public static final Creator<TestIgnoredEvent> CREATOR =
-      new Creator<TestIgnoredEvent>() {
-        @Override
-        public TestIgnoredEvent createFromParcel(Parcel source) {
-          return new TestIgnoredEvent(source);
-        }
+  TestIgnoredEvent(Parcel source) {
+    super(source);
+  }
 
-        @Override
-        public TestIgnoredEvent[] newArray(int size) {
-          return new TestIgnoredEvent[size];
-        }
-      };
+  @Override
+  EventType instanceType() {
+    return EventType.TEST_IGNORED;
+  }
 }

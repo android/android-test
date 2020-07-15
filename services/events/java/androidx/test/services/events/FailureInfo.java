@@ -16,52 +16,57 @@
 
 package androidx.test.services.events;
 
+import static androidx.test.internal.util.Checks.checkNotNull;
+
 import android.os.Parcel;
 import android.os.Parcelable;
+import androidx.annotation.NonNull;
 
 /**
  * Denotes an android test failure, has details of the failure including stack trace / type and
  * message.
  */
-public final class Failure implements Parcelable {
+public final class FailureInfo implements Parcelable {
 
   /** The failure message associated with the failure. */
-  private final String failureMessage;
+  @NonNull public final String failureMessage;
 
-  /** The Type of failure exception. E.g NullPointerException */
-  private final String failureType;
+  /** The type of failure exception. E.g {@code NullPointerException}. */
+  @NonNull public final String failureType;
 
   /** The stack trace associated with the failure. */
-  private final String stackTrace;
+  @NonNull public final String stackTrace;
 
-  public String getFailureMessage() {
-    return failureMessage;
-  }
+  /** The test case that caused the failure. */
+  @NonNull public final TestCaseInfo testCase;
 
-  public String getFailureType() {
-    return failureType;
-  }
-
-  public String getStackTrace() {
-    return stackTrace;
-  }
-
-  /** Constructor to create a {@link Failure}. */
-  public Failure(String failureMessage, String failureType, String stackTrace) {
+  /** Constructor to create a {@link FailureInfo}. */
+  public FailureInfo(
+      @NonNull String failureMessage,
+      @NonNull String failureType,
+      @NonNull String stackTrace,
+      @NonNull TestCaseInfo testCase) {
+    checkNotNull(failureMessage, "failureMessage cannot be null");
+    checkNotNull(failureType, "failureType cannot be null");
+    checkNotNull(stackTrace, "stackTrace cannot be null");
+    checkNotNull(testCase, "testCase cannot be null");
     this.failureMessage = failureMessage;
     this.failureType = failureType;
     this.stackTrace = stackTrace;
+    this.testCase = testCase;
   }
 
   /**
-   * Creates a {@link Failure} from android {@link Parcel}.
+   * Creates a {@link FailureInfo} from android {@link Parcel}.
    *
    * @param source the android Parcel.
    */
-  public Failure(Parcel source) {
+  public FailureInfo(@NonNull Parcel source) {
+    checkNotNull(source, "source cannot be null");
     failureMessage = source.readString();
     failureType = source.readString();
     stackTrace = source.readString();
+    testCase = source.readParcelable(TestCaseInfo.class.getClassLoader());
   }
 
   @Override
@@ -71,22 +76,22 @@ public final class Failure implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel parcel, int i) {
-
     parcel.writeString(failureMessage);
     parcel.writeString(failureType);
     parcel.writeString(stackTrace);
+    parcel.writeParcelable(testCase, i);
   }
 
-  public static final Parcelable.Creator<Failure> CREATOR =
-      new Parcelable.Creator<Failure>() {
+  public static final Parcelable.Creator<FailureInfo> CREATOR =
+      new Parcelable.Creator<FailureInfo>() {
         @Override
-        public Failure createFromParcel(Parcel source) {
-          return new Failure(source);
+        public FailureInfo createFromParcel(Parcel source) {
+          return new FailureInfo(source);
         }
 
         @Override
-        public Failure[] newArray(int size) {
-          return new Failure[size];
+        public FailureInfo[] newArray(int size) {
+          return new FailureInfo[size];
         }
       };
 }

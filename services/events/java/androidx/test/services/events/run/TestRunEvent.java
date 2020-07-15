@@ -18,37 +18,21 @@ package androidx.test.services.events.run;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.test.services.events.TestCase;
 
-/**
- * Base class for all [TestRunEvent]s to implement. Every {@link TestRunEvent} must have a {@link
- * TestCase} for it to be identified.
- */
-public class TestRunEvent implements Parcelable {
+/** Base class for all other {@code TestRunEvents} to extend. */
+public abstract class TestRunEvent implements Parcelable {
+  /** Creates a {@link TestRunEvent}. */
+  TestRunEvent() {}
 
-  /** Returns the {@link TestCase} this event is associated to. */
-  public TestCase getTestCase() {
-    return testCase;
-  }
-
-  private final TestCase testCase;
-
-  /**
-   * Creates a {@link TestRunEvent} from an {@link Parcel}.
-   *
-   * @param source Android {@link Parcel} to read from.
-   */
-  TestRunEvent(Parcel source) {
-    testCase = new TestCase(source);
-  }
-
-  /**
-   * Constructor to create a {@link TestRunEvent}
-   *
-   * @param testCase the test case this event represents,
-   */
-  public TestRunEvent(TestCase testCase) {
-    this.testCase = testCase;
+  /** Each derived class will return its corresponding EventType in {@link #instanceType()}. */
+  enum EventType {
+    STARTED,
+    TEST_STARTED,
+    TEST_FINISHED,
+    TEST_ASSUMPTION_FAILURE,
+    TEST_FAILURE,
+    TEST_IGNORED,
+    FINISHED
   }
 
   @Override
@@ -58,19 +42,24 @@ public class TestRunEvent implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel parcel, int i) {
-    testCase.writeToParcel(parcel, 0);
+    parcel.writeString(instanceType().name());
   }
 
-  public static final Parcelable.Creator<TestRunEvent> CREATOR =
-      new Parcelable.Creator<TestRunEvent>() {
-        @Override
-        public TestRunEvent createFromParcel(Parcel source) {
-          return new TestRunEvent(source);
-        }
+  /**
+   * The {@code ITestRunEvent#send(TestRunEvent)} service method receives an instance of the {@link
+   * TestRunEvent} base class, so the {@link #CREATOR} factory in this class is being used to create
+   * the event instances, not the {@code CREATOR} of one of its derived instances.
+   *
+   * <p>Therefore the {@code createFromParcel} method first needs to read a String containing the
+   * EventType enum value of the correct derived type to instantiate. Derived classes should
+   * override this method to return the applicable event type.
+   *
+   * <p>Also note that this means only this base class provides a {@code CREATOR}, since the derived
+   * classes don't need one.
+   *
+   * @return the EventType of the final derived event class that extends this base class
+   */
+  abstract EventType instanceType();
 
-        @Override
-        public TestRunEvent[] newArray(int size) {
-          return new TestRunEvent[size];
-        }
-      };
+  public static final Parcelable.Creator<TestRunEvent> CREATOR = new TestRunEventFactory();
 }

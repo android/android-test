@@ -16,43 +16,61 @@
 
 package androidx.test.services.events.run;
 
+import static androidx.test.internal.util.Checks.checkNotNull;
+
 import android.os.Parcel;
-import androidx.test.services.events.TestCase;
+import android.os.Parcelable;
+import androidx.annotation.NonNull;
+import androidx.test.services.events.FailureInfo;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Denotes that the test ended with a TEST_RUN_FINISHED. It has the {@link TestCase} object to
- * denote which case this event is associated to.
- */
+/** Denotes that the test ended with a TEST_RUN_FINISHED event. */
 public class TestRunFinishedEvent extends TestRunEvent {
+  public final int count;
+  public final int ignoreCount;
+  public final long runTime;
+  @NonNull public final List<FailureInfo> failures;
 
   /**
-   * Constructor to create an {@link TestRunEvent} from an Android Parcel.
+   * Creates a {@link TestRunFinishedEvent}.
    *
-   * @param source Android {@link Parcel} to read from.
+   * @param count total number of tests run
+   * @param ignoreCount the number of tests ignored during the run
+   * @param runTime the number of milliseconds it took to run the entire suite to run
+   * @param failures the tests that failed
    */
+  public TestRunFinishedEvent(
+      int count, int ignoreCount, long runTime, @NonNull List<FailureInfo> failures) {
+    checkNotNull(failures, "failures cannot be null");
+    this.count = count;
+    this.ignoreCount = ignoreCount;
+    this.runTime = runTime;
+    this.failures = failures;
+  }
+
   TestRunFinishedEvent(Parcel source) {
-    super(source);
+    count = source.readInt();
+    ignoreCount = source.readInt();
+    runTime = source.readLong();
+    this.failures = new ArrayList<>();
+    Parcelable[] failures = source.readParcelableArray(FailureInfo[].class.getClassLoader());
+    for (Object failure : failures) {
+      this.failures.add((FailureInfo) failure);
+    }
   }
 
-  /**
-   * Constructor to create {@link TestRunFinishedEvent}.
-   *
-   * @param testCase the test case that this event is for.
-   */
-  TestRunFinishedEvent(TestCase testCase) {
-    super(testCase);
+  @Override
+  public void writeToParcel(Parcel parcel, int i) {
+    super.writeToParcel(parcel, i);
+    parcel.writeInt(count);
+    parcel.writeInt(ignoreCount);
+    parcel.writeLong(runTime);
+    parcel.writeParcelableArray(failures.toArray(new FailureInfo[0]), i);
   }
 
-  public static final Creator<TestRunFinishedEvent> CREATOR =
-      new Creator<TestRunFinishedEvent>() {
-        @Override
-        public TestRunFinishedEvent createFromParcel(Parcel source) {
-          return new TestRunFinishedEvent(source);
-        }
-
-        @Override
-        public TestRunFinishedEvent[] newArray(int size) {
-          return new TestRunFinishedEvent[size];
-        }
-      };
+  @Override
+  EventType instanceType() {
+    return EventType.FINISHED;
+  }
 }

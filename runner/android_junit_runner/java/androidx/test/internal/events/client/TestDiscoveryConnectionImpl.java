@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.services.events.client;
+package androidx.test.internal.events.client;
 
 import android.os.RemoteException;
 import androidx.test.services.events.discovery.ITestDiscoveryEvent;

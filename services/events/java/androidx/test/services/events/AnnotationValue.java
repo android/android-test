@@ -13,57 +13,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package androidx.test.services.events;
+
+import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a field value on an {@link java.lang.annotation.Annotation}. See <a
- * href="https://developer.android.com/reference/android/os/Parcelable.html">Android Parcelable </a>
+ * Represents a field value on an {@link java.lang.annotation.Annotation}.
+ *
+ * <p>See <a href="https://developer.android.com/reference/android/os/Parcelable.html">Android
+ * Parcelable</a>.
  */
-public class AnnotationValue implements Parcelable {
-
-  private final String fieldName;
-  private List<String> fieldValues = new ArrayList<>();
-  private final String valueType;
-
-  public String getFieldName() {
-    return fieldName;
-  }
-
-  public List<String> getFieldValues() {
-    return fieldValues;
-  }
-
-  public String getValueType() {
-    return valueType;
-  }
+public final class AnnotationValue implements Parcelable {
+  /** Name of the field in a {@link java.lang.annotation.Annotation}. */
+  @NonNull public final String fieldName;
+  /** Values of the annotation's field represented as {@link String}s. */
+  @NonNull public final List<String> fieldValues;
+  /** The type of the values, e.g. {@link Integer}. */
+  @NonNull public final String valueType;
 
   /**
-   * Constructor to create an {@link AnnotationValue} given an Android Parcel.
-   *
-   * @param source Android {@link Parcel} to read from.
-   */
-  public AnnotationValue(Parcel source) {
-    fieldName = source.readString();
-    source.readStringList(fieldValues);
-    valueType = source.readString();
-  }
-
-  /**
-   * ] Contructor to create an {@link AnnotationValue}.
+   * Constructor to create an {@link AnnotationValue}.
    *
    * @param fieldName Name of the field in a {@link java.lang.annotation.Annotation}
-   * @param fieldValues Values of the annotations field represent as {@link String}
-   * @param valueType The actual type of the values
+   * @param fieldValues Values of the annotation's field represented as {@link String}s
+   * @param valueType The type of the values, e.g. {@link Integer}
    */
-  public AnnotationValue(String fieldName, List<String> fieldValues, String valueType) {
+  public AnnotationValue(
+      @NonNull String fieldName, @NonNull List<String> fieldValues, @NonNull String valueType) {
+    checkNotNull(fieldName, "fieldName cannot be null");
+    checkNotNull(fieldValues, "fieldValues cannot be null");
+    checkNotNull(valueType, "valueType cannot be null");
     this.fieldName = fieldName;
     this.fieldValues = fieldValues;
     this.valueType = valueType;
+  }
+
+  private AnnotationValue(Parcel source) {
+    fieldName = source.readString();
+    fieldValues = new ArrayList<>();
+    source.readStringList(fieldValues);
+    valueType = source.readString();
   }
 
   @Override

@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package androidx.test.services.events.client;
+package androidx.test.internal.events.client;
 
-import android.os.RemoteException;
-import androidx.test.services.events.run.TestRunEvent;
+import android.content.ComponentName;
+import android.content.Context;
+import android.os.IBinder;
 
 /**
- * Base interface implemented by the test run service client connection, e.g. {@link
- * TestRunConnectionImpl}.
+ * Base interface for caller's of {@link OrchestratorConnection} must implement. {@link
+ * #onTestEventClientConnect()} will be called by the connection when the service connects.
  */
-public interface TestRunService {
+interface TestEventClientConnectListener {
+
   /**
-   * Sends a test status event and related {@link androidx.test.services.events.TestCase} and {@link
-   * androidx.test.services.events.Failure} parcelables.
-   *
-   * @param testRunEvent parcelable with the {@link androidx.test.services.events.TestCase}
-   *     information.
+   * Called from the connection's {@link
+   * android.content.ServiceConnection#onServiceConnected(ComponentName, IBinder)} implementation to
+   * indicate that the async {@link #connect(Context)} operation has finished.
    */
-  void send(TestRunEvent testRunEvent) throws RemoteException;
+  void onTestEventClientConnect();
 }
