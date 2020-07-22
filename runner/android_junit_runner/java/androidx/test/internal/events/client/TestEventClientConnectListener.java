@@ -24,7 +24,7 @@ import android.os.IBinder;
  * Base interface for caller's of {@link OrchestratorConnection} must implement. {@link
  * #onTestEventClientConnect()} will be called by the connection when the service connects.
  */
-public interface TestEventClientConnectListener {
+interface TestEventClientConnectListener {
 
   /**
    * Called from the connection's {@link

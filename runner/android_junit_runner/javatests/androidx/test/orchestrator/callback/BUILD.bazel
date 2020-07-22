@@ -1,4 +1,0 @@
-# Description: Tests for the Orchestrator client connection
-licenses(["notice"])  # Apache License 2.0
-
-# TODO(b/161812565): create Bazel files for test events and new AJUR files

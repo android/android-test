@@ -53,10 +53,9 @@ public final class ParcelableConverter {
         description.getTestClass() != null
             ? getAnnotationsFromArray(description.getTestClass().getAnnotations())
             : emptyList();
-    // Note that getMethodName() may return null as in the case of TestRunStartedEvent.
     return new TestCaseInfo(
         description.getClassName(),
-        description.getMethodName() != null ? description.getMethodName() : "",
+        description.getMethodName(),
         methodAnnotations,
         classAnnotations);
   }

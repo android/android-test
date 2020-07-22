@@ -42,12 +42,8 @@ public final class ParcelableFailure implements Parcelable {
   }
 
   public ParcelableFailure(ParcelableDescription description, Throwable t) {
-    this(description, t.getMessage());
-  }
-
-  public ParcelableFailure(ParcelableDescription description, String message) {
     this.description = description;
-    trace = trimToLength(message);
+    trace = trimToLength(t.getMessage());
   }
 
   @Override
@@ -75,17 +71,14 @@ public final class ParcelableFailure implements Parcelable {
       };
 
   private static String trimToLength(String trace) {
-    if (!trace.endsWith("\n")) {
-      trace = trace + "\n";
-    }
     if (trace.length() > MAX_STREAM_LENGTH) {
       Log.i(
           TAG,
           String.format(
-              "Stack trace too long, trimmed to first %s characters.", MAX_STREAM_LENGTH - 1));
-      return trace.substring(0, MAX_STREAM_LENGTH - 1) + "\n";
+              "Stack trace too long, trimmed to first %s characters.", MAX_STREAM_LENGTH));
+      return trace.substring(0, MAX_STREAM_LENGTH) + "\n";
     } else {
-      return trace;
+      return trace + "\n";
     }
   }
 
