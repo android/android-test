@@ -49,7 +49,9 @@ import org.junit.runner.notification.RunListener;
 public final class TestEventClient {
   // TODO(b/161745142): Separate TestEventServiceClient and OrchestratorServiceClient impl code
   private static final String TAG = "TestEventClient";
-  private static final TestEventClient NO_OP_CLIENT = new TestEventClient();
+
+  /** If no test discovery or test run events required, then return a client that does nothing. */
+  public static final TestEventClient NO_OP_CLIENT = new TestEventClient();
 
   @Nullable private final TestDiscovery testDiscovery;
   @Nullable private final OrchestratedInstrumentationListener notificationRunListener;

@@ -26,6 +26,10 @@ import org.junit.runner.Result;
 public final class ParcelableResult implements Parcelable {
   private final List<ParcelableFailure> failures;
 
+  public ParcelableResult(List<ParcelableFailure> failures) {
+    this.failures = failures;
+  }
+
   public ParcelableResult(Result result) {
     failures = new ArrayList<>();
     for (org.junit.runner.notification.Failure failure : result.getFailures()) {

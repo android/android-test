@@ -29,6 +29,9 @@ import android.util.Log;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.MediumTest;
 import androidx.test.filters.SmallTest;
+import androidx.test.internal.events.client.TestEventClient;
+import androidx.test.internal.events.client.TestEventClientArgs;
+import androidx.test.internal.events.client.TestEventClientConnectListener;
 import androidx.test.internal.runner.RunnerArgs;
 import androidx.test.internal.runner.TestExecutor;
 import androidx.test.internal.runner.TestRequestBuilder;
@@ -40,8 +43,7 @@ import androidx.test.internal.runner.listener.LogRunListener;
 import androidx.test.internal.runner.listener.SuiteAssignmentPrinter;
 import androidx.test.internal.runner.tracker.AnalyticsBasedUsageTracker;
 import androidx.test.internal.runner.tracker.UsageTrackerRegistry.AxtVersions;
-import androidx.test.orchestrator.instrumentationlistener.OrchestratedInstrumentationListener;
-import androidx.test.orchestrator.instrumentationlistener.OrchestratedInstrumentationListener.OnConnectListener;
+import androidx.test.orchestrator.callback.OrchestratorV1Connection;
 import androidx.test.runner.lifecycle.ApplicationLifecycleCallback;
 import androidx.test.runner.lifecycle.ApplicationLifecycleMonitorRegistry;
 import androidx.test.runner.screenshot.ScreenCaptureProcessor;
@@ -263,7 +265,8 @@ import org.junit.runners.model.RunnerBuilder;
  *
  * Arguments specified via shell will override manifest specified arguments.
  */
-public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnConnectListener {
+public class AndroidJUnitRunner extends MonitoringInstrumentation
+    implements TestEventClientConnectListener {
 
   private static final String LOG_TAG = "AndroidJUnitRunner";
 
@@ -274,8 +277,9 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
       new InstrumentationResultPrinter();
   private RunnerArgs runnerArgs;
   private UsageTrackerFacilitator usageTrackerFacilitator;
-  private OrchestratedInstrumentationListener orchestratorListener;
+  private TestEventClient testEventClient = TestEventClient.NO_OP_CLIENT;
 
+  /** {@inheritDoc} */
   @Override
   public void onCreate(Bundle arguments) {
     super.onCreate(arguments);
@@ -295,23 +299,38 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
       usageTrackerFacilitator = new UsageTrackerFacilitator(false);
     }
 
-
     for (ApplicationLifecycleCallback listener : runnerArgs.appListeners) {
       ApplicationLifecycleMonitorRegistry.getInstance().addLifecycleCallback(listener);
     }
 
     addScreenCaptureProcessors(runnerArgs);
 
-    if (runnerArgs.orchestratorService != null && isPrimaryInstrProcess(runnerArgs.targetProcess)) {
-      // If orchestratorService is provided, and we are the primary process
-      // we await onOrchestratorConnect() before we start().
-      orchestratorListener = new OrchestratedInstrumentationListener(this);
-      orchestratorListener.connect(getContext());
+    if (isOrchestratorServiceProvided()) {
+      Log.v(LOG_TAG, "Waiting to connect to the Orchestrator service...");
     } else {
       // If no orchestration service is given, or we are not the primary process we can
       // start() immediately.
       start();
     }
+  }
+
+  /**
+   * Connects to the remote test event service if necessary, i.e. either the test discovery or test
+   * run events service is being used and this is the primary process.
+   *
+   * @return true if running in "orchestrated mode".
+   */
+  private boolean isOrchestratorServiceProvided() {
+    TestEventClientArgs args =
+        TestEventClientArgs.builder()
+            .setConnectionFactory(OrchestratorV1Connection::new)
+            .setOrchestratorService(runnerArgs.orchestratorService)
+            .setPrimaryInstProcess(isPrimaryInstrProcess())
+            .setTestDiscoveryRequested(runnerArgs.listTestsForOrchestrator)
+            .setTestRunEventsRequested(!runnerArgs.listTestsForOrchestrator)
+            .build();
+    testEventClient = TestEventClient.connect(getContext(), this, args);
+    return testEventClient.isTestDiscoveryEnabled() || testEventClient.isTestRunEventsEnabled();
   }
 
   /** Checks if need to wait for debugger. */
@@ -323,11 +342,23 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
    * Called when AndroidJUnitRunner connects to a test orchestrator, if the {@code
    * orchestratorService} parameter is set.
    *
+   * @deprecated use onTestEventClientConnect()
+   * @hide
+   */
+  @Deprecated // TODO(b/161833844): Remove onOrchestratorConnect(), use onTestEventClientConnect()
+  public void onOrchestratorConnect() {
+    start();
+  }
+
+  /**
+   * Called when AndroidJUnitRunner connects to a test orchestrator, if the {@code
+   * orchestratorService}, {@code discoveryService} or {@code testRunEventService} parameter is set.
+   *
    * @hide
    */
   @Override
-  public void onOrchestratorConnect() {
-    start();
+  public void onTestEventClientConnect() {
+    onOrchestratorConnect();
   }
 
   /**
@@ -360,16 +391,16 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
   public void onStart() {
     setJsBridgeClassName("androidx.test.espresso.web.bridge.JavaScriptBridge");
     super.onStart();
+    Request testRequest = buildRequest(runnerArgs, getArguments());
 
     /*
      * The orchestrator cannot collect the list of tests as it is running in a different process
      * than the test app.  On first run, the Orchestrator will ask AJUR to list the tests
      * out that would be run for a given class parameter.  AJUR will then be successively
-     * called with whatever it passes back to the orchestratorListener.
+     * called with whatever it passes back to the orchestrator service.
      */
-    if (runnerArgs.listTestsForOrchestrator && isPrimaryInstrProcess(runnerArgs.targetProcess)) {
-      Request testRequest = buildRequest(runnerArgs, getArguments());
-      orchestratorListener.addTests(testRequest.getRunner().getDescription());
+    if (testEventClient.isTestDiscoveryEnabled()) {
+      testEventClient.addTests(testRequest.getRunner().getDescription());
       finish(Activity.RESULT_OK, new Bundle());
       return;
     }
@@ -387,13 +418,8 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
     Bundle results = new Bundle();
     try {
       TestExecutor.Builder executorBuilder = new TestExecutor.Builder(this);
-
       addListeners(runnerArgs, executorBuilder);
-
-      Request testRequest = buildRequest(runnerArgs, getArguments());
-
       results = executorBuilder.build().execute(testRequest);
-
     } catch (RuntimeException e) {
       final String msg = "Fatal exception when running tests";
       Log.e(LOG_TAG, msg, e);
@@ -433,8 +459,8 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
       builder.addRunListener(new SuiteAssignmentPrinter());
     } else {
       builder.addRunListener(new LogRunListener());
-      if (orchestratorListener != null) {
-        builder.addRunListener(orchestratorListener);
+      if (testEventClient.isTestRunEventsEnabled()) {
+        builder.addRunListener(testEventClient.getNotificationRunListener());
       } else {
         builder.addRunListener(getInstrumentationResultPrinter());
       }
@@ -474,8 +500,8 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
       builder.addRunListener(new LogRunListener());
       addDelayListener(args, builder);
       addCoverageListener(args, builder);
-      if (orchestratorListener != null) {
-        builder.addRunListener(orchestratorListener);
+      if (testEventClient.isTestRunEventsEnabled()) {
+        builder.addRunListener(testEventClient.getNotificationRunListener());
       } else {
         builder.addRunListener(getInstrumentationResultPrinter());
       }
@@ -529,26 +555,12 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation implements OnC
     Log.e(LOG_TAG, "An unhandled exception was thrown by the app.");
     InstrumentationResultPrinter instResultPrinter = getInstrumentationResultPrinter();
     if (instResultPrinter != null) {
-      // report better error message back to Instrumentation results.
+      // Report better error message back to Instrumentation results.
       instResultPrinter.reportProcessCrash(e);
     }
-    if (orchestratorListener != null) {
-      // Waits until the orchestrator gets a chance to handle the test failure (if any) before
-      // bringing down the entire Instrumentation process.
-      //
-      // It's also possible that the process crashes in the middle of a test, so no TestFinish event
-      // will be received. In this case, it will wait until MILLIS_TO_WAIT_FOR_TEST_FINISH millis
-      // is reached.
-      orchestratorListener.waitUntilTestFinished(MILLIS_TO_WAIT_FOR_TEST_FINISH);
-
-      // Need to report the process crashed event to the orchestrator.
-      // This is to handle the case when the test body finishes but process crashes during
-      // Instrumentation cleanup (e.g. stopping the app). Otherwise, the test will be marked as
-      // passed.
-      if (!orchestratorListener.isTestFailed()) {
-        Log.i(LOG_TAG, "No test failure has been reported. Report the process crash.");
-        orchestratorListener.reportProcessCrash(e);
-      }
+    if (testEventClient.isTestRunEventsEnabled()) {
+      // Report the error message back to the orchestrator.
+      testEventClient.reportProcessCrash(e, MILLIS_TO_WAIT_FOR_TEST_FINISH);
     }
     Log.i(LOG_TAG, "Bringing down the entire Instrumentation process.");
     return super.onException(obj, e);
