@@ -36,11 +36,12 @@ android_library(
 # a java_library target libjunit_release_no_deps
 axt_release_lib(
     name = "junit_release",
+    custom_package = "androidx.test.ext.junit.ktx",
     keep_spec = "androidx/test/ext/junit|META-INF/androidx.test.ext.junit.kotlin_module",
     overlapping_jars = [
         "//ext/junit/java/androidx/test/ext/junit:junit_release_no_deps.jar",
     ],
-    remove_spec = "androidx/test/ext/junit/R[$$\.]",
+    remove_spec = "androidx/test/ext/junit/R[$$\\.]",
     resource_files = glob(
         ["res/**/*"],
     ),
@@ -50,7 +51,7 @@ axt_release_lib(
 )
 
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_JUNIT_VERSION", "CORE_VERSION", "ANDROIDX_VERSION", "RUNNER_VERSION", "ANDROIDX_LIFECYCLE_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_JUNIT_VERSION", "ANDROIDX_LIFECYCLE_VERSION", "ANDROIDX_VERSION", "CORE_VERSION", "RUNNER_VERSION")
 
 maven_artifact(
     name = "junit_maven_artifact",

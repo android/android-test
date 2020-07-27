@@ -36,11 +36,12 @@ android_library(
 # a java_library target libcore_release_no_deps
 axt_release_lib(
     name = "core_release",
+    custom_package = "androidx.test.core.ktx",
     keep_spec = "androidx/test/core|META-INF/androidx.test.core.kotlin_module",
     overlapping_jars = [
         "//core/java/androidx/test/core:core_release_no_deps.jar",
     ],
-    remove_spec = "androidx/test/core/R[$$\.]",
+    remove_spec = "androidx/test/core/R[$$\\.]",
     resource_files = glob(
         ["res/**/*"],
     ),
@@ -50,7 +51,7 @@ axt_release_lib(
 )
 
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "CORE_VERSION", "ANDROIDX_VERSION", "RUNNER_VERSION", "ANDROIDX_LIFECYCLE_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_LIFECYCLE_VERSION", "ANDROIDX_VERSION", "CORE_VERSION", "RUNNER_VERSION")
 
 maven_artifact(
     name = "core_maven_artifact",
