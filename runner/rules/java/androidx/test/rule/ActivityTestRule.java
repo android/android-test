@@ -66,6 +66,24 @@ import org.junit.runners.model.Statement;
  * @deprecated use {@link androidx.test.core.app.ActivityScenario} or {@link
  *     androidx.test.ext.junit.rules.ActivityScenarioRule} instead. They offer a simpler, and safer
  *     way of controlling Activity lifecycles.
+ *     <p>Here are some tips to consider when converting to <code>ActivityScenario/Rule</code>:
+ *     <ol>
+ *       <li>For simple cases where you want to launch the Activity before each test and tear it
+ *           down after each test (eg you are using {@link #ActivityTestRule(Class)}), convert
+ *           directly to ActivityScenarioRule.
+ *       <li>If you need control over when to launch the Activity (eg you are using {@link
+ *           #ActivityTestRule(Class, false, false)}, use ActivityScenario.launch. Its recommended
+ *           to wrap the launch in a try-block, so the Activity is closed automatically. <code>
+ *       try (ActivityScenario.launch(activityClass)) {
+ *         ...
+ *       }
+ *     </code>
+ *       <li>If you need access to the Activity during the test (eg you are calling {@link
+ *           ActivityTestRule#getActivity()} provide a Runnable callback to {@link
+ *           androidx.test.core.app.ActivityScenario#onActivity(Runnable)} instead. The callback
+ *           provided to onActivity will run on the application's main thread, thus ensuring a safer
+ *           mechanism to access the Activity.
+ *     </ol>
  */
 @Deprecated
 public class ActivityTestRule<T extends Activity> implements TestRule {
