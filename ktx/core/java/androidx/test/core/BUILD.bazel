@@ -41,7 +41,7 @@ axt_release_lib(
     overlapping_jars = [
         "//core/java/androidx/test/core:core_release_no_deps.jar",
     ],
-    remove_spec = "androidx/test/core/R[$$\\.]",
+    remove_spec = "androidx/test/core/ktx/R[$$\\.]|androidx/test/core/R[$$\\.]",
     resource_files = glob(
         ["res/**/*"],
     ),
