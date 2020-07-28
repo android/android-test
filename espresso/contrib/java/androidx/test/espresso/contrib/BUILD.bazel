@@ -220,6 +220,7 @@ axt_release_lib(
     keep_spec = "androidx/test/espresso/contrib",
     multidex = "native",
     remove_spec = "androidx/test/espresso/contrib/R[$$\\.]",
+    resource_files = glob(["res/**"]),
     deps = [
         ":espresso_contrib_release_lib",
     ],
