@@ -1,0 +1,20 @@
+licenses(["notice"])
+
+android_library(
+    name = "events",
+    srcs = glob(["**/*.java"]),
+    idl_parcelables = [
+        "discovery/TestDiscoveryEvent.aidl",
+        "run/TestRunEvent.aidl",
+    ],
+    visibility = ["//visibility:public"],
+    idl_srcs = [
+        "discovery/ITestDiscoveryEvent.aidl",
+        "run/ITestRunEvent.aidl",
+    ],
+    deps = [
+        "//runner/monitor/java/androidx/test:monitor",
+        "//:androidx_annotation",
+        "@maven//:junit_junit",
+    ],
+)
