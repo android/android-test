@@ -171,7 +171,11 @@ public class TestRunResult implements ITestRunListener {
   private void updateTestResult(TestIdentifier test, TestStatus status, String trace) {
     TestResult r = testResults.get(test);
     if (r == null) {
-      Log.d(LOG_TAG, String.format("received test event without test start for %s", test));
+      Log.w(
+          LOG_TAG,
+          String.format(
+              "received test event %s without test start for %s. trace: %s",
+              status.name(), test, trace));
       r = new TestResult();
     }
     r.setStatus(status);
