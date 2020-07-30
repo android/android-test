@@ -69,6 +69,8 @@ public class EventActionIntegrationTest {
     onView(withText(is(activity.getString(R.string.text_click)))).check(matches(isDisplayed()));
   }
 
+  // fails on SDK 30 due to the key dispatching timeout of 5 seconds. see b/162542125
+  @SdkSuppress(maxSdkVersion = 29)
   @Test
   public void badClickTesting() {
     onView(withText(is(activity.getString(R.string.text_click))))
