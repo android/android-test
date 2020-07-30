@@ -18,6 +18,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="androidx.test.orchestrator">
 
+  <queries>
+      <package android:name="androidx.test.services" />
+  </queries>
+
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.INTERNET" />
@@ -25,7 +29,7 @@
 
   <uses-sdk
       android:minSdkVersion="14"
-      android:targetSdkVersion="28" />
+      android:targetSdkVersion="30" />
 
   <application android:directBootAware="true">
     <uses-library android:name="android.test.runner" />
