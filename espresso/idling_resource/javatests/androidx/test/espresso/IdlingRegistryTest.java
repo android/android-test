@@ -77,6 +77,19 @@ public class IdlingRegistryTest {
   }
 
   @Test
+  public void verifyRegisterAndUnregisterLooper() {
+    idlingRegistry.registerLooperAsIdlingResource(Looper.myLooper());
+    idlingRegistry.unregisterLooperAsIdlingResource(Looper.myLooper());
+    assertEquals(0, idlingRegistry.getLoopers().size());
+  }
+
+  @Test
+  public void verifyUnregisterNotRegisteredLooper() {
+    assertFalse(idlingRegistry.unregisterLooperAsIdlingResource(Looper.myLooper()));
+    assertEquals(0, idlingRegistry.getLoopers().size());
+  }
+
+  @Test
   public void verifyAttemptingToRegisterMainLooperThrows() {
     try {
       idlingRegistry.registerLooperAsIdlingResource(Looper.getMainLooper());

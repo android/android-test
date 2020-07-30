@@ -96,6 +96,20 @@ public final class IdlingRegistry {
     loopers.add(looper);
   }
 
+  /**
+   * Unregisters a {@link Looper}.
+   *
+   * <p>Attempting to unregister a looper that is not registered is a no-op.
+   *
+   * @return {@code true} if the looper was successfully removed from the registry
+   */
+  public boolean unregisterLooperAsIdlingResource(Looper looper) {
+    if (null == looper) {
+      throw new NullPointerException("looper cannot be null!");
+    }
+    return loopers.remove(looper);
+  }
+
   /** Returns a set of all currently registered {@link IdlingResource}s. */
   public Collection<IdlingResource> getResources() {
     return new HashSet<>(resources);
