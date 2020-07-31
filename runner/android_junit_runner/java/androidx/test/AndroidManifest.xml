@@ -15,13 +15,12 @@
   ~ limitations under the License.
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="androidx.test.runner" >
+    package="androidx.test.runner">
     <queries>
         <package android:name="androidx.test.orchestrator" />
         <package android:name="androidx.test.services" />
         <package android:name="com.google.android.apps.common.testing.services" />
     </queries>
-
 
     <uses-sdk
         android:minSdkVersion="14"
