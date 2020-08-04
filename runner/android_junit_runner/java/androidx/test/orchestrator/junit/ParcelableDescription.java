@@ -34,9 +34,14 @@ public final class ParcelableDescription implements Parcelable {
 
   public ParcelableDescription(String classAndMethodName) {
     String[] classAndMethodNames = classAndMethodName.split("#");
-    this.className = classAndMethodNames[0];
-    this.methodName = classAndMethodNames.length > 1 ? classAndMethodNames[1] : "";
-    this.displayName = classAndMethodName;
+    if (classAndMethodNames.length > 0) {
+      this.className = classAndMethodNames[0];
+      this.methodName = classAndMethodNames.length > 1 ? classAndMethodNames[1] : "";
+    } else {
+      this.className = "";
+      this.methodName = "";
+    }
+    this.displayName = String.format("%s(%s)", methodName, className);
   }
 
   private ParcelableDescription(Parcel in) {
