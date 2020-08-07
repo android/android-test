@@ -117,6 +117,19 @@ public class OrchestratedInstrumentationListenerTest {
   }
 
   @Test
+  public void testFailureWithNoFailureMessage() throws TestEventClientException {
+    String nullError = null;
+    Failure jUnitFailureWithNoErrorMessage =
+        new Failure(jUnitDescription, new Throwable(nullError));
+    listener.testFailure(jUnitFailureWithNoErrorMessage);
+    ArgumentCaptor<TestRunEvent> argument = ArgumentCaptor.forClass(TestRunEvent.class);
+    verify(testRunEventService).send(argument.capture());
+
+    TestFailureEvent event = (TestFailureEvent) argument.getValue();
+    compareFailure(event, jUnitFailureWithNoErrorMessage);
+  }
+
+  @Test
   public void testAssumptionFailure() throws TestEventClientException {
     listener.testAssumptionFailure(jUnitFailure);
     ArgumentCaptor<TestRunEvent> argument = ArgumentCaptor.forClass(TestRunEvent.class);
