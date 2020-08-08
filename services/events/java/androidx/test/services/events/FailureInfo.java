@@ -21,7 +21,6 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * Denotes an android test failure, has details of the failure including stack trace / type and
@@ -30,10 +29,10 @@ import androidx.annotation.Nullable;
 public final class FailureInfo implements Parcelable {
 
   /** The failure message associated with the failure. */
-  @Nullable public final String failureMessage;
+  @NonNull public final String failureMessage;
 
   /** The type of failure exception. E.g {@code NullPointerException}. */
-  @Nullable public final String failureType;
+  @NonNull public final String failureType;
 
   /** The stack trace associated with the failure. */
   @NonNull public final String stackTrace;
@@ -43,10 +42,12 @@ public final class FailureInfo implements Parcelable {
 
   /** Constructor to create a {@link FailureInfo}. */
   public FailureInfo(
-      @Nullable String failureMessage,
-      @Nullable String failureType,
+      @NonNull String failureMessage,
+      @NonNull String failureType,
       @NonNull String stackTrace,
       @NonNull TestCaseInfo testCase) {
+    checkNotNull(failureMessage, "failureMessage cannot be null");
+    checkNotNull(failureType, "failureType cannot be null");
     checkNotNull(stackTrace, "stackTrace cannot be null");
     checkNotNull(testCase, "testCase cannot be null");
     this.failureMessage = failureMessage;
