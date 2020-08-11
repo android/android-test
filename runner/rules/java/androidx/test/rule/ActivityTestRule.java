@@ -292,7 +292,7 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
    * <p>The reference to the activity is assigned during the initial creation of the acivity and for
    * every sinlge {@link Activity#OnResumed()} lifecycle change.
    *
-   * <p><b>Note:</b> Lifecycle changes happen on the UI thread (not the instrumenation thread where
+   * <p><b>Note:</b> Lifecycle changes happen on the UI thread (not the instrumentation thread where
    * this test code usually executes). Thus, the return value may vary depending on timing.
    *
    * <p>For example, if the activity is finished and relaunched, the reference returned by this
