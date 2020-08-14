@@ -326,8 +326,12 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
             .setConnectionFactory(OrchestratorV1Connection::new)
             .setOrchestratorService(runnerArgs.orchestratorService)
             .setPrimaryInstProcess(isPrimaryInstrProcess(runnerArgs.targetProcess))
+            // The listTestsForOrchestrator arg is used for Orchestrator V1 connections:
             .setTestDiscoveryRequested(runnerArgs.listTestsForOrchestrator)
             .setTestRunEventsRequested(!runnerArgs.listTestsForOrchestrator)
+            // The testDiscoveryService and testRunEventsService args are used for Orchestrator V2:
+            .setTestDiscoveryService(runnerArgs.testDiscoveryService)
+            .setTestRunEventService(runnerArgs.testRunEventsService)
             .build();
     testEventClient = TestEventClient.connect(getContext(), this, args);
     return testEventClient.isTestDiscoveryEnabled() || testEventClient.isTestRunEventsEnabled();

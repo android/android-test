@@ -569,6 +569,8 @@ public class RunnerArgsTest {
     b.putString(RunnerArgs.ARGUMENT_TARGET_PROCESS, "con.foo.bar");
     b.putString(RunnerArgs.ARGUMENT_ORCHESTRATOR_SERVICE, "test.orchestratorService");
     b.putString(RunnerArgs.ARGUMENT_LIST_TESTS_FOR_ORCHESTRATOR, "true");
+    b.putString(RunnerArgs.ARGUMENT_ORCHESTRATOR_DISCOVERY_SERVICE, "test.DiscoveryService");
+    b.putString(RunnerArgs.ARGUMENT_ORCHESTRATOR_RUN_EVENTS_SERVICE, "test.RunEventsService");
     b.putString(RunnerArgs.ARGUMENT_SHELL_EXEC_BINDER_KEY, "secret");
     b.putString(
         RunnerArgs.ARGUMENT_SCREENSHOT_PROCESSORS,
