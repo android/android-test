@@ -30,11 +30,19 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
 /**
- * A cross environment JUnit4 runner for Android tests.
+ * A JUnit4 runner for Android tests.
  *
- * <p>This implementation will delegate to the appropriate runner based on the build-system provided
- * value. A custom runner can be provided by specifying the full class name in a
- * 'android.junit.runner' system property.
+ * <p>This runner offers several features on top of the standard JUnit4 runner,
+ *
+ * <ul>
+ *   <li>Supports running on Robolectric. This implementation will delegate to RobolectricTestRunner
+ *       if test is running in Robolectric enviroment. A custom runner can be provided by specifying
+ *       the full class name in a 'android.junit.runner' system property.
+ *   <li>Supports a per-test timeout - specfied via a 'timeout_msec' {@link
+ *       androidx.test.runner.AndroidJUnitRunner} argument.
+ *   <li>Supports running tests on the application's UI Thread, for tests annotated with {@link
+ *       UiThreadTest}.
+ * </ul>
  *
  * <p>Usage {@code @RunWith(AndroidJUnit4.class)}
  */

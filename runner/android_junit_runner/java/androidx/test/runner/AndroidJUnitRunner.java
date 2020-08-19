@@ -218,7 +218,9 @@ import org.junit.runners.model.RunnerBuilder;
  * <p><b>Set timeout (in milliseconds) that will be applied to each test:</b> -e timeout_msec 5000
  *
  * <p>Supported for both JUnit3 and JUnit4 style tests. For JUnit3 tests, this flag is the only way
- * to specify timeouts. For JUnit4 tests, this flag overrides timeouts specified via <a
+ * to specify timeouts. For JUnit4 tests, this flag is only supported when using the
+ * the {@link androidx.test.ext.junit.runners.AndroidJUnit4) runner. It overrides timeouts
+ * specified via <a
  * href="http://junit.org/javadoc/latest/org/junit/rules/Timeout.html"><code>org.junit.rules.Timeout
  * </code></a>. Please note that in JUnit4 <a
  * href="http://junit.org/javadoc/latest/org/junit/Test.html#timeout()"><code>
