@@ -52,8 +52,23 @@ public class IdlingScheduledThreadPoolExecutor extends ScheduledThreadPoolExecut
    */
   public IdlingScheduledThreadPoolExecutor(
       String resourceName, int corePoolSize, ThreadFactory threadFactory) {
+    this(resourceName, corePoolSize, threadFactory, false);
+  }
+
+  /**
+   * Creates a new {@code IdlingScheduledThreadPoolExecutor} with the given initial parameters.
+   *
+   * @param resourceName the name of the executor (used for logging and idempotency of
+   *     registration).
+   * @param corePoolSize the number of threads to keep in the pool, even if they are idle, unless
+   *     allowCoreThreadTimeOut is set.
+   * @param threadFactory the factory to use when the executor creates a new thread.
+   * @param debugCounting if true increment & decrement calls will print trace information to logs.
+   */
+  public IdlingScheduledThreadPoolExecutor(
+      String resourceName, int corePoolSize, ThreadFactory threadFactory, boolean debugCounting) {
     super(corePoolSize, threadFactory);
-    countingIdlingResource = new CountingIdlingResource(resourceName);
+    countingIdlingResource = new CountingIdlingResource(resourceName, debugCounting);
     Log.i(LOG_TAG, "Register idling resource for scheduled thread pool " + resourceName);
     IdlingRegistry.getInstance().register(this);
   }
