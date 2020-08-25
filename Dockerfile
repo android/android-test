@@ -11,10 +11,9 @@ RUN \
     apt-get -q update && \
     apt-get -q -y install maven \
     unzip \
-    zip \
-    wget && \
+    zip && \
 
     # download and extract sdk while suppressing the progress bar output
-    wget -nv https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip && \
+    curl -sLO https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip && \
     unzip -q sdk-tools-linux-4333796.zip -d $ANDROID_HOME && \
     yes | sdkmanager --install 'build-tools;29.0.3' 'platforms;android-29' | grep -v = || true
