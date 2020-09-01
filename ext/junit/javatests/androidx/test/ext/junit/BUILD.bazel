@@ -31,6 +31,7 @@ android_library_local_tests(
         "//:androidx_lifecycle_common",
         "//core/java/androidx/test/core",
         "//core/javatests/androidx/test/core/app/testing",
+        "//core/javatests/androidx/test/core/app/testing:manifest",
         "//ext/junit",
         "//ext/truth",
         "//runner/monitor/java/androidx/test:monitor",

@@ -30,6 +30,7 @@ android_library_local_tests(
     deps = [
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
+        "//core/javatests/androidx/test/core/app/testing:manifest",
         "//ext/junit",
         "//ext/truth",
         "//runner/rules",
