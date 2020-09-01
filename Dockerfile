@@ -15,6 +15,6 @@ RUN \
     wget && \
 
     # download and extract sdk while suppressing the progress bar output
-    wget -nv https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip && \
-    unzip -q sdk-tools-linux-4333796.zip -d $ANDROID_HOME && \
-    yes | sdkmanager --install 'build-tools;29.0.3' 'platforms;android-29' | grep -v = || true
+    wget -nv https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip && \
+    unzip -q commandlinetools-linux-6609375_latest.zip -d $ANDROID_HOME && \
+    yes | sdkmanager --install 'build-tools;30.0.2' 'platforms;android-30' --sdk_root=$ANDROID_HOME | grep -v = || true
