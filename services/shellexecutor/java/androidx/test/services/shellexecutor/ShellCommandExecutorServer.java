@@ -52,17 +52,34 @@ final class ShellCommandExecutorServer {
           public void execute(
               String command,
               List<String> parameters,
-              @SuppressWarnings("unchecked")
+              @SuppressWarnings("rawtypes")
                   Map shellEnv, // shellEnv comes from aidl and must a Map without type.
               boolean executeThroughShell,
               ParcelFileDescriptor pdf) {
+            executeWithTimeout(command, parameters, shellEnv, executeThroughShell, pdf, 0L);
+          }
+
+          @Override
+          public void executeWithTimeout(
+              String command,
+              List<String> parameters,
+              @SuppressWarnings("rawtypes")
+                  Map shellEnv, // shellEnv comes from aidl and must a Map without type.
+              boolean executeThroughShell,
+              ParcelFileDescriptor pdf,
+              long timeoutMs) {
 
             OutputStream outputReceiver = new ParcelFileDescriptor.AutoCloseOutputStream(pdf);
 
             try {
+              @SuppressWarnings("unchecked")
               ShellCommand commandObject =
                   new ShellCommand(
-                      command, parameters, (Map<String, String>) shellEnv, executeThroughShell);
+                      command,
+                      parameters,
+                      (Map<String, String>) shellEnv,
+                      executeThroughShell,
+                      timeoutMs);
               shellCommandExecutor.execute(commandObject, outputReceiver);
             } catch (IOException e) {
               Log.w(TAG, "Running command threw an exception", e);

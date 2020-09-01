@@ -30,6 +30,7 @@ class ShellCommand {
   private final List<String> parameters;
   private final Map<String, String> shellEnv;
   private final boolean executeThroughShell;
+  private final long timeoutMs;
 
   /**
    * @param command The command to be executed
@@ -37,12 +38,15 @@ class ShellCommand {
    * @param shellEnv A map of environment variables to be set before the command is executed
    * @param executeThroughShell If set to {@code true}, the command string will be executed through
    *     the shell with parameters given as additional shell arguments.
+   * @param timeoutMs If set to a value > 0, this creates a watcher that kills the subprocess when
+   *     it surpasses the timeout.
    */
   ShellCommand(
       String command,
       List<String> parameters,
       Map<String, String> shellEnv,
-      boolean executeThroughShell) {
+      boolean executeThroughShell,
+      long timeoutMs) {
 
     if (TextUtils.isEmpty(command)) {
       throw new IllegalArgumentException("Null or empty command");
@@ -52,6 +56,7 @@ class ShellCommand {
     this.parameters = Collections.unmodifiableList(new ArrayList<>(parameters));
     this.shellEnv = Collections.unmodifiableMap(new HashMap<>(shellEnv));
     this.executeThroughShell = executeThroughShell;
+    this.timeoutMs = timeoutMs;
   }
 
   public boolean executeThroughShell() {
@@ -68,5 +73,9 @@ class ShellCommand {
 
   public Map<String, String> getShellEnv() {
     return shellEnv;
+  }
+
+  public long getTimeoutMs() {
+    return timeoutMs;
   }
 }
