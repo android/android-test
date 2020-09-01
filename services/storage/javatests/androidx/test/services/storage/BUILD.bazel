@@ -41,7 +41,7 @@ android_library(
         "//runner/android_junit_runner",
         "//services/storage/java/androidx/test/services/storage",
         "//services/storage/java/androidx/test/services/storage/file",
-        "@androidsdk//:legacy_test-29",
+        "@androidsdk//:legacy_test-30",
         "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
     ],

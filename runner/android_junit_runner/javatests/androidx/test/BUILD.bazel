@@ -40,15 +40,6 @@ android_library(
     ],
 )
 
-# TODO(b/117464840): remove when legacy_test-29 is a neverlink target
-java_library(
-    name = "legacy-test-neverlink",
-    neverlink = 1,
-    exports = [
-        "@androidsdk//:legacy_test-29",
-    ],
-)
-
 android_library_instrumentation_tests(
     name = "android_junit_runner_tests",
     size = "large",
@@ -77,7 +68,7 @@ android_library_instrumentation_tests(
     ],
     target_devices = devices(),
     deps = [
-        ":legacy-test-neverlink",
+        "@androidsdk//:legacy_test-30",
         ":legacy_test_manifest",
         ":parameterized",
         "//core",
