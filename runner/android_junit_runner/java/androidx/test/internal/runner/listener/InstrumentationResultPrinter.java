@@ -45,7 +45,7 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
 
   private static final String TAG = "InstrumentationResultPrinter";
 
-  @VisibleForTesting static final int MAX_TRACE_SIZE = 32 * 1024;
+  @VisibleForTesting static final int MAX_TRACE_SIZE = 64 * 1024;
 
   /**
    * This value, if stored with key {@link android.app.Instrumentation#REPORT_KEY_IDENTIFIER},
