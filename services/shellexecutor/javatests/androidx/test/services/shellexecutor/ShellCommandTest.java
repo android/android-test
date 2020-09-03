@@ -53,7 +53,8 @@ public class ShellCommandTest {
         command,
         params,
         env,
-        executeThroughShell);
+        executeThroughShell,
+        0L);
   }
 
   @Test
@@ -127,7 +128,8 @@ public class ShellCommandTest {
             "dd if=/dev/urandom bs=2048 count=16384",
             null,
             null,
-            true);
+            true,
+            0L);
 
     boolean weReadSomething = false;
 

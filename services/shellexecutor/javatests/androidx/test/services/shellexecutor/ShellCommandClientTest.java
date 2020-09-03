@@ -35,7 +35,7 @@ public class ShellCommandClientTest {
   public void testBlankCommand()
       throws ClientNotConnected, IOException, RemoteException, InterruptedException {
     try {
-      ShellCommandClient.execOnServer(getTargetContext(), "secret", "", null, null, false);
+      ShellCommandClient.execOnServer(getTargetContext(), "secret", "", null, null, false, 0L);
       fail("Passing blank command should throw IllegalArgumentException");
     } catch (IllegalArgumentException expected) {
       // Pass
@@ -46,7 +46,7 @@ public class ShellCommandClientTest {
   public void testNullCommand()
       throws ClientNotConnected, IOException, RemoteException, InterruptedException {
     try {
-      ShellCommandClient.execOnServer(getTargetContext(), "secret", null, null, null, false);
+      ShellCommandClient.execOnServer(getTargetContext(), "secret", null, null, null, false, 0L);
       fail("Passing null command should throw IllegalArgumentException");
     } catch (IllegalArgumentException expected) {
       // Pass
@@ -57,7 +57,8 @@ public class ShellCommandClientTest {
   public void testShellClientNoRunOnMainThread()
       throws ClientNotConnected, IOException, RemoteException, InterruptedException {
     try {
-      ShellCommandClient.execOnServer(getTargetContext(), "secret", "command", null, null, false);
+      ShellCommandClient.execOnServer(
+          getTargetContext(), "secret", "command", null, null, false, 0L);
       fail("Calling execServer on main thread should throw exception");
     } catch (IllegalStateException expected) {
       // Pass

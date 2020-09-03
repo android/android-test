@@ -68,7 +68,8 @@ final class ShellCommandClient {
       String command,
       List<String> parameters,
       Map<String, String> shellEnv,
-      boolean executeThroughShell)
+      boolean executeThroughShell,
+      long timeoutMs)
       throws ClientNotConnected, IOException, RemoteException {
 
     if (TextUtils.isEmpty(command)) {
@@ -103,7 +104,14 @@ final class ShellCommandClient {
     ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
 
     Command commandStub = Stub.asInterface(result.binder);
-    commandStub.execute(command, parameters, shellEnv, executeThroughShell, pipe[1]);
+    // Only use timeout version if timeout is greater than 0
+    if (timeoutMs > 0L) {
+      // NOTICE: this is not be supported on older versions of the Command server.
+      commandStub.executeWithTimeout(
+          command, parameters, shellEnv, executeThroughShell, pipe[1], timeoutMs);
+    } else {
+      commandStub.execute(command, parameters, shellEnv, executeThroughShell, pipe[1]);
+    }
 
     // Closes the write pipe client-side. Server-side to be closed by server.
     pipe[1].close();
@@ -129,10 +137,12 @@ final class ShellCommandClient {
       String command,
       List<String> parameters,
       Map<String, String> shellEnv,
-      boolean executeThroughShell)
+      boolean executeThroughShell,
+      long timeoutMs)
       throws ClientNotConnected, IOException, RemoteException {
     return inputStreamToString(
-        execOnServer(context, secret, command, parameters, shellEnv, executeThroughShell));
+        execOnServer(
+            context, secret, command, parameters, shellEnv, executeThroughShell, timeoutMs));
   }
 
   private static String inputStreamToString(InputStream inputStream) throws IOException {

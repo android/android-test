@@ -50,11 +50,45 @@ public final class ShellExecutorImpl implements ShellExecutor {
       String command,
       List<String> parameters,
       Map<String, String> shellEnv,
-      boolean executeThroughShell)
+      boolean executeThroughShell,
+      long timeoutMs)
       throws IOException {
     try {
       return ShellCommandClient.execOnServerSync(
-          context, binderKey, command, parameters, shellEnv, executeThroughShell);
+          context, binderKey, command, parameters, shellEnv, executeThroughShell, timeoutMs);
+    } catch (ClientNotConnected e) {
+      Log.e(TAG, "ShellCommandClient not connected. Is ShellCommandExecutor service started?", e);
+      throw new RuntimeException(e);
+    } catch (IOException | RemoteException e) {
+      Log.e(
+          TAG, "ShellCommandClient connection failed. Is ShellCommandExecutor service started?", e);
+      throw new RuntimeException(e);
+    }
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String executeShellCommandSync(
+      String command,
+      List<String> parameters,
+      Map<String, String> shellEnv,
+      boolean executeThroughShell)
+      throws IOException {
+    return executeShellCommandSync(command, parameters, shellEnv, executeThroughShell, 0L);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public InputStream executeShellCommand(
+      String command,
+      List<String> parameters,
+      Map<String, String> shellEnv,
+      boolean executeThroughShell,
+      long timeoutMs)
+      throws IOException, RemoteException {
+    try {
+      return ShellCommandClient.execOnServer(
+          context, binderKey, command, parameters, shellEnv, executeThroughShell, timeoutMs);
     } catch (ClientNotConnected e) {
       Log.e(TAG, "ShellCommandClient not connected. Is ShellCommandExecutor service started?", e);
       throw new RuntimeException(e);
@@ -73,16 +107,6 @@ public final class ShellExecutorImpl implements ShellExecutor {
       Map<String, String> shellEnv,
       boolean executeThroughShell)
       throws IOException, RemoteException {
-    try {
-      return ShellCommandClient.execOnServer(
-          context, binderKey, command, parameters, shellEnv, executeThroughShell);
-    } catch (ClientNotConnected e) {
-      Log.e(TAG, "ShellCommandClient not connected. Is ShellCommandExecutor service started?", e);
-      throw new RuntimeException(e);
-    } catch (IOException | RemoteException e) {
-      Log.e(
-          TAG, "ShellCommandClient connection failed. Is ShellCommandExecutor service started?", e);
-      throw new RuntimeException(e);
-    }
+    return executeShellCommand(command, parameters, shellEnv, executeThroughShell, 0L);
   }
 }
