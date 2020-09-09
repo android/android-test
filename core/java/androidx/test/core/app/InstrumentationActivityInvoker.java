@@ -397,18 +397,24 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     // may start in different process. Also, we use PendingIntent because the target activity may
     // set "exported" attribute to false so that it prohibits starting the activity outside of their
     // package. With PendingIntent we delegate the authority to BootstrapActivity.
-    getApplicationContext()
-        .startActivity(
-            getIntentForActivity(BootstrapActivity.class)
-                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                .putExtra(
-                    TARGET_ACTIVITY_INTENT_KEY,
-                    PendingIntent.getActivity(
-                        getApplicationContext(),
-                        /*requestCode=*/ 0,
-                        intent,
-                        /*flags=*/ PendingIntent.FLAG_UPDATE_CURRENT))
-                .putExtra(TARGET_ACTIVITY_OPTIONS_BUNDLE_KEY, activityOptions));
+    Intent bootstrapIntent =
+        getIntentForActivity(BootstrapActivity.class)
+            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .putExtra(
+                TARGET_ACTIVITY_INTENT_KEY,
+                PendingIntent.getActivity(
+                    getApplicationContext(),
+                    /*requestCode=*/ 0,
+                    intent,
+                    /*flags=*/ PendingIntent.FLAG_UPDATE_CURRENT))
+            .putExtra(TARGET_ACTIVITY_OPTIONS_BUNDLE_KEY, activityOptions);
+
+    if (Build.VERSION.SDK_INT < 16) {
+      // activityOptions not supported
+      getApplicationContext().startActivity(bootstrapIntent);
+    } else {
+      getApplicationContext().startActivity(bootstrapIntent, activityOptions);
+    }
   }
 
   @Override
