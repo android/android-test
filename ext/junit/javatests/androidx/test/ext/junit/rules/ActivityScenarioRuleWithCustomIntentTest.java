@@ -15,19 +15,21 @@
  */
 package androidx.test.ext.junit.rules;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
-import static androidx.test.ext.truth.content.IntentSubject.assertThat;
-import static com.google.common.truth.Truth.assertThat;
-
 import android.app.Activity;
 import android.content.Intent;
+
 import androidx.test.core.app.testing.RecreationRecordingActivity;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static androidx.test.ext.truth.content.IntentSubject.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 
 /** Tests for {@link ActivityScenarioRule} using custom intent to start activity. */
 @RunWith(AndroidJUnit4.class)
@@ -39,7 +41,7 @@ public final class ActivityScenarioRuleWithCustomIntentTest {
               .putExtra("MyIntentParameterKey", "MyIntentParameterValue"));
 
   @Test
-  public void activityShouldBeResumedAutomatically() throws Exception {
+  public void activityShouldBeResumedAutomatically() {
     activityScenarioRule
         .getScenario()
         .onActivity(
@@ -54,7 +56,7 @@ public final class ActivityScenarioRuleWithCustomIntentTest {
   }
 
   @Test
-  public void recreateActivityShouldWork() throws Exception {
+  public void recreateActivityShouldWork() {
     activityScenarioRule.getScenario().recreate();
     activityScenarioRule
         .getScenario()

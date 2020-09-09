@@ -15,17 +15,19 @@
  */
 package androidx.test.ext.junit.rules;
 
-import static com.google.common.truth.Truth.assertThat;
-
 import android.app.Activity;
+
 import androidx.lifecycle.Lifecycle;
 import androidx.test.core.app.testing.RecreationRecordingActivity;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import static com.google.common.truth.Truth.assertThat;
 
 /** Tests for {@link ActivityScenarioRule}. */
 @RunWith(AndroidJUnit4.class)
@@ -35,7 +37,7 @@ public final class ActivityScenarioRuleTest {
       new ActivityScenarioRule<>(RecreationRecordingActivity.class);
 
   @Test
-  public void activityShouldBeResumedAutomatically() throws Exception {
+  public void activityShouldBeResumedAutomatically() {
     activityScenarioRule
         .getScenario()
         .onActivity(
@@ -46,7 +48,7 @@ public final class ActivityScenarioRuleTest {
   }
 
   @Test
-  public void recreateActivityShouldWork() throws Exception {
+  public void recreateActivityShouldWork() {
     activityScenarioRule.getScenario().recreate();
     activityScenarioRule
         .getScenario()
@@ -58,12 +60,13 @@ public final class ActivityScenarioRuleTest {
   }
 
   @Test
-  public void activityCanBeDestroyedManually() throws Exception {
+  public void activityCanBeDestroyedManually() {
     activityScenarioRule.getScenario().moveToState(Lifecycle.State.DESTROYED);
+    activityScenarioRule.getScenario();
   }
 
   @Test
-  public void activityCanBeClosedManually() throws Exception {
+  public void activityCanBeClosedManually() {
     activityScenarioRule.getScenario().close();
   }
 

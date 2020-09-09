@@ -15,14 +15,17 @@
  */
 package androidx.test.ext.junit.rules;
 
-import static androidx.test.internal.util.Checks.checkNotNull;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.test.core.app.ActivityScenario;
+
 import org.junit.rules.ExternalResource;
+
+import static androidx.test.internal.util.Checks.checkNotNull;
 
 /**
  * ActivityScenarioRule launches a given activity before the test starts and closes after the test.
@@ -58,8 +61,9 @@ public final class ActivityScenarioRule<A extends Activity> extends ExternalReso
     T get();
   }
 
-  private final Supplier<ActivityScenario<A>> scenarioSupplier;
+  @NonNull private final Supplier<ActivityScenario<A>> scenarioSupplier;
   @Nullable private ActivityScenario<A> scenario;
+  private final boolean launchActivity;
 
   /**
    * Constructs ActivityScenarioRule for a given activity class.
@@ -68,15 +72,30 @@ public final class ActivityScenarioRule<A extends Activity> extends ExternalReso
    */
   public ActivityScenarioRule(Class<A> activityClass) {
     scenarioSupplier = () -> ActivityScenario.launch(checkNotNull(activityClass));
+    this.launchActivity = true;
   }
 
   /**
    * @see #ActivityScenarioRule(Class)
    * @param activityOptions an activity options bundle to be passed along with the intent to start
-   *     activity.
+   *                        activity.
    */
   public ActivityScenarioRule(Class<A> activityClass, @Nullable Bundle activityOptions) {
     scenarioSupplier = () -> ActivityScenario.launch(checkNotNull(activityClass), activityOptions);
+    this.launchActivity = true;
+  }
+
+  /**
+   * @see #ActivityScenarioRule(Class)
+   * @param activityOptions an activity options bundle to be passed along with the intent to start
+   *                        activity.
+   * @param launchActivity true if the Activity should be launched automatically once per test. If
+   *                       set to false the launch of the activity under test will be deferred until
+   *                      {@link ActivityScenarioRule#getScenario()} is called.
+   */
+  public ActivityScenarioRule(Class<A> activityClass, @Nullable Bundle activityOptions, boolean launchActivity) {
+    scenarioSupplier = () -> ActivityScenario.launch(checkNotNull(activityClass), activityOptions);
+    this.launchActivity = launchActivity;
   }
 
   /**
@@ -86,25 +105,43 @@ public final class ActivityScenarioRule<A extends Activity> extends ExternalReso
    */
   public ActivityScenarioRule(Intent startActivityIntent) {
     scenarioSupplier = () -> ActivityScenario.launch(checkNotNull(startActivityIntent));
+    this.launchActivity = true;
   }
 
   /**
    * @see #ActivityScenarioRule(Intent)
    * @param activityOptions an activity options bundle to be passed along with the intent to start
-   *     activity.
+   *                        activity.
    */
   public ActivityScenarioRule(Intent startActivityIntent, @Nullable Bundle activityOptions) {
     scenarioSupplier =
         () -> ActivityScenario.launch(checkNotNull(startActivityIntent), activityOptions);
+    this.launchActivity = true;
+  }
+
+  /**
+   * @see #ActivityScenarioRule(Intent)
+   * @param activityOptions an activity options bundle to be passed along with the intent to start
+   *                        activity.
+   * @param launchActivity true if the Activity should be launched automatically once per test. If
+   *                       set to false the launch of the activity under test will be deferred until
+   *                      {@link ActivityScenarioRule#getScenario()} is called.
+   */
+  public ActivityScenarioRule(Intent startActivityIntent, @Nullable Bundle activityOptions, boolean launchActivity) {
+    scenarioSupplier =
+            () -> ActivityScenario.launch(checkNotNull(startActivityIntent), activityOptions);
+    this.launchActivity = launchActivity;
   }
 
   @Override
-  protected void before() throws Throwable {
+  protected void before() {
+    if (!launchActivity) return;
     scenario = scenarioSupplier.get();
   }
 
   @Override
   protected void after() {
+    if (scenario == null) return;
     scenario.close();
   }
 
@@ -115,6 +152,7 @@ public final class ActivityScenarioRule<A extends Activity> extends ExternalReso
    * @return a non-null {@link ActivityScenario} instance
    */
   public ActivityScenario<A> getScenario() {
+    if (!launchActivity && scenario == null) scenario = scenarioSupplier.get();
     return checkNotNull(scenario);
   }
 }
