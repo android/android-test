@@ -19,7 +19,8 @@ again.
 
 AndroidX Test uses the [bazel](https://bazel.build) build system.
 
-Currently only Linux is supported.
+Currently only Linux is fully supported. For Mac and windows users, you may be able to build 
+and run the Robolectric tests.
 
 ### One time setup
 
@@ -27,20 +28,40 @@ Currently only Linux is supported.
     [clone](https://help.github.com/articles/cloning-a-repository/) the
     [AndroidX Test repo](https://github.com/android/android-test)
 *   Install [bazel](https://docs.bazel.build/versions/master/install.html).
-    Version 2.2.0 is recommended. Ensure your environment meets the following
+    Version 2.2.0 is recommended. For instrumentation testing on Linux make sure your environment 
+    meets the following
     [prerequisites](https://docs.bazel.build/versions/master/android-instrumentation-test.html#prerequisites)
 *   Install [maven](http://maven.apache.org/install.html) and make it available
     on PATH.
 *   Install the [Android SDK](https://developer.android.com/studio/install) and
     run the following command to ensure you have the necessary components:
-    `./tools/bin/sdkmanager --install 'build-tools;29.0.3'
-    'platforms;android-29' 'emulator' 'platform-tools'
+    `./tools/bin/sdkmanager --install 'build-tools;30.0.2'
+    'platforms;android-30' 'emulator' 'platform-tools'
     'system-images;android-19;default;x86'
     'system-images;android-21;default;x86'
     'system-images;android-22;default;x86'
     'system-images;android-23;default;x86'`
-*   Set the ANDROID_HOME environment variable to point to the SDK install
-    location. eg `export ANDROID_HOME=/home/$USER/Android/Sdk`
+*   Set the `ANDROID_HOME` environment variable to point to the SDK install
+    location. For example
+    *   On Linux: export ANDROID_HOME=/home/$USER/Android/Sdk
+    *   On Mac: export ANDROID_HOME=/Users/$USER/Library/Android/sdk
+    You can also add this command to your ~/.bashrc, ~/.zshrc, or ~/.profile file to make it 
+    permanent.
+
+### IDE setup
+
+Android Studio is recommended.
+
+*   Install the [Bazel Android Studio plugin](https://docs.bazel.build/versions/master/ide.html).
+*   Setup Bazel Android Studio plugin:
+    *   Navigate to `Settings > Other Settings > Bazel Settings`
+    *   Update `Bazel binary location` to `/path/to/bazel/binary` (on Mac it's usually 
+      `/usr/local/bin/bazel`)
+*   Select 'Import Bazel project' and set workspace location to android-test
+    github repo
+*   Select 'Import project view' and select <github repo>/.bazelproject
+
+Check [Troubleshooting](#troubleshooting) for tips on resolving common build issues.
 
 ### Building
 
@@ -68,15 +89,35 @@ To run all the robolectric local tests (and thus replicate the Google Cloud
 Build CI) `bazel test ... --test_tag_filters=robolectric
 --build_tag_filters=robolectric`
 
-### IDE setup
+### Troubleshooting
 
-Android Studio is recommended.
+#### Unresolved imports after build
 
-*   Install the bazel Android Studio plugin
-    [instructions](https://docs.bazel.build/versions/master/ide.html)
-*   Select 'Import Bazel project' and set workspace location to android-test
-    github repo
-*   Select 'Import project view' and select <github repo>/.bazelproject
+If your project fails to build because of unresolved imports two things might be wrong.
+
+1. Missing Android SDK components.
+   Open SDK Manager in Android Studio and check that the platform and build tools versions specified in the `WORKSPACE` file are installed.
+   Look at the following variables:
+
+    ```bazel
+    android_sdk_repository(
+        ...
+        api_level = 30,
+        build_tools_version = "30.0.2",
+        ...
+    )
+    ```
+
+2. Something might be wrong with `ANDROID_HOME` environment variable setup. Try adding the path of 
+the android-sdk to the `WORKSPACE` file:
+
+    ```bazel
+    android_sdk_repository(
+        ...
+        path = "/Users/$USER/Library/Android/sdk",
+        ...
+    )
+    ```
 
 ## Code reviews
 
