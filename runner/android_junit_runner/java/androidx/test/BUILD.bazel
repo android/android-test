@@ -25,10 +25,10 @@ android_library(
         "//runner/monitor",
     ],
     deps = [
+        "@androidsdk//:legacy_test-30",
         "//:androidx_annotation",
         "//runner/monitor",
         "//services/events/java/androidx/test/services/events",
-        "@androidsdk//:legacy_test-30",
         "@maven//:junit_junit",
     ],
 )
@@ -64,7 +64,7 @@ maven_artifact(
     src = ":runner_release.aar",
     artifact_deps = [
         "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
-        "androidx.test:monitor:[%s]" % RUNNER_VERSION,
+        "androidx.test:monitor:%s" % RUNNER_VERSION,
         "junit:junit:%s" % JUNIT_VERSION,
     ],
     artifact_id = "runner",
