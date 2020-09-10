@@ -32,6 +32,7 @@ import androidx.test.filters.SmallTest;
 import androidx.test.internal.events.client.TestEventClient;
 import androidx.test.internal.events.client.TestEventClientArgs;
 import androidx.test.internal.events.client.TestEventClientConnectListener;
+import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.runner.RunnerArgs;
 import androidx.test.internal.runner.TestExecutor;
 import androidx.test.internal.runner.TestRequestBuilder;
@@ -211,6 +212,10 @@ import org.junit.runners.model.RunnerBuilder;
  * runner. Legacy order had those user defined listeners running after the default ones.
  *
  * <p></b>Note:</b>The new order will become the default in the future.
+ *
+ * <p><a
+ * href="http://junit.org/javadoc/latest/org/junit/runner/notification/RunListener.html"><code>
+ *    can also be specified via java.util.ServiceLoader metadata.
  *
  * <p><b> To specify a custom {@link java.lang.ClassLoader} to load the test class: </b> -e
  * classLoader com.foo.CustomClassLoader
@@ -489,6 +494,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
       addDelayListener(args, builder);
       addCoverageListener(args, builder);
     }
+    addListenersFromClasspath(builder);
     addListenersFromArg(args, builder);
   }
 
@@ -496,6 +502,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     // User defined listeners go first, to guarantee running before InstrumentationResultPrinter
     // and ActivityFinisherRunListener. Delay and Coverage Listener are also moved before for the
     // same reason.
+    addListenersFromClasspath(builder);
     addListenersFromArg(args, builder);
     if (args.logOnly) {
       // Only add the listener that will report the list of tests when running in logOnly
@@ -548,6 +555,13 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
       // On older platforms, collecting tests can fail for large volume of tests.
       // Insert a small delay between each test to prevent this
       builder.addRunListener(new DelayInjector(15 /* msec */));
+    }
+  }
+
+  /** Load and register {@link RunListener}'s specified via {@link java.util.ServiceLoader}. */
+  private static void addListenersFromClasspath(TestExecutor.Builder builder) {
+    for (RunListener listener : ServiceLoaderWrapper.loadService(RunListener.class)) {
+      builder.addRunListener(listener);
     }
   }
 
