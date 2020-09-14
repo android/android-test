@@ -32,7 +32,6 @@ import androidx.test.filters.SmallTest;
 import androidx.test.internal.events.client.TestEventClient;
 import androidx.test.internal.events.client.TestEventClientArgs;
 import androidx.test.internal.events.client.TestEventClientConnectListener;
-import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.runner.RunnerArgs;
 import androidx.test.internal.runner.TestExecutor;
 import androidx.test.internal.runner.TestRequestBuilder;
@@ -50,6 +49,7 @@ import androidx.test.runner.lifecycle.ApplicationLifecycleMonitorRegistry;
 import androidx.test.runner.screenshot.ScreenCaptureProcessor;
 import androidx.test.runner.screenshot.Screenshot;
 import java.util.HashSet;
+import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
 import org.junit.runner.Request;
 import org.junit.runner.manipulation.Filter;
@@ -560,7 +560,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
 
   /** Load and register {@link RunListener}'s specified via {@link java.util.ServiceLoader}. */
   private static void addListenersFromClasspath(TestExecutor.Builder builder) {
-    for (RunListener listener : ServiceLoaderWrapper.loadService(RunListener.class)) {
+    for (RunListener listener : ServiceLoader.load(RunListener.class)) {
       builder.addRunListener(listener);
     }
   }
