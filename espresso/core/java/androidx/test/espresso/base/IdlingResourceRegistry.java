@@ -272,7 +272,6 @@ public final class IdlingResourceRegistry {
         return false;
       }
     }
-    Log.d(TAG, "All idling resources are idle.");
     return true;
   }
 
