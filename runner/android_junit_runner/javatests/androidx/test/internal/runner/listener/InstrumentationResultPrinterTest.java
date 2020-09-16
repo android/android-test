@@ -16,7 +16,6 @@
 
 package androidx.test.internal.runner.listener;
 
-import static androidx.test.internal.runner.listener.InstrumentationResultPrinter.MAX_TRACE_SIZE;
 import static androidx.test.internal.runner.listener.InstrumentationResultPrinter.REPORT_KEY_STACK;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -64,27 +63,6 @@ public class InstrumentationResultPrinterTest {
   }
 
   @Test
-  public void verifyFailureStackTraceIsTruncated() throws Exception {
-    InstrumentationResultPrinter intrResultPrinter = new InstrumentationResultPrinter();
-    intrResultPrinter.testNum = 1;
-
-    Failure testFailure = new Failure(Description.EMPTY, new Exception(getVeryLargeString()));
-    intrResultPrinter.testFailure(testFailure);
-
-    int testResultTraceLength =
-        intrResultPrinter.testResult.getString(REPORT_KEY_STACK).length() - 1;
-    assertTrue(
-        String.format(
-            "The stack trace length: %s, exceeds the max: %s",
-            testResultTraceLength, MAX_TRACE_SIZE),
-        testResultTraceLength <= MAX_TRACE_SIZE);
-  }
-
-  private static String getVeryLargeString() {
-    return new String(new char[1000000]);
-  }
-
-  @Test
   public void verifyFailureDescriptionPropagatedToStartAndFinishMethods() throws Exception {
     Description[] descriptions = new Description[2];
     InstrumentationResultPrinter intrResultPrinter =
@@ -101,7 +79,7 @@ public class InstrumentationResultPrinterTest {
         };
 
     Description d = Description.createTestDescription(this.getClass(), "Failure Description");
-    Failure testFailure = new Failure(d, new Exception(getVeryLargeString()));
+    Failure testFailure = new Failure(d, new Exception());
     intrResultPrinter.testFailure(testFailure);
 
     assertEquals(d, descriptions[0]);

@@ -1,0 +1,20 @@
+# Tests for On-Device Infrastructure - Orchestrator
+licenses(["notice"])
+
+android_local_test(
+    name = "StackTrimmerTest",
+    size = "small",
+    srcs = [
+        "StackTrimmerTest.java",
+    ],
+    manifest_values = {
+        "minSdkVersion": "14",
+    },
+    tags = ["robolectric"],
+    deps = [
+        "//ext/junit",
+        "//services/events/java/androidx/test/services/events",
+        "@maven//:junit_junit",,
+        "@maven//:truth_truth",,
+    ],
+)

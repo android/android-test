@@ -19,9 +19,10 @@ package androidx.test.orchestrator.junit;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import androidx.test.services.events.internal.StackTrimmer;
 import org.junit.runner.notification.Failure;
 
-/** Parcelable imitation of a JUnit ParcelableFailure */
+/** Parcelable imitation of a JUnit Failure */
 public final class ParcelableFailure implements Parcelable {
 
   private static final String TAG = "ParcelableFailure";
@@ -33,7 +34,7 @@ public final class ParcelableFailure implements Parcelable {
 
   public ParcelableFailure(Failure failure) {
     this.description = new ParcelableDescription(failure.getDescription());
-    this.trace = failure.getTrace();
+    this.trace = StackTrimmer.getTrimmedStackTrace(failure);
   }
 
   private ParcelableFailure(Parcel in) {

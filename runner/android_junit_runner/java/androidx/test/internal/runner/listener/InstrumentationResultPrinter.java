@@ -19,6 +19,7 @@ import android.app.Instrumentation;
 import android.os.Bundle;
 import androidx.annotation.VisibleForTesting;
 import android.util.Log;
+import androidx.test.services.events.internal.StackTrimmer;
 import java.io.PrintStream;
 import org.junit.internal.TextListener;
 import org.junit.runner.Description;
@@ -44,8 +45,6 @@ import org.junit.runner.notification.Failure;
 public class InstrumentationResultPrinter extends InstrumentationRunListener {
 
   private static final String TAG = "InstrumentationResultPrinter";
-
-  @VisibleForTesting static final int MAX_TRACE_SIZE = 64 * 1024;
 
   /**
    * This value, if stored with key {@link android.app.Instrumentation#REPORT_KEY_IDENTIFIER},
@@ -175,21 +174,12 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
   }
 
   private void reportFailure(Failure failure) {
-    String trace = failure.getTrace();
-    if (trace.length() > MAX_TRACE_SIZE) {
-      // Since AJUR needs to report failures back to AM via a binder IPC, we need to make sure that
-      // we don't exceed the Binder transaction limit - which is 1MB per process.
-      Log.w(
-          TAG,
-          String.format("Stack trace too long, trimmed to first %s characters.", MAX_TRACE_SIZE));
-      trace = trace.substring(0, MAX_TRACE_SIZE) + "\n";
-    }
+    String trace = StackTrimmer.getTrimmedStackTrace(failure);
     testResult.putString(REPORT_KEY_STACK, trace);
     // pretty printing
     testResult.putString(
         Instrumentation.REPORT_KEY_STREAMRESULT,
-        String.format(
-            "\nError in %s:\n%s", failure.getDescription().getDisplayName(), failure.getTrace()));
+        String.format("\nError in %s:\n%s", failure.getDescription().getDisplayName(), trace));
   }
 
   @Override

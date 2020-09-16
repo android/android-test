@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.orchestrator.SampleJUnitTest;
+import androidx.test.services.events.internal.StackTrimmer;
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
@@ -57,7 +58,7 @@ public class BundleJUnitUtilsTest {
         BundleJUnitUtils.getFailure(
             parcelBundle(BundleJUnitUtils.getBundleFromFailure(jUnitFailure)));
 
-    assertThat(parcelableFailure.getTrace(), is(jUnitFailure.getTrace()));
+    assertThat(parcelableFailure.getTrace(), is(StackTrimmer.getTrimmedStackTrace(jUnitFailure)));
     compareDescription(parcelableFailure.getDescription(), jUnitFailure.getDescription());
   }
 
@@ -122,7 +123,7 @@ public class BundleJUnitUtilsTest {
   }
 
   private static void compareFailure(ParcelableFailure parcelableFailure, Failure jUnitFailure) {
-    assertThat(parcelableFailure.getTrace(), is(jUnitFailure.getTrace()));
+    assertThat(parcelableFailure.getTrace(), is(StackTrimmer.getTrimmedStackTrace(jUnitFailure)));
     compareDescription(parcelableFailure.getDescription(), jUnitFailure.getDescription());
   }
 

@@ -21,6 +21,7 @@ import static java.util.Collections.emptyList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.util.Log;
+import androidx.test.services.events.internal.StackTrimmer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -99,7 +100,7 @@ public final class ParcelableConverter {
     return new FailureInfo(
         junitFailure.getMessage(),
         junitFailure.getTestHeader(),
-        junitFailure.getTrace(),
+        StackTrimmer.getTrimmedStackTrace(junitFailure),
         getTestCaseFromDescription(junitFailure.getDescription()));
   }
 

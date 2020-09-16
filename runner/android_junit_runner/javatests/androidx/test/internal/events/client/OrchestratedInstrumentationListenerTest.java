@@ -16,10 +16,11 @@
 
 package androidx.test.internal.events.client;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.verify;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.services.events.internal.StackTrimmer;
 import androidx.test.services.events.run.TestAssumptionFailureEvent;
 import androidx.test.services.events.run.TestFailureEvent;
 import androidx.test.services.events.run.TestFinishedEvent;
@@ -39,10 +40,9 @@ import org.junit.runner.notification.RunListener;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricTestRunner;
 
 /** Unit tests for {@link OrchestratedInstrumentationListener}. */
-@RunWith(RobolectricTestRunner.class)
+@RunWith(AndroidJUnit4.class)
 public class OrchestratedInstrumentationListenerTest {
   @Mock TestRunEventService testRunEventService;
 
@@ -83,7 +83,7 @@ public class OrchestratedInstrumentationListenerTest {
     verify(testRunEventService).send(argument.capture());
 
     TestRunFinishedEvent event = (TestRunFinishedEvent) argument.getValue();
-    assertThat(event.count, is(1));
+    assertThat(event.count).isEqualTo(1);
   }
 
   @Test
@@ -151,12 +151,12 @@ public class OrchestratedInstrumentationListenerTest {
 
   private static void compareDescription(
       TestRunEventWithTestCase event, Description jUnitDescription) {
-    assertThat(event.testCase.className, is(jUnitDescription.getClassName()));
-    assertThat(event.testCase.methodName, is(jUnitDescription.getMethodName()));
+    assertThat(event.testCase.className).isEqualTo(jUnitDescription.getClassName());
+    assertThat(event.testCase.methodName).isEqualTo(jUnitDescription.getMethodName());
   }
 
   private static void compareFailure(TestFailureEvent event, Failure jUnitFailure) {
-    assertThat(event.failure.stackTrace, is(jUnitFailure.getTrace()));
+    assertThat(event.failure.stackTrace).isEqualTo(StackTrimmer.getTrimmedStackTrace(jUnitFailure));
     compareDescription(event, jUnitFailure.getDescription());
   }
 }
