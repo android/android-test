@@ -37,8 +37,10 @@ import android.util.Log;
 import android.view.Choreographer;
 import android.view.View;
 import android.view.ViewConfiguration;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.base.IdlingResourceRegistry;
+import androidx.test.espresso.base.UpdatableViewHierarchyRenderer;
 import androidx.test.espresso.util.TreeIterables;
 import androidx.test.platform.app.InstrumentationRegistry;
 import com.google.common.util.concurrent.ListenableFutureTask;
@@ -181,6 +183,27 @@ public final class Espresso {
   /** Changes the default {@link FailureHandler} to the given one. */
   public static void setFailureHandler(FailureHandler failureHandler) {
     BASE.failureHolder().update(checkNotNull(failureHandler));
+  }
+
+  /**
+   * Returns the {@link UpdatableViewHierarchyRenderer} used by Espresso to render the view
+   * hierarchy as a string when an error happens.
+   *
+   * You can change the default {@link ViewHierarchyRenderer} implementation by calling
+   * {@link UpdatableViewHierarchyRenderer#updateViewHierarchyRenderer(ViewHierarchyRenderer)}.
+   *
+   * The default {@link ViewHierarchyRenderer} implementation can also be provided by 3rd party
+   * libraries by including a META-INF/services/androidx.test.espresso.ViewHierarchyRenderer
+   * file in their jar.
+   *
+   * If there are more than one library defining a
+   * META-INF/services/androidx.test.espresso.ViewHierarchyRenderer file in the classpath then
+   * Espresso will throw on errors. If that happens, you can call
+   * {@link UpdatableViewHierarchyRenderer#updateViewHierarchyRenderer(ViewHierarchyRenderer)}
+   * which takes precedence.
+   */
+  public static UpdatableViewHierarchyRenderer getViewHierarchyRenderer() {
+   return BASE.updatableViewHierarchyRenderer();
   }
 
   /**
