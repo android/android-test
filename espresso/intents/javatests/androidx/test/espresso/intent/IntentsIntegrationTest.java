@@ -65,6 +65,7 @@ import androidx.test.ui.app.R;
 import androidx.test.ui.app.SendActivity;
 import junit.framework.AssertionFailedError;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -257,7 +258,9 @@ public class IntentsIntegrationTest {
     assertNoUnverifiedIntents();
   }
 
+  // TODO(b/168904560): relies on MMS app. Rewrite to not have this dependency
   @Test
+  @Ignore
   public void externalIntentWithType() {
     onView(withId(R.id.send_message_button)).perform(scrollTo(), click());
     intended(
