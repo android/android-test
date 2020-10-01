@@ -563,19 +563,29 @@ public final class ViewMatchers {
   public static <T> void assertThat(String message, T actual, Matcher<T> matcher) {
     if (!matcher.matches(actual)) {
       Description description = new StringDescription();
+      String mismatchDescriptionString = getMismatchDescriptionString(actual, matcher);
       description
           .appendText(message)
           .appendText("\nExpected: ")
           .appendDescriptionOf(matcher)
-          .appendText("\n     Got: ");
+          .appendText("\n     Got: ")
+          .appendText(mismatchDescriptionString);
       if (actual instanceof View) {
-        description.appendValue(HumanReadables.describe((View) actual));
-      } else {
-        description.appendValue(actual);
+        // Get the human readable view description.
+        description
+            .appendText("\nView Details: ")
+            .appendText(HumanReadables.describe((View) actual));
       }
       description.appendText("\n");
       throw new AssertionFailedError(description.toString());
     }
+  }
+
+  private static <T> String getMismatchDescriptionString(T actual, Matcher<T> matcher) {
+    Description mismatchDescription = new StringDescription();
+    matcher.describeMismatch(actual, mismatchDescription);
+    String mismatchDescriptionString = mismatchDescription.toString().trim();
+    return mismatchDescriptionString.isEmpty() ? actual.toString() : mismatchDescriptionString;
   }
 
   /**

@@ -56,6 +56,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -87,12 +88,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.test.annotation.UiThreadTest;
 import androidx.test.espresso.matcher.ViewMatchers.Visibility;
+import androidx.test.espresso.util.HumanReadables;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.ui.app.R;
 import com.google.common.collect.Lists;
 import java.util.List;
+import junit.framework.AssertionFailedError;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -416,6 +421,83 @@ public class ViewMatchersTest {
     assertTrue(isDescendantOfA(isAssignableFrom(RelativeLayout.class)).matches(v));
     assertTrue(isDescendantOfA(isAssignableFrom(ScrollView.class)).matches(v));
     assertFalse(isDescendantOfA(isAssignableFrom(LinearLayout.class)).matches(v));
+  }
+
+  private static final class MismatchTestMatcher<T> extends BaseMatcher<T> {
+
+    private final T expected;
+    private final String description;
+    private final String mismatchDescription;
+
+    MismatchTestMatcher(T expected, String description, String mismatchDescription) {
+      this.expected = expected;
+      this.description = description;
+      this.mismatchDescription = mismatchDescription;
+    }
+
+    @Override
+    public boolean matches(Object item) {
+      return (expected == null && item == null) || (expected != null && expected.equals(item));
+    }
+
+    @Override
+    public void describeMismatch(Object item, Description mismatchDescription) {
+      mismatchDescription.appendText(this.mismatchDescription);
+    }
+
+    @Override
+    public void describeTo(Description description) {
+      description.appendText(this.description);
+    }
+  }
+
+  @Test
+  public void testAssertThat_matcherSuccess() {
+    ViewMatchers.assertThat("test", new MismatchTestMatcher<String>("test", "", ""));
+  }
+
+  @Test
+  public void testAssertThat_matcherFails_printsCustomMismatchDescription() {
+    try {
+      ViewMatchers.assertThat(
+          "test",
+          new MismatchTestMatcher<String>("expected", "description", "mismatchDescription"));
+      fail("Expected to throw exception");
+    } catch (AssertionFailedError error) {
+      assertEquals("\nExpected: description\n     Got: mismatchDescription\n", error.getMessage());
+    }
+  }
+
+  @Test
+  public void testAssertThat_matcherFails_usesFallbackObjectToString() {
+    try {
+      ViewMatchers.assertThat(
+          "test", new MismatchTestMatcher<String>("expected", "description", ""));
+      fail("Expected to throw exception");
+    } catch (AssertionFailedError error) {
+      assertEquals("\nExpected: description\n     Got: test\n", error.getMessage());
+    }
+  }
+
+  @Test
+  public void testAssertThat_matcherFails_usesHumanReadablesForViewMatchers() {
+    String description = "Expect to fail match";
+    TextView view = new TextView(context);
+    Matcher<TextView> matcher = new MismatchTestMatcher<>(null, description, "");
+    try {
+      ViewMatchers.assertThat(view, matcher);
+      fail("Expected to throw exception");
+    } catch (AssertionFailedError error) {
+      assertEquals(
+          "\nExpected: "
+              + description
+              + "\n     Got: "
+              + view
+              + "\nView Details: "
+              + HumanReadables.describe(view)
+              + "\n",
+          error.getMessage());
+    }
   }
 
   @Test
