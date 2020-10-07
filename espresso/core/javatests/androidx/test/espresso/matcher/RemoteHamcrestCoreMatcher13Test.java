@@ -17,6 +17,7 @@
 package androidx.test.espresso.matcher;
 
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
@@ -34,7 +35,6 @@ import androidx.test.espresso.remote.GenericRemoteMessage;
 import androidx.test.espresso.remote.RemoteDescriptorRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import com.google.common.collect.Lists;
 import org.hamcrest.Matcher;
 import org.hamcrest.core.AllOf;
 import org.hamcrest.core.AnyOf;
@@ -71,11 +71,13 @@ public class RemoteHamcrestCoreMatcher13Test {
   }
 
   @Test
+  @SuppressWarnings({"unchecked"})
   public void isEqual_transformationFromProto() {
-    IsEqual isEqual = new IsEqual(5);
+    IsEqual<Integer> isEqual = new IsEqual<>(5);
     GenericRemoteMessage isEqualRemoteMessage = new GenericRemoteMessage(isEqual);
     IsEqualProto isEqualProto = (IsEqualProto) isEqualRemoteMessage.toProto();
-    IsEqual isEqualFromProto = (IsEqual) GenericRemoteMessage.FROM.fromProto(isEqualProto);
+    IsEqual<Integer> isEqualFromProto =
+        (IsEqual<Integer>) GenericRemoteMessage.FROM.fromProto(isEqualProto);
 
     assertThat(5, isEqualFromProto);
   }
@@ -91,24 +93,25 @@ public class RemoteHamcrestCoreMatcher13Test {
   }
 
   @Test
+  @SuppressWarnings({"unchecked"})
   public void is_transformationFromProto() {
     IsEqual<Integer> nestedMatcher = new IsEqual<>(5);
     Is<Integer> isMatcher = new Is<>(nestedMatcher);
 
     GenericRemoteMessage isMatcherRemoteMessage = new GenericRemoteMessage(isMatcher);
     IsProto isMatcherProto = (IsProto) isMatcherRemoteMessage.toProto();
-    Is isMatcherFromProto = (Is) GenericRemoteMessage.FROM.fromProto(isMatcherProto);
+    Is<Integer> isMatcherFromProto =
+        (Is<Integer>) GenericRemoteMessage.FROM.fromProto(isMatcherProto);
 
     assertThat(5, isMatcherFromProto);
   }
 
   @Test
   public void anyOf_transformationToProto() {
-    Matcher isEqualInteger = new IsEqual<>(5);
-    Matcher isEqualInteger2 = new IsEqual<>(3);
+    Matcher<Integer> isEqualInteger = new IsEqual<>(5);
+    Matcher<Integer> isEqualInteger2 = new IsEqual<>(3);
 
-    AnyOf<Matcher> anyOfMatcher =
-        new AnyOf<Matcher>(Lists.newArrayList(isEqualInteger, isEqualInteger2));
+    AnyOf<Integer> anyOfMatcher = anyOf(isEqualInteger, isEqualInteger2);
     GenericRemoteMessage anyOfMatcherRemoteMessage = new GenericRemoteMessage(anyOfMatcher);
     AnyOfProto anyOfMatcherMatcherProto = (AnyOfProto) anyOfMatcherRemoteMessage.toProto();
 
@@ -117,12 +120,12 @@ public class RemoteHamcrestCoreMatcher13Test {
   }
 
   @Test
+  @SuppressWarnings({"unchecked"})
   public void anyOf_transformationFromProto() {
-    Matcher isEqualInteger = new IsEqual<>(5);
-    Matcher isEqualInteger2 = new IsEqual<>(3);
+    Matcher<Integer> isEqualInteger = new IsEqual<>(5);
+    Matcher<Integer> isEqualInteger2 = new IsEqual<>(3);
 
-    AnyOf<Matcher> anyOfMatcher =
-        new AnyOf<Matcher>(Lists.newArrayList(isEqualInteger, isEqualInteger2));
+    AnyOf<Integer> anyOfMatcher = anyOf(isEqualInteger, isEqualInteger2);
     GenericRemoteMessage anyOfMatcherRemoteMessage = new GenericRemoteMessage(anyOfMatcher);
     AnyOfProto anyOfMatcherMatcherProto = (AnyOfProto) anyOfMatcherRemoteMessage.toProto();
     Matcher<Integer> anyOfMatcherFromProto =
@@ -134,11 +137,10 @@ public class RemoteHamcrestCoreMatcher13Test {
 
   @Test
   public void allOf_transformationToProto() {
-    Matcher isEqualInteger = new IsEqual<>(5);
-    Matcher isEqualInteger2 = new IsEqual<>(5);
+    Matcher<Integer> isEqualInteger = new IsEqual<>(5);
+    Matcher<Integer> isEqualInteger2 = new IsEqual<>(5);
 
-    AllOf<Matcher> allOfMatcher =
-        new AllOf<Matcher>(Lists.newArrayList(isEqualInteger, isEqualInteger2));
+    Matcher<Integer> allOfMatcher = allOf(isEqualInteger, isEqualInteger2);
     GenericRemoteMessage allOfMatcherRemoteMessage = new GenericRemoteMessage(allOfMatcher);
     AllOfProto allOfMatcherMatcherProto = (AllOfProto) allOfMatcherRemoteMessage.toProto();
 
@@ -147,6 +149,7 @@ public class RemoteHamcrestCoreMatcher13Test {
   }
 
   @Test
+  @SuppressWarnings({"unchecked"})
   public void allOf_transformationFromProto() {
     Matcher<Integer> isEqualInteger = equalTo(5);
     Matcher<Integer> isEqualInteger2 = equalTo(5);
@@ -154,8 +157,8 @@ public class RemoteHamcrestCoreMatcher13Test {
     Matcher<Integer> allOfMatcher = allOf(isEqualInteger, isEqualInteger2);
     GenericRemoteMessage allOfMatcherRemoteMessage = new GenericRemoteMessage(allOfMatcher);
     AllOfProto allOfMatcherMatcherProto = (AllOfProto) allOfMatcherRemoteMessage.toProto();
-    AllOf<Matcher> allOfMatcherFromProto =
-        (AllOf<Matcher>) GenericRemoteMessage.FROM.fromProto(allOfMatcherMatcherProto);
+    AllOf<Integer> allOfMatcherFromProto =
+        (AllOf<Integer>) GenericRemoteMessage.FROM.fromProto(allOfMatcherMatcherProto);
     assertThat(allOfMatcherFromProto.matches(5), is(true));
   }
 
@@ -186,7 +189,7 @@ public class RemoteHamcrestCoreMatcher13Test {
 
   @Test
   public void isNull_transformationToProto() {
-    IsNull isNotNull = new IsNull();
+    Matcher<Object> isNotNull = IsNull.nullValue();
     GenericRemoteMessage isNullMatcherRemoteMsg = new GenericRemoteMessage(isNotNull);
     IsNullProto isNullMatcherProto = (IsNullProto) isNullMatcherRemoteMsg.toProto();
 
@@ -194,19 +197,20 @@ public class RemoteHamcrestCoreMatcher13Test {
   }
 
   @Test
+  @SuppressWarnings({"unchecked"})
   public void isNull_transformationFromProto() {
-    IsNull isNullMatcher = new IsNull();
+    Matcher<Object> isNullMatcher = IsNull.nullValue();
     GenericRemoteMessage isNullMatcherRemoteMsg = new GenericRemoteMessage(isNullMatcher);
     IsNullProto isNullMatcherProto = (IsNullProto) isNullMatcherRemoteMsg.toProto();
-    IsNull isNullMatcherFromProto =
-        (IsNull) GenericRemoteMessage.FROM.fromProto(isNullMatcherProto);
+    IsNull<Object> isNullMatcherFromProto =
+        (IsNull<Object>) GenericRemoteMessage.FROM.fromProto(isNullMatcherProto);
 
     assertThat(null, isNullMatcherFromProto);
   }
 
   @Test
   public void isNot_transformationToProto() {
-    IsNot isNotMatcher = new IsNot<Object>(is("foo"));
+    IsNot<Object> isNotMatcher = new IsNot<>(is("foo"));
 
     GenericRemoteMessage isNotMatcherRemoteMsg = new GenericRemoteMessage(isNotMatcher);
     IsNotProto isNotMatcherProto = (IsNotProto) isNotMatcherRemoteMsg.toProto();
@@ -215,13 +219,15 @@ public class RemoteHamcrestCoreMatcher13Test {
   }
 
   @Test
+  @SuppressWarnings({"unchecked"})
   public void isNot_transformationFromProto() {
     String expected = "test";
 
-    IsNot isNotMatcher = new IsNot<Object>(is(expected));
+    IsNot<Object> isNotMatcher = new IsNot<>(is(expected));
     GenericRemoteMessage isNotMatcherRemoteMsg = new GenericRemoteMessage(isNotMatcher);
     IsNotProto isNotMatcherProto = (IsNotProto) isNotMatcherRemoteMsg.toProto();
-    IsNot isNotMatcherFromProto = (IsNot) GenericRemoteMessage.FROM.fromProto(isNotMatcherProto);
+    IsNot<Object> isNotMatcherFromProto =
+        (IsNot<Object>) GenericRemoteMessage.FROM.fromProto(isNotMatcherProto);
 
     assertThat(is(expected), isNotMatcherFromProto);
   }
