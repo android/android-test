@@ -31,7 +31,8 @@
       android:minSdkVersion="14"
       android:targetSdkVersion="30" />
 
-  <application android:directBootAware="true">
+  <application android:directBootAware="true"
+               android:forceQueryable="true">
     <uses-library android:name="android.test.runner" />
 
     <!-- BEWARE!  If you change this service to run on a different process than

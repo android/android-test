@@ -22,17 +22,19 @@
   <uses-sdk
     android:minSdkVersion="14"
     tools:overrideLibrary="android.support.graphics.drawable, androidx.vectordrawable.graphics.drawable.animated, androidx.test.services.speakeasy.server, androidx.test.services.storage.provider"
-    android:targetSdkVersion="29" />
+    android:targetSdkVersion="30" />
 
    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS" />
    <uses-permission android:name="android.permission.ACCESS_CONTENT_PROVIDERS_EXTERNALLY" />
    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+   <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
    <application android:label="TestServices"
                 android:directBootAware="true"
                 android:requestLegacyExternalStorage = "true"
+                android:forceQueryable="true"
                 tools:replace="android:label">
      <service
          android:directBootAware="true"

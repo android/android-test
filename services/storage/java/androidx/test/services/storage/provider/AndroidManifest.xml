@@ -22,8 +22,10 @@
 
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
-  <!-- TODO(b/146005513): Updates to targetSdkVersion 29. -->
-  <uses-sdk android:minSdkVersion="14" />
+
+  <uses-sdk android:minSdkVersion="14"
+            android:targetSdkVersion="30"/>
 
 </manifest>
