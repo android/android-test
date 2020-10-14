@@ -26,6 +26,7 @@ axt_release_lib(
     proguard_specs = [
         "//:proguard_binary.cfg",
         "//espresso:proguard_binary.cfg",
+        ":proguard_binary.cfg",
     ],
     deps = [
         ":espresso_web_release_lib",
