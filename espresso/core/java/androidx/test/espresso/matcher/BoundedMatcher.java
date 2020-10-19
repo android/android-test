@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 
 /**
  * Some matcher sugar that lets you create a matcher for a given type but only process items of a
@@ -27,7 +28,9 @@ import org.hamcrest.BaseMatcher;
  *
  * @param <T> The desired type of the Matcher.
  * @param <S> the subtype of T that your matcher applies safely to.
+ * @deprecated Use {@link BoundedDiagnosingMatcher} instead for better diagnostic messages.
  */
+@Deprecated
 public abstract class BoundedMatcher<T, S extends T> extends BaseMatcher<T> {
 
   private final Class<?> expectedType;
@@ -35,7 +38,7 @@ public abstract class BoundedMatcher<T, S extends T> extends BaseMatcher<T> {
 
   public BoundedMatcher(Class<? extends S> expectedType) {
     this.expectedType = checkNotNull(expectedType);
-    this.interfaceTypes = new Class[0];
+    this.interfaceTypes = new Class<?>[0];
   }
 
   public BoundedMatcher(
@@ -43,7 +46,7 @@ public abstract class BoundedMatcher<T, S extends T> extends BaseMatcher<T> {
     this.expectedType = checkNotNull(expectedType);
     checkNotNull(otherInterfaces);
     int interfaceCount = otherInterfaces.length + 1;
-    this.interfaceTypes = new Class[interfaceCount];
+    this.interfaceTypes = new Class<?>[interfaceCount];
 
     interfaceTypes[0] = checkNotNull(interfaceType1);
     checkArgument(interfaceType1.isInterface());
@@ -73,5 +76,24 @@ public abstract class BoundedMatcher<T, S extends T> extends BaseMatcher<T> {
       return matchesSafely((S) item);
     }
     return false;
+  }
+
+  @Override
+  @SuppressWarnings({"unchecked"})
+  public void describeMismatch(Object item, Description description) {
+    if (item == null) {
+      description.appendText("item was null");
+      return;
+    }
+    if (!expectedType.isInstance(item)) {
+      description.appendText("item does not extend ").appendText(expectedType.getName());
+      return;
+    }
+    for (Class<?> intfType : interfaceTypes) {
+      if (!intfType.isInstance(item)) {
+        description.appendText("item does not implement ").appendText(intfType.getName());
+        return;
+      }
+    }
   }
 }
