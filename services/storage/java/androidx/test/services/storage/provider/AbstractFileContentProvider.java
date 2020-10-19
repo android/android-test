@@ -126,16 +126,7 @@ abstract class AbstractFileContentProvider extends ContentProvider {
   }
 
   private File fromUri(Uri inUri) throws FileNotFoundException {
-    File requestedFile = null;
-    try {
-      requestedFile = new File(hostedDirectory, inUri.getPath()).getCanonicalFile();
-    } catch (IOException ioe) {
-      throw new FileNotFoundException(
-          String.format(
-              "'%s': error resolving to canonical path - %s", requestedFile, ioe.getMessage()));
-    }
-
-    File checkFile = requestedFile.getAbsoluteFile();
+    File checkFile = new File(hostedDirectory, inUri.getPath()).getAbsoluteFile();
 
     while (null != checkFile) {
       if (checkFile.equals(hostedDirectory)) {
