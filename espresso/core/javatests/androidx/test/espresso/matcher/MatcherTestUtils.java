@@ -36,4 +36,24 @@ import org.hamcrest.StringDescription;
     matcher.describeMismatch(actual, description);
     return description.toString();
   }
+
+  /** Object transformer used for various overloads of the {@code join} method. */
+  interface Transformer<F, T> {
+    T transform(F original);
+  }
+
+  /**
+   * Similar implementation to {@link android.text.TextUtils#join(CharSequence, Object[])} but
+   * allows for object transformations on each element.
+   */
+  public static <T> String join(CharSequence delimiter, T[] tokens, Transformer<T, ?> transformer) {
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < tokens.length; ++i) {
+      if (i != 0) {
+        sb.append(delimiter);
+      }
+      sb.append(transformer != null ? transformer.transform(tokens[i]) : tokens[i]);
+    }
+    return sb.toString();
+  }
 }

@@ -23,11 +23,9 @@ import static org.hamcrest.Matchers.is;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.widget.AdapterView;
-import java.util.Arrays;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.SelfDescribing;
-import org.hamcrest.StringDescription;
 
 /**
  * A collection of Hamcrest matchers that matches a data row in a {@link Cursor}. <br>
@@ -51,68 +49,78 @@ public final class CursorMatchers {
   }
 
   /** A {@link Matcher} that matches {@link Cursor}s based on values in their columns. */
-  public static class CursorMatcher extends BoundedMatcher<Object, Cursor> {
+  public static class CursorMatcher extends BoundedDiagnosingMatcher<Object, Cursor> {
 
     private final int columnIndex;
     private final Matcher<String> columnNameMatcher;
     private final Matcher<?> valueMatcher;
-    private final MatcherApplier applier;
-    private boolean checkColumns = true;
+    private final CursorDataRetriever<?> cursorDataRetriever;
+    private boolean checkColumns = false;
 
-    private CursorMatcher(int columnIndex, Matcher<?> valueMatcher, MatcherApplier applier) {
+    private CursorMatcher(
+        int columnIndex, Matcher<?> valueMatcher, CursorDataRetriever<?> cursorDataRetriever) {
       super(Cursor.class);
       checkArgument(columnIndex >= 0);
       this.columnIndex = columnIndex;
       this.valueMatcher = checkNotNull(valueMatcher);
-      this.applier = checkNotNull(applier);
+      this.cursorDataRetriever = checkNotNull(cursorDataRetriever);
       this.columnNameMatcher = null;
     }
 
     private CursorMatcher(
-        Matcher<String> columnPicker, Matcher<?> valueMatcher, MatcherApplier applier) {
+        Matcher<String> columnPicker,
+        Matcher<?> valueMatcher,
+        CursorDataRetriever<?> cursorDataRetriever) {
       super(Cursor.class);
       this.columnNameMatcher = checkNotNull(columnPicker);
       this.valueMatcher = checkNotNull(valueMatcher);
-      this.applier = checkNotNull(applier);
+      this.cursorDataRetriever = checkNotNull(cursorDataRetriever);
       this.columnIndex = USE_COLUMN_PICKER;
     }
 
     @Override
-    public boolean matchesSafely(Cursor cursor) {
+    protected boolean matchesSafely(Cursor cursor, Description mismatchDescription) {
       int chosenColumn = columnIndex;
       if (chosenColumn < 0) {
         chosenColumn = findColumnIndex(columnNameMatcher, cursor);
         if (chosenColumn < 0) {
-          StringDescription description = new StringDescription();
-          columnNameMatcher.describeTo(description);
-          if (chosenColumn == COLUMN_NOT_FOUND) {
-            if (checkColumns) {
-              throw new IllegalArgumentException(
-                  "Couldn't find column in "
-                      + Arrays.asList(cursor.getColumnNames())
-                      + " matching "
-                      + description.toString());
-            }
-            // this cursor position doesn't have a column with this name, but other ones might
-            // (e.g. in case of MergeCursor), so if columnChecks are off continue the search.
-            return false;
-          } else if (chosenColumn == MULTIPLE_COLUMNS_FOUND) {
-            throw new IllegalArgumentException(
-                "Multiple columns in "
-                    + Arrays.asList(cursor.getColumnNames())
-                    + " match "
-                    + description.toString());
+          if (chosenColumn == MULTIPLE_COLUMNS_FOUND) {
+            mismatchDescription
+                .appendText("Multiple columns in ")
+                .appendValue(cursor.getColumnNames())
+                .appendText(" match ")
+                .appendDescriptionOf(columnNameMatcher);
           } else {
-            throw new IllegalArgumentException(
-                "Couldn't find column in " + Arrays.asList(cursor.getColumnNames()));
+            mismatchDescription
+                .appendText("Couldn't find column in ")
+                .appendValue(cursor.getColumnNames())
+                .appendText(" matching ")
+                .appendDescriptionOf(columnNameMatcher);
           }
+          if (checkColumns) {
+            throw new IllegalArgumentException(mismatchDescription.toString());
+          }
+          return false;
         }
       }
       try {
-        return applier.apply(cursor, chosenColumn, valueMatcher);
+        Object data = cursorDataRetriever.getData(cursor, chosenColumn);
+        boolean result = valueMatcher.matches(data);
+        if (!result) {
+          mismatchDescription
+              .appendText("value at column ")
+              .appendValue(chosenColumn)
+              .appendText(" ");
+          valueMatcher.describeMismatch(data, mismatchDescription);
+        }
+        return result;
       } catch (CursorIndexOutOfBoundsException e) {
+        mismatchDescription
+            .appendText("Column index ")
+            .appendValue(chosenColumn)
+            .appendText(" is invalid");
         if (checkColumns) {
-          throw new IllegalArgumentException("Column index is invalid", e);
+          throw new IllegalArgumentException(mismatchDescription.toString(), e);
         }
         // this cursor position doesn't have a column with this index, but other ones might
         // (e.g. in case of MergeCursor), so if columnChecks are off continue the search.
@@ -121,23 +129,25 @@ public final class CursorMatchers {
     }
 
     @Override
-    public void describeTo(Description description) {
+    protected void describeMoreTo(Description description) {
       description.appendText("Rows with column: ");
       if (columnIndex < 0) {
         columnNameMatcher.describeTo(description);
       } else {
-        description.appendText(" index = " + columnIndex + " ");
+        description.appendText("index = " + columnIndex);
       }
-      applier.describeTo(description);
-      description.appendText(" ");
-      valueMatcher.describeTo(description);
+      description
+          .appendText(" ")
+          .appendDescriptionOf(cursorDataRetriever)
+          .appendText(" matching ")
+          .appendDescriptionOf(valueMatcher);
     }
 
     /**
      * Allows test authors to override whether the the matcher should throw an {@link
      * IllegalArgumentException} if the column name/count is not valid. This is useful in the case
      * where a cursor may iterates over a data set with variable columns. By default, the checks are
-     * on.
+     * off.
      */
     public CursorMatcher withStrictColumnChecks(boolean checkColumns) {
       this.checkColumns = checkColumns;
@@ -162,98 +172,98 @@ public final class CursorMatchers {
     return result;
   }
 
-  private interface MatcherApplier extends SelfDescribing {
-    public boolean apply(Cursor cursor, int chosenColumn, Matcher<?> matcher);
+  private interface CursorDataRetriever<T> extends SelfDescribing {
+    T getData(Cursor cursor, int chosenColumn);
   }
 
-  private static final MatcherApplier BLOB_MATCHER_APPLIER =
-      new MatcherApplier() {
-        @Override
-        public boolean apply(Cursor cursor, int chosenColumn, Matcher<?> matcher) {
-          return matcher.matches(cursor.getBlob(chosenColumn));
-        }
-
+  private static final CursorDataRetriever<byte[]> BLOB_MATCHER_APPLIER =
+      new CursorDataRetriever<byte[]>() {
         @Override
         public void describeTo(Description description) {
           description.appendText("with Blob");
         }
+
+        @Override
+        public byte[] getData(Cursor cursor, int chosenColumn) {
+          return cursor.getBlob(chosenColumn);
+        }
       };
 
-  private static final MatcherApplier LONG_MATCHER_APPLIER =
-      new MatcherApplier() {
-        @Override
-        public boolean apply(Cursor cursor, int chosenColumn, Matcher<?> matcher) {
-          return matcher.matches(cursor.getLong(chosenColumn));
-        }
-
+  private static final CursorDataRetriever<Long> LONG_MATCHER_APPLIER =
+      new CursorDataRetriever<Long>() {
         @Override
         public void describeTo(Description description) {
           description.appendText("with Long");
         }
+
+        @Override
+        public Long getData(Cursor cursor, int chosenColumn) {
+          return cursor.getLong(chosenColumn);
+        }
       };
 
-  private static final MatcherApplier SHORT_MATCHER_APPLIER =
-      new MatcherApplier() {
-        @Override
-        public boolean apply(Cursor cursor, int chosenColumn, Matcher<?> matcher) {
-          return matcher.matches(cursor.getShort(chosenColumn));
-        }
-
+  private static final CursorDataRetriever<Short> SHORT_MATCHER_APPLIER =
+      new CursorDataRetriever<Short>() {
         @Override
         public void describeTo(Description description) {
           description.appendText("with Short");
         }
+
+        @Override
+        public Short getData(Cursor cursor, int chosenColumn) {
+          return cursor.getShort(chosenColumn);
+        }
       };
 
-  private static final MatcherApplier INT_MATCHER_APPLIER =
-      new MatcherApplier() {
-        @Override
-        public boolean apply(Cursor cursor, int chosenColumn, Matcher<?> matcher) {
-          return matcher.matches(cursor.getInt(chosenColumn));
-        }
-
+  private static final CursorDataRetriever<Integer> INT_MATCHER_APPLIER =
+      new CursorDataRetriever<Integer>() {
         @Override
         public void describeTo(Description description) {
           description.appendText("with Int");
         }
+
+        @Override
+        public Integer getData(Cursor cursor, int chosenColumn) {
+          return cursor.getInt(chosenColumn);
+        }
       };
 
-  private static final MatcherApplier FLOAT_MATCHER_APPLIER =
-      new MatcherApplier() {
-        @Override
-        public boolean apply(Cursor cursor, int chosenColumn, Matcher<?> matcher) {
-          return matcher.matches(cursor.getFloat(chosenColumn));
-        }
-
+  private static final CursorDataRetriever<Float> FLOAT_MATCHER_APPLIER =
+      new CursorDataRetriever<Float>() {
         @Override
         public void describeTo(Description description) {
           description.appendText("with Float");
         }
+
+        @Override
+        public Float getData(Cursor cursor, int chosenColumn) {
+          return cursor.getFloat(chosenColumn);
+        }
       };
 
-  private static final MatcherApplier DOUBLE_MATCHER_APPLIER =
-      new MatcherApplier() {
-        @Override
-        public boolean apply(Cursor cursor, int chosenColumn, Matcher<?> matcher) {
-          return matcher.matches(cursor.getDouble(chosenColumn));
-        }
-
+  private static final CursorDataRetriever<Double> DOUBLE_MATCHER_APPLIER =
+      new CursorDataRetriever<Double>() {
         @Override
         public void describeTo(Description description) {
           description.appendText("with Double");
         }
+
+        @Override
+        public Double getData(Cursor cursor, int chosenColumn) {
+          return cursor.getDouble(chosenColumn);
+        }
       };
 
-  private static final MatcherApplier STRING_MATCHER_APPLIER =
-      new MatcherApplier() {
-        @Override
-        public boolean apply(Cursor cursor, int chosenColumn, Matcher<?> matcher) {
-          return matcher.matches(cursor.getString(chosenColumn));
-        }
-
+  private static final CursorDataRetriever<String> STRING_MATCHER_APPLIER =
+      new CursorDataRetriever<String>() {
         @Override
         public void describeTo(Description description) {
           description.appendText("with String");
+        }
+
+        @Override
+        public String getData(Cursor cursor, int chosenColumn) {
+          return cursor.getString(chosenColumn);
         }
       };
 

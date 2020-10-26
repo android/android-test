@@ -23,9 +23,14 @@ import static androidx.test.espresso.matcher.CursorMatchers.withRowInt;
 import static androidx.test.espresso.matcher.CursorMatchers.withRowLong;
 import static androidx.test.espresso.matcher.CursorMatchers.withRowShort;
 import static androidx.test.espresso.matcher.CursorMatchers.withRowString;
+import static androidx.test.espresso.matcher.MatcherTestUtils.getDescription;
+import static androidx.test.espresso.matcher.MatcherTestUtils.getMismatchDescription;
+import static androidx.test.espresso.matcher.MatcherTestUtils.join;
 import static junit.framework.TestCase.assertFalse;
+import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.rules.ExpectedException.none;
@@ -122,6 +127,40 @@ public class CursorMatchersTest {
   }
 
   @Test
+  public void columnNameMatcher_doesNotMatch() {
+    assertFalse(withRowShort(is("not_a_column"), any(Short.class)).matches(cursor));
+  }
+
+  @Test
+  public void columnNameMatcher_doesNotMatch_mismatchDescription() {
+    Matcher<String> columnNameMatcher = is("not_a_column");
+    assertThat(
+        getMismatchDescription(withRowShort(columnNameMatcher, any(Short.class)), cursor),
+        is(
+            "Couldn't find column in ["
+                + join(", ", COLUMN_NAMES, columnName -> "\"" + columnName + "\"")
+                + "] matching "
+                + getDescription(columnNameMatcher)));
+  }
+
+  @Test
+  public void columnNameMatcher_matchesMultiple() {
+    assertFalse(withRowShort(any(String.class), any(Short.class)).matches(cursor));
+  }
+
+  @Test
+  public void columnNameMatcher_matchesMultiple_mismatchDescription() {
+    Matcher<String> columnNameMatcher = any(String.class);
+    assertThat(
+        getMismatchDescription(withRowShort(columnNameMatcher, any(Short.class)), cursor),
+        is(
+            "Multiple columns in ["
+                + join(", ", COLUMN_NAMES, columnName -> "\"" + columnName + "\"")
+                + "] match "
+                + getDescription(columnNameMatcher)));
+  }
+
+  @Test
   public void withRowShort_columnIndexAndValue() {
     assertTrue(withRowShort(1, SHORT_VALUE).matches(cursor));
   }
@@ -147,8 +186,38 @@ public class CursorMatchersTest {
   }
 
   @Test
-  public void withRowShort_ValueDoesNotMatch() {
+  public void withRowShort_valueDoesNotMatch() {
     assertFalse(withRowShort(COLUMN_SHORT, (short) -1).matches(cursor));
+  }
+
+  @Test
+  public void withRowShort_columnIndexAndValue_description() {
+    assertThat(
+        getDescription(withRowShort(1, SHORT_VALUE)),
+        is(
+            "an instance of android.database.Cursor and "
+                + "Rows with column: index = 1 with Short matching "
+                + getDescription(SHORT_VALUE_MATCHER)));
+  }
+
+  @Test
+  public void withRowShort_columnNameAndValue_description() {
+    assertThat(
+        getDescription(withRowShort(COLUMN_SHORT, SHORT_VALUE)),
+        is(
+            "an instance of android.database.Cursor and "
+                + "Rows with column: "
+                + getDescription(is(COLUMN_SHORT))
+                + " with Short matching "
+                + getDescription(SHORT_VALUE_MATCHER)));
+  }
+
+  @Test
+  public void withRowShort_valueDoesNotMatch_mismatchDescription() {
+    Matcher<Short> valueMatcher = is((short) -1);
+    assertThat(
+        getMismatchDescription(withRowShort(COLUMN_SHORT, valueMatcher), cursor),
+        is("value at column <1> " + getMismatchDescription(valueMatcher, SHORT_VALUE)));
   }
 
   @Test
@@ -182,6 +251,36 @@ public class CursorMatchersTest {
   }
 
   @Test
+  public void withRowInt_columnIndexAndValue_description() {
+    assertThat(
+        getDescription(withRowInt(2, INTEGER_VALUE)),
+        is(
+            "an instance of android.database.Cursor and "
+                + "Rows with column: index = 2 with Int matching "
+                + getDescription(INTEGER_VALUE_MATCHER)));
+  }
+
+  @Test
+  public void withRowInt_columnNameAndValue_description() {
+    assertThat(
+        getDescription(withRowInt(COLUMN_INT, INTEGER_VALUE)),
+        is(
+            "an instance of android.database.Cursor and "
+                + "Rows with column: "
+                + getDescription(is(COLUMN_INT))
+                + " with Int matching "
+                + getDescription(INTEGER_VALUE_MATCHER)));
+  }
+
+  @Test
+  public void withRowInt_valueDoesNotMatch_mismatchDescription() {
+    Matcher<Integer> valueMatcher = is(-1);
+    assertThat(
+        getMismatchDescription(withRowInt(COLUMN_INT, valueMatcher), cursor),
+        is("value at column <2> " + getMismatchDescription(valueMatcher, INTEGER_VALUE)));
+  }
+
+  @Test
   public void withRowLong_columnIndexAndValue() {
     assertTrue(withRowLong(3, LONG_VALUE).matches(cursor));
   }
@@ -212,6 +311,36 @@ public class CursorMatchersTest {
   }
 
   @Test
+  public void withRowLong_columnIndexAndValue_description() {
+    assertThat(
+        getDescription(withRowLong(3, LONG_VALUE)),
+        is(
+            "an instance of android.database.Cursor and "
+                + "Rows with column: index = 3 with Long matching "
+                + getDescription(LONG_VALUE_MATCHER)));
+  }
+
+  @Test
+  public void withRowLong_columnNameAndValue_description() {
+    assertThat(
+        getDescription(withRowLong(COLUMN_LONG, LONG_VALUE)),
+        is(
+            "an instance of android.database.Cursor and "
+                + "Rows with column: "
+                + getDescription(is(COLUMN_LONG))
+                + " with Long matching "
+                + getDescription(LONG_VALUE_MATCHER)));
+  }
+
+  @Test
+  public void withRowLong_valueDoesNotMatch_mismatchDescription() {
+    Matcher<Long> valueMatcher = is(-1L);
+    assertThat(
+        getMismatchDescription(withRowLong(COLUMN_LONG, valueMatcher), cursor),
+        is("value at column <3> " + getMismatchDescription(valueMatcher, LONG_VALUE)));
+  }
+
+  @Test
   public void withRowFloat_columnIndexAndValue() {
     assertTrue(withRowFloat(4, FLOAT_VALUE).matches(cursor));
   }
@@ -237,8 +366,38 @@ public class CursorMatchersTest {
   }
 
   @Test
-  public void withRowFloat_ValueDoesNotMatch() {
+  public void withRowFloat_valueDoesNotMatch() {
     assertFalse(withRowFloat(COLUMN_FLOAT, -1f).matches(cursor));
+  }
+
+  @Test
+  public void withRowFloat_columnIndexAndValue_description() {
+    assertThat(
+        getDescription(withRowFloat(4, FLOAT_VALUE)),
+        is(
+            "an instance of android.database.Cursor and "
+                + "Rows with column: index = 4 with Float matching "
+                + getDescription(FLOAT_VALUE_MATCHER)));
+  }
+
+  @Test
+  public void withRowFloat_columnNameAndValue_description() {
+    assertThat(
+        getDescription(withRowFloat(COLUMN_FLOAT, FLOAT_VALUE)),
+        is(
+            "an instance of android.database.Cursor and "
+                + "Rows with column: "
+                + getDescription(is(COLUMN_FLOAT))
+                + " with Float matching "
+                + getDescription(FLOAT_VALUE_MATCHER)));
+  }
+
+  @Test
+  public void withRowFloat_valueDoesNotMatch_mismatchDescription() {
+    Matcher<Float> valueMatcher = is(-1f);
+    assertThat(
+        getMismatchDescription(withRowFloat(COLUMN_FLOAT, valueMatcher), cursor),
+        is("value at column <4> " + getMismatchDescription(valueMatcher, FLOAT_VALUE)));
   }
 
   @Test
@@ -272,6 +431,36 @@ public class CursorMatchersTest {
   }
 
   @Test
+  public void withRowDouble_columnIndexAndValue_description() {
+    assertThat(
+        getDescription(withRowDouble(5, DOUBLE_VALUE)),
+        is(
+            "an instance of android.database.Cursor and "
+                + "Rows with column: index = 5 with Double matching "
+                + getDescription(DOUBLE_VALUE_MATCHER)));
+  }
+
+  @Test
+  public void withRowDouble_columnNameAndValue_description() {
+    assertThat(
+        getDescription(withRowDouble(COLUMN_DOUBLE, DOUBLE_VALUE)),
+        is(
+            "an instance of android.database.Cursor and "
+                + "Rows with column: "
+                + getDescription(is(COLUMN_DOUBLE))
+                + " with Double matching "
+                + getDescription(DOUBLE_VALUE_MATCHER)));
+  }
+
+  @Test
+  public void withRowDouble_valueDoesNotMatch_mismatchDescription() {
+    Matcher<Double> valueMatcher = is(-1.0);
+    assertThat(
+        getMismatchDescription(withRowDouble(COLUMN_DOUBLE, valueMatcher), cursor),
+        is("value at column <5> " + getMismatchDescription(valueMatcher, DOUBLE_VALUE)));
+  }
+
+  @Test
   public void withRowString_columnIndexAndValue() {
     assertTrue(withRowString(6, STRING_VALUE).matches(cursor));
   }
@@ -299,6 +488,36 @@ public class CursorMatchersTest {
   @Test
   public void withRowString_ValueDoesNotMatch() {
     assertFalse(withRowString(COLUMN_STR, "does not match").matches(cursor));
+  }
+
+  @Test
+  public void withRowString_columnIndexAndValue_description() {
+    assertThat(
+        getDescription(withRowString(6, STRING_VALUE)),
+        is(
+            "an instance of android.database.Cursor and "
+                + "Rows with column: index = 6 with String matching "
+                + getDescription(STRING_VALUE_MATCHER)));
+  }
+
+  @Test
+  public void withRowString_columnNameAndValue_description() {
+    assertThat(
+        getDescription(withRowString(COLUMN_STR, STRING_VALUE)),
+        is(
+            "an instance of android.database.Cursor and "
+                + "Rows with column: "
+                + getDescription(is(COLUMN_STR))
+                + " with String matching "
+                + getDescription(STRING_VALUE_MATCHER)));
+  }
+
+  @Test
+  public void withRowString_valueDoesNotMatch_mismatchDescription() {
+    Matcher<String> valueMatcher = is("bad");
+    assertThat(
+        getMismatchDescription(withRowString(COLUMN_STR, valueMatcher), cursor),
+        is("value at column <6> " + getMismatchDescription(valueMatcher, STRING_VALUE)));
   }
 
   @Test
@@ -332,6 +551,36 @@ public class CursorMatchersTest {
   }
 
   @Test
+  public void withRowBlob_columnIndexAndValue_description() {
+    assertThat(
+        getDescription(withRowBlob(7, BLOB_VALUE)),
+        is(
+            "an instance of android.database.Cursor and "
+                + "Rows with column: index = 7 with Blob matching "
+                + getDescription(BLOB_VALUE_MATCHER)));
+  }
+
+  @Test
+  public void withRowBlob_columnNameAndValue_description() {
+    assertThat(
+        getDescription(withRowBlob(COLUMN_BLOB, BLOB_VALUE)),
+        is(
+            "an instance of android.database.Cursor and "
+                + "Rows with column: "
+                + getDescription(is(COLUMN_BLOB))
+                + " with Blob matching "
+                + getDescription(BLOB_VALUE_MATCHER)));
+  }
+
+  @Test
+  public void withRowBlob_valueDoesNotMatch_mismatchDescription() {
+    Matcher<byte[]> valueMatcher = is(new byte[8]);
+    assertThat(
+        getMismatchDescription(withRowBlob(COLUMN_BLOB, valueMatcher), cursor),
+        is("value at column <7> " + getMismatchDescription(valueMatcher, BLOB_VALUE)));
+  }
+
+  @Test
   public void wrongNegativeColumnIndex() {
     expectedException.expect(IllegalArgumentException.class);
     withRowInt(-1, INTEGER_VALUE_MATCHER).matches(cursor);
@@ -344,7 +593,7 @@ public class CursorMatchersTest {
     MergeCursor mergeCursor = new MergeCursor(new Cursor[] {c1, c2});
     mergeCursor.moveToFirst();
     try {
-      withRowInt("three", 3).matches(mergeCursor);
+      withRowInt("three", 3).withStrictColumnChecks(true).matches(mergeCursor);
       fail("expected previous line to throw an exception.");
     } catch (IllegalArgumentException expected) {
     }
@@ -353,7 +602,7 @@ public class CursorMatchersTest {
     mergeCursor.moveToLast();
     assertTrue(withRowInt("three", 3).matches(mergeCursor));
     try {
-      withRowInt(3, 3).matches(mergeCursor);
+      withRowInt(3, 3).withStrictColumnChecks(true).matches(mergeCursor);
       fail("expected previous line to throw an exception.");
     } catch (IllegalArgumentException expected) {
     }
