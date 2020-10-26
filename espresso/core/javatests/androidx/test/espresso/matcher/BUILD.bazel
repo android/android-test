@@ -16,7 +16,7 @@ android_library(
     name = "utils",
     srcs = ["MatcherTestUtils.java"],
     visibility = ["//visibility:private"],
-    deps = ["@maven://org_hamcrest_hamcrest_all"],
+    deps = ["@maven//:org_hamcrest_hamcrest_all"],
 )
 
 android_app_instrumentation_tests(
