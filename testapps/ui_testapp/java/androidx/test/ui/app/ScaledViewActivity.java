@@ -35,19 +35,15 @@ public class ScaledViewActivity extends Activity {
     View scaledView = findViewById(R.id.scaled_view);
     scaledView.setOnClickListener(
         new View.OnClickListener() {
-          private boolean scaled = false;
+          private int scaleIncrement = 2; // Value can be 1 (0.5), 2 (1.0) or 3 (1.5)
 
           @Override
           public void onClick(View v) {
             ViewPropertyAnimator animator = v.animate();
             animator.cancel();
-            if (scaled) {
-              animator.scaleX(1f).scaleY(1f).start();
-              scaled = !scaled;
-            } else {
-              animator.scaleX(0.5f).scaleY(0.5f).start();
-              scaled = !scaled;
-            }
+            scaleIncrement = scaleIncrement % 3 + 1;
+            float scale = scaleIncrement * 0.5f;
+            animator.scaleX(scale).scaleY(scale).start();
           }
         });
   }

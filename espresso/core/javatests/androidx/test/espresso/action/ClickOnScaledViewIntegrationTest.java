@@ -51,6 +51,14 @@ public class ClickOnScaledViewIntegrationTest {
     onView(withId(R.id.scaled_view)).perform(click());
   }
 
+  @Test
+  @SdkSuppress(minSdkVersion = 12)
+  public void clickToScaleAndClickAgainTwice() {
+    onView(withId(R.id.scaled_view)).perform(click());
+    onView(withId(R.id.scaled_view)).perform(click());
+    onView(withId(R.id.scaled_view)).perform(click());
+  }
+
   // placeholder test to avoid the 'no tests found' error on api 10
   // TODO: yuck, find a better solution
   @Test

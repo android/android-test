@@ -32,6 +32,14 @@ android_library(
 )
 
 android_library(
+    name = "lib_with_exported_manifest",
+    testonly = 1,
+    exports_manifest = 1,
+    manifest = "AndroidManifest.xml",
+    exports = [":lib"],
+)
+
+android_library(
     name = "lib_neverlink",
     testonly = 1,
     # Don't export manifest. This lib is just for compile time dependency and it

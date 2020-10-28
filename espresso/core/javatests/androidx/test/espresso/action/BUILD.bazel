@@ -6,8 +6,26 @@ load(
     "android_app_instrumentation_tests",
 )
 load(
+    "//build_extensions:android_library_local_tests.bzl",
+    "android_library_local_tests",
+)
+load(
     "//build_extensions:test_devices.bzl",
     "devices",
+)
+
+android_library_local_tests(
+    name = "android_library_local_tests",
+    srcs = ["ClickOnScaledViewIntegrationTest.java"],
+    deps = [
+        "//espresso/core/java/androidx/test/espresso",
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//testapps/ui_testapp/java/androidx/test/ui/app:lib_with_exported_manifest",
+        "@maven//:junit_junit",
+    ],
 )
 
 android_app_instrumentation_tests(

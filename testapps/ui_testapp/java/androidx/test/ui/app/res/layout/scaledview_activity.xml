@@ -24,6 +24,7 @@
         android:id="@+id/scaled_view"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_margin="50dp"
         android:background="#0594ED"
         android:clickable="true" />
 
