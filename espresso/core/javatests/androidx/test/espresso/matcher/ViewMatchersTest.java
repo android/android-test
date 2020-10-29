@@ -17,6 +17,8 @@
 package androidx.test.espresso.matcher;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static androidx.test.espresso.matcher.MatcherTestUtils.getDescription;
+import static androidx.test.espresso.matcher.MatcherTestUtils.getMismatchDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.hasBackground;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
@@ -58,17 +60,20 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.rules.ExpectedException.none;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Build;
 import androidx.annotation.NonNull;
 import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannedString;
+import android.text.method.TransformationMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.util.Linkify;
 import android.view.View;
@@ -309,12 +314,7 @@ public class ViewMatchersTest {
 
   @Test
   public void withTextNull() {
-    try {
-      withText((Matcher<String>) null);
-      fail("Should of thrown NPE");
-    } catch (NullPointerException e) {
-      // Good, this is expected.
-    }
+    assertThrows(NullPointerException.class, () -> withText((Matcher<String>) null));
   }
 
   @UiThreadTest
@@ -381,6 +381,50 @@ public class ViewMatchersTest {
   }
 
   @Test
+  public void withTextString_describe() {
+    Matcher<String> isMatcher = is("test");
+    assertThat(
+        getDescription(withText(isMatcher)),
+        is(
+            "an instance of android.widget.TextView and "
+                + "view.getText() with or without transformation to match: "
+                + getDescription(isMatcher)));
+  }
+
+  @Test
+  public void withTextString_describeMismatch() {
+    TextView textView = new TextView(context);
+    textView.setText("text");
+    Matcher<View> viewMatcher = withText(is("blah"));
+
+    assertThat(getMismatchDescription(viewMatcher, textView), is("view.getText() was \"text\""));
+  }
+
+  @Test
+  public void withTextString_withTransformation_describeMismatch() {
+    TextView textView = new TextView(context);
+    textView.setText("text");
+    textView.setTransformationMethod(
+        new TransformationMethod() {
+          @Override
+          public CharSequence getTransformation(CharSequence source, View view) {
+            return source + "_transformed";
+          }
+
+          @Override
+          public void onFocusChanged(
+              View view,
+              CharSequence sourceText,
+              boolean focused,
+              int direction,
+              Rect previouslyFocusedRect) {}
+        });
+    assertThat(
+        getMismatchDescription(withText(is("blah")), textView),
+        is("view.getText() was \"text\" transformed text was \"text_transformed\""));
+  }
+
+  @Test
   public void hasTextColorTest() {
     TextView textView = new TextView(context);
     textView.setText("text");
@@ -396,6 +440,37 @@ public class ViewMatchersTest {
 
     assertTrue(hasTextColor(R.color.green).matches(textView));
     assertFalse(hasTextColor(R.color.red).matches(textView));
+  }
+
+  @Test
+  public void hasTextColor_withId_describe() {
+    assertThat(
+        getDescription(hasTextColor(R.color.green)),
+        is(
+            "an instance of android.widget.TextView and "
+                + "textView.getCurrentTextColor() is color with ID <"
+                + R.color.green
+                + ">"));
+  }
+
+  @Test
+  public void hasTextColor_withName_describe() {
+    Matcher<View> matcher = hasTextColor(R.color.green);
+    matcher.matches(new TextView(context));
+    assertThat(
+        getDescription(matcher),
+        is(
+            "an instance of android.widget.TextView and "
+                + "textView.getCurrentTextColor() is color with value #FF377E00"));
+  }
+
+  @Test
+  public void hasTextColor_describeMismatch() {
+    TextView textView = new TextView(context);
+    textView.setTextColor(Color.GREEN);
+    assertThat(
+        getMismatchDescription(hasTextColor(R.color.green), textView),
+        is("textView.getCurrentTextColor() was #FF00FF00"));
   }
 
   @Test
@@ -609,6 +684,41 @@ public class ViewMatchersTest {
   }
 
   @Test
+  public void withTextResourceId_describeNoName() {
+    assertThat(
+        getDescription(withText(R.string.something)),
+        is(
+            "an instance of android.widget.TextView and "
+                + "view.getText() equals string from resource id: <"
+                + R.string.something
+                + ">"));
+  }
+
+  @Test
+  public void withTextResourceId_describeWithName() {
+    TextView textView = new TextView(context);
+    Matcher<View> matcher = withText(R.string.something);
+    matcher.matches(textView);
+    assertThat(
+        getDescription(matcher),
+        is(
+            "an instance of android.widget.TextView and "
+                + "view.getText() equals string from resource id: <"
+                + R.string.something
+                + ">"
+                + " [something] value: Hello World"));
+  }
+
+  @Test
+  public void withTextResourceId_describeMismatch() {
+    TextView textView = new TextView(context);
+    textView.setText(R.string.other_string);
+    assertThat(
+        getMismatchDescription(withText(R.string.something), textView),
+        is("view.getText() was \"" + textView.getText() + "\""));
+  }
+
+  @Test
   public void withTextResourceId_charSequenceTest() {
     TextView textView = new TextView(context);
     String expectedText = context.getResources().getString(R.string.something);
@@ -639,6 +749,32 @@ public class ViewMatchersTest {
   }
 
   @Test
+  public void withHintString_describe() {
+    assertThat(
+        getDescription(withHint("hint")),
+        is("an instance of android.widget.TextView and view.getHint() matching: is \"hint\""));
+  }
+
+  @Test
+  public void withHintNull_describeMismatch() {
+    Matcher<View> matcher = withHint("hint");
+    TextView textView = new TextView(context);
+    textView.setHint(null);
+
+    assertThat(getMismatchDescription(matcher, textView), is("view.getHint() was null"));
+  }
+
+  @Test
+  public void withHintString_describeMismatch() {
+    Matcher<View> matcher = withHint("hint");
+    TextView textView = new TextView(context);
+    textView.setHint("textview hint");
+
+    assertThat(
+        getMismatchDescription(matcher, textView), is("view.getHint() was \"textview hint\""));
+  }
+
+  @Test
   public void withHintNullTest() {
     TextView textView = new TextView(context);
     textView.setHint(null);
@@ -654,6 +790,43 @@ public class ViewMatchersTest {
     assertFalse(withHint(R.string.other_string).matches(textView));
     // test the case of resource is not found, espresso should not crash
     assertFalse(withHint(R.string.other_string + 100).matches(textView));
+  }
+
+  @Test
+  public void withHintResourceId_describeNoName() {
+    TextView textView = new TextView(context);
+    textView.setHint(R.string.something);
+    assertThat(
+        getDescription(withHint(R.string.something)),
+        is(
+            "an instance of android.widget.TextView and "
+                + "view.getHint() equals string from resource id: <"
+                + R.string.something
+                + ">"));
+  }
+
+  @Test
+  public void withHintResourceId_describeWithName() {
+    TextView textView = new TextView(context);
+    textView.setHint(R.string.something);
+    Matcher<View> matcher = withHint(R.string.something);
+    matcher.matches(textView);
+    assertThat(
+        getDescription(matcher),
+        is(
+            "an instance of android.widget.TextView and "
+                + "view.getHint() equals string from resource id: <"
+                + R.string.something
+                + "> [something] value: Hello World"));
+  }
+
+  @Test
+  public void withHintResourceId_describeMismatch() {
+    TextView textView = new TextView(context);
+    textView.setHint(R.string.something);
+    assertThat(
+        getMismatchDescription(withHint(R.string.something), textView),
+        is("view.getHint() was \"Hello World\""));
   }
 
   @Test
@@ -807,30 +980,103 @@ public class ViewMatchersTest {
     assertFalse(hasLinks().matches(viewWithNoLinks));
   }
 
+  @Test
+  public void hasLinks_description() {
+    assertThat(
+        getDescription(hasLinks()),
+        is("an instance of android.widget.TextView and textView.getUrls().length > 0"));
+  }
+
+  @Test
+  public void hasLinks_mismatchDescription() {
+    assertThat(
+        getMismatchDescription(hasLinks(), new TextView(context)),
+        is("textView.getUrls().length was <0>"));
+  }
+
   @UiThreadTest
   @Test
   public void withSpinnerTextResourceId() {
-    Spinner spinner = new Spinner(this.context);
+    Spinner spinner = new Spinner(context);
+
+    // Prior to setting the adapter, the selection will be undefined. This is really testing that
+    // we accounted for getSelectedItem being null.
+    assertFalse(withSpinnerText(R.string.something).matches(spinner));
+
     List<String> values = Lists.newArrayList();
-    values.add(this.context.getString(R.string.something));
-    values.add(this.context.getString(R.string.other_string));
+    values.add(context.getString(R.string.something));
+    values.add(context.getString(R.string.other_string));
     ArrayAdapter<String> adapter =
-        new ArrayAdapter<String>(this.context, android.R.layout.simple_spinner_item, values);
+        new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, values);
     spinner.setAdapter(adapter);
     spinner.setSelection(0);
     assertTrue(withSpinnerText(R.string.something).matches(spinner));
     assertFalse(withSpinnerText(R.string.other_string).matches(spinner));
   }
 
+  @Test
+  public void withSpinnerTextResourceId_noName_description() {
+    assertThat(
+        getDescription(withSpinnerText(R.string.something)),
+        is(
+            "an instance of android.widget.Spinner and "
+                + "spinner.getSelectedItem().toString() to match string from resource id: <"
+                + R.string.something
+                + ">"));
+  }
+
+  @UiThreadTest
+  @Test
+  public void withSpinnerTextResourceId_withName_description() {
+    Matcher<View> matcher = withSpinnerText(R.string.something);
+    matcher.matches(new Spinner(context));
+    assertThat(
+        getDescription(matcher),
+        is(
+            "an instance of android.widget.Spinner and "
+                + "spinner.getSelectedItem().toString() to match string from resource id: <"
+                + R.string.something
+                + "> [something] value: Hello World"));
+  }
+
+  @UiThreadTest
+  @Test
+  public void withSpinnerTextResourceId_noSelection_mismatchDescription() {
+    Spinner spinner = new Spinner(context);
+    assertThat(
+        getMismatchDescription(withSpinnerText(R.string.something), spinner),
+        is("spinner.getSelectedItem() was null"));
+  }
+
+  @UiThreadTest
+  @Test
+  public void withSpinnerTextResourceId_withSelection_mismatchDescription() {
+    Spinner spinner = new Spinner(context);
+    List<String> values = Lists.newArrayList();
+    values.add(context.getString(R.string.something));
+    values.add(context.getString(R.string.other_string));
+    ArrayAdapter<String> adapter =
+        new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, values);
+    spinner.setAdapter(adapter);
+    spinner.setSelection(0);
+    assertThat(
+        getMismatchDescription(withSpinnerText(R.string.other_string), spinner),
+        is("spinner.getSelectedItem().toString() was \"Hello World\""));
+  }
+
   @UiThreadTest
   @Test
   public void withSpinnerTextString() {
-    Spinner spinner = new Spinner(this.context);
+    Spinner spinner = new Spinner(context);
+    // Prior to setting the adapter, the selection will be undefined. This is really testing that
+    // we accounted for getSelectedItem being null.
+    assertFalse(withSpinnerText(is("Hello World")).matches(spinner));
+
     List<String> values = Lists.newArrayList();
     values.add("Hello World");
     values.add("Goodbye!!");
     ArrayAdapter<String> adapter =
-        new ArrayAdapter<String>(this.context, android.R.layout.simple_spinner_item, values);
+        new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, values);
     spinner.setAdapter(adapter);
     spinner.setSelection(0);
     spinner.setTag("spinner");
@@ -840,13 +1086,44 @@ public class ViewMatchersTest {
   }
 
   @Test
+  public void withSpinnerTextString_description() {
+    Matcher<String> stringMatcher = is("Hello World");
+    assertThat(
+        getDescription(withSpinnerText(stringMatcher)),
+        is(
+            "an instance of android.widget.Spinner and "
+                + "spinner.getSelectedItem().toString() to match "
+                + getDescription(stringMatcher)));
+  }
+
+  @UiThreadTest
+  @Test
+  public void withSpinnerTextString_noSelection_mismatchDescription() {
+    Spinner spinner = new Spinner(context);
+    assertThat(
+        getMismatchDescription(withSpinnerText(is("Hello World")), spinner),
+        is("spinner.getSelectedItem() was null"));
+  }
+
+  @UiThreadTest
+  @Test
+  public void withSpinnerTextString_withSelection_mismatchDescription() {
+    Spinner spinner = new Spinner(context);
+    List<String> values = Lists.newArrayList();
+    values.add("Hello World");
+    values.add("Goodbye!!");
+    ArrayAdapter<String> adapter =
+        new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, values);
+    spinner.setAdapter(adapter);
+    spinner.setSelection(0);
+    assertThat(
+        getMismatchDescription(withSpinnerText(is("Goodbye!!")), spinner),
+        is("spinner.getSelectedItem().toString() was \"Hello World\""));
+  }
+
+  @Test
   public void withSpinnerTextNull() {
-    try {
-      withSpinnerText((Matcher<String>) null);
-      fail("Should of thrown NPE");
-    } catch (NullPointerException e) {
-      // Good, this is expected.
-    }
+    assertThrows(NullPointerException.class, () -> withSpinnerText((Matcher<String>) null));
   }
 
   @Test
@@ -876,12 +1153,28 @@ public class ViewMatchersTest {
 
   @Test
   public void hasErrorTextShouldFail_WithNullString() {
-    try {
-      hasErrorText((Matcher<String>) null);
-      fail("Should of thrown NPE");
-    } catch (NullPointerException e) {
-      // Good, this is expected.
-    }
+    assertThrows(NullPointerException.class, () -> hasErrorText((Matcher<String>) null));
+  }
+
+  @Test
+  public void hasErrorText_description() {
+    Matcher<String> stringMatcher = is("TEST");
+    assertThat(
+        getDescription(hasErrorText(stringMatcher)),
+        is(
+            "an instance of android.widget.EditText and "
+                + "editText.getError() to match "
+                + getDescription(stringMatcher)));
+  }
+
+  @Test
+  @UiThreadTest
+  public void hasErrorText_mismatchDescription() {
+    EditText editText = new EditText(context);
+    editText.setError("OTHER");
+    assertThat(
+        getMismatchDescription(hasErrorText("TEST"), editText),
+        is("editText.getError() was \"OTHER\""));
   }
 
   @Test
@@ -917,6 +1210,27 @@ public class ViewMatchersTest {
     EditText editText = new EditText(context);
     editText.setInputType(InputType.TYPE_CLASS_NUMBER);
     assertFalse(withInputType(UNRECOGNIZED_INPUT_TYPE).matches(editText));
+  }
+
+  @Test
+  public void withInputType_description() {
+    assertThat(
+        getDescription(withInputType(InputType.TYPE_CLASS_NUMBER)),
+        is(
+            "an instance of android.widget.EditText and "
+                + "editText.getInputType() is <"
+                + InputType.TYPE_CLASS_NUMBER
+                + ">"));
+  }
+
+  @Test
+  @UiThreadTest
+  public void withInputType_mismatchDescription() {
+    EditText editText = new EditText(context);
+    editText.setInputType(InputType.TYPE_CLASS_TEXT);
+    assertThat(
+        getMismatchDescription(withInputType(InputType.TYPE_CLASS_NUMBER), editText),
+        is("editText.getInputType() was <" + InputType.TYPE_CLASS_TEXT + ">"));
   }
 
   @Test
@@ -967,6 +1281,21 @@ public class ViewMatchersTest {
   }
 
   @Test
+  public void hasChildCount_describe() {
+    assertThat(
+        getDescription(hasChildCount(0)),
+        is("an instance of android.view.ViewGroup and viewGroup.getChildCount() to be <0>"));
+  }
+
+  @Test
+  public void hasChildCount_describeMismatch() {
+    LinearLayout linearLayout = new LinearLayout(context);
+    assertThat(
+        getMismatchDescription(hasChildCount(1), linearLayout),
+        is("viewGroup.getChildCount() was <0>"));
+  }
+
+  @Test
   public void hasMinimumChildCount_twoChildren() {
     LinearLayout linearLayout = new LinearLayout(context);
     linearLayout.addView(new View(context));
@@ -984,6 +1313,23 @@ public class ViewMatchersTest {
 
     assertTrue(hasMinimumChildCount(0).matches(linearLayout));
     assertFalse(hasMinimumChildCount(1).matches(linearLayout));
+  }
+
+  @Test
+  public void hasMinimumChildCount_describe() {
+    assertThat(
+        getDescription(hasMinimumChildCount(5)),
+        is(
+            "an instance of android.view.ViewGroup and "
+                + "viewGroup.getChildCount() to be at least <5>"));
+  }
+
+  @Test
+  public void hasMinimumChildCount_describeMismatch() {
+    LinearLayout linearLayout = new LinearLayout(context);
+    assertThat(
+        getMismatchDescription(hasMinimumChildCount(5), linearLayout),
+        is("viewGroup.getChildCount() was <0>"));
   }
 
   @Test
