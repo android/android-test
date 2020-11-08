@@ -527,17 +527,21 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
   @Override
   public void finishActivity(Activity activity) {
     // Stop the activity before calling Activity#finish() as a workaround for the framework bug in
-    // API level 15 to 19 where the framework may not call #onStop and #onDestroy if you call
+    // API level 15 to 26 where the framework may not call #onStop and #onDestroy if you call
     // Activity#finish() while it is resumed. The exact root cause is unknown but moving the
     // activity back-and-forth between foreground and background helps the finish operation to be
     // executed so here we try finishing the activity by several means. This hack is not necessary
-    // for the API level above 19.
-    startEmptyActivitySync();
-    getInstrumentation().runOnMainSync(() -> activity.finish());
-    getApplicationContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
-    startEmptyActivitySync();
-    getInstrumentation().runOnMainSync(() -> activity.finish());
-    getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
+    // for the API level above 26.
+    if (Build.VERSION.SDK_INT <= 26) {
+      startEmptyActivitySync();
+      getInstrumentation().runOnMainSync(() -> activity.finish());
+      getApplicationContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
+      startEmptyActivitySync();
+      getInstrumentation().runOnMainSync(() -> activity.finish());
+      getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
+    } else {
+      getInstrumentation().runOnMainSync(() -> activity.finish());
+    }
   }
 
   private static void checkActivityStageIsIn(Activity activity, Stage... expected) {
