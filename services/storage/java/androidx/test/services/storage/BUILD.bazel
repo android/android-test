@@ -30,7 +30,7 @@ android_library(
     ],
     deps = [
         ":experimental_storage_annotation",
-        "//runner/android_junit_runner",
+        "//runner/monitor",
         "//services/storage/java/androidx/test/services/storage/file",
         "@maven//:com_google_code_findbugs_jsr305",
     ],

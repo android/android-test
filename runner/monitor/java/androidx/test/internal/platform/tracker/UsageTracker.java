@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.internal.runner.tracker;
+package androidx.test.internal.platform.tracker;
 
 /**
  * Used by test infrastructure to report usage stats (optionally).

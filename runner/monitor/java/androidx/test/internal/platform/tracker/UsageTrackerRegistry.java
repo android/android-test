@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.internal.runner.tracker;
+package androidx.test.internal.platform.tracker;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 
