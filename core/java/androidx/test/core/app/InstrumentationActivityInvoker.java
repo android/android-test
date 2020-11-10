@@ -83,6 +83,13 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
       "androidx.test.core.app.InstrumentationActivityInvoker.BOOTSTRAP_ACTIVITY_RESULT_DATA_KEY";
 
   /**
+   * An intent action broadcasted by InstrumentActivityInvoker to clean up any {@link
+   * ActivityResultWaiter}s that are still registered at the end
+   */
+  private static final String CANCEL_ACTIVITY_RESULT_WAITER =
+      "androidx.test.core.app.InstrumentationActivityInvoker.CANCEL_ACTIVITY_RESULT_WAITER";
+
+  /**
    * An intent action broadcasted by {@link EmptyActivity} notifying the activity becomes resumed
    * state.
    */
@@ -243,18 +250,23 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
               // Stop listening to the broadcast once we get the result.
               context.unregisterReceiver(this);
 
-              int resultCode =
-                  intent.getIntExtra(BOOTSTRAP_ACTIVITY_RESULT_CODE_KEY, Activity.RESULT_CANCELED);
-              Intent resultData = intent.getParcelableExtra(BOOTSTRAP_ACTIVITY_RESULT_DATA_KEY);
-              if (resultData != null) {
-                // Make a copy of resultData since the lifetime of the given intent is unknown.
-                resultData = new Intent(resultData);
+              if (BOOTSTRAP_ACTIVITY_RESULT_RECEIVED.equals(intent.getAction())) {
+                int resultCode =
+                    intent.getIntExtra(
+                        BOOTSTRAP_ACTIVITY_RESULT_CODE_KEY, Activity.RESULT_CANCELED);
+                Intent resultData = intent.getParcelableExtra(BOOTSTRAP_ACTIVITY_RESULT_DATA_KEY);
+                if (resultData != null) {
+                  // Make a copy of resultData since the lifetime of the given intent is unknown.
+                  resultData = new Intent(resultData);
+                }
+                activityResult = new ActivityResult(resultCode, resultData);
+                latch.countDown();
               }
-              activityResult = new ActivityResult(resultCode, resultData);
-              latch.countDown();
             }
           };
-      context.registerReceiver(receiver, new IntentFilter(BOOTSTRAP_ACTIVITY_RESULT_RECEIVED));
+      IntentFilter intentFilter = new IntentFilter(BOOTSTRAP_ACTIVITY_RESULT_RECEIVED);
+      intentFilter.addAction(CANCEL_ACTIVITY_RESULT_WAITER);
+      context.registerReceiver(receiver, intentFilter);
     }
 
     /**
@@ -521,7 +533,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
   @Override
   public void recreateActivity(Activity activity) {
     checkActivityStageIsIn(activity, Stage.RESUMED, Stage.PAUSED, Stage.STOPPED);
-    getInstrumentation().runOnMainSync(() -> activity.recreate());
+    getInstrumentation().runOnMainSync(activity::recreate);
   }
 
   @Override
@@ -533,11 +545,12 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     // executed so here we try finishing the activity by several means. This hack is not necessary
     // for the API level above 19.
     startEmptyActivitySync();
-    getInstrumentation().runOnMainSync(() -> activity.finish());
+    getInstrumentation().runOnMainSync(activity::finish);
     getApplicationContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
     startEmptyActivitySync();
-    getInstrumentation().runOnMainSync(() -> activity.finish());
+    getInstrumentation().runOnMainSync(activity::finish);
     getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
+    getApplicationContext().sendBroadcast(new Intent(CANCEL_ACTIVITY_RESULT_WAITER));
   }
 
   private static void checkActivityStageIsIn(Activity activity, Stage... expected) {
