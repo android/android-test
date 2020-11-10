@@ -19,8 +19,8 @@ package androidx.test.services.shellexecutor;
 import static com.google.common.truth.Truth.assertThat;
 
 import android.os.RemoteException;
-import androidx.test.InstrumentationRegistry;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,12 +38,12 @@ public class ShellExecutorTest {
   public void initShellExec() {
     this.shellExecutor =
         new ShellExecutorImpl(
-            InstrumentationRegistry.getContext(),
+            InstrumentationRegistry.getInstrumentation().getContext(),
             InstrumentationRegistry.getArguments().getString(ShellExecSharedConstants.BINDER_KEY));
   }
 
   @Test
-  public void runTestTroughApi() throws IOException, ClientNotConnected, RemoteException {
+  public void executeShellCommandSync() throws IOException, ClientNotConnected, RemoteException {
     Map<String, String> env = new HashMap<>();
     env.put("name", "Shell Exec");
 

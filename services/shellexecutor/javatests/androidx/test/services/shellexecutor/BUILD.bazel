@@ -39,7 +39,7 @@ android_library(
     manifest = "AndroidManifest_opensource.xml",
     deps = [
         "//runner/android_junit_runner",
-        "//runner/rules",
+        "//ext/junit",
         "//services/shellexecutor:exec_client",
         "//services/shellexecutor:exec_server",
         "@maven//:com_google_code_findbugs_jsr305",

@@ -21,9 +21,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 
-import androidx.test.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import com.google.common.collect.Lists;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -38,7 +38,8 @@ import org.junit.runner.RunWith;
 public class ShellCommandTest {
 
   @Rule
-  public ActivityTestRule<DummyActivity> activityRule = new ActivityTestRule<>(DummyActivity.class);
+  public ActivityScenarioRule<DummyActivity> activityRule =
+      new ActivityScenarioRule<>(DummyActivity.class);
 
   private static String getSecret() {
     return InstrumentationRegistry.getArguments().getString(ShellExecSharedConstants.BINDER_KEY);
@@ -48,7 +49,7 @@ public class ShellCommandTest {
       String command, List<String> params, Map<String, String> env, boolean executeThroughShell)
       throws Exception {
     return ShellCommandClient.execOnServerSync(
-        InstrumentationRegistry.getContext(),
+        InstrumentationRegistry.getInstrumentation().getContext(),
         getSecret(),
         command,
         params,
@@ -123,7 +124,7 @@ public class ShellCommandTest {
 
     InputStream stream =
         ShellCommandClient.execOnServer(
-            InstrumentationRegistry.getContext(),
+            InstrumentationRegistry.getInstrumentation().getContext(),
             getSecret(),
             "dd if=/dev/urandom bs=2048 count=16384",
             null,
