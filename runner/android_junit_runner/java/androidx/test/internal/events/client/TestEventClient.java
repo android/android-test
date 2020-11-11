@@ -105,7 +105,7 @@ public final class TestEventClient {
       return NO_OP_CLIENT;
     }
     if (!args.isPrimaryInstrProcess) {
-      Log.e(TAG, "Orchestration requested, but this isn't the primary instrumentation");
+      Log.w(TAG, "Orchestration requested, but this isn't the primary instrumentation");
       return NO_OP_CLIENT;
     }
     TestEventServiceConnection connection = getConnection(listener, args);
