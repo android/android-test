@@ -88,7 +88,9 @@ public class UiThreadStatement extends Statement {
 
   private static boolean hasAnnotation(
       FrameworkMethod method, Class<? extends Annotation> annotationClass) {
-    return annotationClass != null && method.getAnnotation(annotationClass) != null;
+    return annotationClass != null
+        && (method.getAnnotation(annotationClass) != null
+            || method.getDeclaringClass().isAnnotationPresent(annotationClass));
   }
 
   private static Class<? extends Annotation> loadUiThreadClass(String className) {

@@ -22,8 +22,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Methods annotated with this annotation will be executed on the application's UI thread (or main
- * thread).
+ * Classes and methods annotated with this annotation will be executed on the application's UI
+ * thread (or main thread).
  *
  * <p>This annotation will only take effect for {@link org.junit.Test}, {@link org.junit.Before} or
  * {@link org.junit.After} methods.
@@ -31,6 +31,6 @@ import java.lang.annotation.Target;
  * <p>Use {@link android.app.Instrumentation#runOnMainSync(Runnable)} if you need to switch in and
  * out of the UI thread within your method.
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UiThreadTest {}
