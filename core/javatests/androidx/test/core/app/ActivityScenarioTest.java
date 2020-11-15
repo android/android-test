@@ -35,6 +35,7 @@ import androidx.test.core.app.testing.IntentActivity;
 import androidx.test.core.app.testing.RecordingActivity;
 import androidx.test.core.app.testing.RecreationRecordingActivity;
 import androidx.test.core.app.testing.RedirectingActivity;
+import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -417,6 +418,8 @@ public final class ActivityScenarioTest {
   public void launch_callbackSequence() {
     ActivityScenario<RecordingActivity> activityScenario =
         ActivityScenario.launch(RecordingActivity.class);
+    Espresso.onIdle();
+    Espresso.onIdle();
     activityScenario.onActivity(
         activity ->
             assertThat(activity.getCallbacks())
@@ -435,6 +438,8 @@ public final class ActivityScenarioTest {
   public void launch_postingCallbackSequence() {
     ActivityScenario<AsyncRecordingActivity> activityScenario =
         ActivityScenario.launch(AsyncRecordingActivity.class);
+    Espresso.onIdle();
+    Espresso.onIdle();
     activityScenario.onActivity(
         activity ->
             assertThat(activity.getCallbacks())
