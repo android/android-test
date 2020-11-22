@@ -1043,7 +1043,8 @@ public final class ViewMatchers {
       }
       ViewGroup parentGroup = (ViewGroup) parent;
       for (int i = 0; i < parentGroup.getChildCount(); i++) {
-        if (siblingMatcher.matches(parentGroup.getChildAt(i))) {
+        View child = parentGroup.getChildAt(i);
+        if (view != child && siblingMatcher.matches(child)) {
           return true;
         }
       }
