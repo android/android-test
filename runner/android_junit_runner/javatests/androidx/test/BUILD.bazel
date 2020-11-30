@@ -26,6 +26,14 @@ PARAMETERIZED_SRCS = [
     "internal/runner/TestLoaderTest.java",
 ]
 
+UI_THREAD_STATEMENT_TEST_EXAMPLES = [
+    "internal/runner/junit4/statement/UiThreadTestInterface.java",
+    "internal/runner/junit4/statement/UiThreadTestOnClass.java",
+    "internal/runner/junit4/statement/UiThreadTestOnImplementedInterface.java",
+    "internal/runner/junit4/statement/UiThreadTestOnMethod.java",
+    "internal/runner/junit4/statement/UiThreadTestOnSuperclass.java",
+]
+
 # TODO(b/26110951) - remove when these classes are standalone parameterized tests
 android_library(
     name = "parameterized",
@@ -37,6 +45,16 @@ android_library(
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:org_mockito_mockito_core",
+    ],
+)
+
+android_library(
+    name = "ui_thread_statement_test_examples",
+    srcs = UI_THREAD_STATEMENT_TEST_EXAMPLES,
+    deps = [
+        "//ext/junit",
+        "//runner/rules",
+        "@maven//:junit_junit",
     ],
 )
 
@@ -58,7 +76,7 @@ android_library_instrumentation_tests(
             "MyParameterizedTest.java",
             # suppressed
             "TheoriesAndTestsTogether.java",
-        ] + PARAMETERIZED_SRCS,
+        ] + PARAMETERIZED_SRCS + UI_THREAD_STATEMENT_TEST_EXAMPLES,
     ),
     args = [
         "--test_filter_spec",
@@ -71,6 +89,7 @@ android_library_instrumentation_tests(
         "@androidsdk//:legacy_test-30",
         ":legacy_test_manifest",
         ":parameterized",
+        ":ui_thread_statement_test_examples",
         "//core",
         "//ext/junit",
         "//runner/android_junit_runner",

@@ -90,7 +90,28 @@ public class UiThreadStatement extends Statement {
       FrameworkMethod method, Class<? extends Annotation> annotationClass) {
     return annotationClass != null
         && (method.getAnnotation(annotationClass) != null
-            || method.getDeclaringClass().isAnnotationPresent(annotationClass));
+            || classHasAnnotation(method, annotationClass));
+  }
+
+  private static boolean classHasAnnotation(
+      FrameworkMethod method, Class<? extends Annotation> annotationClass) {
+    Class<?> declaringClass = method.getDeclaringClass();
+
+    for (Class<?> declaredInterface : declaringClass.getInterfaces()) {
+      if (declaredInterface.isAnnotationPresent(annotationClass)) {
+        return true;
+      }
+    }
+
+    while (declaringClass != null) {
+      if (declaringClass.isAnnotationPresent(annotationClass)) {
+        return true;
+      }
+
+      declaringClass = declaringClass.getSuperclass();
+    }
+
+    return false;
   }
 
   private static Class<? extends Annotation> loadUiThreadClass(String className) {

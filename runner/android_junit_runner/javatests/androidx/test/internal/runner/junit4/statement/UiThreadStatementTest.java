@@ -35,4 +35,30 @@ public final class UiThreadStatementTest {
       assertThat(UiThreadStatement.shouldRunOnUiThread(new FrameworkMethod(m))).isTrue();
     }
   }
+
+  @Test
+  public void shouldRunOnUiThread_classNegativeCase() throws Exception {
+    for (Method m : getClass().getDeclaredMethods()) {
+      assertThat(UiThreadStatement.shouldRunOnUiThread(new FrameworkMethod(m))).isFalse();
+    }
+  }
+
+  @Test
+  public void shouldRunOnUiThread_superclass() throws Exception {
+    for (Method m :
+        Class.forName("androidx.test.internal.runner.junit4.statement.UiThreadTestOnSuperclass")
+            .getDeclaredMethods()) {
+      assertThat(UiThreadStatement.shouldRunOnUiThread(new FrameworkMethod(m))).isTrue();
+    }
+  }
+
+  @Test
+  public void shouldRunOnUiThread_interface() throws Exception {
+    for (Method m :
+        Class.forName(
+                "androidx.test.internal.runner.junit4.statement.UiThreadTestOnImplementedInterface")
+            .getDeclaredMethods()) {
+      assertThat(UiThreadStatement.shouldRunOnUiThread(new FrameworkMethod(m))).isTrue();
+    }
+  }
 }
