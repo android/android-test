@@ -27,6 +27,8 @@ android_library(
     srcs = [
         "TestStorage.java",
         "TestStorageException.java",
+        "internal/InternalTestStorage.java",
+        "internal/TestStorageUtil.java",
     ],
     deps = [
         ":experimental_storage_annotation",
