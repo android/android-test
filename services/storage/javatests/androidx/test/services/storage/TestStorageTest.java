@@ -15,14 +15,12 @@
  */
 package androidx.test.services.storage;
 
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 
 import android.net.Uri;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.services.storage.file.HostedFile;
-import androidx.test.services.storage.internal.TestStorageUtil;
 import androidx.test.services.storage.testapp.DummyActivity;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -54,7 +52,7 @@ public final class TestStorageTest {
   }
 
   @Test
-  public void readNonExistentInputFile() {
+  public void testReadNonExistentFile() {
     try {
       testStorage.openInputFile("not/here");
       fail("Should throw FileNotFoundException.");
@@ -64,7 +62,7 @@ public final class TestStorageTest {
   }
 
   @Test
-  public void writeFile() throws Exception {
+  public void testWriteFile() throws Exception {
     OutputStream rawStream = testStorage.openOutputFile(OUTPUT_PATH);
     Writer writer = new BufferedWriter(new OutputStreamWriter(rawStream));
     try {
@@ -76,7 +74,7 @@ public final class TestStorageTest {
   }
 
   @Test
-  public void addOutputProperties() throws Exception {
+  public void testAddOutputProperties() throws Exception {
     Map<String, Serializable> propertyMap = new HashMap<String, Serializable>();
     propertyMap.put("property-a", "test");
     // Pass in a cloned copy since addStatsToSponge may modify the propertyMap instance.
@@ -88,9 +86,7 @@ public final class TestStorageTest {
     testStorage.addOutputProperties(new HashMap<String, Serializable>(propertyMap));
 
     Uri dataUri = HostedFile.buildUri(HostedFile.FileHost.EXPORT_PROPERTIES, "properties.dat");
-    InputStream rawStream =
-        TestStorageUtil.getInputStream(
-            dataUri, getInstrumentation().getTargetContext().getContentResolver());
+    InputStream rawStream = testStorage.getInputStream(dataUri);
 
     ObjectInputStream in = null;
     try {
@@ -101,6 +97,7 @@ public final class TestStorageTest {
       closeInputStream(in);
     }
   }
+
 
   private void closeInputStream(ObjectInputStream in) {
     if (in != null) {
