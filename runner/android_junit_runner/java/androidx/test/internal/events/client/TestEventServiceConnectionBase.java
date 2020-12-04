@@ -74,22 +74,19 @@ public class TestEventServiceConnectionBase<T extends IInterface>
       @NonNull String serviceName,
       @NonNull ServiceFromBinder<T> serviceFromBinder,
       @NonNull TestEventClientConnectListener listener) {
-    checkNotNull(serviceName, "serviceName cannot be null");
-    checkNotNull(listener, "listener cannot be null");
-    checkNotNull(serviceFromBinder, "serviceFromBinder cannot be null");
-    this.serviceName = getServiceNameOnly(serviceName);
-    this.servicePackageName = getServicePackage(serviceName);
-    this.listener = listener;
-    this.serviceFromBinder = serviceFromBinder;
+    this.serviceName = checkNotNull(getServiceNameOnly(serviceName), "serviceName cannot be null");
+    this.servicePackageName =
+        checkNotNull(getServicePackage(serviceName), "servicePackageName cannot be null");
+    this.listener = checkNotNull(listener, "listener cannot be null");
+    ;
+    this.serviceFromBinder = checkNotNull(serviceFromBinder, "serviceFromBinder cannot be null");
   }
 
   /** {@inheritDoc} */
   @Override
   public void connect(@NonNull Context context) {
     Intent intent = new Intent(serviceName);
-    if (servicePackageName != null) {
-      intent.setPackage(servicePackageName);
-    }
+    intent.setPackage(servicePackageName);
     if (!context.bindService(intent, connection, Service.BIND_AUTO_CREATE)) {
       throw new IllegalStateException("Cannot connect to " + serviceName);
     }
