@@ -46,6 +46,12 @@ public final class ShellExecutorImpl implements ShellExecutor {
 
   /** {@inheritDoc} */
   @Override
+  public String getBinderKey() {
+    return binderKey;
+  }
+
+  /** {@inheritDoc} */
+  @Override
   public String executeShellCommandSync(
       String command,
       List<String> parameters,

@@ -30,6 +30,9 @@ import java.util.Map;
  * other instances of {@link UiAutomation}.
  */
 public interface ShellExecutor {
+  /* Returns the instrumentation key for ShellExecutor. */
+  String getBinderKey();
+
   /**
    * Execute a command with elevated permissions and block.
    *
