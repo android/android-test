@@ -57,7 +57,7 @@ public final class TestDiscovery {
       Log.d(TAG, "addTest called with an empty test description");
       return;
     }
-    if (description.isTest()) {
+    if (description.isTest() && description.getMethodName() != null) {
       try {
         testDiscoveryEventService.send(new TestFoundEvent(getTestCaseFromDescription(description)));
       } catch (TestEventException e) {

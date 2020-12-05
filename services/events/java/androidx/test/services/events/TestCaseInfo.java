@@ -50,8 +50,8 @@ public final class TestCaseInfo implements Parcelable {
    */
   public TestCaseInfo(@NonNull Parcel source) {
     checkNotNull(source, "source cannot be null");
-    className = source.readString();
-    methodName = source.readString();
+    className = checkNotNull(source.readString(), "className cannot be null");
+    methodName = checkNotNull(source.readString(), "methodName cannot be null");
     methodAnnotations = new ArrayList<>();
     source.readTypedList(methodAnnotations, AnnotationInfo.CREATOR);
     classAnnotations = new ArrayList<>();
@@ -71,14 +71,10 @@ public final class TestCaseInfo implements Parcelable {
       @NonNull String methodName,
       @NonNull List<AnnotationInfo> methodAnnotations,
       @NonNull List<AnnotationInfo> classAnnotations) {
-    checkNotNull(className, "className cannot be null");
-    checkNotNull(methodName, "methodName cannot be null");
-    checkNotNull(classAnnotations, "classAnnotations cannot be null");
-    checkNotNull(methodAnnotations, "methodAnnotations cannot be null");
-    this.className = className;
-    this.methodName = methodName;
-    this.classAnnotations = classAnnotations;
-    this.methodAnnotations = methodAnnotations;
+    this.className = checkNotNull(className, "className cannot be null");
+    this.methodName = checkNotNull(methodName, "methodName cannot be null");
+    this.classAnnotations = checkNotNull(classAnnotations, "classAnnotations cannot be null");
+    this.methodAnnotations = checkNotNull(methodAnnotations, "methodAnnotations cannot be null");
   }
 
   @NonNull
