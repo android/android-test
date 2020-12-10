@@ -60,7 +60,7 @@ public class BuilderReflectorTest {
   private static Any buildAny(String anyTypeUrlOne, String payload) {
     return Any.newBuilder()
         .setTypeUrl(anyTypeUrlOne)
-        .setValue(ByteString.copyFrom(payload.getBytes()))
+        .setValue(ByteString.copyFromUtf8(payload))
         .build();
   }
 
