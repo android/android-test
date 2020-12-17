@@ -43,6 +43,9 @@ import androidx.test.internal.runner.listener.DelayInjector;
 import androidx.test.internal.runner.listener.InstrumentationResultPrinter;
 import androidx.test.internal.runner.listener.LogRunListener;
 import androidx.test.internal.runner.listener.SuiteAssignmentPrinter;
+import androidx.test.internal.runner.storage.RunnerFileIO;
+import androidx.test.internal.runner.storage.RunnerIO;
+import androidx.test.internal.runner.storage.RunnerTestStorageIO;
 import androidx.test.orchestrator.callback.OrchestratorV1Connection;
 import androidx.test.runner.lifecycle.ApplicationLifecycleCallback;
 import androidx.test.runner.lifecycle.ApplicationLifecycleMonitorRegistry;
@@ -285,6 +288,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   private RunnerArgs runnerArgs;
   private UsageTrackerFacilitator usageTrackerFacilitator;
   private TestEventClient testEventClient = TestEventClient.NO_OP_CLIENT;
+  private RunnerIO runnerIO = new RunnerFileIO();
 
   /** {@inheritDoc} */
   @Override
@@ -427,6 +431,10 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
       return;
     }
 
+    if (runnerArgs.useTestStorageService) {
+      runnerIO = new RunnerTestStorageIO();
+    }
+
     Bundle results = new Bundle();
     try {
       TestExecutor.Builder executorBuilder = new TestExecutor.Builder(this);
@@ -543,7 +551,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
 
   private void addCoverageListener(RunnerArgs args, TestExecutor.Builder builder) {
     if (args.codeCoverage) {
-      builder.addRunListener(new CoverageListener(args.codeCoveragePath));
+      builder.addRunListener(new CoverageListener(args.codeCoveragePath, runnerIO));
     }
   }
 

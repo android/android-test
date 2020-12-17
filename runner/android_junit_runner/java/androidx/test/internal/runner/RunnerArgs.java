@@ -83,6 +83,9 @@ public class RunnerArgs {
   static final String ARGUMENT_LIST_TESTS_FOR_ORCHESTRATOR = "listTestsForOrchestrator";
   static final String ARGUMENT_ORCHESTRATOR_DISCOVERY_SERVICE = "testDiscoveryService";
   static final String ARGUMENT_ORCHESTRATOR_RUN_EVENTS_SERVICE = "testRunEventsService";
+  // Specifies whether the `androidx.test.services` service is installed on the device.
+  // Supposed to be used by the test infrastructure only.
+  static final String ARGUMENT_USE_TEST_STORAGE_SERVICE = "useTestStorageService";
   static final String ARGUMENT_SHELL_EXEC_BINDER_KEY = "shellExecBinderKey";
   static final String ARGUMENT_RUN_LISTENER_NEW_ORDER = "newRunListenerMode";
   static final String ARGUMENT_TESTS_REGEX = "tests_regex";
@@ -124,6 +127,7 @@ public class RunnerArgs {
   public final boolean listTestsForOrchestrator;
   public final String testDiscoveryService;
   public final String testRunEventsService;
+  public final boolean useTestStorageService;
   public final String shellExecBinderKey;
   public final boolean newRunListenerMode;
   public final String testsRegEx;
@@ -183,6 +187,7 @@ public class RunnerArgs {
     this.listTestsForOrchestrator = builder.listTestsForOrchestrator;
     this.testDiscoveryService = builder.testDiscoveryService;
     this.testRunEventsService = builder.testRunEventsService;
+    this.useTestStorageService = builder.useTestStorageService;
     this.screenCaptureProcessors = Collections.unmodifiableList(builder.screenCaptureProcessors);
     this.targetProcess = builder.targetProcess;
     this.shellExecBinderKey = builder.shellExecBinderKey;
@@ -190,6 +195,7 @@ public class RunnerArgs {
     this.testsRegEx = builder.testsRegEx;
   }
 
+  /** Builder for {@link RunnerArgs}. */
   public static class Builder {
     private boolean debug = false;
     private boolean suiteAssignment = false;
@@ -220,6 +226,7 @@ public class RunnerArgs {
     private boolean listTestsForOrchestrator = false;
     private String testDiscoveryService = null;
     private String testRunEventsService = null;
+    private boolean useTestStorageService = false;
     private String targetProcess = null;
     private List<ScreenCaptureProcessor> screenCaptureProcessors = new ArrayList<>();
     public String shellExecBinderKey;
@@ -280,6 +287,8 @@ public class RunnerArgs {
           parseBoolean(bundle.getString(ARGUMENT_LIST_TESTS_FOR_ORCHESTRATOR));
       this.testDiscoveryService = bundle.getString(ARGUMENT_ORCHESTRATOR_DISCOVERY_SERVICE);
       this.testRunEventsService = bundle.getString(ARGUMENT_ORCHESTRATOR_RUN_EVENTS_SERVICE);
+      this.useTestStorageService =
+          parseBoolean(bundle.getString(ARGUMENT_USE_TEST_STORAGE_SERVICE));
       this.targetProcess = bundle.getString(ARGUMENT_TARGET_PROCESS);
       this.screenCaptureProcessors.addAll(
           parseLoadAndInstantiateClasses(
