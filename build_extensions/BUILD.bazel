@@ -43,6 +43,5 @@ exports_files([
 
 bzl_library(
     name = "remove_from_jar_lib",
-    testonly = True,
     srcs = ["remove_from_jar.bzl"],
 )
