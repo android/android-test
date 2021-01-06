@@ -82,7 +82,7 @@ bazel test <target path> --spawn_strategy=local
 
 eg to run the androidx-test-core tests
 ```
-bazel test //core/javatests/… --spawn_strategy=local
+bazel test //core/javatests/… --spawn_strategy=local --host_force_python=PY2
 ```
 
 To run all the robolectric local tests (and thus replicate the Google Cloud
