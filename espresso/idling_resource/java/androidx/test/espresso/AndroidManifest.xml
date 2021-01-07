@@ -16,7 +16,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="androidx.test.espresso.idling.concurrent" >
+    package="androidx.test.espresso.idling.resource" >
 
   <uses-sdk
       android:minSdkVersion="14"
