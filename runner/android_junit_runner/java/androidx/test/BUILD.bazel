@@ -53,6 +53,7 @@ axt_release_lib(
     keep_spec = "androidx/test",
     overlapping_jars = [
         "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
+        "//services/storage/java/androidx/test/services/storage:test_storage_release_no_deps.jar",
     ],
     proguard_library = ":proguard_library.cfg",
     deps = [
