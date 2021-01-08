@@ -27,7 +27,7 @@ load("//build_extensions:release.bzl", "axt_release_lib")
 axt_release_lib(
     name = "accessibility_checks_release",
     keep_spec = "androidx/test/espresso/accessibility",
-    remove_spec = "androidx/test/espresso/accessibility/R[$$\.]",
+    remove_spec = "androidx/test/espresso/accessibility/R[$$\\.]",
     deps = [
         ":accessibility_checks",
     ],
@@ -56,7 +56,7 @@ maven_artifact(
     src = ":accessibility_checks_release.aar",
     artifact_deps = [
         "androidx.test.espresso:espresso-core:%s" % ESPRESSO_VERSION,
-        "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.0",
+        "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:3.1",
     ],
     artifact_id = "espresso-accessibility",
     group_id = "androidx.test.espresso",

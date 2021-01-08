@@ -70,7 +70,20 @@ maven_install(
         "androidx.viewpager:viewpager:" + ANDROIDX_VERSION,
         "aopalliance:aopalliance:1.0",
         "com.beust:jcommander:1.72",
-        "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.0",
+                maven.artifact(
+            group = "com.google.android.apps.common.testing.accessibility.framework",
+            artifact = "accessibility-test-framework",
+            version = "3.1",
+            exclusions = [
+             # exclude the org.checkerframework dependency since that require
+             # java8 compatibility. See b/176926990
+                maven.exclusion(
+                    group = "org.checkerframework",
+                    artifact = "checker"
+                    ),
+                ]
+            ),
+
         "com.google.android.material:material:" + GOOGLE_MATERIAL_VERSION,
         "com.google.auto.value:auto-value:1.5.1",
         "com.google.code.findbugs:jsr305:3.0.2",
