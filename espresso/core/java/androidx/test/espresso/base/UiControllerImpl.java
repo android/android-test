@@ -516,6 +516,7 @@ final class UiControllerImpl
   private IdleNotifier<IdleNotificationCallback> loopUntil(
       EnumSet<IdleCondition> conditions, IdleNotifier<IdleNotificationCallback> dynamicIdle) {
     IdlingPolicy masterIdlePolicy = IdlingPolicies.getMasterIdlingPolicy();
+    IdlingPolicy dynamicIdlePolicy = IdlingPolicies.getDynamicIdlingResourceErrorPolicy();
     try {
       long start = SystemClock.uptimeMillis();
       long end =
@@ -536,6 +537,35 @@ final class UiControllerImpl
       for (IdleCondition condition : conditions) {
         if (!condition.isSignaled(conditionSet)) {
           idleConditions.add(condition.name());
+          switch (condition) {
+            case ASYNC_TASKS_HAVE_IDLED:
+              if (masterIdlePolicy.getDisableOnTimeout()
+                  || (!masterIdlePolicy.getTimeoutIfDebuggerAttached()
+                      && Debug.isDebuggerConnected())) {
+                asyncIdle.cancelCallback();
+                asyncIdle = new NoopRunnableIdleNotifier();
+              }
+              break;
+            case COMPAT_TASKS_HAVE_IDLED:
+              if (masterIdlePolicy.getDisableOnTimeout()
+                  || (!masterIdlePolicy.getTimeoutIfDebuggerAttached()
+                      && Debug.isDebuggerConnected())) {
+                compatIdle.cancelCallback();
+                compatIdle = new NoopRunnableIdleNotifier();
+              }
+              break;
+            case DYNAMIC_TASKS_HAVE_IDLED:
+              if (dynamicIdlePolicy.getDisableOnTimeout()
+                  || (!masterIdlePolicy.getTimeoutIfDebuggerAttached()
+                      && Debug.isDebuggerConnected())) {
+                dynamicIdle.cancelCallback();
+                dynamicIdleProvider = new NoopIdleNotificationCallbackIdleNotifierProvider();
+                dynamicIdle = dynamicIdleProvider.get();
+              }
+              break;
+            default:
+              break;
+          }
         }
       }
       if (idleConditions.isEmpty()) {

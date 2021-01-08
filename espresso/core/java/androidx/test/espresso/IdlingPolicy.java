@@ -36,6 +36,8 @@ public final class IdlingPolicy {
   private final long idleTimeout;
   private final TimeUnit unit;
   private final ResponseAction errorHandler;
+  private final boolean timeoutIfDebuggerAttached;
+  private final boolean disableOnTimeout;
 
   /** The amount of time the policy allows a resource to be non-idle. */
   public long getIdleTimeout() {
@@ -67,6 +69,17 @@ public final class IdlingPolicy {
     }
   }
 
+  /**
+   * When true, timeouts should occur even if a debugger is attached to the VM. When false, they
+   * should be suppressed.
+   */
+  public boolean getTimeoutIfDebuggerAttached() {
+    return timeoutIfDebuggerAttached;
+  }
+
+  public boolean getDisableOnTimeout() {
+    return disableOnTimeout;
+  }
 
   Builder toBuilder() {
     return new Builder(this);
@@ -77,12 +90,16 @@ public final class IdlingPolicy {
     this.idleTimeout = builder.idleTimeout;
     this.unit = checkNotNull(builder.unit);
     this.errorHandler = checkNotNull(builder.errorHandler);
+    this.timeoutIfDebuggerAttached = builder.timeoutIfDebuggerAttached;
+    this.disableOnTimeout = builder.disableOnTimeout;
   }
 
   static class Builder {
     private long idleTimeout = -1;
     private TimeUnit unit = null;
     private ResponseAction errorHandler = null;
+    private boolean timeoutIfDebuggerAttached = false;
+    private boolean disableOnTimeout;
 
     public Builder() {}
 
@@ -96,6 +113,15 @@ public final class IdlingPolicy {
       return new IdlingPolicy(this);
     }
 
+    public Builder withTimeoutIfDebuggerAttached(boolean timeoutIfDebuggerAttached) {
+      this.timeoutIfDebuggerAttached = timeoutIfDebuggerAttached;
+      return this;
+    }
+
+    public Builder withDisableOnTimeout(boolean disableOnTimeout) {
+      this.disableOnTimeout = disableOnTimeout;
+      return this;
+    }
 
     public Builder withIdlingTimeout(long idleTimeout) {
       this.idleTimeout = idleTimeout;

@@ -99,8 +99,8 @@ public final class IdlingPolicies {
   public static void setMasterPolicyTimeoutWhenDebuggerAttached(
       boolean timeoutWhenDebuggerAttached) {
     masterIdlingPolicy =
-        masterIdlingPolicy
-            .toBuilder()
+        masterIdlingPolicy.toBuilder()
+            .withTimeoutIfDebuggerAttached(timeoutWhenDebuggerAttached)
             .build();
   }
 
