@@ -30,7 +30,7 @@ android_library(
         "internal/InternalTestStorage.java",
         "internal/TestStorageUtil.java",
     ],
-    manifest = "AndroidManidfest.xml",
+    manifest = "AndroidManifest.xml",
     deps = [
         ":experimental_storage_annotation",
         "//runner/monitor",

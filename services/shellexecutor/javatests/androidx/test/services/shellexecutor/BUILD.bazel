@@ -13,6 +13,7 @@ android_local_test(
     size = "small",
     srcs = ["ShellCommandClientTest.java"],
     tags = ["robolectric"],
+    manifest = "AndroidManifest_opensource.xml",
     deps = [
         "//runner/android_junit_runner",
         "//services/shellexecutor:exec_client",
