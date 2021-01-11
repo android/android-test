@@ -15,12 +15,16 @@
  */
 package androidx.test.ext.truth.location;
 
+import static android.location.LocationManager.GPS_PROVIDER;
+import static android.location.LocationManager.NETWORK_PROVIDER;
 import static androidx.test.ext.truth.location.LocationSubject.assertThat;
 import static com.google.common.truth.ExpectFailure.assertThat;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 import android.location.Location;
-import android.location.LocationManager;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Test;
@@ -31,7 +35,7 @@ public class LocationSubjectTest {
 
   @Test
   public void isEqualTo() {
-    Location location = new Location(LocationManager.GPS_PROVIDER);
+    Location location = new Location(GPS_PROVIDER);
     location.setLatitude(1);
     location.setLongitude(-1);
     location.setTime(2);
@@ -45,12 +49,12 @@ public class LocationSubjectTest {
 
   @Test
   public void isEqualTo_notEqual() {
-    Location location = new Location(LocationManager.GPS_PROVIDER);
+    Location location = new Location(GPS_PROVIDER);
     location.setLatitude(1);
     location.setLongitude(-1);
     location.setTime(2);
 
-    Location other = new Location(LocationManager.GPS_PROVIDER);
+    Location other = new Location(GPS_PROVIDER);
     other.setLatitude(1);
     other.setLongitude(-1);
     other.setTime(3);
@@ -74,11 +78,11 @@ public class LocationSubjectTest {
 
   @Test
   public void isAt() {
-    Location location = new Location(LocationManager.GPS_PROVIDER);
+    Location location = new Location(GPS_PROVIDER);
     location.setLatitude(1);
     location.setLongitude(-1);
 
-    Location other = new Location(LocationManager.GPS_PROVIDER);
+    Location other = new Location(GPS_PROVIDER);
     other.setLatitude(1);
     other.setLongitude(-1);
 
@@ -87,11 +91,11 @@ public class LocationSubjectTest {
 
   @Test
   public void isAt_notAt() {
-    Location location = new Location(LocationManager.GPS_PROVIDER);
+    Location location = new Location(GPS_PROVIDER);
     location.setLatitude(1);
     location.setLongitude(-1);
 
-    Location other = new Location(LocationManager.GPS_PROVIDER);
+    Location other = new Location(GPS_PROVIDER);
     other.setLatitude(1);
     other.setLongitude(-2);
 
@@ -106,11 +110,11 @@ public class LocationSubjectTest {
 
   @Test
   public void isNearby() {
-    Location location = new Location(LocationManager.GPS_PROVIDER);
+    Location location = new Location(GPS_PROVIDER);
     location.setLatitude(1);
     location.setLongitude(-1);
 
-    Location other = new Location(LocationManager.GPS_PROVIDER);
+    Location other = new Location(GPS_PROVIDER);
     other.setLatitude(1.1);
     other.setLongitude(-1.1);
 
@@ -119,11 +123,11 @@ public class LocationSubjectTest {
 
   @Test
   public void isNearby_notNearby() {
-    Location location = new Location(LocationManager.GPS_PROVIDER);
+    Location location = new Location(GPS_PROVIDER);
     location.setLatitude(1);
     location.setLongitude(-1);
 
-    Location other = new Location(LocationManager.GPS_PROVIDER);
+    Location other = new Location(GPS_PROVIDER);
     other.setLatitude(1.1);
     other.setLongitude(-1.1);
 
@@ -138,11 +142,11 @@ public class LocationSubjectTest {
 
   @Test
   public void isFaraway() {
-    Location location = new Location(LocationManager.GPS_PROVIDER);
+    Location location = new Location(GPS_PROVIDER);
     location.setLatitude(1);
     location.setLongitude(-1);
 
-    Location other = new Location(LocationManager.GPS_PROVIDER);
+    Location other = new Location(GPS_PROVIDER);
     other.setLatitude(1.1);
     other.setLongitude(-1.1);
 
@@ -151,11 +155,11 @@ public class LocationSubjectTest {
 
   @Test
   public void isFaraway_notFaraway() {
-    Location location = new Location(LocationManager.GPS_PROVIDER);
+    Location location = new Location(GPS_PROVIDER);
     location.setLatitude(1);
     location.setLongitude(-1);
 
-    Location other = new Location(LocationManager.GPS_PROVIDER);
+    Location other = new Location(GPS_PROVIDER);
     other.setLatitude(1.1);
     other.setLongitude(-1.1);
 
@@ -169,11 +173,103 @@ public class LocationSubjectTest {
   }
 
   @Test
+  public void distanceTo() {
+    Location location = new Location(GPS_PROVIDER);
+    location.setLatitude(1);
+    location.setLongitude(1);
+
+    assertThat(location).distanceTo(2, 2).isWithin(1).of(156876.16f);
+  }
+
+  @Test
+  public void bearingTo() {
+    Location location = new Location(GPS_PROVIDER);
+    location.setLatitude(1);
+    location.setLongitude(1);
+
+    assertThat(location).bearingTo(2, 2).isWithin(.1f).of(45.170467f);
+  }
+
+  @Test
+  public void time() {
+    Location location = new Location(GPS_PROVIDER);
+    location.setTime(1000);
+
+    assertThat(location).time().isEqualTo(1000);
+  }
+
+  @Test
+  public void elapsedRealtime() {
+    assumeTrue(VERSION.SDK_INT > VERSION_CODES.JELLY_BEAN_MR1);
+
+    Location location = new Location(GPS_PROVIDER);
+    location.setElapsedRealtimeNanos(100000000);
+
+    assertThat(location).elapsedRealtimeNanos().isEqualTo(100000000);
+    assertThat(location).elapsedRealtimeMillis().isEqualTo(100);
+  }
+
+  @Test
+  public void hasProvider() {
+    Location location = new Location(GPS_PROVIDER);
+
+    assertThat(location).hasProvider(GPS_PROVIDER);
+    assertThat(location).doesNotHaveProvider(NETWORK_PROVIDER);
+  }
+
+  @Test
+  public void altitude() {
+    Location location = new Location(GPS_PROVIDER);
+    location.setAltitude(1);
+
+    assertThat(location).hasAltitude();
+    assertThat(location).altitude().isEqualTo(1);
+  }
+
+  @Test
+  public void speed() {
+    Location location = new Location(GPS_PROVIDER);
+    location.setSpeed(1f);
+
+    assertThat(location).hasSpeed();
+    assertThat(location).speed().isEqualTo(1);
+  }
+
+  @Test
+  public void bearing() {
+    Location location = new Location(GPS_PROVIDER);
+    location.setBearing(1f);
+
+    assertThat(location).hasBearing();
+    assertThat(location).bearing().isEqualTo(1);
+  }
+
+  @Test
+  public void accuracy() {
+    Location location = new Location(GPS_PROVIDER);
+    location.setAccuracy(1f);
+
+    assertThat(location).hasAccuracy();
+    assertThat(location).accuracy().isEqualTo(1);
+  }
+
+  @Test
+  public void verticalAccuracy() {
+    assumeTrue(VERSION.SDK_INT > VERSION_CODES.O);
+
+    Location location = new Location(GPS_PROVIDER);
+    location.setVerticalAccuracyMeters(1f);
+
+    assertThat(location).hasVerticalAccuracy();
+    assertThat(location).verticalAccuracy().isEqualTo(1);
+  }
+
+  @Test
   public void extras() {
     Bundle bundle = new Bundle();
     bundle.putInt("extra", 2);
 
-    Location location = new Location(LocationManager.GPS_PROVIDER);
+    Location location = new Location(GPS_PROVIDER);
     location.setExtras(bundle);
 
     assertThat(location).extras().containsKey("extra");
