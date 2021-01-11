@@ -38,6 +38,7 @@ http_archive(
 )
 
 load("@rules_jvm_external//:defs.bzl", "maven_install")
+load("@rules_jvm_external//:specs.bzl", "maven")
 load(
     "//build_extensions:axt_versions.bzl",
     "ANDROIDX_JUNIT_VERSION",
