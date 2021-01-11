@@ -228,7 +228,7 @@ maven_artifact(
         "androidx.viewpager:viewpager:%s" % ANDROIDX_VERSION,
         "androidx.core:core:%s" % ANDROIDX_VERSION,
         "androidx.legacy:legacy-support-core-utils:%s" % ANDROIDX_VERSION,
-        "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.0",
+        "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:3.1",
     ],
     artifact_id = "espresso-contrib",
     group_id = "androidx.test.espresso",
