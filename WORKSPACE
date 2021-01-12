@@ -101,7 +101,7 @@ maven_install(
         "com.google.guava:guava-testlib:27.1-android",
         "com.google.inject.extensions:guice-multibindings:4.1.0",
         "com.google.inject:guice:4.1.0",
-        "com.google.truth:truth:0.45",
+        "com.google.truth:truth:1.0",
         "com.googlecode.jarjar:jarjar:1.3",
         "com.linkedin.dexmaker:dexmaker-mockito:jar:2.25.0",
         "com.linkedin.dexmaker:dexmaker:2.25.0",
