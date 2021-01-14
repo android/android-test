@@ -36,6 +36,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import junit.framework.AssertionFailedError;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
@@ -64,6 +66,21 @@ public final class ViewAssertions {
   }
 
   /**
+   * Returns a generic {@link ViewAssertion} that asserts that a view exists in the view hierarchy
+   * and is matched by the given view matcher. Additionally, allows using a custom {@link Logger}
+   * which will be used in place of {@link Log}. If {@code null} is provided for the logger, then no
+   * logging will take place.
+   *
+   * @param viewMatcher The {@link Matcher} used to test the {@link View}.
+   * @param logger The {@link Logger} or {@code null} to use for any error logging.
+   * @return An instance of {@link ViewAssertion} to use for testing {@link View}s.
+   */
+  public static ViewAssertion matches(
+      final Matcher<? super View> viewMatcher, final Logger logger) {
+    return new MatchesViewAssertion(checkNotNull(viewMatcher), logger);
+  }
+
+  /**
    * Returns a generic {@link ViewAssertion} that asserts that the descendant views selected by the
    * selector match the specified matcher.
    *
@@ -82,9 +99,20 @@ public final class ViewAssertions {
     @RemoteMsgField(order = 0)
     final Matcher<? super View> viewMatcher;
 
+    private final Logger logger;
+    private final boolean isLoggerSet;
+
     @RemoteMsgConstructor
     private MatchesViewAssertion(final Matcher<? super View> viewMatcher) {
       this.viewMatcher = viewMatcher;
+      this.logger = null;
+      this.isLoggerSet = false;
+    }
+
+    private MatchesViewAssertion(final Matcher<? super View> viewMatcher, Logger logger) {
+      this.viewMatcher = viewMatcher;
+      this.logger = logger;
+      this.isLoggerSet = true;
     }
 
     @Override
@@ -98,7 +126,13 @@ public final class ViewAssertions {
                 Locale.ROOT,
                 "' check could not be performed because view '%s' was not found.\n",
                 noViewException.getViewMatcherDescription()));
-        Log.e(TAG, description.toString());
+        if (isLoggerSet) {
+          if (logger != null) {
+            logger.log(Level.SEVERE, description.toString());
+          }
+        } else {
+          Log.e(TAG, description.toString());
+        }
         throw noViewException;
       } else {
         description.appendText("' doesn't match the selected view.");
