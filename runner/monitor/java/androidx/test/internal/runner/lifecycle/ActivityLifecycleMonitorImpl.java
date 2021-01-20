@@ -161,9 +161,7 @@ public final class ActivityLifecycleMonitorImpl implements ActivityLifecycleMoni
           refIter.remove();
         } else {
           try {
-            Log.d(TAG, "running callback: " + callback);
             callback.onActivityLifecycleChanged(activity, stage);
-            Log.d(TAG, "callback completes: " + callback);
           } catch (RuntimeException re) {
             Log.e(
                 TAG,
