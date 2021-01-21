@@ -28,6 +28,7 @@ import com.google.testing.platform.android.core.orchestration.strategy.GrpcDiagn
 import com.google.testing.platform.core.telemetry.android.opencensus.exporter.SpanDataWrapper
 import com.google.testing.platform.core.telemetry.opencensus.TraceProtoUtils
 import com.google.testing.platform.lib.coroutines.scope.JobScope
+import com.google.testing.platform.proto.api.android.DiagnosticEventProto
 import io.grpc.android.AndroidChannelBuilder
 import io.opencensus.trace.export.SpanData
 import java.io.ByteArrayInputStream
@@ -128,7 +129,7 @@ class TestDiagnosticsContentProvider : ContentProvider() {
   override fun insert(uri: Uri, contentValues: ContentValues?): Uri? {
     if (contentValues!!.containsKey("FINISH")) {
       if (::grpcDiagnosticsOrchestrationStrategy.isInitialized) {
-        grpcDiagnosticsOrchestrationStrategy.spanMessages.close()
+        grpcDiagnosticsOrchestrationStrategy.diagnosticsEvents.close()
         runBlocking { serverJob.join() }
       }
       Log.i(TAG, "GRPC Channel closed by TestDiagnosticsContentProvider")
@@ -137,7 +138,7 @@ class TestDiagnosticsContentProvider : ContentProvider() {
 
     ByteArrayInputStream(contentValues!!.getAsByteArray("span")).use {
       ObjectInputStream(it).use { ois ->
-        val receivedSpan = SpanDataWrapper.readObject(ois)
+        val receivedSpans = SpanDataWrapper.readObject(ois)
         Log.i(TAG, "Received diagnostics events")
 
         if (!serverPort.isInitialized()) {
@@ -148,7 +149,7 @@ class TestDiagnosticsContentProvider : ContentProvider() {
             return null
           }
         }
-        sendDiagnosticsEvents(receivedSpan)
+        sendDiagnosticsEvents(receivedSpans)
       }
     }
     return null
@@ -187,15 +188,18 @@ class TestDiagnosticsContentProvider : ContentProvider() {
   /**
    * Sends the diagnostics event to the GRPC service.
    */
-  private fun sendDiagnosticsEvents(span: SpanData) {
+  private fun sendDiagnosticsEvents(spans: List<SpanData>) {
     if (serverPort.value.toInt() == INVALID_SERVER_PORT) {
       Log.i(TAG, "Invalid server port, dropping diagnostic event!")
       return
     }
+    val diagnosticsEvent = DiagnosticEventProto.DiagnosticEvent.newBuilder().addAllSpans(
+      spans.map { TraceProtoUtils.toSpanProto(it) }
+    ).build()
 
     try {
       runBlocking {
-        grpcDiagnosticsOrchestrationStrategy.spanMessages.send(TraceProtoUtils.toSpanProto(span))
+        grpcDiagnosticsOrchestrationStrategy.diagnosticsEvents.send(diagnosticsEvent)
       }
     } catch (e: Exception) {
       Log.w(TAG, "Sending events to the diagnostics service resulted in an error: $e")
