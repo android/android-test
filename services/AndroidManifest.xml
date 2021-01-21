@@ -30,6 +30,8 @@
    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+   <uses-permission android:name="android.permission.INTERNET"/>
+   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
    <application android:label="TestServices"
                 android:directBootAware="true"
@@ -53,7 +55,7 @@
         android:authorities="androidx.test.services.storage.runfiles"
         android:directBootAware="true"
         android:exported="true"
-        android:grantUriPermissions="true" />
+        android:grantUriPermissions="true"/>
     <provider
         android:name="androidx.test.services.storage.provider.TestArgsContentProvider"
         android:authorities="androidx.test.services.storage.testargs"
@@ -77,6 +79,12 @@
         android:directBootAware="true"
         android:exported="true"
         android:grantUriPermissions="true" />
-   </application>
+    <provider
+        android:name="androidx.test.services.storage.provider.TestDiagnosticsContentProvider"
+        android:authorities="androidx.test.services.storage.diagnostics"
+        android:directBootAware="true"
+        android:exported="true"
+        android:grantUriPermissions="true"/>
+  </application>
 
 </manifest>
