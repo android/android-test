@@ -95,7 +95,6 @@ android_library_instrumentation_tests(
         "//runner/android_junit_runner",
         "//runner/android_junit_runner/java/androidx/test/internal/runner/coverage",
         "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
-        "//runner/monitor",
         "//runner/rules",
         "//services/storage/java/androidx/test/services/storage/internal:storage",
         "@maven//:com_google_truth_truth",

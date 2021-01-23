@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.internal.platform.tracker;
+package androidx.test.internal.runner.tracker;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 
@@ -28,9 +28,9 @@ public final class UsageTrackerRegistry {
   /** Contains versions for AXT libraries */
   public interface AxtVersions {
     // Espresso version includes: Espresso, Espresso-Web, Intents, Espresso-MPE
-    String ESPRESSO_VERSION = "3.4.0-alpha03";
+    String ESPRESSO_VERSION = "3.4.0-alpha02";
     // Runner version includes: Runner, Rules, ATO, Monitor
-    String RUNNER_VERSION = "1.3.1-alpha03";
+    String RUNNER_VERSION = "1.3.1-alpha02";
     // Test services version.
     String SERVICES_VERSION = RUNNER_VERSION;
   }
