@@ -33,6 +33,7 @@ android_library(
     manifest = "AndroidManifest.xml",
     deps = [
         ":experimental_storage_annotation",
+        "//runner/monitor",
         "//services/storage/java/androidx/test/services/storage/file",
         "@maven//:com_google_code_findbugs_jsr305",
     ],
