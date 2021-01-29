@@ -16,7 +16,6 @@ proto_library(
 
 java_lite_proto_library(
     name = "test_protos_android_pb3",
-    strict_deps = 0,
     deps = [
         ":test_protos",
     ],
