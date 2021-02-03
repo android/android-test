@@ -272,6 +272,9 @@ public final class IdlingResourceRegistry {
         return false;
       }
     }
+    if (Log.isLoggable(TAG, Log.DEBUG)) {
+      Log.d(TAG, "All idling resources are idle.");
+    }
     return true;
   }
 
