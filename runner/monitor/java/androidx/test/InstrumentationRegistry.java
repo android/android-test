@@ -19,7 +19,7 @@ package androidx.test;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.os.Bundle;
-import java.util.concurrent.atomic.AtomicReference;
+import androidx.test.platform.app.InstrumentationProvider;
 
 /**
  * An exposed registry instance that holds a reference to the instrumentation running in the process
@@ -32,10 +32,6 @@ import java.util.concurrent.atomic.AtomicReference;
 @Deprecated
 public final class InstrumentationRegistry {
 
-  private static final AtomicReference<Instrumentation> instrumentationRef =
-      new AtomicReference<Instrumentation>(null);
-  private static final AtomicReference<Bundle> arguments = new AtomicReference<Bundle>(null);
-
   /**
    * Returns the instrumentation currently running. Use this to get an {@link Instrumentation} into
    * your test.
@@ -45,12 +41,7 @@ public final class InstrumentationRegistry {
    */
   @Deprecated
   public static Instrumentation getInstrumentation() {
-    Instrumentation instance = instrumentationRef.get();
-    if (null == instance) {
-      throw new IllegalStateException(
-          "No instrumentation registered! " + "Must run under a registering instrumentation.");
-    }
-    return instance;
+    return androidx.test.platform.app.InstrumentationRegistry.getInstrumentation();
   }
 
   /**
@@ -65,13 +56,7 @@ public final class InstrumentationRegistry {
    */
   @Deprecated
   public static Bundle getArguments() {
-    Bundle instance = arguments.get();
-    if (null == instance) {
-      throw new IllegalStateException(
-          "No instrumentation arguments registered! "
-              + "Are you running under an Instrumentation which registers arguments?");
-    }
-    return new Bundle(instance);
+    return androidx.test.platform.app.InstrumentationRegistry.getArguments();
   }
 
   /**
@@ -109,12 +94,27 @@ public final class InstrumentationRegistry {
    *
    * @param instrumentation the instrumentation currently running.
    * @param arguments the arguments for this application. Null deregisters any existing arguments.
-   * @deprecated use {@link androidx.test.platform.app.InstrumentationRegistry#getInstrumentation()}
+   * @deprecated use {@link
+   *     androidx.test.platform.app.InstrumentationRegistry#registerInstance(Instrumentation,
+   *     Bundle)}
    */
   @Deprecated
   public static void registerInstance(Instrumentation instrumentation, Bundle arguments) {
-    instrumentationRef.set(instrumentation);
-    InstrumentationRegistry.arguments.set(new Bundle(arguments));
+    androidx.test.platform.app.InstrumentationRegistry.registerInstance(instrumentation, arguments);
+  }
+
+  /**
+   * Lazily records/exposes the instrumentation currently running.
+   *
+   * <p>This is a global registry - so be aware of the impact of calling this method!
+   *
+   * <p>Note that this and {@link #registerInstance(Instrumentation, Bundle)}} override each other
+   * with respect to which Instrumentation is saved.
+   */
+  public static void registerInstrumentationProvider(
+      InstrumentationProvider instrumentationProvider, Bundle bundle) {
+    androidx.test.platform.app.InstrumentationRegistry.registerInstrumentationProvider(
+        instrumentationProvider, bundle);
   }
 
   private InstrumentationRegistry() {}
