@@ -30,7 +30,7 @@ public final class UsageTrackerRegistry {
     // Espresso version includes: Espresso, Espresso-Web, Intents, Espresso-MPE
     String ESPRESSO_VERSION = "3.4.0-alpha04";
     // Runner version includes: Runner, Rules, ATO, Monitor
-    String RUNNER_VERSION = "1.3.1-alpha04";
+    String RUNNER_VERSION = "1.4.0-alpha04";
     // Test services version.
     String SERVICES_VERSION = RUNNER_VERSION;
   }
