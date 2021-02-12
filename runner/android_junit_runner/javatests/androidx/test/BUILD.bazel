@@ -76,6 +76,9 @@ android_library_instrumentation_tests(
             "MyParameterizedTest.java",
             # suppressed
             "TheoriesAndTestsTogether.java",
+                        # tested separately
+            "internal/runner/ClassPathScannerTest.java",
+
         ] + PARAMETERIZED_SRCS + UI_THREAD_STATEMENT_TEST_EXAMPLES,
     ),
     args = [
@@ -93,10 +96,9 @@ android_library_instrumentation_tests(
         "//core",
         "//ext/junit",
         "//runner/android_junit_runner",
-        "//runner/android_junit_runner/java/androidx/test/internal/runner/coverage",
         "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
         "//runner/rules",
-        "//services/storage/java/androidx/test/services/storage/internal:storage",
+        "//services/events/java/androidx/test/services/events",
         "@maven//:com_google_truth_truth",
         "@maven//:com_linkedin_dexmaker_dexmaker",
         "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
