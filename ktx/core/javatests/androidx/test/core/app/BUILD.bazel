@@ -38,6 +38,7 @@ kt_android_library(
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
     ],
+    testonly = 1,
 )
 
 android_binary(
