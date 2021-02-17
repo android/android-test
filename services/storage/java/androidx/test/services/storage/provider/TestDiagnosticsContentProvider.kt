@@ -85,17 +85,17 @@ class TestDiagnosticsContentProvider : ContentProvider() {
           it.name == DIAGNOSTIC_SERVER_PORT_ARG
         }?.value
 
-        // If we receive [PORT_ZERO], use the default port instead
+        // If we receive [PORT_ZERO], use the invalid port instead
         serverPort?.let {
           if (it == PORT_ZERO.toString()) {
-            DEFAULT_SERVER_PORT.toString()
+            INVALID_SERVER_PORT.toString()
           } else {
             serverPort
           }
         }
 
         // If we receive no port, set it to the default port
-        serverPort = serverPort ?: INVALID_SERVER_PORT.toString()
+        serverPort = serverPort ?: DEFAULT_SERVER_PORT.toString()
         return serverPort.toInt()
       } catch (e: IOException) {
         throw RuntimeException("Not able to read from file: " + testArgsFile.name, e)
