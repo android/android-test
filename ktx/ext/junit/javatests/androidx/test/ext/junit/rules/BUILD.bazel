@@ -115,6 +115,27 @@ kt_android_library(
     ],
 )
 
+android_local_test(
+    name = "ActivityScenarioRuleWithCustomIntentKotlinTest",
+    manifest = "AndroidManifest_target.xml",
+    deps = [
+        ":ActivityScenarioRuleWithCustomIntentKotlinTest_lib",
+        ":robolectric_config",
+        "//:androidx_lifecycle_common",
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//core/javatests/androidx/test/core/app/testing:manifest",
+        "//ext/junit",
+        "//ext/truth",
+        "//ktx/core",
+        "//ktx/ext/junit",
+        "//runner/monitor",
+        "@guava_jar//jar",
+        "@junit//jar",
+        "@robolectric//bazel:robolectric",
+        "@truth//jar",
+    ],
+)
 
 android_binary(
     name = "ActivityScenarioRuleWithCustomIntentKotlinTest_test_apk",
