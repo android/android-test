@@ -18,7 +18,7 @@ package androidx.test.multidex.app;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.multidex.MultiDex;
+import androidx.multidex.MultiDex;
 import android.util.Log;
 
 /** MultiDexApplication is necessary to install / extract additional dex files */

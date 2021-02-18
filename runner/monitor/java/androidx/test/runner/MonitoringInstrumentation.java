@@ -186,7 +186,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
     // need to install it here, if its on classpath.
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       try {
-        Class<?> multidex = Class.forName("android.support.multidex.MultiDex");
+        Class<?> multidex = Class.forName("androidx.multidex.MultiDex");
         try {
           Method installInstrumentation =
               multidex.getDeclaredMethod("installInstrumentation", Context.class, Context.class);
