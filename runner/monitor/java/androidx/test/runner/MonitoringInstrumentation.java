@@ -186,12 +186,17 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
     // need to install it here, if its on classpath.
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       try {
-        Class<?> multidex = Class.forName("androidx.multidex.MultiDex");
+        Class<?> multidex = getMultiDexClass();
         try {
           Method installInstrumentation =
               multidex.getDeclaredMethod("installInstrumentation", Context.class, Context.class);
           installInstrumentation.invoke(null, getContext(), getTargetContext());
         } catch (NoSuchMethodException nsme) {
+          Log.w(
+              TAG,
+              "Could not find MultiDex.installInstrumentation. Calling MultiDex.install instead."
+                  + " Is an old version of the multidex library being used? If test app is using"
+                  + " multidex, classes might not be found");
           installOldMultiDex(multidex);
         }
       } catch (ClassNotFoundException ignored) {
@@ -203,6 +208,15 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       } catch (IllegalAccessException iae) {
         throw new RuntimeException("multidex is available at runtime, but calling it failed.", iae);
       }
+    }
+  }
+
+  private static Class<?> getMultiDexClass() throws ClassNotFoundException {
+    try {
+      return Class.forName("androidx.multidex.MultiDex");
+    } catch (ClassNotFoundException e) {
+      // check for support multidex
+      return Class.forName("androidx.multidex.MultiDex");
     }
   }
 

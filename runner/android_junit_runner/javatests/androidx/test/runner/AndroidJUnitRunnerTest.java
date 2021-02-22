@@ -224,16 +224,4 @@ public class AndroidJUnitRunnerTest {
     Assert.assertTrue(pathsToScan.contains("/foo/bar.dex"));
     Assert.assertTrue(pathsToScan.contains("/foo/baz.dex"));
   }
-
-  /** Ensure everything works when classpathToScan is not explicitly provided. */
-  @Test
-  public void testDefaultClasspathIsAdded() {
-    Bundle b = new Bundle();
-    RunnerArgs runnerArgs =
-        new RunnerArgs.Builder()
-            .fromBundle(InstrumentationRegistry.getInstrumentation(), b)
-            .build();
-    androidJUnitRunner.buildRequest(runnerArgs, new Bundle());
-    verify(testRequestBuilder, times(1)).addPathToScan("/apps/foo.apk");
-  }
 }

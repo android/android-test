@@ -15,49 +15,50 @@
  */
 package androidx.test.internal.runner;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static com.google.common.truth.Truth.assertThat;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.SmallTest;
-import androidx.test.internal.runner.ClassPathScanner.InclusivePackageNamesFilter;
-import androidx.test.platform.app.InstrumentationRegistry;
-import java.io.File;
+import androidx.test.internal.runner.ClassPathScanner.AcceptAllFilter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/** Unit tests for {@link ClassPathScanner}. */
+/**
+ * Unit tests for {@link ClassPathScanner}.
+ *
+ * <p>is the instrumentation target, and is a multidex binary. Its critical this test is executed
+ * across APIs <=20 and newer APIs.
+ */
 @RunWith(AndroidJUnit4.class)
-@SmallTest
 public class ClassPathScannerTest {
 
   private ClassPathScanner classPathScanner;
 
   @Before
   public void setUp() throws Exception {
-    classPathScanner = new ClassPathScanner(getClassPathToScan());
+    // scan the target aka app under test
+    classPathScanner =
+        new ClassPathScanner(ClassPathScanner.getDefaultClasspaths(getInstrumentation()));
   }
 
-  private static String[] getClassPathToScan() {
-    String classpathArg =
-        InstrumentationRegistry.getArguments().getString(RunnerArgs.ARGUMENT_CLASSPATH_TO_SCAN);
-    if (classpathArg != null) {
-      return classpathArg.split(File.pathSeparator);
-    } else {
-      return new String[] {getApplicationContext().getPackageCodePath()};
-    }
-  }
-
+  /** Verify that all classes are scanned in a multidex apk */
   @Test
-  public void inclusivePackageNamesFilter() throws IOException {
-    Set<String> result =
-        classPathScanner.getClassPathEntries(
-            new InclusivePackageNamesFilter(Arrays.asList("androidx.test.annotation")));
-    assertThat(result).hasSize(1);
-    assertThat(result).contains("androidx.test.annotation.Beta");
+  public void multidex() throws IOException {
+    Set<String> result = classPathScanner.getClassPathEntries(new AcceptAllFilter());
+    assertThat(result)
+        .containsAtLeast(
+            "androidx.test.multidex.app.MultiDexTestClassA",
+            "androidx.test.multidex.app.MultiDexTestClassB",
+            "androidx.test.multidex.app.MultiDexTestClassC",
+            "androidx.test.multidex.app.MultiDexTestClassD",
+            "androidx.test.multidex.app.MultiDexApplication");
+
+    // ensure classes from binary under test are not included
+    // this relies on build adding "androidx.test.testing.fixtures.CustomTestFilter" to target app
+    // only
+    assertThat(result).doesNotContain("androidx.test.testing.fixtures.CustomTestFilter");
   }
 }
