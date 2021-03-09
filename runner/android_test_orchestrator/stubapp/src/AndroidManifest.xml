@@ -27,6 +27,11 @@
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.ACCESS_CONTENT_PROVIDERS_EXTERNALLY" />
 
+  <!-- Allow query of any normal app on the device in R+.
+       AndroidTestOrchestrator needs this permission in order to
+       run pm clear command against installed tested packages. -->
+  <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+
   <uses-sdk
       android:minSdkVersion="14"
       android:targetSdkVersion="30" />

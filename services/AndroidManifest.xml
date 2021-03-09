@@ -33,6 +33,9 @@
    <uses-permission android:name="android.permission.INTERNET"/>
    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
+   <!-- Allow query of any normal app on the device in R+ -->
+   <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+
    <application android:label="TestServices"
                 android:directBootAware="true"
                 android:requestLegacyExternalStorage = "true"
