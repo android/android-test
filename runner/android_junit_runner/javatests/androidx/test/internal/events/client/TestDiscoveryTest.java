@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.services.events.discovery.TestDiscoveryEvent;
@@ -63,5 +64,19 @@ public class TestDiscoveryTest {
     assertThat(
         infoEvent.testCase.getClassAndMethodName(),
         is(getClass().getCanonicalName() + "#sampleTest"));
+  }
+
+  @Test
+  public void addBogusTest() throws TestEventClientException {
+    ArgumentCaptor<TestDiscoveryEvent> argument = ArgumentCaptor.forClass(TestDiscoveryEvent.class);
+
+    TestDiscovery testDiscovery = new TestDiscovery(discoveryEventService);
+    Description testDescription = Description.createTestDescription("a.b", "initializationError");
+    testDiscovery.addTests(testDescription);
+
+    verify(discoveryEventService, times(2)).send(argument.capture());
+    assertThat(argument.getAllValues().get(0), instanceOf(TestDiscoveryStartedEvent.class));
+    assertThat(argument.getAllValues().get(1), instanceOf(TestDiscoveryFinishedEvent.class));
+    verifyNoMoreInteractions(discoveryEventService);
   }
 }

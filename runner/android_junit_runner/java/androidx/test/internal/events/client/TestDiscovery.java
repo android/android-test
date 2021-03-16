@@ -34,7 +34,6 @@ import org.junit.runner.Description;
 public final class TestDiscovery {
   private static final String TAG = "TestDiscovery";
   private final TestDiscoveryEventService testDiscoveryEventService;
-  private static final String INIT_ERROR_METHOD_NAME = "initializationError";
 
   public TestDiscovery(@NonNull TestDiscoveryEventService testDiscoveryEventService) {
     this.testDiscoveryEventService =
@@ -53,19 +52,22 @@ public final class TestDiscovery {
     testDiscoveryEventService.send(new TestDiscoveryFinishedEvent());
   }
 
-  private static boolean methodNameIsValid(String methodName) {
-    // This is pretty gross, but if JUnit fails to create a class it still creates a Description for
-    // it in the form of initializationError(foo.bar.EmptyTestClass). We just ignore tests with this
-    // name even if they are legitimate.
-    return methodName != null && !methodName.equals(INIT_ERROR_METHOD_NAME);
-  }
-
   private void addTest(@NonNull Description description) {
     if (description.isEmpty()) {
       Log.d(TAG, "addTest called with an empty test description");
       return;
     }
-    if (description.isTest() && methodNameIsValid(description.getMethodName())) {
+    if (description.isTest()) {
+      if (!JUnitValidator.validateDescription(description)) {
+        Log.w(
+            TAG,
+            "JUnit reported "
+                + description.getClassName()
+                + "#"
+                + description.getMethodName()
+                + "; discarding as bogus.");
+        return;
+      }
       try {
         testDiscoveryEventService.send(new TestFoundEvent(getTestCaseFromDescription(description)));
       } catch (TestEventException e) {
