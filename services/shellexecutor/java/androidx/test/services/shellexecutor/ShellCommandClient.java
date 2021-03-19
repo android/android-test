@@ -20,6 +20,7 @@ import android.content.Context;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.test.services.shellexecutor.Command.Stub;
@@ -56,7 +57,7 @@ final class ShellCommandClient {
    * @param context A context
    * @param secret A string representing the speakeasy binder key
    * @param command The shell command to be executed.
-   * @param parameters A {@link Map} parameters to be given to the shell command
+   * @param parameters A {@link List} of parameters to be given to the shell command
    * @param shellEnv A {@link Map} of shell environment variables to be set
    * @param executeThroughShell If set to true, the command string will be executed through the
    *     shell with parameters given as additional shell arguments.
@@ -66,8 +67,8 @@ final class ShellCommandClient {
       Context context,
       String secret,
       String command,
-      List<String> parameters,
-      Map<String, String> shellEnv,
+      @Nullable List<String> parameters,
+      @Nullable Map<String, String> shellEnv,
       boolean executeThroughShell,
       long timeoutMs)
       throws ClientNotConnected, IOException, RemoteException {
@@ -125,7 +126,7 @@ final class ShellCommandClient {
    * @param context A context
    * @param secret A string representing the speakeasy binder key
    * @param command The shell command to be executed.
-   * @param parameters A {@link Map} parameters to be given to the shell command
+   * @param parameters A {@link List} of parameters to be given to the shell command
    * @param shellEnv A {@link Map} of shell environment variables to be set
    * @param executeThroughShell If set to true, the command string will be executed through the
    *     shell with parameters given as additional shell arguments.
@@ -135,8 +136,8 @@ final class ShellCommandClient {
       Context context,
       String secret,
       String command,
-      List<String> parameters,
-      Map<String, String> shellEnv,
+      @Nullable List<String> parameters,
+      @Nullable Map<String, String> shellEnv,
       boolean executeThroughShell,
       long timeoutMs)
       throws ClientNotConnected, IOException, RemoteException {

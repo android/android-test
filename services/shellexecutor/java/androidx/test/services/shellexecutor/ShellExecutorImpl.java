@@ -57,8 +57,7 @@ public final class ShellExecutorImpl implements ShellExecutor {
       List<String> parameters,
       Map<String, String> shellEnv,
       boolean executeThroughShell,
-      long timeoutMs)
-      throws IOException {
+      long timeoutMs) {
     try {
       return ShellCommandClient.execOnServerSync(
           context, binderKey, command, parameters, shellEnv, executeThroughShell, timeoutMs);
@@ -78,8 +77,7 @@ public final class ShellExecutorImpl implements ShellExecutor {
       String command,
       List<String> parameters,
       Map<String, String> shellEnv,
-      boolean executeThroughShell)
-      throws IOException {
+      boolean executeThroughShell) {
     return executeShellCommandSync(command, parameters, shellEnv, executeThroughShell, 0L);
   }
 
@@ -90,8 +88,7 @@ public final class ShellExecutorImpl implements ShellExecutor {
       List<String> parameters,
       Map<String, String> shellEnv,
       boolean executeThroughShell,
-      long timeoutMs)
-      throws IOException, RemoteException {
+      long timeoutMs) {
     try {
       return ShellCommandClient.execOnServer(
           context, binderKey, command, parameters, shellEnv, executeThroughShell, timeoutMs);
@@ -111,8 +108,7 @@ public final class ShellExecutorImpl implements ShellExecutor {
       String command,
       List<String> parameters,
       Map<String, String> shellEnv,
-      boolean executeThroughShell)
-      throws IOException, RemoteException {
+      boolean executeThroughShell) {
     return executeShellCommand(command, parameters, shellEnv, executeThroughShell, 0L);
   }
 }

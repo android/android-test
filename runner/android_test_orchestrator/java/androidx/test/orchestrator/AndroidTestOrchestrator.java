@@ -42,7 +42,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.IBinder;
-import android.os.RemoteException;
 import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
@@ -56,13 +55,11 @@ import androidx.test.orchestrator.listeners.OrchestrationResult;
 import androidx.test.orchestrator.listeners.OrchestrationResultPrinter;
 import androidx.test.orchestrator.listeners.OrchestrationXmlTestRunListener;
 import androidx.test.runner.UsageTrackerFacilitator;
-import androidx.test.services.shellexecutor.ClientNotConnected;
 import androidx.test.services.shellexecutor.ShellExecSharedConstants;
 import androidx.test.services.shellexecutor.ShellExecutor;
 import androidx.test.services.shellexecutor.ShellExecutorImpl;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -530,11 +527,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     try {
       ShellExecutor shellExecutor = new ShellExecutorImpl(context, secret);
       cmdResult = shellExecutor.executeShellCommandSync(cmd, params, new HashMap<>(), false);
-    } catch (ClientNotConnected clientNotConnected) {
-      exception = clientNotConnected;
-    } catch (IOException e) {
-      exception = e;
-    } catch (RemoteException e) {
+    } catch (RuntimeException e) {
       exception = e;
     } finally {
       if (exception != null) {
