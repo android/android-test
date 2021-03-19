@@ -16,7 +16,8 @@
 
 package androidx.test.services.shellexecutor;
 
-import androidx.annotation.Nullable;
+import android.os.RemoteException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -36,73 +37,77 @@ public interface ShellExecutor {
    * Execute a command with elevated permissions and block.
    *
    * @param command The shell command to be executed.
-   * @param parameters A {@link List} of parameters to be given to the shell command
+   * @param parameters A {@link Map} parameters to be given to the shell command
    * @param shellEnv A {@link Map} of shell environment variables to be set
    * @param executeThroughShell If set to true, the command string will be executed through the
-   *     shell with parameters given as additional shell arguments, as in "sh -c 'command' p1 ...".
+   *     shell with parameters given as additional shell arguments.
    * @param timeoutMs Optional, destroys the executing subprocess if it runs longer than this
    *     timeout.
    * @return {@link String} representing the contents of the shell output of the command.
-   * @throws RuntimeException if cannot execute command on executor service.
+   * @throws IOException if cannot execute command on executor service.
    */
   String executeShellCommandSync(
       String command,
-      @Nullable List<String> parameters,
-      @Nullable Map<String, String> shellEnv,
+      List<String> parameters,
+      Map<String, String> shellEnv,
       boolean executeThroughShell,
-      long timeoutMs);
+      long timeoutMs)
+      throws ClientNotConnected, IOException, RemoteException;
 
   /**
    * Execute a command with elevated permissions and block.
    *
    * @param command The shell command to be executed.
-   * @param parameters A {@link List} of parameters to be given to the shell command
+   * @param parameters A {@link Map} parameters to be given to the shell command
    * @param shellEnv A {@link Map} of shell environment variables to be set
    * @param executeThroughShell If set to true, the command string will be executed through the
-   *     shell with parameters given as additional shell arguments, as in "sh -c 'command' p1 ...".
+   *     shell with parameters given as additional shell arguments.
    * @return {@link String} representing the contents of the shell output of the command.
-   * @throws RuntimeException if cannot execute command on executor service.
+   * @throws IOException if cannot execute command on executor service.
    */
   String executeShellCommandSync(
       String command,
-      @Nullable List<String> parameters,
-      @Nullable Map<String, String> shellEnv,
-      boolean executeThroughShell);
+      List<String> parameters,
+      Map<String, String> shellEnv,
+      boolean executeThroughShell)
+      throws ClientNotConnected, IOException, RemoteException;
 
   /**
    * Execute a command with elevated permissions and return immediately.
    *
    * @param command The shell command to be executed.
-   * @param parameters A {@link List} of parameters to be given to the shell command
+   * @param parameters A {@link Map} parameters to be given to the shell command
    * @param shellEnv A {@link Map} of shell environment variables to be set
    * @param executeThroughShell If set to true, the command string will be executed through the
-   *     shell with parameters given as additional shell arguments, as in "sh -c 'command' p1 ...".
+   *     shell with parameters given as additional shell arguments.
    * @param timeoutMs Optional, destroys the executing subprocess if it runs longer than this
    *     timeout.
    * @return {@link java.io.InputStream} representing the shell output of the command.
-   * @throws RuntimeException if cannot execute command on executor service.
+   * @throws IOException if cannot execute command on executor service.
    */
   InputStream executeShellCommand(
       String command,
-      @Nullable List<String> parameters,
-      @Nullable Map<String, String> shellEnv,
+      List<String> parameters,
+      Map<String, String> shellEnv,
       boolean executeThroughShell,
-      long timeoutMs);
+      long timeoutMs)
+      throws ClientNotConnected, IOException, RemoteException;
 
   /**
    * Execute a command with elevated permissions and return immediately.
    *
    * @param command The shell command to be executed.
-   * @param parameters A {@link List} of parameters to be given to the shell command
+   * @param parameters A {@link Map} parameters to be given to the shell command
    * @param shellEnv A {@link Map} of shell environment variables to be set
    * @param executeThroughShell If set to true, the command string will be executed through the
-   *     shell with parameters given as additional shell arguments, as in "sh -c 'command' p1 ...".
+   *     shell with parameters given as additional shell arguments.
    * @return {@link java.io.InputStream} representing the shell output of the command.
-   * @throws RuntimeException if cannot execute command on executor service.
+   * @throws IOException if cannot execute command on executor service.
    */
   InputStream executeShellCommand(
       String command,
-      @Nullable List<String> parameters,
-      @Nullable Map<String, String> shellEnv,
-      boolean executeThroughShell);
+      List<String> parameters,
+      Map<String, String> shellEnv,
+      boolean executeThroughShell)
+      throws ClientNotConnected, IOException, RemoteException;
 }
