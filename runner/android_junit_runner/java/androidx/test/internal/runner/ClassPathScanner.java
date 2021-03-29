@@ -19,7 +19,6 @@ package androidx.test.internal.runner;
 import android.app.Instrumentation;
 import android.content.pm.ApplicationInfo;
 import android.os.Build.VERSION;
-import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 import dalvik.system.DexFile;
 import java.io.File;
@@ -41,7 +40,6 @@ import java.util.regex.Pattern;
  *
  * <p>Adapted from tools/tradefederation/..ClassPathScanner
  */
-@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
 public class ClassPathScanner {
 
   private static final String TAG = "ClassPathScanner";
