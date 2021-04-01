@@ -52,11 +52,11 @@ import portpicker
 
 
 from tools.android.emulator import resources
-from google.apputils import stopwatch
 
 from tools.android.emulator import common
 from tools.android.emulator import emulator_meta_data_pb2
 from tools.android.emulator import reporting
+from tools.android.emulator import stopwatch
 
 from tools.android.emulator import xserver
 
