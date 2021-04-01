@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Classes to interact with android emulator."""
+from __future__ import print_function
 
 
 
@@ -1999,7 +2000,7 @@ class EmulatedDevice(object):
 
       if self.delete_temp_on_exit and self._emulator_tmp_dir:
         logging.info('Cleaning up data dirs.')
-        print 'cleanup data dirs...'
+        print('cleanup data dirs...')
         self.CleanUp()
         logging.info('Clean up done.')
 
@@ -3523,8 +3524,7 @@ class EmulatedDevice(object):
 
   def GetApiCodeName(self):
     """Returns the codename of the image if it exists in source.properties."""
-    if self._source_properties and self._source_properties.has_key(
-        API_CODE_NAME):
+    if self._source_properties and API_CODE_NAME in self._source_properties:
       return self._source_properties[API_CODE_NAME]
     return ''
 
