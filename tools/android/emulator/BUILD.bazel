@@ -130,7 +130,7 @@ py_binary(
     srcs = ["unified_launcher.py"],
     imports = ["../../.."],
     main = "unified_launcher.py",
-    python_version = "PY2",
+    python_version = "PY2AND3",
     deps = [
         ":emulated_device",
         ":emulator_meta_data_pb_py_pb2",
