@@ -17,6 +17,8 @@
 
 package(default_visibility = ["//visibility:public"])
 
+load("@com_google_protobuf//:protobuf.bzl", "py_proto_library")
+
 proto_library(
     name = "emulator_meta_data_pb",
     srcs = ["emulator_meta_data.proto"],
@@ -27,10 +29,9 @@ java_proto_library(
     deps = [":emulator_meta_data_pb"],
 )
 
-py_library(
+py_proto_library(
     name = "emulator_meta_data_pb_py_pb2",
-    srcs = ["emulator_meta_data_pb2.py"],
-    deps = ["@com_google_protobuf//:protobuf_python"],
+    srcs = [":emulator_meta_data.proto"],
 )
 
 MOX = "@mox_archive//:mox"
