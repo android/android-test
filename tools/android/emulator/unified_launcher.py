@@ -18,11 +18,10 @@ from __future__ import print_function
 
 
 import collections
-import ConfigParser
+import configparser
 import json
 import logging
 import os
-import StringIO
 import subprocess
 import sys
 import tempfile
@@ -33,6 +32,8 @@ import time
 from absl import app
 from absl import flags
 
+from io import StringIO
+
 from google.protobuf import text_format
 from tools.android.emulator import resources
 
@@ -40,7 +41,6 @@ from tools.android.emulator import common
 from tools.android.emulator import emulated_device
 from tools.android.emulator import emulator_meta_data_pb2
 from tools.android.emulator import reporting
-
 
 FLAGS = flags.FLAGS
 flags.DEFINE_enum('action', None,
@@ -749,9 +749,9 @@ def _TryToConvertIniStyleFileToDict(ini_style_file):
   if ini_style_file:
     with open(ini_style_file) as real_text_handle:
       text = real_text_handle.read()
-      filehandle = StringIO.StringIO('[android]\n' + text)
+      filehandle = StringIO('[android]\n' + text)
       try:
-        config = ConfigParser.ConfigParser()
+        config = configparser.ConfigParser()
         config.readfp(filehandle)
         return dict(config.items('android'))
       finally:
