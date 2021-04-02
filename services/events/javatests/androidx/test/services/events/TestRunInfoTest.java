@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,35 +27,40 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * Unit tests for the parcelable {@link TestCaseInfo}. We write and read from the parcel to test
+ * Unit tests for the parcelable {@link TestRunInfo}. We write and read from the parcel to test
  * everything is done correctly.
  */
 @RunWith(AndroidJUnit4.class)
-public class TestCaseInfoTest {
-
-  private final String className = "DummyTestClass";
-  private final String methodName = "DummyTestMethod";
+public class TestRunInfoTest {
+  private static final String CLASS_NAME = "Class1";
+  private static final String METHOD_NAME = "Method1";
 
   @Test
   public void testCaseToParcelableTest_basicClassNameAndMethodNameGiven() {
-
-    TestCaseInfo testCase =
-        new TestCaseInfo(className, methodName, new ArrayList<>(), new ArrayList<>());
+    String className2 = "Class2";
+    String methodName2 = "Method2";
+    List<TestCaseInfo> testCases = new ArrayList<>();
+    testCases.add(new TestCaseInfo(CLASS_NAME, METHOD_NAME, new ArrayList<>(), new ArrayList<>()));
+    testCases.add(new TestCaseInfo(className2, methodName2, new ArrayList<>(), new ArrayList<>()));
+    TestRunInfo testRun = new TestRunInfo(CLASS_NAME, testCases);
     Parcel parcel = Parcel.obtain();
-    testCase.writeToParcel(parcel, 0);
+    testRun.writeToParcel(parcel, 0);
 
     parcel.setDataPosition(0);
 
-    TestCaseInfo testCaseFromParcel = TestCaseInfo.CREATOR.createFromParcel(parcel);
+    TestRunInfo testRunFromParcel = TestRunInfo.CREATOR.createFromParcel(parcel);
 
-    assertThat(testCaseFromParcel.className).isEqualTo(className);
-    assertThat(testCaseFromParcel.methodName).isEqualTo(methodName);
-    assertThat(testCaseFromParcel.methodAnnotations).isEmpty();
-    assertThat(testCaseFromParcel.classAnnotations).isEmpty();
+    assertThat(testRunFromParcel.testRunName).isEqualTo(CLASS_NAME);
+    assertThat(testRunFromParcel.testCases.size()).isEqualTo(2);
+    assertThat(testRunFromParcel.testCases.get(0).className).isEqualTo(CLASS_NAME);
+    assertThat(testRunFromParcel.testCases.get(0).methodName).isEqualTo(METHOD_NAME);
+    assertThat(testRunFromParcel.testCases.get(1).className).isEqualTo(className2);
+    assertThat(testRunFromParcel.testCases.get(1).methodName).isEqualTo(methodName2);
   }
 
   @DummyAnnotation(
@@ -65,24 +70,29 @@ public class TestCaseInfoTest {
   private static void testMethodToGetAnnotations() {}
 
   @Test
-  public void testCaseToParcelableTest_withMethodAnnotations() throws NoSuchMethodException {
+  public void testRunToParcelableTest_testCasesKeepAnnotationInfo() throws NoSuchMethodException {
     Annotation[] annotations =
-        TestCaseInfoTest.class
+        TestRunInfoTest.class
             .getDeclaredMethod("testMethodToGetAnnotations")
             .getDeclaredAnnotations();
 
-    TestCaseInfo testCase =
+    List<TestCaseInfo> testCases = new ArrayList<>();
+    testCases.add(
         new TestCaseInfo(
-            className, methodName, getAnnotationsFromArray(annotations), new ArrayList<>());
+            CLASS_NAME, METHOD_NAME, getAnnotationsFromArray(annotations), new ArrayList<>()));
+    TestRunInfo testRun = new TestRunInfo(CLASS_NAME, testCases);
     Parcel parcel = Parcel.obtain();
-    testCase.writeToParcel(parcel, 0);
+    testRun.writeToParcel(parcel, 0);
 
     parcel.setDataPosition(0);
 
-    TestCaseInfo testCaseFromParcel = TestCaseInfo.CREATOR.createFromParcel(parcel);
+    TestRunInfo testRunFromParcel = TestRunInfo.CREATOR.createFromParcel(parcel);
 
-    assertThat(testCaseFromParcel.className).isEqualTo(className);
-    assertThat(testCaseFromParcel.methodName).isEqualTo(methodName);
+    assertThat(testRunFromParcel.testRunName).isEqualTo(CLASS_NAME);
+    assertThat(testRunFromParcel.testCases.size()).isEqualTo(1);
+    TestCaseInfo testCaseFromParcel = testRunFromParcel.testCases.get(0);
+    assertThat(testCaseFromParcel.className).isEqualTo(CLASS_NAME);
+    assertThat(testCaseFromParcel.methodName).isEqualTo(METHOD_NAME);
 
     // Assertion for the inserted method annotation
     assertThat(testCaseFromParcel.methodAnnotations).isNotEmpty();

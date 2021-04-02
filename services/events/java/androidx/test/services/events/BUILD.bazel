@@ -6,15 +6,17 @@ android_library(
     idl_parcelables = [
         "discovery/TestDiscoveryEvent.aidl",
         "run/TestRunEvent.aidl",
+        "platform/TestPlatformEvent.aidl",
     ],
-    visibility = ["//visibility:public"],
     idl_srcs = [
         "discovery/ITestDiscoveryEvent.aidl",
         "run/ITestRunEvent.aidl",
+        "platform/ITestPlatformEvent.aidl",
     ],
+    visibility = ["//visibility:public"],
     deps = [
-        "//runner/monitor/java/androidx/test:monitor",
         "//:androidx_annotation",
+        "//runner/monitor/java/androidx/test:monitor",
         "@maven//:junit_junit",
     ],
 )
