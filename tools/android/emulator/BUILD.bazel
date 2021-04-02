@@ -126,11 +126,12 @@ py_library(
 )
 
 py_binary(
-    name = "unified_launcher_head",
+    name = "unified_launcher_head_py2",
     srcs = ["unified_launcher.py"],
     imports = ["../../.."],
     main = "unified_launcher.py",
-    python_version = "PY2AND3",
+    python_version = "PY2",
+    visibility = ["//visibility:private"],
     deps = [
         ":emulated_device",
         ":emulator_meta_data_pb_py_pb2",
@@ -140,6 +141,33 @@ py_binary(
         "@com_google_protobuf//:protobuf_python",
         PORTPICKER,
     ] + PYGLIB,
+)
+
+py_binary(
+    name = "unified_launcher_head_py3",
+    srcs = ["unified_launcher.py"],
+    imports = ["../../.."],
+    main = "unified_launcher.py",
+    python_version = "PY3",
+    visibility = ["//visibility:private"],
+    deps = [
+        ":emulated_device",
+        ":emulator_meta_data_pb_py_pb2",
+        ":reporting",
+        ":resources",
+        ":xserver",
+        "@com_google_protobuf//:protobuf_python",
+        PORTPICKER,
+    ] + PYGLIB,
+)
+
+alias(
+    name = "unified_launcher_head",
+    actual = select({
+        "@bazel_tools//tools/python:PY2": ":unified_launcher_head_py2",
+        "@bazel_tools//tools/python:PY3": ":unified_launcher_head_py3",
+        "//conditions:default": ":unified_launcher_head_py3",
+    }),
 )
 
 py_library(
