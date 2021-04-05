@@ -1,7 +1,7 @@
-package(default_visibility = ["//:__subpackages__"])
-
 load("//build_extensions:maven_repo.bzl", "maven_repository")
 load("@rules_jvm_external//:defs.bzl", "artifact")
+
+package(default_visibility = ["//wearables/qa/watch/..."])
 
 exports_files([
     "proguard_binary.cfg",
