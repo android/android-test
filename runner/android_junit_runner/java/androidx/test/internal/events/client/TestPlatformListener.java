@@ -125,7 +125,7 @@ public final class TestPlatformListener extends RunListener {
             // The test was supposed to be run but was never finished
             testCaseToStatus.put(test, Status.CANCELLED);
           }
-          testFinished(test);
+          testFinishedInternal(test, timeStamp);
         }
       }
     }
@@ -157,6 +157,11 @@ public final class TestPlatformListener extends RunListener {
   @Override
   public void testFinished(Description description) {
     TimeStamp timeStamp = getTimeStamp();
+    testFinishedInternal(description, timeStamp);
+  }
+
+  // If the test is marked as finished during the test run finish, we use the same timestamp
+  private void testFinishedInternal(Description description, TimeStamp timeStamp) {
     if (isInitError(description)) {
       return; // This isn't a real test method, don't send an update to the service
     }
@@ -209,6 +214,7 @@ public final class TestPlatformListener extends RunListener {
   /** {@inheritDoc} */
   @Override
   public void testIgnored(Description description) {
+    TimeStamp timeStamp = getTimeStamp();
     Log.i(
         TAG,
         "TestIgnoredEvent("
@@ -218,7 +224,7 @@ public final class TestPlatformListener extends RunListener {
             + "#"
             + description.getMethodName());
     testCaseToStatus.put(description, Status.IGNORED);
-    testFinished(description);
+    testFinishedInternal(description, timeStamp);
   }
 
   /** Reports the process crash event with a given exception. */
@@ -270,7 +276,7 @@ public final class TestPlatformListener extends RunListener {
 
   private TestPlatformEvent createErrorEvent(Failure failure, TimeStamp timeStamp) {
     Description descriptionToUse = failure.getDescription();
-    if (!descriptionToUse.isTest() && !isInitError(descriptionToUse)) {
+    if (!descriptionToUse.isTest() || isInitError(descriptionToUse)) {
       descriptionToUse = testRunDescription;
     }
     ErrorInfo errorInfo =
