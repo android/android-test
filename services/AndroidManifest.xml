@@ -39,7 +39,6 @@
    <application android:label="TestServices"
                 android:directBootAware="true"
                 android:requestLegacyExternalStorage = "true"
-                android:forceQueryable="true"
                 tools:replace="android:label">
      <service
          android:directBootAware="true"

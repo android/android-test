@@ -26,7 +26,6 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="30" />
 
-    <!-- support for androidx.test.orchestrator clearPackageData -->
-    <application android:forceQueryable="true" />
+    <application />
 
 </manifest>
