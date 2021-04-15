@@ -344,6 +344,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
             // The testDiscoveryService and testRunEventsService args are used for Orchestrator V2:
             .setTestDiscoveryService(runnerArgs.testDiscoveryService)
             .setTestRunEventService(runnerArgs.testRunEventsService)
+            .setTestPlatformMigration(runnerArgs.testPlatformMigration)
             .build();
     testEventClient = TestEventClient.connect(getContext(), this, args);
     return testEventClient.isTestDiscoveryEnabled() || testEventClient.isTestRunEventsEnabled();
@@ -481,7 +482,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     } else {
       builder.addRunListener(new LogRunListener());
       if (testEventClient.isTestRunEventsEnabled()) {
-        builder.addRunListener(testEventClient.getNotificationRunListener());
+        builder.addRunListener(testEventClient.getRunListener());
       } else {
         builder.addRunListener(getInstrumentationResultPrinter());
       }
@@ -524,7 +525,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
       addDelayListener(args, builder);
       addCoverageListener(args, builder);
       if (testEventClient.isTestRunEventsEnabled()) {
-        builder.addRunListener(testEventClient.getNotificationRunListener());
+        builder.addRunListener(testEventClient.getRunListener());
       } else {
         builder.addRunListener(getInstrumentationResultPrinter());
       }

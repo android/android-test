@@ -113,7 +113,7 @@ public class TestEventClientTest {
 
     TestEventClient client = TestEventClient.connect(context, listener, args);
 
-    assertThat(client.getNotificationRunListener(), nullValue());
+    assertThat(client.getRunListener(), nullValue());
   }
 
   @Test
@@ -125,7 +125,7 @@ public class TestEventClientTest {
 
     TestEventClient client = TestEventClient.connect(context, listener, args);
 
-    assertThat(client.getNotificationRunListener(), instanceOf(RunListener.class));
+    assertThat(client.getRunListener(), instanceOf(RunListener.class));
   }
 
   @Test

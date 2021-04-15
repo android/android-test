@@ -37,6 +37,7 @@ public final class TestEventClientArgs {
   @Nullable public final String testDiscoveryService;
   @Nullable public final String testRunEventService;
   @Nullable public final ConnectionFactory connectionFactory;
+  public final boolean testPlatformMigration;
 
   private TestEventClientArgs(
       boolean isOrchestrated, int orchestratorVersion, @NonNull Builder builder) {
@@ -48,6 +49,7 @@ public final class TestEventClientArgs {
     this.testRunEventService = builder.testRunEventService;
     this.connectionFactory = builder.connectionFactory;
     this.orchestratorVersion = orchestratorVersion;
+    this.testPlatformMigration = builder.testPlatformMigration;
   }
 
   /** Creates a new {@link TestEventClientArgs.Builder} instance. */
@@ -66,6 +68,7 @@ public final class TestEventClientArgs {
     boolean isPrimaryInstProcess = true;
     boolean testDiscoveryRequested = false;
     boolean testRunEventsRequested = false;
+    boolean testPlatformMigration = false;
     @Nullable private ConnectionFactory connectionFactory;
     @Nullable private String orchestratorService;
     @Nullable private String testDiscoveryService;
@@ -106,6 +109,13 @@ public final class TestEventClientArgs {
     @NonNull
     public Builder setTestRunEventsRequested(boolean runEventsRequested) {
       this.testRunEventsRequested = runEventsRequested;
+      return this;
+    }
+
+    /** Temporary workaround - should this use the new test platform event client */
+    @NonNull
+    public Builder setTestPlatformMigration(boolean testPlatformMigration) {
+      this.testPlatformMigration = testPlatformMigration;
       return this;
     }
 
