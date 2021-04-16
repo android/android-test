@@ -83,6 +83,11 @@ public class RunnerArgs {
   static final String ARGUMENT_LIST_TESTS_FOR_ORCHESTRATOR = "listTestsForOrchestrator";
   static final String ARGUMENT_ORCHESTRATOR_DISCOVERY_SERVICE = "testDiscoveryService";
   static final String ARGUMENT_ORCHESTRATOR_RUN_EVENTS_SERVICE = "testRunEventsService";
+  // WARNING: DO NOT USE THIS FLAG
+  // This is a temporary flag to enable a migration to a new test platform event system. This will
+  // be removed in April 2021. Depending on this flag is discouraged and dependents will not be
+  // supported.
+  static final String ARGUMENT_TEST_PLATFORM_MIGRATION = "temporary_testPlatformMigration";
   // Specifies whether the `androidx.test.services` service is installed on the device.
   // Supposed to be used by the test infrastructure only.
   static final String ARGUMENT_USE_TEST_STORAGE_SERVICE = "useTestStorageService";
@@ -131,6 +136,7 @@ public class RunnerArgs {
   public final String shellExecBinderKey;
   public final boolean newRunListenerMode;
   public final String testsRegEx;
+  public final boolean testPlatformMigration;
 
   /** Encapsulates a test class and optional method. */
   public static class TestArg {
@@ -193,6 +199,7 @@ public class RunnerArgs {
     this.shellExecBinderKey = builder.shellExecBinderKey;
     this.newRunListenerMode = builder.newRunListenerMode;
     this.testsRegEx = builder.testsRegEx;
+    this.testPlatformMigration = builder.testPlatformMigration;
   }
 
   /** Builder for {@link RunnerArgs}. */
@@ -232,6 +239,7 @@ public class RunnerArgs {
     public String shellExecBinderKey;
     private boolean newRunListenerMode = false;
     private String testsRegEx = null;
+    private boolean testPlatformMigration = false;
 
     /**
      * Populate the arg data from the given Bundle.
@@ -298,6 +306,7 @@ public class RunnerArgs {
       this.shellExecBinderKey = bundle.getString(ARGUMENT_SHELL_EXEC_BINDER_KEY);
       this.newRunListenerMode = parseBoolean(bundle.getString(ARGUMENT_RUN_LISTENER_NEW_ORDER));
       this.testsRegEx = bundle.getString(ARGUMENT_TESTS_REGEX);
+      this.testPlatformMigration = parseBoolean(bundle.getString(ARGUMENT_TEST_PLATFORM_MIGRATION));
       return this;
     }
 

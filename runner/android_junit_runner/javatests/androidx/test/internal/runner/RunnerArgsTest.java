@@ -501,6 +501,7 @@ public class RunnerArgsTest {
     b.putString(RunnerArgs.ARGUMENT_RUN_LISTENER_NEW_ORDER, "true");
     b.putString(RunnerArgs.ARGUMENT_CLASSPATH_TO_SCAN, "/foo/baz/f.dex:/foo/bar/f.dex");
     b.putString(RunnerArgs.ARGUMENT_TESTS_REGEX, "myregex");
+    b.putString(RunnerArgs.ARGUMENT_TEST_PLATFORM_MIGRATION, "true");
 
     RunnerArgs fromBundle = new RunnerArgs.Builder().fromBundle(getInstrumentation(), b).build();
 

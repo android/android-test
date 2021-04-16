@@ -53,13 +53,19 @@ public final class TestEventClient {
   /** If no test discovery or test run events required, then return a client that does nothing. */
   public static final TestEventClient NO_OP_CLIENT = new TestEventClient();
 
+  /*
+   * At most one of these should not be null - the non-null value determines how this client
+   * operates.
+   */
   @Nullable private final TestDiscovery testDiscovery;
   @Nullable private final OrchestratedInstrumentationListener notificationRunListener;
+  @Nullable private final TestPlatformListener testPlatformListener;
 
   /** Creates a no-op TestEventClient that doesn't send test discovery or run events. */
   private TestEventClient() {
     this.testDiscovery = null;
     this.notificationRunListener = null;
+    this.testPlatformListener = null;
   }
 
   /**
@@ -70,17 +76,29 @@ public final class TestEventClient {
     checkNotNull(testDiscovery, "testDiscovery cannot be null");
     this.testDiscovery = testDiscovery;
     this.notificationRunListener = null;
+    this.testPlatformListener = null;
   }
 
   /**
-   * Creates a TestEventClient in test run notifications mode. Call {@link
-   * #getNotificationRunListener()} to get the JUnit {@link RunListener} to register in the test
-   * runner.
+   * Creates a TestEventClient in test run notifications mode. Call {@link #getRunListener()} to get
+   * the JUnit {@link RunListener} to register in the test runner.
    */
   private TestEventClient(@NonNull OrchestratedInstrumentationListener runListener) {
     checkNotNull(runListener, "runListener cannot be null");
     this.testDiscovery = null;
     this.notificationRunListener = runListener;
+    this.testPlatformListener = null;
+  }
+
+  /**
+   * Creates a TestEventClient in test run notifications mode. Call {@link #getRunListener()} to get
+   * the JUnit {@link RunListener} to register in the test runner.
+   */
+  private TestEventClient(@NonNull TestPlatformListener runListener) {
+    checkNotNull(runListener, "runListener cannot be null");
+    this.testDiscovery = null;
+    this.notificationRunListener = null;
+    this.testPlatformListener = runListener;
   }
 
   /**
@@ -117,10 +135,16 @@ public final class TestEventClient {
       result = new TestEventClient(testDiscovery);
     } else if (args.isTestRunEventsRequested) {
       Log.v(TAG, "Test run events requested");
-      TestRunEventService notificationService = (TestRunEventService) connection;
-      OrchestratedInstrumentationListener runListener =
-          new OrchestratedInstrumentationListener(notificationService);
-      result = new TestEventClient(runListener);
+      if (args.testPlatformMigration) {
+        TestPlatformListener platformListener =
+            new TestPlatformListener((TestPlatformEventService) connection);
+        result = new TestEventClient(platformListener);
+      } else {
+        TestRunEventService notificationService = (TestRunEventService) connection;
+        OrchestratedInstrumentationListener runListener =
+            new OrchestratedInstrumentationListener(notificationService);
+        result = new TestEventClient(runListener);
+      }
     }
     connection.connect(context);
     return result;
@@ -145,7 +169,7 @@ public final class TestEventClient {
    * @return true if in orchestrated test run mode
    */
   public boolean isTestRunEventsEnabled() {
-    return notificationRunListener != null;
+    return notificationRunListener != null || testPlatformListener != null;
   }
 
   /**
@@ -154,11 +178,15 @@ public final class TestEventClient {
    * @return an {@link OrchestratedInstrumentationListener} instance
    */
   @Nullable
-  public RunListener getNotificationRunListener() {
+  public RunListener getRunListener() {
     if (!isTestRunEventsEnabled()) {
       Log.e(TAG, "Orchestrator service not connected - can't send test run notifications");
     }
-    return notificationRunListener;
+    if (notificationRunListener != null) {
+      return notificationRunListener;
+    } else {
+      return testPlatformListener;
+    }
   }
 
   /**
@@ -194,6 +222,10 @@ public final class TestEventClient {
         return new TestDiscoveryEventServiceConnection(
             checkNotNull(args.testDiscoveryService), listener);
       } else if (args.isTestRunEventsRequested) {
+        if (args.testPlatformMigration) {
+          return new TestPlatformEventServiceConnection(
+              checkNotNull(args.testRunEventService), listener);
+        }
         return new TestRunEventServiceConnection(checkNotNull(args.testRunEventService), listener);
       }
     }
@@ -210,7 +242,12 @@ public final class TestEventClient {
       //
       // It's also possible that the process crashes in the middle of a test, so no TestFinish event
       // will be received. In this case, it will wait until timeoutMillis is reached.
-      notificationRunListener.reportProcessCrash(t, timeoutMillis);
+      if (notificationRunListener != null) {
+        notificationRunListener.reportProcessCrash(t, timeoutMillis);
+      }
+      if (testPlatformListener != null) {
+        testPlatformListener.reportProcessCrash(t, timeoutMillis);
+      }
     }
   }
 }
