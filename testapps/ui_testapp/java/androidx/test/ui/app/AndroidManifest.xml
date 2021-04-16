@@ -174,10 +174,6 @@
         android:label="Scaled View Activity"
         android:name=".ScaledViewActivity"/>
     <activity
-        android:label="Binder IPC Activity"
-        android:name=".BinderIPCActivity"
-        android:theme="@style/Theme.AppCompat"/>
-    <activity
         android:label="Idling UI Activity"
         android:name=".IdlingUIActivity" />
     <activity
@@ -185,20 +181,6 @@
         android:name=".ViewWithTextAllCapsActivity">
     </activity>
     <service android:name=".ChatHeadService"/>
-    <service
-        android:name=".BinderIPCRemoteServer"
-        android:process=":remoteServer">
-      <intent-filter>
-        <action android:name="androidx.test.ui.app.IPCservice"/>
-      </intent-filter>
-    </service>
-    <service
-        android:name=".BinderSyncAIDLServer"
-        android:process=":remoteAIDLServer">
-      <intent-filter>
-        <action android:name="androidx.test.ui.app.IPCAIDLservice"/>
-      </intent-filter>
-    </service>
 
     <provider
         android:authorities="androidx.test.ui.app.flights"
