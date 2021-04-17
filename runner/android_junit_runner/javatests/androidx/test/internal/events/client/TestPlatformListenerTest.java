@@ -104,7 +104,7 @@ public class TestPlatformListenerTest {
   }
 
   @Test
-  public void passingTests() throws TestEventClientException {
+  public void passingTests() throws Exception {
     when(runResult.wasSuccessful()).thenReturn(true);
     listener.testRunStarted(testSuiteDesc); // 0
     listener.testStarted(alphaDesc); // 1
@@ -143,7 +143,7 @@ public class TestPlatformListenerTest {
   }
 
   @Test
-  public void testFailure() throws TestEventClientException {
+  public void testFailure() throws Exception {
     RuntimeException error = new RuntimeException("Beta Failed");
     when(runResult.wasSuccessful()).thenReturn(false);
     listener.testRunStarted(testSuiteDesc); // 0
@@ -189,7 +189,7 @@ public class TestPlatformListenerTest {
   }
 
   @Test
-  public void runnerFailure_cancelsRemainingTests() throws TestEventClientException {
+  public void runnerFailure_cancelsRemainingTests() throws Exception {
     RuntimeException error = new RuntimeException("Mysterious Run Failure");
     when(runResult.wasSuccessful()).thenReturn(false);
     listener.testRunStarted(testSuiteDesc); // 0
@@ -231,7 +231,7 @@ public class TestPlatformListenerTest {
   }
 
   @Test
-  public void runnerFailure_cancelsAllTests() throws TestEventClientException {
+  public void runnerFailure_cancelsAllTests() throws Exception {
     RuntimeException error = new RuntimeException("BeforeClass Failure");
     when(runResult.wasSuccessful()).thenReturn(false);
     listener.testRunStarted(testSuiteDesc); // 0
@@ -268,55 +268,49 @@ public class TestPlatformListenerTest {
     assertThat(runFinished.runStatus.status).isEqualTo(Status.FAILED);
   }
 
-  // @Test
-  // public void runFinished_abortsActiveTest_cancelsRemainingTests() throws
-  // TestEventClientException {
-  //   when(runResult.wasSuccessful()).thenReturn(true);
-  //   listener.testRunStarted(testSuiteDesc); // 0
-  //   listener.testStarted(alphaDesc); // 1
-  //   listener.testRunFinished(runResult); // 3
-  //   verify(stubService, times(6)).send(serviceCaptor.capture());
-  //   List<TestPlatformEvent> events = serviceCaptor.getAllValues();
-  //   TestRunStartedEvent runStart = (TestRunStartedEvent) events.get(0);
-  //   TestCaseStartedEvent alphaStart = (TestCaseStartedEvent) events.get(1);
-  //   TestCaseFinishedEvent alphaFinished = (TestCaseFinishedEvent) events.get(2);
-  //   TestCaseFinishedEvent betaFinished = (TestCaseFinishedEvent) events.get(3);
-  //   TestRunFinishedEvent runFinished = (TestRunFinishedEvent) events.get(4);
-  //   assertThat(runStart.testRun.testRunName).isEqualTo(MY_TEST_CLASS);
-  //   assertThat(runStart.testRun.testCases).hasSize(2);
-  //   assertThat(runStart.testRun.testCases.get(0).getClassAndMethodName())
-  //       .isEqualTo(MY_TEST_CLASS + "#" + ALPHA);
-  //   assertThat(runStart.testRun.testCases.get(1).getClassAndMethodName())
-  //       .isEqualTo(MY_TEST_CLASS + "#" + BETA);
-  //   assertThat(alphaStart.testCase.getClassAndMethodName()).isEqualTo(MY_TEST_CLASS + "#" +
-  // ALPHA);
-  //   assertThat(alphaFinished.testCase.getClassAndMethodName())
-  //       .isEqualTo(MY_TEST_CLASS + "#" + ALPHA);
-  //   assertThat(alphaFinished.testStatus.status).isEqualTo(Status.ABORTED);
-  //   assertThat(betaFinished.testCase.getClassAndMethodName()).isEqualTo(MY_TEST_CLASS + "#" +
-  // BETA);
-  //   assertThat(betaFinished.testStatus.status).isEqualTo(Status.CANCELLED);
-  //   assertThat(runFinished.testRun.testRunName).isEqualTo(MY_TEST_CLASS);
-  //   assertThat(runFinished.testRun.testCases).hasSize(2);
-  //   assertThat(runFinished.testRun.testCases.get(0).getClassAndMethodName())
-  //       .isEqualTo(MY_TEST_CLASS + "#" + ALPHA);
-  //   assertThat(runFinished.testRun.testCases.get(1).getClassAndMethodName())
-  //       .isEqualTo(MY_TEST_CLASS + "#" + BETA);
-  //   assertThat(runFinished.runStatus.status).isEqualTo(Status.ABORTED);
-  // }
+  @Test
+  public void runFinished_abortsActiveTest_cancelsRemainingTests() throws Exception {
+    when(runResult.wasSuccessful()).thenReturn(true);
+    listener.testRunStarted(testSuiteDesc); // 0
+    listener.testStarted(alphaDesc); // 1
+    // should send testFinished x2 (once fore each test) + test run finished x 1
+    listener.testRunFinished(runResult); // 3
+    verify(stubService, times(5)).send(serviceCaptor.capture());
+    List<TestPlatformEvent> events = serviceCaptor.getAllValues();
+    TestRunStartedEvent runStart = (TestRunStartedEvent) events.get(0);
+    TestCaseStartedEvent alphaStart = (TestCaseStartedEvent) events.get(1);
+    TestCaseFinishedEvent alphaFinished = (TestCaseFinishedEvent) events.get(2);
+    TestCaseFinishedEvent betaFinished = (TestCaseFinishedEvent) events.get(3);
+    TestRunFinishedEvent runFinished = (TestRunFinishedEvent) events.get(4);
+    assertThat(runStart.testRun.testRunName).isEqualTo(MY_TEST_CLASS);
+    assertThat(runStart.testRun.testCases).hasSize(2);
+    assertThat(runStart.testRun.testCases.get(0).getClassAndMethodName())
+        .isEqualTo(MY_TEST_CLASS + "#" + ALPHA);
+    assertThat(runStart.testRun.testCases.get(1).getClassAndMethodName())
+        .isEqualTo(MY_TEST_CLASS + "#" + BETA);
+    assertThat(alphaStart.testCase.getClassAndMethodName()).isEqualTo(MY_TEST_CLASS + "#" + ALPHA);
+    assertThat(alphaFinished.testCase.getClassAndMethodName())
+        .isEqualTo(MY_TEST_CLASS + "#" + ALPHA);
+    assertThat(alphaFinished.testStatus.status).isEqualTo(Status.ABORTED);
+    assertThat(betaFinished.testCase.getClassAndMethodName()).isEqualTo(MY_TEST_CLASS + "#" + BETA);
+    assertThat(betaFinished.testStatus.status).isEqualTo(Status.CANCELLED);
+    assertThat(runFinished.testRun.testRunName).isEqualTo(MY_TEST_CLASS);
+    assertThat(runFinished.testRun.testCases).hasSize(2);
+    assertThat(runFinished.testRun.testCases.get(0).getClassAndMethodName())
+        .isEqualTo(MY_TEST_CLASS + "#" + ALPHA);
+    assertThat(runFinished.testRun.testCases.get(1).getClassAndMethodName())
+        .isEqualTo(MY_TEST_CLASS + "#" + BETA);
+    assertThat(runFinished.runStatus.status).isEqualTo(Status.ABORTED);
+  }
 
   @Test
-  public void appCrash_duringTest_reportsTestError() throws TestEventClientException {
+  public void appCrash_duringTest_reportsTestError() throws Exception {
     RuntimeException error = new RuntimeException("Beta Instrumentation Crash");
-    // JUnit isn't keeping track of this internally so it will think everything is fine
-    when(runResult.wasSuccessful()).thenReturn(true);
     listener.testRunStarted(testSuiteDesc); // 0
     listener.testStarted(alphaDesc); // 1
     listener.testFinished(alphaDesc); // 2
     listener.testStarted(betaDesc); // 3
-    listener.reportProcessCrash(error, 0L); // 4
-    listener.testFinished(betaDesc); // 5
-    listener.testRunFinished(runResult); // 6
+    listener.reportProcessCrash(error); // 4
     verify(stubService, times(7)).send(serviceCaptor.capture());
     List<TestPlatformEvent> events = serviceCaptor.getAllValues();
     TestRunStartedEvent runStart = (TestRunStartedEvent) events.get(0);
@@ -353,17 +347,15 @@ public class TestPlatformListenerTest {
   }
 
   @Test
-  public void appCrash_outsideOfTest_reportsRunnerError() throws TestEventClientException {
+  public void appCrash_outsideOfTest_reportsRunnerError() throws Exception {
     // JUnit isn't keeping track of this internally so it will think everything is fine
-    when(runResult.wasSuccessful()).thenReturn(true);
     RuntimeException error = new RuntimeException("Some Instrumentation Crash");
     listener.testRunStarted(testSuiteDesc); // 0
     listener.testStarted(alphaDesc); // 1
     listener.testFinished(alphaDesc); // 2
     listener.testStarted(betaDesc); // 3
     listener.testFinished(betaDesc); // 4
-    listener.reportProcessCrash(error, 0L); // 4
-    listener.testRunFinished(runResult); // 6
+    listener.reportProcessCrash(error); // 5
     verify(stubService, times(7)).send(serviceCaptor.capture());
     List<TestPlatformEvent> events = serviceCaptor.getAllValues();
     TestRunStartedEvent runStart = (TestRunStartedEvent) events.get(0);
@@ -400,7 +392,7 @@ public class TestPlatformListenerTest {
   }
 
   @Test
-  public void testSkipped_ok() throws TestEventClientException {
+  public void testSkipped_ok() throws Exception {
     when(runResult.wasSuccessful()).thenReturn(true);
     AssumptionViolatedException alphaSkip = new AssumptionViolatedException("skip alpha");
     AssumptionViolatedException betaSkip = new AssumptionViolatedException("skip beta");
@@ -452,7 +444,7 @@ public class TestPlatformListenerTest {
   }
 
   @Test
-  public void initializationError_ok() throws TestEventClientException {
+  public void initializationError_ok() throws Exception {
     when(runResult.wasSuccessful()).thenReturn(false);
     InitializationError initErr = new InitializationError("Malformed class");
     // Initialization error gets pushed through the Run Listener lifecycle as if it was an actual
@@ -483,7 +475,7 @@ public class TestPlatformListenerTest {
   }
 
   @Test
-  public void testIgnored_ok() throws TestEventClientException {
+  public void testIgnored_ok() throws Exception {
     when(runResult.wasSuccessful()).thenReturn(true);
     listener.testRunStarted(testSuiteDesc); // 0
     listener.testIgnored(alphaDesc); // 1

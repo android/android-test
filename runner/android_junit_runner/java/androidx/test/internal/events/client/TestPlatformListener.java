@@ -69,6 +69,15 @@ public final class TestPlatformListener extends RunListener {
       new AtomicReference<>(Description.EMPTY);
   private TestRunInfo memoizedTestRun;
   private final AtomicBoolean processCrashed = new AtomicBoolean(false);
+  /*
+   * ongoingResult and ongoingResultListener enable us to generate a final test run result in the
+   * event of an application crash.  This is a bit messy, but Result's internal state is completely
+   * dependent on its listener.  If this API changes, we can just subclass Result directly and
+   * populate it throughout this RunListener.
+   */
+  private final AtomicReference<Result> ongoingResult = new AtomicReference<>(new Result());
+  private final AtomicReference<RunListener> ongoingResultListener =
+      new AtomicReference<>(ongoingResult.get().createListener());
 
   /**
    * Creates the {@link TestPlatformListener} to communicate with the remote test platform event
@@ -84,9 +93,10 @@ public final class TestPlatformListener extends RunListener {
 
   /** {@inheritDoc} */
   @Override
-  public void testRunStarted(Description description) {
+  public void testRunStarted(Description description) throws Exception {
     TimeStamp timeStamp = getTimeStamp();
     resetListener();
+    ongoingResultListener.get().testRunStarted(description);
     setRunDescription(description);
     List<Description> testCases =
         JUnitDescriptionParser.getAllTestCaseDescriptions(testRunDescription);
@@ -105,8 +115,9 @@ public final class TestPlatformListener extends RunListener {
 
   /** {@inheritDoc} */
   @Override
-  public void testRunFinished(Result result) {
+  public void testRunFinished(Result result) throws Exception {
     TimeStamp timeStamp = getTimeStamp();
+    ongoingResultListener.get().testRunFinished(result);
     Status status = result.wasSuccessful() ? Status.PASSED : Status.FAILED;
     // If the process crashed at any point, this is failed.
     status = processCrashed.get() ? Status.FAILED : status;
@@ -139,11 +150,12 @@ public final class TestPlatformListener extends RunListener {
 
   /** {@inheritDoc} */
   @Override
-  public void testStarted(Description description) {
+  public void testStarted(Description description) throws Exception {
     TimeStamp timeStamp = getTimeStamp();
     if (isInitError(description)) {
       return; // This isn't a real test method, don't send an update to the service
     }
+    ongoingResultListener.get().testStarted(description);
     startedTestCases.add(description);
     currentTestCase.set(description); // Caches the test description in case of a crash
     try {
@@ -155,16 +167,17 @@ public final class TestPlatformListener extends RunListener {
 
   /** {@inheritDoc} */
   @Override
-  public void testFinished(Description description) {
+  public void testFinished(Description description) throws Exception {
     TimeStamp timeStamp = getTimeStamp();
     testFinishedInternal(description, timeStamp);
   }
 
   // If the test is marked as finished during the test run finish, we use the same timestamp
-  private void testFinishedInternal(Description description, TimeStamp timeStamp) {
+  private void testFinishedInternal(Description description, TimeStamp timeStamp) throws Exception {
     if (isInitError(description)) {
       return; // This isn't a real test method, don't send an update to the service
     }
+    ongoingResultListener.get().testFinished(description);
     finishedTestCases.add(description);
     try {
       notificationService.send(
@@ -182,9 +195,10 @@ public final class TestPlatformListener extends RunListener {
 
   /** {@inheritDoc} */
   @Override
-  public void testFailure(Failure failure) {
+  public void testFailure(Failure failure) throws Exception {
     TimeStamp timeStamp = getTimeStamp();
     Description description = failure.getDescription();
+    ongoingResultListener.get().testFailure(failure);
     if (description.isTest() && !isInitError(description)) {
       testCaseToStatus.put(description, Status.FAILED);
     }
@@ -200,6 +214,7 @@ public final class TestPlatformListener extends RunListener {
   @Override
   public void testAssumptionFailure(Failure failure) {
     TimeStamp timeStamp = getTimeStamp();
+    ongoingResultListener.get().testAssumptionFailure(failure);
     if (failure.getDescription().isTest()) {
       testCaseToStatus.put(failure.getDescription(), Status.SKIPPED);
     }
@@ -213,8 +228,9 @@ public final class TestPlatformListener extends RunListener {
 
   /** {@inheritDoc} */
   @Override
-  public void testIgnored(Description description) {
+  public void testIgnored(Description description) throws Exception {
     TimeStamp timeStamp = getTimeStamp();
+    ongoingResultListener.get().testIgnored(description);
     Log.i(
         TAG,
         "TestIgnoredEvent("
@@ -227,14 +243,34 @@ public final class TestPlatformListener extends RunListener {
     testFinishedInternal(description, timeStamp);
   }
 
-  /** Reports the process crash event with a given exception. */
-  public void reportProcessCrash(Throwable t, long timeoutMillis) {
+  /**
+   * Reports the process crash event with a given exception. It is assumed that AJUR is crashing and
+   * not recovering from this. This will inform all clients that:
+   *
+   * <ol>
+   *   <li>A test has encountered an error (or the run has encountered an error if no test is in
+   *       progress)
+   *   <li>The currently running test has finished (if it didn't already finished normally)
+   *   <li>The test run has finished.
+   * </ol>
+   */
+  public void reportProcessCrash(Throwable t) {
     processCrashed.set(true);
+    boolean isTestCase = true;
     Description failingDescription = currentTestCase.get();
     if (failingDescription.equals(Description.EMPTY)) {
+      isTestCase = false;
       failingDescription = testRunDescription;
     }
-    testFailure(new Failure(failingDescription, t));
+    try {
+      testFailure(new Failure(failingDescription, t));
+      if (isTestCase) {
+        testFinished(failingDescription);
+      }
+      testRunFinished(ongoingResult.get());
+    } catch (Exception e) {
+      Log.e("An exception was encountered while reporting the process crash", e.getMessage());
+    }
   }
 
   private void resetListener() {
@@ -246,6 +282,8 @@ public final class TestPlatformListener extends RunListener {
     testRunDescription = Description.EMPTY;
     memoizedTestRun = null;
     processCrashed.set(false);
+    ongoingResult.set(new Result());
+    ongoingResultListener.set(ongoingResult.get().createListener());
   }
 
   private void setRunDescription(Description description) {

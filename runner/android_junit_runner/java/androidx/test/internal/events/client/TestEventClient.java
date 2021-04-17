@@ -245,8 +245,10 @@ public final class TestEventClient {
       if (notificationRunListener != null) {
         notificationRunListener.reportProcessCrash(t, timeoutMillis);
       }
+      // Ignores timeoutMillis, this listener reports the error and allows the process to exit
+      // quickly. We don't wait for the test to handle the exception.
       if (testPlatformListener != null) {
-        testPlatformListener.reportProcessCrash(t, timeoutMillis);
+        testPlatformListener.reportProcessCrash(t);
       }
     }
   }
