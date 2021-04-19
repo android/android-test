@@ -29,7 +29,6 @@ import java.util.ServiceLoader;
  */
 public final class ServiceLoaderWrapper {
 
-
   private ServiceLoaderWrapper() {}
 
   /**
@@ -56,8 +55,8 @@ public final class ServiceLoaderWrapper {
   }
 
   /**
-   * A wrapper method around loadService that strictly enforces there is only one implementation of
-   * the service.
+   * A wrapper method around {@link #loadService(Class)} that strictly enforces there is only one
+   * implementation of the service.
    *
    * @param serviceClass the service type class to load implementation for
    * @param defaultImplFactory the factory implementation for creating instances
@@ -66,9 +65,26 @@ public final class ServiceLoaderWrapper {
    * @throws IllegalStateException if more than one service implementations are found
    */
   public static <T> T loadSingleService(Class<T> serviceClass, Factory<T> defaultImplFactory) {
+    T impl = loadSingleServiceOrNull(serviceClass);
+    if (impl == null) {
+      return defaultImplFactory.create();
+    } else {
+      return impl;
+    }
+  }
+
+  /**
+   * A wrapper method around {@link #loadService(Class)} that returns one implementation of the
+   * service or {@code null} if no implementation is found.
+   *
+   * @param serviceClass the service type class to load implementation for
+   * @return the implementing service or null if none is found.
+   * @throws IllegalStateException if more than one service implementations are found
+   */
+  public static <T> T loadSingleServiceOrNull(Class<T> serviceClass) {
     List<T> impls = ServiceLoaderWrapper.loadService(serviceClass);
     if (impls.isEmpty()) {
-      return defaultImplFactory.create();
+      return null;
     } else if (impls.size() == 1) {
       return impls.get(0);
     } else {

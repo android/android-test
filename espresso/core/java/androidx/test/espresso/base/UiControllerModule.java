@@ -24,7 +24,6 @@ import androidx.test.espresso.UiController;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import dagger.Module;
 import dagger.Provides;
-import java.util.List;
 import javax.inject.Singleton;
 
 /**
@@ -38,14 +37,12 @@ public class UiControllerModule {
   @Provides
   @Singleton
   public UiController provideUiController(UiControllerImpl uiControllerImpl) {
-    List<androidx.test.platform.ui.UiController> platformUiControllers =
-        ServiceLoaderWrapper.loadService(androidx.test.platform.ui.UiController.class);
-    if (platformUiControllers.isEmpty()) {
+    androidx.test.platform.ui.UiController platformUiController =
+        ServiceLoaderWrapper.loadSingleServiceOrNull(androidx.test.platform.ui.UiController.class);
+    if (platformUiController == null) {
       return uiControllerImpl;
-    } else if (platformUiControllers.size() == 1) {
-      return new EspressoUiControllerAdapter(platformUiControllers.get(0));
     } else {
-      throw new IllegalStateException("Found more than one androidx.test.platform.ui.UiController");
+      return new EspressoUiControllerAdapter(platformUiController);
     }
   }
 
