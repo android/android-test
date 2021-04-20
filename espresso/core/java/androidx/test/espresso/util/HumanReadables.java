@@ -29,6 +29,9 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.Checkable;
 import android.widget.TextView;
+import androidx.test.espresso.Espresso;
+import androidx.test.espresso.GraphHolder;
+import androidx.test.espresso.ViewHierarchyRenderer;
 import androidx.test.espresso.util.TreeIterables.ViewAndDistance;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -72,27 +75,12 @@ public final class HumanReadables {
 
     errorMessage.append("\n\nView Hierarchy:\n");
 
-    Joiner.on("\n")
-        .appendTo(
-            errorMessage,
-            Iterables.transform(
-                depthFirstViewTraversalWithDistance(rootView),
-                new Function<ViewAndDistance, String>() {
-                  @Override
-                  public String apply(ViewAndDistance viewAndDistance) {
-                    String formatString = "+%s%s ";
-                    if (problemViews != null && problemViews.contains(viewAndDistance.getView())) {
-                      formatString += problemViewSuffix;
-                    }
-                    formatString += "\n|";
-
-                    return String.format(
-                        Locale.ROOT,
-                        formatString,
-                        Strings.padStart(">", viewAndDistance.getDistanceFromRoot() + 1, '-'),
-                        HumanReadables.describe(viewAndDistance.getView()));
-                  }
-                }));
+    ViewHierarchyRenderer.ProblemViews problemViewsToHighlight = null;
+    if (problemViews != null) {
+      problemViewsToHighlight =
+          new ViewHierarchyRenderer.ProblemViews(problemViewSuffix, problemViews);
+    }
+    errorMessage.append(Espresso.getViewHierarchyRenderer().render(rootView, problemViewsToHighlight));
 
     return errorMessage.toString();
   }
