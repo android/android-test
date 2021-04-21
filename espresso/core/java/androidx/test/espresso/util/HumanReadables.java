@@ -70,30 +70,28 @@ public final class HumanReadables {
               Locale.ROOT, "\nProblem views are marked with '%s' below.", problemViewSuffix));
     }
 
-    errorMessage.append("\n\nView Hierarchy:\n");
+    String viewHierarchyDump =
+        Joiner.on("\n|\n")
+            .join(
+                Iterables.transform(
+                    depthFirstViewTraversalWithDistance(rootView),
+                    new Function<ViewAndDistance, String>() {
+                      @Override
+                      public String apply(ViewAndDistance viewAndDistance) {
+                        String formatString = "+%s%s ";
+                        if (problemViews != null
+                            && problemViews.contains(viewAndDistance.getView())) {
+                          formatString += problemViewSuffix;
+                        }
+                        return String.format(
+                            Locale.ROOT,
+                            formatString,
+                            Strings.padStart(">", viewAndDistance.getDistanceFromRoot() + 1, '-'),
+                            HumanReadables.describe(viewAndDistance.getView()));
+                      }
+                    }));
 
-    Joiner.on("\n")
-        .appendTo(
-            errorMessage,
-            Iterables.transform(
-                depthFirstViewTraversalWithDistance(rootView),
-                new Function<ViewAndDistance, String>() {
-                  @Override
-                  public String apply(ViewAndDistance viewAndDistance) {
-                    String formatString = "+%s%s ";
-                    if (problemViews != null && problemViews.contains(viewAndDistance.getView())) {
-                      formatString += problemViewSuffix;
-                    }
-                    formatString += "\n|";
-
-                    return String.format(
-                        Locale.ROOT,
-                        formatString,
-                        Strings.padStart(">", viewAndDistance.getDistanceFromRoot() + 1, '-'),
-                        HumanReadables.describe(viewAndDistance.getView()));
-                  }
-                }));
-
+    errorMessage.append("\n\nView Hierarchy:\n").append(viewHierarchyDump);
     return errorMessage.toString();
   }
 
