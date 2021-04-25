@@ -23,7 +23,7 @@ import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.util.HumanReadables;
-import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResult.AccessibilityCheckResultDescriptor;
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultDescriptor;
 import com.google.android.apps.common.testing.accessibility.framework.integrations.espresso.AccessibilityValidator;
 
 /**
