@@ -4,11 +4,11 @@ Ensure UsageTrackerRegistry is updated accordingly when incrementing version num
 """
 
 # AXT versions
-RUNNER_VERSION = "1.4.0-alpha05"
-ESPRESSO_VERSION = "3.4.0-alpha05"
-CORE_VERSION = "1.4.0-alpha05"
-ANDROIDX_JUNIT_VERSION = "1.1.3-alpha05"
-ANDROIDX_TRUTH_VERSION = "1.4.0-alpha05"
+RUNNER_VERSION = "1.4.0-alpha06"
+ESPRESSO_VERSION = "3.4.0-alpha06"
+CORE_VERSION = "1.4.0-alpha06"
+ANDROIDX_JUNIT_VERSION = "1.1.3-alpha06"
+ANDROIDX_TRUTH_VERSION = "1.4.0-alpha06"
 UIAUTOMATOR_VERSION = "2.2.0"
 JANK_VERSION = "1.0.1"
 SERVICES_VERSION = RUNNER_VERSION
