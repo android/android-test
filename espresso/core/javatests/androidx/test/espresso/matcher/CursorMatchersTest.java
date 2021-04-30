@@ -24,8 +24,6 @@ import static androidx.test.espresso.matcher.CursorMatchers.withRowLong;
 import static androidx.test.espresso.matcher.CursorMatchers.withRowShort;
 import static androidx.test.espresso.matcher.CursorMatchers.withRowString;
 import static androidx.test.espresso.matcher.MatcherTestUtils.getDescription;
-import static androidx.test.espresso.matcher.MatcherTestUtils.getMismatchDescription;
-import static androidx.test.espresso.matcher.MatcherTestUtils.join;
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
@@ -132,32 +130,8 @@ public class CursorMatchersTest {
   }
 
   @Test
-  public void columnNameMatcher_doesNotMatch_mismatchDescription() {
-    Matcher<String> columnNameMatcher = is("not_a_column");
-    assertThat(
-        getMismatchDescription(withRowShort(columnNameMatcher, any(Short.class)), cursor),
-        is(
-            "Couldn't find column in ["
-                + join(", ", COLUMN_NAMES, columnName -> "\"" + columnName + "\"")
-                + "] matching "
-                + getDescription(columnNameMatcher)));
-  }
-
-  @Test
   public void columnNameMatcher_matchesMultiple() {
     assertFalse(withRowShort(any(String.class), any(Short.class)).matches(cursor));
-  }
-
-  @Test
-  public void columnNameMatcher_matchesMultiple_mismatchDescription() {
-    Matcher<String> columnNameMatcher = any(String.class);
-    assertThat(
-        getMismatchDescription(withRowShort(columnNameMatcher, any(Short.class)), cursor),
-        is(
-            "Multiple columns in ["
-                + join(", ", COLUMN_NAMES, columnName -> "\"" + columnName + "\"")
-                + "] match "
-                + getDescription(columnNameMatcher)));
   }
 
   @Test
@@ -213,14 +187,6 @@ public class CursorMatchersTest {
   }
 
   @Test
-  public void withRowShort_valueDoesNotMatch_mismatchDescription() {
-    Matcher<Short> valueMatcher = is((short) -1);
-    assertThat(
-        getMismatchDescription(withRowShort(COLUMN_SHORT, valueMatcher), cursor),
-        is("value at column <1> " + getMismatchDescription(valueMatcher, SHORT_VALUE)));
-  }
-
-  @Test
   public void withRowInt_columnIndexAndValue() {
     assertTrue(withRowInt(2, INTEGER_VALUE).matches(cursor));
   }
@@ -270,14 +236,6 @@ public class CursorMatchersTest {
                 + getDescription(is(COLUMN_INT))
                 + " with Int matching "
                 + getDescription(INTEGER_VALUE_MATCHER)));
-  }
-
-  @Test
-  public void withRowInt_valueDoesNotMatch_mismatchDescription() {
-    Matcher<Integer> valueMatcher = is(-1);
-    assertThat(
-        getMismatchDescription(withRowInt(COLUMN_INT, valueMatcher), cursor),
-        is("value at column <2> " + getMismatchDescription(valueMatcher, INTEGER_VALUE)));
   }
 
   @Test
@@ -333,14 +291,6 @@ public class CursorMatchersTest {
   }
 
   @Test
-  public void withRowLong_valueDoesNotMatch_mismatchDescription() {
-    Matcher<Long> valueMatcher = is(-1L);
-    assertThat(
-        getMismatchDescription(withRowLong(COLUMN_LONG, valueMatcher), cursor),
-        is("value at column <3> " + getMismatchDescription(valueMatcher, LONG_VALUE)));
-  }
-
-  @Test
   public void withRowFloat_columnIndexAndValue() {
     assertTrue(withRowFloat(4, FLOAT_VALUE).matches(cursor));
   }
@@ -390,14 +340,6 @@ public class CursorMatchersTest {
                 + getDescription(is(COLUMN_FLOAT))
                 + " with Float matching "
                 + getDescription(FLOAT_VALUE_MATCHER)));
-  }
-
-  @Test
-  public void withRowFloat_valueDoesNotMatch_mismatchDescription() {
-    Matcher<Float> valueMatcher = is(-1f);
-    assertThat(
-        getMismatchDescription(withRowFloat(COLUMN_FLOAT, valueMatcher), cursor),
-        is("value at column <4> " + getMismatchDescription(valueMatcher, FLOAT_VALUE)));
   }
 
   @Test
@@ -453,14 +395,6 @@ public class CursorMatchersTest {
   }
 
   @Test
-  public void withRowDouble_valueDoesNotMatch_mismatchDescription() {
-    Matcher<Double> valueMatcher = is(-1.0);
-    assertThat(
-        getMismatchDescription(withRowDouble(COLUMN_DOUBLE, valueMatcher), cursor),
-        is("value at column <5> " + getMismatchDescription(valueMatcher, DOUBLE_VALUE)));
-  }
-
-  @Test
   public void withRowString_columnIndexAndValue() {
     assertTrue(withRowString(6, STRING_VALUE).matches(cursor));
   }
@@ -513,14 +447,6 @@ public class CursorMatchersTest {
   }
 
   @Test
-  public void withRowString_valueDoesNotMatch_mismatchDescription() {
-    Matcher<String> valueMatcher = is("bad");
-    assertThat(
-        getMismatchDescription(withRowString(COLUMN_STR, valueMatcher), cursor),
-        is("value at column <6> " + getMismatchDescription(valueMatcher, STRING_VALUE)));
-  }
-
-  @Test
   public void withRowBlob_columnIndexAndValue() {
     assertTrue(withRowBlob(7, BLOB_VALUE).matches(cursor));
   }
@@ -570,14 +496,6 @@ public class CursorMatchersTest {
                 + getDescription(is(COLUMN_BLOB))
                 + " with Blob matching "
                 + getDescription(BLOB_VALUE_MATCHER)));
-  }
-
-  @Test
-  public void withRowBlob_valueDoesNotMatch_mismatchDescription() {
-    Matcher<byte[]> valueMatcher = is(new byte[8]);
-    assertThat(
-        getMismatchDescription(withRowBlob(COLUMN_BLOB, valueMatcher), cursor),
-        is("value at column <7> " + getMismatchDescription(valueMatcher, BLOB_VALUE)));
   }
 
   @Test

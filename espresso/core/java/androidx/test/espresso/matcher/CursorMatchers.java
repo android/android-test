@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.SelfDescribing;
+import org.hamcrest.StringDescription;
 
 /**
  * A collection of Hamcrest matchers that matches a data row in a {@link Cursor}. <br>
@@ -49,7 +50,8 @@ public final class CursorMatchers {
   }
 
   /** A {@link Matcher} that matches {@link Cursor}s based on values in their columns. */
-  public static class CursorMatcher extends BoundedDiagnosingMatcher<Object, Cursor> {
+  @SuppressWarnings("Extended from BoundedMatcher to be binary compatible")
+  public static class CursorMatcher extends BoundedMatcher<Object, Cursor> {
 
     private final int columnIndex;
     private final Matcher<String> columnNameMatcher;
@@ -79,8 +81,9 @@ public final class CursorMatchers {
     }
 
     @Override
-    protected boolean matchesSafely(Cursor cursor, Description mismatchDescription) {
+    public boolean matchesSafely(Cursor cursor) {
       int chosenColumn = columnIndex;
+      StringDescription mismatchDescription = new StringDescription();
       if (chosenColumn < 0) {
         chosenColumn = findColumnIndex(columnNameMatcher, cursor);
         if (chosenColumn < 0) {
@@ -129,8 +132,8 @@ public final class CursorMatchers {
     }
 
     @Override
-    protected void describeMoreTo(Description description) {
-      description.appendText("Rows with column: ");
+    public void describeTo(Description description) {
+      description.appendText("an instance of android.database.Cursor and Rows with column: ");
       if (columnIndex < 0) {
         columnNameMatcher.describeTo(description);
       } else {
