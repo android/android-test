@@ -26,11 +26,11 @@ import org.hamcrest.Description;
  * Some matcher sugar that lets you create a matcher for a given type but only process items of a
  * specific subtype of that matcher.
  *
+ * <p>Use {@link BoundedDiagnosingMatcher} for better diagnostic messages when a mismatch happens.
+ *
  * @param <T> The desired type of the Matcher.
  * @param <S> the subtype of T that your matcher applies safely to.
- * @deprecated Use {@link BoundedDiagnosingMatcher} instead for better diagnostic messages.
  */
-@Deprecated
 public abstract class BoundedMatcher<T, S extends T> extends BaseMatcher<T> {
 
   private final Class<?> expectedType;
