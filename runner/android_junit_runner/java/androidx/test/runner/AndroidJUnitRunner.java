@@ -48,6 +48,7 @@ import androidx.test.internal.runner.storage.RunnerTestStorageIO;
 import androidx.test.internal.runner.tracker.AnalyticsBasedUsageTracker;
 import androidx.test.internal.runner.tracker.UsageTrackerRegistry.AxtVersions;
 import androidx.test.orchestrator.callback.OrchestratorV1Connection;
+import androidx.test.orchestrator.instrumentationlistener.OrchestratedInstrumentationListener.OnConnectListener;
 import androidx.test.runner.lifecycle.ApplicationLifecycleCallback;
 import androidx.test.runner.lifecycle.ApplicationLifecycleMonitorRegistry;
 import androidx.test.runner.screenshot.ScreenCaptureProcessor;
@@ -277,7 +278,7 @@ import org.junit.runners.model.RunnerBuilder;
  * Arguments specified via shell will override manifest specified arguments.
  */
 public class AndroidJUnitRunner extends MonitoringInstrumentation
-    implements TestEventClientConnectListener {
+    implements TestEventClientConnectListener, OnConnectListener {
 
   private static final String LOG_TAG = "AndroidJUnitRunner";
 
