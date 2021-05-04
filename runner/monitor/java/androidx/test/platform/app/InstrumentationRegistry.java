@@ -94,7 +94,11 @@ public final class InstrumentationRegistry {
    *
    * <p>Note that this and {@link #registerInstance(Instrumentation, Bundle)}} override each other
    * with respect to which Instrumentation is saved.
+   *
+   * @deprecated do not use, will be removed shortly
+   * @hide
    */
+  @Deprecated
   public static void registerInstrumentationProvider(
       InstrumentationProvider instrumentationProvider, Bundle arguments) {
     provider.set(instrumentationProvider);

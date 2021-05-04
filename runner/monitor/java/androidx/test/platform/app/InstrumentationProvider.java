@@ -20,7 +20,11 @@ import android.app.Instrumentation;
 
 /**
  * Interface to allow runner implementations to provide an <code>Instrumentation</code> as needed
+ *
+ * @deprecated do not use, will be removed shortly
+ * @hide
  */
+@Deprecated
 public interface InstrumentationProvider {
 
   /**
