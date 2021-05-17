@@ -19,6 +19,7 @@ package androidx.test;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.os.Bundle;
+import com.google.errorprone.annotations.InlineMe;
 
 /**
  * An exposed registry instance that holds a reference to the instrumentation running in the process
@@ -38,6 +39,7 @@ public final class InstrumentationRegistry {
    * @throws IllegalStateException if instrumentation hasn't been registered
    * @deprecated use {@link androidx.test.platform.app.InstrumentationRegistry#getInstrumentation()}
    */
+  @InlineMe(replacement = "androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()")
   @Deprecated
   public static Instrumentation getInstrumentation() {
     return androidx.test.platform.app.InstrumentationRegistry.getInstrumentation();
@@ -53,6 +55,7 @@ public final class InstrumentationRegistry {
    * @throws IllegalStateException if no argument Bundle has been registered.
    * @deprecated use {@link androidx.test.platform.app.InstrumentationRegistry#getArguments()}
    */
+  @InlineMe(replacement = "androidx.test.platform.app.InstrumentationRegistry.getArguments()")
   @Deprecated
   public static Bundle getArguments() {
     return androidx.test.platform.app.InstrumentationRegistry.getArguments();
@@ -70,7 +73,7 @@ public final class InstrumentationRegistry {
    */
   @Deprecated
   public static Context getContext() {
-    return getInstrumentation().getContext();
+    return androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getContext();
   }
 
   /**
@@ -82,7 +85,8 @@ public final class InstrumentationRegistry {
    */
   @Deprecated
   public static Context getTargetContext() {
-    return getInstrumentation().getTargetContext();
+    return androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
+        .getTargetContext();
   }
 
   /**
@@ -97,6 +101,10 @@ public final class InstrumentationRegistry {
    *     androidx.test.platform.app.InstrumentationRegistry#registerInstance(Instrumentation,
    *     Bundle)}
    */
+  @InlineMe(
+      replacement =
+          "androidx.test.platform.app.InstrumentationRegistry.registerInstance(instrumentation,"
+              + " arguments)")
   @Deprecated
   public static void registerInstance(Instrumentation instrumentation, Bundle arguments) {
     androidx.test.platform.app.InstrumentationRegistry.registerInstance(instrumentation, arguments);

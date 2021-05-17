@@ -23,6 +23,7 @@ android_library(
         ":runtime_hidden_apis",
         "//:androidx_annotation",
         "//annotation",
+        "//third_party/java/error_prone:annotations",
     ],
 )
 
