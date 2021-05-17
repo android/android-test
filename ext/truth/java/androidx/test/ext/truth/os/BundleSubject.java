@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,6 +95,11 @@ public final class BundleSubject extends Subject {
 
   public IterableSubject parcelableArrayList(String key) {
     return check("getParcelableArrayList(%s)", key).that(actual.getParcelableArrayList(key));
+  }
+
+  /** Returns a truth subject for the value associated with the given key. */
+  public Subject serializable(String key) {
+    return check("getSerializable(%s)", key).that(actual.getSerializable(key));
   }
 
   public void containsKey(String key) {
