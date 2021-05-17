@@ -17,10 +17,8 @@ package androidx.test.platform.app;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import android.app.Instrumentation;
 import android.os.Bundle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -64,27 +62,5 @@ public class InstrumentationRegistryTest {
 
     // Subsequent reads should not be affected by the local modifications.
     assertThat(InstrumentationRegistry.getArguments().size()).isEqualTo(originalSize);
-  }
-
-  @Test
-  public void instanceProviderRegistered() {
-    Bundle bundle = new Bundle();
-    bundle.putString("entry", "val");
-    final AtomicBoolean provideCalled = new AtomicBoolean(false);
-    InstrumentationProvider provider =
-        new InstrumentationProvider() {
-          @Override
-          public Instrumentation provide() {
-            provideCalled.set(true);
-            return new Instrumentation();
-          }
-        };
-
-    InstrumentationRegistry.registerInstrumentationProvider(provider, bundle);
-
-    InstrumentationRegistry.getInstrumentation();
-    assertThat(provideCalled.get()).isTrue();
-    assertThat(InstrumentationRegistry.getArguments().size()).isEqualTo(1);
-    assertThat(InstrumentationRegistry.getArguments().getString("entry")).isEqualTo("val");
   }
 }

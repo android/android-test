@@ -19,7 +19,6 @@ package androidx.test;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.test.platform.app.InstrumentationProvider;
 
 /**
  * An exposed registry instance that holds a reference to the instrumentation running in the process
@@ -101,24 +100,6 @@ public final class InstrumentationRegistry {
   @Deprecated
   public static void registerInstance(Instrumentation instrumentation, Bundle arguments) {
     androidx.test.platform.app.InstrumentationRegistry.registerInstance(instrumentation, arguments);
-  }
-
-  /**
-   * Lazily records/exposes the instrumentation currently running.
-   *
-   * <p>This is a global registry - so be aware of the impact of calling this method!
-   *
-   * <p>Note that this and {@link #registerInstance(Instrumentation, Bundle)}} override each other
-   * with respect to which Instrumentation is saved.
-   *
-   * @deprecated do not use, will be removed shortly
-   * @hide
-   */
-  @Deprecated
-  public static void registerInstrumentationProvider(
-      InstrumentationProvider instrumentationProvider, Bundle bundle) {
-    androidx.test.platform.app.InstrumentationRegistry.registerInstrumentationProvider(
-        instrumentationProvider, bundle);
   }
 
   private InstrumentationRegistry() {}

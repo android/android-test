@@ -32,8 +32,6 @@ public final class InstrumentationRegistry {
   private static final AtomicReference<Instrumentation> instrumentationRef =
       new AtomicReference<>(null);
   private static final AtomicReference<Bundle> arguments = new AtomicReference<>(null);
-  private static final AtomicReference<InstrumentationProvider> provider =
-      new AtomicReference<>(null);
 
   /**
    * Returns the instrumentation currently running. Use this to get an {@link Instrumentation} into
@@ -43,10 +41,6 @@ public final class InstrumentationRegistry {
    */
   public static Instrumentation getInstrumentation() {
     Instrumentation instance = instrumentationRef.get();
-    if (instance == null && provider.get() != null) {
-      instance = provider.get().provide();
-      instrumentationRef.set(instance);
-    }
     if (instance == null) {
       throw new IllegalStateException(
           "No instrumentation registered! " + "Must run under a registering instrumentation.");
@@ -85,25 +79,6 @@ public final class InstrumentationRegistry {
   public static void registerInstance(Instrumentation instrumentation, Bundle arguments) {
     instrumentationRef.set(instrumentation);
     InstrumentationRegistry.arguments.set(new Bundle(arguments));
-  }
-
-  /**
-   * Registers an Instrumentation Provider to support lazy loading of Instrumentation
-   *
-   * <p>This is a global registry - so be aware of the impact of calling this method!
-   *
-   * <p>Note that this and {@link #registerInstance(Instrumentation, Bundle)}} override each other
-   * with respect to which Instrumentation is saved.
-   *
-   * @deprecated do not use, will be removed shortly
-   * @hide
-   */
-  @Deprecated
-  public static void registerInstrumentationProvider(
-      InstrumentationProvider instrumentationProvider, Bundle arguments) {
-    provider.set(instrumentationProvider);
-    InstrumentationRegistry.arguments.set(new Bundle(arguments));
-    instrumentationRef.set(null);
   }
 
   private InstrumentationRegistry() {}
