@@ -27,6 +27,8 @@ import androidx.test.espresso.internal.inject.TargetContext;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.os.ControlledLooper;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.platform.io.PlatformTestStorage;
+import androidx.test.platform.io.PlatformTestStorageRegistry;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import com.google.common.base.Optional;
@@ -197,5 +199,11 @@ public class BaseLayerModule {
     // load a service loaded provided ControlledLooper if available, otherwise return a no-op
     return ServiceLoaderWrapper.loadSingleService(
         ControlledLooper.class, () -> ControlledLooper.NO_OP_CONTROLLED_LOOPER);
+  }
+
+  @Provides
+  @Singleton
+  PlatformTestStorage provideTestStorage() {
+    return PlatformTestStorageRegistry.getInstance();
   }
 }

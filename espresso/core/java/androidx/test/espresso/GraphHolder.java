@@ -18,10 +18,11 @@ package androidx.test.espresso;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import android.util.Log;
 import androidx.test.espresso.base.ActiveRootLister;
-import androidx.test.internal.platform.util.TestOutputEmitter;
 import androidx.test.internal.runner.tracker.UsageTrackerRegistry;
 import androidx.test.internal.runner.tracker.UsageTrackerRegistry.AxtVersions;
+import androidx.test.platform.io.PlatformTestStorage;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /** Holds Espresso's object graph. */
 public final class GraphHolder {
+  private static final String TAG = GraphHolder.class.getSimpleName();
 
   private static final AtomicReference<GraphHolder> instance =
       new AtomicReference<GraphHolder>(null);
@@ -48,13 +50,29 @@ public final class GraphHolder {
         // Also adds the usage data as test output properties. By default it's no-op.
         Map<String, Serializable> usageProperties = new HashMap<>();
         usageProperties.put("Espresso", AxtVersions.ESPRESSO_VERSION);
-        TestOutputEmitter.addOutputProperties(usageProperties);
+        addUsageToOutputProperties(usageProperties, instanceRef.component.testStorage());
         return instanceRef.component;
       } else {
         return instance.get().component;
       }
     } else {
       return instanceRef.component;
+    }
+  }
+
+  private static void addUsageToOutputProperties(
+      Map<String, Serializable> usageProperties, PlatformTestStorage testStorage) {
+    try {
+      testStorage.addOutputProperties(usageProperties);
+    } catch (Exception e) {
+      // The properties.dat file can be created only once on an automotive emulator with API 30,
+      // which causes the `addOutputProperties` call to fail when running multiple test cases. Catch
+      // the exception and log until the issue is fixed in the emulator.
+      Log.d(
+          TAG,
+          "Failed to add the output properties. This could happen when running on an"
+              + " automotive emulator with API 30. Ignore for now.",
+          e);
     }
   }
 }
