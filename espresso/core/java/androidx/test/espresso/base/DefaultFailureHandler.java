@@ -22,11 +22,9 @@ import android.content.Context;
 import android.view.View;
 import androidx.test.espresso.EspressoException;
 import androidx.test.espresso.FailureHandler;
-import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.internal.inject.TargetContext;
 import androidx.test.internal.platform.util.TestOutputEmitter;
-import androidx.test.platform.io.PlatformTestStorage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,20 +43,17 @@ public final class DefaultFailureHandler implements FailureHandler {
   private final List<FailureHandler> handlers = new ArrayList<>();
 
   @Inject
-  public DefaultFailureHandler(@TargetContext Context appContext, PlatformTestStorage testStorage) {
+  public DefaultFailureHandler(@TargetContext Context appContext) {
     // Adds a chain of exception handlers.
     // Order matters and a matching failure handler in the chain will throw after the exception is
     // handled. Always adds the handler of the child class ahead of its superclasses to make sure
     // the exception is handled by its corresponding handler.
     //
     // The hierarchy of the exception types handled is:
-    // NoMatchingViewException -->
-    // PerformException ---------> EspressoException
-    //                  ---------> Throwable
-    // AssertionError ----------->
-    handlers.add(
-        new NoMatchingViewExceptionHandler(
-            testStorage, failureCount, NoMatchingViewException.class));
+    //
+    // PerformException --> EspressoException
+    //                  --> Throwable
+    // AssertionError ---->
     handlers.add(new PerformExceptionHandler(checkNotNull(appContext), PerformException.class));
     // On API 15, junit.framework.AssertionFailedError is not a subclass of AssertionError.
     handlers.add(new AssertionErrorHandler(AssertionFailedError.class, AssertionError.class));

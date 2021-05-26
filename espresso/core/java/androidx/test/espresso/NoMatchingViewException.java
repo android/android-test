@@ -70,11 +70,6 @@ public final class NoMatchingViewException extends RuntimeException implements E
     return viewMatcherDescription;
   }
 
-  /** Returns the root view where this exception is thrown. */
-  public View getRootView() {
-    return rootView;
-  }
-
   private static String getErrorMessage(Builder builder) {
     String errorMessage = "";
     if (builder.includeViewHierarchy) {
