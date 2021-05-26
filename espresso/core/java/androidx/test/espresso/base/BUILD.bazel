@@ -18,6 +18,7 @@ android_library(
             "IdlingUiController.java",
             "IdlingResourceRegistry.java",
             "LooperIdlingResourceInterrogationHandler.java",
+            "NoMatchingViewExceptionHandler.java",
         ],
     ),
     plugins = ["//opensource/dagger:dagger_plugin"],
@@ -80,6 +81,7 @@ android_library(
         "AssertionErrorHandler.java",
         "DefaultFailureHandler.java",
         "EspressoExceptionHandler.java",
+        "NoMatchingViewExceptionHandler.java",
         "PerformExceptionHandler.java",
         "ThrowableHandler.java",
     ],
@@ -87,6 +89,7 @@ android_library(
     deps = [
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/internal/inject",
+        "//espresso/core/java/androidx/test/espresso/util",
         "//runner/monitor/java/androidx/test:monitor",
         "@maven//:com_google_dagger_dagger",
         "@maven//:com_google_guava_guava",
