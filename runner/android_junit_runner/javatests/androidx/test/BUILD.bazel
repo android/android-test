@@ -123,6 +123,7 @@ android_library_instrumentation_tests(
             "TheoriesAndTestsTogether.java",
             # tested separately
             "internal/runner/ClassPathScannerTest.java",
+            "internal/runner/TestRequestBuilderLocalTest.java",
         ] + PARAMETERIZED_SRCS + UI_THREAD_STATEMENT_TEST_EXAMPLES,
     ),
     args = [
@@ -150,5 +151,16 @@ android_library_instrumentation_tests(
         "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:org_mockito_mockito_core",
         "@maven//:org_objenesis_objenesis",
+    ],
+)
+
+android_local_test(
+    name = "TestRequestBuilderLocalTest",
+    srcs = ["internal/runner/TestRequestBuilderLocalTest.java"],
+    test_class = "androidx.test.internal.runner.TestRequestBuilderLocalTest",
+    deps = [
+        "runner/android_junit_runner",
+        "@maven//:org_mockito_mockito_core",
+        "@maven//:com_google_truth_truth",
     ],
 )
