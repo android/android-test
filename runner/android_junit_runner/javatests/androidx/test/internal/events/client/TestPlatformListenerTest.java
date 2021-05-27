@@ -506,4 +506,26 @@ public class TestPlatformListenerTest {
         .isEqualTo(MY_TEST_CLASS + "#" + BETA);
     assertThat(runFinished.runStatus.status).isEqualTo(Status.PASSED);
   }
+
+  @Test
+  public void testFailure_largeMessage() throws Exception {
+    listener.testRunStarted(testSuiteDesc); // 0
+    listener.testStarted(alphaDesc); // 1
+    listener.testFailure(new Failure(alphaDesc, new Exception(getVeryLargeString(1000000)))); // 2
+    listener.testFinished(alphaDesc); // 3
+    listener.testRunFinished(runResult); // 4
+
+    verify(stubService, times(6)).send(serviceCaptor.capture());
+    TestCaseErrorEvent testError = (TestCaseErrorEvent) serviceCaptor.getAllValues().get(2);
+    // verify message is truncated
+    assertThat(testError.error.errorMessage.length()).isLessThan(100000);
+  }
+
+  private static String getVeryLargeString(int size) {
+    StringBuilder sb = new StringBuilder(size);
+    for (int i = 0; i < size; i++) {
+      sb.append('a');
+    }
+    return sb.toString();
+  }
 }

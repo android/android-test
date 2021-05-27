@@ -30,6 +30,7 @@ import androidx.test.services.events.TestRunInfo;
 import androidx.test.services.events.TestStatus;
 import androidx.test.services.events.TestStatus.Status;
 import androidx.test.services.events.TimeStamp;
+import androidx.test.services.events.internal.StackTrimmer;
 import androidx.test.services.events.platform.TestCaseErrorEvent;
 import androidx.test.services.events.platform.TestCaseFinishedEvent;
 import androidx.test.services.events.platform.TestCaseStartedEvent;
@@ -319,7 +320,9 @@ public final class TestPlatformListener extends RunListener {
     }
     ErrorInfo errorInfo =
         new ErrorInfo(
-            failure.getMessage(), failure.getException().getClass().getName(), failure.getTrace());
+            StackTrimmer.getTrimmedMessage(failure),
+            failure.getException().getClass().getName(),
+            StackTrimmer.getTrimmedStackTrace(failure));
     // If the description is a run description, report a run error. Otherwise report a test error.
     if (!descriptionToUse.equals(testRunDescription)) {
       try {
