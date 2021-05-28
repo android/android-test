@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
@@ -52,6 +53,15 @@ public class TestRequestBuilderLocalTest {
     public void noMatch() {}
   }
 
+  public static class TestFixtureIgnored {
+    @Ignore
+    @Test
+    public void ignored() {}
+
+    @Test
+    public void notIgnored() {}
+  }
+
   @Mock private ClassPathScanner mockClassPathScanner;
 
   private TestRequestBuilder builder;
@@ -73,9 +83,11 @@ public class TestRequestBuilderLocalTest {
     builder.setTestsRegExFilter("TestFixture#match");
     builder.addTestClass(TestFixture.class.getName());
 
-    List<String> results = runRequest(builder.build());
+    RecordingRunListener results = runRequest(builder.build());
 
-    assertThat(results).containsExactly(TestFixture.class.getName() + "#match");
+    assertThat(results.testFinishedMethods).containsExactly(TestFixture.class.getName() + "#match");
+    assertThat(results.testIgnoredMethods).hasSize(0);
+    assertThat(results.runStartedMethods).containsExactlyElementsIn(results.testFinishedMethods);
   }
 
   @Test
@@ -83,9 +95,11 @@ public class TestRequestBuilderLocalTest {
     builder.setTestsRegExFilter("TestFixture#match").addPathToScan("foo");
     setClassPathScanningResults(TestFixture.class.getName(), "com.android.SomeOtherClass");
 
-    List<String> results = runRequest(builder.build());
+    RecordingRunListener results = runRequest(builder.build());
 
-    assertThat(results).containsExactly(TestFixture.class.getName() + "#match");
+    assertThat(results.testFinishedMethods).containsExactly(TestFixture.class.getName() + "#match");
+    assertThat(results.testIgnoredMethods).hasSize(0);
+    assertThat(results.runStartedMethods).containsExactlyElementsIn(results.testFinishedMethods);
   }
 
   @Test
@@ -93,9 +107,27 @@ public class TestRequestBuilderLocalTest {
     builder.addTestSizeFilter(TestSize.SMALL);
     builder.addTestClass(TestFixture.class.getName());
 
-    List<String> results = runRequest(builder.build());
+    RecordingRunListener results = runRequest(builder.build());
 
-    assertThat(results).containsExactly(TestFixture.class.getName() + "#match");
+    assertThat(results.testFinishedMethods).containsExactly(TestFixture.class.getName() + "#match");
+    assertThat(results.testIgnoredMethods).hasSize(0);
+    assertThat(results.runStartedMethods).containsExactlyElementsIn(results.testFinishedMethods);
+  }
+
+  @Test
+  public void ignored() throws IOException {
+    builder.addTestClass(TestFixtureIgnored.class.getName());
+
+    RecordingRunListener results = runRequest(builder.build());
+
+    assertThat(results.testFinishedMethods)
+        .containsExactly(TestFixtureIgnored.class.getName() + "#notIgnored");
+    assertThat(results.testIgnoredMethods)
+        .containsExactly(TestFixtureIgnored.class.getName() + "#ignored");
+    assertThat(results.runStartedMethods)
+        .containsExactly(
+            TestFixtureIgnored.class.getName() + "#ignored",
+            TestFixtureIgnored.class.getName() + "#notIgnored");
   }
 
   private void setClassPathScanningResults(String... names) throws IOException {
@@ -104,21 +136,55 @@ public class TestRequestBuilderLocalTest {
   }
 
   /** Runs the test request and gets list of test methods run */
-  private static ArrayList<String> runRequest(Request request) {
+  private static RecordingRunListener runRequest(Request request) {
     JUnitCore testRunner = new JUnitCore();
     RecordingRunListener listener = new RecordingRunListener();
     testRunner.addListener(listener);
     testRunner.run(request);
-    return listener.methods;
+    return listener;
   }
 
   /** Records list of test methods executed */
   private static class RecordingRunListener extends RunListener {
-    ArrayList<String> methods = new ArrayList<>();
+    List<String> runStartedMethods = new ArrayList<>();
+    List<String> testStartedMethods = new ArrayList<>();
+    List<String> testFinishedMethods = new ArrayList<>();
+    List<String> testIgnoredMethods = new ArrayList<>();
+
+    @Override
+    public void testRunStarted(Description description) {
+      addMethodsFromDescription(runStartedMethods, description);
+    }
+
+    @Override
+    public void testStarted(Description description) {
+      addMethodsFromDescription(testStartedMethods, description);
+    }
 
     @Override
     public void testFinished(Description description) {
-      methods.add(description.getClassName() + "#" + description.getMethodName());
+      addMethodsFromDescription(testFinishedMethods, description);
     }
+
+    @Override
+    public void testIgnored(Description description) {
+      addMethodsFromDescription(testIgnoredMethods, description);
+    }
+
+    private static void addMethodsFromDescription(
+        List<String> methodList, Description description) {
+      if (description.isTest()) {
+        methodList.add(description.getClassName() + "#" + description.getMethodName());
+      }
+      for (Description child : description.getChildren()) {
+        addMethodsFromDescription(methodList, child);
+      }
+    }
+
+    // @Override
+    // public void testFinished(Description description) {
+    //  methods.add(description.getClassName() + "#" + description.getMethodName());
+    // }
+
   }
 }
