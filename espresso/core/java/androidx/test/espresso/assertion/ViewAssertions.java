@@ -22,7 +22,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.hamcrest.Matchers.is;
 
 import androidx.annotation.VisibleForTesting;
-import android.util.Log;
 import android.view.View;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
@@ -89,21 +88,15 @@ public final class ViewAssertions {
 
     @Override
     public void check(View view, NoMatchingViewException noViewException) {
+      if (noViewException != null) {
+        throw noViewException;
+      }
+
       StringDescription description = new StringDescription();
       description.appendText("'");
       viewMatcher.describeTo(description);
-      if (noViewException != null) {
-        description.appendText(
-            String.format(
-                Locale.ROOT,
-                "' check could not be performed because view '%s' was not found.\n",
-                noViewException.getViewMatcherDescription()));
-        Log.e(TAG, description.toString());
-        throw noViewException;
-      } else {
-        description.appendText("' doesn't match the selected view.");
-        assertThat(description.toString(), view, viewMatcher);
-      }
+      description.appendText("' doesn't match the selected view.");
+      assertThat(description.toString(), view, viewMatcher);
     }
 
     @Override
