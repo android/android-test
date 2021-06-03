@@ -63,8 +63,11 @@ public class LocationSubjectTest {
       assertThat(location).isEqualTo(other);
       fail("Should have thrown");
     } catch (AssertionError e) {
-      assertThat(e).factValue("expected").isEqualTo("3");
-      assertThat(e).factValue("but was").isEqualTo("2");
+      // isEqualTo only provides detailed info below S
+      if (VERSION.SDK_INT <= VERSION_CODES.R) {
+        assertThat(e).factValue("expected").isEqualTo("3");
+        assertThat(e).factValue("but was").isEqualTo("2");
+      }
     }
 
     try {
