@@ -34,6 +34,7 @@ import androidx.test.espresso.intent.ResolvedIntent;
 import java.util.Set;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 
 /** A collection of hamcrest matchers for matching {@link Intent} objects. */
@@ -194,6 +195,12 @@ public final class IntentMatchers {
 
   public static <T> Matcher<Intent> hasExtra(String key, T value) {
     return hasExtras(hasEntry(key, value));
+  }
+
+  public static Matcher<Intent> hasExtra(String key, Matcher<?> valueMatcher) {
+    // The null check in here isn't ideal, but it's necessary for backwards compatibility.
+    // Otherwise, the previously acceptable `hasExtra(key, null)` invocation will throw an NPE.
+    return hasExtras(hasEntry(key, valueMatcher == null ? Matchers.nullValue() : valueMatcher));
   }
 
   public static Matcher<Intent> hasExtra(Matcher<String> keyMatcher, Matcher<?> valueMatcher) {

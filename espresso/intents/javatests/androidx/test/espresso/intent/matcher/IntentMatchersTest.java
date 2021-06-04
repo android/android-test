@@ -163,7 +163,7 @@ public class IntentMatchersTest {
         hasExtras(
             allOf(
                 hasEntry(equalTo("key1"), equalTo("value1")),
-                hasEntry(equalTo("key1"), equalTo("value1"))));
+                hasEntry(equalTo("key2"), equalTo("value2"))));
     assertTrue(
         matcher.matches(
             new Intent(Intent.ACTION_VIEW)
@@ -356,9 +356,20 @@ public class IntentMatchersTest {
 
   @Test
   public void hasExtraTesting() {
-    Intent intent = new Intent().putExtra("key1", "value1").putExtra("key2", 100.0);
+    Intent intent =
+        new Intent()
+            .putExtra("key1", "value1")
+            .putExtra("key2", 100.0)
+            .putExtra("key3", (String) null);
     assertTrue(hasExtra("key1", "value1").matches(intent));
+    assertTrue(hasExtra("key1", equalTo("value1")).matches(intent));
+    assertTrue(hasExtra(equalTo("key1"), equalTo("value1")).matches(intent));
     assertTrue(hasExtra("key2", 100.0).matches(intent));
+    assertTrue(hasExtra("key2", equalTo(100.0)).matches(intent));
+    assertTrue(hasExtra(equalTo("key2"), equalTo(100.0)).matches(intent));
+    assertTrue(hasExtra("key3", null).matches(intent));
+    assertTrue(hasExtra("key3", equalTo(null)).matches(intent));
+    assertTrue(hasExtra(equalTo("key3"), equalTo(null)).matches(intent));
   }
 
   @Test
@@ -517,5 +528,6 @@ public class IntentMatchersTest {
     public Intent getIntent() {
       return this;
     }
-  };
+  }
+  ;
 }
