@@ -43,6 +43,7 @@ import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -435,11 +436,25 @@ public final class ActivityScenarioTest {
   }
 
   @Test
-  public void launch_postingCallbackSequence() {
+  public void launch_postingCallbackSequence() throws Exception {
     ActivityScenario<AsyncRecordingActivity> activityScenario =
         ActivityScenario.launch(AsyncRecordingActivity.class);
     Espresso.onIdle();
     Espresso.onIdle();
+
+    int maxRetry = 3;
+    AtomicBoolean activityHasFocus = new AtomicBoolean(false);
+    for (int attempt = 0; attempt < maxRetry; attempt++) {
+      activityScenario.onActivity(activity -> activityHasFocus.set(activity.hasWindowFocus()));
+      if (activityHasFocus.get()) {
+        break;
+      }
+      // Retry after the sleep. Window focus is the global state and there is a lag
+      // before onWindowFocusChanged is called after the activity is resumed.
+      // TODO(b/191072024): Find a beter way to monitor focus activity and remove the sleep.
+      Thread.sleep(500);
+    }
+
     activityScenario.onActivity(
         activity ->
             assertThat(activity.getCallbacks())
