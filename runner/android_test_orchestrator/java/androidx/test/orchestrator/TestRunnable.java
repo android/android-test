@@ -27,6 +27,7 @@ import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 import androidx.test.services.shellexecutor.ClientNotConnected;
 import androidx.test.services.shellexecutor.ShellExecutorImpl;
+import com.google.common.io.ByteStreams;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -131,11 +132,8 @@ public class TestRunnable implements Runnable {
     try {
       InputStream inputStream =
           runShellCommand(buildShellParams(getTargetInstrumentationArguments()));
-      byte[] read = new byte[1024];
       try {
-        while (inputStream.read(read) != -1) {
-          outputStream.write(read);
-        }
+        ByteStreams.copy(inputStream, outputStream);
       } finally {
         if (inputStream != null) {
           inputStream.close();

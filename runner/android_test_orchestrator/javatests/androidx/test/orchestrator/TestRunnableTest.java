@@ -117,7 +117,7 @@ public class TestRunnableTest {
     FakeTestRunnable runnable =
         new FakeTestRunnable(context, "secret", arguments, outputStream, listener, null, true);
     runnable.run();
-    assertThat(outputStream.toString().trim(), is("abcdefg"));
+    assertThat(outputStream.toString(), is("abcdefg"));
   }
 
   @Test
