@@ -42,12 +42,10 @@ import androidx.test.internal.runner.listener.DelayInjector;
 import androidx.test.internal.runner.listener.InstrumentationResultPrinter;
 import androidx.test.internal.runner.listener.LogRunListener;
 import androidx.test.internal.runner.listener.SuiteAssignmentPrinter;
-import androidx.test.internal.runner.storage.RunnerFileIO;
-import androidx.test.internal.runner.storage.RunnerIO;
-import androidx.test.internal.runner.storage.RunnerTestStorageIO;
 import androidx.test.internal.runner.tracker.AnalyticsBasedUsageTracker;
 import androidx.test.internal.runner.tracker.UsageTrackerRegistry.AxtVersions;
 import androidx.test.orchestrator.callback.OrchestratorV1Connection;
+import androidx.test.platform.io.FileTestStorage;
 import androidx.test.platform.io.PlatformTestStorageRegistry;
 import androidx.test.runner.lifecycle.ApplicationLifecycleCallback;
 import androidx.test.runner.lifecycle.ApplicationLifecycleMonitorRegistry;
@@ -291,7 +289,6 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   private RunnerArgs runnerArgs;
   private UsageTrackerFacilitator usageTrackerFacilitator;
   private TestEventClient testEventClient = TestEventClient.NO_OP_CLIENT;
-  private RunnerIO runnerIO = new RunnerFileIO();
 
   /** {@inheritDoc} */
   @Override
@@ -435,10 +432,6 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
       return;
     }
 
-    // TODO(b/187349527): Clean up the runner I/O.
-    if (runnerArgs.useTestStorageService) {
-      runnerIO = new RunnerTestStorageIO();
-    }
     registerTestStorage(runnerArgs);
 
     Bundle results = new Bundle();
@@ -557,7 +550,8 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
 
   private void addCoverageListener(RunnerArgs args, TestExecutor.Builder builder) {
     if (args.codeCoverage) {
-      builder.addRunListener(new CoverageListener(args.codeCoveragePath, runnerIO));
+      builder.addRunListener(
+          new CoverageListener(args.codeCoveragePath, PlatformTestStorageRegistry.getInstance()));
     }
   }
 
@@ -631,10 +625,12 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   }
 
   private void registerTestStorage(RunnerArgs runnerArgs) {
-    // TODO: Uses the app folder for test storage otherwise. By default, the no_op one will be used.
     if (runnerArgs.useTestStorageService) {
       Log.d(LOG_TAG, "Use the test storage service for managing file I/O.");
       PlatformTestStorageRegistry.registerInstance(new TestStorage());
+    } else {
+      Log.d(LOG_TAG, "Use the raw file system for managing file I/O.");
+      PlatformTestStorageRegistry.registerInstance(new FileTestStorage());
     }
   }
 }

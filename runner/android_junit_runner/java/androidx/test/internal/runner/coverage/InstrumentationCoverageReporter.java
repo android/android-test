@@ -19,8 +19,8 @@ import android.app.Instrumentation;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import android.util.Log;
-import androidx.test.internal.runner.storage.RunnerIO;
-import androidx.test.internal.runner.storage.RunnerTestStorageIO;
+import androidx.test.platform.io.PlatformTestStorage;
+import androidx.test.services.storage.TestStorage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -40,17 +40,19 @@ public class InstrumentationCoverageReporter {
   private static final String DEFAULT_COVERAGE_FILE_NAME = "coverage.ec";
 
   private final Instrumentation instrumentation;
-  private final RunnerIO runnerIO;
+  private final PlatformTestStorage testStorage;
 
   /**
    * Constructor.
    *
    * @param instrumentation the instrumentation instance. Must not be {@code null}.
-   * @param runnerIO the {@code RunnerIO} to dump the coverage execution data onto the device.
+   * @param testStorage the {@code PlatformTestStorage} to dump the coverage execution data onto the
+   *     device.
    */
-  public InstrumentationCoverageReporter(Instrumentation instrumentation, RunnerIO runnerIO) {
+  public InstrumentationCoverageReporter(
+      Instrumentation instrumentation, PlatformTestStorage testStorage) {
     this.instrumentation = instrumentation;
-    this.runnerIO = runnerIO;
+    this.testStorage = testStorage;
   }
 
   /**
@@ -80,11 +82,11 @@ public class InstrumentationCoverageReporter {
       @Nullable String coverageFilePath, PrintStream instrumentationResultWriter) {
     // Unfortunately, the JaCoCo (Emma-compatible) API only supports dumping the execution data to a
     // `File`, rather than accepting an `OutputStream`. Worth looking JaCoCo's newer API [1] which
-    // supports obtaining the execution data directly, and writing using the `RunnerIO` without
-    // inspecting its implementation/instance.
+    // supports obtaining the execution data directly, and writing using the `PlatformTestStorage`
+    // without inspecting its implementation/instance.
     // [1]
     // https://www.jacoco.org/jacoco/trunk/doc/api/org/jacoco/agent/rt/IAgent.html#getExecutionData(boolean).
-    if (runnerIO instanceof RunnerTestStorageIO) {
+    if (testStorage instanceof TestStorage) {
       coverageFilePath = dumpCoverageToTestStorage(coverageFilePath, instrumentationResultWriter);
     } else {
       coverageFilePath = dumpCoverageToFile(coverageFilePath, instrumentationResultWriter);
@@ -164,7 +166,7 @@ public class InstrumentationCoverageReporter {
           String.format(
               "Moving coverage file [%s] to the internal test storage [%s].",
               srcFilePath, destFilePath));
-      try (OutputStream outputStream = runnerIO.openOutputStream(destFilePath);
+      try (OutputStream outputStream = testStorage.openInternalOutputFile(destFilePath);
           FileChannel srcChannel = new FileInputStream(srcFilePath).getChannel();
           WritableByteChannel destChannel = Channels.newChannel(outputStream)) {
         srcChannel.transferTo(0 /* position */, srcChannel.size() /* count */, destChannel);

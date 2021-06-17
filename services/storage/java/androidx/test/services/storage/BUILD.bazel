@@ -27,7 +27,6 @@ android_library(
     srcs = [
         "TestStorage.java",
         "TestStorageException.java",
-        "internal/InternalTestStorage.java",
         "internal/TestStorageUtil.java",
     ],
     manifest = "AndroidManifest.xml",

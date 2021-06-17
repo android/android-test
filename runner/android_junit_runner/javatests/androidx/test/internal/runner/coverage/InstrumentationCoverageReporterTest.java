@@ -25,8 +25,9 @@ import static org.mockito.Mockito.verify;
 
 import android.app.Instrumentation;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.internal.runner.storage.RunnerFileIO;
-import androidx.test.internal.runner.storage.RunnerTestStorageIO;
+import androidx.test.platform.io.FileTestStorage;
+import androidx.test.platform.io.PlatformTestStorage;
+import androidx.test.services.storage.TestStorage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -41,7 +42,7 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class InstrumentationCoverageReporterTest {
   private Instrumentation instrumentation;
-  private RunnerTestStorageIO testStorage;
+  private PlatformTestStorage testStorage;
   private PrintStream instrumentationResultWriter;
   private InstrumentationCoverageReporter spyCoverageReporter;
   private String defaultAppDataFolder;
@@ -51,7 +52,7 @@ public class InstrumentationCoverageReporterTest {
   public void setUp() throws IOException {
     instrumentation = getInstrumentation();
     instrumentationResultWriter = new PrintStream(new ByteArrayOutputStream());
-    testStorage = new RunnerTestStorageIO();
+    testStorage = new TestStorage();
 
     spyCoverageReporter = spy(new InstrumentationCoverageReporter(instrumentation, testStorage));
     defaultAppDataFolder =
@@ -74,7 +75,7 @@ public class InstrumentationCoverageReporterTest {
             "path/to/coverage.ec", instrumentationResultWriter);
 
     assertThat(actualCoverageFilePath).isEqualTo("path/to/coverage.ec");
-    try (InputStream in = testStorage.openInputStream("path/to/coverage.ec")) {
+    try (InputStream in = testStorage.openInternalInputFile("path/to/coverage.ec")) {
       byte[] coverageData = new byte["Coverage data dump".length()];
       in.read(coverageData);
       assertThat(coverageData).isEqualTo("Coverage data dump".getBytes());
@@ -94,7 +95,7 @@ public class InstrumentationCoverageReporterTest {
             null /* coverageFilePath */, instrumentationResultWriter);
 
     assertThat(actualCoverageFilePath).isEqualTo("coverage.ec");
-    try (InputStream in = testStorage.openInputStream("coverage.ec")) {
+    try (InputStream in = testStorage.openInternalInputFile("coverage.ec")) {
       byte[] coverageData = new byte["Coverage data dump".length()];
       in.read(coverageData);
       assertThat(coverageData).isEqualTo("Coverage data dump".getBytes());
@@ -118,7 +119,7 @@ public class InstrumentationCoverageReporterTest {
 
     assertThat(actualCoverageFilePath).isEqualTo("path/to/coverage2.ec");
     // The coverage file should be empty.
-    try (InputStream in = testStorage.openInputStream(actualCoverageFilePath)) {
+    try (InputStream in = testStorage.openInternalInputFile(actualCoverageFilePath)) {
       assertThat(in.read()).isEqualTo(-1); // Eof
     }
   }
@@ -127,7 +128,7 @@ public class InstrumentationCoverageReporterTest {
   public void generateCoverageReport_noTestService() throws IOException {
     // Stubs the coverage reporter.
     spyCoverageReporter =
-        spy(new InstrumentationCoverageReporter(instrumentation, new RunnerFileIO()));
+        spy(new InstrumentationCoverageReporter(instrumentation, new FileTestStorage()));
     String coverageFilePath = defaultAppDataFolder + "this_is_coverage.ec";
     doReturn(true)
         .when(spyCoverageReporter)
@@ -143,7 +144,7 @@ public class InstrumentationCoverageReporterTest {
   public void generateCoverageReport_noTestService_sameAsDefaultPath() throws IOException {
     // Stubs the coverage reporter.
     spyCoverageReporter =
-        spy(new InstrumentationCoverageReporter(instrumentation, new RunnerFileIO()));
+        spy(new InstrumentationCoverageReporter(instrumentation, new FileTestStorage()));
     doReturn(true)
         .when(spyCoverageReporter)
         .generateCoverageInternal(eq(defaultCoverageFilePath), eq(instrumentationResultWriter));
@@ -159,7 +160,7 @@ public class InstrumentationCoverageReporterTest {
   public void generateCoverageReport_noTestService_defaultCoveragePath() throws IOException {
     // Stubs the coverage reporter.
     spyCoverageReporter =
-        spy(new InstrumentationCoverageReporter(instrumentation, new RunnerFileIO()));
+        spy(new InstrumentationCoverageReporter(instrumentation, new FileTestStorage()));
     doReturn(true)
         .when(spyCoverageReporter)
         .generateCoverageInternal(eq(defaultCoverageFilePath), eq(instrumentationResultWriter));

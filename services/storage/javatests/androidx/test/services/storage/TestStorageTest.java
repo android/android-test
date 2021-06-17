@@ -16,6 +16,7 @@
 package androidx.test.services.storage;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 
@@ -33,6 +34,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Before;
@@ -100,6 +102,20 @@ public final class TestStorageTest {
     } catch (IOException | ClassNotFoundException e) {
       closeInputStream(in);
     }
+  }
+
+  @Test
+  public void readWriteInternalFile() throws IOException {
+    try (OutputStream output = testStorage.openInternalOutputFile("path/to/file")) {
+      output.write(new byte[] {'h', 'e', 'l', 'l', 'o'});
+    }
+
+    byte[] data = new byte[5];
+    try (InputStream input = testStorage.openInternalInputFile("path/to/file")) {
+      input.read(data);
+    }
+
+    assertThat(new String(data, Charset.defaultCharset())).isEqualTo("hello");
   }
 
   private void closeInputStream(ObjectInputStream in) {

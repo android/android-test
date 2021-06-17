@@ -20,8 +20,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.internal.runner.coverage.InstrumentationCoverageReporter;
-import androidx.test.internal.runner.storage.RunnerFileIO;
-import androidx.test.internal.runner.storage.RunnerIO;
+import androidx.test.platform.io.PlatformTestStorage;
+import androidx.test.platform.io.PlatformTestStorageRegistry;
 import java.io.PrintStream;
 import org.junit.runner.Result;
 
@@ -31,7 +31,7 @@ import org.junit.runner.Result;
  */
 public class CoverageListener extends InstrumentationRunListener {
   private final String coverageFilePath;
-  private RunnerIO runnerIO;
+  private PlatformTestStorage runnerIO;
   private InstrumentationCoverageReporter coverageReporter;
 
   /**
@@ -49,7 +49,7 @@ public class CoverageListener extends InstrumentationRunListener {
    *     {@code null}.
    */
   public CoverageListener(@Nullable String customCoverageFilePath) {
-    this(customCoverageFilePath, new RunnerFileIO());
+    this(customCoverageFilePath, PlatformTestStorageRegistry.getInstance());
   }
 
   /**
@@ -59,7 +59,7 @@ public class CoverageListener extends InstrumentationRunListener {
    *     {@code null}.
    * @param runnerIO the {@code RunnerIO} to dump coverage data onto the device.
    */
-  public CoverageListener(@Nullable String customCoverageFilePath, RunnerIO runnerIO) {
+  public CoverageListener(@Nullable String customCoverageFilePath, PlatformTestStorage runnerIO) {
     coverageFilePath = customCoverageFilePath;
     this.runnerIO = runnerIO;
   }

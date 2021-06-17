@@ -34,7 +34,6 @@ android_library(
     testonly = 1,
     srcs = [
         "TestStorageTest.java",
-        "internal/InternalTestStorageTest.java",
     ],
     manifest = "AndroidManifest_opensource.xml",
     deps = [

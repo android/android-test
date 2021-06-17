@@ -24,6 +24,7 @@ import android.util.Log;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.platform.io.PlatformTestStorage;
 import androidx.test.services.storage.file.HostedFile;
+import androidx.test.services.storage.file.HostedFile.FileHost;
 import androidx.test.services.storage.file.PropertyFile;
 import androidx.test.services.storage.file.PropertyFile.Authority;
 import androidx.test.services.storage.internal.TestStorageUtil;
@@ -264,6 +265,40 @@ public final class TestStorage implements PlatformTestStorage {
       silentlyClose(rawStream);
     }
     return new HashMap<>();
+  }
+
+  /**
+   * Provides an InputStream to an internal file used by the testing infrastructure.
+   *
+   * @param pathname path to the internal file. Should not be null. This is a relative path to where
+   *     the storage service stores the internal files. For example, if the storage service stores
+   *     the input files under "/sdcard/internal_only", with a pathname "/path/to/my_input.txt", the
+   *     file will end up at "/sdcard/internal_only/path/to/my_input.txt" on device.
+   * @return an InputStream to the given test file.
+   * @hide
+   */
+  @Override
+  public InputStream openInternalInputFile(String pathname) throws IOException {
+    checkNotNull(pathname);
+    Uri outputUri = HostedFile.buildUri(FileHost.INTERNAL_USE_ONLY, pathname);
+    return TestStorageUtil.getInputStream(outputUri, contentResolver);
+  }
+
+  /**
+   * Provides an OutputStream to an internal file used by the testing infrastructure.
+   *
+   * @param pathname path to the internal file. Should not be null. This is a relative path to where
+   *     the storage service stores the output files. For example, if the storage service stores the
+   *     output files under "/sdcard/internal_only", with a pathname "/path/to/my_output.txt", the
+   *     file will end up at "/sdcard/internal_only/path/to/my_output.txt" on device.
+   * @return an OutputStream to the given output file.
+   * @hide
+   */
+  @Override
+  public OutputStream openInternalOutputFile(String pathname) throws IOException {
+    checkNotNull(pathname);
+    Uri outputUri = HostedFile.buildUri(FileHost.INTERNAL_USE_ONLY, pathname);
+    return TestStorageUtil.getOutputStream(outputUri, contentResolver);
   }
 
   private static Uri getPropertyFileUri() {

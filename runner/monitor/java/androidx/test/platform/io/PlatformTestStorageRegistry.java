@@ -18,6 +18,7 @@ package androidx.test.platform.io;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import androidx.test.internal.platform.ServiceLoaderWrapper;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -94,6 +95,16 @@ public final class PlatformTestStorageRegistry {
     @Override
     public Map<String, Serializable> getOutputProperties() {
       return new HashMap<>();
+    }
+
+    @Override
+    public InputStream openInternalInputFile(String pathname) throws IOException {
+      return new NullInputStream();
+    }
+
+    @Override
+    public OutputStream openInternalOutputFile(String pathname) throws IOException {
+      return new NullOutputStream();
     }
 
     static class NullInputStream extends InputStream {

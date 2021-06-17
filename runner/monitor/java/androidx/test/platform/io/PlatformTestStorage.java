@@ -35,26 +35,13 @@ public interface PlatformTestStorage {
   /**
    * Provides an InputStream to a test file dependency.
    *
-   * @param pathname path to the test file dependency. Should not be null. This is a relative path
-   *     to where the storage service stores the input files. For example, if the storage service
-   *     stores the input files under "/sdcard/test_input_files", with a pathname
-   *     "/path/to/my_input.txt", the file will end up at
-   *     "/sdcard/test_input_files/path/to/my_input.txt" on device.
+   * @param pathname path to the test file dependency. Should not be null.
    * @return an InputStream to the given test file.
    */
   InputStream openInputFile(String pathname) throws IOException;
 
   /**
    * Returns the value of a given argument name.
-   *
-   * <p>There should be one and only one argument defined with the given argument name. Otherwise,
-   * it will throw a TestStorageException if zero or more than one arguments are found.
-   *
-   * <p>We suggest using some naming convention when defining the argument name to avoid possible
-   * conflict, e.g. defining "namespaces" for your arguments which helps clarify how the argument is
-   * used and also its scope. For example, for arguments used for authentication purposes, you could
-   * name the account email argument as something like "google_account.email" and its password as
-   * "google_account.password".
    *
    * @param argName the argument name. Should not be null.
    */
@@ -68,11 +55,7 @@ public interface PlatformTestStorage {
   /**
    * Provides an OutputStream to a test output file.
    *
-   * @param pathname path to the test output file. Should not be null. This is a relative path to
-   *     where the storage service stores the output files. For example, if the storage service
-   *     stores the output files under "/sdcard/test_output_files", with a pathname
-   *     "/path/to/my_output.txt", the file will end up at
-   *     "/sdcard/test_output_files/path/to/my_output.txt" on device.
+   * @param pathname path to the test output file. Should not be null.
    * @return an OutputStream to the given output file.
    */
   OutputStream openOutputFile(String pathname) throws IOException;
@@ -90,4 +73,22 @@ public interface PlatformTestStorage {
    * returned.
    */
   Map<String, Serializable> getOutputProperties();
+
+  /**
+   * Provides an InputStream to an internal file used by the testing infrastructure.
+   *
+   * @param pathname path to the internal file. Should not be null.
+   * @return an InputStream to the given test file.
+   * @hide
+   */
+  InputStream openInternalInputFile(String pathname) throws IOException;
+
+  /**
+   * Provides an OutputStream to an internal file used by the testing infrastructure.
+   *
+   * @param pathname path to the internal file. Should not be null.
+   * @return an OutputStream to the given output file.
+   * @hide
+   */
+  OutputStream openInternalOutputFile(String pathname) throws IOException;
 }
