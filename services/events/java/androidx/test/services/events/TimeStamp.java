@@ -17,6 +17,8 @@
 package androidx.test.services.events;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -73,4 +75,10 @@ public final class TimeStamp implements Parcelable {
           return new TimeStamp[size];
         }
       };
+
+  public static TimeStamp now() {
+    long epochNanos = System.nanoTime();
+    long epochSeconds = NANOSECONDS.toSeconds(epochNanos);
+    return new TimeStamp(epochSeconds, (int) (epochNanos - SECONDS.toNanos(epochSeconds)));
+  }
 }

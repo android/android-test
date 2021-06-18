@@ -27,6 +27,7 @@ public abstract class TestDiscoveryEvent implements Parcelable {
   enum EventType {
     STARTED,
     TEST_FOUND,
+    ERROR,
     FINISHED
   }
 
