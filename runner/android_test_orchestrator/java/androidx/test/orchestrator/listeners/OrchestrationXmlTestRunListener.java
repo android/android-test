@@ -27,6 +27,7 @@ import androidx.test.orchestrator.listeners.result.TestIdentifier;
 import androidx.test.orchestrator.listeners.result.TestResult;
 import androidx.test.orchestrator.listeners.result.TestResult.TestStatus;
 import androidx.test.orchestrator.listeners.result.TestRunResult;
+import androidx.test.platform.io.PlatformTestStorage;
 import com.google.common.io.ByteStreams;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -107,11 +108,17 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
 
   private String reportPath = "";
 
+  private PlatformTestStorage testStorage;
+
   private TestRunResult runResult = new TestRunResult();
 
   private int numTests = 0;
   private long startTime;
   private long finishTime;
+
+  public OrchestrationXmlTestRunListener(PlatformTestStorage testStorage) {
+    this.testStorage = testStorage;
+  }
 
   /** Sets the report file to use. */
   public void setReportDir(File file) {
@@ -177,7 +184,7 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
     finishTime = System.currentTimeMillis();
     long elapsedTime = finishTime - startTime;
     runResult.testRunEnded(elapsedTime, new HashMap<String, String>());
-    generateDocument(reportDir, elapsedTime);
+    generateDocument(elapsedTime);
   }
 
   private static TestIdentifier toTestIdentifier(ParcelableDescription description) {
@@ -185,12 +192,12 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
   }
 
   /** Creates a report file and populates it with the report data from the completed tests. */
-  private void generateDocument(File reportDir, long elapsedTime) {
+  private void generateDocument(long elapsedTime) {
     String timestamp = getTimestamp();
 
     OutputStream stream = null;
     try {
-      stream = createOutputResultStream(reportDir);
+      stream = createOutputResultStream();
       XmlSerializer serializer = XmlPullParserFactory.newInstance().newSerializer();
       serializer.setOutput(stream, UTF_8);
       serializer.startDocument(UTF_8, null);
@@ -198,11 +205,6 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
       // TODO: insert build info
       printTestResults(serializer, timestamp, elapsedTime);
       serializer.endDocument();
-      String msg =
-          String.format(
-              "XML test result file generated at %s. %s",
-              getAbsoluteReportPath(), runResult.getTextSummary());
-      Log.i(LOG_TAG, msg);
     } catch (IOException | XmlPullParserException e) {
       Log.e(LOG_TAG, "Failed to generate report data", e);
       // TODO: consider throwing exception
@@ -214,10 +216,6 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
         }
       }
     }
-  }
-
-  private String getAbsoluteReportPath() {
-    return reportPath;
   }
 
   /** Return the current timestamp as a {@link String}. */
@@ -246,6 +244,15 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
     return reportFile;
   }
 
+  OutputStream createOutputResultStream() throws IOException {
+    if (testStorage != null) {
+      return testStorage.openOutputFile(
+          TEST_RESULT_FILE_PREFIX + "test_storage" + TEST_RESULT_FILE_SUFFIX);
+    } else {
+      return createOutputResultStream(reportDir);
+    }
+  }
+
   /** Creates the output stream to use for test results. Exposed for mocking. */
   OutputStream createOutputResultStream(File reportDir) throws IOException {
     if (!reportDir.exists() && !reportDir.mkdirs()) {
@@ -258,10 +265,10 @@ public class OrchestrationXmlTestRunListener extends OrchestrationRunListener {
           return ByteStreams.nullOutputStream();
         }
       }
+      Log.i(LOG_TAG, "dmeng debug failed again " + testStorage);
       throw new IOException("Failed to prepare report directory.");
     }
     File reportFile = getResultFile(reportDir);
-    reportPath = reportFile.getAbsolutePath();
     return new BufferedOutputStream(new FileOutputStream(reportFile));
   }
 

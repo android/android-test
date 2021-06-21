@@ -19,15 +19,17 @@ import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.orchestrator.junit.ParcelableDescription;
 import androidx.test.orchestrator.junit.ParcelableFailure;
 import androidx.test.orchestrator.junit.ParcelableResult;
+import androidx.test.platform.io.PlatformTestStorage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +43,15 @@ import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.xml.sax.InputSource;
 
 /** Unit tests for {@link OrchestrationXmlTestRunListener}. */
 @RunWith(AndroidJUnit4.class)
 public class OrchestrationXmlTestRunListenerTest {
 
+  @Mock private PlatformTestStorage testStorage;
   private OrchestrationXmlTestRunListener resultReporter;
   private ByteArrayOutputStream outputStream;
   private File reportDir;
@@ -56,15 +61,11 @@ public class OrchestrationXmlTestRunListenerTest {
 
   @Before
   public void setUp() throws Exception {
-
+    MockitoAnnotations.initMocks(this);
     outputStream = new ByteArrayOutputStream();
+    when(testStorage.openOutputFile(anyString())).thenReturn(outputStream);
     resultReporter =
-        new OrchestrationXmlTestRunListener() {
-          @Override
-          OutputStream createOutputResultStream(File reportDir) throws IOException {
-            return outputStream;
-          }
-
+        new OrchestrationXmlTestRunListener(testStorage) {
           @Override
           String getTimestamp() {
             return "ignore";

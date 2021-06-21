@@ -55,6 +55,7 @@ import androidx.test.orchestrator.listeners.OrchestrationListenerManager;
 import androidx.test.orchestrator.listeners.OrchestrationResult;
 import androidx.test.orchestrator.listeners.OrchestrationResultPrinter;
 import androidx.test.orchestrator.listeners.OrchestrationXmlTestRunListener;
+import androidx.test.platform.io.PlatformTestStorageRegistry;
 import androidx.test.runner.UsageTrackerFacilitator;
 import androidx.test.services.shellexecutor.ClientNotConnected;
 import androidx.test.services.shellexecutor.ShellExecSharedConstants;
@@ -142,7 +143,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
       Arrays.asList(permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE);
 
   private final OrchestrationXmlTestRunListener xmlTestRunListener =
-      new OrchestrationXmlTestRunListener();
+      new OrchestrationXmlTestRunListener(PlatformTestStorageRegistry.getInstance());
   private final OrchestrationResult.Builder resultBuilder = new OrchestrationResult.Builder();
   private final OrchestrationResultPrinter resultPrinter = new OrchestrationResultPrinter();
   private final OrchestrationListenerManager listenerManager =

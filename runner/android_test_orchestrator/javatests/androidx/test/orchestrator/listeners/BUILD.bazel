@@ -20,6 +20,7 @@ android_library_instrumentation_tests(
         "//runner/android_junit_runner",
         "//runner/android_test_orchestrator",
         "@maven//:junit_junit",
+        "@maven//:mockito_mockito",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
