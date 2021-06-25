@@ -27,7 +27,7 @@
         <activity
             android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity"
             android:exported="true"
-            android:theme="@android:style/Theme">
+            android:theme="@style/WhiteBackgroundTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -35,7 +35,7 @@
         <activity
             android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity"
             android:exported="true"
-            android:theme="@android:style/Theme">
+            android:theme="@style/WhiteBackgroundTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -43,7 +43,7 @@
         <activity
             android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyFloatingActivity"
             android:exported="true"
-            android:theme="@android:style/Theme.Dialog">
+            android:theme="@style/WhiteBackgroundDialogTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
