@@ -54,7 +54,6 @@ import androidx.test.orchestrator.junit.ParcelableDescription;
 import androidx.test.orchestrator.listeners.OrchestrationListenerManager;
 import androidx.test.orchestrator.listeners.OrchestrationResult;
 import androidx.test.orchestrator.listeners.OrchestrationResultPrinter;
-import androidx.test.orchestrator.listeners.OrchestrationXmlTestRunListener;
 import androidx.test.runner.UsageTrackerFacilitator;
 import androidx.test.services.shellexecutor.ClientNotConnected;
 import androidx.test.services.shellexecutor.ShellExecSharedConstants;
@@ -141,8 +140,6 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   private static final List<String> RUNTIME_PERMISSIONS =
       Arrays.asList(permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE);
 
-  private final OrchestrationXmlTestRunListener xmlTestRunListener =
-      new OrchestrationXmlTestRunListener();
   private final OrchestrationResult.Builder resultBuilder = new OrchestrationResult.Builder();
   private final OrchestrationResultPrinter resultPrinter = new OrchestrationResultPrinter();
   private final OrchestrationListenerManager listenerManager =
@@ -415,7 +412,6 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   }
 
   private void addListeners(int testSize) {
-    listenerManager.addListener(xmlTestRunListener);
     listenerManager.addListener(resultBuilder);
     listenerManager.addListener(resultPrinter);
     listenerManager.orchestrationRunStarted(testSize);
@@ -440,7 +436,6 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
 
   @Override
   public void finish(int resultCode, Bundle results) {
-    xmlTestRunListener.orchestrationRunFinished();
     try {
       usageTrackerFacilitator.trackUsage("AndroidTestOrchestrator", AxtVersions.RUNNER_VERSION);
       usageTrackerFacilitator.sendUsages();
