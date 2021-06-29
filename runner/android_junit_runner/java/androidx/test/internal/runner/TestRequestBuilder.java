@@ -259,15 +259,20 @@ public class TestRequestBuilder {
     @Override
     protected boolean evaluateTest(Description description) {
       final SdkSuppress sdkSuppress = getAnnotationForTest(description);
-      if (sdkSuppress != null) {
-        if ((getDeviceSdkInt() >= sdkSuppress.minSdkVersion()
-                && getDeviceSdkInt() <= sdkSuppress.maxSdkVersion())
-            || getDeviceCodeName().equals(sdkSuppress.codeName())) {
-          return true; // run the test
-        }
-        return false; // don't run the test
+      if (sdkSuppress == null) {
+        return true; // no SdkSuppress, run the test
       }
-      return true; // no SdkSuppress, run the test
+      if ((getDeviceSdkInt() >= sdkSuppress.minSdkVersion()
+          && getDeviceSdkInt() <= sdkSuppress.maxSdkVersion())) {
+        return true; // run the test
+      }
+      final String deviceCodename = getDeviceCodeName();
+      for (final String cn : sdkSuppress.codeName()) {
+        if (deviceCodename.equals(cn)) {
+          return true; // Also run the test if codename matches
+        }
+      }
+      return false; // don't run the test
     }
 
     private SdkSuppress getAnnotationForTest(Description description) {

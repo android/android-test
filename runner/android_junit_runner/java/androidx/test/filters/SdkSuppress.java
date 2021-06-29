@@ -34,14 +34,20 @@ public @interface SdkSuppress {
   /** The maximum API level to execute (inclusive) */
   int maxSdkVersion() default Integer.MAX_VALUE;
   /**
-   * The {@link android.os.Build.VERSION.CODENAME} to execute on. This is intended to be used to run
-   * on a pre-release SDK, where the {@link android.os.Build.VERSION.SDK_INT} has not yet been
-   * finalized. This is treated as an OR operation with respect to the minSdkVersion and
+   * An array of {@link android.os.Build.VERSION.CODENAME} to execute on. This is intended to be
+   * used to run on a pre-release SDK, where the {@link android.os.Build.VERSION.SDK_INT} has not
+   * yet been finalized. This is treated as an OR operation with respect to the minSdkVersion and
    * maxSdkVersion attributes.
    *
-   * <p>For example, to filter a test so it runs on only the prerelease R SDK: <code>
-   * {@literal @}SdkSuppress(minSdkVersion = Build.VERSION_CODES.R, codeName = "R")
+   * <p>Note that in some development versions of a pre-release SDK, notably on the AOSP main
+   * branch, the codename can often be two versions behind the version code. This is because N+2 SDK
+   * development may have started before the N+1 finalized SDK is merged into the branch. For that
+   * reason, codeName should almost always contain two codenames, so that when the codename is
+   * updated from SDK version+1 to SDK version+2, the test keeps running.
+   *
+   * <p>For example, to filter a test so it runs on only the prerelease S SDK: <code>
+   * {@literal @}SdkSuppress(minSdkVersion = Build.VERSION_CODES.S, codeName = { "S", "T" })
    * </code>
    */
-  String codeName() default "unset";
+  String[] codeName() default {};
 }
