@@ -29,4 +29,13 @@ public class LogUtilsTest {
     assertThat(ShadowLog.getLogsForTag(LogUtilsTest.class.getSimpleName())).isEmpty();
   }
 
+  @Test
+  public void logDebugWithProcess() {
+    ShadowLog.setLoggable(LogUtilsTest.class.getSimpleName(), Log.DEBUG);
+    String message = "Order me a %s";
+    LogUtil.logDebugWithProcess(LogUtilsTest.class.getSimpleName(), message, "latte");
+    assertThat(ShadowLog.getLogsForTag(LogUtilsTest.class.getSimpleName())).isNotEmpty();
+    assertThat(ShadowLog.getLogsForTag(LogUtilsTest.class.getSimpleName()).get(0).msg)
+        .contains("Order me a latte in robolectric");
+  }
 }
