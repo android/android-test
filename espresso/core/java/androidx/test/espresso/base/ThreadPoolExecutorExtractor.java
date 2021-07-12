@@ -112,7 +112,14 @@ final class ThreadPoolExecutorExtractor {
         public Optional<ThreadPoolExecutor> call() throws Exception {
           try {
             Class<?> modernClazz = Class.forName(MODERN_ASYNC_TASK_CLASS_NAME);
-            Field executorField = modernClazz.getField(MODERN_ASYNC_TASK_FIELD_NAME);
+            if (modernClazz == null) {
+              return Optional.<ThreadPoolExecutor>absent();
+            }
+            Field executorField = modernClazz.getDeclaredField(MODERN_ASYNC_TASK_FIELD_NAME);
+            if (executorField == null) {
+              return Optional.<ThreadPoolExecutor>absent();
+            }
+            executorField.setAccessible(true);
             return Optional.of((ThreadPoolExecutor) executorField.get(null));
           } catch (ClassNotFoundException cnfe) {
             return Optional.<ThreadPoolExecutor>absent();
