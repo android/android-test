@@ -72,14 +72,14 @@ import org.junit.runners.model.Statement;
  *           down after each test (eg you are using {@link #ActivityTestRule(Class)}), convert
  *           directly to ActivityScenarioRule.
  *       <li>If you need control over when to launch the Activity (eg you are using {@link
- *           #ActivityTestRule(Class, false, false)}, use ActivityScenario.launch. Its recommended
+ *           #ActivityTestRule(Class, false, false)}), use ActivityScenario.launch. It's recommended
  *           to wrap the launch in a try-block, so the Activity is closed automatically. <code>
  *       try (ActivityScenario.launch(activityClass)) {
  *         ...
  *       }
  *     </code>
  *       <li>If you need access to the Activity during the test (eg you are calling {@link
- *           ActivityTestRule#getActivity()} provide a Runnable callback to {@link
+ *           ActivityTestRule#getActivity()}) provide a Runnable callback to {@link
  *           androidx.test.core.app.ActivityScenario#onActivity(Runnable)} instead. The callback
  *           provided to onActivity will run on the application's main thread, thus ensuring a safer
  *           mechanism to access the Activity.
@@ -421,17 +421,14 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
     try {
       final T hardActivityRef = activity.get();
       runOnUiThread(
-          new Runnable() {
-            @Override
-            public void run() {
-              checkState(
-                  hardActivityRef != null,
-                  "Activity was not launched. If you manually finished it, you must launch it"
-                      + " again before finishing it. ");
-              hardActivityRef.finish();
-              // If there is an activity result we save it
-              setActivityResultForActivity(hardActivityRef);
-            }
+          () -> {
+            checkState(
+                hardActivityRef != null,
+                "Activity was not launched. If you manually finished it, you must launch it"
+                    + " again before finishing it. ");
+            hardActivityRef.finish();
+            // If there is an activity result we save it
+            setActivityResultForActivity(hardActivityRef);
           });
       instrumentation.waitForIdleSync();
     } catch (Throwable throwable) {
@@ -465,12 +462,9 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
       checkNotNull(hardActivityRef, "Activity wasn't created yet or already destroyed!");
       try {
         runOnUiThread(
-            new Runnable() {
-              @Override
-              public void run() {
-                checkState(hardActivityRef.isFinishing(), "Activity is not finishing!");
-                setActivityResultForActivity(hardActivityRef);
-              }
+            () -> {
+              checkState(hardActivityRef.isFinishing(), "Activity is not finishing!");
+              setActivityResultForActivity(hardActivityRef);
             });
       } catch (Throwable throwable) {
         throw new IllegalStateException(throwable);
