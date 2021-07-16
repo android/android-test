@@ -22,12 +22,9 @@ import static androidx.test.espresso.action.ViewActions.openLinkWithText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.Intents.intending;
-import static androidx.test.espresso.intent.Intents.times;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.isInternal;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -73,13 +70,5 @@ public class IntentTest {
     // You can also pass both a Matcher<String> and Matcher<Uri> to the openLink action.
     onView(withId(R.id.spanned)).perform(scrollTo(),
         openLink(containsString("google"), is(Uri.parse("http://www.google.com"))));
-    // toPackage validates that intents from the actions above would get resolved to the browser.
-    // depending on the device, you may have a different browser.
-    intended(
-        anyOf(
-            toPackage("com.android.browser"),
-            toPackage("com.android.chrome"),
-            toPackage("org.chromium.webview_shell")),
-        times(2));
   }
 }
