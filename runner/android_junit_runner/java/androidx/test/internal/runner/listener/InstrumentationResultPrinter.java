@@ -108,8 +108,13 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
   private Description description = Description.EMPTY;
 
   public InstrumentationResultPrinter() {
+    this(null);
+  }
+
+  public InstrumentationResultPrinter(Instrumentation instr) {
     resultTemplate = new Bundle();
     testResult = new Bundle(resultTemplate);
+    setInstrumentation(instr);
   }
 
   @Override
