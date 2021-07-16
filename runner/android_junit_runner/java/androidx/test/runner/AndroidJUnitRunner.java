@@ -54,6 +54,7 @@ import androidx.test.runner.screenshot.Screenshot;
 import androidx.test.services.storage.TestStorage;
 import java.util.HashSet;
 import java.util.ServiceLoader;
+import java.util.concurrent.TimeUnit;
 import org.junit.runner.Request;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.notification.RunListener;
@@ -280,9 +281,11 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
 
   private static final String LOG_TAG = "AndroidJUnitRunner";
 
+  private static final long MILLIS_TO_WAIT_FOR_TEST_FINISH = TimeUnit.SECONDS.toMillis(20);
+
   private Bundle arguments;
-  private final InstrumentationResultPrinter instrumentationResultPrinter =
-      new InstrumentationResultPrinter(this);
+  private InstrumentationResultPrinter instrumentationResultPrinter =
+      new InstrumentationResultPrinter();
   private RunnerArgs runnerArgs;
   private UsageTrackerFacilitator usageTrackerFacilitator;
   private TestEventClient testEventClient = TestEventClient.NO_OP_CLIENT;
@@ -579,17 +582,14 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   @Override
   public boolean onException(Object obj, Throwable e) {
     Log.e(LOG_TAG, "An unhandled exception was thrown by the app.");
-
-    // Report better error message back to Instrumentation results.
     InstrumentationResultPrinter instResultPrinter = getInstrumentationResultPrinter();
-    instResultPrinter.reportProcessCrash(e);
-
-    // If the app crashes in #newApplication(ClassLoader, String, Context), before #onCreate(Bundle)
-    // is called, `testEventClient` could possibly be null.
-    if (testEventClient != null && testEventClient.isTestRunEventsEnabled()) {
+    if (instResultPrinter != null) {
+      // Report better error message back to Instrumentation results.
+      instResultPrinter.reportProcessCrash(e);
+    }
+    if (testEventClient.isTestRunEventsEnabled()) {
       // Report the error message back to the orchestrator.
-      Log.d(LOG_TAG, "Reporting the crash to the test run event service.");
-      testEventClient.reportProcessCrash(e);
+      testEventClient.reportProcessCrash(e, MILLIS_TO_WAIT_FOR_TEST_FINISH);
     }
     Log.i(LOG_TAG, "Bringing down the entire Instrumentation process.");
     return super.onException(obj, e);
