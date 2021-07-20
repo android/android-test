@@ -1,6 +1,6 @@
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "ESPRESSO_VERSION", "GOOGLE_MATERIAL_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "ATF_VERSION", "ESPRESSO_VERSION", "GOOGLE_MATERIAL_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 # Description:
@@ -228,7 +228,7 @@ maven_artifact(
         "androidx.viewpager:viewpager:%s" % ANDROIDX_VERSION,
         "androidx.core:core:%s" % ANDROIDX_VERSION,
         "androidx.legacy:legacy-support-core-utils:%s" % ANDROIDX_VERSION,
-        "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:3.1",
+        "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:%s" % ATF_VERSION,
     ],
     artifact_id = "espresso-contrib",
     group_id = "androidx.test.espresso",
