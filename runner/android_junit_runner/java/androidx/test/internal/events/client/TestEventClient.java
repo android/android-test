@@ -17,6 +17,7 @@
 package androidx.test.internal.events.client;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
@@ -234,6 +235,11 @@ public final class TestEventClient {
   }
 
   /** Reports the process crash event with a given exception. */
+  public void reportProcessCrash(Throwable t) {
+    reportProcessCrash(t, /* timeout */ SECONDS.toMillis(20));
+  }
+
+  /** Reports the process crash event with a given exception. */
   public void reportProcessCrash(Throwable t, long timeoutMillis) {
     if (isTestRunEventsEnabled()) {
       // Waits until the orchestrator gets a chance to handle the test failure (if any) and
@@ -243,11 +249,13 @@ public final class TestEventClient {
       // It's also possible that the process crashes in the middle of a test, so no TestFinish event
       // will be received. In this case, it will wait until timeoutMillis is reached.
       if (notificationRunListener != null) {
+        Log.d(TAG, "Test run event service is available.");
         notificationRunListener.reportProcessCrash(t, timeoutMillis);
       }
       // Ignores timeoutMillis, this listener reports the error and allows the process to exit
       // quickly. We don't wait for the test to handle the exception.
       if (testPlatformListener != null) {
+        Log.d(TAG, "Platform test event service is available.");
         testPlatformListener.reportProcessCrash(t);
       }
     }
