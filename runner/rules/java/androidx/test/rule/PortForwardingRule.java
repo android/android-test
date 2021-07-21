@@ -20,8 +20,8 @@ import static androidx.test.internal.util.Checks.checkArgument;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
 import android.util.Log;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.annotation.Beta;
 import java.util.Properties;
 import org.junit.rules.TestRule;

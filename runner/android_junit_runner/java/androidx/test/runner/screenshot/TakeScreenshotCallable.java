@@ -16,9 +16,9 @@
 package androidx.test.runner.screenshot;
 
 import android.graphics.Bitmap;
-import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.View;
+import androidx.annotation.VisibleForTesting;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.Callable;
 

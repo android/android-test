@@ -20,8 +20,8 @@ import static android.os.Environment.DIRECTORY_PICTURES;
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
 import android.os.Build;
-import androidx.annotation.VisibleForTesting;
 import android.util.Log;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.annotation.Beta;
 import java.io.BufferedOutputStream;
 import java.io.File;
