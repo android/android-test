@@ -28,10 +28,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Build;
 import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
 import android.test.mock.MockContentResolver;
 import android.text.TextUtils;
 import android.util.Log;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.annotation.Beta;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.io.BufferedReader;
@@ -189,9 +189,9 @@ public class ProviderTestRule implements TestRule {
             Log.e(
                 TAG,
                 String.format(
-                    "Error executing sql command %s, possibly wrong "
-                        + "or duplicated commands (e.g. same table insertion command without checking "
-                        + "current table existence).",
+                    "Error executing sql command %s, possibly wrong or duplicated commands (e.g."
+                        + " same table insertion command without checking current table"
+                        + " existence).",
                     cmd));
             throw e;
           }

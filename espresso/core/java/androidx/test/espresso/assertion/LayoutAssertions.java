@@ -29,11 +29,11 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.not;
 
 import android.graphics.Rect;
-import androidx.annotation.VisibleForTesting;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.matcher.ViewMatchers.Visibility;

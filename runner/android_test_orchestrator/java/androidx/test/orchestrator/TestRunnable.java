@@ -23,8 +23,8 @@ import static androidx.test.orchestrator.OrchestratorConstants.TARGET_INSTRUMENT
 import android.content.Context;
 import android.os.Bundle;
 import android.os.RemoteException;
-import androidx.annotation.VisibleForTesting;
 import android.util.Log;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.services.shellexecutor.ClientNotConnected;
 import androidx.test.services.shellexecutor.ShellExecutorImpl;
 import com.google.common.io.ByteStreams;

@@ -15,8 +15,8 @@
  */
 package androidx.test.services.events.internal;
 
-import androidx.annotation.VisibleForTesting;
 import android.util.Log;
+import androidx.annotation.VisibleForTesting;
 import org.junit.runner.notification.Failure;
 
 /** A utility for JUnit failure stack traces */
