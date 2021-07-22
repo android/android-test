@@ -152,7 +152,7 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
   @Override
   public void testFailure(Failure failure) throws Exception {
     boolean shouldCallFinish = false;
-    if (description.equals(Description.EMPTY) && testNum == 0 && testClass == null) {
+    if (!isAnyTestStarted()) {
       // Junit failed during initialization and testStarted was never called. For example, an
       // exception was thrown in @BeforeClass method. We must artificially call testStarted and
       // testFinished in order to print a descriptive result that external tools (like Studio) can
@@ -199,22 +199,25 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
       Failure failure = new Failure(description, t);
       testResult.putString(REPORT_KEY_STACK, failure.getTrace());
       // pretty printing
+      String errMsgPrefix =
+          isAnyTestStarted()
+              ? "\nProcess crashed while executing " + description.getDisplayName()
+              : "\nProcess crashed before executing the test(s)";
       testResult.putString(
           Instrumentation.REPORT_KEY_STREAMRESULT,
-          String.format(
-              "\nProcess crashed while executing %s:\n%s",
-              description.getDisplayName(), failure.getTrace()));
+          String.format(errMsgPrefix + ":\n%s", failure.getTrace()));
       testFinished(description);
     } catch (Exception e) {
       // ignore, about to crash anyway
       if (null == description) {
-        Log.e(TAG, "Failed to initialize test before process crash");
+        Log.e(TAG, "Failed to initialize test before process crash", e);
       } else {
         Log.e(
             TAG,
             "Failed to mark test "
                 + description.getDisplayName()
-                + " as finished after process crash");
+                + " as finished after process crash",
+            e);
       }
     }
   }
@@ -224,5 +227,9 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
       PrintStream streamResult, Bundle resultBundle, Result junitResults) {
     // reuse JUnit TextListener to display a summary of the run
     new TextListener(streamResult).testRunFinished(junitResults);
+  }
+
+  private boolean isAnyTestStarted() {
+    return !description.equals(Description.EMPTY) || testNum != 0 || testClass != null;
   }
 }
