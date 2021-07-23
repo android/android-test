@@ -81,6 +81,14 @@ public class BundleSubjectTest {
   }
 
   @Test
+  public void doubleFloat() {
+    Bundle bundle = new Bundle();
+    bundle.putDouble("foo", 100.0);
+
+    assertThat(bundle).doubleFloat("foo").isEqualTo(100.0);
+  }
+
+  @Test
   public void bool() {
     Bundle bundle = new Bundle();
     bundle.putBoolean("foo", true);

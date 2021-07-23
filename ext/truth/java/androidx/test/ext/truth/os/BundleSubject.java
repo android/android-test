@@ -20,6 +20,7 @@ import static com.google.common.truth.Fact.simpleFact;
 import android.os.Bundle;
 import android.os.Parcelable;
 import com.google.common.truth.BooleanSubject;
+import com.google.common.truth.DoubleSubject;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.IntegerSubject;
 import com.google.common.truth.IterableSubject;
@@ -72,6 +73,10 @@ public final class BundleSubject extends Subject {
 
   public LongSubject longInt(String key) {
     return check("getLong(%s)", key).that(actual.getLong(key));
+  }
+
+  public DoubleSubject doubleFloat(String key) {
+    return check("getDouble(%s)", key).that(actual.getDouble(key));
   }
 
   public BooleanSubject bool(String key) {
