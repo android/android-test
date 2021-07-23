@@ -16,9 +16,9 @@
 package androidx.test.core.app
 
 import android.app.Activity
-import androidx.lifecycle.Lifecycle.State
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.Lifecycle.State
 
 /**
  * Launches an activity of a given class and constructs ActivityScenario with the activity. Waits

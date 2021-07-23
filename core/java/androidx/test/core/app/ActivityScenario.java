@@ -23,8 +23,6 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 
 import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
-import androidx.lifecycle.Lifecycle.Event;
-import androidx.lifecycle.Lifecycle.State;
 import android.content.Intent;
 import android.os.Build.VERSION;
 import android.os.Bundle;
@@ -33,6 +31,8 @@ import android.provider.Settings;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.Nullable;
 import android.util.Log;
+import androidx.lifecycle.Lifecycle.Event;
+import androidx.lifecycle.Lifecycle.State;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.app.ActivityInvoker;
 import androidx.test.internal.platform.os.ControlledLooper;

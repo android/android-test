@@ -23,11 +23,11 @@ import static org.junit.Assert.fail;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
-import androidx.lifecycle.Lifecycle.State;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import androidx.lifecycle.Lifecycle.State;
 import androidx.test.core.app.ActivityScenario.ActivityAction;
 import androidx.test.core.app.testing.AsyncRecordingActivity;
 import androidx.test.core.app.testing.FinishItselfActivity;

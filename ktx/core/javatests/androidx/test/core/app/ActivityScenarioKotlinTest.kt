@@ -18,8 +18,8 @@ package androidx.test.core.app
 
 import android.app.Activity
 import android.app.Activity.RESULT_OK
-import androidx.lifecycle.Lifecycle.State
 import android.content.Intent
+import androidx.lifecycle.Lifecycle.State
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.core.app.testing.RecreationRecordingActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -34,9 +34,7 @@ private fun lastLifeCycleTransition(activity: Activity): Stage {
   return ActivityLifecycleMonitorRegistry.getInstance().getLifecycleStageOf(activity)
 }
 
-/**
- * An example test with ActivityScenario using Kotlin extensions.
- */
+/** An example test with ActivityScenario using Kotlin extensions. */
 @RunWith(AndroidJUnit4::class)
 class ActivityScenarioKotlinTest {
   @Test
@@ -84,15 +82,16 @@ class ActivityScenarioKotlinTest {
 
   @Test
   fun basicUseCaseWithCustomIntent() {
-    val intent = Intent(getApplicationContext(), RecreationRecordingActivity::class.java).apply {
-      putExtra("MyIntentParameterKey", "MyIntentParameterValue")
-    }
+    val intent =
+      Intent(getApplicationContext(), RecreationRecordingActivity::class.java).apply {
+        putExtra("MyIntentParameterKey", "MyIntentParameterValue")
+      }
     launchActivity<RecreationRecordingActivity>(intent).use { scenario ->
       scenario.onActivity { activity ->
         assertThat(activity.intent)
-                .extras()
-                .string("MyIntentParameterKey")
-                .isEqualTo("MyIntentParameterValue")
+          .extras()
+          .string("MyIntentParameterKey")
+          .isEqualTo("MyIntentParameterValue")
       }
     }
   }
