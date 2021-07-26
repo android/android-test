@@ -27,8 +27,8 @@ import android.os.IBinder;
 import android.os.IInterface;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 import android.util.Log;
+import androidx.annotation.VisibleForTesting;
 
 /**
  * The base class that service connections have to extend. Handles connection to the service proxy

@@ -26,11 +26,11 @@ import static org.hamcrest.Matchers.allOf;
 
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.Adapter;
 import android.widget.AdapterView;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.action.AdapterDataLoaderAction;
 import androidx.test.espresso.action.AdapterViewProtocol;
 import androidx.test.espresso.action.AdapterViewProtocol.AdaptedData;

@@ -16,8 +16,8 @@
 
 package androidx.test.internal.runner.junit4;
 
-import androidx.annotation.VisibleForTesting;
 import android.util.Log;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.internal.util.AndroidRunnerParams;
 import androidx.test.runner.AndroidJUnit4;
 import org.junit.internal.builders.AnnotatedBuilder;
