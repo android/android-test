@@ -17,8 +17,8 @@ package androidx.test.internal.runner.listener;
 
 import android.app.Instrumentation;
 import android.os.Bundle;
-import androidx.annotation.VisibleForTesting;
 import android.util.Log;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.services.events.internal.StackTrimmer;
 import java.io.PrintStream;
 import org.junit.internal.TextListener;

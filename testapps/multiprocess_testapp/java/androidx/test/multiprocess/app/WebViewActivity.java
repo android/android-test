@@ -20,10 +20,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import androidx.annotation.VisibleForTesting;
 
 /**
  * An {@link Activity} that gets a text string from the user and displays it back when the user

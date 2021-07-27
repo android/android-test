@@ -21,8 +21,8 @@ import static androidx.test.espresso.web.model.Atoms.script;
 import static androidx.test.espresso.web.model.Atoms.transform;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import androidx.annotation.VisibleForTesting;
 import android.webkit.WebView;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import androidx.test.espresso.web.model.Atom;

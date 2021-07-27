@@ -19,8 +19,8 @@ package androidx.test.ui.app;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.VisibleForTesting;
 import android.widget.TextView;
+import androidx.annotation.VisibleForTesting;
 
 /** An activity with a delayed text view loading */
 public class IdlingUIActivity extends Activity {
