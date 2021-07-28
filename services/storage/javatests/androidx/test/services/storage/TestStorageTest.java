@@ -22,6 +22,7 @@ import static org.junit.Assert.assertEquals;
 
 import android.net.Uri;
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.services.storage.file.HostedFile;
 import androidx.test.services.storage.internal.TestStorageUtil;
 import androidx.test.services.storage.testapp.DummyActivity;
@@ -116,6 +117,28 @@ public final class TestStorageTest {
     }
 
     assertThat(new String(data, Charset.defaultCharset())).isEqualTo("hello");
+  }
+
+  @Test
+  public void writeFileInAppendMode() throws IOException {
+    try (OutputStream output = testStorage.openOutputFile("path/to/file")) {
+      output.write(new byte[] {'h', 'e', 'l', 'l', 'o'});
+    }
+
+    try (OutputStream output = testStorage.openOutputFile("path/to/file", true)) {
+      output.write(new byte[] {' ', 'w', 'o', 'r', 'l', 'd'});
+    }
+
+    byte[] data = new byte[11];
+    Uri outputFileUri = TestStorage.getOutputFileUri("path/to/file");
+    try (InputStream input =
+        TestStorageUtil.getInputStream(
+            outputFileUri,
+            InstrumentationRegistry.getInstrumentation().getTargetContext().getContentResolver())) {
+      input.read(data);
+    }
+
+    assertThat(new String(data, Charset.defaultCharset())).isEqualTo("hello world");
   }
 
   private void closeInputStream(ObjectInputStream in) {

@@ -61,6 +61,16 @@ public interface PlatformTestStorage {
   OutputStream openOutputFile(String pathname) throws IOException;
 
   /**
+   * Provides an OutputStream to a test output file.
+   *
+   * @param pathname path to the test output file. Should not be null.
+   * @param append if true, then the lines will be added to the end of the file rather than
+   *     overwriting.
+   * @return an OutputStream to the given output file.
+   */
+  OutputStream openOutputFile(String pathname, boolean append) throws IOException;
+
+  /**
    * Adds the given properties.
    *
    * <p>Adding a property with the same name would append new values and overwrite the old values if

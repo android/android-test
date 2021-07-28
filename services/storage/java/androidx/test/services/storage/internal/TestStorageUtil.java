@@ -66,12 +66,28 @@ public final class TestStorageUtil {
    */
   public static OutputStream getOutputStream(Uri uri, ContentResolver contentResolver)
       throws FileNotFoundException {
+    return getOutputStream(uri, contentResolver, false);
+  }
+
+  /**
+   * Gets the output stream for a given Uri.
+   *
+   * <p>The returned OutputStream is essentially a {@link java.io.FileOutputStream} which likely
+   * should be buffered to avoid {@code UnbufferedIoViolation} when running under strict mode.
+   *
+   * @param uri The Uri for which the OutputStream is required.
+   * @param append if true, then the lines will be added to the end of the file rather than
+   *     overwriting.
+   */
+  public static OutputStream getOutputStream(
+      Uri uri, ContentResolver contentResolver, boolean append) throws FileNotFoundException {
     checkNotNull(uri);
 
     ContentProviderClient providerClient = null;
     try {
       providerClient = makeContentProviderClient(contentResolver, uri);
-      return new ParcelFileDescriptor.AutoCloseOutputStream(providerClient.openFile(uri, "w"));
+      String mode = append ? "wa" : "w";
+      return new ParcelFileDescriptor.AutoCloseOutputStream(providerClient.openFile(uri, mode));
     } catch (RemoteException re) {
       throw new TestStorageException("Unable to access content provider: " + uri, re);
     } finally {

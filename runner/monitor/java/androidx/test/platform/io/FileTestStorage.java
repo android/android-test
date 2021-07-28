@@ -54,6 +54,11 @@ public final class FileTestStorage implements PlatformTestStorage {
     return new FileOutputStream(pathname);
   }
 
+  @Override
+  public OutputStream openOutputFile(String pathname, boolean append) throws IOException {
+    return new FileOutputStream(pathname, append);
+  }
+
   /**
    * Test input arguments is not supported when raw file I/O is used.
    *

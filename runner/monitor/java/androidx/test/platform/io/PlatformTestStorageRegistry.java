@@ -90,6 +90,11 @@ public final class PlatformTestStorageRegistry {
     }
 
     @Override
+    public OutputStream openOutputFile(String pathname, boolean append) {
+      return new NullOutputStream();
+    }
+
+    @Override
     public void addOutputProperties(Map<String, Serializable> properties) {}
 
     @Override

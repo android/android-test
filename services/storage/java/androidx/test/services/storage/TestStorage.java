@@ -196,10 +196,27 @@ public final class TestStorage implements PlatformTestStorage {
    */
   @Override
   public OutputStream openOutputFile(@Nonnull String pathname) throws FileNotFoundException {
-    checkNotNull(pathname);
+    return openOutputFile(pathname, false);
+  }
 
+  /**
+   * Provides an OutputStream to a test output file.
+   *
+   * @param pathname path to the test output file. Should not be null. This is a relative path to
+   *     where the storage service stores the output files. For example, if the storage service
+   *     stores the output files under "/sdcard/test_output_files", with a pathname
+   *     "/path/to/my_output.txt", the file will end up at
+   *     "/sdcard/test_output_files/path/to/my_output.txt" on device.
+   * @param append if true, then the lines will be added to the end of the file rather than
+   *     overwriting.
+   * @return an OutputStream to the given output file.
+   */
+  @Override
+  public OutputStream openOutputFile(@Nonnull String pathname, boolean append)
+      throws FileNotFoundException {
+    checkNotNull(pathname);
     Uri outputUri = getOutputFileUri(pathname);
-    return TestStorageUtil.getOutputStream(outputUri, contentResolver);
+    return TestStorageUtil.getOutputStream(outputUri, contentResolver, append);
   }
 
   /**
