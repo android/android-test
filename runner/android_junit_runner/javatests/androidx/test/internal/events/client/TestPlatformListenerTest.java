@@ -74,37 +74,9 @@ public class TestPlatformListenerTest {
     listener = new TestPlatformListener(stubService);
   }
 
-  @Before
-  public void buildRegularDescriptionTree() {
-    // AJUR top level description name is "null". This might be a bug, but it's also probably going
-    // to be one of the weirdest Description trees we may encounter. Better to just defensively test
-    // this component to ensure it works with other Runners as well.
-    testSuiteDesc = Description.createSuiteDescription("null");
-    testClassDesc = Description.createSuiteDescription(MyTestClass.class);
-    alphaDesc = Description.createTestDescription(MY_TEST_CLASS, ALPHA, ALPHA);
-    betaDesc = Description.createTestDescription(MY_TEST_CLASS, BETA, BETA);
-
-    // "null"
-    //  |--> MyTestClass
-    //       |--> MyTestClass.alpha
-    //       |--> MyTestClass.beta
-    testSuiteDesc.addChild(testClassDesc);
-    testClassDesc.addChild(alphaDesc);
-    testClassDesc.addChild(betaDesc);
-  }
-
-  @Before
-  public void buildInitializationErrorTree() {
-    // InitializationError is treated as its own method in terms of Description structure
-    initErrSuiteDesc = Description.createSuiteDescription("null");
-    initErrClassDesc = Description.createSuiteDescription(MyTestClass.class);
-    initErrDesc = Description.createTestDescription(MY_TEST_CLASS, INIT_ERR, INIT_ERR);
-    initErrSuiteDesc.addChild(initErrClassDesc);
-    initErrClassDesc.addChild(initErrDesc);
-  }
-
   @Test
   public void passingTests() throws Exception {
+    buildRegularDescriptionTree();
     when(runResult.wasSuccessful()).thenReturn(true);
     listener.testRunStarted(testSuiteDesc); // 0
     listener.testStarted(alphaDesc); // 1
@@ -144,6 +116,7 @@ public class TestPlatformListenerTest {
 
   @Test
   public void testFailure() throws Exception {
+    buildRegularDescriptionTree();
     RuntimeException error = new RuntimeException("Beta Failed");
     when(runResult.wasSuccessful()).thenReturn(false);
     listener.testRunStarted(testSuiteDesc); // 0
@@ -190,6 +163,7 @@ public class TestPlatformListenerTest {
 
   @Test
   public void runnerFailure_cancelsRemainingTests() throws Exception {
+    buildRegularDescriptionTree();
     RuntimeException error = new RuntimeException("Mysterious Run Failure");
     when(runResult.wasSuccessful()).thenReturn(false);
     listener.testRunStarted(testSuiteDesc); // 0
@@ -232,6 +206,7 @@ public class TestPlatformListenerTest {
 
   @Test
   public void runnerFailure_cancelsAllTests() throws Exception {
+    buildRegularDescriptionTree();
     RuntimeException error = new RuntimeException("BeforeClass Failure");
     when(runResult.wasSuccessful()).thenReturn(false);
     listener.testRunStarted(testSuiteDesc); // 0
@@ -270,6 +245,7 @@ public class TestPlatformListenerTest {
 
   @Test
   public void runFinished_abortsActiveTest_cancelsRemainingTests() throws Exception {
+    buildRegularDescriptionTree();
     when(runResult.wasSuccessful()).thenReturn(true);
     listener.testRunStarted(testSuiteDesc); // 0
     listener.testStarted(alphaDesc); // 1
@@ -305,6 +281,7 @@ public class TestPlatformListenerTest {
 
   @Test
   public void appCrash_duringTest_reportsTestError() throws Exception {
+    buildRegularDescriptionTree();
     RuntimeException error = new RuntimeException("Beta Instrumentation Crash");
     listener.testRunStarted(testSuiteDesc); // 0
     listener.testStarted(alphaDesc); // 1
@@ -348,6 +325,7 @@ public class TestPlatformListenerTest {
 
   @Test
   public void appCrash_outsideOfTest_reportsRunnerError() throws Exception {
+    buildRegularDescriptionTree();
     // JUnit isn't keeping track of this internally so it will think everything is fine
     RuntimeException error = new RuntimeException("Some Instrumentation Crash");
     listener.testRunStarted(testSuiteDesc); // 0
@@ -393,6 +371,7 @@ public class TestPlatformListenerTest {
 
   @Test
   public void testSkipped_ok() throws Exception {
+    buildRegularDescriptionTree();
     when(runResult.wasSuccessful()).thenReturn(true);
     AssumptionViolatedException alphaSkip = new AssumptionViolatedException("skip alpha");
     AssumptionViolatedException betaSkip = new AssumptionViolatedException("skip beta");
@@ -445,6 +424,7 @@ public class TestPlatformListenerTest {
 
   @Test
   public void initializationError_ok() throws Exception {
+    buildInitializationErrorTree();
     when(runResult.wasSuccessful()).thenReturn(false);
     InitializationError initErr = new InitializationError("Malformed class");
     // Initialization error gets pushed through the Run Listener lifecycle as if it was an actual
@@ -476,6 +456,7 @@ public class TestPlatformListenerTest {
 
   @Test
   public void testIgnored_ok() throws Exception {
+    buildRegularDescriptionTree();
     when(runResult.wasSuccessful()).thenReturn(true);
     listener.testRunStarted(testSuiteDesc); // 0
     listener.testIgnored(alphaDesc); // 1
@@ -509,6 +490,7 @@ public class TestPlatformListenerTest {
 
   @Test
   public void testFailure_largeMessage() throws Exception {
+    buildRegularDescriptionTree();
     listener.testRunStarted(testSuiteDesc); // 0
     listener.testStarted(alphaDesc); // 1
     listener.testFailure(new Failure(alphaDesc, new Exception(getVeryLargeString(1000000)))); // 2
@@ -519,6 +501,48 @@ public class TestPlatformListenerTest {
     TestCaseErrorEvent testError = (TestCaseErrorEvent) serviceCaptor.getAllValues().get(2);
     // verify message is truncated
     assertThat(testError.error.errorMessage.length()).isLessThan(100000);
+  }
+
+  @Test
+  public void crashBeforeTestRun() throws TestEventClientException {
+    listener.reportProcessCrash(new RuntimeException("Crash before test run"));
+
+    // Verifies a test failure event & test run finished event were sent
+    verify(stubService, times(2)).send(serviceCaptor.capture());
+    List<TestPlatformEvent> events = serviceCaptor.getAllValues();
+    TestRunErrorEvent failureEvent = (TestRunErrorEvent) events.get(0);
+    assertThat(failureEvent.testRun.testRunName).isEqualTo("No Tests");
+    assertThat(failureEvent.error.errorType).isEqualTo("java.lang.RuntimeException");
+    TestRunFinishedEvent runFinishedEvent = (TestRunFinishedEvent) events.get(1);
+    assertThat(runFinishedEvent.testRun.testRunName).isEqualTo("No Tests");
+    assertThat(runFinishedEvent.runStatus.status).isEqualTo(Status.FAILED);
+  }
+
+  private void buildRegularDescriptionTree() {
+    // AJUR top level description name is "null". This might be a bug, but it's also probably going
+    // to be one of the weirdest Description trees we may encounter. Better to just defensively test
+    // this component to ensure it works with other Runners as well.
+    testSuiteDesc = Description.createSuiteDescription("null");
+    testClassDesc = Description.createSuiteDescription(MyTestClass.class);
+    alphaDesc = Description.createTestDescription(MY_TEST_CLASS, ALPHA, ALPHA);
+    betaDesc = Description.createTestDescription(MY_TEST_CLASS, BETA, BETA);
+
+    // "null"
+    //  |--> MyTestClass
+    //       |--> MyTestClass.alpha
+    //       |--> MyTestClass.beta
+    testSuiteDesc.addChild(testClassDesc);
+    testClassDesc.addChild(alphaDesc);
+    testClassDesc.addChild(betaDesc);
+  }
+
+  private void buildInitializationErrorTree() {
+    // InitializationError is treated as its own method in terms of Description structure
+    initErrSuiteDesc = Description.createSuiteDescription("null");
+    initErrClassDesc = Description.createSuiteDescription(MyTestClass.class);
+    initErrDesc = Description.createTestDescription(MY_TEST_CLASS, INIT_ERR, INIT_ERR);
+    initErrSuiteDesc.addChild(initErrClassDesc);
+    initErrClassDesc.addChild(initErrDesc);
   }
 
   private static String getVeryLargeString(int size) {

@@ -24,6 +24,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
+import android.os.StrictMode;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.filters.LargeTest;
@@ -588,7 +589,10 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
       // minimize the dependencies during initialization.
       instResultPrinter.setInstrumentation(this);
     }
+    // Allows DISK_WRITE as `sendStatus` writes to standard output.
+    StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
     instResultPrinter.reportProcessCrash(e);
+    StrictMode.setThreadPolicy(oldPolicy);
 
     // If the app crashes in #newApplication(ClassLoader, String, Context), before #onCreate(Bundle)
     // is called, `testEventClient` could possibly be null.

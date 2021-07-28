@@ -88,6 +88,9 @@ public final class TestPlatformListener extends RunListener {
    */
   public TestPlatformListener(@NonNull TestPlatformEventService notificationService) {
     super();
+    // Instantiates everything on creation so that we can correctly report errors before
+    // {@link #testRunStarted} is called.
+    initListener();
     this.notificationService =
         checkNotNull(notificationService, "notificationService cannot be null");
   }
@@ -96,7 +99,7 @@ public final class TestPlatformListener extends RunListener {
   @Override
   public void testRunStarted(Description description) throws Exception {
     TimeStamp timeStamp = getTimeStamp();
-    resetListener();
+    initListener();
     ongoingResultListener.get().testRunStarted(description);
     setRunDescription(description);
     List<Description> testCases =
@@ -270,11 +273,11 @@ public final class TestPlatformListener extends RunListener {
       }
       testRunFinished(ongoingResult.get());
     } catch (Exception e) {
-      Log.e("An exception was encountered while reporting the process crash", e.getMessage());
+      Log.e(TAG, "An exception was encountered while reporting the process crash", e);
     }
   }
 
-  private void resetListener() {
+  private void initListener() {
     finishedTestCases = new HashSet<>();
     foundTestCases = new HashSet<>();
     startedTestCases = new HashSet<>();
@@ -313,7 +316,8 @@ public final class TestPlatformListener extends RunListener {
     return description.getMethodName() != null && description.getMethodName().equals(INIT_ERROR);
   }
 
-  private TestPlatformEvent createErrorEvent(Failure failure, TimeStamp timeStamp) {
+  private TestPlatformEvent createErrorEvent(Failure failure, TimeStamp timeStamp)
+      throws TestEventException {
     Description descriptionToUse = failure.getDescription();
     if (!descriptionToUse.isTest() || isInitError(descriptionToUse)) {
       descriptionToUse = testRunDescription;
@@ -330,6 +334,10 @@ public final class TestPlatformListener extends RunListener {
       } catch (TestEventException e) {
         Log.e(TAG, "Unable to create TestCaseErrorEvent", e);
       }
+    }
+    if (memoizedTestRun == null) {
+      Log.d(TAG, "No test run info. Reporting an error before test run has ever started.");
+      memoizedTestRun = convertToTestRun(Description.EMPTY);
     }
     return new TestRunErrorEvent(memoizedTestRun, errorInfo, timeStamp);
   }

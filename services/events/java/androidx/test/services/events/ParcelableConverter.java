@@ -64,8 +64,7 @@ public final class ParcelableConverter {
 
   /** Checks if the specified JUnit {@link Description} contains a valid test case name. */
   public static boolean isValidJUnitDescription(@NonNull Description description) {
-    return !description.equals(Description.EMPTY)
-        && !description.equals(Description.TEST_MECHANISM);
+    return !description.equals(Description.TEST_MECHANISM);
   }
 
   /**
