@@ -14,41 +14,31 @@
  * limitations under the License.
  */
 
-package androidx.test.espresso.internal.data
+package androidx.test.espresso.internal.data.model
 
-/**
- * Stores metadata for a visited screen in an Espresso test.
- */
+/** Stores metadata for a visited screen in an Espresso test. */
 class ScreenData {
   // List of ActionData objects containing metadata for actions originating on this screen
   private val actions: ArrayList<ActionData> = ArrayList()
   // Artifacts such as screenshots, HSV files, logcat snippets captured on this screen
   private val artifacts: ArrayList<TestArtifact> = ArrayList()
 
-  /**
-   * Adds an ActionData with this as source and a given [ScreenData] as the destination.
-   */
+  /** Adds an ActionData with this as source and a given [ScreenData] as the destination. */
   fun addAction(action: ActionData) {
     actions.add(action)
   }
 
-  /**
-   * Gets the list of [ActionData] objects corresponding to actions taken from this screen.
-   */
+  /** Gets the list of [ActionData] objects corresponding to actions taken from this screen. */
   fun getActions(): List<ActionData> {
     return actions.toList()
   }
 
-  /**
-   * Creates and appends an artifact to this [ScreenData] object.
-   */
+  /** Creates and appends an artifact to this [ScreenData] object. */
   fun addArtifact(artifact: TestArtifact) {
     artifacts.add(artifact)
   }
 
-  /**
-   * Gets the list of [TestArtifact] objects on this screen.
-   */
+  /** Gets the list of [TestArtifact] objects on this screen. */
   fun getArtifacts(): List<TestArtifact> {
     return artifacts.toList()
   }

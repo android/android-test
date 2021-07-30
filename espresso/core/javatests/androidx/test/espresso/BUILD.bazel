@@ -24,6 +24,7 @@ android_app_instrumentation_tests(
         "//espresso/core/java/androidx/test/espresso:data-interaction-remote",
         "//espresso/core/java/androidx/test/espresso/action:remote_view_actions",
         "//espresso/core/java/androidx/test/espresso/base",
+        "//espresso/core/java/androidx/test/espresso/internal/data",
         "//espresso/core/java/androidx/test/espresso/matcher:remote_hamcrest_v1_3_core_matchers",
         "//espresso/core/java/androidx/test/espresso/matcher:remote_view_matchers",
         "//espresso/core/java/androidx/test/espresso/proto/matcher:ui_interaction_view_matchers_android_pb3",

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.espresso.internal.data
+package androidx.test.espresso.internal.data.model
 
 /**
  * An abstraction for a test artifact representing a file to be included in a [ScreenData] node.

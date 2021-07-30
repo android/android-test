@@ -39,6 +39,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import android.os.IBinder;
 import android.view.View;
 import androidx.test.espresso.base.InterruptableUiController;
+import androidx.test.espresso.internal.data.TestFlowVisualizer;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.espresso.remote.Bindable;
 import androidx.test.espresso.remote.NoRemoteEspressoInstanceException;
@@ -46,6 +47,7 @@ import androidx.test.espresso.remote.RemoteInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import androidx.test.internal.platform.os.ControlledLooper;
+import androidx.test.platform.io.PlatformTestStorageRegistry;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -88,7 +90,6 @@ public class ViewInteractionTest {
   private Matcher<View> actionConstraint;
   private AtomicReference<Matcher<Root>> rootMatcherRef;
   private AtomicReference<Boolean> needsActivity;
-
 
   private static Callable<Void> createSuccessfulListenableFutureStub() {
     return new Callable<Void>() {
@@ -435,7 +436,8 @@ public class ViewInteractionTest {
                     TimeUnit.SECONDS,
                     new LinkedBlockingQueue<Runnable>(),
                     new ThreadFactoryBuilder().setNameFormat("Espresso Remote #%d").build())),
-            mockControlledLooper);
+            mockControlledLooper,
+            TestFlowVisualizer.getInstance(PlatformTestStorageRegistry.getInstance()));
   }
 
   private void initWithRunPerformWithSuccessfulRemoteInteraction() {

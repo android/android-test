@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-package androidx.test.espresso.internal.data
+package androidx.test.espresso.base;
 
-/**
- * Represents a gallery of the test output metadata.
- *  e.g. the screens visited, and actions performed, in an Espresso test.
- */
-class TestOutputGallery {
-  // A reference to the first [ScreenData] node.
-  var head: ScreenData? = null
-  // A reference to the last [ScreenData] node.
-  var tail: ScreenData? = null
+import androidx.test.platform.io.PlatformTestStorage;
+import androidx.test.platform.io.PlatformTestStorageRegistry;
+import dagger.Module;
+import dagger.Provides;
 
-  /**
-   * Adds a [ScreenData] object to the graph.
-   */
-  fun addScreen(screen: ScreenData) {
-    if (head == null) {
-      head = screen
-    } else {
-      tail!!.addAction(ActionData(tail!!, screen))
-    }
-    tail = screen
+/** Dagger module for creating {@link PlatformTestStorage} instances. */
+@Module
+public class PlatformTestStorageModule {
+  @Provides
+  PlatformTestStorage provideTestStorage() {
+    return PlatformTestStorageRegistry.getInstance();
   }
 }

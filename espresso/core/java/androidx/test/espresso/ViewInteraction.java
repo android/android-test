@@ -29,6 +29,7 @@ import android.widget.AdapterView;
 import androidx.test.espresso.action.ScrollToAction;
 import androidx.test.espresso.base.InterruptableUiController;
 import androidx.test.espresso.base.MainThread;
+import androidx.test.espresso.internal.data.TestFlowVisualizer;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.espresso.remote.Bindable;
 import androidx.test.espresso.remote.IInteractionExecutionStatus;
@@ -76,6 +77,7 @@ public final class ViewInteraction {
   private final AtomicReference<Boolean> needsActivity;
   private final RemoteInteraction remoteInteraction;
   private final ListeningExecutorService remoteExecutor;
+  private final TestFlowVisualizer testFlowVisualizer;
   // test thread only
   private boolean hasRootMatcher = false;
 
@@ -90,7 +92,8 @@ public final class ViewInteraction {
       AtomicReference<Boolean> needsActivity,
       RemoteInteraction remoteInteraction,
       ListeningExecutorService remoteExecutor,
-      ControlledLooper controlledLooper) {
+      ControlledLooper controlledLooper,
+      TestFlowVisualizer testFlowVisualizer) {
     this.viewFinder = checkNotNull(viewFinder);
     this.uiController = (InterruptableUiController) checkNotNull(uiController);
     this.failureHandler = checkNotNull(failureHandler);
@@ -101,12 +104,17 @@ public final class ViewInteraction {
     this.remoteInteraction = checkNotNull(remoteInteraction);
     this.remoteExecutor = checkNotNull(remoteExecutor);
     this.controlledLooper = checkNotNull(controlledLooper);
+    this.testFlowVisualizer = checkNotNull(testFlowVisualizer);
   }
 
   /**
    * Performs the given action(s) on the view selected by the current view matcher. If more than one
    * action is provided, actions are executed in the order provided with precondition checks running
    * prior to each action.
+   *
+   * <p>If the test argument `--enable_testflow_gallery` is present, {@link TestFlowVisualizer}
+   * captures data for each of the interactions and generates an output report at the end of the
+   * test run. NOTE, this is an experimental feature.
    *
    * @param viewActions one or more actions to execute.
    * @return this interaction for further perform/verification calls.
@@ -117,6 +125,9 @@ public final class ViewInteraction {
       SingleExecutionViewAction singleExecutionViewAction =
           new SingleExecutionViewAction(va, viewMatcher);
       desugaredPerform(singleExecutionViewAction);
+      if (testFlowVisualizer.isEnabled()) {
+        testFlowVisualizer.generateScreenData();
+      }
     }
     return this;
   }

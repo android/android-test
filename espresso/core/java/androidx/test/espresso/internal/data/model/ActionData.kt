@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.espresso.internal.data
+package androidx.test.espresso.internal.data.model
 
 /**
  * [ActionData] stores metadata of [androidx.test.espresso.ViewAction].
@@ -22,7 +22,4 @@ package androidx.test.espresso.internal.data
  * @param source the [ScreenData] node this ActionData object belongs to.
  * @param dest the [ScreenData] node this ActionData object points to.
  */
-data class ActionData(
-  val source: ScreenData,
-  val dest: ScreenData
-)
+data class ActionData(val source: ScreenData, val dest: ScreenData)

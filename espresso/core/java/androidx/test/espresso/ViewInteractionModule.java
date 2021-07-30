@@ -19,11 +19,14 @@ package androidx.test.espresso;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.view.View;
+import androidx.test.espresso.base.PlatformTestStorageModule;
 import androidx.test.espresso.base.RootViewPicker;
 import androidx.test.espresso.base.ViewFinderImpl;
+import androidx.test.espresso.internal.data.TestFlowVisualizer;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.espresso.remote.RemoteInteraction;
 import androidx.test.espresso.remote.RemoteInteractionRegistry;
+import androidx.test.platform.io.PlatformTestStorage;
 import dagger.Module;
 import dagger.Provides;
 import java.util.concurrent.atomic.AtomicReference;
@@ -34,7 +37,7 @@ import org.hamcrest.Matcher;
  *
  * @hide
  */
-@Module
+@Module(includes = {PlatformTestStorageModule.class})
 class ViewInteractionModule {
 
   private final Matcher<View> viewMatcher;
@@ -75,5 +78,10 @@ class ViewInteractionModule {
   public View provideRootView(RootViewPicker rootViewPicker) {
     // RootsOracle acts as a provider, but returning Providers is illegal, so delegate.
     return rootViewPicker.get();
+  }
+
+  @Provides
+  TestFlowVisualizer provideTestFlowVisualizer(PlatformTestStorage platformTestStorage) {
+    return TestFlowVisualizer.getInstance(platformTestStorage);
   }
 }
