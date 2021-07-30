@@ -95,13 +95,83 @@ public class TestFlowVisualizer {
   public void writeHtmlForScreenshot(String pathname) {
     try (PrintStream writer =
         new PrintStream(platformTestStorage.openOutputFile("output_gallery.html", !firstWrite))) {
-      writer.append("<img src=\"./").append(pathname).append("\" />\n");
-      firstWrite = false;
+      if (firstWrite) {
+        addHtmlStyling(writer);
+        firstWrite = false;
+      }
+      writer
+          .append("<img id=\"")
+          .append(Integer.toString(testFlow.getSize()))
+          .append("\"src=\"./")
+          .append(pathname)
+          .append("\" />\n");
     } catch (IOException e) {
       Log.e(
           "TestFlowVisualizer",
           "Exception thrown while trying to append screenshot to output artifact",
           e);
     }
+  }
+
+  /** Saves styling tags to the displayed artifact. */
+  public void addHtmlStyling(PrintStream writer) {
+    writer.append("<body onload = \"setup()\">\n");
+    writer.append("<style>\n");
+    writer.append("  img { display:none; }\n");
+    writer.append("  .nav-button {\n");
+    writer.append("    height:25px;\n");
+    writer.append("    width:100px;\n");
+    writer.append("    border:2px solid black;\n");
+    writer.append("    display:inline-block;\n");
+    writer.append("    text-align:center;\n");
+    writer.append("    margin:2px;\n");
+    writer.append("  }\n");
+    writer.append("</style>\n");
+    writer.append("<script>\n");
+    writer.append("  var slider = 0;\n");
+    writer.append("  function setup() { \n");
+    writer.append("    var chooser = document.getElementById(\"chooser\");\n");
+    writer.append("    document.getElementById(\"0\").style.display=\"block\"; \n");
+    writer.append("    chooser.value = 0;\n");
+    writer.append("    chooser.addEventListener(\"change\", change);\n");
+    writer.append("    document.addEventListener(\"keydown\", keypress => {\n");
+    writer.append("      let keycode = keypress.keyCode\n");
+    writer.append("      if (keycode === 74 || keycode === 39) {increment();}\n");
+    writer.append("      else if (keycode === 75 || keycode === 37) { decrement(); }\n");
+    writer.append("    });\n");
+    writer.append("  }\n");
+    writer.append("  function decrement() {\n");
+    writer.append("    if (slider <= 0) { return; }\n");
+    writer.append("    document.getElementById(slider.toString()).style.display=\"none\";\n");
+    writer.append("    document.getElementById((slider-1).toString()).style.display=\"block\";\n");
+    writer.append("    slider--;\n");
+    writer.append("    document.getElementById(\"chooser\").value = slider;\n");
+    writer.append("  }\n");
+    writer.append("  function increment(){\n");
+    writer.append("    let next = document.getElementById((slider+1).toString());\n");
+    writer.append("    if (next != null) {\n");
+    writer.append("      document.getElementById(slider.toString()).style.display=\"none\";\n");
+    writer.append("      next.style.display=\"block\";\n");
+    writer.append("      slider++;\n");
+    writer.append("      document.getElementById(\"chooser\").value = slider; \n");
+    writer.append("    }\n");
+    writer.append("  }\n");
+    writer.append("  function change() {\n");
+    writer.append("    var chooser = document.getElementById(\"chooser\");\n");
+    writer.append("    var slide = document.getElementById((chooser.value).toString());\n");
+    writer.append("    if (slide == null) {\n");
+    writer.append("      chooser.value = slider;\n");
+    writer.append("    } else {\n");
+    writer.append("      document.getElementById(slider.toString()).style.display=\"none\";\n");
+    writer.append("      slide.style.display=\"block\";\n");
+    writer.append("      slider = chooser.value;\n");
+    writer.append("    }\n");
+    writer.append("  }\n");
+    writer.append("</script>\n");
+    writer.append("<div>\n");
+    writer.append("<div id=\"previous\" class=\"nav-button\" onclick=\"decrement()\"><</div>\n");
+    writer.append("<div style=\"display:inline-block\"><input id=\"chooser\" type=\"number\">");
+    writer.append("</div>\n");
+    writer.append("<div id=\"next\" class=\"nav-button\" onclick=\"increment()\">></div>\n");
   }
 }
