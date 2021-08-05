@@ -48,17 +48,23 @@ import org.junit.runners.model.Statement;
  * losing control over the app under test.
  *
  * <p>The requested permissions will be granted for all test methods in the test class. Use {@link
- * #grant(String...)} static factory method to request a variable number of permissions. Usage:
- * <code>
- * \@Rule
+ * #grant(String...)} static factory method to request a variable number of permissions.
+ *
+ * <p>Usage:
+ *
+ * <pre>
+ * &#064;Rule
  * public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule
  *     .grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
- * </code>
+ * </pre>
+ *
+ * <p>
  *
  * <p>Note: As per <a
- * href=https://developer.android.com/reference/android/Manifest.permission.html#READ_EXTERNAL_STORAGE/>
- * this rule will automatically grant {@link android.Manifest.permission#READ_EXTERNAL_STORAGE} when
- * {@link android.Manifest.permission#WRITE_EXTERNAL_STORAGE} is requested.
+ * href=https://developer.android.com/reference/android/Manifest.permission.html#READ_EXTERNAL_STORAGE>
+ * the documentation</a> this rule will automatically grant {@link
+ * android.Manifest.permission#READ_EXTERNAL_STORAGE} when {@link
+ * android.Manifest.permission#WRITE_EXTERNAL_STORAGE} is requested.
  *
  * <p>See <a href="https://developer.android.com/training/permissions/requesting">Request App
  * Permissions</a> for more details on runtime permissions.
