@@ -17,6 +17,7 @@
 package androidx.test.runner;
 
 import static androidx.test.internal.util.Checks.checkNotMainThread;
+import static androidx.test.internal.util.Checks.checkState;
 
 import android.app.Activity;
 import android.app.Application;
@@ -27,6 +28,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -136,6 +138,23 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   private UncaughtExceptionHandler standardHandler;
 
   /**
+   * Does initialization before creating the application.
+   *
+   * <p>Note, {@link #newApplication(ClassLoader, String, Context)} is called before {@link
+   * #onCreate(Bundle)} on API > 15. For API <= 15, {@link #onCreate(Bundle)} is called first.
+   */
+  @Override
+  public Application newApplication(ClassLoader cl, String className, Context context)
+      throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    Log.i(TAG, "newApplication called!");
+    if (VERSION.SDK_INT >= 16) {
+      // On API <= 15, initialization should have been called in #onCreate().
+      installMultidexAndExceptionHandler();
+    }
+    return super.newApplication(cl, className, context);
+  }
+
+  /**
    * Sets up lifecycle monitoring, and argument registry.
    *
    * <p>Subclasses must call up to onCreate(). This onCreate method does not call start() it is the
@@ -144,11 +163,11 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   @Override
   public void onCreate(Bundle arguments) {
     Log.i(TAG, "Instrumentation started!");
-    logUncaughtExceptions();
-    // Multidex must be installed early otherwise we could call into code that has
-    // landed in a different dex split.
-    installMultidex();
-
+    if (VERSION.SDK_INT <= 15) {
+      // On API level <= 15, #onCreate is called earlier than #newApplication. We should install
+      // Multidex and register the uncaught exception handler here.
+      installMultidexAndExceptionHandler();
+    }
     InstrumentationRegistry.registerInstance(this, arguments);
     androidx.test.InstrumentationRegistry.registerInstance(this, arguments);
     ActivityLifecycleMonitorRegistry.registerInstance(lifecycleMonitor);
@@ -275,14 +294,39 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
     isDexmakerClassLoaderInitialized.set(Boolean.TRUE);
   }
 
-  private void logUncaughtExceptions() {
+  private void installMultidexAndExceptionHandler() {
+    // Multidex must be installed early otherwise we could call into code that has
+    // landed in a different dex split.
+    installMultidex();
+    checkState(
+        Thread.currentThread().equals(Looper.getMainLooper().getThread()),
+        "Method cannot be called off the main application thread (on: %s)",
+        Thread.currentThread().getName());
+    // App could crash even before #onCreate(Bundle) method is called, e.g. during installing
+    // content providers.
+    // Registers a custom uncaught exception handler to shuttle back the exception to the
+    // instrumentation result.
+    registerUncaughtExceptionHandler();
+  }
+
+  private void registerUncaughtExceptionHandler() {
     standardHandler = Thread.currentThread().getUncaughtExceptionHandler();
     Thread.currentThread()
         .setUncaughtExceptionHandler(
             new Thread.UncaughtExceptionHandler() {
               @Override
               public void uncaughtException(Thread t, Throwable e) {
-                onException(t, e);
+                Log.d(TAG, "Handling an uncaught exception thrown on the main thread.", e);
+                if (VERSION.SDK_INT == 18
+                    && e instanceof SecurityException
+                    && e.getMessage().equals("Calling from not trusted UID!")) {
+                  Log.d(
+                      TAG,
+                      "Catching and ignoring SecurityException: Calling from not trusted UID!, as"
+                          + " this is an android platform bug on API 18 - b/10930931.");
+                } else {
+                  onException(t, e);
+                }
                 if (null != standardHandler) {
                   Log.w(
                       TAG,
@@ -1047,5 +1091,27 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       // in targeted mode treat the 1st name listed in android:targetProcesses as primary.
       return isHostingProcess(targetProcesses.get(0), me);
     }
+  }
+
+  /**
+   * Unwraps an exception from certain wrapper types, e.g. RuntimeException.
+   *
+   * <p>We consider two exceptions the same if they are caused by the same root cause. For example,
+   * when an exception occurs on the main thread, the #onException method is first called to handle
+   * it, and the exception is wrapped with RuntimeException and re-thrown, which is then caught by
+   * the uncaught exception handler. In this case, the exception should only be handled once.
+   *
+   * @return the root cause of the given exception
+   */
+  protected Throwable unwrapException(Throwable t) {
+    Throwable cause = t.getCause();
+    if (cause == null) {
+      return t;
+    }
+    Class<?> clazz = t.getClass();
+    if (clazz.equals(RuntimeException.class)) {
+      return unwrapException(cause);
+    }
+    return t;
   }
 }

@@ -53,8 +53,11 @@ import androidx.test.runner.lifecycle.ApplicationLifecycleMonitorRegistry;
 import androidx.test.runner.screenshot.ScreenCaptureProcessor;
 import androidx.test.runner.screenshot.Screenshot;
 import androidx.test.services.storage.TestStorage;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.ServiceLoader;
+import java.util.Set;
+import java.util.WeakHashMap;
 import org.junit.runner.Request;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.notification.RunListener;
@@ -287,6 +290,8 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   private RunnerArgs runnerArgs;
   private UsageTrackerFacilitator usageTrackerFacilitator;
   private TestEventClient testEventClient = TestEventClient.NO_OP_CLIENT;
+  private final Set<Throwable> appExceptionsHandled =
+      Collections.newSetFromMap(new WeakHashMap<>());
 
   /** {@inheritDoc} */
   @Override
@@ -579,7 +584,17 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
 
   @Override
   public boolean onException(Object obj, Throwable e) {
-    Log.e(LOG_TAG, "An unhandled exception was thrown by the app.");
+    Throwable cause = unwrapException(e);
+    if (appExceptionsHandled.contains(cause)) {
+      Log.d(
+          LOG_TAG,
+          String.format(
+              "We've already handled this exception %s. Ignoring.", cause.getClass().getName()));
+      return false;
+    }
+
+    Log.e(LOG_TAG, "An unhandled exception was thrown by the app.", cause);
+    appExceptionsHandled.add(cause);
 
     // Report better error message back to Instrumentation results.
     InstrumentationResultPrinter instResultPrinter = getInstrumentationResultPrinter();
@@ -589,10 +604,14 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
       // minimize the dependencies during initialization.
       instResultPrinter.setInstrumentation(this);
     }
+
     // Allows DISK_WRITE as `sendStatus` writes to standard output.
-    StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-    instResultPrinter.reportProcessCrash(e);
-    StrictMode.setThreadPolicy(oldPolicy);
+    final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+    try {
+      instResultPrinter.reportProcessCrash(e);
+    } finally {
+      StrictMode.setThreadPolicy(oldPolicy);
+    }
 
     // If the app crashes in #newApplication(ClassLoader, String, Context), before #onCreate(Bundle)
     // is called, `testEventClient` could possibly be null.

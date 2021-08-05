@@ -25,7 +25,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import androidx.test.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
 import androidx.test.internal.runner.RunnerArgs;
 import androidx.test.internal.runner.TestExecutor;
@@ -35,6 +35,7 @@ import androidx.test.internal.runner.listener.CoverageListener;
 import androidx.test.internal.runner.listener.DelayInjector;
 import androidx.test.internal.runner.listener.InstrumentationResultPrinter;
 import androidx.test.internal.runner.listener.LogRunListener;
+import androidx.test.platform.app.InstrumentationRegistry;
 import java.util.HashSet;
 import java.util.Set;
 import junit.framework.Assert;
@@ -223,5 +224,48 @@ public class AndroidJUnitRunnerTest {
     Assert.assertEquals(2, pathsToScan.size());
     Assert.assertTrue(pathsToScan.contains("/foo/bar.dex"));
     Assert.assertTrue(pathsToScan.contains("/foo/baz.dex"));
+  }
+
+  @Test
+  public void onException() {
+    Throwable t = new NoSuchMethodError("No direct method <init> in the class");
+    androidJUnitRunner.onException(this, t);
+    verify(instrumentationResultPrinter).reportProcessCrash(t);
+  }
+
+  @Test
+  public void onExceptionSameException() {
+    Throwable t = new NoSuchMethodError("No direct method <init> in the class");
+    androidJUnitRunner.onException(this, t);
+    androidJUnitRunner.onException(this, t);
+    verify(instrumentationResultPrinter).reportProcessCrash(t);
+  }
+
+  @Test
+  public void onExceptionSameRootCause() {
+    Throwable exception = new NoSuchMethodError("No direct method <init> in the class");
+    Throwable wrappedException = new RuntimeException("wrapped in runtime exception", exception);
+    androidJUnitRunner.onException(this, exception);
+    androidJUnitRunner.onException(this, wrappedException);
+    verify(instrumentationResultPrinter).reportProcessCrash(exception);
+  }
+
+  @Test
+  public void onExceptionSameRootCause2() {
+    Throwable exception = new NoSuchMethodError("No direct method <init> in the class");
+    Throwable wrappedException = new RuntimeException("wrapped in runtime exception", exception);
+    androidJUnitRunner.onException(this, wrappedException);
+    androidJUnitRunner.onException(this, exception);
+    verify(instrumentationResultPrinter).reportProcessCrash(wrappedException);
+  }
+
+  @Test
+  public void onExceptionDifferentExceptions() {
+    Throwable t1 = new NoSuchMethodError("No direct method <init> in the class");
+    Throwable t2 = new IllegalStateException("App in an illegal state");
+    androidJUnitRunner.onException(this, t1);
+    androidJUnitRunner.onException(this, t2);
+    verify(instrumentationResultPrinter).reportProcessCrash(t1);
+    verify(instrumentationResultPrinter).reportProcessCrash(t2);
   }
 }
