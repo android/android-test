@@ -445,9 +445,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     } catch (RuntimeException e) {
       final String msg = "Fatal exception when running tests";
       Log.e(LOG_TAG, msg, e);
-      // report the exception to instrumentation out
-      results.putString(
-          Instrumentation.REPORT_KEY_STREAMRESULT, msg + "\n" + Log.getStackTraceString(e));
+      onException(this, e);
     }
     finish(Activity.RESULT_OK, results);
   }
