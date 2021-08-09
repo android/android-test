@@ -19,6 +19,7 @@ import androidx.test.annotation.ExperimentalDeviceInteraction;
 
 /** Entry point for device centric operations */
 public class EspressoDevice {
+  private static final DeviceLayerComponent BASE = DeviceHolder.deviceLayer();
 
   private EspressoDevice() {}
 
@@ -30,6 +31,6 @@ public class EspressoDevice {
    */
   @ExperimentalDeviceInteraction
   public static DeviceInteraction onDevice() {
-    return new DeviceInteraction();
+    return new DeviceInteraction(BASE.deviceController());
   }
 }

@@ -16,6 +16,7 @@
 package androidx.test.espresso.device;
 
 import androidx.test.annotation.ExperimentalDeviceInteraction;
+import javax.inject.Inject;
 
 /**
  * API surface for performing device-centric operations.
@@ -23,4 +24,22 @@ import androidx.test.annotation.ExperimentalDeviceInteraction;
  * <p>This API is experimental and subject to change.
  */
 @ExperimentalDeviceInteraction
-public class DeviceInteraction {}
+public class DeviceInteraction {
+  private final DeviceController deviceController;
+
+  @Inject
+  DeviceInteraction(DeviceController deviceController) {
+    this.deviceController = deviceController;
+  }
+
+  /**
+   * Performs the given action on the test device.
+   *
+   * @param action the DeviceAction to execute.
+   * @return this interaction for further perform/verification calls.
+   */
+  public DeviceInteraction perform(DeviceAction action) {
+    action.perform(deviceController);
+    return this;
+  }
+}

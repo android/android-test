@@ -7,7 +7,19 @@ package(default_visibility = ["//visibility:private"])
 android_library(
     name = "device",
     srcs = glob(["*.java"]),
+    plugins = ["//opensource/dagger:dagger_plugin"],  # Add programmatically
     deps = [
+        "//espresso/core/java/androidx/test/espresso/device:kt_device",
+        "//opensource/dagger",
         "//runner/monitor",
+    ],
+)
+
+kt_android_library(
+    name = "kt_device",
+    srcs = glob(["*.kt"]),
+    plugins = ["//opensource/dagger:dagger_plugin"],  # Add programmatically
+    deps = [
+        "//opensource/dagger",
     ],
 )
