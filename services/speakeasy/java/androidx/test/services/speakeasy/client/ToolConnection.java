@@ -198,7 +198,8 @@ public abstract class ToolConnection implements Connection {
             Class<?> attrSrcClass = Class.forName(ATTRIBUTON_SOURCE_CLASS_NAME);
             Constructor<?> attrSrcCons =
                 attrSrcClass.getConstructor(Integer.TYPE, String.class, String.class);
-            Object attrSrcObj = attrSrcCons.newInstance(/* uid */ -1, null, null);
+            Log.i(TAG, "Using uid " + Binder.getCallingUid());
+            Object attrSrcObj = attrSrcCons.newInstance(Binder.getCallingUid(), null, null);
             call.invoke(provider, attrSrcObj, CONTENT_PROVIDER, null, null, b);
           } else if (call.getParameterTypes().length == 5) {
             Log.i(TAG, "Invoking Android Q call method");
