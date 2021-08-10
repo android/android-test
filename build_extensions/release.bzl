@@ -14,7 +14,8 @@ def axt_release_lib(
     keep_spec = None,
     remove_spec = None,
     overlapping_jars = [],
-    resource_files = None):
+    resource_files = None,
+    visibility = None):
   """Generates release artifacts for a AXT library.
 
   Resulting output will be two files:
@@ -34,6 +35,7 @@ def axt_release_lib(
       This is useful when the library has dependencies whose java package namespaces
       overlap with this jar. See remove_from_jar docs for more details.
     resource_files: res files to include in library
+    visibility: optional visibility to use for generated rules
   """
 
   # The rules here produce a final .aar artifact and jar for external release.
@@ -72,6 +74,7 @@ def axt_release_lib(
       deps = [
           ":%s_initial" % name,
       ],
+      visibility = visibility,
   )
 
   expected_output = ":%s_all_deploy.jar" % name
@@ -83,6 +86,7 @@ def axt_release_lib(
     name = "jarjar_bin",
     main_class = "org.pantsbuild.jarjar.Main",
     runtime_deps = ["@maven//:org_pantsbuild_jarjar"],
+    visibility = visibility,
   )
   native.genrule(
       name = "%s_jarjared" % name,
@@ -92,8 +96,9 @@ def axt_release_lib(
                "$(location %s) '$<' '$@'") % jarjar_rules,
       tools = [
           jarjar_rules,
-	  ":jarjar_bin",
+	        ":jarjar_bin",
       ],
+      visibility = visibility,
   )
 
   # Step 4. Strip out external dependencies. This produces the final name_no_deps.jar.
@@ -103,6 +108,7 @@ def axt_release_lib(
       keep_spec = keep_spec,
       remove_spec = remove_spec,
       overlapping_jars = overlapping_jars,
+      visibility = visibility,
   )
 
   expected_output = ":%s_initial.aar" % name
