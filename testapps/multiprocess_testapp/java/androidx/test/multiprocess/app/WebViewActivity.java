@@ -19,10 +19,10 @@ package androidx.test.multiprocess.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 /**
