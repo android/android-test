@@ -20,11 +20,11 @@ import static androidx.test.espresso.remote.InteractionResponse.Status.Ok;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.proto.UiInteraction.Error;
 import androidx.test.espresso.proto.UiInteraction.InteractionResultProto;
