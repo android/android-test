@@ -17,6 +17,7 @@
 package androidx.test.runner;
 
 import static androidx.test.internal.util.Checks.checkNotMainThread;
+import static androidx.test.internal.util.Checks.checkState;
 
 import android.app.Activity;
 import android.app.Application;
@@ -134,7 +135,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
 
   private volatile boolean finished = false;
   private volatile InterceptingActivityFactory interceptingActivityFactory;
-  private UncaughtExceptionHandler oldDefaultExceptionHandler;
+  private UncaughtExceptionHandler standardHandler;
 
   /**
    * Does initialization before creating the application.
@@ -297,6 +298,10 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
     // Multidex must be installed early otherwise we could call into code that has
     // landed in a different dex split.
     installMultidex();
+    checkState(
+        Thread.currentThread().equals(Looper.getMainLooper().getThread()),
+        "Method cannot be called off the main application thread (on: %s)",
+        Thread.currentThread().getName());
     // App could crash even before #onCreate(Bundle) method is called, e.g. during installing
     // content providers.
     // Registers a custom uncaught exception handler to shuttle back the exception to the
@@ -305,49 +310,49 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   }
 
   private void registerUncaughtExceptionHandler() {
-    oldDefaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
-    Thread.setDefaultUncaughtExceptionHandler(
-        new UncaughtExceptionHandler() {
-          @Override
-          public void uncaughtException(Thread t, Throwable e) {
-            Log.d(
-                TAG,
-                String.format(
-                    "Handling an uncaught exception thrown on the thread %s.", t.getName()),
-                e);
-            if (VERSION.SDK_INT == 18
-                && e instanceof SecurityException
-                && e.getMessage().equals("Calling from not trusted UID!")) {
-              Log.d(
-                  TAG,
-                  "Catching and ignoring SecurityException: Calling from not trusted UID!, as"
-                      + " this is an android platform bug on API 18 - b/10930931.");
-            } else {
-              onException(t, e);
-            }
-            if (null != oldDefaultExceptionHandler) {
-              Log.w(
-                  TAG,
-                  String.format(
-                      "Invoking default uncaught exception handler %s (a %s)",
-                      oldDefaultExceptionHandler, oldDefaultExceptionHandler.getClass()));
-              oldDefaultExceptionHandler.uncaughtException(t, e);
-            }
-            if (!"robolectric".equals(Build.FINGERPRINT)
-                && Looper.getMainLooper().getThread().equals(t)) {
-              // Running within the Android OS and the handler didn't kill the main thread
-              // Now we're in a state where the main looper is stopped and the Android OS
-              // can no longer commmunicate with the app - by crashing we ensure the
-              // am instrument command exits cleanly.
-              Log.e(TAG, "The main thread has died and the handlers didn't care, exiting");
-              System.exit(-10);
-            }
-          }
-        });
+    standardHandler = Thread.currentThread().getUncaughtExceptionHandler();
+    Thread.currentThread()
+        .setUncaughtExceptionHandler(
+            new Thread.UncaughtExceptionHandler() {
+              @Override
+              public void uncaughtException(Thread t, Throwable e) {
+                Log.d(TAG, "Handling an uncaught exception thrown on the main thread.", e);
+                if (VERSION.SDK_INT == 18
+                    && e instanceof SecurityException
+                    && e.getMessage().equals("Calling from not trusted UID!")) {
+                  Log.d(
+                      TAG,
+                      "Catching and ignoring SecurityException: Calling from not trusted UID!, as"
+                          + " this is an android platform bug on API 18 - b/10930931.");
+                } else {
+                  onException(t, e);
+                }
+                if (null != standardHandler) {
+                  Log.w(
+                      TAG,
+                      String.format(
+                          "Invoking uncaught exception handler %s (a %s)",
+                          standardHandler, standardHandler.getClass()));
+                  standardHandler.uncaughtException(t, e);
+                } else {
+                  Log.w(TAG, "Invoking uncaught exception handler for thread: " + t.getName());
+                  t.getThreadGroup().uncaughtException(t, e);
+                }
+                if (!"robolectric".equals(Build.FINGERPRINT)
+                    && Looper.getMainLooper().getThread().equals(t)) {
+                  // Running within the Android OS and the handler didn't kill the main thread
+                  // Now we're in a state where the main looper is stopped and the Android OS
+                  // can no longer commmunicate with the app - by crashing we ensure the
+                  // am instrument command exits cleanly.
+                  Log.e(TAG, "The main thread has died and the handlers didn't care, exiting");
+                  System.exit(-10);
+                }
+              }
+            });
   }
 
   protected void restoreUncaughtExceptionHandler() {
-    Thread.setDefaultUncaughtExceptionHandler(oldDefaultExceptionHandler);
+    Thread.currentThread().setUncaughtExceptionHandler(standardHandler);
   }
 
   /**
