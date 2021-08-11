@@ -1,0 +1,9 @@
+# Alias for androidx.test.espresso.core dependency
+
+licenses(["notice"])  # Apache License 2.0
+
+android_library(
+    name = "core",
+    visibility = ["//visibility:public"],
+    exports = ["//espresso/core/java/androidx/test/espresso"],
+)
