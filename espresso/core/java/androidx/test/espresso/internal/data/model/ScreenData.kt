@@ -17,11 +17,15 @@
 package androidx.test.espresso.internal.data.model
 
 /** Stores metadata for a visited screen in an Espresso test. */
-class ScreenData {
-  // List of ActionData objects containing metadata for actions originating on this screen
+class ScreenData() {
+  // List of ActionData objects containing metadata for actions originating on this screen.
   private val actions: ArrayList<ActionData> = ArrayList()
-  // Artifacts such as screenshots, HSV files, logcat snippets captured on this screen
+  // Artifacts such as screenshots, HSV files, logcat snippets captured on this screen.
   private val artifacts: ArrayList<TestArtifact> = ArrayList()
+  // View data objects contained within the screen.
+  private val views: ArrayList<ViewData> = ArrayList()
+  // Used for traversals. Increment during traversal to avoid cycling.
+  var actionIndex = 0
 
   /** Adds an ActionData with this as source and a given [ScreenData] as the destination. */
   fun addAction(action: ActionData) {
@@ -41,5 +45,15 @@ class ScreenData {
   /** Gets the list of [TestArtifact] objects on this screen. */
   fun getArtifacts(): List<TestArtifact> {
     return artifacts.toList()
+  }
+
+  /** Creates and appends a [ViewData] to this object. */
+  fun addViewData(viewData: ViewData) {
+    views.add(viewData)
+  }
+
+  /** Gets the list of [ViewData] objects on this screen. */
+  fun getViews(): List<ViewData> {
+    return views.toList()
   }
 }

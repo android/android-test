@@ -30,6 +30,7 @@ import androidx.test.espresso.action.ScrollToAction;
 import androidx.test.espresso.base.InterruptableUiController;
 import androidx.test.espresso.base.MainThread;
 import androidx.test.espresso.internal.data.TestFlowVisualizer;
+import androidx.test.espresso.internal.data.model.ActionData;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.espresso.remote.Bindable;
 import androidx.test.espresso.remote.IInteractionExecutionStatus;
@@ -113,8 +114,8 @@ public final class ViewInteraction {
    * prior to each action.
    *
    * <p>If the test argument `--enable_testflow_gallery` is present, {@link TestFlowVisualizer}
-   * captures data for each of the interactions and generates an output report at the end of the
-   * test run. NOTE, this is an experimental feature.
+   * captures data for each of the interactions and generates an output artifact for the test run.
+   * NOTE, this is an experimental feature.
    *
    * @param viewActions one or more actions to execute.
    * @return this interaction for further perform/verification calls.
@@ -122,11 +123,16 @@ public final class ViewInteraction {
   public ViewInteraction perform(final ViewAction... viewActions) {
     checkNotNull(viewActions);
     for (ViewAction va : viewActions) {
+      int actionIndex = testFlowVisualizer.getLastActionIndexAndIncrement();
+      boolean testFlowEnabled = testFlowVisualizer.isEnabled();
+      if (testFlowEnabled) {
+        testFlowVisualizer.beforeActionGenerateTestArtifact(actionIndex);
+      }
       SingleExecutionViewAction singleExecutionViewAction =
           new SingleExecutionViewAction(va, viewMatcher);
-      desugaredPerform(singleExecutionViewAction);
-      if (testFlowVisualizer.isEnabled()) {
-        testFlowVisualizer.generateScreenData();
+      desugaredPerform(singleExecutionViewAction, actionIndex, testFlowEnabled);
+      if (testFlowEnabled) {
+        testFlowVisualizer.afterActionGenerateTestArtifact(actionIndex);
       }
     }
     return this;
@@ -161,12 +167,13 @@ public final class ViewInteraction {
     return getIBindersFromBindables(getBindables((Object[]) viewAssertions));
   }
 
-  private void desugaredPerform(final SingleExecutionViewAction va) {
+  private void desugaredPerform(
+      final SingleExecutionViewAction va, int actionIndex, boolean testFlowEnabled) {
     Callable<Void> performInteraction =
         new Callable<Void>() {
           @Override
           public Void call() {
-            doPerform(va);
+            doPerform(va, actionIndex, testFlowEnabled);
             return null;
           }
         };
@@ -227,7 +234,8 @@ public final class ViewInteraction {
    *
    * @param viewAction the action to execute.
    */
-  private void doPerform(final SingleExecutionViewAction viewAction) {
+  private void doPerform(
+      final SingleExecutionViewAction viewAction, int actionIndex, boolean testFlowEnabled) {
     checkNotNull(viewAction);
     final Matcher<? extends View> constraints = checkNotNull(viewAction.getConstraints());
     uiController.loopMainThreadUntilIdle();
@@ -263,7 +271,14 @@ public final class ViewInteraction {
           .withCause(new RuntimeException(stringDescription.toString()))
           .build();
     } else {
+      ActionData actionData = new ActionData(actionIndex, viewAction.viewAction);
+      if (testFlowEnabled) {
+        testFlowVisualizer.beforeActionRecordData(actionData, targetView);
+      }
       viewAction.perform(uiController, targetView);
+      if (testFlowEnabled) {
+        testFlowVisualizer.afterActionRecordData(actionData);
+      }
     }
   }
 

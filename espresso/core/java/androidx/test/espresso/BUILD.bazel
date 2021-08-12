@@ -82,6 +82,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/action",
         "//espresso/core/java/androidx/test/espresso/base",
         "//espresso/core/java/androidx/test/espresso/internal/data",
+        "//espresso/core/java/androidx/test/espresso/internal/data/model",
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/core/java/androidx/test/espresso/remote:aidls",
         "//espresso/core/java/androidx/test/espresso/remote:bindable",

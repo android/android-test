@@ -25,16 +25,55 @@ class TestFlow {
   var head: ScreenData? = null
   // A reference to the last [ScreenData] node.
   var tail: ScreenData? = null
-  var size = 0
+  // A reference to all ScreenData nodes in the graph.
+  private val allScreenData: ArrayList<ScreenData> = ArrayList()
 
   /** Adds a [ScreenData] object to the graph. */
   fun addScreen(screen: ScreenData) {
+    allScreenData.add(screen)
     if (head == null) {
       head = screen
-    } else {
-      tail!!.addAction(ActionData(tail!!, screen))
     }
+    tail?.addAction(ActionData(tail!!, screen))
     tail = screen
-    size++
+  }
+
+  /** Adds a [ScreenData] object to the graph with existing ActionData. */
+  fun addScreen(screen: ScreenData, action: ActionData) {
+    allScreenData.add(screen)
+    if (head == null) {
+      head = screen
+    }
+    tail!!.addAction(action)
+    tail = screen
+  }
+
+  fun getSize(): Int {
+    return allScreenData.size
+  }
+
+  /** Resets each [ScreenData] object. */
+  fun resetTraversal() {
+    for (screenData in allScreenData) {
+      screenData.actionIndex = 0
+    }
+  }
+
+  /** Gets the [ActionData] that has a certain index. Null if not found. */
+  fun getEdge(index: Int): ActionData? {
+    if (head == null) {
+      return null
+    }
+    var curr: ScreenData = head!!
+    resetTraversal()
+    while (curr.getActions().isNotEmpty()) {
+      val nextAction: ActionData = curr.getActions()[curr.actionIndex]
+      curr.actionIndex++
+      if (nextAction.index != null && index == nextAction.index) {
+        return nextAction
+      }
+      curr = nextAction.dest
+    }
+    return null
   }
 }

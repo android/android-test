@@ -11,6 +11,7 @@ android_library(
     ],
     deps = [
         "//:androidx_annotation",
+        "//espresso/core/java/androidx/test/espresso/action",
         "//espresso/core/java/androidx/test/espresso/internal/data/model",
         "//runner/monitor/java/androidx/test:monitor",
     ],

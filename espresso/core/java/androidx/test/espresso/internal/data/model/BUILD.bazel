@@ -12,5 +12,9 @@ kt_android_library(
         "ScreenData.kt",
         "TestArtifact.kt",
         "TestFlow.kt",
+        "ViewData.kt",
+    ],
+    deps = [
+        "//espresso/core/java/androidx/test/espresso:framework",
     ],
 )
