@@ -18,9 +18,9 @@ package androidx.test.services.events;
 
 import static java.util.Collections.emptyList;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.test.services.events.internal.StackTrimmer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
