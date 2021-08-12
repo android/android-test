@@ -22,10 +22,10 @@ import static com.google.common.base.Preconditions.checkState;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.proto.UiInteraction.Error;
 import androidx.test.espresso.proto.UiInteraction.InteractionResultProto;
 import androidx.test.espresso.remote.EspressoRemoteMessage.To;
@@ -276,8 +276,8 @@ public final class InteractionResponse implements To<MessageLite> {
       if (status != null || remoteError != null) {
         if (interactionResultProtoByteArray != null) {
           throw new RemoteProtocolException(
-              "Instances can either be create from an status and "
-                  + "optional remote error or an interaction result proto byte array but not both!");
+              "Instances can either be create from an status and optional remote error or an"
+                  + " interaction result proto byte array but not both!");
         }
       }
 

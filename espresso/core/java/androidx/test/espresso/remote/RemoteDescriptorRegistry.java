@@ -20,9 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
+import androidx.annotation.VisibleForTesting;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;

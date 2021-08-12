@@ -22,8 +22,8 @@ import static com.google.common.base.Preconditions.checkState;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 import android.view.View;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.Root;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewAssertion;
