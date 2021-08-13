@@ -16,8 +16,6 @@
 
 package androidx.test.runner;
 
-import static androidx.test.internal.util.ReflectionUtil.reflectivelyInvokeRemoteMethod;
-
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Context;
@@ -45,6 +43,8 @@ import androidx.test.internal.runner.listener.LogRunListener;
 import androidx.test.internal.runner.listener.SuiteAssignmentPrinter;
 import androidx.test.internal.runner.tracker.AnalyticsBasedUsageTracker;
 import androidx.test.internal.runner.tracker.UsageTrackerRegistry.AxtVersions;
+import androidx.test.internal.util.ReflectionUtil;
+import androidx.test.internal.util.ReflectionUtil.ReflectionException;
 import androidx.test.orchestrator.callback.OrchestratorV1Connection;
 import androidx.test.platform.io.FileTestStorage;
 import androidx.test.platform.io.PlatformTestStorageRegistry;
@@ -425,8 +425,17 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     }
 
     if (runnerArgs.remoteMethod != null) {
-      reflectivelyInvokeRemoteMethod(
-          runnerArgs.remoteMethod.testClassName, runnerArgs.remoteMethod.methodName);
+      try {
+        ReflectionUtil.callStaticMethod(
+            runnerArgs.remoteMethod.testClassName, runnerArgs.remoteMethod.methodName);
+      } catch (ReflectionException e) {
+        Log.e(
+            LOG_TAG,
+            String.format(
+                "Reflective call to remote method %s#%s failed",
+                runnerArgs.remoteMethod.testClassName, runnerArgs.remoteMethod.methodName),
+            e);
+      }
     }
 
     // TODO(b/162075422): using deprecated isPrimaryInstrProcess(argsProcessName) method

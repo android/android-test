@@ -24,28 +24,78 @@ public class ReflectionUtil {
 
   private static final String TAG = "ReflectionUtil";
 
+  /** Data class for reflective method call parameters. */
+  public static class ReflectionParams {
+    final Class<?> type;
+    final Object value;
+
+    public ReflectionParams(Class<?> type, Object value) {
+      this.type = type;
+      this.value = value;
+    }
+
+    public static Class<?>[] getTypes(ReflectionParams[] params) {
+      Class<?>[] types = new Class[params.length];
+      for (int i = 0; i < params.length; i++) {
+        types[i] = params[i].type;
+      }
+      return types;
+    }
+
+    public static Object[] getValues(ReflectionParams[] params) {
+      Object[] values = new Object[params.length];
+      for (int i = 0; i < params.length; i++) {
+        values[i] = params[i].value;
+      }
+      return values;
+    }
+  }
+
+  /** Thrown when there was a failure making a reflective call. */
+  public static class ReflectionException extends Exception {
+    ReflectionException(Exception cause) {
+      super("Reflective call failed", cause);
+    }
+  }
+
   /**
-   * Helper function for various runners who extend from this class to be able to reflectively
-   * invoke the class#method that was passed in via "remoteMethod" runner argument.
+   * Reflectively call the specified static method.
    *
-   * @param className the fully qualified class name to invoke (cannot be null).
-   * @param methodName the method to invoke (cannot be null).
+   * @param className the fully qualified name of the class
+   * @param methodName the full name of the method
+   * @param params the list of parameter types and values for parameters
+   * @return the result from the method
+   * @throws ReflectionException if the call could not be performed
    */
-  public static void reflectivelyInvokeRemoteMethod(
-      final String className, final String methodName) {
-    Checks.checkNotNull(className);
-    Checks.checkNotNull(methodName);
-    Log.i(TAG, "Attempting to reflectively call: " + methodName);
+  public static Object callStaticMethod(
+      String className, String methodName, ReflectionParams... params) throws ReflectionException {
     try {
-      Class<?> c = Class.forName(className);
-      Method m = c.getDeclaredMethod(methodName);
+      return callStaticMethod(Class.forName(className), methodName, params);
+    } catch (ClassNotFoundException e) {
+      throw new ReflectionException(e);
+    }
+  }
+
+  /**
+   * Reflectively call the specified static method.
+   *
+   * @param clazz the Class that defines the method
+   * @param methodName the full name of the method
+   * @param params the list of parameter types and values for parameters
+   * @return the result from the method
+   * @throws ReflectionException if the call could not be performed
+   */
+  public static Object callStaticMethod(
+      Class<?> clazz, String methodName, ReflectionParams... params) throws ReflectionException {
+    Log.d(TAG, "Attempting to reflectively call: " + methodName);
+    try {
+      Class<?>[] types = ReflectionParams.getTypes(params);
+      Object[] values = ReflectionParams.getValues(params);
+      Method m = clazz.getDeclaredMethod(methodName, types);
       m.setAccessible(true);
-      m.invoke(null);
-    } catch (ClassNotFoundException
-        | InvocationTargetException
-        | IllegalAccessException
-        | NoSuchMethodException e) {
-      Log.e(TAG, "Reflective call failed: ", e);
+      return m.invoke(null, values);
+    } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+      throw new ReflectionException(e);
     }
   }
 }
