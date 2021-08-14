@@ -118,6 +118,7 @@ public final class TestStorage implements PlatformTestStorage {
    *     "/path/to/my_input.txt", the file will end up at
    *     "/sdcard/test_input_files/path/to/my_input.txt" on device.
    * @return an InputStream to the given test file.
+   * @throws FileNotFoundException if pathname does not exist
    */
   @Override
   public InputStream openInputFile(@Nonnull String pathname) throws FileNotFoundException {
