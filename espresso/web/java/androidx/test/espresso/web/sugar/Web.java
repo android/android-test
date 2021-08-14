@@ -23,8 +23,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.hamcrest.Matchers.any;
 
-import androidx.annotation.CheckResult;
 import android.view.View;
+import androidx.annotation.CheckResult;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
