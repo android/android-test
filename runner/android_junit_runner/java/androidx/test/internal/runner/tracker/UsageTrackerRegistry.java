@@ -22,15 +22,18 @@ import static androidx.test.internal.util.Checks.checkNotNull;
  * A registry to hold the global {@link UsageTracker}.
  *
  * <p>Instrumentation will configure this registry at startup.
+ *
+ * @deprecated obsolete
  */
+@Deprecated
 public final class UsageTrackerRegistry {
 
   /** Contains versions for AXT libraries */
   public interface AxtVersions {
     // Espresso version includes: Espresso, Espresso-Web, Intents, Espresso-MPE
-    String ESPRESSO_VERSION = "3.4.0";
+    String ESPRESSO_VERSION = "3.5.0-alpha01";
     // Runner version includes: Runner, Rules, ATO, Monitor
-    String RUNNER_VERSION = "1.4.0";
+    String RUNNER_VERSION = "1.5.0-alpha01";
     // Test services version.
     String SERVICES_VERSION = RUNNER_VERSION;
   }
