@@ -23,6 +23,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.endsWith;
@@ -81,7 +82,18 @@ public final class Espresso {
   @CheckReturnValue
   @CheckResult
   public static ViewInteraction onView(final Matcher<View> viewMatcher) {
+    verifyAccessibilityCheckingEnabled();
     return BASE.plus(new ViewInteractionModule(viewMatcher)).viewInteraction();
+  }
+
+  private static boolean accessibilityCheckingEnabled = false;
+
+  public static void setAccessibilityCheckingEnabled(boolean enabled) {
+    accessibilityCheckingEnabled = enabled;
+  }
+
+  private static void verifyAccessibilityCheckingEnabled() {
+    checkState(accessibilityCheckingEnabled);
   }
 
   /**
@@ -98,6 +110,7 @@ public final class Espresso {
   @CheckReturnValue
   @CheckResult
   public static DataInteraction onData(Matcher<? extends Object> dataMatcher) {
+    verifyAccessibilityCheckingEnabled();
     return new DataInteraction(dataMatcher);
   }
 

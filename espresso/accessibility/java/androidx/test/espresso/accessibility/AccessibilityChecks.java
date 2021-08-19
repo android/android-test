@@ -19,6 +19,7 @@ package androidx.test.espresso.accessibility;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.action.ViewActions;
@@ -85,6 +86,7 @@ public final class AccessibilityChecks {
       Log.w(TAG, "Accessibility checks already enabled.");
     } else {
       checksEnabled = true;
+      Espresso.setAccessibilityCheckingEnabled(true);
       ViewActions.addGlobalAssertion("Accessibility Checks", ACCESSIBILITY_CHECK_ASSERTION);
     }
     return CHECK_EXECUTOR;
@@ -100,6 +102,7 @@ public final class AccessibilityChecks {
       throw new IllegalStateException("Accessibility checks not enabled!");
     }
     checksEnabled = false;
+    Espresso.setAccessibilityCheckingEnabled(false);
     ViewActions.removeGlobalAssertion(ACCESSIBILITY_CHECK_ASSERTION);
   }
 
