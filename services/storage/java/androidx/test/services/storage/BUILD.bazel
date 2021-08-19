@@ -3,7 +3,7 @@
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
 load("//build_extensions:release.bzl", "axt_release_lib")
-load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION", "SERVICES_VERSION")
+load("//build_extensions:axt_versions.bzl", "MONITOR_VERSION", "SERVICES_VERSION")
 
 package(
     default_visibility = [
@@ -76,6 +76,7 @@ maven_artifact(
     name = "test_storage_maven_artifact",
     src = ":test_storage_release.aar",
     artifact_deps = [
+        "androidx.test:monitor:[%s]" % MONITOR_VERSION,
         "com.google.code.findbugs:jsr305:2.0.1",
     ],
     artifact_id = "storage",

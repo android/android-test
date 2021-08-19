@@ -1,4 +1,8 @@
 # Description: Build rules for building androidx.test.truth from source
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_JUNIT_VERSION", "ANDROIDX_VERSION", "CORE_VERSION", "JUNIT_VERSION", "MONITOR_VERSION")
+load("//build_extensions:release.bzl", "axt_release_lib")
+
 licenses(["notice"])  # Apache License 2.0
 
 package(
@@ -21,8 +25,6 @@ android_library(
     ],
 )
 
-load("//build_extensions:release.bzl", "axt_release_lib")
-
 # group of targets to use to produce release binary + docs
 android_library(
     name = "junit_release_lib",
@@ -38,14 +40,11 @@ android_library(
 axt_release_lib(
     name = "junit_release",
     keep_spec = "androidx/test/ext/junit",
-    remove_spec = "androidx/test/ext/junit/R[$$\.]",
+    remove_spec = "androidx/test/ext/junit/R[$$\\.]",
     deps = [
         ":junit_release_lib",
     ],
 )
-
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "CORE_VERSION", "JUNIT_VERSION", "ANDROIDX_JUNIT_VERSION", "RUNNER_VERSION", "ANDROIDX_VERSION")
 
 maven_artifact(
     name = "junit_maven_artifact",
@@ -53,7 +52,7 @@ maven_artifact(
     artifact_deps = [
         "junit:junit:%s" % JUNIT_VERSION,
         "androidx.test:core:%s" % CORE_VERSION,
-        "androidx.test:monitor:%s" % RUNNER_VERSION,
+        "androidx.test:monitor:%s" % MONITOR_VERSION,
         "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
     ],
     artifact_id = "junit",

@@ -20,9 +20,9 @@ android_library(
         "proguard.cfg",
     ],
     deps = [
-        "@androidsdk//:legacy_test-30",
         "//:androidx_annotation",
         "//runner/android_junit_runner",
+        "@androidsdk//:legacy_test-30",
         "@maven//:junit_junit",
     ],
 )
@@ -31,13 +31,13 @@ android_library(
 # and runner_release.aar
 axt_release_lib(
     name = "rules_release",
+    custom_package = "androidx.test.rules",
     keep_spec = "androidx/test",
     overlapping_jars = [
         "//runner/android_junit_runner/java/androidx/test:runner_release_no_deps.jar",
         "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
         "//services/storage/java/androidx/test/services/storage:test_storage_release_no_deps.jar",
     ],
-    custom_package = "androidx.test.rules",
     proguard_library = "proguard.cfg",
     deps = [
         ":rules",
@@ -68,5 +68,5 @@ maven_artifact(
     group_id = "androidx.test",
     last_updated = "20170622000000",
     src_jar = ":rules_src_jars.jar",
-    version = "%s" % RUNNER_VERSION,
+    version = "%s" % RULES_VERSION,
 )

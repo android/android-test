@@ -1,3 +1,7 @@
+load("//build_extensions:release.bzl", "axt_release_lib")
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "MONITOR_VERSION")
+
 # Description: Build rules for building androidx.test from source
 licenses(["notice"])  # Apache License 2.0
 
@@ -36,8 +40,6 @@ android_library(
     neverlink = 1,
 )
 
-load("//build_extensions:release.bzl", "axt_release_lib")
-
 # group of targets to use to produce release binary + docs
 android_library(
     name = "monitor_release_lib",
@@ -60,10 +62,6 @@ axt_release_lib(
     ],
 )
 
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "RUNNER_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
-
 maven_artifact(
     name = "monitor_maven_artifact",
     src = ":monitor_release.aar",
@@ -74,5 +72,5 @@ maven_artifact(
     group_id = "androidx.test",
     last_updated = "20170622000000",
     src_jar = ":libmonitor-src.jar",
-    version = "%s" % RUNNER_VERSION,
+    version = "%s" % MONITOR_VERSION,
 )
