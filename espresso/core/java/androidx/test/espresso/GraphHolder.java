@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.util.Log;
 import androidx.test.espresso.base.ActiveRootLister;
-import androidx.test.internal.runner.tracker.UsageTrackerRegistry;
 import androidx.test.internal.runner.tracker.UsageTrackerRegistry.AxtVersions;
 import androidx.test.platform.io.PlatformTestStorage;
 import java.io.Serializable;
@@ -46,7 +45,6 @@ public final class GraphHolder {
     if (null == instanceRef) {
       instanceRef = new GraphHolder(DaggerBaseLayerComponent.create());
       if (instance.compareAndSet(null, instanceRef)) {
-        UsageTrackerRegistry.getInstance().trackUsage("Espresso", AxtVersions.ESPRESSO_VERSION);
         // Also adds the usage data as test output properties. By default it's no-op.
         Map<String, Serializable> usageProperties = new HashMap<>();
         usageProperties.put("Espresso", AxtVersions.ESPRESSO_VERSION);

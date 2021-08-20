@@ -36,7 +36,6 @@ import androidx.test.espresso.web.model.Atom;
 import androidx.test.espresso.web.model.ElementReference;
 import androidx.test.espresso.web.model.WindowReference;
 import androidx.test.internal.platform.util.TestOutputEmitter;
-import androidx.test.internal.runner.tracker.UsageTrackerRegistry;
 import androidx.test.internal.runner.tracker.UsageTrackerRegistry.AxtVersions;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -62,7 +61,6 @@ import org.hamcrest.Matcher;
  */
 public final class Web {
   static {
-    UsageTrackerRegistry.getInstance().trackUsage("Espresso-Web", AxtVersions.ESPRESSO_VERSION);
     // Also adds the usage data as test output properties. By default it's no-op.
     Map<String, Serializable> usageProperties = new HashMap<>();
     usageProperties.put("Espresso-Web", AxtVersions.ESPRESSO_VERSION);

@@ -54,8 +54,6 @@ import androidx.test.espresso.web.model.RemoteWebModelAtoms;
 import androidx.test.espresso.web.sugar.RemoteWebSugar;
 import androidx.test.espresso.web.webdriver.RemoteWebDriverAtoms;
 import androidx.test.internal.runner.InstrumentationConnection;
-import androidx.test.internal.runner.tracker.UsageTrackerRegistry;
-import androidx.test.internal.runner.tracker.UsageTrackerRegistry.AxtVersions;
 import androidx.test.internal.util.ParcelableIBinder;
 import com.google.common.base.Throwables;
 import java.util.HashMap;
@@ -85,10 +83,6 @@ import org.hamcrest.Matcher;
  */
 public final class EspressoRemote implements RemoteInteraction {
   private static final String TAG = "EspressoRemote";
-
-  static {
-    UsageTrackerRegistry.getInstance().trackUsage("Espresso-MPE", AxtVersions.ESPRESSO_VERSION);
-  }
 
   private static final EspressoRemote DEFAULT_INSTANCE = new EspressoRemote();
 

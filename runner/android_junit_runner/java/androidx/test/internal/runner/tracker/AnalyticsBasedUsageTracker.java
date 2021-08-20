@@ -39,7 +39,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-/** Creates a usage tracker that pings google analytics when infra bits get used. */
+/**
+ * Creates a usage tracker that pings google analytics when infra bits get used.
+ *
+ * @deprecated obsolete
+ */
+@Deprecated
 public final class AnalyticsBasedUsageTracker implements UsageTracker {
   private static final String TAG = "InfraTrack";
 

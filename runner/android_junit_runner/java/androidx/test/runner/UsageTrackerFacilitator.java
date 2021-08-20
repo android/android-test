@@ -25,12 +25,8 @@ import androidx.test.internal.runner.RunnerArgs;
 import androidx.test.internal.runner.tracker.UsageTracker;
 import androidx.test.internal.runner.tracker.UsageTrackerRegistry;
 
-/**
- * Helper class to enable/disable usage tracker in the runner. For details on how AndroidJUnitRunner
- * tracks usage, see <a
- * href="https://android.github.io/android-test/docs/espresso/setup/index.html#analytics">
- * AndroidJUnitRunner Analytics</a>
- */
+/** @deprecated obsolete and will be removed in the future. */
+@Deprecated
 public class UsageTrackerFacilitator implements UsageTracker {
   private static final String TAG = "UsageTrackerFacilitator";
 

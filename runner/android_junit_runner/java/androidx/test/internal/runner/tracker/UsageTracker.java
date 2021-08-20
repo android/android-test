@@ -20,7 +20,10 @@ package androidx.test.internal.runner.tracker;
  * Used by test infrastructure to report usage stats (optionally).
  *
  * <p>This interface should only be used by test infrastructure.
+ *
+ * @deprecated obsolete
  */
+@Deprecated
 public interface UsageTracker {
 
   /**
