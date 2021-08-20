@@ -57,6 +57,8 @@ axt_release_lib(
     jarjar_rules = "release_jarjar_rules.txt",
     keep_spec = "androidx/test",
     proguard_library = ":proguard_library.cfg",
+    # remove the generated R class
+    remove_spec = "androidx/test/monitor/R[$$\\.]",
     deps = [
         ":monitor_release_lib",
     ],

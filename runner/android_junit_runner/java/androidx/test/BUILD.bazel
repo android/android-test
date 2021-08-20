@@ -56,6 +56,8 @@ axt_release_lib(
         "//services/storage/java/androidx/test/services/storage:test_storage_release_no_deps.jar",
     ],
     proguard_library = ":proguard_library.cfg",
+    # remove the generated R class
+    remove_spec = "androidx/test/runner/R[$$\\.]",
     deps = [
         ":runner_release_lib",
     ],
