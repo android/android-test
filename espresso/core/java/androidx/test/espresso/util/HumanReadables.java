@@ -156,7 +156,10 @@ public final class HumanReadables {
       return "null";
     }
     ToStringHelper helper = MoreObjects.toStringHelper(v).add("id", v.getId());
-    if (v.getId() != -1 && v.getResources() != null && !isViewIdGenerated(v.getId())) {
+    if (v.getId() != -1
+        && v.getId() != 0
+        && v.getResources() != null
+        && !isViewIdGenerated(v.getId())) {
       try {
         helper.add("res-name", v.getResources().getResourceEntryName(v.getId()));
       } catch (Resources.NotFoundException ignore) {
