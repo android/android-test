@@ -1,5 +1,10 @@
 # androidx.test.core Kotlin extensions
 
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library")
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_LIFECYCLE_VERSION", "ANDROIDX_VERSION", "CORE_VERSION", "RUNNER_VERSION", "KOTLIN_VERSION")
+
+
 package(
     default_visibility = [
         "//:__subpackages__",
@@ -8,7 +13,7 @@ package(
 
 licenses(["notice"])  # Apache License 2.0
 
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library")
+
 
 kt_android_library(
     name = "core",
@@ -50,8 +55,6 @@ axt_release_lib(
     ],
 )
 
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_LIFECYCLE_VERSION", "ANDROIDX_VERSION", "CORE_VERSION", "RUNNER_VERSION")
 
 maven_artifact(
     name = "core_maven_artifact",
@@ -59,6 +62,7 @@ maven_artifact(
     artifact_deps = [
         "androidx.test:core:%s" % CORE_VERSION,
         "androidx.lifecycle:lifecycle-common:%s" % ANDROIDX_LIFECYCLE_VERSION,
+        "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
     ],
     artifact_id = "core-ktx",
     group_id = "androidx.test",

@@ -1,6 +1,6 @@
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION", "HAMCREST_VERSION", "RUNNER_VERSION")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION", "HAMCREST_VERSION", "RUNNER_VERSION", "KOTLIN_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 load("//build_extensions:remove_from_jar.bzl", "remove_from_jar")
 
@@ -278,6 +278,7 @@ maven_artifact(
         "org.hamcrest:hamcrest-library:%s" % HAMCREST_VERSION,
         "org.hamcrest:hamcrest-integration:%s" % HAMCREST_VERSION,
         "com.google.code.findbugs:jsr305:2.0.1",
+        "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
     ],
     artifact_id = "espresso-core",
     group_id = "androidx.test.espresso",
