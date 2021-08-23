@@ -1,5 +1,10 @@
 # Remote package for espresso.
 
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION", "ESPRESSO_VERSION", "ANDROIDX_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+load("//build_extensions:release.bzl", "axt_release_lib")
+
 licenses(["notice"])  # Apache License 2.0
 
 package(
@@ -183,10 +188,6 @@ android_library(
     ],
 )
 
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION", "ESPRESSO_VERSION", "ANDROIDX_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
-
 filegroup(
     name = "espresso_remote_src",
     srcs = [
@@ -207,7 +208,7 @@ combine_jars(
     ],
 )
 
-load("//build_extensions:release.bzl", "axt_release_lib")
+
 
 axt_release_lib(
     name = "espresso_remote_release",
@@ -223,6 +224,7 @@ axt_release_lib(
         "//:proguard_binary.cfg",
         "//espresso:proguard_binary.cfg",
     ],
+    remove_spec = "androidx/test/espresso/remote/R[$$\\.]",
     deps = [
         ":remote",
     ],

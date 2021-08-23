@@ -1,5 +1,10 @@
 # Description:
 # Network Idling Resources
+load("//build_extensions:release.bzl", "axt_release_lib")
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "ESPRESSO_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
 licenses(["notice"])  # Apache License 2.0
 
 package(
@@ -16,21 +21,16 @@ android_library(
     ],
 )
 
-load("//build_extensions:release.bzl", "axt_release_lib")
-
 # rule for outputting externally released binary. Produces
 # idling_net_release_no_deps.jar and idling_net_release.aar
 axt_release_lib(
     name = "idling_net_release",
     keep_spec = "androidx/test/espresso/idling/net",
+    remove_spec = "androidx/test/espresso/idling/net/R[$$\\.]",
     deps = [
         ":uri_idling_resource",
     ],
 )
-
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "ESPRESSO_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 filegroup(
     name = "idling_net_src",

@@ -1,6 +1,11 @@
 # Description:
 #   Light weight module that contains IdlinResources around concurrent Java APIs
 
+load("//build_extensions:release.bzl", "axt_release_lib")
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
 package(
     default_visibility = ["//:__subpackages__"],
 )
@@ -40,21 +45,16 @@ android_library(
     ],
 )
 
-load("//build_extensions:release.bzl", "axt_release_lib")
-
 # rule for outputting externally released binary. Produces
 # idling_concurrent_release_no_deps.jar and idling_concurrent_release.aar
 axt_release_lib(
     name = "idling_concurrent_release",
     keep_spec = "androidx/test/espresso/idling/concurrent",
+    remove_spec = "androidx/test/espresso/idling/concurrent/R[$$\\.]",
     deps = [
         ":idling_concurrent",
     ],
 )
-
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 filegroup(
     name = "idling_concurrent_src",

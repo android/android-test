@@ -2,6 +2,11 @@
 #   Light weight module represents a resources of an application under test which can cause
 #   asynchronous background work to happen during test execution.
 
+load("//build_extensions:release.bzl", "axt_release_lib")
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
 package(
     default_visibility = ["//visibility:public"],
 )
@@ -47,22 +52,17 @@ alias(
     actual = "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:thread_pool_idling_resource",
 )
 
-load("//build_extensions:release.bzl", "axt_release_lib")
-
 # rule for outputting externally released binary. Produces
 # espresso_idling_resource_release_no_deps.jar and espresso_idling_resource_release.aar
 axt_release_lib(
     name = "espresso_idling_resource_release",
     custom_package = "androidx.test.espresso.idling.resource",
     keep_spec = "androidx/test/espresso",
+    remove_spec = "androidx/test/espresso/idling/resource/R[$$\\.]",
     deps = [
         ":idling_resource",
     ],
 )
-
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 filegroup(
     name = "idling_resource_src",

@@ -1,3 +1,8 @@
+load("//build_extensions:release.bzl", "axt_release_lib")
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "ESPRESSO_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
 licenses(["notice"])  # Apache License 2.0
 
 package(
@@ -5,7 +10,6 @@ package(
 )
 
 # ** Generate the release artifacts **
-load("//build_extensions:release.bzl", "axt_release_lib")
 
 android_library(
     name = "espresso_web_release_lib",
@@ -28,14 +32,11 @@ axt_release_lib(
         "//espresso:proguard_binary.cfg",
         ":proguard_binary.cfg",
     ],
+    remove_spec = "androidx/test/espresso/web/R[$$\\.]",
     deps = [
         ":espresso_web_release_lib",
     ],
 )
-
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION", "ANDROIDX_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 filegroup(
     name = "web_src",

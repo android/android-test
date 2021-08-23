@@ -229,6 +229,7 @@ axt_release_lib(
         "//:proguard_binary.cfg",
         "//espresso:proguard_binary.cfg",
     ],
+    remove_spec = "androidx/test/espresso/core/R[$$\\.]",
     deps = [
         ":espresso",
     ],
