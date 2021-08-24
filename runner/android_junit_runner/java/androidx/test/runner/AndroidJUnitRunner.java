@@ -55,6 +55,7 @@ import java.util.HashSet;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.runner.Request;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.notification.RunListener;
@@ -277,6 +278,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   private Bundle arguments;
   private final InstrumentationResultPrinter instrumentationResultPrinter =
       new InstrumentationResultPrinter();
+  private final AtomicBoolean isConnectedToOrchestrator = new AtomicBoolean(false);
   private RunnerArgs runnerArgs;
   private TestEventClient testEventClient = TestEventClient.NO_OP_CLIENT;
   private final Set<Throwable> appExceptionsHandled =
@@ -359,6 +361,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
    */
   @Override
   public void onTestEventClientConnect() {
+    isConnectedToOrchestrator.set(true);
     start();
   }
 
@@ -595,7 +598,9 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
 
     // If the app crashes in #newApplication(ClassLoader, String, Context), before #onCreate(Bundle)
     // is called, `testEventClient` could possibly be null.
-    if (testEventClient != null && testEventClient.isTestRunEventsEnabled()) {
+    if (testEventClient != null
+        && testEventClient.isTestRunEventsEnabled()
+        && isConnectedToOrchestrator.get()) {
       // Report the error message back to the orchestrator.
       Log.d(LOG_TAG, "Reporting the crash to the test run event service.");
       testEventClient.reportProcessCrash(e);

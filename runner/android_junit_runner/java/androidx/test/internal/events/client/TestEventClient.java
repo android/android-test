@@ -54,6 +54,8 @@ public final class TestEventClient {
   /** If no test discovery or test run events required, then return a client that does nothing. */
   public static final TestEventClient NO_OP_CLIENT = new TestEventClient();
 
+  private static TestEventServiceConnection defaultConn;
+
   /*
    * At most one of these should not be null - the non-null value determines how this client
    * operates.
@@ -127,7 +129,8 @@ public final class TestEventClient {
       Log.w(TAG, "Orchestration requested, but this isn't the primary instrumentation");
       return NO_OP_CLIENT;
     }
-    TestEventServiceConnection connection = getConnection(listener, args);
+    TestEventServiceConnection connection =
+        defaultConn != null ? defaultConn : getConnection(listener, args);
     TestEventClient result = NO_OP_CLIENT;
     if (args.isTestDiscoveryRequested) {
       Log.v(TAG, "Test discovery events requested");
@@ -259,5 +262,17 @@ public final class TestEventClient {
         testPlatformListener.reportProcessCrash(t);
       }
     }
+  }
+
+  /**
+   * Sets the default connection to use to connect to the orchestrator.
+   *
+   * <p>Only useful in internal platform testing. Shouldn't be called when running Instrumentation
+   * tests.
+   *
+   * @param conn the default connection instance to use.
+   */
+  public static void setOrchestratorConnection(TestEventServiceConnection conn) {
+    defaultConn = checkNotNull(conn);
   }
 }
