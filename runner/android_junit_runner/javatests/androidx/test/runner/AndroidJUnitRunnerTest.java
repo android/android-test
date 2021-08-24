@@ -15,18 +15,26 @@
  */
 package androidx.test.runner;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import android.app.Instrumentation;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.InstrumentationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import androidx.test.annotation.UiThreadTest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
+import androidx.test.internal.events.client.TestEventClient;
 import androidx.test.internal.runner.RunnerArgs;
 import androidx.test.internal.runner.TestExecutor;
 import androidx.test.internal.runner.TestRequestBuilder;
@@ -35,7 +43,10 @@ import androidx.test.internal.runner.listener.CoverageListener;
 import androidx.test.internal.runner.listener.DelayInjector;
 import androidx.test.internal.runner.listener.InstrumentationResultPrinter;
 import androidx.test.internal.runner.listener.LogRunListener;
+import androidx.test.orchestrator.callback.NoOpOrchestratorConnection;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.services.events.run.TestRunEvent;
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import junit.framework.Assert;
@@ -61,19 +72,44 @@ public class AndroidJUnitRunnerTest {
 
   @Captor private ArgumentCaptor<Iterable<String>> pathsCaptor;
   @Mock private Context mockContext;
+  @Mock private Context mockTargetContext;
+  @Mock private PackageManager mockPackageManager;
   @Mock private InstrumentationResultPrinter instrumentationResultPrinter;
   @Mock private TestRequestBuilder testRequestBuilder;
+  @Mock private NoOpOrchestratorConnection mockOrchestratorConn;
 
   @Before
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
+    // Set up context.
     doReturn("/apps/foo.apk").when(mockContext).getPackageCodePath();
+    doReturn(mockPackageManager).when(mockContext).getPackageManager();
+    doReturn(new InstrumentationInfo())
+        .when(mockPackageManager)
+        .getInstrumentationInfo(
+            eq(new ComponentName("a.b.c.testpackage", "testclass")),
+            eq(PackageManager.GET_META_DATA));
+    // Set up target context.
+    doReturn("a.b.c.package").when(mockTargetContext).getPackageName();
+    doReturn(new ApplicationInfo()).when(mockTargetContext).getApplicationInfo();
+    doReturn(new File("/dex/cache/"))
+        .when(mockTargetContext)
+        .getDir(eq("dxmaker_cache"), eq(Context.MODE_PRIVATE));
+
     androidJUnitRunner =
         new AndroidJUnitRunner() {
 
           @Override
           public Context getContext() {
             return mockContext;
+          }
+
+          @Override
+          protected void specifyDexMakerCacheProperty() {}
+
+          @Override
+          public Context getTargetContext() {
+            return mockTargetContext;
           }
 
           @Override
@@ -85,7 +121,21 @@ public class AndroidJUnitRunnerTest {
           TestRequestBuilder createTestRequestBuilder(Instrumentation instr, Bundle arguments) {
             return testRequestBuilder;
           }
+
+          @Override
+          public ComponentName getComponentName() {
+            return new ComponentName("a.b.c.testpackage", "testclass");
+          }
+
+          @Override
+          public void onStart() {}
+
+          @Override
+          protected boolean isPrimaryInstrProcess(String argsProcessName) {
+            return true;
+          }
         };
+    TestEventClient.setOrchestratorConnection(mockOrchestratorConn);
   }
 
   /** Ensures that the main looper is not blocked and can process messages during test execution. */
@@ -208,11 +258,28 @@ public class AndroidJUnitRunnerTest {
   public void testClasspathToScanIsAdded() {
     Bundle b = new Bundle();
     b.putString("classpathToScan", "/foo/bar.dex:/foo/baz.dex");
-
     RunnerArgs runnerArgs =
         new RunnerArgs.Builder()
             .fromBundle(InstrumentationRegistry.getInstrumentation(), b)
             .build();
+    androidJUnitRunner =
+        new AndroidJUnitRunner() {
+          @Override
+          public Context getContext() {
+            return mockContext;
+          }
+
+          @Override
+          TestRequestBuilder createTestRequestBuilder(Instrumentation instr, Bundle arguments) {
+            return testRequestBuilder;
+          }
+
+          @Override
+          public Context getTargetContext() {
+            return null;
+          }
+        };
+
     androidJUnitRunner.buildRequest(runnerArgs, new Bundle());
     verify(testRequestBuilder, times(1)).addPathsToScan(pathsCaptor.capture());
 
@@ -224,6 +291,50 @@ public class AndroidJUnitRunnerTest {
     Assert.assertEquals(2, pathsToScan.size());
     Assert.assertTrue(pathsToScan.contains("/foo/bar.dex"));
     Assert.assertTrue(pathsToScan.contains("/foo/baz.dex"));
+  }
+
+  @Test
+  @UiThreadTest
+  public void onExceptionWithNoOpTestEventClient() {
+    // No-op test event client will be used when no argument is specified.
+    androidJUnitRunner.onCreate(new Bundle());
+
+    androidJUnitRunner.onException(this, new RuntimeException("A runtime exception"));
+
+    // Verifies that no event should be sent.
+    verify(mockOrchestratorConn, times(0)).send(any(TestRunEvent.class));
+  }
+
+  @Test
+  @UiThreadTest
+  public void onExceptionWithDisconnectedOrchestrator() {
+    Bundle runnerArgs = new Bundle();
+    runnerArgs.putString("orchestratorService", "androidx.test/.service.OrchestratorService");
+    runnerArgs.putString("isTestRunEventsRequested", "true");
+    androidJUnitRunner.onCreate(runnerArgs);
+
+    RuntimeException exception = new RuntimeException("A runtime exception");
+    androidJUnitRunner.onException(this, exception);
+
+    // Verifies that no event should be sent.
+    verify(mockOrchestratorConn, times(0)).send(any(TestRunEvent.class));
+  }
+
+  @Test
+  @UiThreadTest
+  public void onExceptionWithConnectedOrchestrator() {
+    Bundle runnerArgs = new Bundle();
+    runnerArgs.putString("orchestratorService", "androidx.test/.service.OrchestratorService");
+    runnerArgs.putString("isTestRunEventsRequested", "true");
+    androidJUnitRunner.onCreate(runnerArgs);
+    // Simulates the scenario that AJUR is connected to the orchestration service.
+    androidJUnitRunner.onTestEventClientConnect();
+
+    RuntimeException exception = new RuntimeException("A runtime exception");
+    androidJUnitRunner.onException(this, exception);
+
+    // One for failure event, one for test finished event.
+    verify(mockOrchestratorConn, times(2)).send(any(TestRunEvent.class));
   }
 
   @Test
