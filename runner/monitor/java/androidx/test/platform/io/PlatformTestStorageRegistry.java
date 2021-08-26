@@ -115,7 +115,7 @@ public final class PlatformTestStorageRegistry {
     static class NullInputStream extends InputStream {
       @Override
       public int read() {
-        return 0;
+        return -1;
       }
     }
 
