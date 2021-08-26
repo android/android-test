@@ -1,3 +1,7 @@
+load("//build_extensions:release.bzl", "axt_release_lib")
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_TRUTH_VERSION", "ANDROIDX_VERSION", "CORE_VERSION", "GUAVA_VERSION", "TRUTH_VERSION")
+
 # Description: Build rules for building androidx.test.truth from source
 licenses(["notice"])  # Apache License 2.0
 
@@ -22,8 +26,6 @@ android_library(
     ],
 )
 
-load("//build_extensions:release.bzl", "axt_release_lib")
-
 # group of targets to use to produce release binary + docs
 android_library(
     name = "truth_release_lib",
@@ -39,14 +41,11 @@ android_library(
 axt_release_lib(
     name = "truth_release",
     keep_spec = "androidx/test/ext/truth",
-    remove_spec = "androidx/test/ext/truth/R[$$\.]",
+    remove_spec = "androidx/test/ext/truth/R[$$\\.]",
     deps = [
         ":truth_release_lib",
     ],
 )
-
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "TRUTH_VERSION", "ANDROIDX_TRUTH_VERSION", "ANDROIDX_VERSION", "CORE_VERSION", "GUAVA_VERSION")
 
 maven_artifact(
     name = "truth_maven_artifact",
