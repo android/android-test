@@ -1,0 +1,13 @@
+# Device Actions for espresso.
+
+licenses(["notice"])
+
+package(default_visibility = ["//visibility:private"])
+
+android_library(
+    name = "device",
+    srcs = glob(["*.java"]),
+    deps = [
+        "//runner/monitor",
+    ],
+)

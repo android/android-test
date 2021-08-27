@@ -27,10 +27,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Annotation denoting that the image capturing APIs library are experimental and require opt-in.
- */
+/** Annotation denoting that the DeviceInteraction APIs are experimental and require opt-in. */
 @Retention(RetentionPolicy.CLASS)
 @Target({TYPE, METHOD, CONSTRUCTOR, FIELD, PACKAGE})
 @RequiresOptIn()
-public @interface ExperimentalScreenshot {}
+public @interface ExperimentalDeviceInteraction {}
