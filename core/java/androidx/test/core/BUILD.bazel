@@ -1,6 +1,7 @@
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "CORE_VERSION", "MONITOR_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_LIFECYCLE_VERSION", "ANDROIDX_VERSION", "CORE_VERSION", "KOTLIN_VERSION", "MONITOR_VERSION")
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library")
 
 # Description: Build rules for building androidx.test.core from source
 licenses(["notice"])  # Apache License 2.0
@@ -11,7 +12,7 @@ package(
     ],
 )
 
-android_library(
+kt_android_library(
     name = "core",
     srcs = glob(
         ["**/*.java"],
@@ -55,6 +56,8 @@ maven_artifact(
     artifact_deps = [
         "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
         "androidx.test:monitor:%s" % MONITOR_VERSION,
+        "androidx.lifecycle:lifecycle-common:%s" % ANDROIDX_LIFECYCLE_VERSION,
+        "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
     ],
     artifact_id = "core",
     group_id = "androidx.test",
