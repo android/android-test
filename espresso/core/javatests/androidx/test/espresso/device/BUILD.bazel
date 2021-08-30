@@ -1,0 +1,29 @@
+# Description:
+#   Tests for Synchronized Device State Change API
+
+load(
+    "//third_party/android/androidx_test/build_extensions:kt_android_app_instrumentation_tests.bzl",
+    "kt_android_app_instrumentation_tests",
+)
+load(
+    "//build_extensions:test_devices.bzl",
+    "devices",
+)
+
+kt_android_app_instrumentation_tests(
+    name = "instrumentation_tests",
+    srcs = glob(
+        ["*.kt"],
+    ),
+    binary_target = "//third_party/android/androidx_test/testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+    target_devices = devices(foldable = True),
+    deps = [
+        "//espresso/core/java/androidx/test/espresso/device",
+        "//ext/junit",
+        "//java/com/google/android/apps/common/testing/testrunner",
+        "//java/com/google/android/apps/common/testing/util",
+        "//runner/android_junit_runner",
+        "//testapps/ui_testapp/javatests/androidx/test/ui/app:test_resources",
+        "@maven//:junit_junit",
+    ],
+)

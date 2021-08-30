@@ -8,6 +8,16 @@ android_library(
     name = "device",
     srcs = glob(["*.java"]),
     deps = [
+        "//espresso/core/java/androidx/test/espresso/device:kt_device",
+        "//runner/monitor",
+    ],
+)
+
+kt_android_library(
+    name = "kt_device",
+    srcs = glob(["*.kt"]),
+    deps = [
+        "//java/com/google/android/apps/common/testing/util",
         "//runner/monitor",
     ],
 )

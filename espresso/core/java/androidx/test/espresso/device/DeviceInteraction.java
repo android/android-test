@@ -23,4 +23,16 @@ import androidx.test.annotation.ExperimentalDeviceInteraction;
  * <p>This API is experimental and subject to change.
  */
 @ExperimentalDeviceInteraction
-public class DeviceInteraction {}
+public class DeviceInteraction {
+  /**
+   * Performs the given action on the test device.
+   *
+   * @param action the DeviceAction to execute.
+   * @return this interaction for further perform/verification calls.
+   */
+  public DeviceInteraction perform(DeviceAction action) {
+    DeviceController deviceController = new DeviceControllerImpl();
+    action.perform(deviceController);
+    return this;
+  }
+}
