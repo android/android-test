@@ -1,0 +1,9 @@
+// Signature format: 3.0
+package androidx.test.core.app {
+
+  public final class ActivityScenarioKt {
+    method public static inline <reified A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A>! launchActivity(android.content.Intent? intent = null, android.os.Bundle? activityOptions = null);
+  }
+
+}
+
