@@ -482,7 +482,7 @@ public class TestRequestBuilder {
 
     // Strips out the parameterized suffix if it exists
     private String stripParameterizedSuffix(String name) {
-      Pattern suffixPattern = Pattern.compile(".+(\\[[0-9]+\\])$");
+      Pattern suffixPattern = Pattern.compile(".+(\\[.+\\])$");
       if (suffixPattern.matcher(name).matches()) {
         name = name.substring(0, name.lastIndexOf('['));
       }
