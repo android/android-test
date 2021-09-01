@@ -30,7 +30,7 @@ import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
 
 /** Subject for making assertions about {@link Bundle}s. */
-public final class BundleSubject extends Subject {
+public final class BundleSubject extends ParcelableSubject<Bundle> {
 
   public static BundleSubject assertThat(Bundle bundle) {
     return Truth.assertAbout(bundles()).that(bundle);
