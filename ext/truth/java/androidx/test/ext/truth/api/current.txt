@@ -1,0 +1,211 @@
+
+
+package androidx.test.ext.truth.app {
+
+  public class NotificationActionSubject extends com.google.common.truth.Subject {
+    method public static androidx.test.ext.truth.app.NotificationActionSubject assertThat(android.app.Notification.Action);
+    method public static com.google.common.truth.Subject.Factory<androidx.test.ext.truth.app.NotificationActionSubject, android.app.Notification.Action> notificationActions();
+    method public final com.google.common.truth.StringSubject title();
+  }
+
+  public class NotificationSubject extends com.google.common.truth.Subject {
+    method public static androidx.test.ext.truth.app.NotificationSubject assertThat(android.app.Notification);
+    method public final androidx.test.ext.truth.app.PendingIntentSubject contentIntent();
+    method public final androidx.test.ext.truth.app.PendingIntentSubject deleteIntent();
+    method public final void doesNotHaveFlags(int);
+    method public final androidx.test.ext.truth.os.BundleSubject extras();
+    method public final void hasFlags(int);
+    method public static com.google.common.truth.Subject.Factory<androidx.test.ext.truth.app.NotificationSubject, android.app.Notification> notifications();
+    method public final com.google.common.truth.StringSubject tickerText();
+  }
+
+  public class PendingIntentSubject extends com.google.common.truth.Subject {
+    method public static androidx.test.ext.truth.app.PendingIntentSubject assertThat(android.app.PendingIntent);
+    method public static com.google.common.truth.Subject.Factory<androidx.test.ext.truth.app.PendingIntentSubject, android.app.PendingIntent> pendingIntents();
+  }
+
+}
+
+package androidx.test.ext.truth.content {
+
+  public final class IntentCorrespondences {
+    method public static com.google.common.truth.Correspondence<android.content.Intent, android.content.Intent> action();
+    method public static com.google.common.truth.Correspondence<android.content.Intent, android.content.Intent> all(com.google.common.truth.Correspondence<android.content.Intent, android.content.Intent>...);
+    method public static com.google.common.truth.Correspondence<android.content.Intent, android.content.Intent> data();
+  }
+
+  public final class IntentSubject extends com.google.common.truth.Subject {
+    method public static androidx.test.ext.truth.content.IntentSubject assertThat(android.content.Intent);
+    method public com.google.common.truth.IterableSubject categories();
+    method public androidx.test.ext.truth.os.BundleSubject extras();
+    method public void filtersEquallyTo(android.content.Intent);
+    method public void hasAction(java.lang.String);
+    method public void hasComponent(java.lang.String, java.lang.String);
+    method public void hasComponent(android.content.ComponentName);
+    method public void hasComponentClass(java.lang.Class<?>);
+    method public void hasComponentClass(java.lang.String);
+    method public void hasComponentPackage(java.lang.String);
+    method public void hasData(android.net.Uri);
+    method public void hasFlags(int);
+    method public void hasNoAction();
+    method public void hasPackage(java.lang.String);
+    method public void hasType(java.lang.String);
+    method public static com.google.common.truth.Subject.Factory<androidx.test.ext.truth.content.IntentSubject, android.content.Intent> intents();
+  }
+
+}
+
+package androidx.test.ext.truth.location {
+
+  public final class LocationCorrespondences {
+    method public static com.google.common.truth.Correspondence<android.location.Location, android.location.Location> at();
+    method public static com.google.common.truth.Correspondence<android.location.Location, android.location.Location> equality();
+    method public static com.google.common.truth.Correspondence<android.location.Location, android.location.Location> nearby(float);
+  }
+
+  public class LocationSubject extends com.google.common.truth.Subject {
+    method public com.google.common.truth.FloatSubject accuracy();
+    method public com.google.common.truth.DoubleSubject altitude();
+    method public static androidx.test.ext.truth.location.LocationSubject assertThat(android.location.Location);
+    method public com.google.common.truth.FloatSubject bearing();
+    method public com.google.common.truth.FloatSubject bearingAccuracy();
+    method public com.google.common.truth.FloatSubject bearingTo(double, double);
+    method public com.google.common.truth.FloatSubject bearingTo(android.location.Location);
+    method public com.google.common.truth.FloatSubject distanceTo(double, double);
+    method public com.google.common.truth.FloatSubject distanceTo(android.location.Location);
+    method public void doesNotHaveProvider(java.lang.String);
+    method public com.google.common.truth.LongSubject elapsedRealtimeMillis();
+    method public com.google.common.truth.LongSubject elapsedRealtimeNanos();
+    method public final androidx.test.ext.truth.os.BundleSubject extras();
+    method public void hasAccuracy();
+    method public void hasAltitude();
+    method public void hasBearing();
+    method public void hasBearingAccuracy();
+    method public void hasProvider(java.lang.String);
+    method public void hasSpeed();
+    method public void hasSpeedAccuracy();
+    method public void hasVerticalAccuracy();
+    method public void isAt(android.location.Location);
+    method public void isAt(double, double);
+    method public void isFaraway(android.location.Location, float);
+    method public void isMock();
+    method public void isNearby(android.location.Location, float);
+    method public void isNotAt(android.location.Location);
+    method public void isNotAt(double, double);
+    method public void isNotMock();
+    method public static com.google.common.truth.Subject.Factory<androidx.test.ext.truth.location.LocationSubject, android.location.Location> locations();
+    method public com.google.common.truth.FloatSubject speed();
+    method public com.google.common.truth.FloatSubject speedAccuracy();
+    method public com.google.common.truth.LongSubject time();
+    method public com.google.common.truth.FloatSubject verticalAccuracy();
+  }
+
+}
+
+package androidx.test.ext.truth.os {
+
+  public final class BundleSubject extends com.google.common.truth.Subject {
+    method public static androidx.test.ext.truth.os.BundleSubject assertThat(android.os.Bundle);
+    method public com.google.common.truth.BooleanSubject bool(java.lang.String);
+    method public static com.google.common.truth.Subject.Factory<androidx.test.ext.truth.os.BundleSubject, android.os.Bundle> bundles();
+    method public void containsKey(java.lang.String);
+    method public void doesNotContainKey(java.lang.String);
+    method public void hasSize(int);
+    method public com.google.common.truth.IntegerSubject integer(java.lang.String);
+    method public void isEmpty();
+    method public void isNotEmpty();
+    method public com.google.common.truth.LongSubject longInt(java.lang.String);
+    method public <T extends android.os.Parcelable> androidx.test.ext.truth.os.ParcelableSubject<T> parcelable(java.lang.String);
+    method public com.google.common.truth.IterableSubject parcelableArrayList(java.lang.String);
+    method public <T extends android.os.Parcelable, SubjectT extends com.google.common.truth.Subject> SubjectT parcelableAsType(java.lang.String, com.google.common.truth.Subject.Factory<SubjectT, T>);
+    method public com.google.common.truth.StringSubject string(java.lang.String);
+    method public com.google.common.truth.IterableSubject stringArrayList(java.lang.String);
+  }
+
+  public final class ParcelableSubject<T extends android.os.Parcelable> extends com.google.common.truth.Subject {
+    method public static <T extends android.os.Parcelable> androidx.test.ext.truth.os.ParcelableSubject<T> assertThat(T);
+    method public static <T extends android.os.Parcelable> com.google.common.truth.Subject.Factory<androidx.test.ext.truth.os.ParcelableSubject<T>, T> parcelables();
+    method public void recreatesEqual(android.os.Parcelable.Creator<T>);
+  }
+
+}
+
+package androidx.test.ext.truth.view {
+
+  public final class MotionEventSubject extends com.google.common.truth.Subject {
+    method public static androidx.test.ext.truth.view.MotionEventSubject assertThat(android.view.MotionEvent);
+    method public void hasAction(int);
+    method public void hasActionButton(int);
+    method public void hasButtonState(int);
+    method public void hasDeviceId(int);
+    method public void hasDownTime(long);
+    method public void hasEdgeFlags(int);
+    method public void hasEventTime(long);
+    method public void hasFlags(int);
+    method public void hasHistorySize(int);
+    method public void hasMetaState(int);
+    method public void hasPointerCount(int);
+    method public com.google.common.truth.LongSubject historicalEventTime(int);
+    method public com.google.common.truth.FloatSubject historicalOrientation(int);
+    method public androidx.test.ext.truth.view.PointerCoordsSubject historicalPointerCoords(int, int);
+    method public com.google.common.truth.FloatSubject historicalPressure(int);
+    method public com.google.common.truth.FloatSubject historicalSize(int);
+    method public com.google.common.truth.FloatSubject historicalToolMajor(int);
+    method public com.google.common.truth.FloatSubject historicalToolMinor(int);
+    method public com.google.common.truth.FloatSubject historicalTouchMajor(int);
+    method public com.google.common.truth.FloatSubject historicalTouchMinor(int);
+    method public com.google.common.truth.FloatSubject historicalX(int);
+    method public com.google.common.truth.FloatSubject historicalY(int);
+    method public static com.google.common.truth.Subject.Factory<androidx.test.ext.truth.view.MotionEventSubject, android.view.MotionEvent> motionEvents();
+    method public com.google.common.truth.FloatSubject orientation();
+    method public com.google.common.truth.FloatSubject orientation(int);
+    method public androidx.test.ext.truth.view.PointerCoordsSubject pointerCoords(int);
+    method public com.google.common.truth.IntegerSubject pointerId(int);
+    method public androidx.test.ext.truth.view.PointerPropertiesSubject pointerProperties(int);
+    method public com.google.common.truth.FloatSubject pressure();
+    method public com.google.common.truth.FloatSubject pressure(int);
+    method public com.google.common.truth.FloatSubject rawX();
+    method public com.google.common.truth.FloatSubject rawY();
+    method public com.google.common.truth.FloatSubject size();
+    method public com.google.common.truth.FloatSubject size(int);
+    method public com.google.common.truth.FloatSubject toolMajor();
+    method public com.google.common.truth.FloatSubject toolMajor(int);
+    method public com.google.common.truth.FloatSubject toolMinor();
+    method public com.google.common.truth.FloatSubject toolMinor(int);
+    method public com.google.common.truth.FloatSubject touchMajor();
+    method public com.google.common.truth.FloatSubject touchMajor(int);
+    method public com.google.common.truth.FloatSubject touchMinor();
+    method public com.google.common.truth.FloatSubject touchMinor(int);
+    method public com.google.common.truth.FloatSubject x();
+    method public com.google.common.truth.FloatSubject x(int);
+    method public com.google.common.truth.FloatSubject xPrecision();
+    method public com.google.common.truth.FloatSubject y();
+    method public com.google.common.truth.FloatSubject y(int);
+    method public com.google.common.truth.FloatSubject yPrecision();
+  }
+
+  public final class PointerCoordsSubject extends com.google.common.truth.Subject {
+    method public static androidx.test.ext.truth.view.PointerCoordsSubject assertThat(android.view.MotionEvent.PointerCoords);
+    method public com.google.common.truth.FloatSubject axisValue(int);
+    method public com.google.common.truth.FloatSubject orientation();
+    method public static com.google.common.truth.Subject.Factory<androidx.test.ext.truth.view.PointerCoordsSubject, android.view.MotionEvent.PointerCoords> pointerCoords();
+    method public com.google.common.truth.FloatSubject pressure();
+    method public com.google.common.truth.FloatSubject size();
+    method public com.google.common.truth.FloatSubject toolMajor();
+    method public com.google.common.truth.FloatSubject toolMinor();
+    method public com.google.common.truth.FloatSubject touchMajor();
+    method public com.google.common.truth.FloatSubject touchMinor();
+    method public com.google.common.truth.FloatSubject x();
+    method public com.google.common.truth.FloatSubject y();
+  }
+
+  public final class PointerPropertiesSubject extends com.google.common.truth.Subject {
+    method public static androidx.test.ext.truth.view.PointerPropertiesSubject assertThat(android.view.MotionEvent.PointerProperties);
+    method public void hasId(int);
+    method public void hasToolType(int);
+    method public void isEqualTo(android.view.MotionEvent.PointerProperties);
+    method public static com.google.common.truth.Subject.Factory<androidx.test.ext.truth.view.PointerPropertiesSubject, android.view.MotionEvent.PointerProperties> pointerProperties();
+  }
+
+}
+
