@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * annotation implies nothing about the quality or performance of the API in question, only the fact
  * that it is not "API-frozen."
  *
- * @deprecated Create a "@RequiresOptIn" annotation specific to the API instead
+ * @deprecated Use {@link ExperimentalTestApi} instead.
  */
 @Retention(RetentionPolicy.CLASS)
 @Target({

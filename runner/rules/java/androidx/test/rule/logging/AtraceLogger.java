@@ -19,7 +19,7 @@ import android.app.Instrumentation;
 import android.app.UiAutomation;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
-import androidx.test.annotation.Beta;
+import androidx.test.annotation.ExperimentalTestApi;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,7 +35,7 @@ import java.util.Set;
  *
  * <p><b>This API is currently in beta.</b>
  */
-@Beta
+@ExperimentalTestApi
 public class AtraceLogger {
 
   private static final String ATRACE_START = "atrace --async_start -b %d -c %s";

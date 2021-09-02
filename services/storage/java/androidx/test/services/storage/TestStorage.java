@@ -21,6 +21,7 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.platform.io.PlatformTestStorage;
 import androidx.test.services.storage.file.HostedFile;
@@ -44,7 +45,7 @@ import javax.annotation.Nonnull;
  * Provides convenient I/O operations for reading/writing testing relevant files, properties in a
  * test.
  */
-@ExperimentalTestStorage
+@ExperimentalTestApi
 public final class TestStorage implements PlatformTestStorage {
   private static final String TAG = TestStorage.class.getSimpleName();
   private static final String PROPERTIES_FILE_NAME = "properties.dat";

@@ -1,0 +1,182 @@
+
+
+package androidx.test.espresso.remote {
+
+  public abstract interface Bindable {
+    method public abstract android.os.IBinder getIBinder();
+    method public abstract java.lang.String getId();
+    method public abstract void setIBinder(android.os.IBinder);
+  }
+
+  public final class ConstructorInvocation {
+    ctor public ConstructorInvocation(java.lang.Class<?>, java.lang.Class<? extends java.lang.annotation.Annotation>, java.lang.Class<?>...);
+    method public java.lang.Object invokeConstructor(java.lang.Object...);
+  }
+
+  public abstract interface Converter<I, O> {
+    method public abstract O convert(I);
+  }
+
+  public final class EspressoRemote implements androidx.test.espresso.remote.RemoteInteraction {
+    method public synchronized java.util.concurrent.Callable<java.lang.Void> createRemoteCheckCallable(org.hamcrest.Matcher<androidx.test.espresso.Root>, org.hamcrest.Matcher<android.view.View>, java.util.Map<java.lang.String, android.os.IBinder>, androidx.test.espresso.ViewAssertion);
+    method public synchronized java.util.concurrent.Callable<java.lang.Void> createRemotePerformCallable(org.hamcrest.Matcher<androidx.test.espresso.Root>, org.hamcrest.Matcher<android.view.View>, java.util.Map<java.lang.String, android.os.IBinder>, androidx.test.espresso.ViewAction...);
+    method public static androidx.test.espresso.remote.EspressoRemote getInstance();
+    method public synchronized void init();
+    method public synchronized boolean isRemoteProcess();
+    method public synchronized void terminate();
+  }
+
+  public abstract interface EspressoRemoteMessage {
+  }
+
+  public static abstract interface EspressoRemoteMessage.From<T, M> {
+    method public abstract T fromProto(M);
+  }
+
+  public static abstract interface EspressoRemoteMessage.To<M> {
+    method public abstract M toProto();
+  }
+
+  public final class FieldDescriptor {
+    method public static androidx.test.espresso.remote.FieldDescriptor of(java.lang.Class<?>, java.lang.String, int);
+    field public final java.lang.String fieldName;
+    field public final java.lang.Class<?> fieldType;
+    field public final int order;
+  }
+
+  public final class GenericRemoteMessage implements androidx.test.espresso.remote.EspressoRemoteMessage.To {
+    ctor public GenericRemoteMessage(java.lang.Object);
+    method public com.google.protobuf.MessageLite toProto();
+    field public static final androidx.test.espresso.remote.EspressoRemoteMessage.From<java.lang.Object, com.google.protobuf.MessageLite> FROM;
+  }
+
+  public final class InteractionRequest implements androidx.test.espresso.remote.EspressoRemoteMessage.To {
+    method public org.hamcrest.Matcher<androidx.test.espresso.Root> getRootMatcher();
+    method public androidx.test.espresso.ViewAction getViewAction();
+    method public androidx.test.espresso.ViewAssertion getViewAssertion();
+    method public org.hamcrest.Matcher<android.view.View> getViewMatcher();
+    method public com.google.protobuf.MessageLite toProto();
+  }
+
+  public static class InteractionRequest.Builder {
+    ctor public Builder();
+    method public androidx.test.espresso.remote.InteractionRequest build();
+    method public androidx.test.espresso.remote.InteractionRequest.Builder setRequestProto(byte[]);
+    method public androidx.test.espresso.remote.InteractionRequest.Builder setRootMatcher(org.hamcrest.Matcher<androidx.test.espresso.Root>);
+    method public androidx.test.espresso.remote.InteractionRequest.Builder setViewAction(androidx.test.espresso.ViewAction);
+    method public androidx.test.espresso.remote.InteractionRequest.Builder setViewAssertion(androidx.test.espresso.ViewAssertion);
+    method public androidx.test.espresso.remote.InteractionRequest.Builder setViewMatcher(org.hamcrest.Matcher<android.view.View>);
+  }
+
+  public final class InteractionResponse implements androidx.test.espresso.remote.EspressoRemoteMessage.To {
+    method public androidx.test.espresso.remote.InteractionResponse.RemoteError getRemoteError();
+    method public androidx.test.espresso.remote.InteractionResponse.Status getStatus();
+    method public boolean hasRemoteError();
+    method public com.google.protobuf.MessageLite toProto();
+  }
+
+  public static class InteractionResponse.Builder {
+    ctor public Builder();
+    method public androidx.test.espresso.remote.InteractionResponse build();
+    method public androidx.test.espresso.remote.InteractionResponse.Builder setRemoteError(androidx.test.espresso.remote.InteractionResponse.RemoteError);
+    method public androidx.test.espresso.remote.InteractionResponse.Builder setResultProto(byte[]);
+    method public androidx.test.espresso.remote.InteractionResponse.Builder setStatus(androidx.test.espresso.remote.InteractionResponse.Status);
+  }
+
+  public static final class InteractionResponse.RemoteError {
+    method public int getCode();
+    method public java.lang.String getDescription();
+    field public static final int REMOTE_ESPRESSO_ERROR_CODE = 0; // 0x0
+    field public static final int REMOTE_PROTOCOL_ERROR_CODE = 1; // 0x1
+  }
+
+  public static final class InteractionResponse.Status extends java.lang.Enum {
+    method public static androidx.test.espresso.remote.InteractionResponse.Status valueOf(java.lang.String);
+    method public static final androidx.test.espresso.remote.InteractionResponse.Status[] values();
+    enum_constant public static final androidx.test.espresso.remote.InteractionResponse.Status Error;
+    enum_constant public static final androidx.test.espresso.remote.InteractionResponse.Status Ok;
+  }
+
+  public final class NoRemoteEspressoInstanceException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
+    ctor public NoRemoteEspressoInstanceException(java.lang.String);
+  }
+
+  public class NoopRemoteInteraction implements androidx.test.espresso.remote.RemoteInteraction {
+    ctor public NoopRemoteInteraction();
+    method public java.util.concurrent.Callable<java.lang.Void> createRemoteCheckCallable(org.hamcrest.Matcher<androidx.test.espresso.Root>, org.hamcrest.Matcher<android.view.View>, java.util.Map<java.lang.String, android.os.IBinder>, androidx.test.espresso.ViewAssertion);
+    method public java.util.concurrent.Callable<java.lang.Void> createRemotePerformCallable(org.hamcrest.Matcher<androidx.test.espresso.Root>, org.hamcrest.Matcher<android.view.View>, java.util.Map<java.lang.String, android.os.IBinder>, androidx.test.espresso.ViewAction...);
+    method public boolean isRemoteProcess();
+  }
+
+  public final class ProtoUtils {
+    method public static java.lang.String capitalizeFirstChar(java.lang.String);
+    method public static <T extends java.lang.Enum> T checkedGetEnumForProto(int, java.lang.Class<T>);
+    method public static java.util.List<java.lang.reflect.Field> getFilteredFieldList(java.lang.Class<?>, java.util.List<java.lang.String>) throws java.lang.NoSuchFieldException;
+  }
+
+  public final class RemoteDescriptor {
+    method public java.util.List<androidx.test.espresso.remote.FieldDescriptor> getInstanceFieldDescriptorList();
+    method public java.lang.Class<?> getInstanceType();
+    method public java.lang.String getInstanceTypeName();
+    method public java.lang.Class<?> getProtoBuilderClass();
+    method public com.google.protobuf.Parser<?> getProtoParser();
+    method public java.lang.Class<?> getProtoType();
+    method public java.lang.Class<?>[] getRemoteConstrTypes();
+    method public java.lang.Class<?> getRemoteType();
+  }
+
+  public static final class RemoteDescriptor.Builder {
+    ctor public Builder();
+    method public androidx.test.espresso.remote.RemoteDescriptor build();
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder setInstanceFieldDescriptors(androidx.test.espresso.remote.FieldDescriptor...);
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder setInstanceType(java.lang.Class<?>);
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder setProtoBuilderType(java.lang.Class<?>);
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder setProtoParser(com.google.protobuf.Parser<?>);
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder setProtoType(java.lang.Class<?>);
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder setRemoteConstrTypes(java.lang.Class<?>...);
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder setRemoteType(java.lang.Class<?>);
+  }
+
+  public final class RemoteDescriptorRegistry {
+    method public androidx.test.espresso.remote.RemoteDescriptor argForInstanceType(java.lang.Class<?>);
+    method public androidx.test.espresso.remote.RemoteDescriptor argForMsgType(java.lang.Class<?>);
+    method public androidx.test.espresso.remote.RemoteDescriptor argForRemoteTypeUrl(java.lang.String);
+    method public static androidx.test.espresso.remote.RemoteDescriptorRegistry getInstance();
+    method public boolean hasArgForInstanceType(java.lang.Class<?>);
+    method public boolean registerRemoteTypeArgs(java.util.List<androidx.test.espresso.remote.RemoteDescriptor>);
+    method public void unregisterRemoteTypeArgs(java.util.List<androidx.test.espresso.remote.RemoteDescriptor>);
+  }
+
+  public class RemoteEspressoException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
+    ctor public RemoteEspressoException(java.lang.String);
+    ctor public RemoteEspressoException(java.lang.String, java.lang.Throwable);
+  }
+
+  public abstract interface RemoteInteraction {
+    method public abstract java.util.concurrent.Callable<java.lang.Void> createRemoteCheckCallable(org.hamcrest.Matcher<androidx.test.espresso.Root>, org.hamcrest.Matcher<android.view.View>, java.util.Map<java.lang.String, android.os.IBinder>, androidx.test.espresso.ViewAssertion);
+    method public abstract java.util.concurrent.Callable<java.lang.Void> createRemotePerformCallable(org.hamcrest.Matcher<androidx.test.espresso.Root>, org.hamcrest.Matcher<android.view.View>, java.util.Map<java.lang.String, android.os.IBinder>, androidx.test.espresso.ViewAction...);
+    method public abstract boolean isRemoteProcess();
+    field public static final java.lang.String BUNDLE_EXECUTION_STATUS = "executionStatus";
+  }
+
+  public class RemoteInteractionRegistry {
+    method public static androidx.test.espresso.remote.RemoteInteraction getInstance();
+    method public static void registerInstance(androidx.test.espresso.remote.RemoteInteraction);
+  }
+
+  public class RemoteProtocolException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
+    ctor public RemoteProtocolException(java.lang.String);
+    ctor public RemoteProtocolException(java.lang.String, java.lang.Throwable);
+  }
+
+  public final class TypeProtoConverters {
+    method public static <T> T anyToType(com.google.protobuf.Any);
+    method public static android.os.Parcelable byteStringToParcelable(com.google.protobuf.ByteString, java.lang.Class<android.os.Parcelable>);
+    method public static <T> T byteStringToType(com.google.protobuf.ByteString);
+    method public static com.google.protobuf.ByteString parcelableToByteString(android.os.Parcelable);
+    method public static <T> com.google.protobuf.Any typeToAny(T);
+    method public static com.google.protobuf.ByteString typeToByteString(java.lang.Object);
+  }
+
+}
+

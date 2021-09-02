@@ -1,0 +1,90 @@
+
+package androidx.test.runner {
+
+  public final deprecated class AndroidJUnit4 extends org.junit.runner.Runner implements org.junit.runner.manipulation.Filterable org.junit.runner.manipulation.Sortable {
+    ctor public AndroidJUnit4(java.lang.Class<?>, androidx.test.internal.util.AndroidRunnerParams) throws org.junit.runners.model.InitializationError;
+    ctor public AndroidJUnit4(java.lang.Class<?>) throws org.junit.runners.model.InitializationError;
+    method public void filter(org.junit.runner.manipulation.Filter) throws org.junit.runner.manipulation.NoTestsRemainException;
+    method public org.junit.runner.Description getDescription();
+    method public void run(org.junit.runner.notification.RunNotifier);
+    method public void sort(org.junit.runner.manipulation.Sorter);
+  }
+
+  public class AndroidJUnitRunner extends androidx.test.runner.MonitoringInstrumentation implements androidx.test.internal.events.client.TestEventClientConnectListener {
+    ctor public AndroidJUnitRunner();
+    method public void onTestEventClientConnect();
+  }
+}
+
+
+package androidx.test.runner.permission {
+
+  public class PermissionRequester implements androidx.test.internal.platform.content.PermissionGranter {
+    ctor public PermissionRequester();
+    method public void addPermissions(java.lang.String...);
+    method public void requestPermissions();
+    method protected void setAndroidRuntimeVersion(int);
+  }
+
+  public abstract class RequestPermissionCallable implements java.util.concurrent.Callable {
+    ctor public RequestPermissionCallable(androidx.test.runner.permission.ShellCommand, android.content.Context, java.lang.String);
+    method protected java.lang.String getPermission();
+    method protected androidx.test.runner.permission.ShellCommand getShellCommand();
+    method protected boolean isPermissionGranted();
+  }
+
+  public static final class RequestPermissionCallable.Result extends java.lang.Enum {
+    method public static androidx.test.runner.permission.RequestPermissionCallable.Result valueOf(java.lang.String);
+    method public static final androidx.test.runner.permission.RequestPermissionCallable.Result[] values();
+    enum_constant public static final androidx.test.runner.permission.RequestPermissionCallable.Result FAILURE;
+    enum_constant public static final androidx.test.runner.permission.RequestPermissionCallable.Result SUCCESS;
+  }
+
+  public abstract class ShellCommand {
+    ctor public ShellCommand();
+  }
+
+}
+
+package androidx.test.runner.screenshot {
+
+  public class BasicScreenCaptureProcessor implements androidx.test.runner.screenshot.ScreenCaptureProcessor {
+    ctor public BasicScreenCaptureProcessor();
+    method protected java.lang.String getDefaultFilename();
+    method protected java.lang.String getFilename(java.lang.String);
+    method public java.lang.String process(androidx.test.runner.screenshot.ScreenCapture) throws java.io.IOException;
+    field protected java.lang.String mDefaultFilenamePrefix;
+    field protected java.io.File mDefaultScreenshotPath;
+    field protected java.lang.String mFileNameDelimiter;
+    field protected java.lang.String mTag;
+  }
+
+  public final class ScreenCapture {
+    method public android.graphics.Bitmap getBitmap();
+    method public android.graphics.Bitmap.CompressFormat getFormat();
+    method public java.lang.String getName();
+    method public void process() throws java.io.IOException;
+    method public void process(java.util.Set<androidx.test.runner.screenshot.ScreenCaptureProcessor>) throws java.io.IOException;
+    method public androidx.test.runner.screenshot.ScreenCapture setFormat(android.graphics.Bitmap.CompressFormat);
+    method public androidx.test.runner.screenshot.ScreenCapture setName(java.lang.String);
+  }
+
+  public abstract interface ScreenCaptureProcessor {
+    method public abstract java.lang.String process(androidx.test.runner.screenshot.ScreenCapture) throws java.io.IOException;
+  }
+
+  public final class Screenshot {
+    ctor public Screenshot();
+    method public static void addScreenCaptureProcessors(java.util.Set<androidx.test.runner.screenshot.ScreenCaptureProcessor>);
+    method public static androidx.test.runner.screenshot.ScreenCapture capture() throws androidx.test.runner.screenshot.Screenshot.ScreenShotException;
+    method public static androidx.test.runner.screenshot.ScreenCapture capture(android.app.Activity) throws androidx.test.runner.screenshot.Screenshot.ScreenShotException;
+    method public static androidx.test.runner.screenshot.ScreenCapture capture(android.view.View) throws androidx.test.runner.screenshot.Screenshot.ScreenShotException;
+    method public static void setScreenshotProcessors(java.util.Set<androidx.test.runner.screenshot.ScreenCaptureProcessor>);
+  }
+
+  public class UiAutomationWrapper {
+    method public android.graphics.Bitmap takeScreenshot();
+  }
+
+}
+

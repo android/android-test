@@ -1,6 +1,6 @@
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANNOTATION_VERSION", "RUNNER_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 # Description: Build rules for building androidx.test from source
@@ -65,6 +65,7 @@ maven_artifact(
     src = ":rules_release.aar",
     artifact_deps = [
         "androidx.test:runner:%s" % RUNNER_VERSION,
+        "androidx.test:annotation:%s" % ANNOTATION_VERSION,
     ],
     artifact_id = "rules",
     group_id = "androidx.test",

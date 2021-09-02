@@ -1,0 +1,21 @@
+
+
+package androidx.test.espresso.idling.net {
+
+  public class UriIdlingResource implements androidx.test.espresso.IdlingResource {
+    ctor public UriIdlingResource(java.lang.String, long);
+    method public void beginLoad(java.lang.String);
+    method public void endLoad(java.lang.String);
+    method public java.lang.String getName();
+    method public void ignoreUri(java.util.regex.Pattern);
+    method public boolean isIdleNow();
+    method public void registerIdleTransitionCallback(androidx.test.espresso.IdlingResource.ResourceCallback);
+  }
+
+  public static abstract interface UriIdlingResource.HandlerIntf {
+    method public abstract void postDelayed(java.lang.Runnable, long);
+    method public abstract void removeCallbacks(java.lang.Runnable);
+  }
+
+}
+

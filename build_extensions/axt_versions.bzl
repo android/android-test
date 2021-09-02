@@ -15,6 +15,7 @@ UIAUTOMATOR_VERSION = "2.2.0"
 JANK_VERSION = "1.0.1"
 SERVICES_VERSION = "1.4.1-alpha01"  # stable 1.4.0
 ORCHESTRATOR_VERSION = "1.4.1-alpha01"  # stable 1.4.0
+ANNOTATION_VERSION = "1.0.0-alpha01"
 
 # Maven dependency versions
 ANDROIDX_VERSION = "1.0.0"

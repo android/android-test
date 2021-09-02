@@ -15,7 +15,7 @@
  */
 package androidx.test.espresso.device;
 
-import androidx.test.annotation.ExperimentalDeviceInteraction;
+import androidx.test.annotation.ExperimentalTestApi;
 
 /** Entry point for device centric operations */
 public class EspressoDevice {
@@ -28,7 +28,7 @@ public class EspressoDevice {
    *
    * <p>This API is experimental and subject to change or removal.
    */
-  @ExperimentalDeviceInteraction
+  @ExperimentalTestApi
   public static DeviceInteraction onDevice() {
     return new DeviceInteraction();
   }

@@ -1,0 +1,17 @@
+# Description: Build rules for building androidx.test.annotation from source
+
+# all users should reference the equivalent targets in //third_party/android/androidx_test/junit
+package(
+    default_visibility = ["//annotation:__subpackages__"],
+)
+
+android_library(
+    name = "annotation",
+    srcs = glob(
+        ["**/*.java"],
+    ),
+    tags = ["alt_dep=//annotation"],
+    deps = [
+        "//:androidx_annotation_experimental",
+    ],
+)

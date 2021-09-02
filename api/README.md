@@ -1,3 +1,5 @@
-Text output for the androidx.test API.
+Deprecated!
 
-Generated via blaze build //third_party/android/androidx_test:axt_doc
+Previous repository for api definitions for androidx.test. 
+API definitions have been moved to per-library directories.
+

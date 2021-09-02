@@ -1,0 +1,12 @@
+
+
+package androidx.test.espresso.accessibility {
+
+  public final class AccessibilityChecks {
+    method public static androidx.test.espresso.ViewAssertion accessibilityAssertion();
+    method public static void disable();
+    method public static com.google.android.apps.common.testing.accessibility.framework.integrations.espresso.AccessibilityValidator enable();
+  }
+
+}
+

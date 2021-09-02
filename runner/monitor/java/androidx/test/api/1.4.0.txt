@@ -1,0 +1,192 @@
+package androidx.test {
+
+  public final deprecated class InstrumentationRegistry {
+    method public static deprecated android.os.Bundle getArguments();
+    method public static deprecated android.content.Context getContext();
+    method public static deprecated android.app.Instrumentation getInstrumentation();
+    method public static deprecated android.content.Context getTargetContext();
+    method public static deprecated void registerInstance(android.app.Instrumentation, android.os.Bundle);
+  }
+
+}
+
+package androidx.test.annotation {
+
+  public abstract class Beta implements java.lang.annotation.Annotation {
+  }
+
+}
+
+
+package androidx.test.platform {
+
+  public abstract interface TestFrameworkException {
+  }
+
+}
+
+package androidx.test.platform.app {
+
+  public final class InstrumentationRegistry {
+    method public static android.os.Bundle getArguments();
+    method public static android.app.Instrumentation getInstrumentation();
+    method public static void registerInstance(android.app.Instrumentation, android.os.Bundle);
+  }
+
+}
+
+package androidx.test.platform.ui {
+
+  public class InjectEventSecurityException extends java.lang.Exception implements androidx.test.platform.TestFrameworkException {
+    ctor public InjectEventSecurityException(java.lang.String);
+    ctor public InjectEventSecurityException(java.lang.Throwable);
+    ctor public InjectEventSecurityException(java.lang.String, java.lang.Throwable);
+  }
+
+  public abstract interface UiController {
+    method public abstract boolean injectKeyEvent(android.view.KeyEvent) throws androidx.test.platform.ui.InjectEventSecurityException;
+    method public abstract boolean injectMotionEvent(android.view.MotionEvent) throws androidx.test.platform.ui.InjectEventSecurityException;
+    method public abstract boolean injectString(java.lang.String) throws androidx.test.platform.ui.InjectEventSecurityException;
+    method public abstract void loopMainThreadForAtLeast(long);
+    method public abstract void loopMainThreadUntilIdle();
+  }
+
+}
+
+
+package androidx.test.runner {
+
+
+  public class MonitoringInstrumentation extends androidx.test.internal.runner.hidden.ExposedInstrumentationApi {
+    ctor public MonitoringInstrumentation();
+    method protected void dumpThreadStateToOutputs(java.lang.String);
+    method protected java.lang.String getThreadState();
+    method protected void installMultidex();
+    method protected void installOldMultiDex(java.lang.Class<?>) throws java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.NoSuchMethodException;
+    method public void interceptActivityUsing(androidx.test.runner.intercepting.InterceptingActivityFactory);
+    method protected deprecated boolean isPrimaryInstrProcess(java.lang.String);
+    method protected final boolean isPrimaryInstrProcess();
+    method protected void restoreUncaughtExceptionHandler();
+    method protected final void setJsBridgeClassName(java.lang.String);
+    method protected boolean shouldWaitForActivitiesToComplete();
+    method protected void specifyDexMakerCacheProperty();
+    method public void useDefaultInterceptingActivityFactory();
+    method protected void waitForActivitiesToComplete();
+  }
+
+  public class MonitoringInstrumentation.ActivityFinisher implements java.lang.Runnable {
+    ctor public ActivityFinisher();
+    method public void run();
+  }
+
+  public class UsageTrackerFacilitator implements androidx.test.internal.runner.tracker.UsageTracker {
+    ctor public UsageTrackerFacilitator(androidx.test.internal.runner.RunnerArgs);
+    ctor public UsageTrackerFacilitator(boolean);
+    method public void registerUsageTracker(androidx.test.internal.runner.tracker.UsageTracker);
+    method public void sendUsages();
+    method public boolean shouldTrackUsage();
+    method public void trackUsage(java.lang.String, java.lang.String);
+  }
+
+}
+
+package androidx.test.runner.intent {
+
+  public abstract interface IntentCallback {
+    method public abstract void onIntentSent(android.content.Intent);
+  }
+
+  public abstract interface IntentMonitor {
+    method public abstract void addIntentCallback(androidx.test.runner.intent.IntentCallback);
+    method public abstract void removeIntentCallback(androidx.test.runner.intent.IntentCallback);
+  }
+
+  public final class IntentMonitorRegistry {
+    method public static androidx.test.runner.intent.IntentMonitor getInstance();
+    method public static void registerInstance(androidx.test.runner.intent.IntentMonitor);
+  }
+
+  public abstract interface IntentStubber {
+    method public abstract android.app.Instrumentation.ActivityResult getActivityResultForIntent(android.content.Intent);
+  }
+
+  public final class IntentStubberRegistry {
+    method public static androidx.test.runner.intent.IntentStubber getInstance();
+    method public static boolean isLoaded();
+    method public static void load(androidx.test.runner.intent.IntentStubber);
+    method public static synchronized void reset();
+  }
+
+}
+
+package androidx.test.runner.intercepting {
+
+  public abstract interface InterceptingActivityFactory {
+    method public abstract android.app.Activity create(java.lang.ClassLoader, java.lang.String, android.content.Intent);
+    method public abstract boolean shouldIntercept(java.lang.ClassLoader, java.lang.String, android.content.Intent);
+  }
+
+  public abstract class SingleActivityFactory<T extends android.app.Activity> implements androidx.test.runner.intercepting.InterceptingActivityFactory {
+    ctor public SingleActivityFactory(java.lang.Class<T>);
+    method public final android.app.Activity create(java.lang.ClassLoader, java.lang.String, android.content.Intent);
+    method protected abstract T create(android.content.Intent);
+    method public final java.lang.Class<T> getActivityClassToIntercept();
+    method public final boolean shouldIntercept(java.lang.ClassLoader, java.lang.String, android.content.Intent);
+  }
+
+}
+
+package androidx.test.runner.lifecycle {
+
+  public abstract interface ActivityLifecycleCallback {
+    method public abstract void onActivityLifecycleChanged(android.app.Activity, androidx.test.runner.lifecycle.Stage);
+  }
+
+  public abstract interface ActivityLifecycleMonitor {
+    method public abstract void addLifecycleCallback(androidx.test.runner.lifecycle.ActivityLifecycleCallback);
+    method public abstract java.util.Collection<android.app.Activity> getActivitiesInStage(androidx.test.runner.lifecycle.Stage);
+    method public abstract androidx.test.runner.lifecycle.Stage getLifecycleStageOf(android.app.Activity);
+    method public abstract void removeLifecycleCallback(androidx.test.runner.lifecycle.ActivityLifecycleCallback);
+  }
+
+  public final class ActivityLifecycleMonitorRegistry {
+    method public static androidx.test.runner.lifecycle.ActivityLifecycleMonitor getInstance();
+    method public static void registerInstance(androidx.test.runner.lifecycle.ActivityLifecycleMonitor);
+  }
+
+  public abstract interface ApplicationLifecycleCallback {
+    method public abstract void onApplicationLifecycleChanged(android.app.Application, androidx.test.runner.lifecycle.ApplicationStage);
+  }
+
+  public abstract interface ApplicationLifecycleMonitor {
+    method public abstract void addLifecycleCallback(androidx.test.runner.lifecycle.ApplicationLifecycleCallback);
+    method public abstract void removeLifecycleCallback(androidx.test.runner.lifecycle.ApplicationLifecycleCallback);
+  }
+
+  public final class ApplicationLifecycleMonitorRegistry {
+    method public static androidx.test.runner.lifecycle.ApplicationLifecycleMonitor getInstance();
+    method public static void registerInstance(androidx.test.runner.lifecycle.ApplicationLifecycleMonitor);
+  }
+
+  public final class ApplicationStage extends java.lang.Enum {
+    method public static androidx.test.runner.lifecycle.ApplicationStage valueOf(java.lang.String);
+    method public static final androidx.test.runner.lifecycle.ApplicationStage[] values();
+    enum_constant public static final androidx.test.runner.lifecycle.ApplicationStage CREATED;
+    enum_constant public static final androidx.test.runner.lifecycle.ApplicationStage PRE_ON_CREATE;
+  }
+
+  public final class Stage extends java.lang.Enum {
+    method public static androidx.test.runner.lifecycle.Stage valueOf(java.lang.String);
+    method public static final androidx.test.runner.lifecycle.Stage[] values();
+    enum_constant public static final androidx.test.runner.lifecycle.Stage CREATED;
+    enum_constant public static final androidx.test.runner.lifecycle.Stage DESTROYED;
+    enum_constant public static final androidx.test.runner.lifecycle.Stage PAUSED;
+    enum_constant public static final androidx.test.runner.lifecycle.Stage PRE_ON_CREATE;
+    enum_constant public static final androidx.test.runner.lifecycle.Stage RESTARTED;
+    enum_constant public static final androidx.test.runner.lifecycle.Stage RESUMED;
+    enum_constant public static final androidx.test.runner.lifecycle.Stage STARTED;
+    enum_constant public static final androidx.test.runner.lifecycle.Stage STOPPED;
+  }
+
+}
+

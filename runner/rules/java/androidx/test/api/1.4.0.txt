@@ -1,0 +1,93 @@
+package androidx.test.annotation {
+
+  public abstract class UiThreadTest implements java.lang.annotation.Annotation {
+  }
+
+}
+
+package androidx.test.rule {
+
+  public deprecated class ActivityTestRule<T extends android.app.Activity> implements org.junit.rules.TestRule {
+    ctor public ActivityTestRule(java.lang.Class<T>);
+    ctor public ActivityTestRule(java.lang.Class<T>, boolean);
+    ctor public ActivityTestRule(java.lang.Class<T>, boolean, boolean);
+    ctor public ActivityTestRule(androidx.test.runner.intercepting.SingleActivityFactory<T>, boolean, boolean);
+    ctor public ActivityTestRule(java.lang.Class<T>, java.lang.String, int, boolean, boolean);
+    method protected void afterActivityFinished();
+    method protected void afterActivityLaunched();
+    method public org.junit.runners.model.Statement apply(org.junit.runners.model.Statement, org.junit.runner.Description);
+    method protected void beforeActivityLaunched();
+    method public void finishActivity();
+    method public T getActivity();
+    method protected android.content.Intent getActivityIntent();
+    method public android.app.Instrumentation.ActivityResult getActivityResult();
+    method public T launchActivity(android.content.Intent);
+    method public void runOnUiThread(java.lang.Runnable) throws java.lang.Throwable;
+  }
+
+  public class DisableOnAndroidDebug implements org.junit.rules.TestRule {
+    ctor public DisableOnAndroidDebug(org.junit.rules.TestRule);
+    method public final org.junit.runners.model.Statement apply(org.junit.runners.model.Statement, org.junit.runner.Description);
+    method public boolean isDebugging();
+  }
+
+  public class GrantPermissionRule implements org.junit.rules.TestRule {
+    method public final org.junit.runners.model.Statement apply(org.junit.runners.model.Statement, org.junit.runner.Description);
+    method public static androidx.test.rule.GrantPermissionRule grant(java.lang.String...);
+  }
+
+  public class ServiceTestRule implements org.junit.rules.TestRule {
+    ctor public ServiceTestRule();
+    ctor protected ServiceTestRule(long, java.util.concurrent.TimeUnit);
+    method protected void afterService();
+    method public org.junit.runners.model.Statement apply(org.junit.runners.model.Statement, org.junit.runner.Description);
+    method protected void beforeService();
+    method public android.os.IBinder bindService(android.content.Intent) throws java.util.concurrent.TimeoutException;
+    method public android.os.IBinder bindService(android.content.Intent, android.content.ServiceConnection, int) throws java.util.concurrent.TimeoutException;
+    method public void startService(android.content.Intent) throws java.util.concurrent.TimeoutException;
+    method public void unbindService();
+    method public static androidx.test.rule.ServiceTestRule withTimeout(long, java.util.concurrent.TimeUnit);
+  }
+
+  public deprecated class UiThreadTestRule implements org.junit.rules.TestRule {
+    ctor public UiThreadTestRule();
+    method public org.junit.runners.model.Statement apply(org.junit.runners.model.Statement, org.junit.runner.Description);
+    method public void runOnUiThread(java.lang.Runnable) throws java.lang.Throwable;
+    method protected boolean shouldRunOnUiThread(org.junit.runner.Description);
+  }
+
+}
+
+package androidx.test.rule.logging {
+
+  public class AtraceLogger {
+    method public void atraceStart(java.util.Set<java.lang.String>, int, int, java.io.File, java.lang.String) throws java.io.IOException;
+    method public void atraceStop() throws java.io.IOException, java.lang.InterruptedException;
+    method public static androidx.test.rule.logging.AtraceLogger getAtraceLoggerInstance(android.app.Instrumentation);
+  }
+
+}
+
+package androidx.test.rule.provider {
+
+  public class ProviderTestRule implements org.junit.rules.TestRule {
+    method protected void afterProviderCleanedUp();
+    method public org.junit.runners.model.Statement apply(org.junit.runners.model.Statement, org.junit.runner.Description);
+    method protected void beforeProviderSetup();
+    method public android.content.ContentResolver getResolver();
+    method public void revokePermission(java.lang.String);
+    method public void runDatabaseCommands(java.lang.String, java.lang.String...);
+  }
+
+  public static class ProviderTestRule.Builder {
+    ctor public Builder(java.lang.Class<T>, java.lang.String);
+    method public <T extends android.content.ContentProvider> androidx.test.rule.provider.ProviderTestRule.Builder addProvider(java.lang.Class<T>, java.lang.String);
+    method public androidx.test.rule.provider.ProviderTestRule build();
+    method public androidx.test.rule.provider.ProviderTestRule.Builder setDatabaseCommands(java.lang.String, java.lang.String...);
+    method public androidx.test.rule.provider.ProviderTestRule.Builder setDatabaseCommandsFile(java.lang.String, java.io.File);
+    method public androidx.test.rule.provider.ProviderTestRule.Builder setDatabaseFile(java.lang.String, java.io.File);
+    method public androidx.test.rule.provider.ProviderTestRule.Builder setPrefix(java.lang.String);
+  }
+
+}
+

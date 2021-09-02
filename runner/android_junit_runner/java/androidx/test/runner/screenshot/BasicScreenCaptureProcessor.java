@@ -22,7 +22,7 @@ import static android.os.Environment.getExternalStoragePublicDirectory;
 import android.os.Build;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.Beta;
+import androidx.test.annotation.ExperimentalTestApi;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,7 +39,7 @@ import java.util.UUID;
  *
  * <p><b>This API is currently in beta.</b>
  */
-@Beta
+@ExperimentalTestApi
 public class BasicScreenCaptureProcessor implements ScreenCaptureProcessor {
   private static int sAndroidRuntimeVersion = Build.VERSION.SDK_INT;
   private static String sAndroidDeviceName = Build.DEVICE;

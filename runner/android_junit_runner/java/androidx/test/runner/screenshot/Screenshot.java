@@ -26,7 +26,7 @@ import androidx.annotation.NonNull;
 import android.view.View;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.InstrumentationRegistry;
-import androidx.test.annotation.Beta;
+import androidx.test.annotation.ExperimentalTestApi;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,7 +44,7 @@ import java.util.concurrent.FutureTask;
  *
  * <p><b>This API is currently in beta.</b>
  */
-@Beta
+@ExperimentalTestApi
 public final class Screenshot {
   private static int androidRuntimeVersion = Build.VERSION.SDK_INT;
   private static UiAutomationWrapper uiWrapper = new UiAutomationWrapper();

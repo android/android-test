@@ -1,0 +1,16 @@
+
+package androidx.test.espresso.idling {
+
+  public final class CountingIdlingResource implements androidx.test.espresso.IdlingResource {
+    ctor public CountingIdlingResource(java.lang.String);
+    ctor public CountingIdlingResource(java.lang.String, boolean);
+    method public void decrement();
+    method public void dumpStateToLogs();
+    method public java.lang.String getName();
+    method public void increment();
+    method public boolean isIdleNow();
+    method public void registerIdleTransitionCallback(androidx.test.espresso.IdlingResource.ResourceCallback);
+  }
+
+}
+

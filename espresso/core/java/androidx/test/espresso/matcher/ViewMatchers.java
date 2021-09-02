@@ -44,7 +44,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.Beta;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import androidx.test.espresso.util.HumanReadables;
@@ -1658,7 +1658,7 @@ public final class ViewMatchers {
    *
    * <p><b>This API is currently in beta.</b>
    */
-  @Beta
+  @ExperimentalTestApi
   public static Matcher<View> hasBackground(final int drawableId) {
     return new HasBackgroundMatcher(drawableId);
   }
@@ -1668,7 +1668,7 @@ public final class ViewMatchers {
    *
    * <p><b>This API is currently in beta.</b>
    */
-  @Beta
+  @ExperimentalTestApi
   public static Matcher<View> hasTextColor(final int colorResId) {
     return new BoundedDiagnosingMatcher<View, TextView>(TextView.class) {
       private Context context;

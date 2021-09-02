@@ -28,7 +28,7 @@ import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.Beta;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.platform.content.PermissionGranter;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.permission.UiAutomationShellCommand.PmCommand;
@@ -50,7 +50,7 @@ import java.util.HashSet;
  *
  * <p><b>This API is currently in beta.</b>
  */
-@Beta
+@ExperimentalTestApi
 @TargetApi(value = 23)
 public class PermissionRequester implements PermissionGranter {
 

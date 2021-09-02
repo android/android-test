@@ -21,7 +21,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import android.Manifest.permission;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.Beta;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.content.PermissionGranter;
 import androidx.test.runner.permission.PermissionRequester;
@@ -71,7 +71,7 @@ import org.junit.runners.model.Statement;
  *
  * <p><b>This API is currently in beta.</b>
  */
-@Beta
+@ExperimentalTestApi
 public class GrantPermissionRule implements TestRule {
 
   private PermissionGranter permissionGranter;

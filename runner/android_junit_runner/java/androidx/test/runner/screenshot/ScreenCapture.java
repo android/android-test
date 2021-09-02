@@ -22,7 +22,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import androidx.annotation.NonNull;
-import androidx.test.annotation.Beta;
+import androidx.test.annotation.ExperimentalTestApi;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -41,7 +41,7 @@ import java.util.Set;
  *
  * <p><b>This API is currently in beta.</b>
  */
-@Beta
+@ExperimentalTestApi
 public final class ScreenCapture {
   private static final Bitmap.CompressFormat DEFAULT_FORMAT = PNG;
 
