@@ -1,0 +1,153 @@
+
+package androidx.test.espresso.intent {
+
+  public abstract interface ActivityResultFunction {
+    method public abstract android.app.Instrumentation.ActivityResult apply(android.content.Intent);
+  }
+
+  public final class Checks {
+    method public static void checkArgument(boolean);
+    method public static void checkArgument(boolean, java.lang.Object);
+    method public static void checkArgument(boolean, java.lang.String, java.lang.Object...);
+    method public static <T> T checkNotNull(T);
+    method public static <T> T checkNotNull(T, java.lang.Object);
+    method public static <T> T checkNotNull(T, java.lang.String, java.lang.Object...);
+    method public static void checkState(boolean, java.lang.Object);
+    method public static void checkState(boolean, java.lang.String, java.lang.Object...);
+  }
+
+  public final class Intents {
+    method public static void assertNoUnverifiedIntents();
+    method public static java.util.List<android.content.Intent> getIntents();
+    method public static void init();
+    method public static void intended(org.hamcrest.Matcher<android.content.Intent>);
+    method public static void intended(org.hamcrest.Matcher<android.content.Intent>, androidx.test.espresso.intent.VerificationMode);
+    method public static androidx.test.espresso.intent.OngoingStubbing intending(org.hamcrest.Matcher<android.content.Intent>);
+    method public static void release();
+    method public static androidx.test.espresso.intent.VerificationMode times(int);
+  }
+
+  public final class OngoingStubbing {
+    method public void respondWith(android.app.Instrumentation.ActivityResult);
+    method public void respondWithFunction(androidx.test.espresso.intent.ActivityResultFunction);
+  }
+
+  public abstract interface ResettingStubber implements androidx.test.runner.intent.IntentStubber {
+    method public abstract void initialize();
+    method public abstract boolean isInitialized();
+    method public abstract void reset();
+    method public abstract void setActivityResultForIntent(org.hamcrest.Matcher<android.content.Intent>, android.app.Instrumentation.ActivityResult);
+    method public abstract void setActivityResultFunctionForIntent(org.hamcrest.Matcher<android.content.Intent>, androidx.test.espresso.intent.ActivityResultFunction);
+  }
+
+  public final class ResettingStubberImpl implements androidx.test.espresso.intent.ResettingStubber {
+    ctor public ResettingStubberImpl();
+    method public android.app.Instrumentation.ActivityResult getActivityResultForIntent(android.content.Intent);
+    method public void initialize();
+    method public boolean isInitialized();
+    method public void reset();
+    method public void setActivityResultForIntent(org.hamcrest.Matcher<android.content.Intent>, android.app.Instrumentation.ActivityResult);
+    method public void setActivityResultFunctionForIntent(org.hamcrest.Matcher<android.content.Intent>, androidx.test.espresso.intent.ActivityResultFunction);
+  }
+
+  public abstract interface ResolvedIntent {
+    method public abstract boolean canBeHandledBy(java.lang.String);
+    method public abstract android.content.Intent getIntent();
+  }
+
+  public abstract interface VerifiableIntent implements androidx.test.espresso.intent.ResolvedIntent {
+    method public abstract boolean hasBeenVerified();
+    method public abstract void markAsVerified();
+  }
+
+  public abstract interface VerificationMode {
+    method public abstract void verify(org.hamcrest.Matcher<android.content.Intent>, java.util.List<androidx.test.espresso.intent.VerifiableIntent>);
+  }
+
+  public final class VerificationModes {
+    method public static androidx.test.espresso.intent.VerificationMode noUnverifiedIntents();
+    method public static androidx.test.espresso.intent.VerificationMode times(int);
+  }
+
+}
+
+package androidx.test.espresso.intent.matcher {
+
+  public final class BundleMatchers {
+    method public static <T> org.hamcrest.Matcher<android.os.Bundle> hasEntry(java.lang.String, T);
+    method public static org.hamcrest.Matcher<android.os.Bundle> hasEntry(java.lang.String, org.hamcrest.Matcher<?>);
+    method public static org.hamcrest.Matcher<android.os.Bundle> hasEntry(org.hamcrest.Matcher<java.lang.String>, org.hamcrest.Matcher<?>);
+    method public static org.hamcrest.Matcher<android.os.Bundle> hasKey(java.lang.String);
+    method public static org.hamcrest.Matcher<android.os.Bundle> hasKey(org.hamcrest.Matcher<java.lang.String>);
+    method public static <T> org.hamcrest.Matcher<android.os.Bundle> hasValue(T);
+    method public static org.hamcrest.Matcher<android.os.Bundle> hasValue(org.hamcrest.Matcher<?>);
+    method public static org.hamcrest.Matcher<android.os.Bundle> isEmpty();
+    method public static org.hamcrest.Matcher<android.os.Bundle> isEmptyOrNull();
+  }
+
+  public final class ComponentNameMatchers {
+    method public static org.hamcrest.Matcher<android.content.ComponentName> hasClassName(java.lang.String);
+    method public static org.hamcrest.Matcher<android.content.ComponentName> hasClassName(org.hamcrest.Matcher<java.lang.String>);
+    method public static org.hamcrest.Matcher<android.content.ComponentName> hasMyPackageName();
+    method public static org.hamcrest.Matcher<android.content.ComponentName> hasPackageName(java.lang.String);
+    method public static org.hamcrest.Matcher<android.content.ComponentName> hasPackageName(org.hamcrest.Matcher<java.lang.String>);
+    method public static org.hamcrest.Matcher<android.content.ComponentName> hasShortClassName(java.lang.String);
+    method public static org.hamcrest.Matcher<android.content.ComponentName> hasShortClassName(org.hamcrest.Matcher<java.lang.String>);
+  }
+
+  public final class IntentMatchers {
+    method public static org.hamcrest.Matcher<android.content.Intent> anyIntent();
+    method public static org.hamcrest.Matcher<android.content.Intent> filterEquals(android.content.Intent);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasAction(java.lang.String);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasAction(org.hamcrest.Matcher<java.lang.String>);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasCategories(java.util.Set<java.lang.String>);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasCategories(org.hamcrest.Matcher<? extends java.lang.Iterable<? super java.lang.String>>);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasComponent(java.lang.String);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasComponent(android.content.ComponentName);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasComponent(org.hamcrest.Matcher<android.content.ComponentName>);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasData(java.lang.String);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasData(android.net.Uri);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasData(org.hamcrest.Matcher<android.net.Uri>);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasDataString(org.hamcrest.Matcher<java.lang.String>);
+    method public static <T> org.hamcrest.Matcher<android.content.Intent> hasExtra(java.lang.String, T);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasExtra(org.hamcrest.Matcher<java.lang.String>, org.hamcrest.Matcher<?>);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasExtraWithKey(java.lang.String);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasExtraWithKey(org.hamcrest.Matcher<java.lang.String>);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasExtras(org.hamcrest.Matcher<android.os.Bundle>);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasFlag(int);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasFlags(int...);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasFlags(int);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasPackage(org.hamcrest.Matcher<java.lang.String>);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasPackage(java.lang.String);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasType(java.lang.String);
+    method public static org.hamcrest.Matcher<android.content.Intent> hasType(org.hamcrest.Matcher<java.lang.String>);
+    method public static org.hamcrest.Matcher<android.content.Intent> isInternal();
+    method public static org.hamcrest.Matcher<android.content.Intent> toPackage(java.lang.String);
+  }
+
+  public final class UriMatchers {
+    method public static org.hamcrest.Matcher<android.net.Uri> hasHost(java.lang.String);
+    method public static org.hamcrest.Matcher<android.net.Uri> hasHost(org.hamcrest.Matcher<java.lang.String>);
+    method public static org.hamcrest.Matcher<android.net.Uri> hasParamWithName(java.lang.String);
+    method public static org.hamcrest.Matcher<android.net.Uri> hasParamWithName(org.hamcrest.Matcher<java.lang.String>);
+    method public static org.hamcrest.Matcher<android.net.Uri> hasParamWithValue(java.lang.String, java.lang.String);
+    method public static org.hamcrest.Matcher<android.net.Uri> hasParamWithValue(org.hamcrest.Matcher<java.lang.String>, org.hamcrest.Matcher<java.lang.String>);
+    method public static org.hamcrest.Matcher<android.net.Uri> hasPath(java.lang.String);
+    method public static org.hamcrest.Matcher<android.net.Uri> hasPath(org.hamcrest.Matcher<java.lang.String>);
+    method public static org.hamcrest.Matcher<android.net.Uri> hasScheme(java.lang.String);
+    method public static org.hamcrest.Matcher<android.net.Uri> hasScheme(org.hamcrest.Matcher<java.lang.String>);
+    method public static org.hamcrest.Matcher<android.net.Uri> hasSchemeSpecificPart(java.lang.String, java.lang.String);
+    method public static org.hamcrest.Matcher<android.net.Uri> hasSchemeSpecificPart(org.hamcrest.Matcher<java.lang.String>, org.hamcrest.Matcher<java.lang.String>);
+  }
+
+}
+
+package androidx.test.espresso.intent.rule {
+
+  public deprecated class IntentsTestRule<T extends android.app.Activity> extends androidx.test.rule.ActivityTestRule {
+    ctor public IntentsTestRule(java.lang.Class<T>);
+    ctor public IntentsTestRule(java.lang.Class<T>, boolean);
+    ctor public IntentsTestRule(java.lang.Class<T>, boolean, boolean);
+  }
+
+}

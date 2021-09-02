@@ -1,0 +1,93 @@
+
+package androidx.test.core.app {
+
+  public final class ActivityScenario<A extends android.app.Activity> implements java.lang.AutoCloseable java.io.Closeable {
+    method public void close();
+    method public android.app.Instrumentation.ActivityResult getResult();
+    method public android.arch.lifecycle.Lifecycle.State getState();
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A> launch(java.lang.Class<A>);
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A> launch(java.lang.Class<A>, android.os.Bundle);
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A> launch(android.content.Intent);
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A> launch(android.content.Intent, android.os.Bundle);
+    method public androidx.test.core.app.ActivityScenario<A> moveToState(android.arch.lifecycle.Lifecycle.State);
+    method public androidx.test.core.app.ActivityScenario<A> onActivity(androidx.test.core.app.ActivityScenario.ActivityAction<A>);
+    method public androidx.test.core.app.ActivityScenario<A> recreate();
+  }
+
+  public static abstract interface ActivityScenario.ActivityAction<A extends android.app.Activity> {
+    method public abstract void perform(A);
+  }
+
+  public final class ApplicationProvider {
+    method public static <T extends android.content.Context> T getApplicationContext();
+  }
+
+}
+
+package androidx.test.core.content.pm {
+
+  public final class ApplicationInfoBuilder {
+    method public android.content.pm.ApplicationInfo build();
+    method public static androidx.test.core.content.pm.ApplicationInfoBuilder newBuilder();
+    method public androidx.test.core.content.pm.ApplicationInfoBuilder setName(java.lang.String);
+    method public androidx.test.core.content.pm.ApplicationInfoBuilder setPackageName(java.lang.String);
+  }
+
+  public final class PackageInfoBuilder {
+    method public android.content.pm.PackageInfo build();
+    method public static androidx.test.core.content.pm.PackageInfoBuilder newBuilder();
+    method public androidx.test.core.content.pm.PackageInfoBuilder setApplicationInfo(android.content.pm.ApplicationInfo);
+    method public androidx.test.core.content.pm.PackageInfoBuilder setPackageName(java.lang.String);
+  }
+
+}
+
+package androidx.test.core.os {
+
+  public final class Parcelables {
+    method public static <T extends android.os.Parcelable> T forceParcel(T, android.os.Parcelable.Creator<T>);
+  }
+
+}
+
+package androidx.test.core.view {
+
+  public class MotionEventBuilder {
+    method public android.view.MotionEvent build();
+    method public static androidx.test.core.view.MotionEventBuilder newBuilder();
+    method public androidx.test.core.view.MotionEventBuilder setAction(int);
+    method public androidx.test.core.view.MotionEventBuilder setActionIndex(int);
+    method public androidx.test.core.view.MotionEventBuilder setButtonState(int);
+    method public androidx.test.core.view.MotionEventBuilder setDeviceId(int);
+    method public androidx.test.core.view.MotionEventBuilder setDownTime(long);
+    method public androidx.test.core.view.MotionEventBuilder setEdgeFlags(int);
+    method public androidx.test.core.view.MotionEventBuilder setEventTime(long);
+    method public androidx.test.core.view.MotionEventBuilder setFlags(int);
+    method public androidx.test.core.view.MotionEventBuilder setMetaState(int);
+    method public androidx.test.core.view.MotionEventBuilder setPointer(float, float);
+    method public androidx.test.core.view.MotionEventBuilder setPointer(android.view.MotionEvent.PointerProperties, android.view.MotionEvent.PointerCoords);
+    method public androidx.test.core.view.MotionEventBuilder setSource(int);
+    method public androidx.test.core.view.MotionEventBuilder setXPrecision(float);
+    method public androidx.test.core.view.MotionEventBuilder setYPrecision(float);
+  }
+
+  public class PointerCoordsBuilder {
+    method public android.view.MotionEvent.PointerCoords build();
+    method public static androidx.test.core.view.PointerCoordsBuilder newBuilder();
+    method public androidx.test.core.view.PointerCoordsBuilder setCoords(float, float);
+    method public androidx.test.core.view.PointerCoordsBuilder setOrientation(float);
+    method public androidx.test.core.view.PointerCoordsBuilder setPressure(float);
+    method public androidx.test.core.view.PointerCoordsBuilder setSize(float);
+    method public androidx.test.core.view.PointerCoordsBuilder setTool(float, float);
+    method public androidx.test.core.view.PointerCoordsBuilder setTouch(float, float);
+  }
+
+  public class PointerPropertiesBuilder {
+    method public android.view.MotionEvent.PointerProperties build();
+    method public static androidx.test.core.view.PointerPropertiesBuilder newBuilder();
+    method public androidx.test.core.view.PointerPropertiesBuilder setId(int);
+    method public androidx.test.core.view.PointerPropertiesBuilder setToolType(int);
+  }
+
+}
+

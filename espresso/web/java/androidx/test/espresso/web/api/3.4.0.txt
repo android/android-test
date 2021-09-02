@@ -1,0 +1,228 @@
+
+
+package androidx.test.espresso.web.action {
+
+  public final class AtomAction<E> implements androidx.test.espresso.remote.Bindable androidx.test.espresso.ViewAction {
+    ctor public AtomAction(androidx.test.espresso.web.model.Atom<E>, androidx.test.espresso.web.model.WindowReference, androidx.test.espresso.web.model.ElementReference);
+    method public E get() throws java.util.concurrent.ExecutionException, java.lang.InterruptedException;
+    method public E get(long, java.util.concurrent.TimeUnit) throws java.util.concurrent.ExecutionException, java.lang.InterruptedException, java.util.concurrent.TimeoutException;
+    method public org.hamcrest.Matcher<android.view.View> getConstraints();
+    method public java.lang.String getDescription();
+    method public java.util.concurrent.Future<E> getFuture();
+    method public android.os.IBinder getIBinder();
+    method public java.lang.String getId();
+    method public void perform(androidx.test.espresso.UiController, android.view.View);
+    method public void setIBinder(android.os.IBinder);
+  }
+
+  public class EnableJavascriptAction implements androidx.test.espresso.ViewAction {
+    ctor public EnableJavascriptAction();
+    method public org.hamcrest.Matcher<android.view.View> getConstraints();
+    method public java.lang.String getDescription();
+    method public void perform(androidx.test.espresso.UiController, android.view.View);
+  }
+
+  public abstract interface IAtomActionResultPropagator implements android.os.IInterface {
+    method public abstract void setError(android.os.Bundle) throws android.os.RemoteException;
+    method public abstract void setResult(androidx.test.espresso.web.model.Evaluation) throws android.os.RemoteException;
+  }
+
+  public static abstract class IAtomActionResultPropagator.Stub extends com.google.android.aidl.BaseStub implements androidx.test.espresso.web.action.IAtomActionResultPropagator {
+    ctor public Stub();
+    method public static androidx.test.espresso.web.action.IAtomActionResultPropagator asInterface(android.os.IBinder);
+  }
+
+  public static class IAtomActionResultPropagator.Stub.Proxy extends com.google.android.aidl.BaseProxy implements androidx.test.espresso.web.action.IAtomActionResultPropagator {
+    method public void setError(android.os.Bundle) throws android.os.RemoteException;
+    method public void setResult(androidx.test.espresso.web.model.Evaluation) throws android.os.RemoteException;
+  }
+
+}
+
+package androidx.test.espresso.web.assertion {
+
+  public final class TagSoupDocumentParser {
+    method public static androidx.test.espresso.web.assertion.TagSoupDocumentParser newInstance() throws org.xml.sax.SAXNotRecognizedException, org.xml.sax.SAXNotSupportedException;
+    method public org.w3c.dom.Document parse(java.lang.String) throws java.io.IOException, org.xml.sax.SAXException;
+  }
+
+  public abstract class WebAssertion<E> {
+    ctor public WebAssertion(androidx.test.espresso.web.model.Atom<E>);
+    method protected abstract void checkResult(android.webkit.WebView, E);
+    method public final androidx.test.espresso.web.model.Atom<E> getAtom();
+    method public final androidx.test.espresso.ViewAssertion toViewAssertion(E);
+  }
+
+  public final class WebViewAssertions {
+    method public static androidx.test.espresso.web.assertion.WebAssertion<org.w3c.dom.Document> webContent(org.hamcrest.Matcher<org.w3c.dom.Document>);
+    method public static <E> androidx.test.espresso.web.assertion.WebAssertion<E> webMatches(androidx.test.espresso.web.model.Atom<E>, org.hamcrest.Matcher<E>, androidx.test.espresso.web.assertion.WebViewAssertions.ResultDescriber<? super E>);
+    method public static <E> androidx.test.espresso.web.assertion.WebAssertion<E> webMatches(androidx.test.espresso.web.model.Atom<E>, org.hamcrest.Matcher<E>);
+  }
+
+  public static abstract interface WebViewAssertions.ResultDescriber<E> {
+    method public abstract java.lang.String apply(E);
+  }
+
+}
+
+package androidx.test.espresso.web.matcher {
+
+  public final class AmbiguousElementMatcherException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
+    ctor public AmbiguousElementMatcherException(java.lang.String);
+  }
+
+  public final class DomMatchers {
+    method public static org.hamcrest.Matcher<org.w3c.dom.Document> containingTextInBody(java.lang.String);
+    method public static org.hamcrest.Matcher<org.w3c.dom.Document> elementById(java.lang.String, org.hamcrest.Matcher<org.w3c.dom.Element>);
+    method public static org.hamcrest.Matcher<org.w3c.dom.Document> elementByXPath(java.lang.String, org.hamcrest.Matcher<org.w3c.dom.Element>);
+    method public static org.hamcrest.Matcher<org.w3c.dom.Document> hasElementWithId(java.lang.String);
+    method public static org.hamcrest.Matcher<org.w3c.dom.Document> hasElementWithXpath(java.lang.String);
+    method public static org.hamcrest.Matcher<org.w3c.dom.Document> withBody(org.hamcrest.Matcher<org.w3c.dom.Element>);
+    method public static org.hamcrest.Matcher<org.w3c.dom.Element> withTextContent(java.lang.String);
+    method public static org.hamcrest.Matcher<org.w3c.dom.Element> withTextContent(org.hamcrest.Matcher<java.lang.String>);
+  }
+
+}
+
+package androidx.test.espresso.web.model {
+
+  public abstract interface Atom<R> {
+    method public abstract java.util.List<java.lang.Object> getArguments(androidx.test.espresso.web.model.ElementReference);
+    method public abstract java.lang.String getScript();
+    method public abstract R transform(androidx.test.espresso.web.model.Evaluation);
+  }
+
+  public final class Atoms {
+    method public static <E> androidx.test.espresso.web.model.TransformingAtom.Transformer<androidx.test.espresso.web.model.Evaluation, E> castOrDie(java.lang.Class<E>);
+    method public static androidx.test.espresso.web.model.Atom<java.lang.String> getCurrentUrl();
+    method public static androidx.test.espresso.web.model.Atom<java.lang.String> getTitle();
+    method public static <O> androidx.test.espresso.web.model.Atom<O> script(java.lang.String, androidx.test.espresso.web.model.TransformingAtom.Transformer<androidx.test.espresso.web.model.Evaluation, O>);
+    method public static androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.Evaluation> script(java.lang.String);
+    method public static androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.Evaluation> scriptWithArgs(java.lang.String, java.util.List<java.lang.Object>);
+    method public static <I, O> androidx.test.espresso.web.model.Atom<O> transform(androidx.test.espresso.web.model.Atom<I>, androidx.test.espresso.web.model.TransformingAtom.Transformer<I, O>);
+  }
+
+  public final class ElementReference implements androidx.test.espresso.web.model.JSONAble {
+    method public java.lang.String toJSONString();
+  }
+
+  public final class Evaluation implements androidx.test.espresso.web.model.JSONAble android.os.Parcelable {
+    ctor protected Evaluation(android.os.Parcel);
+    method public int describeContents();
+    method public java.lang.String getMessage();
+    method public int getStatus();
+    method public java.lang.Object getValue();
+    method public boolean hasMessage();
+    method public void readFromParcel(android.os.Parcel);
+    method public java.lang.String toJSONString();
+    method public void writeToParcel(android.os.Parcel, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.espresso.web.model.Evaluation> CREATOR;
+  }
+
+  public abstract interface JSONAble {
+    method public abstract java.lang.String toJSONString();
+  }
+
+  public static abstract interface JSONAble.DeJSONFactory {
+    method public abstract java.lang.Object attemptDeJSONize(java.util.Map<java.lang.String, java.lang.Object>);
+  }
+
+  public final class ModelCodec {
+    method public static void addDeJSONFactory(androidx.test.espresso.web.model.JSONAble.DeJSONFactory);
+    method public static androidx.test.espresso.web.model.Evaluation decodeEvaluation(java.lang.String);
+    method public static java.lang.String encode(java.lang.Object);
+    method public static void removeDeJSONFactory(androidx.test.espresso.web.model.JSONAble.DeJSONFactory);
+  }
+
+  public class SimpleAtom implements androidx.test.espresso.web.model.Atom {
+    ctor public SimpleAtom(java.lang.String);
+    ctor public SimpleAtom(java.lang.String, androidx.test.espresso.web.model.SimpleAtom.ElementReferencePlacement);
+    method public final java.util.List<java.lang.Object> getArguments(androidx.test.espresso.web.model.ElementReference);
+    method protected java.util.List<java.lang.Object> getNonContextualArguments();
+    method public final java.lang.String getScript();
+    method protected androidx.test.espresso.web.model.Evaluation handleBadEvaluation(androidx.test.espresso.web.model.Evaluation);
+    method protected void handleNoElementReference();
+    method public final androidx.test.espresso.web.model.Evaluation transform(androidx.test.espresso.web.model.Evaluation);
+  }
+
+  public static final class SimpleAtom.ElementReferencePlacement extends java.lang.Enum {
+    method public static androidx.test.espresso.web.model.SimpleAtom.ElementReferencePlacement valueOf(java.lang.String);
+    method public static final androidx.test.espresso.web.model.SimpleAtom.ElementReferencePlacement[] values();
+    enum_constant public static final androidx.test.espresso.web.model.SimpleAtom.ElementReferencePlacement FIRST;
+    enum_constant public static final androidx.test.espresso.web.model.SimpleAtom.ElementReferencePlacement LAST;
+  }
+
+  public class TransformingAtom<I, O> implements androidx.test.espresso.web.model.Atom {
+    ctor public TransformingAtom(androidx.test.espresso.web.model.Atom<I>, androidx.test.espresso.web.model.TransformingAtom.Transformer<I, O>);
+    method public java.util.List<java.lang.Object> getArguments(androidx.test.espresso.web.model.ElementReference);
+    method public java.lang.String getScript();
+    method public O transform(androidx.test.espresso.web.model.Evaluation);
+  }
+
+  public static abstract interface TransformingAtom.Transformer<I, O> {
+    method public abstract O apply(I);
+  }
+
+  public final class WindowReference implements androidx.test.espresso.web.model.JSONAble {
+    method public java.lang.String toJSONString();
+  }
+
+}
+
+package androidx.test.espresso.web.sugar {
+
+  public final class Web {
+    ctor public Web();
+    method public static androidx.test.espresso.web.sugar.Web.WebInteraction<java.lang.Void> onWebView();
+    method public static androidx.test.espresso.web.sugar.Web.WebInteraction<java.lang.Void> onWebView(org.hamcrest.Matcher<android.view.View>);
+  }
+
+  public static class Web.WebInteraction<R> {
+    method public <E> androidx.test.espresso.web.sugar.Web.WebInteraction<E> check(androidx.test.espresso.web.assertion.WebAssertion<E>);
+    method public androidx.test.espresso.web.sugar.Web.WebInteraction<R> forceJavascriptEnabled();
+    method public R get();
+    method public androidx.test.espresso.web.sugar.Web.WebInteraction<R> inWindow(androidx.test.espresso.web.model.WindowReference);
+    method public androidx.test.espresso.web.sugar.Web.WebInteraction<R> inWindow(androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.WindowReference>);
+    method public <E> androidx.test.espresso.web.sugar.Web.WebInteraction<E> perform(androidx.test.espresso.web.model.Atom<E>);
+    method public androidx.test.espresso.web.sugar.Web.WebInteraction<R> reset();
+    method public androidx.test.espresso.web.sugar.Web.WebInteraction<R> withContextualElement(androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.ElementReference>);
+    method public androidx.test.espresso.web.sugar.Web.WebInteraction<R> withElement(androidx.test.espresso.web.model.ElementReference);
+    method public androidx.test.espresso.web.sugar.Web.WebInteraction<R> withElement(androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.ElementReference>);
+    method public androidx.test.espresso.web.sugar.Web.WebInteraction<R> withNoTimeout();
+    method public androidx.test.espresso.web.sugar.Web.WebInteraction<R> withTimeout(long, java.util.concurrent.TimeUnit);
+  }
+
+}
+
+package androidx.test.espresso.web.webdriver {
+
+  public final class DriverAtoms {
+    method public static androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.Evaluation> clearElement();
+    method public static androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.ElementReference> findElement(androidx.test.espresso.web.webdriver.Locator, java.lang.String);
+    method public static androidx.test.espresso.web.model.Atom<java.util.List<androidx.test.espresso.web.model.ElementReference>> findMultipleElements(androidx.test.espresso.web.webdriver.Locator, java.lang.String);
+    method public static androidx.test.espresso.web.model.Atom<java.lang.String> getText();
+    method public static androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.ElementReference> selectActiveElement();
+    method public static androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.WindowReference> selectFrameByIdOrName(java.lang.String, androidx.test.espresso.web.model.WindowReference);
+    method public static androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.WindowReference> selectFrameByIdOrName(java.lang.String);
+    method public static androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.WindowReference> selectFrameByIndex(int);
+    method public static androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.WindowReference> selectFrameByIndex(int, androidx.test.espresso.web.model.WindowReference);
+    method public static androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.Evaluation> webClick();
+    method public static androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.Evaluation> webKeys(java.lang.String);
+    method public static androidx.test.espresso.web.model.Atom<java.lang.Boolean> webScrollIntoView();
+  }
+
+  public final class Locator extends java.lang.Enum {
+    method public java.lang.String getType();
+    method public static androidx.test.espresso.web.webdriver.Locator valueOf(java.lang.String);
+    method public static final androidx.test.espresso.web.webdriver.Locator[] values();
+    enum_constant public static final androidx.test.espresso.web.webdriver.Locator CLASS_NAME;
+    enum_constant public static final androidx.test.espresso.web.webdriver.Locator CSS_SELECTOR;
+    enum_constant public static final androidx.test.espresso.web.webdriver.Locator ID;
+    enum_constant public static final androidx.test.espresso.web.webdriver.Locator LINK_TEXT;
+    enum_constant public static final androidx.test.espresso.web.webdriver.Locator NAME;
+    enum_constant public static final androidx.test.espresso.web.webdriver.Locator PARTIAL_LINK_TEXT;
+    enum_constant public static final androidx.test.espresso.web.webdriver.Locator TAG_NAME;
+    enum_constant public static final androidx.test.espresso.web.webdriver.Locator XPATH;
+  }
+
+}
