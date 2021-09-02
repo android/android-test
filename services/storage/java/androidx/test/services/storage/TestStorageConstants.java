@@ -15,8 +15,10 @@
  */
 package androidx.test.services.storage;
 
+import androidx.test.annotation.ExperimentalTestApi;
+
 /** Holds constants that are shared between on-device and host-side testing infrastructure. */
-@ExperimentalTestStorage
+@ExperimentalTestApi
 public final class TestStorageConstants {
 
   /** The parent folder name for all the test related files. */

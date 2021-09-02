@@ -16,7 +16,7 @@
 
 package androidx.test.runner.screenshot;
 
-import androidx.test.annotation.Beta;
+import androidx.test.annotation.ExperimentalTestApi;
 import java.io.IOException;
 
 /**
@@ -24,7 +24,7 @@ import java.io.IOException;
  *
  * <p><b>This API is currently in beta.</b>
  */
-@Beta
+@ExperimentalTestApi
 public interface ScreenCaptureProcessor {
 
   /**

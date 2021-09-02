@@ -24,7 +24,7 @@ import android.os.IBinder;
 import androidx.annotation.NonNull;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.Beta;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.util.Checks;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.util.concurrent.CountDownLatch;
@@ -73,7 +73,7 @@ import org.junit.runners.model.Statement;
  *
  * <p><b>This API is currently in beta.</b>
  */
-@Beta
+@ExperimentalTestApi
 public class ServiceTestRule implements TestRule {
 
   private static final String TAG = "ServiceTestRule";

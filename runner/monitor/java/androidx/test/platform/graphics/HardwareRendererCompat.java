@@ -18,7 +18,7 @@ package androidx.test.platform.graphics;
 import android.graphics.HardwareRenderer;
 import android.os.Build.VERSION;
 import android.util.Log;
-import androidx.test.annotation.ExperimentalScreenshot;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.util.ReflectionUtil;
 import androidx.test.internal.util.ReflectionUtil.ReflectionException;
 import androidx.test.internal.util.ReflectionUtil.ReflectionParams;
@@ -30,7 +30,7 @@ import androidx.test.internal.util.ReflectionUtil.ReflectionParams;
  *
  * <p>This API is currently experimental and subject to change or removal.
  */
-@ExperimentalScreenshot
+@ExperimentalTestApi
 public class HardwareRendererCompat {
 
   private static final String TAG = "HardwareRendererCompat";

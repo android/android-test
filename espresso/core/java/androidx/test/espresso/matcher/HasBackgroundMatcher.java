@@ -23,7 +23,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
-import androidx.test.annotation.Beta;
+import androidx.test.annotation.ExperimentalTestApi;
 import java.util.Arrays;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -33,7 +33,7 @@ import org.hamcrest.TypeSafeMatcher;
  *
  * <p><b>This API is currently in beta.</b>
  */
-@Beta
+@ExperimentalTestApi
 public final class HasBackgroundMatcher extends TypeSafeMatcher<View> {
 
   private static final String TAG = "HasBackgroundMatcher";

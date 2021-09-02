@@ -32,7 +32,7 @@ import android.test.mock.MockContentResolver;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.Beta;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.io.BufferedReader;
 import java.io.File;
@@ -130,7 +130,7 @@ import org.junit.runners.model.Statement;
  *
  * <p><b>This API is currently in beta.</b>
  */
-@Beta
+@ExperimentalTestApi
 public class ProviderTestRule implements TestRule {
 
   private static final String TAG = "ProviderTestRule";

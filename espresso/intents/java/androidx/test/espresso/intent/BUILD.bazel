@@ -1,5 +1,11 @@
 # Description:
 #   Common library for testing inter and intra app communication via intents.
+
+load("//build_extensions:release.bzl", "axt_release_lib")
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION", "RUNNER_VERSION", "CORE_VERSION", "ANNOTATION_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
 licenses(["notice"])  # Apache License 2.0
 
 package(
@@ -26,6 +32,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/intents/java/androidx/test/espresso/intent/matcher",
         "//runner/android_junit_runner",
+        "//annotation"
         "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:junit_junit",
     ],
@@ -45,8 +52,6 @@ android_library(
 
 # ** Generate the release artifacts **
 
-load("//build_extensions:release.bzl", "axt_release_lib")
-
 android_library(
     name = "espresso_intents_release_lib",
     exports = [
@@ -63,10 +68,6 @@ axt_release_lib(
         ":espresso_intents_release_lib",
     ],
 )
-
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION", "RUNNER_VERSION", "CORE_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 filegroup(
     name = "intents_src",
@@ -92,6 +93,7 @@ maven_artifact(
         "androidx.test.espresso:espresso-core:%s" % ESPRESSO_VERSION,
         "androidx.test:core:%s" % CORE_VERSION,
         "androidx.test:rules:%s" % RUNNER_VERSION,
+        "androidx.test:annotation:%s" % ANNOTATION_VERSION,
     ],
     artifact_id = "espresso-intents",
     group_id = "androidx.test.espresso",

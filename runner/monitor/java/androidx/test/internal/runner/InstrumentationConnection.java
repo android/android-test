@@ -38,7 +38,7 @@ import android.os.RemoteException;
 import androidx.annotation.NonNull;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.Beta;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.util.ParcelableIBinder;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.MonitoringInstrumentation;
@@ -73,7 +73,7 @@ import java.util.concurrent.TimeUnit;
  *
  * <p><b>This API is currently in beta.</b>
  */
-@Beta
+@ExperimentalTestApi
 public class InstrumentationConnection {
   private static final String TAG = "InstrConnection";
 

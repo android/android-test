@@ -22,7 +22,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import androidx.annotation.NonNull;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.Beta;
+import androidx.test.annotation.ExperimentalTestApi;
 import java.util.Properties;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -39,7 +39,7 @@ import org.junit.runners.model.Statement;
  *
  * @hide
  */
-@Beta
+@ExperimentalTestApi
 public class PortForwardingRule implements TestRule {
 
   private static final String TAG = "PortForwardingRule";
