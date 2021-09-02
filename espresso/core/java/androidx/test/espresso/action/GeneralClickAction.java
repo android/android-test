@@ -26,6 +26,7 @@ import android.webkit.WebView;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.action.Tapper.Status;
 import androidx.test.espresso.util.HumanReadables;
 import com.google.common.base.Optional;
 import java.util.Locale;
@@ -41,11 +42,11 @@ public final class GeneralClickAction implements ViewAction {
   private final Optional<ViewAction> rollbackAction;
   private final int inputDevice;
   private final int buttonState;
+  private Status status;
 
-  /*
-   * @deprecated
-   * Use {@link #GeneralClickAction(Tapper, CoordinatesProvider, PrecisionDescriber, int, int)}
-   * instead
+  /**
+   * @deprecated Use {@link #GeneralClickAction(Tapper, CoordinatesProvider, PrecisionDescriber,
+   *     int, int)} instead.
    */
   @Deprecated
   public GeneralClickAction(
@@ -64,10 +65,9 @@ public final class GeneralClickAction implements ViewAction {
     this(tapper, coordinatesProvider, precisionDescriber, inputDevice, buttonState, null);
   }
 
-  /*
-   * @deprecated
-   * Use {@link #GeneralClickAction(Tapper, CoordinatesProvider, PrecisionDescriber, int, int,
-   * ViewAction)} instead
+  /**
+   * @deprecated Use {@link #GeneralClickAction(Tapper, CoordinatesProvider, PrecisionDescriber,
+   *     int, int, ViewAction)} instead.
    */
   @Deprecated
   public GeneralClickAction(

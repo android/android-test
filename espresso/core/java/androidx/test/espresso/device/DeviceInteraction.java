@@ -15,12 +15,12 @@
  */
 package androidx.test.espresso.device;
 
-import androidx.test.annotation.ExperimentalDeviceInteraction;
+import androidx.test.annotation.ExperimentalTestApi;
 
 /**
  * API surface for performing device-centric operations.
  *
  * <p>This API is experimental and subject to change.
  */
-@ExperimentalDeviceInteraction
+@ExperimentalTestApi
 public class DeviceInteraction {}

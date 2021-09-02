@@ -3,7 +3,7 @@
 
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION", "RUNNER_VERSION", "CORE_VERSION", "ANNOTATION_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANNOTATION_VERSION", "CORE_VERSION", "ESPRESSO_VERSION", "RUNNER_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 licenses(["notice"])  # Apache License 2.0
@@ -26,15 +26,15 @@ android_library(
     deps = [
         ":resolved_intent_interface",
         "//:androidx_annotation",
+        "//annotation",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/intents/java/androidx/test/espresso/intent/matcher",
         "//runner/android_junit_runner",
-        "//annotation"
-        "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 
@@ -63,7 +63,7 @@ android_library(
 axt_release_lib(
     name = "espresso_intents_release",
     keep_spec = "androidx/test/espresso/intent",
-    remove_spec = "androidx/test/espresso/intent/R[$$\.]",
+    remove_spec = "androidx/test/espresso/intent/R[$$\\.]",
     deps = [
         ":espresso_intents_release_lib",
     ],

@@ -18,6 +18,7 @@ package androidx.test.runner.screenshot;
 import android.graphics.Bitmap;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.InstrumentationRegistry;
+import androidx.test.annotation.ExperimentalTestApi;
 
 /**
  * Wrapper for UiAutomation object.
@@ -25,6 +26,7 @@ import androidx.test.InstrumentationRegistry;
  * <p>Ideally we wouldn't need this abstraction but since {@link android.app.UiAutomation} is final
  * we need an abstraction on top to be able to mock it in tests.
  */
+@ExperimentalTestApi
 public class UiAutomationWrapper {
 
   @VisibleForTesting

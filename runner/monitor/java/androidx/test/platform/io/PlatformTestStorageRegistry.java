@@ -17,6 +17,7 @@ package androidx.test.platform.io;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +32,10 @@ import java.util.Map;
  * <p>{@code PlatformTestStorage} and {@code PlatformTestStorageRegistry} are low level APIs,
  * typically used by higher level test frameworks. It is generally not recommended for direct use by
  * most tests.
+ *
+ * <p>This API is experimental and is subject to change or removal in future releases.
  */
+@ExperimentalTestApi
 public final class PlatformTestStorageRegistry {
   private static PlatformTestStorage testStorageInstance;
 

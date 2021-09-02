@@ -45,7 +45,11 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
 
   private final Runner delegate;
 
-  /** Constructs a new instance of the default runner */
+  /**
+   * Constructs a new instance of the default runner
+   *
+   * @hide
+   */
   public AndroidJUnit4(Class<?> klass, AndroidRunnerParams runnerParams)
       throws InitializationError {
     // this is expected to be called when in Android environment.

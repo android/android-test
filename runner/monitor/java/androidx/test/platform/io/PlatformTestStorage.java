@@ -15,6 +15,7 @@
  */
 package androidx.test.platform.io;
 
+import androidx.test.annotation.ExperimentalTestApi;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,7 +31,10 @@ import java.util.Map;
  * <p>Use a concrete implementation class of this interface if you need to read/write files in your
  * tests. For example, in an Android Instrumentation test, use {@code
  * androidx.test.services.storage.TestStorage} when the test services is installed on the device.
+ *
+ * <p>This API is experimental and is subject to change or removal in future releases.
  */
+@ExperimentalTestApi
 public interface PlatformTestStorage {
   /**
    * Provides an InputStream to a test file dependency.

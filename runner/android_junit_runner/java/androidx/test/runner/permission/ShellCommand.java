@@ -18,6 +18,7 @@ package androidx.test.runner.permission;
 
 import android.app.UiAutomation;
 import androidx.annotation.VisibleForTesting;
+import androidx.test.annotation.ExperimentalTestApi;
 
 /**
  * Ideally we wouldn't need this abstraction but since {@link UiAutomation} is final we need an
@@ -25,6 +26,7 @@ import androidx.annotation.VisibleForTesting;
  * another implementation in the future.
  */
 @VisibleForTesting
+@ExperimentalTestApi
 public abstract class ShellCommand {
 
   /** Characters that have no special meaning to the shell. */

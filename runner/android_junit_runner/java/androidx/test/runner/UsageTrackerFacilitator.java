@@ -32,6 +32,7 @@ public class UsageTrackerFacilitator implements UsageTracker {
 
   private final boolean shouldTrackUsage;
 
+  /** @hide */
   public UsageTrackerFacilitator(@NonNull RunnerArgs runnerArgs) {
     checkNotNull(runnerArgs, "runnerArgs cannot be null!");
 
@@ -51,6 +52,7 @@ public class UsageTrackerFacilitator implements UsageTracker {
     return shouldTrackUsage;
   }
 
+  /** @hide */
   public void registerUsageTracker(@Nullable UsageTracker usageTracker) {
     if (usageTracker != null && shouldTrackUsage()) {
       Log.i(TAG, "Usage tracking enabled");

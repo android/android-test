@@ -34,6 +34,8 @@ import androidx.test.services.events.run.TestRunEvent;
  * Handles the communication with the remote {@code androidx.test.orchestrator.OrchestratorService}.
  * The Orchestrator v1 service supports both test discovery notifications and test run event
  * notifications.
+ *
+ * @hide
  */
 public final class OrchestratorV1Connection
     extends TestEventServiceConnectionBase<OrchestratorCallback>

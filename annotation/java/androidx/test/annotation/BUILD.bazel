@@ -11,6 +11,7 @@ android_library(
         ["**/*.java"],
     ),
     manifest = "AndroidManifest.xml",
+    manifest = "AndroidManifest.xml",
     tags = ["alt_dep=//annotation"],
     deps = [
         "//:androidx_annotation_experimental",

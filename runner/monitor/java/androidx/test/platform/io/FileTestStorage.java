@@ -16,6 +16,7 @@
 package androidx.test.platform.io;
 
 import android.util.Log;
+import androidx.test.annotation.ExperimentalTestApi;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,7 +26,12 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-/** A class that reads/writes the runner data using the raw file system. */
+/**
+ * A class that reads/writes the runner data using the raw file system.
+ *
+ * <p>This API is experimental and is subject to change or removal in future releases.
+ */
+@ExperimentalTestApi
 public final class FileTestStorage implements PlatformTestStorage {
 
   private static final String TAG = FileTestStorage.class.getSimpleName();

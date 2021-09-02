@@ -24,6 +24,7 @@ import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import androidx.annotation.VisibleForTesting;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.runner.permission.RequestPermissionCallable.Result;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -34,6 +35,7 @@ import java.util.concurrent.Callable;
  * <p>Note: This class is visible only for testing. Please do not use it directly.
  */
 @VisibleForTesting
+@ExperimentalTestApi
 public abstract class RequestPermissionCallable implements Callable<Result> {
 
   private final ShellCommand shellCommand;
