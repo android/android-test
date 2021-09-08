@@ -55,5 +55,5 @@ public abstract class ShellCommand {
     return word;
   }
 
-  abstract void execute() throws Exception;
+  protected abstract void execute() throws Exception;
 }

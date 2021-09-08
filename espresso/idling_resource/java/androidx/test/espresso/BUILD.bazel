@@ -16,7 +16,7 @@ licenses(["notice"])  # Apache License 2.0
 IDLING_INTERFACE = [
     "IdlingResource.java",
     "IdlingRegistry.java",
-    "CountingIdlingResource.java",
+    "idling/CountingIdlingResource.java",
 ]
 
 android_library(

@@ -53,8 +53,8 @@ public abstract class InstrumentationRunListener extends RunListener {
   /**
    * Optional callback subclasses can implement. Will be called when instrumentation run completes.
    *
-   * @param streamResult the {@link PrintStream} to instrumentation out. Will be displayed even when
-   *     instrumentation not run in -r mode
+   * @param streamResult the {@link java.io.PrintStream} to instrumentation out. Will be displayed
+   *     even when instrumentation not run in -r mode
    * @param resultBundle the instrumentation result bundle. Can be used to inject key-value pairs
    *     into the instrumentation output when run in -r/raw mode
    * @param junitResults the test results

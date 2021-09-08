@@ -44,7 +44,6 @@ public interface RemoteInteraction {
    * @param rootMatcher the root matcher to use.
    * @param viewMatcher the view matcher to use.
    * @param iBinders a list of binders to pass along to the remote process instance
-   * @param viewAssert the assertion to check.
    * @return a {@link Callable} that will perform the check pending completion of the task.
    */
   Callable<Void> createRemoteCheckCallable(

@@ -156,8 +156,6 @@ public final class InteractionRequest implements EspressoRemoteMessage.To<Messag
 
   /**
    * Creates an instance of {@link InteractionRequest} from a View matcher and action.
-   *
-   * @return remote request object
    */
   public static class Builder {
     private final RemoteDescriptorRegistry remoteDescriptorRegistry;

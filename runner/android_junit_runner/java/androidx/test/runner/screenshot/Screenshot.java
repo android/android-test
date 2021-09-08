@@ -210,7 +210,8 @@ public final class Screenshot {
   }
 
   /** An Exception associated with failing to capture a screenshot. */
-  static final class ScreenShotException extends RuntimeException {
+  @ExperimentalTestApi
+  public static final class ScreenShotException extends RuntimeException {
     ScreenShotException(Throwable cause) {
       super(cause);
     }

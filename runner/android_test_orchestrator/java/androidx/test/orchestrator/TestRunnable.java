@@ -54,7 +54,7 @@ public class TestRunnable implements Runnable {
    * @param secret A string representing the speakeasy binder key
    * @param arguments contains arguments to be passed to the target instrumentation
    * @param outputStream the stream to write the results of the test process
-   * @param listener, a callback listener to know when the run has completed
+   * @param listener a callback listener to know when the run has completed
    */
   public static TestRunnable legacyTestRunnable(
       Context context,
@@ -72,7 +72,7 @@ public class TestRunnable implements Runnable {
    * @param secret A string representing the speakeasy binder key
    * @param arguments contains arguments to be passed to the target instrumentation
    * @param outputStream the stream to write the results of the test process
-   * @param listener, a callback listener to know when the run has completed
+   * @param listener a callback listener to know when the run has completed
    * @param test contains a specific test#method to run. Will override whatever is specified in the
    *     bundle.
    */
@@ -93,7 +93,7 @@ public class TestRunnable implements Runnable {
    * @param secret A string representing the speakeasy binder key
    * @param arguments contains arguments to be passed to the target instrumentation
    * @param outputStream the stream to write the results of the test process
-   * @param listener, a callback listener to know when the run has completed
+   * @param listener a callback listener to know when the run has completed
    */
   public static TestRunnable testCollectionRunnable(
       Context context,
