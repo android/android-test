@@ -348,7 +348,7 @@ public final class IdlingResourceRegistry {
         timeoutError, error.getIdleTimeoutUnit().toMillis(error.getIdleTimeout()));
   }
 
-  private List<String> getBusyResources() {
+  List<String> getBusyResources() {
     List<String> busyResourceNames = Lists.newArrayList();
     List<IdlingState> racyResources = Lists.newArrayList();
 

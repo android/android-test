@@ -19,6 +19,7 @@ package androidx.test.espresso;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import android.os.Handler;
@@ -31,6 +32,7 @@ import androidx.test.ui.app.SyncActivity;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.hamcrest.core.SubstringMatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -78,9 +80,31 @@ public class AppNotIdleExceptionTest {
       onView(withId(R.id.request_button)).perform(click());
       fail("Espresso failed to throw AppNotIdleException");
     } catch (AppNotIdleException expected) {
-      // Do Nothing. Test pass.
+      assertThat(
+          expected.getMessage(),
+          new StringPattern(
+              "Looped for \\d+ iterations over \\d+ SECONDS. "
+                  + "The following Idle Conditions failed MAIN_LOOPER_HAS_IDLED"
+                  + "\\(last message: [^\\)]+\\)."));
     } finally {
       continueBeingBusy.getAndSet(false);
+    }
+  }
+
+  // Simulate the MatchesPattern available in Hamcrest 2.
+  private static class StringPattern extends SubstringMatcher {
+    public StringPattern(String substringRegexPattern) {
+      super(substringRegexPattern);
+    }
+
+    @Override
+    protected boolean evalSubstringOf(String s) {
+      return s.matches(substring);
+    }
+
+    @Override
+    protected String relationship() {
+      return "matching";
     }
   }
 }

@@ -87,6 +87,11 @@ public final class OnIdleTest {
       assertThat(countDownLatch.await(10, TimeUnit.SECONDS), is(false));
     } catch (AppNotIdleException expected) {
       assertThat(expected, instanceOf(AppNotIdleException.class));
+      assertThat(
+          expected.getMessage(),
+          is(
+              "Looped for 1 iterations over 5 SECONDS. The following Idle Conditions failed"
+                  + " DYNAMIC_TASKS_HAVE_IDLED(busy resources=testResource)."));
     } finally {
       assertThat(Espresso.unregisterIdlingResources(resource), is(true));
     }
@@ -109,6 +114,11 @@ public final class OnIdleTest {
       assertThat(countDownLatch.await(10, TimeUnit.SECONDS), is(false));
     } catch (AppNotIdleException expected) {
       assertThat(expected, instanceOf(AppNotIdleException.class));
+      assertThat(
+          expected.getMessage(),
+          is(
+              "Looped for 1 iterations over 5 SECONDS. The following Idle Conditions failed"
+                  + " DYNAMIC_TASKS_HAVE_IDLED(busy resources=testResource)."));
     } finally {
       assertThat(IdlingRegistry.getInstance().unregister(resource), is(true));
     }
@@ -124,6 +134,11 @@ public final class OnIdleTest {
       fail("Expected AppNotIdleException to be thrown");
     } catch (AppNotIdleException expected) {
       assertThat(expected, instanceOf(AppNotIdleException.class));
+      assertThat(
+          expected.getMessage(),
+          is(
+              "Looped for 1 iterations over 5 SECONDS. The following Idle Conditions failed"
+                  + " DYNAMIC_TASKS_HAVE_IDLED(busy resources=testResource)."));
     } finally {
       assertThat(IdlingRegistry.getInstance().unregister(resource), is(true));
     }

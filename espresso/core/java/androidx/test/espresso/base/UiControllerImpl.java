@@ -38,6 +38,7 @@ import androidx.test.espresso.InjectEventSecurityException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -536,7 +537,7 @@ final class UiControllerImpl
       List<String> idleConditions = Lists.newArrayList();
       for (IdleCondition condition : conditions) {
         if (!condition.isSignaled(conditionSet)) {
-          idleConditions.add(condition.name());
+          String conditionName = condition.name();
           switch (condition) {
             case ASYNC_TASKS_HAVE_IDLED:
               if (masterIdlePolicy.getDisableOnTimeout()
@@ -562,12 +563,22 @@ final class UiControllerImpl
                 dynamicIdleProvider = new NoopIdleNotificationCallbackIdleNotifierProvider();
                 dynamicIdle = dynamicIdleProvider.get();
               }
+
+              List<String> busyResources = idlingResourceRegistry.getBusyResources();
+              conditionName =
+                  String.format(
+                      Locale.ROOT,
+                      "%s(busy resources=%s)",
+                      conditionName,
+                      Joiner.on(",").join(busyResources));
               break;
             default:
               break;
           }
+          idleConditions.add(conditionName);
         }
       }
+
       if (idleConditions.isEmpty()) {
         // Formatted to look consistent with other idling conditions.
         idleConditions.add(
