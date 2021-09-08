@@ -496,6 +496,15 @@ public final class ActivityScenarioTest {
     assertThat(activityScenario).isNotNull();
   }
 
+  @Test
+  public void launch_intentWithPackageName() {
+    Intent intent = new Intent("custom.actions.intent.EXAMPLE_INTENT");
+    intent.setPackage("androidx.test.core");
+
+    ActivityScenario<IntentActivity> activityScenario = ActivityScenario.launch(intent);
+    assertThat(activityScenario).isNotNull();
+  }
+
   private static Stage lastLifeCycleTransition(Activity activity) {
     return ActivityLifecycleMonitorRegistry.getInstance().getLifecycleStageOf(activity);
   }

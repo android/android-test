@@ -41,6 +41,26 @@ android_app_instrumentation_tests(
     ],
 )
 
+android_app_instrumentation_tests(
+    name = "ActivityScenarioTest_self_instrumentation",
+    srcs = glob(["**/ActivityScenarioTest.java"]),
+    binary_target = ":ActivityScenarioTest_target",
+    target_devices = devices(),
+    deps = [
+        "//:androidx_lifecycle_common",
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//core/javatests/androidx/test/core/app/testing:manifest",
+        "//espresso/core/java/androidx/test/espresso",
+        "//ext/junit",
+        "//ext/truth",
+        "//runner/android_junit_runner",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+    ],
+)
+
 android_library_instrumentation_tests(
     name = "instrumentation_tests",
     srcs = glob(
