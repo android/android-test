@@ -3,8 +3,13 @@
 
 licenses(["notice"])  # Apache License 2.0
 
+TEST_FAILURE_ASSERTION_TEST_CLASSES = [
+    "AssertionFailureIntegrationTest.java",
+]
+
 TESTAPP_TEST_SRCS = glob(
-    ["**/*.java"],
+    include = ["**/*.java"],
+    exclude = TEST_FAILURE_ASSERTION_TEST_CLASSES,
 )
 
 TESTAPP_DEPS = [
