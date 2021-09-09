@@ -1,0 +1,11 @@
+#  Device Actions for espresso.
+
+licenses(["notice"])
+
+package(default_visibility = ["//espresso/core/java/androidx/test/espresso/device:__subpackages__"])
+
+kt_android_library(
+    name = "action",
+    srcs = glob(["*.kt"]),
+    deps = [],
+)

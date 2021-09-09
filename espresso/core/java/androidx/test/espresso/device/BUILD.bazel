@@ -1,13 +1,28 @@
-# Device Actions for espresso.
+# EspressoDevice - the new Synchronized Device State Change API for Android.
 
 licenses(["notice"])
 
 package(default_visibility = ["//visibility:private"])
 
+# Add only device packages here.
+package_group(
+    name = "device_pkg",
+    packages = [
+        "//espresso/core/java/androidx/test/espresso/device",
+        "//espresso/core/java/androidx/test/espresso/device/action",
+        "//espresso/core/java/androidx/test/espresso/device/dagger",
+    ],
+)
+
 android_library(
     name = "device",
     srcs = glob(["*.java"]),
+    plugins = ["//opensource/dagger:dagger_plugin"],  # Add programmatically
     deps = [
-        "//runner/monitor",
+        "//annotation/java/androidx/test/annotation",
+        "//espresso/core/java/androidx/test/espresso/device/action",
+        "//espresso/core/java/androidx/test/espresso/device/dagger",
+        "//opensource/dagger",
+        "@maven//:com_google_guava_guava",
     ],
 )

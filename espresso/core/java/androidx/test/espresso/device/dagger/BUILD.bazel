@@ -1,0 +1,15 @@
+# Dagger components for device.
+
+licenses(["notice"])
+
+package(default_visibility = ["//espresso/core/java/androidx/test/espresso/device:__subpackages__"])
+
+kt_android_library(
+    name = "dagger",
+    srcs = glob(["*.kt"]),
+    plugins = ["//opensource/dagger:dagger_plugin"],  # Add programmatically
+    deps = [
+        "//espresso/core/java/androidx/test/espresso/device/action",
+        "//opensource/dagger",
+    ],
+)

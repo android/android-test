@@ -16,9 +16,12 @@
 package androidx.test.espresso.device;
 
 import androidx.test.annotation.ExperimentalTestApi;
+import androidx.test.espresso.device.dagger.DeviceHolder;
+import androidx.test.espresso.device.dagger.DeviceLayerComponent;
 
 /** Entry point for device centric operations */
 public class EspressoDevice {
+  private static final DeviceLayerComponent BASE = DeviceHolder.deviceLayer();
 
   private EspressoDevice() {}
 
@@ -30,6 +33,6 @@ public class EspressoDevice {
    */
   @ExperimentalTestApi
   public static DeviceInteraction onDevice() {
-    return new DeviceInteraction();
+    return new DeviceInteraction(BASE.deviceController());
   }
 }
