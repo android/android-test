@@ -1,5 +1,7 @@
 #  Device Actions for espresso.
 
+load("//tools/build_defs/kotlin:rules.bzl", "kt_android_library")
+
 licenses(["notice"])
 
 package(default_visibility = ["//espresso/core/java/androidx/test/espresso/device:__subpackages__"])
