@@ -19,8 +19,8 @@ package androidx.test.rule;
 import static androidx.test.internal.util.Checks.checkArgument;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
-import androidx.annotation.NonNull;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.annotation.ExperimentalTestApi;
 import java.util.Properties;
