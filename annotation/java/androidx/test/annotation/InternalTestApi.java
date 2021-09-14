@@ -16,7 +16,6 @@
 
 package androidx.test.annotation;
 
-import androidx.annotation.RequiresOptIn;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
 import java.lang.annotation.ElementType;
@@ -25,11 +24,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Signifies that an androidx.test public API (public class, method or field) is subject to
- * incompatible changes, or even removal, in a future release. An API bearing this annotation is
- * exempt from any compatibility guarantees made by its containing library. Note that the presence
- * of this annotation implies nothing about the quality or performance of the API in question, only
- * the fact that it is not "API-frozen."
+ * Denotes an API that is for internal androidx.test usage only.
+ *
+ * <p>Unlike @hide APIs, @InternalTestApis can be used outside of their immediate library, and are
+ * thus subject to backwards compatibility constraints, but they should only be used by
+ * androidx.test libraries
  */
 @Retention(RetentionPolicy.CLASS)
 @Target({
@@ -40,5 +39,4 @@ import java.lang.annotation.Target;
   ElementType.TYPE
 })
 @RestrictTo(Scope.LIBRARY_GROUP)
-@RequiresOptIn
-public @interface ExperimentalTestApi {}
+public @interface InternalTestApi {}

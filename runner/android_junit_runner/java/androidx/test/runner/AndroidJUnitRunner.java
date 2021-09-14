@@ -40,11 +40,11 @@ import androidx.test.internal.runner.listener.DelayInjector;
 import androidx.test.internal.runner.listener.InstrumentationResultPrinter;
 import androidx.test.internal.runner.listener.LogRunListener;
 import androidx.test.internal.runner.listener.SuiteAssignmentPrinter;
-import androidx.test.internal.util.ReflectionUtil;
-import androidx.test.internal.util.ReflectionUtil.ReflectionException;
 import androidx.test.orchestrator.callback.OrchestratorV1Connection;
 import androidx.test.platform.io.FileTestStorage;
 import androidx.test.platform.io.PlatformTestStorageRegistry;
+import androidx.test.platform.reflect.ReflectionException;
+import androidx.test.platform.reflect.ReflectiveMethod;
 import androidx.test.runner.lifecycle.ApplicationLifecycleCallback;
 import androidx.test.runner.lifecycle.ApplicationLifecycleMonitorRegistry;
 import androidx.test.runner.screenshot.ScreenCaptureProcessor;
@@ -411,8 +411,9 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
 
     if (runnerArgs.remoteMethod != null) {
       try {
-        ReflectionUtil.callStaticMethod(
-            runnerArgs.remoteMethod.testClassName, runnerArgs.remoteMethod.methodName);
+        new ReflectiveMethod<Void>(
+                runnerArgs.remoteMethod.testClassName, runnerArgs.remoteMethod.methodName)
+            .invokeStatic();
       } catch (ReflectionException e) {
         Log.e(
             LOG_TAG,

@@ -19,9 +19,8 @@ import android.graphics.HardwareRenderer;
 import android.os.Build.VERSION;
 import android.util.Log;
 import androidx.test.annotation.ExperimentalTestApi;
-import androidx.test.internal.util.ReflectionUtil;
-import androidx.test.internal.util.ReflectionUtil.ReflectionException;
-import androidx.test.internal.util.ReflectionUtil.ReflectionParams;
+import androidx.test.platform.reflect.ReflectionException;
+import androidx.test.platform.reflect.ReflectiveMethod;
 
 /**
  * Helper class that provides {@link HardwareRenderer#isDrawingEnabled()} and {@link
@@ -34,6 +33,13 @@ import androidx.test.internal.util.ReflectionUtil.ReflectionParams;
 public class HardwareRendererCompat {
 
   private static final String TAG = "HardwareRendererCompat";
+
+  private static final ReflectiveMethod<Boolean> isDrawingEnabledReflectiveCall =
+      new ReflectiveMethod<>("android.graphics.HardwareRenderer", "isDrawingEnabled");
+
+  private static final ReflectiveMethod<Void> setDrawingEnabledReflectiveCall =
+      new ReflectiveMethod<>(
+          "android.graphics.HardwareRenderer", "setDrawingEnabled", boolean.class);
 
   private HardwareRendererCompat() {}
 
@@ -49,7 +55,7 @@ public class HardwareRendererCompat {
       return true;
     }
     try {
-      return (boolean) ReflectionUtil.callStaticMethod(HardwareRenderer.class, "isDrawingEnabled");
+      return isDrawingEnabledReflectiveCall.invokeStatic();
     } catch (ReflectionException e) {
       Log.i(
           TAG, "Failed to reflectively call HardwareRenderer#isDrawingEnabled, returning true", e);
@@ -67,11 +73,9 @@ public class HardwareRendererCompat {
       // unsupported on these apis
       return;
     }
+
     try {
-      ReflectionUtil.callStaticMethod(
-          HardwareRenderer.class,
-          "setDrawingEnabled",
-          new ReflectionParams(boolean.class, renderingEnabled));
+      setDrawingEnabledReflectiveCall.invokeStatic(renderingEnabled);
     } catch (ReflectionException e) {
       Log.i(TAG, "Failed to reflectively call HardwareRenderer#setDrawingEnabled, ignoring", e);
     }
