@@ -89,5 +89,11 @@ package androidx.test.core.view {
     method public androidx.test.core.view.PointerPropertiesBuilder! setToolType(int);
   }
 
+  public final class ViewCapture {
+  }
+
+  public final class WindowCapture {
+  }
+
 }
 

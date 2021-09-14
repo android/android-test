@@ -114,9 +114,6 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
   private static final String FINISH_EMPTY_ACTIVITIES =
       "androidx.test.core.app.InstrumentationActivityInvoker.FINISH_EMPTY_ACTIVITIES";
 
-  // TODO(b/176898246): Update to PendingIntent.FLAG_MUTABLE once available
-  private static final int FLAG_MUTABLE = 1 << 25;
-
   /**
    * BootstrapActivity starts a test target activity specified by the extras bundle with key {@link
    * #TARGET_ACTIVITY_INTENT_KEY} in the intent that starts this bootstrap activity. The target
@@ -421,7 +418,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
                     getApplicationContext(),
                     /*requestCode=*/ 0,
                     intent,
-                    /*flags=*/ PendingIntent.FLAG_UPDATE_CURRENT | FLAG_MUTABLE))
+                    /*flags=*/ PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE))
             .putExtra(TARGET_ACTIVITY_OPTIONS_BUNDLE_KEY, activityOptions);
 
     if (Build.VERSION.SDK_INT < 16) {
@@ -481,7 +478,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     try {
       latch.await(ActivityLifecycleTimeout.getMillis(), TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
-      throw new AssertionError("Failed to pause activity", e);
+      throw new RuntimeException("Failed to pause activity", e);
     } finally {
       getApplicationContext().unregisterReceiver(receiver);
     }
@@ -514,7 +511,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     try {
       latch.await(ActivityLifecycleTimeout.getMillis(), TimeUnit.MILLISECONDS);
     } catch (InterruptedException e) {
-      throw new AssertionError("Failed to stop activity", e);
+      throw new RuntimeException("Failed to stop activity", e);
     } finally {
       getApplicationContext().unregisterReceiver(receiver);
     }

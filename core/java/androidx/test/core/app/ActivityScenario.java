@@ -109,6 +109,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *   }
  * }</pre>
  */
+@SuppressWarnings("NewApi") // suppress AutoCloseable usage error
 public final class ActivityScenario<A extends Activity> implements AutoCloseable, Closeable {
   private static final String TAG = ActivityScenario.class.getSimpleName();
 
