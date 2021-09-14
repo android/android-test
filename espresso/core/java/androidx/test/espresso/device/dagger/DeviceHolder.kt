@@ -21,11 +21,11 @@ import java.util.concurrent.atomic.AtomicReference
 /** Holds Espresso's device graph. */
 class DeviceHolder {
   companion object {
-    val instance = AtomicReference<DeviceHolder>(null)
+    private val instance = AtomicReference<DeviceHolder>(null)
 
     @JvmStatic
     fun deviceLayer(): DeviceLayerComponent {
-      var instanceRef: DeviceHolder = instance.get()
+      var instanceRef: DeviceHolder? = instance.get()
       if (null == instanceRef) {
         instanceRef = DeviceHolder(DaggerDeviceLayerComponent.create())
         if (instance.compareAndSet(null, instanceRef)) {
