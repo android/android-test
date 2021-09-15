@@ -32,7 +32,6 @@ import androidx.test.ui.app.SyncActivity;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.hamcrest.core.SubstringMatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -82,29 +81,13 @@ public class AppNotIdleExceptionTest {
     } catch (AppNotIdleException expected) {
       assertThat(
           expected.getMessage(),
-          new StringPattern(
-              "Looped for \\d+ iterations over \\d+ SECONDS. "
+          new StringPatternMatcher(
+              "Looped for \\d+ iterations over \\d+ SECONDS\\. "
                   + "The following Idle Conditions failed MAIN_LOOPER_HAS_IDLED"
-                  + "\\(last message: [^\\)]+\\)."));
+                  + "\\(last message: [^\\)]+\\)\\."));
     } finally {
       continueBeingBusy.getAndSet(false);
     }
   }
 
-  // Simulate the MatchesPattern available in Hamcrest 2.
-  private static class StringPattern extends SubstringMatcher {
-    public StringPattern(String substringRegexPattern) {
-      super(substringRegexPattern);
-    }
-
-    @Override
-    protected boolean evalSubstringOf(String s) {
-      return s.matches(substring);
-    }
-
-    @Override
-    protected String relationship() {
-      return "matching";
-    }
-  }
 }
