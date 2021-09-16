@@ -62,15 +62,14 @@ public final class GraphHolder {
       Map<String, Serializable> usageProperties, PlatformTestStorage testStorage) {
     try {
       testStorage.addOutputProperties(usageProperties);
-    } catch (Exception e) {
+    } catch (RuntimeException e) {
       // The properties.dat file can be created only once on an automotive emulator with API 30,
       // which causes the `addOutputProperties` call to fail when running multiple test cases. Catch
       // the exception and log until the issue is fixed in the emulator.
-      Log.d(
+      Log.w(
           TAG,
-          "Failed to add the output properties. This could happen when running on an"
-              + " automotive emulator with API 30. Ignore for now.",
-          e);
+          "Failed to add the output properties. This could happen when running on Robolectric or an"
+              + " automotive emulator with API 30. Ignore for now.");
     }
   }
 }
