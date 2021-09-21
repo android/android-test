@@ -8,6 +8,7 @@ load(
     "//build_extensions:infer_java_package_name.bzl",
     "infer_java_package_name",
 )
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library")
 
 def android_library_instrumentation_tests(name, srcs, deps, target_devices,
                                           test_java_package = None, library_args = {},
@@ -50,7 +51,7 @@ def android_library_instrumentation_tests(name, srcs, deps, target_devices,
         testonly = 1,
     )
 
-    native.android_library(
+    kt_android_library(
         name = library_name,
         srcs = srcs,
         testonly = 1,

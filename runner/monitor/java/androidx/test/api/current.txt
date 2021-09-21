@@ -71,6 +71,17 @@ package androidx.test.platform.ui {
 
 }
 
+package androidx.test.platform.view.inspector {
+
+  @androidx.test.annotation.InternalTestApi public class WindowInspectorCompat {
+    method public static java.util.List<android.view.View!>! getGlobalWindowViews() throws androidx.test.platform.view.inspector.WindowInspectorCompat.ViewRetrievalException;
+  }
+
+  public static class WindowInspectorCompat.ViewRetrievalException extends java.lang.Exception {
+  }
+
+}
+
 package androidx.test.runner {
 
   public class MonitoringInstrumentation extends android.app.Instrumentation {

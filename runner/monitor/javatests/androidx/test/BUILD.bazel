@@ -46,6 +46,7 @@ android_library_instrumentation_tests(
         "//runner/android_junit_runner",
         "//runner/monitor",
         "//runner/monitor/javatests/androidx/test/internal/platform:fixtures",
+        "//runner/monitor/javatests/androidx/test/platform/view/inspector/fixtures",
         "//runner/rules",
         "//services/storage",
         "@maven//:com_google_truth_truth",
