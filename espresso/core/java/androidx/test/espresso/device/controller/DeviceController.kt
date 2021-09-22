@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-package androidx.test.espresso.device.action
+package androidx.test.espresso.device.controller
 
-/** Implementation of {@link DeviceController}. */
-class DeviceControllerImpl() : DeviceController
+/**
+ * Provides base-level device operations that can be used to build user actions such as folding a
+ * device, changing screen orientation etc. It provides a advanced synchronization mechanism for
+ * test actions.
+ */
+interface DeviceController

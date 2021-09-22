@@ -1,4 +1,4 @@
-#  Device Actions for espresso.
+#  Device controller
 
 load("//tools/build_defs/kotlin:rules.bzl", "kt_android_library")
 
@@ -7,9 +7,15 @@ licenses(["notice"])
 package(default_visibility = ["//espresso/core/java/androidx/test/espresso/device:__subpackages__"])
 
 kt_android_library(
-    name = "action",
-    srcs = glob(["*.kt"]),
+    name = "controller",
+    srcs = ["DeviceController.kt"],
+    deps = [],
+)
+
+kt_android_library(
+    name = "controller_impl",
+    srcs = ["EmulatorController.kt"],
     deps = [
-        "//espresso/core/java/androidx/test/espresso/device/controller",
+        ":controller",
     ],
 )

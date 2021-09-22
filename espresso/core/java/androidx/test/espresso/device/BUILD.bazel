@@ -12,6 +12,7 @@ package_group(
     packages = [
         "//espresso/core/java/androidx/test/espresso/device",
         "//espresso/core/java/androidx/test/espresso/device/action",
+        "//espresso/core/java/androidx/test/espresso/device/controller",
         "//espresso/core/java/androidx/test/espresso/device/dagger",
     ],
 )

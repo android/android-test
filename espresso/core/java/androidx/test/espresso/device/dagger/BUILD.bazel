@@ -11,7 +11,8 @@ kt_android_library(
     srcs = glob(["*.kt"]),
     plugins = ["//opensource/dagger:dagger_plugin"],  # Add programmatically
     deps = [
-        "//espresso/core/java/androidx/test/espresso/device/action",
+        "//espresso/core/java/androidx/test/espresso/device/controller",
+        "//espresso/core/java/androidx/test/espresso/device/controller:controller_impl",
         "//opensource/dagger",
     ],
 )

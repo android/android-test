@@ -16,6 +16,8 @@
 
 package androidx.test.espresso.device.action
 
+import androidx.test.espresso.device.controller.DeviceController
+
 /** Responsible for performing an interaction on the given device. */
 interface DeviceAction {
   /**

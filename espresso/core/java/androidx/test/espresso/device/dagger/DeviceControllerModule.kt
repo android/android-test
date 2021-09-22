@@ -16,8 +16,8 @@
 
 package androidx.test.espresso.device.dagger
 
-import androidx.test.espresso.device.action.DeviceController
-import androidx.test.espresso.device.action.DeviceControllerImpl
+import androidx.test.espresso.device.controller.DeviceController
+import androidx.test.espresso.device.controller.EmulatorController
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -32,6 +32,8 @@ class DeviceControllerModule {
   @Provides
   @Singleton
   fun provideDeviceController(): DeviceController {
-    return DeviceControllerImpl()
+    // TODO(b/200852481): initialize the correct instance depending on whether the test is run on a
+    // real device or an emulator
+    return EmulatorController()
   }
 }

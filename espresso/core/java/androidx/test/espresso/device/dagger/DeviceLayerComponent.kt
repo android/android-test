@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.device.dagger
 
-import androidx.test.espresso.device.action.DeviceController
+import androidx.test.espresso.device.controller.DeviceController
 import dagger.Component
 import javax.inject.Singleton
 

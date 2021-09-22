@@ -17,7 +17,7 @@ package androidx.test.espresso.device
 
 import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.espresso.device.action.DeviceAction
-import androidx.test.espresso.device.action.DeviceController
+import androidx.test.espresso.device.controller.DeviceController
 import javax.inject.Inject
 
 /**
