@@ -17,4 +17,8 @@
 package androidx.test.espresso.device.controller
 
 /** Implementation of {@link DeviceController} for tests run on an Emulator. */
-class EmulatorController() : DeviceController
+class EmulatorController() : DeviceController {
+  override fun setDeviceMode(deviceMode: Int) {
+    // TODO(b/200863559) Set the connected test device to the provided device mode.
+  }
+}

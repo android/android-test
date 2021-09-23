@@ -21,4 +21,11 @@ package androidx.test.espresso.device.controller
  * device, changing screen orientation etc. It provides a advanced synchronization mechanism for
  * test actions.
  */
-interface DeviceController
+interface DeviceController {
+  /**
+   * Synchronously sets the connected device to the provided mode.
+   *
+   * @param deviceMode the mode to put the device in
+   */
+  fun setDeviceMode(deviceMode: Int)
+}
