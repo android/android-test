@@ -15,7 +15,10 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
-      - name: Check bazelisk version  
-        run: bazelisk version 
+      - name: Check bazelisk version
+        run: bazelisk version
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - name: Build maven artifacts 
+        run: bazelisk build //:axt_m2repository
       - run: echo "🍏 This job's status is ${{ job.status }}."
 
