@@ -35,6 +35,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.junit.rules.ExpectedException.none;
 
 import android.content.Context;
@@ -207,6 +208,30 @@ public class EspressoTest {
   public void emptyArrayOfResources() {
     assertTrue(Espresso.registerIdlingResources());
     assertTrue(Espresso.unregisterIdlingResources());
+  }
+
+  @Test
+  public void onViewPerformClick_fromScenarioOnActivity() {
+    rule.getScenario().onActivity(activity -> onView(withId(android.R.id.list)).perform(click()));
+  }
+
+  @Test
+  public void onData_throwsFromScenarioOnActivity() {
+    rule.getScenario()
+        .onActivity(
+            activity -> {
+              try {
+                onData(
+                        allOf(
+                            instanceOf(Map.class),
+                            hasValue(ActionBarTestActivity.class.getSimpleName())))
+                    .perform(click());
+                fail("Expected: onData.perform() should have thrown a RuntimeException");
+              } catch (RuntimeException e) {
+                assertEquals(
+                    "Espresso interrogation of the main thread is interrupted", e.getMessage());
+              }
+            });
   }
 
   private static class DummyIdlingResource implements IdlingResource {

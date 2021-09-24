@@ -90,7 +90,12 @@ public class BaseLayerModule {
     return new Executor() {
       @Override
       public void execute(Runnable runnable) {
-        handler.post(runnable);
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+          // immediately execute any queued work on main looper to avoid deadlocks.
+          runnable.run();
+        } else {
+          handler.post(runnable);
+        }
       }
     };
   }
