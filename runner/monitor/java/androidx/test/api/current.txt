@@ -35,6 +35,15 @@ package androidx.test.platform.app {
 
 }
 
+package androidx.test.platform.graphics {
+
+  public class HardwareRendererCompat {
+    method public static boolean isDrawingEnabled();
+    method public static void setDrawingEnabled(boolean);
+  }
+
+}
+
 package androidx.test.platform.reflect {
 
   public class ReflectionException extends java.lang.Exception {

@@ -38,11 +38,4 @@ public class HardwareRendererCompatRenderingDisabledTest {
     HardwareRendererCompat.setDrawingEnabled(false);
     assertThat(HardwareRendererCompat.isDrawingEnabled()).isFalse();
   }
-
-  @Test
-  public void enableDrawingIfNecessary() {
-    assertThat(HardwareRendererCompat.enableDrawingIfNecessary()).isFalse();
-    assertThat(HardwareRendererCompat.isDrawingEnabled()).isTrue();
-    HardwareRendererCompat.setDrawingEnabled(false);
-  }
 }

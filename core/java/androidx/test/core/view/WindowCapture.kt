@@ -27,6 +27,7 @@ import android.view.Window
 import androidx.annotation.RequiresApi
 import androidx.concurrent.futures.ResolvableFuture
 import androidx.test.annotation.ExperimentalTestApi
+import androidx.test.core.internal.os.HandlerExecutor
 import androidx.test.platform.graphics.HardwareRendererCompat
 import com.google.common.util.concurrent.ListenableFuture
 
@@ -47,15 +48,18 @@ import com.google.common.util.concurrent.ListenableFuture
 @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
 fun Window.captureRegionToBitmap(boundsInWindow: Rect? = null): ListenableFuture<Bitmap> {
   val bitmapFuture: ResolvableFuture<Bitmap> = ResolvableFuture.create()
-  val drawingWasEnabled = HardwareRendererCompat.enableDrawingIfNecessary()
   val mainExecutor = HandlerExecutor(Handler(Looper.getMainLooper()))
 
   // disable drawing again if necessary once work is complete
-  if (!drawingWasEnabled) {
+  if (!HardwareRendererCompat.isDrawingEnabled()) {
+    HardwareRendererCompat.setDrawingEnabled(true)
     bitmapFuture.addListener({ HardwareRendererCompat.setDrawingEnabled(false) }, mainExecutor)
   }
 
-  mainExecutor.execute { decorView.forceRedraw { generateBitmap(boundsInWindow, bitmapFuture) } }
+  mainExecutor.execute {
+    val forceRedrawFuture = decorView.forceRedraw()
+    forceRedrawFuture.addListener({ generateBitmap(boundsInWindow, bitmapFuture) }, mainExecutor)
+  }
 
   return bitmapFuture
 }

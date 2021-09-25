@@ -18,7 +18,6 @@ package androidx.test.platform.graphics;
 import android.graphics.HardwareRenderer;
 import android.os.Build.VERSION;
 import android.util.Log;
-import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.platform.reflect.ReflectionException;
 import androidx.test.platform.reflect.ReflectiveMethod;
 
@@ -26,10 +25,7 @@ import androidx.test.platform.reflect.ReflectiveMethod;
  * Helper class that provides {@link HardwareRenderer#isDrawingEnabled()} and {@link
  * android.graphics.HardwareRenderer#setDrawingEnabled(boolean)} functionality on emulator platforms
  * that backported this functionality from a future android API.
- *
- * <p>This API is currently experimental and subject to change or removal.
  */
-@ExperimentalTestApi
 public class HardwareRendererCompat {
 
   private static final String TAG = "HardwareRendererCompat";
@@ -81,16 +77,4 @@ public class HardwareRendererCompat {
     }
   }
 
-  /**
-   * Convenience method to set setDrawingEnabled(true) if and only if it is currently disabled.
-   *
-   * @return the previous isDrawingEnabled() state
-   */
-  public static boolean enableDrawingIfNecessary() {
-    boolean isDrawingEnabled = isDrawingEnabled();
-    if (!isDrawingEnabled) {
-      HardwareRendererCompat.setDrawingEnabled(true);
-    }
-    return isDrawingEnabled;
-  }
 }

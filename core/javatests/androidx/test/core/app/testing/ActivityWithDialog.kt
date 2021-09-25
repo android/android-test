@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.platform.view.inspector.fixtures
+package androidx.test.core.app.testing
 
 import android.app.Activity
 import android.app.AlertDialog

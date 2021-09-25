@@ -1,6 +1,3 @@
-# Description:
-#   Exposes sd card storage to tests regardless of permissions.
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:axt_versions.bzl", "ANNOTATION_VERSION", "MONITOR_VERSION", "SERVICES_VERSION")
@@ -20,6 +17,7 @@ android_library(
         "TestStorage.java",
         "TestStorageException.java",
         "internal/TestStorageUtil.java",
+        "internal/package-info.java",
     ],
     manifest = "AndroidManifest.xml",
     deps = [

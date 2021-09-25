@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright 2021 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.platform.view.inspector.fixtures
 
-import android.app.Activity
-import android.app.AlertDialog
-import android.os.Bundle
-
-class ActivityWithDialog : Activity() {
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.simple_activity)
-
-    AlertDialog.Builder(this)
-      .setMessage("This is a dialog")
-      .setTitle("Dialog Title")
-      .create()
-      .show()
-  }
-}
+/** @hide */
+package androidx.test.core.internal;

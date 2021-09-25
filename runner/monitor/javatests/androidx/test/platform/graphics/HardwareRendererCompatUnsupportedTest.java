@@ -35,10 +35,4 @@ public class HardwareRendererCompatUnsupportedTest {
     // verify ignored
     assertThat(HardwareRendererCompat.isDrawingEnabled()).isTrue();
   }
-
-  @Test
-  public void enableDrawingIfNecessary() {
-    assertThat(HardwareRendererCompat.enableDrawingIfNecessary()).isTrue();
-    assertThat(HardwareRendererCompat.isDrawingEnabled()).isTrue();
-  }
 }

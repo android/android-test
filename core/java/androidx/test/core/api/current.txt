@@ -22,6 +22,9 @@ package androidx.test.core.app {
     method public static <T extends android.content.Context> T! getApplicationContext();
   }
 
+  public final class DeviceCapture {
+  }
+
 }
 
 package androidx.test.core.content.pm {
@@ -38,6 +41,13 @@ package androidx.test.core.content.pm {
     method public static androidx.test.core.content.pm.PackageInfoBuilder! newBuilder();
     method public androidx.test.core.content.pm.PackageInfoBuilder! setApplicationInfo(android.content.pm.ApplicationInfo!);
     method public androidx.test.core.content.pm.PackageInfoBuilder! setPackageName(String!);
+  }
+
+}
+
+package androidx.test.core.graphics {
+
+  public final class BitmapStorage {
   }
 
 }

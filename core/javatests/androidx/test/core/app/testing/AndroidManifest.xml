@@ -57,5 +57,10 @@
         <data android:scheme="scenario" />
       </intent-filter>
     </activity>
+    <activity android:name=".ActivityWithDialog"
+      android:exported="true"/>
+    <activity android:name=".UiActivity"
+        android:exported="true"/>
+
   </application>
 </manifest>

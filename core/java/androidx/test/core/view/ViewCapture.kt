@@ -36,7 +36,7 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RestrictTo
 import androidx.concurrent.futures.ResolvableFuture
 import androidx.test.annotation.ExperimentalTestApi
-import androidx.test.internal.util.Checks
+import androidx.test.core.internal.os.HandlerExecutor
 import androidx.test.platform.graphics.HardwareRendererCompat
 import com.google.common.util.concurrent.ListenableFuture
 
@@ -57,15 +57,18 @@ import com.google.common.util.concurrent.ListenableFuture
 @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
 fun View.captureToBitmap(): ListenableFuture<Bitmap> {
   val bitmapFuture: ResolvableFuture<Bitmap> = ResolvableFuture.create()
-  val drawingWasEnabled = HardwareRendererCompat.enableDrawingIfNecessary()
   val mainExecutor = HandlerExecutor(Handler(Looper.getMainLooper()))
 
   // disable drawing again if necessary once work is complete
-  if (!drawingWasEnabled) {
+  if (!HardwareRendererCompat.isDrawingEnabled()) {
+    HardwareRendererCompat.setDrawingEnabled(true)
     bitmapFuture.addListener({ HardwareRendererCompat.setDrawingEnabled(false) }, mainExecutor)
   }
 
-  mainExecutor.execute { forceRedraw { generateBitmap(bitmapFuture) } }
+  mainExecutor.execute {
+    val forceRedrawFuture = forceRedraw()
+    forceRedrawFuture.addListener({ generateBitmap(bitmapFuture) }, mainExecutor)
+  }
 
   return bitmapFuture
 }
@@ -75,21 +78,17 @@ fun View.captureToBitmap(): ListenableFuture<Bitmap> {
  *
  * Should only be called on UI thread.
  *
- * @param view the view to trigger a redraw of
- * @param onCompleteCallback the runnable to execute once the draw is complete. Will be called on
- * main thread
+ * @return a [ListenableFuture] that will be complete once ui drawing is complete
  */
 // NoClassDefFoundError occurs on API 15
 @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @ExperimentalTestApi
-fun View.forceRedraw(onCompleteCallback: Runnable) {
-  Checks.checkMainThread()
+fun View.forceRedraw(): ListenableFuture<Void> {
+  val future: ResolvableFuture<Void> = ResolvableFuture.create()
+
   if (Build.VERSION.SDK_INT >= 29 && isHardwareAccelerated) {
-    viewTreeObserver.registerFrameCommitCallback() {
-      // frame commit callbacks occur on main thread, so no need to post
-      onCompleteCallback.run()
-    }
+    viewTreeObserver.registerFrameCommitCallback() { future.set(null) }
   } else {
     viewTreeObserver.addOnDrawListener(
       object : ViewTreeObserver.OnDrawListener {
@@ -97,16 +96,16 @@ fun View.forceRedraw(onCompleteCallback: Runnable) {
         override fun onDraw() {
           if (!handled) {
             handled = true
-            Handler(Looper.getMainLooper()).post {
-              onCompleteCallback.run()
-              viewTreeObserver.removeOnDrawListener(this)
-            }
+            future.set(null)
+            // cannot remove on draw listener inside of onDraw
+            Handler(Looper.getMainLooper()).post { viewTreeObserver.removeOnDrawListener(this) }
           }
         }
       }
     )
   }
   invalidate()
+  return future
 }
 
 private fun View.generateBitmap(bitmapFuture: ResolvableFuture<Bitmap>) {
