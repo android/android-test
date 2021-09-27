@@ -32,6 +32,8 @@ import android.os.UserHandle;
  * the device).
  *
  * <p>This class will actually never be included in our .aar!
+ *
+ * @hide
  */
 public class ExposedInstrumentationApi extends Instrumentation {
 

@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.test.annotation.InternalTestApi;
 import androidx.test.runner.intent.IntentCallback;
 import androidx.test.runner.intent.IntentMonitor;
 import java.lang.ref.WeakReference;
@@ -31,10 +32,10 @@ import java.util.List;
 /**
  * Monitors all outgoing {@link Intent}s and signals intent to all registered Callbacks.
  *
- * <p>This intent monitor will be notified by {@link
- * androidx.test.runner.MonitoringInstrumentation} when a new activity was started using
- * {@link Activity#startActivity(Intent)}.
+ * <p>This intent monitor will be notified by {@link androidx.test.runner.MonitoringInstrumentation}
+ * when a new activity was started using {@link Activity#startActivity(Intent)}.
  */
+@InternalTestApi // used by robolectric
 public final class IntentMonitorImpl implements IntentMonitor {
 
   private static final String TAG = "IntentMonitorImpl";

@@ -16,6 +16,7 @@
 package androidx.test.internal.platform;
 
 import android.os.StrictMode;
+import androidx.test.annotation.InternalTestApi;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
@@ -27,6 +28,7 @@ import java.util.ServiceLoader;
  * restricted via StrictMode. This class disables disk access checking and then reenables StrictMode
  * when loading a service.
  */
+@InternalTestApi // used by core, espresso, rule
 public final class ServiceLoaderWrapper {
 
   private ServiceLoaderWrapper() {}

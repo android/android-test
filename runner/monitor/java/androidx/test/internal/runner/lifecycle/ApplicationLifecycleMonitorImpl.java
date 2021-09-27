@@ -20,6 +20,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.app.Application;
 import android.util.Log;
+import androidx.test.annotation.InternalTestApi;
 import androidx.test.runner.lifecycle.ApplicationLifecycleCallback;
 import androidx.test.runner.lifecycle.ApplicationLifecycleMonitor;
 import androidx.test.runner.lifecycle.ApplicationStage;
@@ -29,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /** Implementation of a ApplicationLifecycleMonitor */
+@InternalTestApi // used by robolectric
 public class ApplicationLifecycleMonitorImpl implements ApplicationLifecycleMonitor {
 
   private static final String TAG = "ApplicationLifecycleMonitorImpl";

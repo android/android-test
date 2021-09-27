@@ -24,6 +24,8 @@ import androidx.test.runner.intercepting.InterceptingActivityFactory;
 /**
  * Default implementation of {@link InterceptingActivityFactory} which does not intercept activity
  * creation in {@link MonitoringInstrumentation#newActivity(ClassLoader, String, Intent)}
+ *
+ * @hide
  */
 public final class DefaultInterceptingActivityFactory implements InterceptingActivityFactory {
 

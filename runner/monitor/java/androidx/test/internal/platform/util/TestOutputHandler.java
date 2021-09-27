@@ -22,6 +22,8 @@ import java.util.Map;
  * An extension definition for outputting debugging information to the test execution environment.
  *
  * <p>Implementations should be provided via {@link ServiceLoader}
+ *
+ * @hide
  */
 public interface TestOutputHandler {
 

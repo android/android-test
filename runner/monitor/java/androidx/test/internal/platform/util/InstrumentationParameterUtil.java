@@ -4,7 +4,11 @@ import androidx.test.internal.util.Checks;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.util.concurrent.TimeUnit;
 
-/** Provides utility functions to retrieve and parse data from instrumentation parameter. */
+/**
+ * Provides utility functions to retrieve and parse data from instrumentation parameter.
+ *
+ * @hide
+ */
 public class InstrumentationParameterUtil {
 
   /**

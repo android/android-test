@@ -15,11 +15,13 @@
  */
 package androidx.test.internal.platform.util;
 
+import androidx.test.annotation.InternalTestApi;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import java.io.Serializable;
 import java.util.Map;
 
 /** A utility for outputting execution data files back to the test environment/CI solution. */
+@InternalTestApi // used by espresso
 public class TestOutputEmitter {
 
   // create a handler for TestOutputEmitter calls. By default calls are no-ops

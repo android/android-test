@@ -17,6 +17,7 @@
 package androidx.test.internal.platform.content;
 
 import androidx.annotation.NonNull;
+import androidx.test.annotation.InternalTestApi;
 
 /**
  * Requests a runtime permission.
@@ -24,6 +25,7 @@ import androidx.annotation.NonNull;
  * <p>Note: This class should not be used directly, but through {@link
  * androidx.test.rule.GrantPermissionRule}.
  */
+@InternalTestApi // used by rule
 public interface PermissionGranter {
 
   /**

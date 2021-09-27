@@ -16,7 +16,10 @@
 
 package androidx.test.internal.platform;
 
+import androidx.test.annotation.InternalTestApi;
+
 /** An API to check thread conditions. All classes that implement this API must be thread-safe. */
+@InternalTestApi // used by robolectric
 public interface ThreadChecker {
   /**
    * Checks if the current thread is the main thread, otherwise throws.

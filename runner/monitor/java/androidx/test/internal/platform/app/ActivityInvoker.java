@@ -24,6 +24,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.test.annotation.InternalTestApi;
 
 /**
  * Invokes lifecycle event changes on an {@link Activity}. All methods may work synchronously or
@@ -32,6 +33,7 @@ import androidx.annotation.Nullable;
  * @see <a href="https://developer.android.com/topic/libraries/architecture/lifecycle#lc">Android
  *     Component LifeCycles</a>
  */
+@InternalTestApi // used by core
 public interface ActivityInvoker {
   /**
    * Finds an intent to start an Activity of the given class. It looks up target context first and

@@ -1,8 +1,10 @@
 package androidx.test.internal.platform.app;
 
+import androidx.test.annotation.InternalTestApi;
 import androidx.test.internal.platform.util.InstrumentationParameterUtil;
 
 /** Timeout for Activity's lifecycle state transitions. */
+@InternalTestApi // used by core/runner
 public class ActivityLifecycleTimeout {
 
   /** The instrumentation argument key for the activity lifecycle change timeout. */
