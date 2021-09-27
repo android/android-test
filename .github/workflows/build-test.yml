@@ -16,4 +16,11 @@ jobs:
         run: java --version
       - name: Build maven artifacts
         run: bazelisk build //:axt_m2repository
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Run Robolectric tests
+        run: bazelisk test --test_tag_filters=robolectric,-gcb_ignore --build_tag_filters=robolectric --test_output=all
 
