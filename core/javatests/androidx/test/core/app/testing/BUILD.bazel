@@ -9,6 +9,7 @@ licenses(["notice"])  # Apache License 2.0
 android_library(
     name = "testing",
     srcs = glob(["**/*.java"]),
+    manifest = "AndroidManifest_empty.xml",
     resource_files = glob(["res/**"]),
     visibility = ["//visibility:public"],
     deps = [
