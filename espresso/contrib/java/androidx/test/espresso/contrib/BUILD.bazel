@@ -1,6 +1,16 @@
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "ATF_VERSION", "ESPRESSO_VERSION", "GOOGLE_MATERIAL_VERSION")
+load(
+    "//build_extensions:axt_versions.bzl",
+    "ANDROIDX_CORE_VERSION",
+    "ANDROIDX_DRAWER_LAYOUT_VERSION",
+    "ANDROIDX_LEGACY_SUPPORT_VERSION",
+    "ANDROIDX_RECYCLERVIEW_VERSION",
+    "ANDROIDX_VIEWPAGER_VERSION",
+    "ATF_VERSION",
+    "ESPRESSO_VERSION",
+    "GOOGLE_MATERIAL_VERSION",
+)
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 # Description:
@@ -223,11 +233,11 @@ maven_artifact(
         "androidx.test.espresso:espresso-core:%s" % ESPRESSO_VERSION,
         "androidx.test.espresso:espresso-idling-resource:%s" % ESPRESSO_VERSION,
         "com.google.android.material:material:%s" % GOOGLE_MATERIAL_VERSION,
-        "androidx.recyclerview:recyclerview:%s" % ANDROIDX_VERSION,
-        "androidx.drawerlayout:drawerlayout:%s" % ANDROIDX_VERSION,
-        "androidx.viewpager:viewpager:%s" % ANDROIDX_VERSION,
-        "androidx.core:core:%s" % ANDROIDX_VERSION,
-        "androidx.legacy:legacy-support-core-utils:%s" % ANDROIDX_VERSION,
+        "androidx.recyclerview:recyclerview:%s" % ANDROIDX_RECYCLERVIEW_VERSION,
+        "androidx.drawerlayout:drawerlayout:%s" % ANDROIDX_DRAWER_LAYOUT_VERSION,
+        "androidx.viewpager:viewpager:%s" % ANDROIDX_VIEWPAGER_VERSION,
+        "androidx.core:core:%s" % ANDROIDX_CORE_VERSION,
+        "androidx.legacy:legacy-support-core-utils:%s" % ANDROIDX_LEGACY_SUPPORT_VERSION,
         "com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:%s" % ATF_VERSION,
     ],
     artifact_id = "espresso-contrib",

@@ -1,7 +1,7 @@
 # Remote package for espresso.
 
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION", "ESPRESSO_VERSION", "ANDROIDX_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ESPRESSO_VERSION", "RUNNER_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 load("//build_extensions:release.bzl", "axt_release_lib")
 
@@ -208,8 +208,6 @@ combine_jars(
     ],
 )
 
-
-
 axt_release_lib(
     name = "espresso_remote_release",
     jarjar_rules = "release_jarjar_rules.txt",
@@ -237,7 +235,7 @@ maven_artifact(
         "androidx.test:runner:%s" % RUNNER_VERSION,
         "androidx.test.espresso:espresso-core:%s" % ESPRESSO_VERSION,
         "androidx.test.espresso:espresso-web:%s" % ESPRESSO_VERSION,
-        "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
+        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
     ],
     artifact_id = "espresso-remote",
     group_id = "androidx.test.espresso",

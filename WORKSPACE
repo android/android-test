@@ -3,9 +3,9 @@ workspace(name = "android_test_support")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-RULES_JVM_EXTERNAL_TAG = "2.1"
+RULES_JVM_EXTERNAL_TAG = "4.1"
 
-RULES_JVM_EXTERNAL_SHA = "515ee5265387b88e4547b34a57393d2bcb1101314bcc5360ec7a482792556f42"
+RULES_JVM_EXTERNAL_SHA = "f36441aa876c4f6427bfb2d1f2d723b48e9d930b62662bf723ddfb8fc80f0140"
 
 http_archive(
     name = "rules_jvm_external",
@@ -44,9 +44,21 @@ load(
     "ANDROIDX_JUNIT_VERSION",
     "ANDROIDX_LIFECYCLE_VERSION",
     "ANDROIDX_MULTIDEX_VERSION",
-    "ANDROIDX_VERSION",
+    "ANDROIDX_ANNOTATION_VERSION",
+    "ANDROIDX_ANNOTATION_EXPERIMENTAL_VERSION",
+    "ANDROIDX_COMPAT_VERSION",
+    "ANDROIDX_CONCURRENT_VERSION",
+    "ANDROIDX_CORE_VERSION",
+    "ANDROIDX_CURSOR_ADAPTER_VERSION",
+    "ANDROIDX_DRAWER_LAYOUT_VERSION",
+    "ANDROIDX_FRAGMENT_VERSION",
+    "ANDROIDX_LEGACY_SUPPORT_VERSION",
+    "ANDROIDX_RECYCLERVIEW_VERSION",
+    "ANDROIDX_VIEWPAGER_VERSION",
     "CORE_VERSION",
     "GOOGLE_MATERIAL_VERSION",
+    "GUAVA_VERSION",
+    "GUAVA_LISTENABLEFUTURE_VERSION",
     "RUNNER_VERSION",
     "UIAUTOMATOR_VERSION",
 )
@@ -54,21 +66,22 @@ load(
 maven_install(
     name = "maven",
     artifacts = [
-        "androidx.annotation:annotation:" + ANDROIDX_VERSION,
-        "androidx.annotation:annotation-experimental:jar:" + ANDROIDX_VERSION,
-        "androidx.appcompat:appcompat:" + ANDROIDX_VERSION,
-        "androidx.core:core:" + ANDROIDX_VERSION,
-        "androidx.cursoradapter:cursoradapter:" + ANDROIDX_VERSION,
-        "androidx.drawerlayout:drawerlayout:" + ANDROIDX_VERSION,
-        "androidx.fragment:fragment:" + ANDROIDX_VERSION,
-        "androidx.legacy:legacy-support-core-ui:" + ANDROIDX_VERSION,
-        "androidx.legacy:legacy-support-core-utils:" + ANDROIDX_VERSION,
-        "androidx.legacy:legacy-support-v4:" + ANDROIDX_VERSION,
+        "androidx.annotation:annotation:" + ANDROIDX_ANNOTATION_VERSION,
+        "androidx.annotation:annotation-experimental:jar:" + ANDROIDX_ANNOTATION_EXPERIMENTAL_VERSION,
+        "androidx.appcompat:appcompat:" + ANDROIDX_COMPAT_VERSION,
+        "androidx.concurrent:concurrent-futures:" + ANDROIDX_CONCURRENT_VERSION,
+        "androidx.core:core:" + ANDROIDX_CORE_VERSION,
+        "androidx.cursoradapter:cursoradapter:" + ANDROIDX_CURSOR_ADAPTER_VERSION,
+        "androidx.drawerlayout:drawerlayout:" + ANDROIDX_DRAWER_LAYOUT_VERSION,
+        "androidx.fragment:fragment:" + ANDROIDX_FRAGMENT_VERSION,
+        "androidx.legacy:legacy-support-core-ui:" + ANDROIDX_LEGACY_SUPPORT_VERSION,
+        "androidx.legacy:legacy-support-core-utils:" + ANDROIDX_LEGACY_SUPPORT_VERSION,
+        "androidx.legacy:legacy-support-v4:" + ANDROIDX_LEGACY_SUPPORT_VERSION,
         "androidx.lifecycle:lifecycle-common:" + ANDROIDX_LIFECYCLE_VERSION,
         "androidx.multidex:multidex:" + ANDROIDX_MULTIDEX_VERSION,
-        "androidx.recyclerview:recyclerview:" + ANDROIDX_VERSION,
+        "androidx.recyclerview:recyclerview:" + ANDROIDX_RECYCLERVIEW_VERSION,
         "androidx.test.uiautomator:uiautomator:" + UIAUTOMATOR_VERSION,
-        "androidx.viewpager:viewpager:" + ANDROIDX_VERSION,
+        "androidx.viewpager:viewpager:" + ANDROIDX_VIEWPAGER_VERSION,
         "aopalliance:aopalliance:1.0",
         "com.beust:jcommander:1.72",
                 maven.artifact(
@@ -89,16 +102,17 @@ maven_install(
         "com.google.auto.value:auto-value:1.5.1",
         "com.google.code.findbugs:jsr305:3.0.2",
         "com.google.code.gson:gson:2.8.5",
-        "com.google.dagger:dagger-compiler:2.11",
-        "com.google.dagger:dagger-producers:2.11",
-        "com.google.dagger:dagger:2.10",
+        "com.google.dagger:dagger-compiler:2.38.1",
+        "com.google.dagger:dagger-producers:2.38.1",
+        "com.google.dagger:dagger:2.38.1",
         "com.google.errorprone:javac-shaded:9-dev-r4023-3",
         "com.google.flogger:flogger-system-backend:0.4",
         "com.google.flogger:flogger:0.4",
         "com.google.flogger:google-extensions:0.4",
         "com.google.googlejavaformat:google-java-format:1.4",
-        "com.google.guava:guava:27.1-android",
-        "com.google.guava:guava-testlib:27.1-android",
+        "com.google.guava:guava:" + GUAVA_VERSION,
+        "com.google.guava:guava-testlib:" + GUAVA_VERSION,
+        "com.google.guava:listenablefuture:" + GUAVA_LISTENABLEFUTURE_VERSION,
         "com.google.inject.extensions:guice-multibindings:4.1.0",
         "com.google.inject:guice:4.1.0",
         "com.google.truth:truth:1.0",
@@ -130,8 +144,8 @@ maven_install(
 
 android_sdk_repository(
     name = "androidsdk",
-    api_level = 30,
-    build_tools_version = "30.0.2",
+    api_level = 31,
+    build_tools_version = "30.0.3",
 )
 
 load("//:repo.bzl", "android_test_repositories")
@@ -141,15 +155,13 @@ load("@robolectric//bazel:robolectric.bzl", "robolectric_repositories")
 robolectric_repositories()
 
 # Kotlin toolchains
-rules_kotlin_version = "686518ffd8e58609a21f258616d154ba2934a8e8"
 http_archive(
     name = "io_bazel_rules_kotlin",
-    sha256 = "0237910a921ad492aa8520bf88923c42d745d74522d3507a34c9bfd39b4e295c",
-    strip_prefix = "rules_kotlin-%s" % rules_kotlin_version,
-    type = "zip",
-    urls = ["https://github.com/bazelbuild/rules_kotlin/archive/%s.zip" % rules_kotlin_version],
+    sha256 = "58edd86f0f3c5b959c54e656b8e7eb0b0becabd412465c37a2078693c2571f7f",
+    urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v1.5.0-beta-3/rules_kotlin_release.tgz"],
 )
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
+load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", )
+load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
 kotlin_repositories()
 kt_register_toolchains()
 

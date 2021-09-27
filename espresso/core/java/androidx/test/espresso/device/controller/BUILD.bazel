@@ -1,6 +1,6 @@
 #  Device controller
 
-load("//tools/build_defs/kotlin:rules.bzl", "kt_android_library")
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 
 licenses(["notice"])
 

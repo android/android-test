@@ -1,7 +1,17 @@
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_LIFECYCLE_VERSION", "ANDROIDX_VERSION", "CORE_VERSION", "KOTLIN_VERSION", "MONITOR_VERSION", "SERVICES_VERSION")
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library")
+load(
+    "//build_extensions:axt_versions.bzl",
+    "ANDROIDX_ANNOTATION_VERSION",
+    "ANDROIDX_CONCURRENT_VERSION",
+    "ANDROIDX_LIFECYCLE_VERSION",
+    "CORE_VERSION",
+    "GUAVA_LISTENABLEFUTURE_VERSION",
+    "KOTLIN_VERSION",
+    "MONITOR_VERSION",
+    "SERVICES_VERSION",
+)
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 
 # Description: Build rules for building androidx.test.core from source
 licenses(["notice"])  # Apache License 2.0
@@ -13,27 +23,51 @@ package(
 )
 
 kt_android_library(
-    name = "core",
+    name = "core_internal",
     srcs = glob(
-        ["**/*.java"],
+        [
+            "**/*.java",
+            "**/*.kt",
+        ],
     ),
     exports_manifest = 1,
-    manifest = ":AndroidManifest.xml",
+    manifest = "AndroidManifest.xml",
     resource_files = glob(["res/**"]),
+    tags = ["alt_dep=//core"],
+    visibility = ["//visibility:private"],
     deps = [
-        "//:androidx_annotation",
-        "//:androidx_lifecycle_common",
         "//annotation",
         "//runner/monitor",
+        "//:androidx_annotation",
+        "//:androidx_concurrent_futures",
+        "//:androidx_lifecycle_common",
         "//services/storage",
+        # # TODO(b/201110333): this should be listenable future, but for some unknown reason build
+        # fails with error: cannot access 'com.google.common.util.concurrent.ListenableFuture'
+        # which is a supertype of 'androidx.concurrent.futures.ResolvableFuture'.
+        "@maven//:com_google_guava_guava",
     ],
+)
+
+# TODO(b/199522848): delete these targets once espresso moves to testonly
+android_library(
+    name = "core",
+    testonly = 1,
+    exports = [":core_internal"],
+)
+
+android_library(
+    name = "core_not_test_only",
+    visibility = ["//espresso/core/java/androidx/test/espresso:__subpackages__"],
+    exports = [":core_internal"],
 )
 
 # group of targets to use to produce release binary + docs
 android_library(
     name = "core_release_lib",
+    testonly = 1,
     exports = [
-        ":core",
+        ":core_internal",
     ],
 )
 
@@ -56,15 +90,17 @@ maven_artifact(
     name = "core_maven_artifact",
     src = ":core_release.aar",
     artifact_deps = [
-        "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
+        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
         "androidx.test:monitor:%s" % MONITOR_VERSION,
         "androidx.test.services:storage:%s" % SERVICES_VERSION,
         "androidx.lifecycle:lifecycle-common:%s" % ANDROIDX_LIFECYCLE_VERSION,
+        "com.google.guava:listenablefuture:%s" % GUAVA_LISTENABLEFUTURE_VERSION,
         "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
+        "androidx.concurrent:concurrent-futures:%s" % ANDROIDX_CONCURRENT_VERSION,
     ],
     artifact_id = "core",
     group_id = "androidx.test",
     last_updated = "20180403000000",
-    src_jar = ":libcore-src.jar",
+    src_jar = ":libcore_internal-src.jar",
     version = "%s" % CORE_VERSION,
 )

@@ -1,4 +1,5 @@
 # # This package contains bitmap capturing extensions for espresso
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 
 package(default_visibility = ["//visibility:public"])
 

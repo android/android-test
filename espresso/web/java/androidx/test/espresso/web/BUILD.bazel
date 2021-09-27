@@ -1,6 +1,6 @@
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "ESPRESSO_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ESPRESSO_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 licenses(["notice"])  # Apache License 2.0
@@ -62,7 +62,7 @@ maven_artifact(
     src = ":espresso_web_release.aar",
     artifact_deps = [
         "androidx.test.espresso:espresso-core:%s" % ESPRESSO_VERSION,
-        "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
+        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
         "org.ccil.cowan.tagsoup:tagsoup:1.2",
     ],
     artifact_id = "espresso-web",

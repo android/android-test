@@ -2,7 +2,7 @@
 # Network Idling Resources
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "ESPRESSO_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ESPRESSO_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 licenses(["notice"])  # Apache License 2.0
@@ -50,7 +50,7 @@ maven_artifact(
     name = "idling_net_maven_artifact",
     src = ":idling_net_release.aar",
     artifact_deps = [
-        "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
+        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
         "androidx.test.espresso:espresso-idling-resource:%s" % ESPRESSO_VERSION,
     ],
     artifact_id = "idling-net",

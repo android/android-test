@@ -1,9 +1,9 @@
 # androidx.test.core Kotlin extensions
 
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library")
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_LIFECYCLE_VERSION", "ANDROIDX_VERSION", "CORE_VERSION", "RUNNER_VERSION", "KOTLIN_VERSION")
-
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_LIFECYCLE_VERSION", "CORE_VERSION", "KOTLIN_VERSION")
+load("//build_extensions:release.bzl", "axt_release_lib")
 
 package(
     default_visibility = [
@@ -13,10 +13,9 @@ package(
 
 licenses(["notice"])  # Apache License 2.0
 
-
-
 kt_android_library(
     name = "core",
+    testonly = 1,
     srcs = glob(
         ["**/*.kt"],
     ),
@@ -26,11 +25,10 @@ kt_android_library(
     ],
 )
 
-load("//build_extensions:release.bzl", "axt_release_lib")
-
 # Group of targets to use to produce release binary
 android_library(
     name = "core_release_lib",
+    testonly = 1,
     exports = [
         ":core",
     ],
@@ -54,7 +52,6 @@ axt_release_lib(
         ":core_release_lib",
     ],
 )
-
 
 maven_artifact(
     name = "core_maven_artifact",

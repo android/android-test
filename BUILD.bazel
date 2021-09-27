@@ -1,7 +1,7 @@
-package(default_visibility = ["//:__subpackages__"])
-
 load("//build_extensions:maven_repo.bzl", "maven_repository")
 load("@rules_jvm_external//:defs.bzl", "artifact")
+
+package(default_visibility = ["//:__subpackages__"])
 
 exports_files([
     "proguard_binary.cfg",
@@ -75,8 +75,18 @@ alias(
 )
 
 alias(
+    name = "androidx_annotation_experimental",
+    actual = artifact("androidx.annotation:annotation-experimental"),
+)
+
+alias(
     name = "androidx_lifecycle_common",
     actual = artifact("androidx.lifecycle:lifecycle-common"),
+)
+
+alias(
+    name = "androidx_concurrent_futures",
+    actual = artifact("androidx.concurrent:concurrent-futures"),
 )
 
 alias(

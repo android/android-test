@@ -111,7 +111,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/base",
         "//espresso/core/java/androidx/test/espresso/base:default_failure_handler",
         "//espresso/core/java/androidx/test/espresso/base:idling_resource_registry",
-        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/internal/data",
         "//opensource/dagger",
         "//runner/android_junit_runner",
         "@maven//:com_google_guava_guava",
@@ -190,30 +190,6 @@ android_library(
         "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_all",
-    ],
-)
-
-# Compile-time library is used by tests, to avoid including the project code into test apk.
-# By doing this we significantly reduce test apk filesize.
-# Test code classpath is overlayed with project classpath on Android.
-android_library(
-    name = "espresso_compiletime",
-    testonly = 1,
-    neverlink = 1,
-    exports = [":espresso"],
-)
-
-# Android binary for the UI framework lib, used to generate eclipse dependencies.
-android_binary(
-    name = "espresso_binary",
-    testonly = 1,
-    manifest = "AndroidManifest.xml",
-    deps = [
-        ":espresso",
-        "//:androidx_core",
-        "//:androidx_recyclerview",
-        "//opensource/java_lib:webbridge",
-        "@maven//:org_ccil_cowan_tagsoup_tagsoup",
     ],
 )
 

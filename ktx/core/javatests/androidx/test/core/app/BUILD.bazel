@@ -1,6 +1,6 @@
 # Description: Tests for androidx.test.core Kotlin extension
 
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library")
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 
 package(
     default_testonly = 1,
@@ -24,6 +24,7 @@ java_library(
 
 kt_android_library(
     name = "ActivityScenarioKotlinTest_lib",
+    testonly = 1,
     srcs = ["ActivityScenarioKotlinTest.kt"],
     deps = [
         "//:androidx_lifecycle_common",
@@ -38,7 +39,6 @@ kt_android_library(
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
     ],
-    testonly = 1,
 )
 
 android_binary(

@@ -1,6 +1,6 @@
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_TRUTH_VERSION", "ANDROIDX_VERSION", "CORE_VERSION", "GUAVA_VERSION", "TRUTH_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANDROIDX_TRUTH_VERSION", "CORE_VERSION", "GUAVA_VERSION", "TRUTH_VERSION")
 
 # Description: Build rules for building androidx.test.truth from source
 licenses(["notice"])  # Apache License 2.0
@@ -13,6 +13,7 @@ package(
 
 android_library(
     name = "truth",
+    testonly = 1,
     srcs = glob(
         ["**/*.java"],
     ),
@@ -54,7 +55,7 @@ maven_artifact(
         "androidx.test:core:%s" % CORE_VERSION,
         "com.google.guava:guava:%s" % GUAVA_VERSION,
         "com.google.truth:truth:%s" % TRUTH_VERSION,
-        "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
+        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
     ],
     artifact_id = "truth",
     group_id = "androidx.test.ext",

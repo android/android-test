@@ -18,6 +18,7 @@ INTERFACE_FILES = [
 
 android_library(
     name = "intents",
+    testonly = 1,
     srcs = glob(
         ["*.java"],
         exclude = INTERFACE_FILES + ["GmsAuthTestHelper.java"],
@@ -54,6 +55,7 @@ android_library(
 
 android_library(
     name = "espresso_intents_release_lib",
+    testonly = 1,
     exports = [
         ":intents",
         "//espresso/intents/java/androidx/test/espresso/intent/rule",

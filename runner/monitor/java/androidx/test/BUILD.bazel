@@ -1,6 +1,6 @@
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_VERSION", "ANNOTATION_VERSION", "MONITOR_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANNOTATION_VERSION", "MONITOR_VERSION")
 
 # Description: Build rules for building androidx.test from source
 licenses(["notice"])  # Apache License 2.0
@@ -69,7 +69,7 @@ maven_artifact(
     name = "monitor_maven_artifact",
     src = ":monitor_release.aar",
     artifact_deps = [
-        "androidx.annotation:annotation:%s" % ANDROIDX_VERSION,
+        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
         "androidx.test:annotation:%s" % ANNOTATION_VERSION,
     ],
     artifact_id = "monitor",
