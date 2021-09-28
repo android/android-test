@@ -35,6 +35,7 @@ axt_release_lib(
     custom_package = "androidx.test.rules",
     keep_spec = "androidx/test",
     overlapping_jars = [
+        "//annotation/java/androidx/test/annotation:annotation_release_no_deps.jar",
         "//runner/android_junit_runner/java/androidx/test:runner_release_no_deps.jar",
         "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
         "//services/storage/java/androidx/test/services/storage:test_storage_release_no_deps.jar",
