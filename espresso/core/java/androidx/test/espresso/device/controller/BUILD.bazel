@@ -8,7 +8,10 @@ package(default_visibility = ["//espresso/core/java/androidx/test/espresso/devic
 
 kt_android_library(
     name = "controller",
-    srcs = ["DeviceController.kt"],
+    srcs = [
+        "DeviceController.kt",
+        "DeviceMode.kt",
+    ],
     deps = [],
 )
 
