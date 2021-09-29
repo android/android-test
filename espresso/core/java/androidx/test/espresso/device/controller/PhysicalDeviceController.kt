@@ -16,17 +16,9 @@
 
 package androidx.test.espresso.device.controller
 
-/**
- * Provides base-level device operations that can be used to build user actions such as folding a
- * device, changing screen orientation etc. It provides a advanced synchronization mechanism for
- * test actions.
- */
-interface DeviceController {
-  /**
-   * Synchronously sets the connected device to the provided mode. Throws a
-   * DeviceNotSupportedException if it is called on an unsupported device.
-   *
-   * @param deviceMode the mode to put the device in
-   */
-  fun setDeviceMode(deviceMode: Int)
+/** Implementation of {@link DeviceController} for tests run on a physical device. */
+class PhysicalDeviceController : DeviceController {
+  override fun setDeviceMode(deviceMode: Int) {
+    throw DeviceNotSupportedException("Setting a device mode is not supported on physical devices.")
+  }
 }

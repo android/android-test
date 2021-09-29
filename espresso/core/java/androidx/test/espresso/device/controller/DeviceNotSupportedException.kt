@@ -16,17 +16,13 @@
 
 package androidx.test.espresso.device.controller
 
+import androidx.test.espresso.EspressoException
+
 /**
- * Provides base-level device operations that can be used to build user actions such as folding a
- * device, changing screen orientation etc. It provides a advanced synchronization mechanism for
- * test actions.
+ * An exception which indicates that the device selected does not support an operation called on it.
  */
-interface DeviceController {
-  /**
-   * Synchronously sets the connected device to the provided mode. Throws a
-   * DeviceNotSupportedException if it is called on an unsupported device.
-   *
-   * @param deviceMode the mode to put the device in
-   */
-  fun setDeviceMode(deviceMode: Int)
+class DeviceNotSupportedException : RuntimeException, EspressoException {
+  constructor(description: String) : super(description)
+
+  constructor(description: String, cause: Throwable) : super(description, cause)
 }
