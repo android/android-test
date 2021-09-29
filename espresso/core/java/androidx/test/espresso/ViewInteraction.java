@@ -37,6 +37,7 @@ import androidx.test.espresso.remote.IInteractionExecutionStatus;
 import androidx.test.espresso.remote.RemoteInteraction;
 import androidx.test.espresso.util.HumanReadables;
 import androidx.test.internal.platform.os.ControlledLooper;
+import androidx.test.internal.util.Checks;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -119,6 +120,7 @@ public final class ViewInteraction {
    *
    * @param viewActions one or more actions to execute.
    * @return this interaction for further perform/verification calls.
+   * @throws RuntimeException when being invoked on the main thread.
    */
   public ViewInteraction perform(final ViewAction... viewActions) {
     checkNotNull(viewActions);
@@ -287,6 +289,7 @@ public final class ViewInteraction {
    *
    * @param viewAssert the assertion to check.
    * @return this interaction for further perform/verification calls.
+   * @throws RuntimeException when being invoked on the main thread.
    */
   public ViewInteraction check(final ViewAssertion viewAssert) {
     checkNotNull(viewAssert);
@@ -334,6 +337,8 @@ public final class ViewInteraction {
   }
 
   private ListenableFuture<Void> postAsynchronouslyOnUiThread(Callable<Void> interaction) {
+    Checks.checkNotMainThread();
+
     ListenableFutureTask<Void> mainThreadInteraction = ListenableFutureTask.create(interaction);
     mainThreadExecutor.execute(mainThreadInteraction);
     return mainThreadInteraction;

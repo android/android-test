@@ -130,6 +130,7 @@ public class DataInteraction {
    * Performs an action on the view after we force the data to be loaded.
    *
    * @return an {@link ViewInteraction} for more assertions or actions.
+   * @throws RuntimeException when being invoked on the main thread.
    */
   public ViewInteraction perform(ViewAction... actions) {
     return onView(makeTargetMatcher()).inRoot(rootMatcher).perform(actions);
@@ -139,12 +140,12 @@ public class DataInteraction {
    * Performs an assertion on the state of the view after we force the data to be loaded.
    *
    * @return an {@link ViewInteraction} for more assertions or actions.
+   * @throws RuntimeException when being invoked on the main thread.
    */
   public ViewInteraction check(ViewAssertion assertion) {
     return onView(makeTargetMatcher()).inRoot(rootMatcher).check(assertion);
   }
 
-  @SuppressWarnings("unchecked")
   private Matcher<View> makeTargetMatcher() {
     Matcher<View> targetView =
         displayDataMatcher(
@@ -261,7 +262,6 @@ public class DataInteraction {
       adapterMatcher.describeTo(description);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public boolean matchesSafely(View view) {
       checkState(adapterViewProtocol != null, "adapterViewProtocol cannot be null!");

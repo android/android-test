@@ -17,6 +17,7 @@
 package androidx.test.espresso;
 
 import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onIdle;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.Espresso.openContextualActionModeOverflowMenu;
@@ -30,12 +31,14 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.any;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasValue;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
-import static org.junit.rules.ExpectedException.none;
 
 import android.content.Context;
 import android.view.View;
@@ -55,7 +58,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 /**
@@ -67,8 +69,6 @@ import org.junit.runner.RunWith;
 public class EspressoTest {
   @Rule
   public ActivityScenarioRule<MainActivity> rule = new ActivityScenarioRule<>(MainActivity.class);
-
-  @Rule public ExpectedException expectedException = none();
 
   @Test
   public void openOverflowFromActionBar() {
@@ -207,6 +207,60 @@ public class EspressoTest {
   public void emptyArrayOfResources() {
     assertTrue(Espresso.registerIdlingResources());
     assertTrue(Espresso.unregisterIdlingResources());
+  }
+
+  @Test
+  public void onView_thrownFromScenarioOnActivity() {
+    rule.getScenario()
+        .onActivity(
+            activity -> {
+              IllegalStateException thrown =
+                  assertThrows(
+                      IllegalStateException.class,
+                      () ->
+                          onView(withId(android.R.id.list))
+                              .check(matches(withText("ActionBarTestActivity")))
+                              .perform(click()));
+
+              assertThat(
+                  thrown.getMessage(),
+                  containsString("Method cannot be called on the main application thread"));
+            });
+  }
+
+  @Test
+  public void onData_throwsFromScenarioOnActivity() {
+    rule.getScenario()
+        .onActivity(
+            activity -> {
+              IllegalStateException thrown =
+                  assertThrows(
+                      IllegalStateException.class,
+                      () ->
+                          onData(
+                                  allOf(
+                                      instanceOf(Map.class),
+                                      hasValue(ActionBarTestActivity.class.getSimpleName())))
+                              .perform(click()));
+
+              assertThat(
+                  thrown.getMessage(),
+                  containsString("Method cannot be called on the main application thread"));
+            });
+  }
+
+  @Test
+  public void onIdle_throwsFromScenarioOnActivity() {
+    rule.getScenario()
+        .onActivity(
+            activity -> {
+              IllegalStateException thrown =
+                  assertThrows(IllegalStateException.class, () -> onIdle());
+
+              assertThat(
+                  thrown.getMessage(),
+                  containsString("Method cannot be called on the main application thread"));
+            });
   }
 
   private static class DummyIdlingResource implements IdlingResource {

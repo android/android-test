@@ -40,6 +40,7 @@ import androidx.annotation.CheckResult;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.base.IdlingResourceRegistry;
 import androidx.test.espresso.util.TreeIterables;
+import androidx.test.internal.util.Checks;
 import androidx.test.platform.app.InstrumentationRegistry;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import java.util.List;
@@ -190,7 +191,6 @@ public final class Espresso {
   // Ideally, this should be only allOf(isDisplayed(), withContentDescription("More options"))
   // But the AppCompatActivity compat lib is missing a content description for this element, so
   // we add the class name matcher as another option to find the view.
-  @SuppressWarnings("unchecked")
   private static final Matcher<View> OVERFLOW_BUTTON_MATCHER =
       anyOf(
           allOf(isDisplayed(), withContentDescription("More options")),
@@ -210,7 +210,6 @@ public final class Espresso {
    * ActionMode will always present an overflow icon and that icon only responds to clicks. The menu
    * button (if present) has no impact on it.
    */
-  @SuppressWarnings("unchecked")
   public static void openContextualActionModeOverflowMenu() {
     onView(isRoot()).perform(new TransitionBridgingViewAction());
 
@@ -246,7 +245,6 @@ public final class Espresso {
    * overflows. If a hardware menu key is present, the overflow icon is never displayed in
    * ActionBars and can only be interacted with via menu key presses.
    */
-  @SuppressWarnings("unchecked")
   public static void openActionBarOverflowOrOptionsMenu(Context context) {
     // We need to wait for Activity#onPrepareOptionsMenu to be called before trying to open
     // overflow or it's missing. onPrepareOptionsMenu is called by Choreographer after onResume and
@@ -311,10 +309,13 @@ public final class Espresso {
    * which is executed after the app goes idle.
    *
    * @param action callable executed when the app goes idle.
-   * @return the computed result of the action callable
-   * @throws AppNotIdleException when app does not go Idle within the master policies timeout
+   * @return the computed result of the action callable.
+   * @throws AppNotIdleException when app does not go Idle within the master policies timeout.
+   * @throws RuntimeException when being invoked on the main thread.
    */
   public static <T> T onIdle(Callable<T> action) {
+    Checks.checkNotMainThread();
+
     Executor mainThreadExecutor = BASE.mainThreadExecutor();
     ListenableFutureTask<Void> idleFuture =
         ListenableFutureTask.create(
@@ -352,10 +353,11 @@ public final class Espresso {
    * frameworks that are build on top of Espresso.
    *
    * <p>For UI tests use {@link Espresso#onView(Matcher)} or {@link Espresso#onData(Matcher)}. These
-   * Apis already use Espresso's internal synchronisation mechanisms and do not require a call to
+   * APIs already use Espresso's internal synchronisation mechanisms and do not require a call to
    * {@link Espresso#onIdle()}.
    *
-   * @throws AppNotIdleException when app does not go Idle within the master policies timeout
+   * @throws AppNotIdleException when app does not go Idle within the master policies timeout.
+   * @throws RuntimeException when being invoked on the main thread.
    */
   public static void onIdle() {
     onIdle(
