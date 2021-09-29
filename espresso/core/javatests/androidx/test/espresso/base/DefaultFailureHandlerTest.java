@@ -16,15 +16,21 @@
 
 package androidx.test.espresso.base;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static com.google.common.base.Throwables.getStackTraceAsString;
+import static com.google.common.truth.Truth.assertThat;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 import static org.junit.rules.ExpectedException.none;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import androidx.annotation.NonNull;
 import android.view.View;
 import androidx.test.espresso.AmbiguousViewMatcherException;
@@ -33,7 +39,12 @@ import androidx.test.espresso.ViewAssertion;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.filters.SdkSuppress;
+import androidx.test.services.storage.TestStorage;
+import androidx.test.services.storage.internal.TestStorageUtil;
 import androidx.test.ui.app.MainActivity;
+import java.io.IOException;
+import java.io.InputStream;
 import junit.framework.AssertionFailedError;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.CustomTypeSafeMatcher;
@@ -91,6 +102,28 @@ public class DefaultFailureHandlerTest {
     expectedException.expect(AmbiguousViewMatcherException.class);
     expectedException.expect(stackTraceContainsThisClass());
     onView(withMatchesThatReturns(true)).check(matches(isDisplayed()));
+  }
+
+  @Test
+  @SdkSuppress(minSdkVersion = 18)
+  public void screenshotSaved() throws IOException {
+    assertThrows(
+        NoMatchingViewException.class,
+        () -> onView(withMatchesThatReturns(false)).check(matches(not(isDisplayed()))));
+
+    // ensure a bitmap was written, and do some basic validity tests
+    Bitmap errorBitmap = readBitmapFromTestStorage("view-op-error-1.png");
+    assertThat(errorBitmap).isNotNull();
+    assertThat(errorBitmap.getByteCount()).isGreaterThan(100);
+  }
+
+  private Bitmap readBitmapFromTestStorage(String pathName) throws IOException {
+    Uri outputFileUri = TestStorage.getOutputFileUri(pathName);
+    try (InputStream input =
+        TestStorageUtil.getInputStream(
+            outputFileUri, getApplicationContext().getContentResolver())) {
+      return BitmapFactory.decodeStream(input);
+    }
   }
 
   private static Matcher<View> withMatchesThatReturns(final boolean returnValue) {

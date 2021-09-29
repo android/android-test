@@ -20,6 +20,7 @@ package androidx.test.core.graphics
 
 import android.graphics.Bitmap
 import androidx.test.annotation.ExperimentalTestApi
+import androidx.test.platform.io.PlatformTestStorage
 import androidx.test.services.storage.TestStorage
 
 /**
@@ -30,7 +31,19 @@ import androidx.test.services.storage.TestStorage
  */
 @ExperimentalTestApi
 fun Bitmap.writeToTestStorage(name: String): Boolean {
-  TestStorage().openOutputFile("$name.png").use {
+  return writeToTestStorage(TestStorage(), name)
+}
+
+/**
+ * Writes the contents of the [Bitmap] to a compressed png file to the given [PlatformTestStorage]
+ *
+ * @param testStorage the [PlatformTestStorage] to use
+ * @param name a descriptive base name for the resulting file
+ * @return true if bitmap was successfully compressed and written to stream
+ */
+@ExperimentalTestApi
+fun Bitmap.writeToTestStorage(testStorage: PlatformTestStorage, name: String): Boolean {
+  testStorage.openOutputFile("$name.png").use {
     return this.compress(
       Bitmap.CompressFormat.PNG,
       /** PNG is lossless, so quality is ignored. */
