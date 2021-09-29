@@ -26,7 +26,6 @@ import android.view.Choreographer
 import androidx.annotation.RequiresApi
 import androidx.concurrent.futures.ResolvableFuture
 import androidx.test.annotation.ExperimentalTestApi
-import androidx.test.annotation.InternalTestApi
 import androidx.test.core.internal.os.HandlerExecutor
 import androidx.test.core.view.forceRedraw
 import androidx.test.internal.util.Checks
@@ -35,13 +34,11 @@ import androidx.test.platform.graphics.HardwareRendererCompat
 import androidx.test.platform.view.inspector.WindowInspectorCompat
 import com.google.common.util.concurrent.ListenableFuture
 import java.lang.RuntimeException
-import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
 
 /**
- * Captures an image of the device's screen into a [Bitmap].
+ * Asynchronously captures an image of the device's screen into a [Bitmap].
  *
  * This is essentially a wrapper for [UIAutomation#takeScreenshot()] that attempts to get a stable
  * screenshot by forcing all the current application's root window views to redraw, and also handles
@@ -53,11 +50,9 @@ import java.util.concurrent.TimeoutException
  * [androidx.test.core.view.captureToBitmap], [androidx.test.espresso.screenshot.captureToBitmap]
  * and [androidx.compose.ui.test.captureToImage].
  *
- * This API does not support concurrent usage.
- *
  * This API is currently experimental and subject to change or removal.
  *
- * @return a [Bitmap] that contains the image
+ * @return a [ListenableFuture] for retrieving the result of the bitmap
  * @throws [IllegalStateException] if called on the main thread. This is a limitation of connecting
  * to UiAutomation, [RuntimeException] if UiAutomation fails to take the screenshot
  */
@@ -66,33 +61,13 @@ import java.util.concurrent.TimeoutException
 @Suppress("FutureReturnValueIgnored")
 @Throws(RuntimeException::class)
 fun takeScreenshot(): Bitmap {
-  getInstrumentation().waitForIdleSync()
-  return takeScreenshotNoSync()
-}
-
-/**
- * An internal variant of [takeScreenshot] that skips an idle sync call.
- *
- * This intended for failure handling cases where caller does not want to wait for main thread to be
- * idle.
- *
- * @return a [Bitmap]
- * @throws [IllegalStateException] if called on the main thread. This is a limitation of connecting
- * to UiAutomation, [RuntimeException] if UiAutomation fails to take the screenshot
- */
-@InternalTestApi
-@RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-@Suppress("FutureReturnValueIgnored")
-@Throws(RuntimeException::class)
-fun takeScreenshotNoSync(): Bitmap {
   Checks.checkNotMainThread()
 
   val bitmapFuture: ResolvableFuture<Bitmap> = ResolvableFuture.create()
   val mainExecutor = HandlerExecutor(Handler(Looper.getMainLooper()))
   val uiAutomation = getInstrumentation().uiAutomation
-  if (uiAutomation == null) {
-    throw RuntimeException("uiautomation is null")
-  }
+
+  getInstrumentation().waitForIdleSync()
 
   if (!HardwareRendererCompat.isDrawingEnabled()) {
     HardwareRendererCompat.setDrawingEnabled(true)
@@ -118,24 +93,7 @@ fun takeScreenshotNoSync(): Bitmap {
     }
   }
 
-  // remap future exceptions as RuntimeExceptions
-  try {
-    return bitmapFuture.get(5, TimeUnit.SECONDS)
-  } catch (e: ExecutionException) {
-    if (e.cause is RuntimeException) {
-      throw e.cause as RuntimeException
-    } else {
-      throw RuntimeException(
-        "UiAutomation.takeScreenshot failed with unrecognized exception",
-        e.cause
-      )
-    }
-  } catch (e: TimeoutException) {
-    throw RuntimeException("Uiautomation.takeScreenshot failed to complete in 5 seconds", e)
-  } catch (e: InterruptedException) {
-    Thread.currentThread().interrupt()
-    throw RuntimeException("Uiautomation.takeScreenshot was interrupted")
-  }
+  return bitmapFuture.get(5, TimeUnit.SECONDS)
 }
 
 @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)

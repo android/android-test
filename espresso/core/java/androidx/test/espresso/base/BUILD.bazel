@@ -34,9 +34,9 @@ android_library(
         "//runner/android_junit_runner",
         "@maven//:com_google_dagger_dagger",
         "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:javax_inject_javax_inject",
         "@maven//:junit_junit",
-        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 
@@ -87,17 +87,16 @@ android_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//core/java/androidx/test/core:core_not_test_only",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/internal/inject",
         "//espresso/core/java/androidx/test/espresso/util",
-        "//runner/monitor",
+        "//runner/monitor/java/androidx/test:monitor",
         "@maven//:com_google_dagger_dagger",
         "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:javax_annotation_javax_annotation_api",
         "@maven//:javax_inject_javax_inject",
         "@maven//:junit_junit",
-        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 

@@ -51,7 +51,6 @@ android_app_instrumentation_tests(
         "//ext/junit",
         "//runner/android_junit_runner/java/androidx/test:runner",
         "//runner/rules",
-        "//services/storage",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_guava_guava",
