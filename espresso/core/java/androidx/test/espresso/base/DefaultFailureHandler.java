@@ -19,11 +19,7 @@ package androidx.test.espresso.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.content.Context;
-import android.os.Build.VERSION;
-import android.util.Log;
 import android.view.View;
-import androidx.test.core.app.DeviceCapture;
-import androidx.test.core.graphics.BitmapStorage;
 import androidx.test.espresso.EspressoException;
 import androidx.test.espresso.FailureHandler;
 import androidx.test.espresso.NoMatchingViewException;
@@ -48,7 +44,6 @@ public final class DefaultFailureHandler implements FailureHandler {
 
   private static final AtomicInteger failureCount = new AtomicInteger(0);
   private final List<FailureHandler> handlers = new ArrayList<>();
-  private final PlatformTestStorage testStorage;
 
   public DefaultFailureHandler(@TargetContext Context appContext) {
     this(appContext, PlatformTestStorageRegistry.getInstance());
@@ -66,7 +61,6 @@ public final class DefaultFailureHandler implements FailureHandler {
     // PerformException ---------> EspressoException
     //                  ---------> Throwable
     // AssertionError ----------->
-    this.testStorage = testStorage;
     handlers.add(
         new NoMatchingViewExceptionHandler(
             testStorage, failureCount, NoMatchingViewException.class));
@@ -80,27 +74,13 @@ public final class DefaultFailureHandler implements FailureHandler {
   @Override
   public void handle(Throwable error, Matcher<View> viewMatcher) {
     int count = failureCount.incrementAndGet();
+    TestOutputEmitter.takeScreenshot("view-op-error-" + count + ".png");
     TestOutputEmitter.captureWindowHierarchy("explore-window-hierarchy-" + count + ".xml");
-    takeScreenshot("view-op-error-" + count);
 
     // Iterates through the list of handlers to handle the exception, but at most one handler will
     // update the exception and throw at the end of the handling.
     for (FailureHandler handler : handlers) {
       handler.handle(error, viewMatcher);
-    }
-  }
-
-  private void takeScreenshot(String outputName) {
-    try {
-      // takeScreenshot only supported on API >= 18
-      if (VERSION.SDK_INT >= 18) {
-        BitmapStorage.writeToTestStorage(
-            DeviceCapture.takeScreenshotNoSync(), testStorage, outputName);
-      } else {
-        TestOutputEmitter.takeScreenshot(outputName + ".png");
-      }
-    } catch (RuntimeException | Error e) {
-      Log.w("DefaultFailureHandler", "Failed to take screenshot", e);
     }
   }
 
@@ -133,4 +113,3 @@ public final class DefaultFailureHandler implements FailureHandler {
     abstract void handleSafely(T error, Matcher<View> viewMatcher);
   }
 }
-
