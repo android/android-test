@@ -1,5 +1,6 @@
 """A rule wrapper for a Kotlin instrumentation test for an android binary."""
 
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 load(
     "//build_extensions:generate_instrumentation_tests.bzl",
     "generate_instrumentation_tests",
@@ -52,7 +53,7 @@ def kt_android_app_instrumentation_tests(
     test_java_package_name = test_java_package if test_java_package else infer_java_package_name()
     instrumentation_target_package = binary_target_package if binary_target_package else infer_java_package_name_from_label(binary_target)
 
-    native.kt_android_library(
+    kt_android_library(
         name = library_name,
         srcs = srcs,
         testonly = 1,
