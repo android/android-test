@@ -20,22 +20,41 @@ package androidx.test.core.graphics
 
 import android.graphics.Bitmap
 import androidx.test.annotation.ExperimentalTestApi
+import androidx.test.platform.io.PlatformTestStorage
 import androidx.test.services.storage.TestStorage
+import java.io.IOException
 
 /**
  * Writes the contents of the [Bitmap] to a compressed png file on [TestStorage]
  *
  * @param name a descriptive base name for the resulting file. '.png' will be appended to this name.
- * @return true if bitmap was successfully compressed and written to stream
+ * @throws IOException if bitmap could not be compressed or written to ds
  */
 @ExperimentalTestApi
-fun Bitmap.writeToTestStorage(name: String): Boolean {
-  TestStorage().openOutputFile("$name.png").use {
-    return this.compress(
-      Bitmap.CompressFormat.PNG,
-      /** PNG is lossless, so quality is ignored. */
-      0,
-      it
-    )
+@Throws(IOException::class)
+fun Bitmap.writeToTestStorage(name: String) {
+  writeToTestStorage(TestStorage(), name)
+}
+
+/**
+ * Writes the contents of the [Bitmap] to a compressed png file to the given [PlatformTestStorage]
+ *
+ * @param testStorage the [PlatformTestStorage] to use
+ * @param name a descriptive base name for the resulting file
+ * @throws IOException if bitmap could not be compressed or written to storage
+ */
+@ExperimentalTestApi
+@Throws(IOException::class)
+fun Bitmap.writeToTestStorage(testStorage: PlatformTestStorage, name: String) {
+  testStorage.openOutputFile("$name.png").use {
+    if (!this.compress(
+        Bitmap.CompressFormat.PNG,
+        /** PNG is lossless, so quality is ignored. */
+        0,
+        it
+      )
+    ) {
+      throw IOException("Failed to compress bitmap")
+    }
   }
 }
