@@ -437,12 +437,10 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
       TestExecutor.Builder executorBuilder = new TestExecutor.Builder(this);
       addListeners(runnerArgs, executorBuilder);
       results = executorBuilder.build().execute(testRequest);
-    } catch (RuntimeException e) {
+    } catch (Throwable t) {
       final String msg = "Fatal exception when running tests";
-      Log.e(LOG_TAG, msg, e);
-      // report the exception to instrumentation out
-      results.putString(
-          Instrumentation.REPORT_KEY_STREAMRESULT, msg + "\n" + Log.getStackTraceString(e));
+      Log.e(LOG_TAG, msg, t);
+      onException(this, t);
     }
     finish(Activity.RESULT_OK, results);
   }
