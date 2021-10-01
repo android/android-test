@@ -289,10 +289,11 @@ public class TestRequestBuilder {
     }
   }
 
-  /** Class that filters out tests annotated with {@link RequiresDevice} when running on emulator */
+  /** Class that filters out tests annotated with {@link RequiresDevice} when running on AVD. */
   @VisibleForTesting
   class RequiresDeviceFilter extends AnnotationExclusionFilter {
 
+    static final String CUTTLEFISH = "cutf_cvm";
     static final String EMULATOR_HARDWARE_GOLDFISH = "goldfish";
     static final String EMULATOR_HARDWARE_RANCHU = "ranchu";
     // TODO(b/65053549) Remove once we have a more generic solution
@@ -301,7 +302,10 @@ public class TestRequestBuilder {
     private final Set<String> emulatorHardwareNames =
         new HashSet<>(
             Arrays.asList(
-                EMULATOR_HARDWARE_GOLDFISH, EMULATOR_HARDWARE_RANCHU, EMULATOR_HARDWARE_GCE));
+                CUTTLEFISH,
+                EMULATOR_HARDWARE_GOLDFISH,
+                EMULATOR_HARDWARE_RANCHU,
+                EMULATOR_HARDWARE_GCE));
 
     RequiresDeviceFilter() {
       super(RequiresDevice.class);

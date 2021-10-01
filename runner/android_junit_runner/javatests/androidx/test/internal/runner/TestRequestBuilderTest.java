@@ -15,6 +15,7 @@
  */
 package androidx.test.internal.runner;
 
+import static androidx.test.internal.runner.TestRequestBuilder.RequiresDeviceFilter.CUTTLEFISH;
 import static androidx.test.internal.runner.TestRequestBuilder.RequiresDeviceFilter.EMULATOR_HARDWARE_GOLDFISH;
 import static androidx.test.internal.runner.TestRequestBuilder.RequiresDeviceFilter.EMULATOR_HARDWARE_RANCHU;
 import static androidx.test.platform.app.InstrumentationRegistry.getArguments;
@@ -966,7 +967,7 @@ public class TestRequestBuilderTest {
     MockitoAnnotations.initMocks(this);
     TestRequestBuilder b = createBuilder(mockDeviceBuild);
     when(mockDeviceBuild.getHardware())
-        .thenReturn(EMULATOR_HARDWARE_GOLDFISH, EMULATOR_HARDWARE_RANCHU);
+        .thenReturn(EMULATOR_HARDWARE_GOLDFISH, EMULATOR_HARDWARE_RANCHU, CUTTLEFISH);
     Request request = b.addTestClass(SampleRequiresDevice.class.getName()).build();
     JUnitCore testRunner = new JUnitCore();
     Result result = testRunner.run(request);
