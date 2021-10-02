@@ -196,8 +196,17 @@ android_library(
 axt_release_lib(
     name = "espresso_core_release",
     custom_package = "androidx.test.espresso.core",
-    jarjar_rules = "release_jarjar_rules.txt",
-    keep_spec = "androidx/test/espresso",
+    # perform a two stage jarjar process
+    # the first stage renames all references to guava,dagger to espresso.internal namespace so
+    # external users aren't exposed to dependency version conflicts with those libraries
+    # the second stage renames guava's ListenableFuture back to its original namespace,
+    # since com.google.guava:listenablefuture is a proper transitive dependency
+    jarjar_rules = [
+        "release_jarjar_rules.txt",
+        "release_jarjar_rules_stage2.txt",
+    ],
+    # ensure to include kotlin_module since those define extension functions
+    keep_spec = "androidx/test/espresso|META-INF/androidx.test.espresso.*.kotlin_module",
     overlapping_jars = [
         "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_release_no_deps.jar",
     ],

@@ -25,7 +25,7 @@ android_library(
 
 axt_release_lib(
     name = "espresso_web_release",
-    jarjar_rules = "release_jarjar_rules.txt",
+    jarjar_rules = ["release_jarjar_rules.txt"],
     keep_spec = "androidx.test.espresso.web",
     proguard_specs = [
         "//:proguard_binary.cfg",

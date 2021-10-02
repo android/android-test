@@ -4,18 +4,18 @@ Ensure UsageTrackerRegistry is updated accordingly when incrementing version num
 """
 
 # AXT versions
-RUNNER_VERSION = "1.4.1-alpha02"  # stable 1.4.0
-RULES_VERSION = "1.4.1-alpha02"  # stable 1.4.0
-MONITOR_VERSION = "1.5.0-alpha02"  # stable 1.4.0
-ESPRESSO_VERSION = "3.5.0-alpha02"  # stable 3.4.0
-CORE_VERSION = "1.4.1-alpha02"  # stable 1.4.0
-ANDROIDX_JUNIT_VERSION = "1.1.4-alpha02"  # stable 1.1.3
-ANDROIDX_TRUTH_VERSION = "1.5.0-alpha02"  # stable 1.4.0
+RUNNER_VERSION = "1.4.1-alpha03"  # stable 1.4.0
+RULES_VERSION = "1.4.1-alpha03"  # stable 1.4.0
+MONITOR_VERSION = "1.5.0-alpha03"  # stable 1.4.0
+ESPRESSO_VERSION = "3.5.0-alpha03"  # stable 3.4.0
+CORE_VERSION = "1.4.1-alpha03"  # stable 1.4.0
+ANDROIDX_JUNIT_VERSION = "1.1.4-alpha03"  # stable 1.1.3
+ANDROIDX_TRUTH_VERSION = "1.5.0-alpha03"  # stable 1.4.0
 UIAUTOMATOR_VERSION = "2.2.0"
 JANK_VERSION = "1.0.1"
-SERVICES_VERSION = "1.4.1-alpha02"  # stable 1.4.0
-ORCHESTRATOR_VERSION = "1.4.1-alpha02"  # stable 1.4.0
-ANNOTATION_VERSION = "1.0.0-alpha01"
+SERVICES_VERSION = "1.4.1-alpha03"  # stable 1.4.0
+ORCHESTRATOR_VERSION = "1.4.1-alpha03"  # stable 1.4.0
+ANNOTATION_VERSION = "1.0.0-alpha02"
 
 # Maven dependency versions
 ANDROIDX_ANNOTATION_VERSION = "1.2.0"

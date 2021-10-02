@@ -10,7 +10,7 @@ def axt_release_lib(
     proguard_specs = None,
     proguard_library = None,
     multidex = "off",
-    jarjar_rules = "//build_extensions:noJarJarRules.txt",
+    jarjar_rules = ["//build_extensions:noJarJarRules.txt"],
     keep_spec = None,
     remove_spec = None,
     overlapping_jars = [],
@@ -81,30 +81,37 @@ def axt_release_lib(
   if proguard_specs:
     expected_output = ":%s_all_proguard.jar" % name
 
-  # Step 3. Rename classes via jarjar
+  # Step 3. Rename classes via series of jarjar transforms
+
   native.java_binary(
     name = "jarjar_bin",
     main_class = "org.pantsbuild.jarjar.Main",
     runtime_deps = ["@maven//:org_pantsbuild_jarjar"],
     visibility = visibility,
   )
-  native.genrule(
-      name = "%s_jarjared" % name,
-      srcs = [expected_output],
-      outs = ["%s_jarjared.jar" % name],
-      cmd = ("$(location :jarjar_bin) process " +
-               "$(location %s) '$<' '$@'") % jarjar_rules,
-      tools = [
-          jarjar_rules,
-	        ":jarjar_bin",
-      ],
-      visibility = visibility,
-  )
+  i = 0
+  for jarjar_rule in jarjar_rules:
+      input = expected_output
+      jarjar_rule_name = "%s_jarjared_%d" % (name, i)
+      expected_output = "%s.jar" % jarjar_rule_name
+      native.genrule(
+          name = jarjar_rule_name,
+          srcs = [input],
+          outs = [expected_output],
+          cmd = ("$(location :jarjar_bin) process " +
+                 "$(location %s) '$<' '$@'") % jarjar_rule,
+          tools = [
+              jarjar_rule,
+              ":jarjar_bin",
+          ],
+          visibility = visibility,
+      )
+      i = i + 1
 
   # Step 4. Strip out external dependencies. This produces the final name_no_deps.jar.
   remove_from_jar(
       name = "%s_no_deps" % name,
-      jar = ":%s_jarjared.jar" % name,
+      jar = expected_output,
       keep_spec = keep_spec,
       remove_spec = remove_spec,
       overlapping_jars = overlapping_jars,

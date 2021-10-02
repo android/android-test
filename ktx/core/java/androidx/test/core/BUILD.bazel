@@ -19,6 +19,11 @@ kt_android_library(
     srcs = glob(
         ["**/*.kt"],
     ),
+    # not supported in bazel
+    #kotlincopts = [
+    #    "-module-name",
+    #    "androidx.test.core.ktx",
+    #],
     deps = [
         "//:androidx_lifecycle_common",
         "//core",

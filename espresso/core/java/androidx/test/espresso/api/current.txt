@@ -867,6 +867,13 @@ package androidx.test.espresso.remote {
 
 }
 
+package androidx.test.espresso.screenshot {
+
+  public final class ViewInteractionCapture {
+  }
+
+}
+
 package androidx.test.espresso.util {
 
   public final class ActivityLifecycles {

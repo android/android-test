@@ -6,6 +6,12 @@ package(default_visibility = ["//visibility:public"])
 kt_android_library(
     name = "screenshot",
     srcs = glob(["*.kt"]),
+    # generate the kotlin_module file that defines extensions in the right place
+    # kotlinopts not supported in bazel
+    #kotlincopts = [
+    #    "-module-name",
+    #    "androidx.test.espresso.screenshot",
+    #],
     deps = [
         "//:androidx_annotation",
         "//annotation",

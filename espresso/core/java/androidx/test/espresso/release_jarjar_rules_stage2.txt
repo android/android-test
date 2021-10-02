@@ -1,0 +1,1 @@
+rule androidx.test.espresso.core.internal.deps.guava.util.concurrent.ListenableFuture com.google.common.util.concurrent.ListenableFuture
