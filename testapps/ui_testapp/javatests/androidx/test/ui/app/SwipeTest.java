@@ -17,6 +17,7 @@
 package androidx.test.ui.app;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.slowSwipeLeft;
 import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.swipeRight;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -32,7 +33,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/** Demonstrates use of {@link ViewActions#swipeLeft()} and {@link ViewActions#swipeRight()}. */
+/**
+ * Demonstrates use of {@link ViewActions#swipeLeft()}, {@link ViewActions#slowSwipeLeft()}, and
+ * {@link ViewActions#swipeRight()}.
+ */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class SwipeTest {
@@ -51,6 +55,18 @@ public class SwipeTest {
     onView(withText("Position #1")).check(matches(isDisplayed()));
 
     onView(withId(R.id.pager_layout)).perform(swipeLeft());
+    onView(withText("Position #2")).check(matches(isDisplayed()));
+  }
+
+  @Test
+  public void testSwipingSlowlyThroughViews() {
+    // Should be on position 0 to start with.
+    onView(withText("Position #0")).check(matches(isDisplayed()));
+
+    onView(withId(R.id.pager_layout)).perform(slowSwipeLeft());
+    onView(withText("Position #1")).check(matches(isDisplayed()));
+
+    onView(withId(R.id.pager_layout)).perform(slowSwipeLeft());
     onView(withText("Position #2")).check(matches(isDisplayed()));
   }
 

@@ -218,8 +218,10 @@ public final class ViewActions {
   }
 
   /**
-   * Returns an action that performs a swipe right-to-left across the vertical center of the view.
-   * The swipe doesn't start at the very edge of the view, but is a bit offset.<br>
+   * Returns an action that performs a fast swipe right-to-left across the vertical center of the
+   * view. {@link #slowSwipeLeft()} should be used instead if a slow deliberate swipe is needed
+   * (e.g. to avoid fling). The swipe doesn't start at the very edge of the view, but is a bit
+   * offset.<br>
    * <br>
    * View constraints:
    *
@@ -231,6 +233,25 @@ public final class ViewActions {
     return actionWithAssertions(
         new GeneralSwipeAction(
             Swipe.FAST,
+            GeneralLocation.translate(GeneralLocation.CENTER_RIGHT, -EDGE_FUZZ_FACTOR, 0),
+            GeneralLocation.CENTER_LEFT,
+            Press.FINGER));
+  }
+
+  /**
+   * Similar to {@link #swipeLeft()} but performs a slow and deliberate swipe instead. This is
+   * useful, for example, to avoid fling. <br>
+   * <br>
+   * View constraints:
+   *
+   * <ul>
+   *   <li>must be displayed on screen
+   *       <ul>
+   */
+  public static ViewAction slowSwipeLeft() {
+    return actionWithAssertions(
+        new GeneralSwipeAction(
+            Swipe.SLOW,
             GeneralLocation.translate(GeneralLocation.CENTER_RIGHT, -EDGE_FUZZ_FACTOR, 0),
             GeneralLocation.CENTER_LEFT,
             Press.FINGER));
