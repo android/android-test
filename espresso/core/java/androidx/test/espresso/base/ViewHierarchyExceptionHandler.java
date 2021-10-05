@@ -20,7 +20,7 @@ import static com.google.common.base.Throwables.throwIfUnchecked;
 
 import android.util.Log;
 import android.view.View;
-import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.RootViewException;
 import androidx.test.espresso.base.DefaultFailureHandler.TypedFailureHandler;
 import androidx.test.espresso.util.HumanReadables;
 import androidx.test.platform.io.PlatformTestStorage;
@@ -29,31 +29,33 @@ import java.io.OutputStream;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.hamcrest.Matcher;
 
-/** An Espresso failure handler that handles an {@link NoMatchingViewException}. */
-class NoMatchingViewExceptionHandler extends TypedFailureHandler<NoMatchingViewException> {
-  private static final String TAG = NoMatchingViewExceptionHandler.class.getSimpleName();
+/**
+ * An Espresso failure handler that handles a {@link RootViewException} to dump the full view
+ * hierarchy to an artifact file.
+ */
+class ViewHierarchyExceptionHandler<T extends Throwable & RootViewException>
+    extends TypedFailureHandler<T> {
+  private static final String TAG = ViewHierarchyExceptionHandler.class.getSimpleName();
 
   private final PlatformTestStorage testStorage;
   private final AtomicInteger failureCount;
 
-  public NoMatchingViewExceptionHandler(
-      PlatformTestStorage testStorage,
-      AtomicInteger failureCount,
-      Class<NoMatchingViewException> expectedType) {
+  public ViewHierarchyExceptionHandler(
+      PlatformTestStorage testStorage, AtomicInteger failureCount, Class<T> expectedType) {
     super(expectedType);
     this.testStorage = checkNotNull(testStorage);
     this.failureCount = failureCount;
   }
 
   @Override
-  public void handleSafely(NoMatchingViewException error, Matcher<View> viewMatcher) {
+  public void handleSafely(T error, Matcher<View> viewMatcher) {
     dumpFullViewHierarchyToFile(error);
     error.setStackTrace(Thread.currentThread().getStackTrace());
     throwIfUnchecked(error);
     throw new RuntimeException(error);
   }
 
-  private void dumpFullViewHierarchyToFile(NoMatchingViewException error) {
+  private void dumpFullViewHierarchyToFile(T error) {
     String viewHierarchyMsg =
         HumanReadables.getViewHierarchyErrorMessage(error.getRootView(), null, "", null);
     String viewHierarchyFile = "view-hierarchy-" + failureCount + ".txt";

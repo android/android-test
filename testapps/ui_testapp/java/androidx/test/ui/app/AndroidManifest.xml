@@ -178,8 +178,11 @@
         android:name=".IdlingUIActivity" />
     <activity
         android:label="View With 'textAllCaps' Activity"
-        android:name=".ViewWithTextAllCapsActivity">
-    </activity>
+        android:name=".ViewWithTextAllCapsActivity" />
+    <activity
+        android:label="Duplicate View Activity"
+        android:name=".DuplicateViewActivity"
+        android:exported="false" />
     <service android:name=".ChatHeadService"/>
 
     <provider

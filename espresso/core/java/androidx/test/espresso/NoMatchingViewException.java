@@ -38,13 +38,13 @@ import org.hamcrest.Matcher;
  * thread, it would be invalid to touch the view on the instrumentation thread. Also the view
  * hierarchy may have changed since exception creation (leading to more confusion).
  */
-public final class NoMatchingViewException extends RuntimeException implements EspressoException {
+public final class NoMatchingViewException extends RuntimeException implements RootViewException {
 
   private Matcher<? super View> viewMatcher;
   private View rootView;
   private List<View> adapterViews = Lists.newArrayList();
   private boolean includeViewHierarchy = true;
-  private EspressoOptional<String> adapterViewWarning = EspressoOptional.<String>absent();
+  private EspressoOptional<String> adapterViewWarning = EspressoOptional.absent();
 
   private NoMatchingViewException(String description) {
     super(description);
@@ -71,6 +71,7 @@ public final class NoMatchingViewException extends RuntimeException implements E
   }
 
   /** Returns the root view where this exception is thrown. */
+  @Override
   public View getRootView() {
     return rootView;
   }

@@ -5,6 +5,7 @@ licenses(["notice"])  # Apache License 2.0
 
 TESTAPP_TEST_SRCS = glob(
     ["**/*.java"],
+    exclude = ["DuplicateViewActivityTest.java"],
 )
 
 TESTAPP_DEPS = [

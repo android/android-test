@@ -42,6 +42,7 @@ BASE_LAYER_INTERFACES = [
     "InjectEventSecurityException.java",
     "PerformException.java",
     "Root.java",
+    "RootViewException.java",
     "ViewFinder.java",
     "UiController.java",
 ]

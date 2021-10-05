@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.View;
 import androidx.test.core.app.DeviceCapture;
 import androidx.test.core.graphics.BitmapStorage;
+import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.EspressoException;
 import androidx.test.espresso.FailureHandler;
 import androidx.test.espresso.NoMatchingViewException;
@@ -69,8 +70,11 @@ public final class DefaultFailureHandler implements FailureHandler {
     // AssertionError ----------->
     this.testStorage = testStorage;
     handlers.add(
-        new NoMatchingViewExceptionHandler(
+        new ViewHierarchyExceptionHandler<>(
             testStorage, failureCount, NoMatchingViewException.class));
+    handlers.add(
+        new ViewHierarchyExceptionHandler<>(
+            testStorage, failureCount, AmbiguousViewMatcherException.class));
     handlers.add(new PerformExceptionHandler(checkNotNull(appContext), PerformException.class));
     // On API 15, junit.framework.AssertionFailedError is not a subclass of AssertionError.
     handlers.add(new AssertionErrorHandler(AssertionFailedError.class, AssertionError.class));

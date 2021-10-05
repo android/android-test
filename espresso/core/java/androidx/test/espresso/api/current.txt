@@ -1,7 +1,8 @@
 // Signature format: 3.0
 package androidx.test.espresso {
 
-  public final class AmbiguousViewMatcherException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
+  public final class AmbiguousViewMatcherException extends java.lang.RuntimeException implements androidx.test.espresso.RootViewException {
+    method public android.view.View! getRootView();
   }
 
   public static class AmbiguousViewMatcherException.Builder {
@@ -100,7 +101,7 @@ package androidx.test.espresso {
     method public static androidx.test.espresso.NoMatchingRootException! create(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, java.util.List<androidx.test.espresso.Root!>!);
   }
 
-  public final class NoMatchingViewException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
+  public final class NoMatchingViewException extends java.lang.RuntimeException implements androidx.test.espresso.RootViewException {
     method public android.view.View! getRootView();
     method public String! getViewMatcherDescription();
   }
@@ -142,6 +143,10 @@ package androidx.test.espresso {
     method public androidx.test.espresso.Root! build();
     method public androidx.test.espresso.Root.Builder! withDecorView(android.view.View!);
     method public androidx.test.espresso.Root.Builder! withWindowLayoutParams(android.view.WindowManager.LayoutParams!);
+  }
+
+  public interface RootViewException extends androidx.test.espresso.EspressoException {
+    method public android.view.View! getRootView();
   }
 
   public interface UiController {

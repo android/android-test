@@ -171,6 +171,9 @@
     <activity
         android:label="Idling UI Activity"
         android:name=".IdlingUIActivity" />
+    <activity
+        android:label="Duplicate View Activity"
+        android:name=".DuplicateViewActivity" />
 
     <service android:name=".ChatHeadService"/>
     <provider

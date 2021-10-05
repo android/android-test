@@ -40,7 +40,7 @@ import org.hamcrest.Matcher;
  * hierarchy may have changed since exception creation (leading to more confusion).
  */
 public final class AmbiguousViewMatcherException extends RuntimeException
-    implements EspressoException {
+    implements RootViewException {
 
   private Matcher<? super View> viewMatcher;
   private View rootView;
@@ -85,6 +85,12 @@ public final class AmbiguousViewMatcherException extends RuntimeException
               Locale.ROOT, "Multiple Ambiguous Views found for matcher %s", builder.viewMatcher);
     }
     return errorMessage;
+  }
+
+  /** Returns the root view where this exception is thrown. */
+  @Override
+  public View getRootView() {
+    return rootView;
   }
 
   /** Builder for {@link AmbiguousViewMatcherException}. */
