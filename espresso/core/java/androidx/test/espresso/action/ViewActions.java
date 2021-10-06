@@ -141,7 +141,7 @@ public final class ViewActions {
    *
    * <ul>
    *   <li>must be displayed on screen
-   *       <ul>
+   * </ul>
    */
   public static ViewAction clearText() {
     return actionWithAssertions(new ReplaceTextAction(""));
@@ -157,7 +157,7 @@ public final class ViewActions {
    *
    * <ul>
    *   <li>must be displayed on screen
-   *       <ul>
+   * </ul>
    *
    * @param inputDevice source input device of the click. Example: {@link InputDevice#SOURCE_MOUSE}
    * @param buttonState buttonState associated with the click. Example: {@link
@@ -203,7 +203,7 @@ public final class ViewActions {
    * <ul>
    *   <li>must be displayed on screen
    *   <li>any constraints of the rollbackAction
-   *       <ul>
+   * </ul>
    */
   public static ViewAction click(ViewAction rollbackAction) {
     checkNotNull(rollbackAction);
@@ -225,7 +225,7 @@ public final class ViewActions {
    *
    * <ul>
    *   <li>must be displayed on screen
-   *       <ul>
+   * </ul>
    */
   public static ViewAction swipeLeft() {
     return actionWithAssertions(
@@ -244,7 +244,7 @@ public final class ViewActions {
    *
    * <ul>
    *   <li>must be displayed on screen
-   *       <ul>
+   * </ul>
    */
   public static ViewAction swipeRight() {
     return actionWithAssertions(
@@ -263,7 +263,7 @@ public final class ViewActions {
    *
    * <ul>
    *   <li>must be displayed on screen
-   *       <ul>
+   * </ul>
    */
   public static ViewAction swipeDown() {
     return actionWithAssertions(
@@ -282,7 +282,7 @@ public final class ViewActions {
    *
    * <ul>
    *   <li>must be displayed on screen
-   *       <ul>
+   * </ul>
    */
   public static ViewAction swipeUp() {
     return actionWithAssertions(
@@ -350,7 +350,7 @@ public final class ViewActions {
    *
    * <ul>
    *   <li>must be displayed on screen
-   *       <ul>
+   * </ul>
    */
   public static ViewAction doubleClick() {
     return actionWithAssertions(
@@ -369,7 +369,7 @@ public final class ViewActions {
    *
    * <ul>
    *   <li>must be displayed on screen
-   *       <ul>
+   * </ul>
    */
   public static ViewAction longClick() {
     return actionWithAssertions(
@@ -389,7 +389,7 @@ public final class ViewActions {
    * <ul>
    *   <li>must be a descendant of ScrollView
    *   <li>must have visibility set to View.VISIBLE
-   *       <ul>
+   * </ul>
    */
   public static ViewAction scrollTo() {
     return actionWithAssertions(new ScrollToAction());
@@ -407,7 +407,7 @@ public final class ViewActions {
    *   <li>must be displayed on screen
    *   <li>must support input methods
    *   <li>must be already focused
-   *       <ul>
+   * </ul>
    */
   public static ViewAction typeTextIntoFocusedView(String stringToBeTyped) {
     return actionWithAssertions(new TypeTextAction(stringToBeTyped, false /* tapToFocus */));
@@ -425,7 +425,7 @@ public final class ViewActions {
    * <ul>
    *   <li>must be displayed on screen
    *   <li>must support input methods
-   *       <ul>
+   * </ul>
    */
   public static ViewAction typeText(String stringToBeTyped) {
     return actionWithAssertions(new TypeTextAction(stringToBeTyped));
@@ -439,7 +439,7 @@ public final class ViewActions {
    * <ul>
    *   <li>must be displayed on screen
    *   <li>must be assignable from EditText
-   *       <ul>
+   * </ul>
    */
   public static ViewAction replaceText(@Nonnull String stringToBeSet) {
     return actionWithAssertions(new ReplaceTextAction(stringToBeSet));
@@ -488,7 +488,7 @@ public final class ViewActions {
    *   <li>must be displayed on screen
    *   <li>must be assignable from TextView
    *   <li>must have links
-   *       <ul>
+   * </ul>
    */
   public static ViewAction openLink(Matcher<String> linkTextMatcher, Matcher<Uri> uriMatcher) {
     checkNotNull(linkTextMatcher);
