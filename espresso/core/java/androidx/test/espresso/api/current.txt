@@ -431,6 +431,7 @@ package androidx.test.espresso.action {
     method public static androidx.test.espresso.ViewAction! repeatedlyUntil(androidx.test.espresso.ViewAction!, org.hamcrest.Matcher<android.view.View!>!, int);
     method public static androidx.test.espresso.ViewAction! replaceText(String);
     method public static androidx.test.espresso.ViewAction! scrollTo();
+    method public static androidx.test.espresso.ViewAction! slowSwipeLeft();
     method public static androidx.test.espresso.ViewAction! swipeDown();
     method public static androidx.test.espresso.ViewAction! swipeLeft();
     method public static androidx.test.espresso.ViewAction! swipeRight();
