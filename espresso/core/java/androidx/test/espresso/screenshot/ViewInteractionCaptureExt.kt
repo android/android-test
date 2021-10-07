@@ -28,11 +28,11 @@ import androidx.test.espresso.IdlingPolicies
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.matcher.ViewMatchers
 import com.google.common.util.concurrent.SettableFuture
 import java.util.Locale
 import java.util.concurrent.ExecutionException
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers.any
 
 /**
  * Captures an image of the matching view into a {@link Bitmap}.
@@ -70,7 +70,7 @@ private class CaptureImageException internal constructor(message: String?, e: Ex
 private class ImageCaptureViewAction
 internal constructor(private val bitmapFuture: SettableFuture<Bitmap>) : ViewAction {
   override fun getConstraints(): Matcher<View> {
-    return ViewMatchers.isDisplayingAtLeast(90)
+    return any(View::class.java)
   }
 
   override fun getDescription(): String {
