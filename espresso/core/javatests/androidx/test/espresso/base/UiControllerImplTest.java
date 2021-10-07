@@ -509,4 +509,10 @@ public class UiControllerImplTest {
         "UiController tasks never interrupted",
         latch.await(timeToWaitForIdle - 100, TimeUnit.MILLISECONDS));
   }
+
+  /** Verify uiController can be initialized on instrumentation thread. */
+  @Test
+  public void interruptInitialization() {
+    uiController.get().interruptEspressoTasks();
+  }
 }

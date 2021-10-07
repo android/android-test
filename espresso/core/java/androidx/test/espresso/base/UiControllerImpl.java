@@ -150,8 +150,8 @@ final class UiControllerImpl
           new ThreadFactoryBuilder().setNameFormat("Espresso Key Event #%d").build());
   private final Looper mainLooper;
   private final IdlingResourceRegistry idlingResourceRegistry;
+  private final Handler controllerHandler;
 
-  private Handler controllerHandler;
   // only updated on main thread.
   private MainThreadInterrogation interrogation;
   private int generation = 0;
@@ -175,6 +175,7 @@ final class UiControllerImpl
     this.dynamicIdleProvider = checkNotNull(dynamicIdle);
     this.mainLooper = checkNotNull(mainLooper);
     this.idlingResourceRegistry = checkNotNull(idlingResourceRegistry);
+    controllerHandler = new Handler(mainLooper, this);
   }
 
   @SuppressWarnings("deprecation")
@@ -182,7 +183,6 @@ final class UiControllerImpl
   public boolean injectKeyEvent(final KeyEvent event) throws InjectEventSecurityException {
     checkNotNull(event);
     checkState(Looper.myLooper() == mainLooper, "Expecting to be on main thread!");
-    initialize();
     loopMainThreadUntilIdle();
 
     FutureTask<Boolean> injectTask =
@@ -222,7 +222,6 @@ final class UiControllerImpl
   public boolean injectMotionEvent(final MotionEvent event) throws InjectEventSecurityException {
     checkNotNull(event);
     checkState(Looper.myLooper() == mainLooper, "Expecting to be on main thread!");
-    initialize();
     FutureTask<Boolean> injectTask =
         new SignalingTask<Boolean>(
             new Callable<Boolean>() {
@@ -260,7 +259,6 @@ final class UiControllerImpl
     checkNotNull(events);
     checkState(!Iterables.isEmpty(events), "Expecting non-empty events to inject");
     checkState(Looper.myLooper() == mainLooper, "Expecting to be on main thread!");
-    initialize();
     final Iterator<MotionEvent> mei = events.iterator();
     final long downTime = Iterables.getFirst(events, null).getEventTime();
     final long shift = SystemClock.uptimeMillis() - downTime;
@@ -314,7 +312,6 @@ final class UiControllerImpl
   public boolean injectString(String str) throws InjectEventSecurityException {
     checkNotNull(str);
     checkState(Looper.myLooper() == mainLooper, "Expecting to be on main thread!");
-    initialize();
 
     // No-op if string is empty.
     if (str.isEmpty()) {
@@ -400,7 +397,6 @@ final class UiControllerImpl
 
   @Override
   public void loopMainThreadUntilIdle() {
-    initialize();
     checkState(Looper.myLooper() == mainLooper, "Expecting to be on main thread!");
     IdleNotifier<IdleNotificationCallback> dynamicIdle = dynamicIdleProvider.get();
     do {
@@ -456,8 +452,6 @@ final class UiControllerImpl
 
   @Override
   public void loopMainThreadForAtLeast(long millisDelay) {
-    initialize();
-
     checkState(Looper.myLooper() == mainLooper, "Expecting to be on main thread!");
     checkState(!IdleCondition.DELAY_HAS_PAST.isSignaled(conditionSet), "recursion detected!");
     checkArgument(millisDelay > 0);
@@ -604,7 +598,6 @@ final class UiControllerImpl
 
   @Override
   public void interruptEspressoTasks() {
-    initialize();
     controllerHandler.post(
         new Runnable() {
           @Override
@@ -724,12 +717,6 @@ final class UiControllerImpl
         }
       }
       return conditionsMet;
-    }
-  }
-
-  private void initialize() {
-    if (controllerHandler == null) {
-      controllerHandler = new Handler(this);
     }
   }
 
