@@ -20,9 +20,19 @@ android_library(
     ),
     deps = [
         ":compiletime_hidden_apis",
+        ":errorprone_neverlink",
         ":runtime_hidden_apis",
         "//:androidx_annotation",
         "//annotation",
+    ],
+)
+
+# avoid the runtime dependency on errorprone
+java_library(
+    name = "errorprone_neverlink",
+    neverlink = 1,
+    exports = [
+        "@maven//:com_google_errorprone_error_prone_annotations",
     ],
 )
 

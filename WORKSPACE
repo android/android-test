@@ -104,6 +104,7 @@ maven_install(
         "com.google.dagger:dagger-compiler:2.38.1",
         "com.google.dagger:dagger-producers:2.38.1",
         "com.google.dagger:dagger:2.38.1",
+        "com.google.errorprone:error_prone_annotations:2.9.0",
         "com.google.errorprone:javac-shaded:9-dev-r4023-3",
         "com.google.flogger:flogger-system-backend:0.4",
         "com.google.flogger:flogger:0.4",
