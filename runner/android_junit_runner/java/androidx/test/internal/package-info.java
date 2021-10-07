@@ -15,4 +15,8 @@
  */
 
 /** @hide */
+@RestrictTo(Scope.LIBRARY)
 package androidx.test.internal;
+
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;

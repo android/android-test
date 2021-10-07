@@ -17,6 +17,8 @@
 package androidx.test.runner;
 
 import android.util.Log;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import androidx.test.internal.util.AndroidRunnerParams;
 import java.lang.reflect.InvocationTargetException;
@@ -50,6 +52,7 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
    *
    * @hide
    */
+  @RestrictTo(Scope.LIBRARY)
   public AndroidJUnit4(Class<?> klass, AndroidRunnerParams runnerParams)
       throws InitializationError {
     // this is expected to be called when in Android environment.

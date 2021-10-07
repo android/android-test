@@ -15,6 +15,8 @@
  */
 package androidx.test.espresso.internal.inject;
 
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import javax.inject.Qualifier;
@@ -24,6 +26,7 @@ import javax.inject.Qualifier;
  *
  * @hide
  */
+@RestrictTo(Scope.LIBRARY)
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TargetContext {}

@@ -19,6 +19,8 @@ package androidx.test.espresso;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.view.View;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.test.espresso.base.PlatformTestStorageModule;
 import androidx.test.espresso.base.RootViewPicker;
 import androidx.test.espresso.base.ViewFinderImpl;
@@ -37,6 +39,7 @@ import org.hamcrest.Matcher;
  *
  * @hide
  */
+@RestrictTo(Scope.LIBRARY)
 @Module(includes = {PlatformTestStorageModule.class})
 class ViewInteractionModule {
 

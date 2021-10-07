@@ -17,7 +17,7 @@
 package androidx.test.internal.util;
 
 import android.os.Looper;
-import androidx.test.annotation.InternalTestApi;
+import androidx.annotation.RestrictTo;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.ThreadChecker;
 import java.util.List;
@@ -25,8 +25,10 @@ import java.util.List;
 /**
  * Utility methods for checking null references, method arguments, and thread state to simplify
  * other library code.
+ *
+ * @hide
  */
-@InternalTestApi // used by runner and rules
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by runner and rules
 public final class Checks {
 
   private Checks() {}

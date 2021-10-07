@@ -19,6 +19,8 @@ package androidx.test.espresso.base;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.test.espresso.InjectEventSecurityException;
 import androidx.test.espresso.UiController;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
@@ -31,6 +33,7 @@ import javax.inject.Singleton;
  *
  * @hide
  */
+@RestrictTo(Scope.LIBRARY)
 @Module
 public class UiControllerModule {
 

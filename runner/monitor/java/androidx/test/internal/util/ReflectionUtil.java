@@ -16,7 +16,7 @@
 package androidx.test.internal.util;
 
 import android.util.Log;
-import androidx.test.annotation.InternalTestApi;
+import androidx.annotation.RestrictTo;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -24,9 +24,10 @@ import java.lang.reflect.Method;
  * Utility methods for invoking calls via reflection.
  *
  * @deprecated use {@link androidx.test.platform.reflect.ReflectiveMethod} instead.
+ * @hide
  */
 @Deprecated
-@InternalTestApi // used by runner 1.4.0
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by runner 1.4.0
 public class ReflectionUtil {
   private static final String TAG = "ReflectionUtil";
   /** Data class for reflective method call parameters. */
@@ -55,7 +56,12 @@ public class ReflectionUtil {
       return values;
     }
   }
-  /** Thrown when there was a failure making a reflective call. */
+  /**
+   * Thrown when there was a failure making a reflective call.
+   *
+   * @hide
+   */
+  @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by runner 1.4.0
   public static class ReflectionException extends Exception {
     ReflectionException(Exception cause) {
       super("Reflective call failed", cause);

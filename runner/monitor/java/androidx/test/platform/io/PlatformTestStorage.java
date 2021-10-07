@@ -93,7 +93,6 @@ public interface PlatformTestStorage {
    *
    * @param pathname path to the internal file. Should not be null.
    * @return an InputStream to the given test file.
-   * @hide
    */
   InputStream openInternalInputFile(String pathname) throws IOException;
 
@@ -102,7 +101,6 @@ public interface PlatformTestStorage {
    *
    * @param pathname path to the internal file. Should not be null.
    * @return an OutputStream to the given output file.
-   * @hide
    */
   OutputStream openInternalOutputFile(String pathname) throws IOException;
 }

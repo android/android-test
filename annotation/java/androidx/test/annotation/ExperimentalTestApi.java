@@ -30,6 +30,8 @@ import java.lang.annotation.Target;
  * exempt from any compatibility guarantees made by its containing library. Note that the presence
  * of this annotation implies nothing about the quality or performance of the API in question, only
  * the fact that it is not "API-frozen."
+ *
+ * @hide
  */
 @Retention(RetentionPolicy.CLASS)
 @Target({

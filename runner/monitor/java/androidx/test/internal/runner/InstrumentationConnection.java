@@ -37,8 +37,8 @@ import android.os.Parcelable;
 import android.os.RemoteException;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.InternalTestApi;
 import androidx.test.internal.util.ParcelableIBinder;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.MonitoringInstrumentation;
@@ -70,8 +70,10 @@ import java.util.concurrent.TimeUnit;
  * use any functionality of this class. Call {@link #terminate()} after using
  * InstrumentationConnection to release any resources. Failure to do so will lead to memory leaks
  * and unexpected behavior.
+ *
+ * @hide
  */
-@InternalTestApi // used by espresso remote
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by espresso remote
 public class InstrumentationConnection {
   private static final String TAG = "InstrConnection";
 

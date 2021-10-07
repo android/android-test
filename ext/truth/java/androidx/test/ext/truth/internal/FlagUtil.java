@@ -15,6 +15,8 @@
  */
 package androidx.test.ext.truth.internal;
 
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,7 @@ import java.util.List;
  *
  * @hide
  */
+@RestrictTo(Scope.LIBRARY)
 public final class FlagUtil {
 
   private FlagUtil() {}
@@ -33,6 +36,7 @@ public final class FlagUtil {
    *
    * @hide
    */
+  @RestrictTo(Scope.LIBRARY)
   public static List<String> flagNames(int flags) {
     List<String> flagStrings = new ArrayList<>();
     for (int i = 0; i < 32; i++) {

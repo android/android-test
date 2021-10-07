@@ -16,15 +16,17 @@
 package androidx.test.internal.platform.os;
 
 import android.view.View;
-import androidx.test.annotation.InternalTestApi;
+import androidx.annotation.RestrictTo;
 
 /**
  * An API for advancing the looper when its in a paused or controlled state.
  *
  * <p>Implementations should be loaded via {@link
  * androidx.test.internal.platform.ServiceLoaderWrapper}
+ *
+ * @hide
  */
-@InternalTestApi // used by core and espresso
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by core and espresso
 public interface ControlledLooper {
 
   /**

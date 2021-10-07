@@ -17,10 +17,14 @@
 package androidx.test.internal.util;
 
 import android.util.Log;
-import androidx.test.annotation.InternalTestApi;
+import androidx.annotation.RestrictTo;
 
-/** Util methods related to logging, using the android.util.Log class. */
-@InternalTestApi // used by espresso
+/**
+ * Util methods related to logging, using the android.util.Log class.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by espresso
 public final class LogUtil {
   private static volatile String myProcName = null;
 

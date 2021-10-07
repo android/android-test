@@ -21,6 +21,8 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.util.Log;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.test.internal.runner.RunnerArgs;
 import androidx.test.internal.runner.tracker.UsageTracker;
 import androidx.test.internal.runner.tracker.UsageTrackerRegistry;
@@ -33,6 +35,7 @@ public class UsageTrackerFacilitator implements UsageTracker {
   private final boolean shouldTrackUsage;
 
   /** @hide */
+  @RestrictTo(Scope.LIBRARY)
   public UsageTrackerFacilitator(@NonNull RunnerArgs runnerArgs) {
     checkNotNull(runnerArgs, "runnerArgs cannot be null!");
 
@@ -53,6 +56,7 @@ public class UsageTrackerFacilitator implements UsageTracker {
   }
 
   /** @hide */
+  @RestrictTo(Scope.LIBRARY)
   public void registerUsageTracker(@Nullable UsageTracker usageTracker) {
     if (usageTracker != null && shouldTrackUsage()) {
       Log.i(TAG, "Usage tracking enabled");

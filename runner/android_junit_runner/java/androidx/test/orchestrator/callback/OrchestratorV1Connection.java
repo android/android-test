@@ -21,6 +21,8 @@ import static androidx.test.orchestrator.callback.BundleConverter.getBundleFromT
 
 import android.os.RemoteException;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.test.internal.events.client.TestDiscoveryEventService;
 import androidx.test.internal.events.client.TestEventClientConnectListener;
 import androidx.test.internal.events.client.TestEventClientException;
@@ -37,6 +39,7 @@ import androidx.test.services.events.run.TestRunEvent;
  *
  * @hide
  */
+@RestrictTo(Scope.LIBRARY)
 public final class OrchestratorV1Connection
     extends TestEventServiceConnectionBase<OrchestratorCallback>
     implements TestRunEventService, TestDiscoveryEventService {

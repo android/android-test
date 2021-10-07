@@ -27,10 +27,9 @@ import javax.inject.Singleton
 /**
  * Dagger module for DeviceController.
  *
- * @hide
  */
 @Module
-class DeviceControllerModule {
+internal class DeviceControllerModule {
   companion object {
     /**
      * Detects if the test is running on an emulator or a real device using some heuristics based on

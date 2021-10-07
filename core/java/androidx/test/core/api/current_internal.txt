@@ -1,0 +1,20 @@
+// Signature format: 3.0
+package androidx.test.core.app {
+
+  public final class DeviceCapture {
+    method @RequiresApi(android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static android.graphics.Bitmap takeScreenshotNoSync() throws java.lang.RuntimeException;
+  }
+
+}
+
+package androidx.test.core.internal.os {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class HandlerExecutor implements java.util.concurrent.Executor {
+    ctor public HandlerExecutor(android.os.Handler handler);
+    method public void execute(Runnable command);
+    method public android.os.Handler getHandler();
+    property public final android.os.Handler handler;
+  }
+
+}
+

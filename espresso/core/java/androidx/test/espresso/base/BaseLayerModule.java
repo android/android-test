@@ -20,6 +20,8 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.test.espresso.FailureHandler;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
@@ -49,6 +51,7 @@ import javax.inject.Singleton;
  *
  * @hide
  */
+@RestrictTo(Scope.LIBRARY)
 @Module(includes = {PlatformTestStorageModule.class})
 public class BaseLayerModule {
 

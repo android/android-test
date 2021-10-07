@@ -1,6 +1,6 @@
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANNOTATION_VERSION", "CORE_VERSION", "ESPRESSO_VERSION", "HAMCREST_VERSION", "KOTLIN_VERSION", "RUNNER_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANNOTATION_VERSION", "CORE_VERSION", "ESPRESSO_VERSION", "HAMCREST_VERSION", "KOTLIN_VERSION", "RUNNER_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 load("//build_extensions:remove_from_jar.bzl", "remove_from_jar")
 
@@ -258,6 +258,7 @@ maven_artifact(
     name = "espresso_core_maven_artifact",
     src = ":espresso_core_release.aar",
     artifact_deps = [
+        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
         "androidx.test:core:%s" % CORE_VERSION,
         "androidx.test:runner:%s" % RUNNER_VERSION,
         "androidx.test.espresso:espresso-idling-resource:%s" % ESPRESSO_VERSION,

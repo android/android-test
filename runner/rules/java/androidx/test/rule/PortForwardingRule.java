@@ -21,8 +21,9 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.ExperimentalTestApi;
 import java.util.Properties;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -39,7 +40,7 @@ import org.junit.runners.model.Statement;
  *
  * @hide
  */
-@ExperimentalTestApi
+@RestrictTo(Scope.LIBRARY_GROUP)
 public class PortForwardingRule implements TestRule {
 
   private static final String TAG = "PortForwardingRule";

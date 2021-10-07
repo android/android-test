@@ -22,15 +22,17 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.test.annotation.InternalTestApi;
+import androidx.annotation.RestrictTo;
 
 /**
  * Helper class to help create parcelable IBinder.
  *
  * <p>Required to maintain backwards comparability back to API level 8. Since {@code
  * Bundle.putBinder(...)} was only introduced in API level 18.
+ *
+ * @hide
  */
-@InternalTestApi // used by espresso remote
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by espresso remote
 public class ParcelableIBinder implements Parcelable {
 
   private final IBinder iBinder;

@@ -17,15 +17,17 @@
 package androidx.test.internal.platform.content;
 
 import androidx.annotation.NonNull;
-import androidx.test.annotation.InternalTestApi;
+import androidx.annotation.RestrictTo;
 
 /**
  * Requests a runtime permission.
  *
  * <p>Note: This class should not be used directly, but through {@link
  * androidx.test.rule.GrantPermissionRule}.
+ *
+ * @hide
  */
-@InternalTestApi // used by rule
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by rule
 public interface PermissionGranter {
 
   /**

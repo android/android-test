@@ -21,6 +21,8 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.platform.io.PlatformTestStorage;
@@ -296,6 +298,7 @@ public final class TestStorage implements PlatformTestStorage {
    * @return an InputStream to the given test file.
    * @hide
    */
+  @RestrictTo(Scope.LIBRARY)
   @Override
   public InputStream openInternalInputFile(String pathname) throws IOException {
     checkNotNull(pathname);
@@ -313,6 +316,7 @@ public final class TestStorage implements PlatformTestStorage {
    * @return an OutputStream to the given output file.
    * @hide
    */
+  @RestrictTo(Scope.LIBRARY)
   @Override
   public OutputStream openInternalOutputFile(String pathname) throws IOException {
     checkNotNull(pathname);

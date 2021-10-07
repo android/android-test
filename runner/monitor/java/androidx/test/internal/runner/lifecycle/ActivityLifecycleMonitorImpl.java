@@ -21,7 +21,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import android.app.Activity;
 import android.os.Looper;
 import android.util.Log;
-import androidx.test.annotation.InternalTestApi;
+import androidx.annotation.RestrictTo;
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.Stage;
@@ -31,8 +31,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-/** The lifecycle monitor implementation. */
-@InternalTestApi // used by robolectric
+/**
+ * The lifecycle monitor implementation.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by robolectric
 public final class ActivityLifecycleMonitorImpl implements ActivityLifecycleMonitor {
   private static final String TAG = "LifecycleMonitor";
   private final boolean declawThreadCheck;

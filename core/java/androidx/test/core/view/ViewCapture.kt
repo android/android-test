@@ -33,7 +33,6 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.Window
 import androidx.annotation.RequiresApi
-import androidx.annotation.RestrictTo
 import androidx.concurrent.futures.ResolvableFuture
 import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.core.internal.os.HandlerExecutor
@@ -82,7 +81,7 @@ fun View.captureToBitmap(): ListenableFuture<Bitmap> {
  */
 // NoClassDefFoundError occurs on API 15
 @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+// @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @ExperimentalTestApi
 fun View.forceRedraw(): ListenableFuture<Void> {
   val future: ResolvableFuture<Void> = ResolvableFuture.create()

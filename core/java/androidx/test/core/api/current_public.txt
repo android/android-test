@@ -23,7 +23,6 @@ package androidx.test.core.app {
   }
 
   public final class DeviceCapture {
-    method @RequiresApi(android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) @androidx.test.annotation.InternalTestApi @kotlin.jvm.Throws(exceptionClasses=RuntimeException::class) public static android.graphics.Bitmap takeScreenshotNoSync() throws java.lang.RuntimeException;
   }
 
 }

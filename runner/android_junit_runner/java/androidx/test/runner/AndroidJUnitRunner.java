@@ -23,6 +23,8 @@ import android.os.Bundle;
 import android.os.Debug;
 import android.os.StrictMode;
 import android.util.Log;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.MediumTest;
@@ -348,6 +350,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
    * @deprecated use onTestEventClientConnect()
    * @hide
    */
+  @RestrictTo(Scope.LIBRARY)
   @Deprecated // TODO(b/161833844): Remove onOrchestratorConnect(), use onTestEventClientConnect()
   public void onOrchestratorConnect() {
     onTestEventClientConnect();
@@ -359,6 +362,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
    *
    * @hide
    */
+  @RestrictTo(Scope.LIBRARY)
   @Override
   public void onTestEventClientConnect() {
     isConnectedToOrchestrator.set(true);

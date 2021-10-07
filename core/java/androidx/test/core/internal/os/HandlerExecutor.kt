@@ -16,9 +16,15 @@
 package androidx.test.core.internal.os
 
 import android.os.Handler
+import androidx.annotation.RestrictTo
 import java.util.concurrent.Executor
 
-/** A likely temporary utility class that redirects Executor calls to a Handler. */
+/**
+ * A likely temporary utility class that redirects Executor calls to a Handler.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class HandlerExecutor(val handler: Handler) : Executor {
 
   override fun execute(command: Runnable) {

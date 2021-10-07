@@ -19,7 +19,7 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.view.View;
 import android.view.inspector.WindowInspector;
-import androidx.test.annotation.InternalTestApi;
+import androidx.annotation.RestrictTo;
 import androidx.test.internal.util.Checks;
 import androidx.test.platform.reflect.ReflectionException;
 import androidx.test.platform.reflect.ReflectiveField;
@@ -31,8 +31,10 @@ import java.util.List;
 /**
  * Compat class that supports {@link android.viee.inspecror.WindowInspector} functionality on older
  * Android SDKs.
+ *
+ * @hide
  */
-@InternalTestApi
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // currently used by core, consider making public
 public class WindowInspectorCompat {
 
   // type WindowManagerImpl for API < 17
@@ -57,7 +59,10 @@ public class WindowInspectorCompat {
    *
    * <p>This should only occur if the device does not support the view retrieval mechanism used on
    * used on APIs < 29, before WindowInspector existed.
+   *
+   * @hide
    */
+  @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
   public static class ViewRetrievalException extends Exception {
 
     ViewRetrievalException(Throwable cause) {

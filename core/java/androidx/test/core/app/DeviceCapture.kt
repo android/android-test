@@ -24,9 +24,9 @@ import android.os.Looper
 import android.util.Log
 import android.view.Choreographer
 import androidx.annotation.RequiresApi
+import androidx.annotation.RestrictTo
 import androidx.concurrent.futures.ResolvableFuture
 import androidx.test.annotation.ExperimentalTestApi
-import androidx.test.annotation.InternalTestApi
 import androidx.test.core.internal.os.HandlerExecutor
 import androidx.test.core.view.forceRedraw
 import androidx.test.internal.util.Checks
@@ -79,8 +79,11 @@ fun takeScreenshot(): Bitmap {
  * @return a [Bitmap]
  * @throws [IllegalStateException] if called on the main thread. This is a limitation of connecting
  * to UiAutomation, [RuntimeException] if UiAutomation fails to take the screenshot
+ *
+ * @hide
  */
-@InternalTestApi
+@ExperimentalTestApi
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 @Suppress("FutureReturnValueIgnored")
 @Throws(RuntimeException::class)
