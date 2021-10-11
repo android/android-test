@@ -28,16 +28,20 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 @Deprecated
 public final class UsageTrackerRegistry {
 
-  /** Contains versions for AXT libraries */
+  /**
+   * Contains versions for AXT libraries
+   *
+   * @deprecated obsolete
+   */
+  @Deprecated
   public interface AxtVersions {
     // Espresso version includes: Espresso, Espresso-Web, Intents, Espresso-MPE
-    String ESPRESSO_VERSION = "3.5.0-alpha02";
+    String ESPRESSO_VERSION = "na";
     // Runner version includes: Runner
-    String RUNNER_VERSION = "1.4.1-alpha02";
+    String RUNNER_VERSION = "na";
     // Test services version.
-    String SERVICES_VERSION = "1.4.1-alpha02";
+    String SERVICES_VERSION = "na";
   }
-
 
   // By default we use a NoOp class.
   private static volatile UsageTracker instance = new UsageTracker.NoOpUsageTracker();
