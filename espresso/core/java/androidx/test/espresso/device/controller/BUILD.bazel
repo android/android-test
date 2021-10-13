@@ -14,6 +14,7 @@ kt_android_library(
     srcs = [
         "DeviceController.kt",
         "DeviceMode.kt",
+        "ScreenOrientation.kt",
         "UnsupportedDeviceOperationException.kt",
     ],
     deps = [

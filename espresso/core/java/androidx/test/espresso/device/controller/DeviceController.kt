@@ -29,4 +29,13 @@ interface DeviceController {
    * @param deviceMode the mode to put the device in
    */
   fun setDeviceMode(deviceMode: Int)
+
+  /**
+   * Synchronously sets the connected device to the provided screen orientation.
+   * @throws UnsupportedDeviceOperationException if it is called on an unsupported device or with an
+   * unsupported orientation.
+   *
+   * @param screenOrientation the orientation to put the device in
+   */
+  fun setDeviceScreenOrientation(screenOrientation: Int)
 }

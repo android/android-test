@@ -23,4 +23,10 @@ class PhysicalDeviceController : DeviceController {
       "Setting a device mode is not supported on physical devices."
     )
   }
+
+  override fun setDeviceScreenOrientation(screenOrientation: Int) {
+    throw UnsupportedDeviceOperationException(
+      "Setting a device's screen orientation is not supported on physical devices."
+    )
+  }
 }
