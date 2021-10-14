@@ -24,11 +24,11 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4::class)
 class PhysicalDeviceControllerTest {
   @Test
-  fun setDeviceMode_ThrowsDeviceNotSupportedException() {
+  fun setDeviceMode_ThrowsUnsupportedDeviceOperationException() {
     val deviceController = PhysicalDeviceController()
 
     assertThrows(UnsupportedDeviceOperationException::class.java) {
-      deviceController.setDeviceMode(0)
+      deviceController.setDeviceMode(DeviceMode.FLAT.mode)
     }
   }
 }

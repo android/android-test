@@ -21,4 +21,8 @@ class EmulatorController() : DeviceController {
   override fun setDeviceMode(deviceMode: Int) {
     // TODO(b/200863559) Set the connected test device to the provided device mode.
   }
+
+  override fun setDeviceScreenOrientation(screenOrientation: Int) {
+    // TODO(b/202018386) Set the connected test device to the provided screen orientation.
+  }
 }

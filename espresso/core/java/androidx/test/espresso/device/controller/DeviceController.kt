@@ -23,10 +23,18 @@ package androidx.test.espresso.device.controller
  */
 interface DeviceController {
   /**
-   * Synchronously sets the connected device to the provided mode.
+   * Sets the connected device to the provided mode.
    * @throws UnsupportedDeviceOperationException if it is called on an unsupported device.
    *
    * @param deviceMode the mode to put the device in
    */
   fun setDeviceMode(deviceMode: Int)
+
+  /**
+   * Sets the connected device to the provided screen orientation.
+   * @throws UnsupportedDeviceOperationException if it is called on an unsupported device.
+   *
+   * @param screenOrientation the orientation to put the device in
+   */
+  fun setDeviceScreenOrientation(screenOrientation: Int)
 }

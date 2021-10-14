@@ -23,4 +23,8 @@ class PhysicalDeviceController : DeviceController {
       "Setting a device mode is not supported on physical devices."
     )
   }
+
+  override fun setDeviceScreenOrientation(screenOrientation: Int) {
+    // TODO(b/203092519) Investigate suppporting screen orientation rotation on real devices.
+  }
 }
