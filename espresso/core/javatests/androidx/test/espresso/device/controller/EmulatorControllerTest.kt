@@ -16,19 +16,19 @@
 
 package androidx.test.espresso.device.controller
 
-/** Implementation of {@link DeviceController} for tests run on an Emulator. */
-class EmulatorController() : DeviceController {
-  override fun setDeviceMode(deviceMode: Int) {
-    if (!DeviceMode.values().any { it.mode == deviceMode }) {
-      throw UnsupportedDeviceOperationException(
-        "The provided device mode is not supported on this device."
-      )
+import org.junit.Assert.assertThrows
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
+
+@RunWith(JUnit4::class)
+class EmulatorControllerTest {
+  @Test
+  fun setDeviceModeToInvalidDeviceMode_throwsUnsupportedDeviceOperationException() {
+    val deviceController = EmulatorController()
+
+    assertThrows(UnsupportedDeviceOperationException::class.java) {
+      deviceController.setDeviceMode(-1)
     }
-
-    // TODO(b/200863559) Set the connected test device to the provided device mode.
-  }
-
-  override fun setDeviceScreenOrientation(screenOrientation: Int) {
-    // TODO(b/202018386) Set the connected test device to the provided screen orientation.
   }
 }

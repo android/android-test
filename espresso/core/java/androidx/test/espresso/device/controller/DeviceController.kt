@@ -24,7 +24,8 @@ package androidx.test.espresso.device.controller
 interface DeviceController {
   /**
    * Sets the connected device to the provided mode.
-   * @throws UnsupportedDeviceOperationException if it is called on an unsupported device.
+   * @throws UnsupportedDeviceOperationException if it is called on an unsupported device or with an
+   * unsupported device mode.
    *
    * @param deviceMode the mode to put the device in
    */
