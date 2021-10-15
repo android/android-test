@@ -4,12 +4,23 @@ load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 
 licenses(["notice"])
 
-package(default_visibility = ["//espresso/core/java/androidx/test/espresso/device:__subpackages__"])
+package(default_visibility = [
+    "//espresso/core/java/androidx/test/espresso/device:device_pkg",
+])
 
 kt_android_library(
     name = "action",
-    srcs = glob(["*.kt"]),
+    srcs = ["DeviceAction.kt"],
     deps = [
+        "//espresso/core/java/androidx/test/espresso/device/controller",
+    ],
+)
+
+kt_android_library(
+    name = "action_impl",
+    srcs = ["ScreenOrientationAction.kt"],
+    deps = [
+        ":action",
         "//espresso/core/java/androidx/test/espresso/device/controller",
     ],
 )
