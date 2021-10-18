@@ -18,11 +18,11 @@ package androidx.test.espresso.device.action
 
 import android.content.Context
 import android.content.res.Configuration
-import androidx.test.espresso.device.controller.DeviceController
 import android.util.Log
+import androidx.test.espresso.device.controller.DeviceController
 
 /** Action to set the test device to the provided screen orientation. */
-class ScreenOrientationAction(
+internal class ScreenOrientationAction(
   private val context: Context,
   val screenOrientation: ScreenOrientation
 ) : DeviceAction {
