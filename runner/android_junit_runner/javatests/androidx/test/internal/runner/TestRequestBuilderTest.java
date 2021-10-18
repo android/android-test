@@ -1770,7 +1770,12 @@ public class TestRequestBuilderTest {
   public void testNoSkipExecution_JUnit3TestSuite() {
     Request request = builder.addTestClass(JUnit3FailingTestSuite.class.getName()).build();
     JUnitCore testRunner = new JUnitCore();
-    ensureAllTestsFailed(testRunner.run(request), 1, "No runnable methods");
+    ensureAllTestsFailed(
+        testRunner.run(request),
+        1,
+        "Invalid test class '"
+            + JUnit3FailingTestSuite.class.getName()
+            + "':\n  1. No runnable methods");
   }
 
   /**
@@ -1782,7 +1787,12 @@ public class TestRequestBuilderTest {
     Request request =
         builder.setSkipExecution(true).addTestClass(JUnit3FailingTestSuite.class.getName()).build();
     JUnitCore testRunner = new JUnitCore();
-    ensureAllTestsFailed(testRunner.run(request), 1, "No runnable methods");
+    ensureAllTestsFailed(
+        testRunner.run(request),
+        1,
+        "Invalid test class '"
+            + JUnit3FailingTestSuite.class.getName()
+            + "':\n  1. No runnable methods");
   }
 
   /** Verify that a JUnit 3 custom Test cannot be executed because it has no runnable methods. */
@@ -1790,7 +1800,12 @@ public class TestRequestBuilderTest {
   public void testNoSkipExecution_JUnit3CustomTest() throws Throwable {
     Request request = builder.addTestClass(JUnit3FailingTestSuite.class.getName()).build();
     JUnitCore testRunner = new JUnitCore();
-    ensureAllTestsFailed(testRunner.run(request), 1, "No runnable methods");
+    ensureAllTestsFailed(
+        testRunner.run(request),
+        1,
+        "Invalid test class '"
+            + JUnit3FailingTestSuite.class.getName()
+            + "':\n  1. No runnable methods");
   }
 
   /**
@@ -1802,7 +1817,12 @@ public class TestRequestBuilderTest {
     Request request =
         builder.setSkipExecution(true).addTestClass(JUnit3FailingTestSuite.class.getName()).build();
     JUnitCore testRunner = new JUnitCore();
-    ensureAllTestsFailed(testRunner.run(request), 1, "No runnable methods");
+    ensureAllTestsFailed(
+        testRunner.run(request),
+        1,
+        "Invalid test class '"
+            + JUnit3FailingTestSuite.class.getName()
+            + "':\n  1. No runnable methods");
   }
 
   private static void ensureAllTestsFailed(
