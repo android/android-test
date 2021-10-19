@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
+@file:JvmName("DeviceActions")
+
 package androidx.test.espresso.device.action
 
-import androidx.test.espresso.device.controller.DeviceController
+/** Entry point for device action operations. */
 
-/** Responsible for performing an interaction on the given device. */
-interface DeviceAction {
-  /**
-   * Performs this action on the given device.
-   *
-   * @param context the ActionContext containing the context for this application and test app.
-   * @param deviceController the controller to use to interact with the device.
-   */
-  fun perform(context: ActionContext, deviceController: DeviceController)
+/**
+ * Set device's screen orientation.
+ * @param orientation the orientation to set the device to (portait or landscape)
+ */
+fun setScreenOrientation(orientation: ScreenOrientation): DeviceAction {
+  return ScreenOrientationAction(orientation)
+}
+
+/** Enum for screen orientations a device can be set to. */
+enum class ScreenOrientation(val orientation: Int) {
+  PORTRAIT(0),
+  LANDSCAPE(1)
 }

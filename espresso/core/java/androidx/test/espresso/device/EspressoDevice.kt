@@ -32,7 +32,7 @@ class EspressoDevice private constructor() {
      */
     @ExperimentalTestApi
     fun onDevice(): DeviceInteraction {
-      return DeviceInteraction(BASE.deviceController())
+      return DeviceInteraction(deviceController = BASE.deviceController())
     }
   }
 }

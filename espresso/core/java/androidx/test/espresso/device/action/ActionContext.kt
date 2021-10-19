@@ -16,15 +16,16 @@
 
 package androidx.test.espresso.device.action
 
-import androidx.test.espresso.device.controller.DeviceController
+import android.content.Context
 
-/** Responsible for performing an interaction on the given device. */
-interface DeviceAction {
+/** Interface to provide context to device actions. */
+interface ActionContext {
+  /** Get the application context. */
+  val applicationContext: Context
+
   /**
-   * Performs this action on the given device.
-   *
-   * @param context the ActionContext containing the context for this application and test app.
-   * @param deviceController the controller to use to interact with the device.
+   * Get the test app's context, e.g. the Instrumentation test app's context when running on an
+   * emulator.
    */
-  fun perform(context: ActionContext, deviceController: DeviceController)
+  val testContext: Context
 }

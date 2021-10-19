@@ -16,7 +16,9 @@
 package androidx.test.espresso.device
 
 import androidx.test.annotation.ExperimentalTestApi
+import androidx.test.espresso.device.action.ActionContext
 import androidx.test.espresso.device.action.DeviceAction
+import androidx.test.espresso.device.action.InstrumentationTestActionContext
 import androidx.test.espresso.device.controller.DeviceController
 import javax.inject.Inject
 
@@ -26,7 +28,12 @@ import javax.inject.Inject
  * <p>This API is experimental and subject to change.
  */
 @ExperimentalTestApi
-class DeviceInteraction @Inject constructor(private val deviceController: DeviceController) {
+class DeviceInteraction
+@Inject
+constructor(
+  private val context: ActionContext = InstrumentationTestActionContext(),
+  private val deviceController: DeviceController
+) {
 
   /**
    * Performs the given action on the test device.
@@ -35,8 +42,7 @@ class DeviceInteraction @Inject constructor(private val deviceController: Device
    * @return this interaction for further perform/verification calls.
    */
   fun perform(action: DeviceAction): DeviceInteraction {
-    requireNotNull(action)
-    action.perform(deviceController)
+    action.perform(context, deviceController)
     return this
   }
 }

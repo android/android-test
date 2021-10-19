@@ -16,9 +16,7 @@
 
 package androidx.test.espresso.device.action
 
-import androidx.test.espresso.device.action.ScreenOrientationAction.ScreenOrientation
 import androidx.test.espresso.device.controller.DeviceController
-import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -28,15 +26,12 @@ import org.mockito.Mockito.verify
 
 @RunWith(JUnit4::class)
 class ScreenOrientationActionTest {
-  private val context = InstrumentationRegistry.getInstrumentation().getTargetContext()
-
   @Test
   fun perform_callsDeviceControllerWhenOrientationNeedsToBeChanged() {
     val deviceController: DeviceController = mock(DeviceController::class.java)
-    val action: ScreenOrientationAction =
-      ScreenOrientationAction(context, ScreenOrientation.LANDSCAPE)
+    val action: ScreenOrientationAction = ScreenOrientationAction(ScreenOrientation.LANDSCAPE)
 
-    action.perform(deviceController)
+    action.perform(InstrumentationTestActionContext(), deviceController)
 
     verify(deviceController).setDeviceScreenOrientation(ScreenOrientation.LANDSCAPE.orientation)
   }
@@ -44,10 +39,9 @@ class ScreenOrientationActionTest {
   @Test
   fun perform_doesNotCallDeviceControllerWhenOrientationDoesNotNeedToBeChanged() {
     val deviceController: DeviceController = mock(DeviceController::class.java)
-    val action: ScreenOrientationAction =
-      ScreenOrientationAction(context, ScreenOrientation.PORTRAIT)
+    val action: ScreenOrientationAction = ScreenOrientationAction(ScreenOrientation.PORTRAIT)
 
-    action.perform(deviceController)
+    action.perform(InstrumentationTestActionContext(), deviceController)
 
     verify(deviceController, never())
       .setDeviceScreenOrientation(ScreenOrientation.PORTRAIT.orientation)

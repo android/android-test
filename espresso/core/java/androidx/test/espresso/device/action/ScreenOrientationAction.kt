@@ -16,28 +16,18 @@
 
 package androidx.test.espresso.device.action
 
-import android.content.Context
 import android.content.res.Configuration
 import android.util.Log
 import androidx.test.espresso.device.controller.DeviceController
 
 /** Action to set the test device to the provided screen orientation. */
-internal class ScreenOrientationAction(
-  private val context: Context,
-  val screenOrientation: ScreenOrientation
-) : DeviceAction {
-  /** Enum for screen orientations a device can be set to. */
-  enum class ScreenOrientation(val orientation: Int) {
-    PORTRAIT(0),
-    LANDSCAPE(1)
-  }
-
+internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation) : DeviceAction {
   companion object {
     private val TAG = "ScreenOrientationAction"
   }
 
-  override fun perform(deviceController: DeviceController) {
-    val currentOrientation = context.getResources().getConfiguration().orientation
+  override fun perform(context: ActionContext, deviceController: DeviceController) {
+    val currentOrientation = context.testContext.getResources().getConfiguration().orientation
     val requestedOrientation =
       if (screenOrientation == ScreenOrientation.LANDSCAPE) Configuration.ORIENTATION_LANDSCAPE
       else Configuration.ORIENTATION_PORTRAIT

@@ -10,17 +10,9 @@ package(default_visibility = [
 
 kt_android_library(
     name = "action",
-    srcs = ["DeviceAction.kt"],
+    srcs = glob(["*.kt"]),
     deps = [
         "//espresso/core/java/androidx/test/espresso/device/controller",
-    ],
-)
-
-kt_android_library(
-    name = "action_impl",
-    srcs = ["ScreenOrientationAction.kt"],
-    deps = [
-        ":action",
-        "//espresso/core/java/androidx/test/espresso/device/controller",
+        "//runner/monitor/java/androidx/test:monitor",
     ],
 )
