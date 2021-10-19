@@ -16,6 +16,7 @@
 
 package androidx.test.services.shellexecutor;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import android.util.Log;
@@ -56,7 +57,7 @@ final class ShellCommandExecutor {
       toExecute.add("-c");
     }
     toExecute.add(shellCommand.getCommand());
-    debug("Command to execute: %s", shellCommand.getCommand());
+    debug("Command to execute: %s", toExecute.toString());
     if (shellCommand.getParameters() != null) {
       for (String parameter : shellCommand.getParameters()) {
         debug("Added param: %s", parameter);
@@ -139,8 +140,12 @@ final class ShellCommandExecutor {
         new Runnable() {
           @Override
           public void run() {
+            checkNotNull(p, "Process is null.");
             InputStream stdout = p.getInputStream();
             byte[] buf = new byte[ShellExecSharedConstants.BUFFER_SIZE];
+
+            checkNotNull(stdout, "Process stdout is null.");
+            checkNotNull(writeStdoutTo, "Process write-stdout-to is null.");
 
             while (true) {
               try {

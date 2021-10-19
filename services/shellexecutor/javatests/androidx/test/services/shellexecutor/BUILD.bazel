@@ -35,6 +35,7 @@ android_library(
     srcs = [
         "DummyActivity.java",
         "ShellCommandTest.java",
+        "ShellCommandExecutorTest.java",
         "ShellExecutorTest.java",
     ],
     manifest = "AndroidManifest_opensource.xml",
