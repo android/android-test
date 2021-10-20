@@ -23,7 +23,6 @@ kt_android_library(
         "//annotation/java/androidx/test/annotation",
         "//espresso/core/java/androidx/test/espresso/device/action",
         "//espresso/core/java/androidx/test/espresso/device/context",
-        "//espresso/core/java/androidx/test/espresso/device/context:context_impl",
         "//espresso/core/java/androidx/test/espresso/device/controller",
         "//espresso/core/java/androidx/test/espresso/device/dagger",
         "//opensource/dagger",

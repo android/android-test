@@ -17,6 +17,8 @@
 package androidx.test.espresso.device.dagger
 
 import android.os.Build
+import androidx.test.espresso.device.context.ActionContext
+import androidx.test.espresso.device.context.InstrumentationTestActionContext
 import androidx.test.espresso.device.controller.DeviceController
 import androidx.test.espresso.device.controller.EmulatorController
 import androidx.test.espresso.device.controller.PhysicalDeviceController
@@ -24,10 +26,7 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-/**
- * Dagger module for DeviceController.
- *
- */
+/** Dagger module for DeviceController. */
 @Module
 internal class DeviceControllerModule {
   companion object {
@@ -41,6 +40,15 @@ internal class DeviceControllerModule {
         Build.HARDWARE.contains("goldfish") ||
         Build.HARDWARE.contains("ranchu")
     }
+  }
+
+  @Provides
+  @Singleton
+  fun provideActionContext(): ActionContext {
+    // TODO(b/203570026) Initialize ActionContext depending on whether the test is an
+    // instrumentation
+    // test or Robolectric
+    return InstrumentationTestActionContext()
   }
 
   @Provides

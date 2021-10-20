@@ -16,6 +16,7 @@
 
 package androidx.test.espresso.device.dagger
 
+import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceController
 import dagger.Component
 import javax.inject.Singleton
@@ -24,5 +25,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [DeviceControllerModule::class])
 interface DeviceLayerComponent {
+  fun actionContext(): ActionContext
+
   fun deviceController(): DeviceController
 }
