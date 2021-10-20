@@ -25,6 +25,8 @@ kt_android_app_instrumentation_tests(
     target_devices = devices(),
     deps = [
         "//espresso/core/java/androidx/test/espresso/device/action",
+        "//espresso/core/java/androidx/test/espresso/device/context",
+        "//espresso/core/java/androidx/test/espresso/device/context:context_impl",
         "//espresso/core/java/androidx/test/espresso/device/controller",
         "//ext/junit",
         "//java/com/google/android/apps/common/testing/testrunner",

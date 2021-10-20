@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package androidx.test.espresso.device.action
+package androidx.test.espresso.device.context
 
-import androidx.test.platform.app.InstrumentationRegistry
+import android.content.Context
 
-/** ActionContext for instrumentation tests. */
-class InstrumentationTestActionContext() : ActionContext {
-  override val applicationContext = InstrumentationRegistry.getInstrumentation().context
+/** Interface to provide context to device actions. */
+interface ActionContext {
+  /** Get the application context. */
+  val applicationContext: Context
 
-  override val testContext = InstrumentationRegistry.getInstrumentation().getTargetContext()
+  /**
+   * Get the test app's context, e.g. the Instrumentation test app's context when running on an
+   * emulator.
+   */
+  val testContext: Context
 }
