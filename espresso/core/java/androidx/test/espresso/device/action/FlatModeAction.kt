@@ -16,25 +16,17 @@
 
 package androidx.test.espresso.device.action
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import androidx.test.espresso.device.context.ActionContext
+import androidx.test.espresso.device.controller.DeviceController
+import androidx.test.espresso.device.controller.DeviceMode
 
-@RunWith(JUnit4::class)
-class DeviceActionsTest {
-  @Test
-  fun flatMode_returnsFlatModeAction() {
-    val action = setFlatMode()
+/** Action to set the test device to be completely flat, like a tablet. */
+internal class FlatModeAction() : DeviceAction {
+  override fun perform(context: ActionContext, deviceController: DeviceController) {
+    // TODO(b/203801760): Check current device mode and return if already in flat mode.
 
-    assertTrue(action is FlatModeAction)
-  }
+    deviceController.setDeviceMode(DeviceMode.FLAT.mode)
 
-  @Test
-  fun setScreenOrientation_returnsScreenOrientationActionWithOrientationSet() {
-    val action = setScreenOrientation(ScreenOrientation.PORTRAIT) as ScreenOrientationAction
-
-    assertEquals(action.screenOrientation, ScreenOrientation.PORTRAIT)
+    // TODO(b/203801783): Synchronize device controller call.
   }
 }
