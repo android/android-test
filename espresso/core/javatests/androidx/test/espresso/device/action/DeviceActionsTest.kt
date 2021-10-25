@@ -25,7 +25,14 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4::class)
 class DeviceActionsTest {
   @Test
-  fun flatMode_returnsFlatModeAction() {
+  fun setBookMode_returnsBookModeAction() {
+    val action = setBookMode()
+
+    assertTrue(action is BookModeAction)
+  }
+
+  @Test
+  fun setFlatMode_returnsFlatModeAction() {
     val action = setFlatMode()
 
     assertTrue(action is FlatModeAction)

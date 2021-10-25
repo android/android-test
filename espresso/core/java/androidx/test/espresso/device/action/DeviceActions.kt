@@ -21,6 +21,16 @@ package androidx.test.espresso.device.action
 /** Entry point for device action operations. */
 
 /**
+ * Set device screen to be folded with the hinge in the vertical position.
+ *
+ * Currently only supported for tests run on Android foldable Emulators.
+ * @throws UnsupportedDeviceOperationException if used on a real device or a non-foldable Emulator.
+ */
+fun setBookMode(): DeviceAction {
+  return BookModeAction()
+}
+
+/**
  * Set device screen to be completely flat, like a tablet.
  *
  * Currently only supported for tests run on Android foldable Emulators.
