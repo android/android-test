@@ -4,7 +4,9 @@ load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 
 licenses(["notice"])
 
-package(default_visibility = ["//visibility:private"])
+package(default_visibility = [
+    "//espresso/core/java/androidx/test/espresso/device:device_pkg",
+])
 
 # Add only device packages here.
 package_group(

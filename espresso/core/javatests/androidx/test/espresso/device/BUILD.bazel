@@ -1,0 +1,31 @@
+# Description:
+#   Tests for Espresso device package
+
+load(
+    "//build_extensions:kt_android_app_instrumentation_tests.bzl",
+    "kt_android_app_instrumentation_tests",
+)
+load(
+    "//build_extensions:test_devices.bzl",
+    "devices",
+)
+
+licenses(["notice"])
+
+kt_android_app_instrumentation_tests(
+    name = "instrumentation_tests",
+    srcs = glob(
+        ["*.kt"],
+    ),
+    binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+    target_devices = devices(),
+    deps = [
+        "//espresso/core/java/androidx/test/espresso/device/action",
+        "//espresso/core/java/androidx/test/espresso/device/device",
+        "//ext/junit",
+        "//java/com/google/android/apps/common/testing/testrunner",
+        "//runner/android_junit_runner",
+        "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "@maven//:junit_junit",
+    ],
+)
