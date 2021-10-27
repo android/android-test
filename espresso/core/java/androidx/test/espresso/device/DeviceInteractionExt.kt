@@ -16,7 +16,9 @@
 
 package androidx.test.espresso.device
 
+import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.action.setFlatMode as getSetFlatModeDeviceAction
+import androidx.test.espresso.device.action.setScreenOrientation as getSetScreenOrientationDeviceAction
 
 /**
  * Set device screen to be completely flat, like a tablet.
@@ -26,5 +28,14 @@ import androidx.test.espresso.device.action.setFlatMode as getSetFlatModeDeviceA
  */
 fun DeviceInteraction.setFlatMode(): DeviceInteraction {
   perform(getSetFlatModeDeviceAction())
+  return this
+}
+
+/**
+ * Set device's screen orientation.
+ * @param orientation the orientation to set the device to (portait or landscape)
+ */
+fun DeviceInteraction.setScreenOrientation(orientation: ScreenOrientation): DeviceInteraction {
+  perform(getSetScreenOrientationDeviceAction(orientation))
   return this
 }

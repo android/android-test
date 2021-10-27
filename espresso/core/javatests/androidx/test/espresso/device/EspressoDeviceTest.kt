@@ -16,6 +16,7 @@
 
 package androidx.test.espresso.device
 
+import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.action.setFlatMode
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -35,6 +36,14 @@ class EspressoDeviceTest {
   @Test
   fun setFlatMode_returnsDeviceInteraction() {
     val deviceInteraction = EspressoDevice.onDevice().setFlatMode()
+
+    assertTrue(deviceInteraction is DeviceInteraction)
+  }
+
+  @Test
+  fun setScreenOrientation_returnsDeviceInteraction() {
+    val deviceInteraction =
+      EspressoDevice.onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
 
     assertTrue(deviceInteraction is DeviceInteraction)
   }
