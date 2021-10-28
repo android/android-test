@@ -19,6 +19,7 @@ package_group(
 
 kt_android_library(
     name = "device",
+    testonly = 1,
     srcs = glob(["*.kt"]),
     plugins = ["//opensource/dagger:dagger_plugin"],  # Add programmatically
     deps = [

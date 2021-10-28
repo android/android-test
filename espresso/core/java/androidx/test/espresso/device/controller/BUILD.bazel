@@ -25,8 +25,11 @@ kt_android_library(
     srcs = [
         "EmulatorController.kt",
         "PhysicalDeviceController.kt",
+        "RobolectricController.kt",
     ],
     deps = [
         ":controller",
+        "//espresso/core/java/androidx/test/espresso/device/action",
+        "//robolectric:shadows",
     ],
 )

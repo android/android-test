@@ -1,6 +1,7 @@
 # Description:
 #   Tests for Espresso device package
 
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_local_test")
 load(
     "//build_extensions:kt_android_app_instrumentation_tests.bzl",
     "kt_android_app_instrumentation_tests",
@@ -16,6 +17,7 @@ kt_android_app_instrumentation_tests(
     name = "instrumentation_tests",
     srcs = glob(
         ["*.kt"],
+        exclude = ["EspressoDeviceRobolectricTest.kt"],
     ),
     binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
     target_devices = devices(),
@@ -26,6 +28,18 @@ kt_android_app_instrumentation_tests(
         "//java/com/google/android/apps/common/testing/testrunner",
         "//runner/android_junit_runner",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "@maven//:junit_junit",
+    ],
+)
+
+kt_android_local_test(
+    name = "EspressoDeviceRobolectricTest",
+    srcs = ["EspressoDeviceRobolectricTest.kt"],
+    deps = [
+        "//core",
+        "//espresso/core/java/androidx/test/espresso/device",
+        "//espresso/core/java/androidx/test/espresso/device/action",
+        "//ext/junit",
         "@maven//:junit_junit",
     ],
 )

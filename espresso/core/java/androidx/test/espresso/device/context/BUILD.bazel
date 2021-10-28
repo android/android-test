@@ -16,9 +16,14 @@ kt_android_library(
 
 kt_android_library(
     name = "context_impl",
-    srcs = ["InstrumentationTestActionContext.kt"],
+    testonly = 1,
+    srcs = [
+        "InstrumentationTestActionContext.kt",
+        "RobolectricActionContext.kt",
+    ],
     deps = [
         ":context",
+        "//core",
         "//runner/monitor/java/androidx/test:monitor",
     ],
 )

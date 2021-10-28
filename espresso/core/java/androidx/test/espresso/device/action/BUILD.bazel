@@ -10,6 +10,7 @@ package(default_visibility = [
 
 kt_android_library(
     name = "action",
+    testonly = 1,
     srcs = glob(["*.kt"]),
     deps = [
         "//espresso/core/java/androidx/test/espresso/device/context",

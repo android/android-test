@@ -19,9 +19,11 @@ package androidx.test.espresso.device.dagger
 import android.os.Build
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.context.InstrumentationTestActionContext
+import androidx.test.espresso.device.context.RobolectricActionContext
 import androidx.test.espresso.device.controller.DeviceController
 import androidx.test.espresso.device.controller.EmulatorController
 import androidx.test.espresso.device.controller.PhysicalDeviceController
+import androidx.test.espresso.device.controller.RobolectricController
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -40,15 +42,20 @@ internal class DeviceControllerModule {
         Build.HARDWARE.contains("goldfish") ||
         Build.HARDWARE.contains("ranchu")
     }
+
+    private fun isRobolectric(): Boolean {
+      return Build.FINGERPRINT.equals("robolectric")
+    }
   }
 
   @Provides
   @Singleton
   fun provideActionContext(): ActionContext {
-    // TODO(b/203570026) Initialize ActionContext depending on whether the test is an
-    // instrumentation
-    // test or Robolectric
-    return InstrumentationTestActionContext()
+    if (isRobolectric()) {
+      return RobolectricActionContext()
+    } else {
+      return InstrumentationTestActionContext()
+    }
   }
 
   @Provides
@@ -56,6 +63,8 @@ internal class DeviceControllerModule {
   fun provideDeviceController(): DeviceController {
     if (isEmulator()) {
       return EmulatorController()
+    } else if (isRobolectric()) {
+      return RobolectricController()
     } else {
       return PhysicalDeviceController()
     }
