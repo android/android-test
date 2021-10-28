@@ -16,33 +16,33 @@
 
 package androidx.test.espresso.base;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.fail;
 
 import android.os.Build;
 import android.os.Looper;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.View;
+import android.widget.EditText;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.InjectEventSecurityException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.action.MotionEvents;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
-import androidx.test.espresso.util.HumanReadables;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.filters.Suppress;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SendActivity;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Provider;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,24 +52,7 @@ import org.junit.runner.RunWith;
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class UiControllerImplIntegrationTest {
-  //
-  // @Rule
-  // public ActivityTestRule<SendActivity> rule =
-  //     new ActivityTestRule<SendActivity>(SendActivity.class, true, false) {
-  //       @Override
-  //       public SendActivity getActivity() {
-  //         SendActivity a = ActivityScenario.launch(SendActivity.class);
-  //         while (!a.hasWindowFocus()) {
-  //           getInstrumentation().waitForIdleSync();
-  //         }
-  //         return a;
-  //       }
-  //     };
 
-  private final AtomicBoolean injectEventWorked = new AtomicBoolean(false);
-  private final AtomicBoolean injectEventThrewSecurityException = new AtomicBoolean(false);
-  private final CountDownLatch focusLatch = new CountDownLatch(1);
-  private final CountDownLatch latch = new CountDownLatch(1);
   private UiController uiController;
 
   @Before
@@ -111,132 +94,56 @@ public class UiControllerImplIntegrationTest {
             try {
               KeyCharacterMap keyCharacterMap = UiControllerImpl.getKeyCharacterMap();
               KeyEvent[] events = keyCharacterMap.getEvents("a".toCharArray());
-              injectEventWorked.set(uiController.injectKeyEvent(events[0]));
-              latch.countDown();
+              assertThat(uiController.injectKeyEvent(events[0])).isTrue();
             } catch (InjectEventSecurityException e) {
-              injectEventThrewSecurityException.set(true);
+              throw new RuntimeException(e);
             }
           });
-
-      assertFalse("injectEvent threw a SecurityException", injectEventThrewSecurityException.get());
-      assertTrue("Timed out!", latch.await(10, TimeUnit.SECONDS));
-      assertTrue(injectEventWorked.get());
     }
   }
 
   @Test
-  public void testInjectString() throws InterruptedException {
-    final AtomicBoolean requestFocusSucceded = new AtomicBoolean(false);
-
+  public void testInjectString() throws InterruptedException, IOException {
+    // use TypeTextAction as proxy to test injectString, since it contains the necessary
+    // focus handling to make injectString reliable
     try (ActivityScenario<SendActivity> activityScenario =
         ActivityScenario.launch(SendActivity.class)) {
+      onView(withId(R.id.send_data_to_call_edit_text)).perform(typeText("Hello! \n&*$$$"));
+
       activityScenario.onActivity(
           activity -> {
-            final View view = activity.findViewById(R.id.send_data_to_call_edit_text);
-            Log.i("TEST", HumanReadables.describe(view));
-            requestFocusSucceded.set(view.requestFocus() && view.hasWindowFocus());
-            Log.i("TEST-post", HumanReadables.describe(view));
-            focusLatch.countDown();
+            EditText editText = activity.findViewById(R.id.send_data_to_call_edit_text);
+            assertThat(editText.getText().toString()).isEqualTo("Hello! \n&*$$$");
           });
-
-      assertTrue("requestFocus timed out!", focusLatch.await(2, TimeUnit.SECONDS));
-      assertTrue("requestFocus failed.", requestFocusSucceded.get());
-
-      getInstrumentation()
-          .runOnMainSync(
-              new Runnable() {
-                @Override
-                public void run() {
-                  try {
-                    injectEventWorked.set(uiController.injectString("Hello! \n&*$$$"));
-                    latch.countDown();
-                  } catch (InjectEventSecurityException e) {
-                    injectEventThrewSecurityException.set(true);
-                  }
-                }
-              });
-
-      assertFalse(
-          "SecurityException exception was thrown.", injectEventThrewSecurityException.get());
-      assertTrue("Timed out!", latch.await(20, TimeUnit.SECONDS));
-      assertTrue(injectEventWorked.get());
     }
   }
 
   @Test
   public void injectLargeString() throws InterruptedException {
-    final AtomicBoolean requestFocusSucceded = new AtomicBoolean(false);
-
     try (ActivityScenario<SendActivity> activityScenario =
         ActivityScenario.launch(SendActivity.class)) {
+      onView(withId(R.id.send_data_to_call_edit_text))
+          .perform(typeText("This is a string with 32 chars!!"));
+
       activityScenario.onActivity(
           activity -> {
-            final View view = activity.findViewById(R.id.send_data_to_call_edit_text);
-            Log.i("TEST", HumanReadables.describe(view));
-            requestFocusSucceded.set(view.requestFocus());
-            Log.i("TEST-post", HumanReadables.describe(view));
-
-            focusLatch.countDown();
+            EditText editText = activity.findViewById(R.id.send_data_to_call_edit_text);
+            assertThat(editText.getText().toString()).isEqualTo("This is a string with 32 chars!!");
           });
-
-      assertTrue("requestFocus timed out!", focusLatch.await(2, TimeUnit.SECONDS));
-      assertTrue("requestFocus failed.", requestFocusSucceded.get());
-
-      getInstrumentation()
-          .runOnMainSync(
-              new Runnable() {
-                @Override
-                public void run() {
-                  try {
-                    injectEventWorked.set(
-                        uiController.injectString("This is a string with 32 chars!!"));
-                    latch.countDown();
-                  } catch (InjectEventSecurityException e) {
-                    injectEventThrewSecurityException.set(true);
-                  }
-                }
-              });
-
-      assertFalse(
-          "SecurityException exception was thrown.", injectEventThrewSecurityException.get());
-      assertTrue("Timed out!", latch.await(20, TimeUnit.SECONDS));
-      assertTrue(injectEventWorked.get());
     }
   }
 
   @Test
   public void testInjectEmptyString() throws InterruptedException {
-    final AtomicBoolean requestFocusSucceded = new AtomicBoolean(false);
     try (ActivityScenario<SendActivity> activityScenario =
         ActivityScenario.launch(SendActivity.class)) {
+      onView(withId(R.id.send_data_to_call_edit_text)).perform(typeText(""));
+
       activityScenario.onActivity(
           activity -> {
-            final View view = activity.findViewById(R.id.send_data_to_call_edit_text);
-            requestFocusSucceded.set(view.requestFocus());
-            focusLatch.countDown();
+            EditText editText = activity.findViewById(R.id.send_data_to_call_edit_text);
+            assertThat(editText.getText().toString()).isEmpty();
           });
-
-      assertTrue("requestFocus timed out!", focusLatch.await(2, TimeUnit.SECONDS));
-      assertTrue("requestFocus failed.", requestFocusSucceded.get());
-
-      getInstrumentation()
-          .runOnMainSync(
-              new Runnable() {
-                @Override
-                public void run() {
-                  try {
-                    injectEventWorked.set(uiController.injectString(""));
-                    latch.countDown();
-                  } catch (InjectEventSecurityException e) {
-                    injectEventThrewSecurityException.set(true);
-                  }
-                }
-              });
-
-      assertFalse(
-          "SecurityException exception was thrown.", injectEventThrewSecurityException.get());
-      assertTrue("Timed out!", latch.await(20, TimeUnit.SECONDS));
-      assertTrue(injectEventWorked.get());
     }
   }
 
@@ -244,97 +151,78 @@ public class UiControllerImplIntegrationTest {
   public void injectStringSecurityException() throws InterruptedException {
     getInstrumentation()
         .runOnMainSync(
-            new Runnable() {
-              @Override
-              public void run() {
-                try {
-                  injectEventWorked.set(uiController.injectString("Hello! \n&*$$$"));
-                  latch.countDown();
-                } catch (InjectEventSecurityException e) {
-                  injectEventThrewSecurityException.set(true);
-                }
+            () -> {
+              try {
+                uiController.injectString("Hello! \n&*$$$");
+              } catch (InjectEventSecurityException e) {
+                // expected
+                return;
               }
+              fail("InjectEventSecurityException not thrown");
             });
-
-    assertTrue("SecurityException exception was thrown.", injectEventThrewSecurityException.get());
-    assertFalse("Did NOT time out!", latch.await(3, TimeUnit.SECONDS));
-    assertFalse(injectEventWorked.get());
   }
 
   @Test
-  public void injectMotionEvent() throws InterruptedException {
+  public void injectMotionEvent() throws InterruptedException, IOException {
     try (ActivityScenario<SendActivity> activityScenario =
         ActivityScenario.launch(SendActivity.class)) {
+
       final int[] coords = CoordinatesUtil.getCoordinatesInMiddleOfSendButton(activityScenario);
 
       getInstrumentation()
           .runOnMainSync(
-              new Runnable() {
-                @Override
-                public void run() {
-                  long downTime = SystemClock.uptimeMillis();
-                  try {
-                    MotionEvent event =
-                        MotionEvent.obtain(
-                            downTime,
-                            SystemClock.uptimeMillis(),
-                            MotionEvent.ACTION_DOWN,
-                            coords[0],
-                            coords[1],
-                            0);
+              () -> {
+                uiController.loopMainThreadForAtLeast(100);
 
-                    injectEventWorked.set(uiController.injectMotionEvent(event));
-                    event.recycle();
-                    latch.countDown();
-                  } catch (InjectEventSecurityException e) {
-                    injectEventThrewSecurityException.set(true);
-                  }
+                long downTime = SystemClock.uptimeMillis();
+                try {
+                  MotionEvent event =
+                      MotionEvent.obtain(
+                          downTime,
+                          SystemClock.uptimeMillis(),
+                          MotionEvent.ACTION_DOWN,
+                          coords[0],
+                          coords[1],
+                          0);
+
+                  assertThat(uiController.injectMotionEvent(event)).isTrue();
+
+                  event.recycle();
+                } catch (InjectEventSecurityException e) {
+                  throw new RuntimeException(e);
                 }
               });
-
-      assertFalse(
-          "SecurityException exception was thrown.", injectEventThrewSecurityException.get());
-      assertTrue("Timed out!", latch.await(10, TimeUnit.SECONDS));
-      assertTrue(injectEventWorked.get());
     }
   }
 
   @Test
+  @Suppress // flaky, uiController.injectMotionEventSequence can intermittently return false
   public void injectMotionEventSequence() throws InterruptedException {
     try (ActivityScenario<SendActivity> scenario = ActivityScenario.launch(SendActivity.class)) {
-      getInstrumentation().waitForIdleSync();
+
       final float[][] steps = CoordinatesUtil.getCoordinatesToDrag();
 
       getInstrumentation()
           .runOnMainSync(
-              new Runnable() {
-                @Override
-                public void run() {
-                  long downTime = SystemClock.uptimeMillis();
-                  List<MotionEvent> events = new ArrayList<>();
-                  try {
-                    MotionEvent down =
-                        MotionEvents.obtainDownEvent(steps[0], new float[] {16f, 16f});
-                    events.add(down);
-                    for (int i = 1; i < events.size() - 1; i++) {
-                      events.add(
-                          MotionEvents.obtainMovement(
-                              downTime, SystemClock.uptimeMillis(), steps[i]));
-                    }
-                    events.add(MotionEvents.obtainUpEvent(down, steps[steps.length - 1]));
-
-                    injectEventWorked.set(uiController.injectMotionEventSequence(events));
-                    latch.countDown();
-                  } catch (InjectEventSecurityException e) {
-                    injectEventThrewSecurityException.set(true);
+              () -> {
+                uiController.loopMainThreadForAtLeast(100);
+                long downTime = SystemClock.uptimeMillis();
+                List<MotionEvent> events = new ArrayList<>();
+                try {
+                  MotionEvent down = MotionEvents.obtainDownEvent(steps[0], new float[] {16f, 16f});
+                  events.add(down);
+                  for (int i = 1; i < events.size() - 1; i++) {
+                    events.add(
+                        MotionEvents.obtainMovement(
+                            downTime, SystemClock.uptimeMillis(), steps[i]));
                   }
+                  events.add(MotionEvents.obtainUpEvent(down, steps[steps.length - 1]));
+
+                  assertThat(uiController.injectMotionEventSequence(events)).isTrue();
+                } catch (InjectEventSecurityException e) {
+                  throw new RuntimeException(e);
                 }
               });
-
-      assertFalse(
-          "SecurityException exception was thrown.", injectEventThrewSecurityException.get());
-      assertTrue("Timed out!", latch.await(10, TimeUnit.SECONDS));
-      assertTrue(injectEventWorked.get());
     }
   }
 }
