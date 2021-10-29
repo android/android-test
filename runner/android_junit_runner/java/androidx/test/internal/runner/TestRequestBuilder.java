@@ -31,6 +31,7 @@ import androidx.test.internal.runner.filters.ParentFilter;
 import androidx.test.internal.runner.filters.TestsRegExFilter;
 import androidx.test.internal.util.AndroidRunnerParams;
 import androidx.test.internal.util.Checks;
+import androidx.tracing.Trace;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -779,33 +780,38 @@ public class TestRequestBuilder {
    * @throws java.lang.IllegalArgumentException if provided set of data is not valid
    */
   public Request build() {
-    includedPackages.removeAll(excludedPackages);
-    includedClasses.removeAll(excludedClasses);
-    validate(includedClasses);
+    Trace.beginSection("build test request");
+    try {
+      includedPackages.removeAll(excludedPackages);
+      includedClasses.removeAll(excludedClasses);
+      validate(includedClasses);
 
-    boolean scanningPath = includedClasses.isEmpty();
+      boolean scanningPath = includedClasses.isEmpty();
 
-    // If scanning then suite methods are not supported.
-    boolean ignoreSuiteMethods = this.ignoreSuiteMethods || scanningPath;
+      // If scanning then suite methods are not supported.
+      boolean ignoreSuiteMethods = this.ignoreSuiteMethods || scanningPath;
 
-    AndroidRunnerParams runnerParams =
-        new AndroidRunnerParams(instr, argsBundle, perTestTimeout, ignoreSuiteMethods);
-    RunnerBuilder runnerBuilder = getRunnerBuilder(runnerParams, scanningPath);
+      AndroidRunnerParams runnerParams =
+          new AndroidRunnerParams(instr, argsBundle, perTestTimeout, ignoreSuiteMethods);
+      RunnerBuilder runnerBuilder = getRunnerBuilder(runnerParams, scanningPath);
 
-    TestLoader loader = TestLoader.testLoader(classLoader, runnerBuilder, scanningPath);
-    Collection<String> classNames;
-    if (scanningPath) {
-      // no class restrictions have been specified. Load all classes.
-      classNames = getClassNamesFromClassPath();
-    } else {
-      classNames = includedClasses;
+      TestLoader loader = TestLoader.testLoader(classLoader, runnerBuilder, scanningPath);
+      Collection<String> classNames;
+      if (scanningPath) {
+        // no class restrictions have been specified. Load all classes.
+        classNames = getClassNamesFromClassPath();
+      } else {
+        classNames = includedClasses;
+      }
+
+      List<Runner> runners = loader.getRunnersFor(classNames, scanningPath);
+
+      Suite suite = ExtendedSuite.createSuite(runners);
+      Request request = Request.runner(suite);
+      return new LenientFilterRequest(request, filter);
+    } finally {
+      Trace.endSection();
     }
-
-    List<Runner> runners = loader.getRunnersFor(classNames, scanningPath);
-
-    Suite suite = ExtendedSuite.createSuite(runners);
-    Request request = Request.runner(suite);
-    return new LenientFilterRequest(request, filter);
   }
 
   /** Validate that the set of options provided to this builder are valid and not conflicting */

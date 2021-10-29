@@ -42,6 +42,7 @@ import androidx.test.internal.runner.listener.DelayInjector;
 import androidx.test.internal.runner.listener.InstrumentationResultPrinter;
 import androidx.test.internal.runner.listener.LogRunListener;
 import androidx.test.internal.runner.listener.SuiteAssignmentPrinter;
+import androidx.test.internal.runner.listener.TraceRunListener;
 import androidx.test.orchestrator.callback.OrchestratorV1Connection;
 import androidx.test.platform.io.FileTestStorage;
 import androidx.test.platform.io.PlatformTestStorageRegistry;
@@ -52,6 +53,7 @@ import androidx.test.runner.lifecycle.ApplicationLifecycleMonitorRegistry;
 import androidx.test.runner.screenshot.ScreenCaptureProcessor;
 import androidx.test.runner.screenshot.Screenshot;
 import androidx.test.services.storage.TestStorage;
+import androidx.tracing.Trace;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.ServiceLoader;
@@ -289,28 +291,33 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   /** {@inheritDoc} */
   @Override
   public void onCreate(Bundle arguments) {
-    super.onCreate(arguments);
-    this.arguments = arguments;
-    parseRunnerArgs(this.arguments);
+    Trace.beginSection("AndroidJUnitRunner#onCreate");
+    try {
+      super.onCreate(arguments);
+      this.arguments = arguments;
+      parseRunnerArgs(this.arguments);
 
-    if (waitForDebugger(runnerArgs)) {
-      Log.i(LOG_TAG, "Waiting for debugger to connect...");
-      Debug.waitForDebugger();
-      Log.i(LOG_TAG, "Debugger connected.");
-    }
+      if (waitForDebugger(runnerArgs)) {
+        Log.i(LOG_TAG, "Waiting for debugger to connect...");
+        Debug.waitForDebugger();
+        Log.i(LOG_TAG, "Debugger connected.");
+      }
 
-    for (ApplicationLifecycleCallback listener : runnerArgs.appListeners) {
-      ApplicationLifecycleMonitorRegistry.getInstance().addLifecycleCallback(listener);
-    }
+      for (ApplicationLifecycleCallback listener : runnerArgs.appListeners) {
+        ApplicationLifecycleMonitorRegistry.getInstance().addLifecycleCallback(listener);
+      }
 
-    addScreenCaptureProcessors(runnerArgs);
+      addScreenCaptureProcessors(runnerArgs);
 
-    if (isOrchestratorServiceProvided()) {
-      Log.v(LOG_TAG, "Waiting to connect to the Orchestrator service...");
-    } else {
-      // If no orchestration service is given, or we are not the primary process we can
-      // start() immediately.
-      start();
+      if (isOrchestratorServiceProvided()) {
+        Log.v(LOG_TAG, "Waiting to connect to the Orchestrator service...");
+      } else {
+        // If no orchestration service is given, or we are not the primary process we can
+        // start() immediately.
+        start();
+      }
+    } finally {
+      Trace.endSection();
     }
   }
 
@@ -397,56 +404,61 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
 
   @Override
   public void onStart() {
-    setJsBridgeClassName("androidx.test.espresso.web.bridge.JavaScriptBridge");
-    super.onStart();
-    Request testRequest = buildRequest(runnerArgs, getArguments());
-
-    /*
-     * The orchestrator cannot collect the list of tests as it is running in a different process
-     * than the test app.  On first run, the Orchestrator will ask AJUR to list the tests
-     * out that would be run for a given class parameter.  AJUR will then be successively
-     * called with whatever it passes back to the orchestrator service.
-     */
-    if (testEventClient.isTestDiscoveryEnabled()) {
-      testEventClient.addTests(testRequest.getRunner().getDescription());
-      finish(Activity.RESULT_OK, new Bundle());
-      return;
-    }
-
-    if (runnerArgs.remoteMethod != null) {
-      try {
-        new ReflectiveMethod<Void>(
-                runnerArgs.remoteMethod.testClassName, runnerArgs.remoteMethod.methodName)
-            .invokeStatic();
-      } catch (ReflectionException e) {
-        Log.e(
-            LOG_TAG,
-            String.format(
-                "Reflective call to remote method %s#%s failed",
-                runnerArgs.remoteMethod.testClassName, runnerArgs.remoteMethod.methodName),
-            e);
-      }
-    }
-
-    // TODO(b/162075422): using deprecated isPrimaryInstrProcess(argsProcessName) method
-    if (!isPrimaryInstrProcess(runnerArgs.targetProcess)) {
-      Log.i(LOG_TAG, "Runner is idle...");
-      return;
-    }
-
-    registerTestStorage(runnerArgs);
-
-    Bundle results = new Bundle();
+    Trace.beginSection("AndroidJUnitRunner#onStart");
     try {
-      TestExecutor.Builder executorBuilder = new TestExecutor.Builder(this);
-      addListeners(runnerArgs, executorBuilder);
-      results = executorBuilder.build().execute(testRequest);
-    } catch (Throwable t) {
-      final String msg = "Fatal exception when running tests";
-      Log.e(LOG_TAG, msg, t);
-      onException(this, t);
+      setJsBridgeClassName("androidx.test.espresso.web.bridge.JavaScriptBridge");
+      super.onStart();
+      Request testRequest = buildRequest(runnerArgs, getArguments());
+
+      /*
+       * The orchestrator cannot collect the list of tests as it is running in a different process
+       * than the test app.  On first run, the Orchestrator will ask AJUR to list the tests
+       * out that would be run for a given class parameter.  AJUR will then be successively
+       * called with whatever it passes back to the orchestrator service.
+       */
+      if (testEventClient.isTestDiscoveryEnabled()) {
+        testEventClient.addTests(testRequest.getRunner().getDescription());
+        finish(Activity.RESULT_OK, new Bundle());
+        return;
+      }
+
+      if (runnerArgs.remoteMethod != null) {
+        try {
+          new ReflectiveMethod<Void>(
+                  runnerArgs.remoteMethod.testClassName, runnerArgs.remoteMethod.methodName)
+              .invokeStatic();
+        } catch (ReflectionException e) {
+          Log.e(
+              LOG_TAG,
+              String.format(
+                  "Reflective call to remote method %s#%s failed",
+                  runnerArgs.remoteMethod.testClassName, runnerArgs.remoteMethod.methodName),
+              e);
+        }
+      }
+
+      // TODO(b/162075422): using deprecated isPrimaryInstrProcess(argsProcessName) method
+      if (!isPrimaryInstrProcess(runnerArgs.targetProcess)) {
+        Log.i(LOG_TAG, "Runner is idle...");
+        return;
+      }
+
+      registerTestStorage(runnerArgs);
+
+      Bundle results = new Bundle();
+      try {
+        TestExecutor.Builder executorBuilder = new TestExecutor.Builder(this);
+        addListeners(runnerArgs, executorBuilder);
+        results = executorBuilder.build().execute(testRequest);
+      } catch (Throwable t) {
+        final String msg = "Fatal exception when running tests";
+        Log.e(LOG_TAG, msg, t);
+        onException(this, t);
+      }
+      finish(Activity.RESULT_OK, results);
+    } finally {
+      Trace.endSection();
     }
-    finish(Activity.RESULT_OK, results);
   }
 
   @VisibleForTesting
@@ -489,6 +501,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
       }
       addDelayListener(args, builder);
       addCoverageListener(args, builder);
+      builder.addRunListener(new TraceRunListener());
     }
     addListenersFromClasspath(builder);
     addListenersFromArg(args, builder);
@@ -529,6 +542,17 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
                   }
                 }));
       }
+      builder.addRunListener(new TraceRunListener());
+    }
+  }
+
+  @Override
+  public void finish(int resultCode, Bundle results) {
+    Trace.beginSection("AndroidJUnitRunner#finish");
+    try {
+      super.finish(resultCode, results);
+    } finally {
+      Trace.endSection();
     }
   }
 
@@ -610,6 +634,16 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     }
     Log.i(LOG_TAG, "Bringing down the entire Instrumentation process.");
     return super.onException(obj, e);
+  }
+
+  @Override
+  public void sendStatus(int resultCode, Bundle results) {
+    Trace.beginSection("sendStatus");
+    try {
+      super.sendStatus(resultCode, results);
+    } finally {
+      Trace.endSection();
+    }
   }
 
   /** Builds a {@link Request} based on given input arguments. */

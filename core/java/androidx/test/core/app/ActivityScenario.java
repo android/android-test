@@ -40,6 +40,7 @@ import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
+import androidx.tracing.Trace;
 import java.io.Closeable;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -256,21 +257,29 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
         "\"Don't keep activities\" developer options must be disabled for ActivityScenario");
 
     checkNotMainThread();
-    getInstrumentation().waitForIdleSync();
 
-    ActivityLifecycleMonitorRegistry.getInstance().addLifecycleCallback(activityLifecycleObserver);
+    Trace.beginSection("ActivityScenario launch");
+    try {
+      getInstrumentation().waitForIdleSync();
 
-    // prefer the single argument variant for startActivity for backwards compatibility with older
-    // Robolectric versions
-    if (activityOptions == null) {
-      activityInvoker.startActivity(startActivityIntent);
-    } else {
-      activityInvoker.startActivity(startActivityIntent, activityOptions);
+      ActivityLifecycleMonitorRegistry.getInstance()
+          .addLifecycleCallback(activityLifecycleObserver);
+
+      // prefer the single argument variant for startActivity for backwards compatibility with older
+      // Robolectric versions
+      if (activityOptions == null) {
+        activityInvoker.startActivity(startActivityIntent);
+      } else {
+        activityInvoker.startActivity(startActivityIntent, activityOptions);
+      }
+
+      // Accept any steady states. An activity may start another activity in its onCreate method.
+      // Such
+      // an activity goes back to created or started state immediately after it is resumed.
+      waitForActivityToBecomeAnyOf(STEADY_STATES.values().toArray(new State[0]));
+    } finally {
+      Trace.endSection();
     }
-
-    // Accept any steady states. An activity may start another activity in its onCreate method. Such
-    // an activity goes back to created or started state immediately after it is resumed.
-    waitForActivityToBecomeAnyOf(STEADY_STATES.values().toArray(new State[0]));
   }
 
   /**
@@ -306,9 +315,14 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    */
   @Override
   public void close() {
-    moveToState(State.DESTROYED);
-    ActivityLifecycleMonitorRegistry.getInstance()
-        .removeLifecycleCallback(activityLifecycleObserver);
+    Trace.beginSection("ActivityScenario close");
+    try {
+      moveToState(State.DESTROYED);
+      ActivityLifecycleMonitorRegistry.getInstance()
+          .removeLifecycleCallback(activityLifecycleObserver);
+    } finally {
+      Trace.endSection();
+    }
   }
 
   /**

@@ -1,6 +1,6 @@
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANNOTATION_VERSION", "JUNIT_VERSION", "MONITOR_VERSION", "RUNNER_VERSION", "SERVICES_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANNOTATION_VERSION", "JUNIT_VERSION", "MONITOR_VERSION", "RUNNER_VERSION", "SERVICES_VERSION", "TRACING_VERSION")
 
 # Description: Build rules for building androidx.test from source
 licenses(["notice"])  # Apache License 2.0
@@ -26,6 +26,7 @@ android_library(
     ],
     deps = [
         "//:androidx_annotation",
+        "//:androidx_tracing",
         "//annotation",
         "//runner/monitor",
         "//services/events/java/androidx/test/services/events",
@@ -70,10 +71,11 @@ maven_artifact(
     src = ":runner_release.aar",
     artifact_deps = [
         "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
+        "androidx.test:annotation:%s" % ANNOTATION_VERSION,
         "androidx.test:monitor:[%s]" % MONITOR_VERSION,
         "androidx.test.services:storage:[%s]" % SERVICES_VERSION,
+        "androidx.tracing:tracing:%s" % TRACING_VERSION,
         "junit:junit:%s" % JUNIT_VERSION,
-        "androidx.test:annotation:%s" % ANNOTATION_VERSION,
     ],
     artifact_id = "runner",
     group_id = "androidx.test",

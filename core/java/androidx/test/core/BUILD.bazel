@@ -10,6 +10,7 @@ load(
     "KOTLIN_VERSION",
     "MONITOR_VERSION",
     "SERVICES_VERSION",
+    "TRACING_VERSION",
 )
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 
@@ -46,6 +47,7 @@ kt_android_library(
         "//:androidx_annotation",
         "//:androidx_concurrent_futures",
         "//:androidx_lifecycle_common",
+        "//:androidx_tracing",
         "//services/storage",
         # # TODO(b/201110333): this should be listenable future, but for some unknown reason build
         # fails with error: cannot access 'com.google.common.util.concurrent.ListenableFuture'
@@ -99,6 +101,7 @@ maven_artifact(
         "androidx.test:monitor:%s" % MONITOR_VERSION,
         "androidx.test.services:storage:%s" % SERVICES_VERSION,
         "androidx.lifecycle:lifecycle-common:%s" % ANDROIDX_LIFECYCLE_VERSION,
+        "androidx.tracing:tracing:%s" % TRACING_VERSION,
         "com.google.guava:listenablefuture:%s" % GUAVA_LISTENABLEFUTURE_VERSION,
         "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
         "androidx.concurrent:concurrent-futures:%s" % ANDROIDX_CONCURRENT_VERSION,

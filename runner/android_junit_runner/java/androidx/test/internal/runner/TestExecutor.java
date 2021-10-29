@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.util.Log;
 import androidx.test.internal.runner.listener.InstrumentationRunListener;
 import androidx.test.internal.util.Checks;
+import androidx.tracing.Trace;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -48,26 +49,32 @@ public final class TestExecutor {
 
   /** Execute the tests */
   public Bundle execute(Request request) {
-    Bundle resultBundle = new Bundle();
-    Result junitResults = new Result();
+    Trace.beginSection("execute tests");
     try {
-      JUnitCore testRunner = new JUnitCore();
-      setUpListeners(testRunner);
-      junitResults = testRunner.run(request);
-    } catch (Throwable t) {
-      final String msg = "Fatal exception when running tests";
-      Log.e(LOG_TAG, msg, t);
-      junitResults.getFailures().add(new Failure(Description.createSuiteDescription(msg), t));
+      Bundle resultBundle = new Bundle();
+      Result junitResults = new Result();
+      try {
+        JUnitCore testRunner = new JUnitCore();
+        setUpListeners(testRunner);
+        junitResults = testRunner.run(request);
+      } catch (Throwable t) {
+        final String msg = "Fatal exception when running tests";
+        Log.e(LOG_TAG, msg, t);
+        junitResults.getFailures().add(new Failure(Description.createSuiteDescription(msg), t));
+      } finally {
+        ByteArrayOutputStream summaryStream = new ByteArrayOutputStream();
+        // create the stream used to output summary data to the user
+        PrintStream summaryWriter = new PrintStream(summaryStream);
+        reportRunEnded(listeners, summaryWriter, resultBundle, junitResults);
+        summaryWriter.close();
+        resultBundle.putString(
+            Instrumentation.REPORT_KEY_STREAMRESULT,
+            String.format("\n%s", summaryStream.toString()));
+      }
+      return resultBundle;
     } finally {
-      ByteArrayOutputStream summaryStream = new ByteArrayOutputStream();
-      // create the stream used to output summary data to the user
-      PrintStream summaryWriter = new PrintStream(summaryStream);
-      reportRunEnded(listeners, summaryWriter, resultBundle, junitResults);
-      summaryWriter.close();
-      resultBundle.putString(
-          Instrumentation.REPORT_KEY_STREAMRESULT, String.format("\n%s", summaryStream.toString()));
+      Trace.endSection();
     }
-    return resultBundle;
   }
 
   /** Initialize listeners and add them to the JUnitCore runner */
