@@ -16,6 +16,11 @@
 
 package androidx.test.espresso.device.controller
 
+import com.android.emulator.control.EmulatorControllerGrpc
+import io.grpc.Channel
+import io.grpc.InsecureChannelCredentials
+import io.grpc.okhttp.OkHttpChannelBuilder
+import java.lang.reflect.Method
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,12 +28,47 @@ import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
 class EmulatorControllerTest {
+  private val stub: EmulatorControllerGrpc.EmulatorControllerBlockingStub = createStub()
+
   @Test
   fun setDeviceModeToInvalidDeviceMode_throwsUnsupportedDeviceOperationException() {
-    val deviceController = EmulatorController()
+    val deviceController = EmulatorController(stub)
 
     assertThrows(UnsupportedDeviceOperationException::class.java) {
       deviceController.setDeviceMode(-1)
     }
+  }
+
+  @Test
+  fun setScreenOrientationWithInvalidPort_throwsDeviceControllerOperationException() {
+    val deviceController = EmulatorController(createStubWithInvalidPort())
+
+    assertThrows(DeviceControllerOperationException::class.java) {
+      deviceController.setScreenOrientation(1)
+    }
+  }
+
+  private fun createStub(): EmulatorControllerGrpc.EmulatorControllerBlockingStub {
+    val clazz = Class.forName("android.os.SystemProperties")
+    val getter: Method = clazz.getMethod("get", String::class.java)
+    var gRpcPort = getter.invoke(clazz, "mdevx.grpc_port") as String
+    if (gRpcPort.isBlank()) {
+      throw DeviceControllerOperationException("Unable to connect to Emulator gRPC port.")
+    }
+    val port = gRpcPort.toInt()
+    val channel: Channel =
+      OkHttpChannelBuilder.forAddress("10.0.2.2", port, InsecureChannelCredentials.create()).build()
+    val emulatorControllerStub: EmulatorControllerGrpc.EmulatorControllerBlockingStub =
+      EmulatorControllerGrpc.newBlockingStub(channel)
+    return emulatorControllerStub
+  }
+
+  private fun createStubWithInvalidPort(): EmulatorControllerGrpc.EmulatorControllerBlockingStub {
+    val port = -1
+    val channel: Channel =
+      OkHttpChannelBuilder.forAddress("10.0.2.2", port, InsecureChannelCredentials.create()).build()
+    val emulatorControllerStub: EmulatorControllerGrpc.EmulatorControllerBlockingStub =
+      EmulatorControllerGrpc.newBlockingStub(channel)
+    return emulatorControllerStub
   }
 }

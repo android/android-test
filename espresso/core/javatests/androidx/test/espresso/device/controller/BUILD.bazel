@@ -17,6 +17,9 @@ kt_android_app_instrumentation_tests(
     name = "instrumentation_tests",
     srcs = glob(
         ["*.kt"],
+        exclude = [
+            "EmulatorControllerTest.kt",
+        ],
     ),
     binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
     target_devices = devices(),

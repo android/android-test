@@ -16,18 +16,11 @@
 
 package androidx.test.espresso.device.controller
 
-/** Implementation of {@link DeviceController} for tests run on a physical device. */
-class PhysicalDeviceController : DeviceController {
-  override fun setDeviceMode(deviceMode: Int) {
-    throw UnsupportedDeviceOperationException(
-      "Setting a device mode is not supported on physical devices."
-    )
-  }
+import androidx.test.espresso.EspressoException
 
-  override fun setScreenOrientation(screenOrientation: Int) {
-    // TODO(b/203092519) Investigate suppporting screen orientation rotation on real devices.
-    throw UnsupportedDeviceOperationException(
-      "Setting screen orientation is not supported on physical devices."
-    )
-  }
+/** An exception which indicates that an error occured during a device controller operation. */
+class DeviceControllerOperationException : RuntimeException, EspressoException {
+  constructor(description: String) : super(description)
+
+  constructor(description: String, cause: Throwable) : super(description, cause)
 }

@@ -38,7 +38,7 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
       return
     }
 
-    deviceController.setDeviceScreenOrientation(screenOrientation.orientation)
+    deviceController.setScreenOrientation(screenOrientation.orientation)
 
     // TODO(b/203218147): Synchronize setting screen orientation after DeviceController call.
   }

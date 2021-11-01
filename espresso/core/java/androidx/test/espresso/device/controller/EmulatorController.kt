@@ -16,8 +16,26 @@
 
 package androidx.test.espresso.device.controller
 
+import androidx.test.espresso.device.action.ScreenOrientation
+import com.android.emulator.control.EmulatorControllerGrpc
+import com.android.emulator.control.ParameterValue
+import com.android.emulator.control.PhysicalModelValue
+import com.android.emulator.control.PhysicalModelValue.PhysicalType
+import io.grpc.StatusRuntimeException
+import javax.inject.Inject
+
 /** Implementation of {@link DeviceController} for tests run on an Emulator. */
-class EmulatorController() : DeviceController {
+class EmulatorController
+@Inject
+constructor(
+  private val emulatorControllerStub: EmulatorControllerGrpc.EmulatorControllerBlockingStub
+) : DeviceController {
+  companion object {
+    private val TAG = "EmulatorController"
+    private val DEGREES_TO_ROTATE_LANDSCAPE_TO_PORTRAIT = -45F
+    private val DEGREES_TO_ROTATE_PORTRAIT_TO_LANDSCAPE = 90F
+  }
+
   override fun setDeviceMode(deviceMode: Int) {
     if (!DeviceMode.values().any { it.mode == deviceMode }) {
       throw UnsupportedDeviceOperationException(
@@ -28,7 +46,28 @@ class EmulatorController() : DeviceController {
     // TODO(b/200863559) Set the connected test device to the provided device mode.
   }
 
-  override fun setDeviceScreenOrientation(screenOrientation: Int) {
-    // TODO(b/202018386) Set the connected test device to the provided screen orientation.
+  override fun setScreenOrientation(orientation: Int) {
+    val degreesToRotate =
+      if (orientation == ScreenOrientation.LANDSCAPE.orientation) {
+        DEGREES_TO_ROTATE_PORTRAIT_TO_LANDSCAPE
+      } else {
+        DEGREES_TO_ROTATE_LANDSCAPE_TO_PORTRAIT
+      }
+    val parameters =
+      ParameterValue.newBuilder().addData(0F).addData(0F).addData(degreesToRotate).build()
+    try {
+      val test =
+        emulatorControllerStub.setPhysicalModel(
+          PhysicalModelValue.newBuilder()
+            .setTarget(PhysicalModelValue.PhysicalType.ROTATION)
+            .setValue(parameters)
+            .build()
+        )
+    } catch (e: StatusRuntimeException) {
+      throw DeviceControllerOperationException(
+        "Failed to set screen orientation. Status: ${e.getStatus()}.",
+        e
+      )
+    }
   }
 }

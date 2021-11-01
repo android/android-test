@@ -37,5 +37,5 @@ interface DeviceController {
    *
    * @param screenOrientation the orientation to put the device in
    */
-  fun setDeviceScreenOrientation(screenOrientation: Int)
+  fun setScreenOrientation(screenOrientation: Int)
 }

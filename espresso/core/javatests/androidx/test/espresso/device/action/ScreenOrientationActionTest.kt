@@ -34,7 +34,7 @@ class ScreenOrientationActionTest {
 
     action.perform(InstrumentationTestActionContext(), deviceController)
 
-    verify(deviceController).setDeviceScreenOrientation(ScreenOrientation.LANDSCAPE.orientation)
+    verify(deviceController).setScreenOrientation(ScreenOrientation.LANDSCAPE.orientation)
   }
 
   @Test
@@ -44,7 +44,6 @@ class ScreenOrientationActionTest {
 
     action.perform(InstrumentationTestActionContext(), deviceController)
 
-    verify(deviceController, never())
-      .setDeviceScreenOrientation(ScreenOrientation.PORTRAIT.orientation)
+    verify(deviceController, never()).setScreenOrientation(ScreenOrientation.PORTRAIT.orientation)
   }
 }
