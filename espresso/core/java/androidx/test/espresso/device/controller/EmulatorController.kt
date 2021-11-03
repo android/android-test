@@ -22,11 +22,9 @@ import com.android.emulator.control.ParameterValue
 import com.android.emulator.control.PhysicalModelValue
 import com.android.emulator.control.PhysicalModelValue.PhysicalType
 import io.grpc.StatusRuntimeException
-import javax.inject.Inject
 
 /** Implementation of {@link DeviceController} for tests run on an Emulator. */
 class EmulatorController
-@Inject
 constructor(
   private val emulatorControllerStub: EmulatorControllerGrpc.EmulatorControllerBlockingStub
 ) : DeviceController {

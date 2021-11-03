@@ -27,13 +27,11 @@ kt_android_library(
         "EmulatorController.kt",
         "PhysicalDeviceController.kt",
     ],
-    plugins = ["//opensource/dagger:dagger_plugin"],
     deps = [
         ":controller",
         "//android/emulator:emulator_controller_java_grpc",
         "//android/emulator:emulator_controller_kt_proto",
         "//espresso/core/java/androidx/test/espresso/device/action",
         "//grpc:core_android",
-        "//opensource/dagger",
     ],
 )
