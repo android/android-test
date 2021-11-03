@@ -13,9 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.platform.reflect;
+package androidx.test.internal.platform.reflect;
 
-/** Thrown when there was a failure making a reflective call. */
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
+
+/**
+ * Thrown when there was a failure making a reflective call.
+ *
+ * @hide
+ */
+@RestrictTo(Scope.LIBRARY_GROUP)
 public class ReflectionException extends Exception {
 
   ReflectionException(Exception cause) {

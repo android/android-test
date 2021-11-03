@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.platform.reflect;
+package androidx.test.internal.platform.reflect;
 
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -22,7 +24,10 @@ import java.lang.reflect.Method;
  * Helper class for making more performant reflection method invocations.
  *
  * <p>Lazy initializes and caches Method object to attempt to reduce reflection overhead.
+ *
+ * @hide
  */
+@RestrictTo(Scope.LIBRARY_GROUP)
 public class ReflectiveMethod<T> {
   private final String className;
   private final String methodName;

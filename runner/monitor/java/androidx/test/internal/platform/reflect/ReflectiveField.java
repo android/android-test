@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.platform.reflect;
+package androidx.test.internal.platform.reflect;
 
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import java.lang.reflect.Field;
 
 /**
  * Helper class for making more performant reflection field access.
  *
  * <p>Lazy initializes and caches Method object ro attempt to reduce reflection overhead.
+ *
+ * @hide
  */
+@RestrictTo(Scope.LIBRARY_GROUP)
 public class ReflectiveField<T> {
   private final String className;
   private final String fieldName;

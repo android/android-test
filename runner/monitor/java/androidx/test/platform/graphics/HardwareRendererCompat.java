@@ -18,8 +18,8 @@ package androidx.test.platform.graphics;
 import android.graphics.HardwareRenderer;
 import android.os.Build.VERSION;
 import android.util.Log;
-import androidx.test.platform.reflect.ReflectionException;
-import androidx.test.platform.reflect.ReflectiveMethod;
+import androidx.test.internal.platform.reflect.ReflectionException;
+import androidx.test.internal.platform.reflect.ReflectiveMethod;
 
 /**
  * Helper class that provides {@link HardwareRenderer#isDrawingEnabled()} and {@link

@@ -44,24 +44,6 @@ package androidx.test.platform.graphics {
 
 }
 
-package androidx.test.platform.reflect {
-
-  public class ReflectionException extends java.lang.Exception {
-  }
-
-  public class ReflectiveField<T> {
-    ctor public ReflectiveField(String!, String!);
-    method public T! get(Object!) throws androidx.test.platform.reflect.ReflectionException;
-  }
-
-  public class ReflectiveMethod<T> {
-    ctor public ReflectiveMethod(String!, String!, Class<?>!...);
-    method public T! invoke(Object!, java.lang.Object!...) throws androidx.test.platform.reflect.ReflectionException;
-    method public T! invokeStatic(java.lang.Object!...) throws androidx.test.platform.reflect.ReflectionException;
-  }
-
-}
-
 package androidx.test.platform.ui {
 
   public class InjectEventSecurityException extends java.lang.Exception implements androidx.test.platform.TestFrameworkException {

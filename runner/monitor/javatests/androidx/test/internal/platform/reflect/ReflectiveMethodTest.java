@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.platform.reflect;
+package androidx.test.internal.platform.reflect;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;

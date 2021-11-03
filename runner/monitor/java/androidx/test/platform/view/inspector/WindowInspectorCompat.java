@@ -20,16 +20,16 @@ import android.os.Build.VERSION_CODES;
 import android.view.View;
 import android.view.inspector.WindowInspector;
 import androidx.annotation.RestrictTo;
+import androidx.test.internal.platform.reflect.ReflectionException;
+import androidx.test.internal.platform.reflect.ReflectiveField;
+import androidx.test.internal.platform.reflect.ReflectiveMethod;
 import androidx.test.internal.util.Checks;
-import androidx.test.platform.reflect.ReflectionException;
-import androidx.test.platform.reflect.ReflectiveField;
-import androidx.test.platform.reflect.ReflectiveMethod;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Compat class that supports {@link android.viee.inspecror.WindowInspector} functionality on older
+ * Compat class that supports {@link android.viee.inspector.WindowInspector} functionality on older
  * Android SDKs.
  *
  * @hide
