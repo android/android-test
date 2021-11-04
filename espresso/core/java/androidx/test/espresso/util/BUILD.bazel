@@ -9,8 +9,9 @@ android_library(
     name = "util",
     srcs = glob(["*.java"]),
     deps = [
+        "//:androidx_annotation",
         "//runner/android_junit_runner",
         "@maven//:com_google_guava_guava",
-        "//:androidx_annotation",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
