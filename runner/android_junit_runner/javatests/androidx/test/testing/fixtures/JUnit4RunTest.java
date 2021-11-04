@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.internal.runner;
+package androidx.test.testing.fixtures;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
-/**
- * Work around for lack of support for Parameterized tests in Google 3.
- *
- * <p>TODO(b/26110951) remove when super class can be Parameterized.
- */
-@RunWith(AndroidJUnit4.class)
-public class TestLoaderScanningPathTest extends TestLoaderTest {
+@RunWith(value = Parameterized.class)
+public class JUnit4RunTest {
 
-  public TestLoaderScanningPathTest() {
-    super(true);
-  }
+  public void thisIsMayBeATest() {}
 }

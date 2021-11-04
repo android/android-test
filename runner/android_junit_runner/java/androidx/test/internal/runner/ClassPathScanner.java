@@ -44,6 +44,19 @@ public class ClassPathScanner {
 
   private static final String TAG = "ClassPathScanner";
 
+  // Default excluded test packages
+  private static final String[] DEFAULT_EXCLUDED_PACKAGES = {
+    "junit",
+    "org.junit",
+    "org.hamcrest",
+    "org.mockito", // exclude Mockito for performance and to prevent JVM related errors
+    "androidx.test.internal.runner.junit3", // always skip AndroidTestSuite
+    "androidx.test.runner.suites", // always skip AndroidClassPathSuite to avoid infinite classpath
+    // scanning loop
+    "org.jacoco", // exclude Jacoco to prevent class loading issues
+    "net.bytebuddy" // exclude byte buddy to prevent Mockito 2.0 class loading issues
+  };
+
   /**
    * A filter for classpath entry paths
    *
@@ -107,7 +120,7 @@ public class ClassPathScanner {
 
     private final Collection<String> pkgNames;
 
-    InclusivePackageNamesFilter(Collection<String> pkgNames) {
+    public InclusivePackageNamesFilter(Collection<String> pkgNames) {
       this.pkgNames = new ArrayList<>(pkgNames.size());
       for (String packageName : pkgNames) {
         if (!packageName.endsWith(".")) {
@@ -137,7 +150,7 @@ public class ClassPathScanner {
 
     private final String pkgName;
 
-    ExcludePackageNameFilter(String pkgName) {
+    public ExcludePackageNameFilter(String pkgName) {
       if (!pkgName.endsWith(".")) {
         this.pkgName = String.format("%s.", pkgName);
       } else {
@@ -267,10 +280,28 @@ public class ClassPathScanner {
     }
   }
 
+  public static List<String> getDefaultExcludedPackages() {
+    return Arrays.asList(DEFAULT_EXCLUDED_PACKAGES);
+  }
+
+  /**
+   * Retrieves set of classpath entries, excluding a set of default packages and inner classes.
+   *
+   * @throws IOException if failed to read classes from classpath
+   */
+  public Set<String> getClassPathEntries() throws IOException {
+    ChainedClassNameFilter filter = new ChainedClassNameFilter();
+    for (String pkg : DEFAULT_EXCLUDED_PACKAGES) {
+      filter.add(new ExcludePackageNameFilter(pkg));
+    }
+    filter.add(new ExternalClassNameFilter());
+    return getClassPathEntries(filter);
+  }
+
   /**
    * Retrieves set of classpath entries that match given {@link ClassNameFilter}.
    *
-   * @throws IOException
+   * @throws IOException if failed to read classes from classpath
    */
   public Set<String> getClassPathEntries(ClassNameFilter filter) throws IOException {
     // use LinkedHashSet for predictable order

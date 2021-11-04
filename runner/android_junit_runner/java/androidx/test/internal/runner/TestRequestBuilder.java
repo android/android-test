@@ -61,17 +61,6 @@ import org.junit.runners.model.RunnerBuilder;
 public class TestRequestBuilder {
   private static final String TAG = "TestRequestBuilder";
 
-  // Excluded test packages
-  private static final String[] DEFAULT_EXCLUDED_PACKAGES = {
-    "junit",
-    "org.junit",
-    "org.hamcrest",
-    "org.mockito", // exclude Mockito for performance and to prevent JVM related errors
-    "androidx.test.internal.runner.junit3", // always skip AndroidTestSuite
-    "org.jacoco", // exclude Jacoco to prevent class loading issues
-    "net.bytebuddy" // exclude byte buddy to prevent Mockito 2.0 class loading issues
-  };
-
   static final String MISSING_ARGUMENTS_MSG =
       "Must provide either classes to run, or paths to scan";
   static final String AMBIGUOUS_ARGUMENTS_MSG =
@@ -793,18 +782,22 @@ public class TestRequestBuilder {
 
       AndroidRunnerParams runnerParams =
           new AndroidRunnerParams(instr, argsBundle, perTestTimeout, ignoreSuiteMethods);
-      RunnerBuilder runnerBuilder = getRunnerBuilder(runnerParams, scanningPath);
+      RunnerBuilder runnerBuilder = getRunnerBuilder(runnerParams);
 
-      TestLoader loader = TestLoader.testLoader(classLoader, runnerBuilder, scanningPath);
+      TestLoader loader = TestLoader.Factory.create(classLoader, runnerBuilder, scanningPath);
       Collection<String> classNames;
       if (scanningPath) {
         // no class restrictions have been specified. Load all classes.
+        Log.d(TAG, "Using class path scanning to discover tests");
         classNames = getClassNamesFromClassPath();
       } else {
+        Log.d(
+            TAG,
+            String.format("Skipping class path scanning and directly running %s", includedClasses));
         classNames = includedClasses;
       }
 
-      List<Runner> runners = loader.getRunnersFor(classNames, scanningPath);
+      List<Runner> runners = loader.getRunnersFor(classNames);
 
       Suite suite = ExtendedSuite.createSuite(runners);
       Request request = Request.runner(suite);
@@ -827,18 +820,16 @@ public class TestRequestBuilder {
    * Get the {@link RunnerBuilder} to use to create the {@link Runner} instances.
    *
    * @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters
-   * @param scanningPath true if being used to build {@link Runner} from classes found while
-   *     scanning the path; requires extra checks to avoid unnecessary errors.
    * @return a {@link RunnerBuilder}.
    */
-  private RunnerBuilder getRunnerBuilder(AndroidRunnerParams runnerParams, boolean scanningPath) {
+  private RunnerBuilder getRunnerBuilder(AndroidRunnerParams runnerParams) {
     RunnerBuilder builder;
     if (skipExecution) {
       // If all that is needed is the list of tests then replace the Runner which will
       // run the test with one that will simply fire events for each of the tests.
-      builder = new AndroidLogOnlyBuilder(runnerParams, scanningPath, customRunnerBuilderClasses);
+      builder = new AndroidLogOnlyBuilder(runnerParams, customRunnerBuilderClasses);
     } else {
-      builder = new AndroidRunnerBuilder(runnerParams, scanningPath, customRunnerBuilderClasses);
+      builder = new AndroidRunnerBuilder(runnerParams, customRunnerBuilderClasses);
     }
     return builder;
   }
@@ -853,7 +844,7 @@ public class TestRequestBuilder {
     ChainedClassNameFilter filter = new ChainedClassNameFilter();
     // exclude inner classes
     filter.add(new ExternalClassNameFilter());
-    for (String pkg : DEFAULT_EXCLUDED_PACKAGES) {
+    for (String pkg : ClassPathScanner.getDefaultExcludedPackages()) {
       // Add the test packages to the exclude list unless they were explictly included.
       if (!includedPackages.contains(pkg)) {
         excludedPackages.add(pkg);

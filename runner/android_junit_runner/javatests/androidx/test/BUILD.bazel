@@ -21,11 +21,6 @@ android_library(
     manifest = "AndroidManifest.xml",
 )
 
-PARAMETERIZED_SRCS = [
-    "internal/runner/AndroidLogOnlyBuilderTest.java",
-    "internal/runner/TestLoaderTest.java",
-]
-
 UI_THREAD_STATEMENT_TEST_EXAMPLES = [
     "internal/runner/junit4/statement/UiThreadTestInterface.java",
     "internal/runner/junit4/statement/UiThreadTestOnClass.java",
@@ -33,20 +28,6 @@ UI_THREAD_STATEMENT_TEST_EXAMPLES = [
     "internal/runner/junit4/statement/UiThreadTestOnMethod.java",
     "internal/runner/junit4/statement/UiThreadTestOnSuperclass.java",
 ]
-
-# TODO(b/26110951) - remove when these classes are standalone parameterized tests
-android_library(
-    name = "parameterized",
-    srcs = PARAMETERIZED_SRCS,
-    deps = [
-        "//ext/junit",
-        "//runner/android_junit_runner",
-        "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
-        "@maven//:junit_junit",
-        "@maven//:org_hamcrest_hamcrest_all",
-        "@maven//:org_mockito_mockito_core",
-    ],
-)
 
 android_library(
     name = "ui_thread_statement_test_examples",
@@ -124,7 +105,7 @@ android_library_instrumentation_tests(
             # tested separately
             "internal/runner/ClassPathScannerTest.java",
             "internal/runner/TestRequestBuilderLocalTest.java",
-        ] + PARAMETERIZED_SRCS + UI_THREAD_STATEMENT_TEST_EXAMPLES,
+        ] + UI_THREAD_STATEMENT_TEST_EXAMPLES,
     ),
     args = [
         "--test_filter_spec",
@@ -135,7 +116,6 @@ android_library_instrumentation_tests(
     target_devices = devices(),
     deps = [
         ":legacy_test_manifest",
-        ":parameterized",
         ":ui_thread_statement_test_examples",
         "//core",
         "//ext/junit",
@@ -160,7 +140,7 @@ android_local_test(
     test_class = "androidx.test.internal.runner.TestRequestBuilderLocalTest",
     deps = [
         "runner/android_junit_runner",
-        "@maven//:org_mockito_mockito_core",
         "@maven//:com_google_truth_truth",
+        "@maven//:org_mockito_mockito_core",
     ],
 )

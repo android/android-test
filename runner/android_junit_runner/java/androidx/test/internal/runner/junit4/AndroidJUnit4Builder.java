@@ -17,6 +17,7 @@
 package androidx.test.internal.runner.junit4;
 
 import android.util.Log;
+import androidx.test.internal.runner.EmptyTestRunner;
 import androidx.test.internal.util.AndroidRunnerParams;
 import java.lang.reflect.Method;
 import org.junit.internal.builders.JUnit4Builder;
@@ -32,34 +33,19 @@ public class AndroidJUnit4Builder extends JUnit4Builder {
   private static final String TAG = "AndroidJUnit4Builder";
 
   private final AndroidRunnerParams androidRunnerParams;
-  private final boolean scanningPath;
 
-  /**
-   * @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters
-   * @param scanningPath true if being used to build {@link Runner} from classes found while
-   *     scanning the path; requires extra checks to avoid unnecessary errors.
-   */
-  public AndroidJUnit4Builder(AndroidRunnerParams runnerParams, boolean scanningPath) {
-    androidRunnerParams = runnerParams;
-    this.scanningPath = scanningPath;
-  }
-
-  /**
-   * @deprecated Provided temporarily for backwards compatibility. Use {@link
-   *     AndroidJUnit4Builder#AndroidJUnit4Builder(AndroidRunnerParams, boolean) instead}.
-   */
-  @Deprecated
+  /** @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters */
   public AndroidJUnit4Builder(AndroidRunnerParams runnerParams) {
-    this(runnerParams, false);
+    androidRunnerParams = runnerParams;
   }
 
   @Override
   public Runner runnerForClass(Class<?> testClass) throws Throwable {
     try {
-      // If scanning the path then make sure that it has at least one test method before
-      // trying to run it.
-      if (scanningPath && !hasTestMethods(testClass)) {
-        return null;
+      if (!hasTestMethods(testClass)) {
+        // return a special error runner if there are no @Test methods. This error runner will be
+        // ignored when classpath scanning
+        return new EmptyTestRunner(testClass);
       }
 
       return new AndroidJUnit4ClassRunner(testClass, androidRunnerParams);

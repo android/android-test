@@ -43,8 +43,6 @@ class AndroidLogOnlyBuilder extends RunnerBuilder {
 
   private final AndroidRunnerParams runnerParams;
 
-  private final boolean scanningPath;
-
   // The number of Runners created
   private int runnerCount = 0;
 
@@ -55,16 +53,13 @@ class AndroidLogOnlyBuilder extends RunnerBuilder {
    */
   AndroidLogOnlyBuilder(
       AndroidRunnerParams runnerParams,
-      boolean scanningPath,
       List<Class<? extends RunnerBuilder>> customRunnerBuilderClasses) {
     this.runnerParams = checkNotNull(runnerParams, "runnerParams cannot be null!");
-    this.scanningPath = scanningPath;
 
     // Create a builder for creating the executable Runner instances to wrap. Pass in this
     // builder as the suiteBuilder so that this will be called to create Runners for nested
     // classes, e.g. in Suite or Enclosed.
-    builder =
-        new AndroidRunnerBuilder(this, runnerParams, scanningPath, customRunnerBuilderClasses);
+    builder = new AndroidRunnerBuilder(this, runnerParams, customRunnerBuilderClasses);
   }
 
   @Override
@@ -74,10 +69,8 @@ class AndroidLogOnlyBuilder extends RunnerBuilder {
 
     // Build non executing runners for JUnit3 test classes
     if (isJUnit3Test(testClass)) {
-      // If scanning the path then make sure that it has at least one test method before
-      // trying to run it.
-      if (scanningPath && !hasJUnit3TestMethod(testClass)) {
-        return null;
+      if (!hasJUnit3TestMethod(testClass)) {
+        return new EmptyTestRunner(testClass);
       }
 
       return new JUnit38ClassRunner(new NonExecutingTestSuite(testClass));
@@ -101,7 +94,8 @@ class AndroidLogOnlyBuilder extends RunnerBuilder {
       if (null == runner) {
         // If the runner could not be created then do not wrap it.
         return null;
-      } else if (runner instanceof ErrorReportingRunner) {
+      } else if (runner instanceof ErrorReportingRunner
+          || runner instanceof androidx.test.internal.runner.ErrorReportingRunner) {
         // Preserve behavior where a failure during construction results in an error,
         // even while in logOnly mode, by simply returning the runner rather than
         // wrapping it.

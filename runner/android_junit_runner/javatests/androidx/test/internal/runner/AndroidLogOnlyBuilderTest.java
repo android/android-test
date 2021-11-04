@@ -16,15 +16,10 @@
 
 package androidx.test.internal.runner;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.typeCompatibleWith;
-import static org.junit.Assert.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
 
-import androidx.test.internal.runner.junit3.JUnit38ClassRunner;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.internal.util.AndroidRunnerParams;
 import androidx.test.testing.fixtures.JUnit3FailingTestCase;
 import androidx.test.testing.fixtures.JUnit3FailingTestSuiteWithSuite;
@@ -34,36 +29,19 @@ import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
-import org.junit.internal.runners.ErrorReportingRunner;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.Suite;
 import org.junit.runners.model.RunnerBuilder;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
-// TODO(b/26110951) not supported yet (note this class is ignored in BUILD file as well)
-// @RunWith(Parameterized.class)
-public abstract class AndroidLogOnlyBuilderTest {
-
-  @Mock private AndroidRunnerParams mockAndroidRunnerParams;
+@RunWith(AndroidJUnit4.class)
+public class AndroidLogOnlyBuilderTest {
 
   private AndroidLogOnlyBuilder androidLogOnlyBuilder;
 
-  @Parameter public boolean scanningPath;
-
-  public AndroidLogOnlyBuilderTest(boolean scanningPath) {
-    this.scanningPath = scanningPath;
-  }
-
-  @Parameters
-  public static Object[] parameters() {
-    return new Object[] {true, false};
-  }
+  public AndroidLogOnlyBuilderTest() {}
 
   public static class AnotherJUnit4Test {
     @Test
@@ -90,31 +68,24 @@ public abstract class AndroidLogOnlyBuilderTest {
 
   @Before
   public void initBuilder() {
-    MockitoAnnotations.initMocks(this);
+    AndroidRunnerParams runnerParams = new AndroidRunnerParams(null, null, -1, false);
     androidLogOnlyBuilder =
         new AndroidLogOnlyBuilder(
-            mockAndroidRunnerParams,
-            scanningPath,
-            Collections.<Class<? extends RunnerBuilder>>emptyList());
+            runnerParams, Collections.<Class<? extends RunnerBuilder>>emptyList());
   }
 
   @Test
   public void builderHandlesNotATest() throws Throwable {
     Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(NotATest.class);
-    if (scanningPath) {
-      assertThat(selectedRunner, nullValue());
-    } else {
-      assertThat(selectedRunner, notNullValue());
-      assertThat(selectedRunner.getClass(), typeCompatibleWith(ErrorReportingRunner.class));
+    assertThat(selectedRunner).isNotNull();
+    assertThat(selectedRunner.getClass()).isAssignableTo(ErrorReportingRunner.class);
       runWithRunner(selectedRunner, 1, 1);
-    }
   }
 
   @Test
   public void builderHandlesJUnit3Tests() throws Throwable {
     Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit3FailingTestCase.class);
-    assertThat(selectedRunner, notNullValue());
-    assertThat(selectedRunner.getClass(), typeCompatibleWith(JUnit38ClassRunner.class));
+    assertThat(selectedRunner).isNotNull();
     runWithRunner(selectedRunner, 1, 0);
   }
 
@@ -122,51 +93,47 @@ public abstract class AndroidLogOnlyBuilderTest {
   public void builderHandlesJUnit3TestSuites() throws Throwable {
     Runner selectedRunner =
         androidLogOnlyBuilder.runnerForClass(JUnit3FailingTestSuiteWithSuite.class);
-    assertThat(selectedRunner, notNullValue());
-    assertThat(selectedRunner.getClass(), typeCompatibleWith(JUnit38ClassRunner.class));
+    assertThat(selectedRunner).isNotNull();
+
     runWithRunner(selectedRunner, 1, 0);
   }
 
   @Test
   public void builderHandlesJUnit4Tests() throws Throwable {
     Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit4Failing.class);
-    assertThat(selectedRunner, notNullValue());
-    assertThat(selectedRunner.getClass(), typeCompatibleWith(NonExecutingRunner.class));
+    assertThat(selectedRunner).isNotNull();
+
     runWithRunner(selectedRunner, 1, 0);
   }
 
   @Test
   public void builderHandlesParameterizedRunnerTests() throws Throwable {
     Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit4ParameterizedTest.class);
-    assertThat(selectedRunner, notNullValue());
-    assertThat(selectedRunner.getClass(), typeCompatibleWith(NonExecutingRunner.class));
+    assertThat(selectedRunner).isNotNull();
+
     runWithRunner(selectedRunner, 3, 0);
   }
 
   @Test
   public void builderHandlesJunit4SuitesTests() throws Throwable {
     Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit4TestSuite.class);
-    assertThat(selectedRunner, notNullValue());
+    assertThat(selectedRunner).isNotNull();
     // Although this returns a Suite all the nested Runner implementations will be
     // NonExecutingRunner otherwise there will be failures when run.
-    assertThat(selectedRunner.getClass(), typeCompatibleWith(Suite.class));
     runWithRunner(selectedRunner, 2, 0);
   }
 
   @Test
   public void builderHandlesJunit4EnclosedRunnerTests() throws Throwable {
     Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit4EnclosedTest.class);
-    assertThat(selectedRunner, notNullValue());
-    // Although this returns an Enclosed all the nested Runner implementations will be
-    // NonExecutingRunner otherwise there will be failures when run.
-    assertThat(selectedRunner.getClass(), typeCompatibleWith(Enclosed.class));
+    assertThat(selectedRunner).isNotNull();
     runWithRunner(selectedRunner, 1, 0);
   }
 
   private static void runWithRunner(Runner runner, int runCount, int failureCount) {
     JUnitCore testRunner = new JUnitCore();
     Result result = testRunner.run(runner);
-    assertThat(result.getRunCount(), is(equalTo(runCount)));
-    assertThat(result.getFailureCount(), is(equalTo(failureCount)));
+    assertThat(result.getRunCount()).isEqualTo(runCount);
+    assertThat(result.getFailureCount()).isEqualTo(failureCount);
   }
 }

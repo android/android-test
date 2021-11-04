@@ -1775,7 +1775,7 @@ public class TestRequestBuilderTest {
         1,
         "Invalid test class '"
             + JUnit3FailingTestSuite.class.getName()
-            + "':\n  1. No runnable methods");
+            + "': No test methods found");
   }
 
   /**
@@ -1792,7 +1792,7 @@ public class TestRequestBuilderTest {
         1,
         "Invalid test class '"
             + JUnit3FailingTestSuite.class.getName()
-            + "':\n  1. No runnable methods");
+            + "': No test methods found");
   }
 
   /** Verify that a JUnit 3 custom Test cannot be executed because it has no runnable methods. */
@@ -1805,7 +1805,7 @@ public class TestRequestBuilderTest {
         1,
         "Invalid test class '"
             + JUnit3FailingTestSuite.class.getName()
-            + "':\n  1. No runnable methods");
+            + "': No test methods found");
   }
 
   /**
@@ -1822,7 +1822,7 @@ public class TestRequestBuilderTest {
         1,
         "Invalid test class '"
             + JUnit3FailingTestSuite.class.getName()
-            + "':\n  1. No runnable methods");
+            + "': No test methods found");
   }
 
   private static void ensureAllTestsFailed(

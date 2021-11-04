@@ -20,12 +20,11 @@ import static androidx.test.internal.util.AndroidRunnerBuilderUtil.hasJUnit3Test
 import static androidx.test.internal.util.AndroidRunnerBuilderUtil.isJUnit3Test;
 
 import android.util.Log;
+import androidx.test.internal.runner.EmptyTestRunner;
 import androidx.test.internal.util.AndroidRunnerParams;
 import junit.framework.TestCase;
 import org.junit.internal.builders.JUnit3Builder;
-import org.junit.runner.Description;
 import org.junit.runner.Runner;
-import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.RunnerBuilder;
 
 /**
@@ -36,53 +35,22 @@ public class AndroidJUnit3Builder extends JUnit3Builder {
 
   private static final String TAG = "AndroidJUnit3Builder";
 
-  /**
-   * A special runner, used while scanning to indicate that the class is a JUnit 3 test but is not a
-   * valid test because it has no methods.
-   */
-  public static final Runner NOT_A_VALID_TEST =
-      new Runner() {
-        @Override
-        public Description getDescription() {
-          return Description.EMPTY;
-        }
-
-        @Override
-        public void run(RunNotifier notifier) {}
-      };
 
   private final AndroidRunnerParams androidRunnerParams;
-  private final boolean scanningPath;
 
-  /**
-   * @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters
-   * @param scanningPath true if being used to build {@link Runner} from classes found while
-   *     scanning the path; requires extra checks to avoid unnecessary errors.
-   */
-  public AndroidJUnit3Builder(AndroidRunnerParams runnerParams, boolean scanningPath) {
-    androidRunnerParams = runnerParams;
-    this.scanningPath = scanningPath;
-  }
-
-  /**
-   * @deprecated Provided temporarily for backwards compatibility. Use {@link
-   *     AndroidJUnit3Builder#AndroidJUnit3Builder(AndroidRunnerParams, boolean) instead}.
-   */
-  @Deprecated
+  /** @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters */
   public AndroidJUnit3Builder(AndroidRunnerParams runnerParams) {
-    this(runnerParams, false);
+    androidRunnerParams = runnerParams;
   }
 
   @Override
   public Runner runnerForClass(Class<?> testClass) throws Throwable {
     try {
       if (isJUnit3Test(testClass)) {
-        // If scanning the path then make sure that it has at least one test method before
-        // trying to run it.
-        if (scanningPath && !hasJUnit3TestMethod(testClass)) {
-          // Return a runner to prevent any other RunnerBuilder classes from
-          // trying to check this class.
-          return NOT_A_VALID_TEST;
+        if (!hasJUnit3TestMethod(testClass)) {
+          // ideally we would just let JUnit38ClassRunner handle this case, but for historical
+          // reasons there was special handling when classpath scanning for this case
+          return new EmptyTestRunner(testClass);
         }
         return new JUnit38ClassRunner(new AndroidTestSuite(testClass, androidRunnerParams));
       }

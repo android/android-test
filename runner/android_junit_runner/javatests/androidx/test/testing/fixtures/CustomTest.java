@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.internal.runner;
+package androidx.test.testing.fixtures;
 
-import androidx.test.filters.SmallTest;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import junit.framework.Test;
+import junit.framework.TestResult;
 
-/**
- * Work around for lack of support for Parameterized tests in Google 3.
- *
- * <p>TODO(b/26110951) remove when super class can be Parameterized.
- */
-@RunWith(JUnit4.class)
-@SmallTest
-public class AndroidLogOnlyBuilderNotScanningPathTest extends AndroidLogOnlyBuilderTest {
+public class CustomTest implements Test {
 
-  public AndroidLogOnlyBuilderNotScanningPathTest() {
-    super(false);
+  @Override
+  public int countTestCases() {
+    return 0;
   }
+
+  @Override
+  public void run(TestResult testResult) {}
 }

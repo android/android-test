@@ -47,20 +47,17 @@ class AndroidRunnerBuilder extends AllDefaultPossibilitiesBuilder {
 
   /** @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters */
   public AndroidRunnerBuilder(AndroidRunnerParams runnerParams) {
-    this(null, runnerParams, false, Collections.<Class<? extends RunnerBuilder>>emptyList());
+    this(null, runnerParams, Collections.<Class<? extends RunnerBuilder>>emptyList());
   }
 
   /**
    * @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters
-   * @param scanningPath true if being used to build {@link Runner} from classes found while
-   *     scanning the path; requires extra checks to avoid unnecessary errors.
    * @param customRunnerBuilderClasses custom {@link RunnerBuilder} classes
    */
   AndroidRunnerBuilder(
       AndroidRunnerParams runnerParams,
-      boolean scanningPath,
       List<Class<? extends RunnerBuilder>> customRunnerBuilderClasses) {
-    this(null, runnerParams, scanningPath, customRunnerBuilderClasses);
+    this(null, runnerParams, customRunnerBuilderClasses);
   }
 
   /**
@@ -80,11 +77,10 @@ class AndroidRunnerBuilder extends AllDefaultPossibilitiesBuilder {
   AndroidRunnerBuilder(
       RunnerBuilder suiteBuilder,
       AndroidRunnerParams runnerParams,
-      boolean scanningPath,
       List<Class<? extends RunnerBuilder>> customRunnerBuilderClasses) {
     super(true);
-    androidJUnit3Builder = new AndroidJUnit3Builder(runnerParams, scanningPath);
-    androidJUnit4Builder = new AndroidJUnit4Builder(runnerParams, scanningPath);
+    androidJUnit3Builder = new AndroidJUnit3Builder(runnerParams);
+    androidJUnit4Builder = new AndroidJUnit4Builder(runnerParams);
     androidSuiteBuilder = new AndroidSuiteBuilder(runnerParams);
     androidAnnotatedBuilder =
         new AndroidAnnotatedBuilder(suiteBuilder == null ? this : suiteBuilder, runnerParams);
