@@ -33,6 +33,10 @@
   <string name="enter_hint">Type text and press Enter</string>
   <string name="launch_list_activity">Launch list_activity</string>
   <string name="launch_scroll_activity">Launch scroll_activity</string>
+  <string name="screen_orientation_text"
+          description="Displays the current orientation of the test device [CHAR_LIMIT=NONE]">
+    screen orientation has not been set
+  </string>
   <string name="send_data_to_message_edit_text">send_data_to_message_edit_text</string>
   <string name="send_hint">Enter text here</string>
   <string name="send_hint_for_call">Enter number here</string>

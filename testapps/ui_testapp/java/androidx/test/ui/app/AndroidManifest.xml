@@ -33,7 +33,8 @@
   <application
       android:icon="@drawable/ic_launcher"
       android:label="UI Test App"
-      android:name="android.support.multidex.MultiDexApplication">
+      android:name="android.support.multidex.MultiDexApplication"
+      android:supportsRtl="true">
     <activity
         android:label="UI Test App"
         android:name=".MainActivity">
@@ -183,6 +184,11 @@
         android:label="Duplicate View Activity"
         android:name=".DuplicateViewActivity"
         android:exported="false" />
+     <activity
+        android:label="screen orientation activity"
+        android:name=".ScreenOrientationActivity"
+        android:configChanges="orientation|screenSize"
+        android:exported="false"/>
     <service android:name=".ChatHeadService"/>
 
     <provider

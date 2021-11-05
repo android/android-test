@@ -32,7 +32,8 @@
 
   <application
       android:icon="@drawable/ic_launcher"
-      android:label="UI Test App">
+      android:label="UI Test App"
+      android:supportsRtl="true">
     <activity
         android:label="UI Test App"
         android:name=".MainActivity">
@@ -174,6 +175,11 @@
     <activity
         android:label="Duplicate View Activity"
         android:name=".DuplicateViewActivity" />
+    <activity
+        android:label="screen orientation activity"
+        android:name=".ScreenOrientationActivity"
+        android:configChanges="orientation|screenSize"
+        android:exported="false"/>
 
     <service android:name=".ChatHeadService"/>
     <provider
