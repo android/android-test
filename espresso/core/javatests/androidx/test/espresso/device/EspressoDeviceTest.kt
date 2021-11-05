@@ -16,35 +16,77 @@
 
 package androidx.test.espresso.device
 
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.action.setFlatMode
+import androidx.test.espresso.device.action.setScreenOrientation
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.ui.app.R
+import androidx.test.ui.app.ScreenOrientationActivity
 import org.junit.Assert.assertTrue
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
 class EspressoDeviceTest {
+  @get:Rule
+  val activityScenario: ActivityScenarioRule<ScreenOrientationActivity> =
+    ActivityScenarioRule(ScreenOrientationActivity::class.java)
 
   @Test
   fun setFlatModeWithPerform_returnsDeviceInteraction() {
-    val deviceInteraction = EspressoDevice.onDevice().perform(setFlatMode())
+    val deviceInteraction = onDevice().perform(setFlatMode())
 
     assertTrue(deviceInteraction is DeviceInteraction)
   }
 
   @Test
   fun setFlatMode_returnsDeviceInteraction() {
-    val deviceInteraction = EspressoDevice.onDevice().setFlatMode()
+    val deviceInteraction = onDevice().setFlatMode()
 
     assertTrue(deviceInteraction is DeviceInteraction)
   }
 
   @Test
-  fun setScreenOrientation_returnsDeviceInteraction() {
-    val deviceInteraction =
-      EspressoDevice.onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
+  fun onDevice_setScreenOrientationToLandscape() {
+    onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
 
-    assertTrue(deviceInteraction is DeviceInteraction)
+    onView(withId(R.id.current_screen_orientation)).check(matches(withText("landscape")))
+  }
+
+  @Test
+  fun onDevice_setScreenOrientationToPortrait() {
+    onDevice().perform(setScreenOrientation(ScreenOrientation.PORTRAIT))
+
+    onView(withId(R.id.current_screen_orientation)).check(matches(withText("portrait")))
+  }
+
+  @Test
+  fun onDevice_setScreenOrientationToLandscapeAndThenToPortrait() {
+    onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
+
+    onView(withId(R.id.current_screen_orientation)).check(matches(withText("landscape")))
+
+    onDevice().perform(setScreenOrientation(ScreenOrientation.PORTRAIT))
+
+    onView(withId(R.id.current_screen_orientation)).perform(click())
+    onView(withId(R.id.current_screen_orientation)).check(matches(withText("portrait")))
+  }
+
+  @Test
+  fun onDevice_clickAndThenSetScreenOrientationToLandscape() {
+    onView(withId(R.id.current_screen_orientation)).perform(click())
+
+    onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
+
+    onView(withId(R.id.current_screen_orientation)).perform(click())
+    onView(withId(R.id.current_screen_orientation)).check(matches(withText("landscape")))
   }
 }

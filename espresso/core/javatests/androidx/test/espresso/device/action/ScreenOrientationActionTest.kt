@@ -18,6 +18,8 @@ package androidx.test.espresso.device.action
 
 import androidx.test.espresso.device.context.InstrumentationTestActionContext
 import androidx.test.espresso.device.controller.DeviceController
+import androidx.test.espresso.device.controller.DeviceControllerOperationException
+import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -32,7 +34,9 @@ class ScreenOrientationActionTest {
     val deviceController: DeviceController = mock(DeviceController::class.java)
     val action: ScreenOrientationAction = ScreenOrientationAction(ScreenOrientation.LANDSCAPE)
 
-    action.perform(InstrumentationTestActionContext(), deviceController)
+    assertThrows(DeviceControllerOperationException::class.java) {
+      action.perform(InstrumentationTestActionContext(), deviceController)
+    }
 
     verify(deviceController).setScreenOrientation(ScreenOrientation.LANDSCAPE.orientation)
   }

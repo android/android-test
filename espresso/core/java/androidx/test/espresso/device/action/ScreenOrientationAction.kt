@@ -20,15 +20,17 @@ import android.content.res.Configuration
 import android.util.Log
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceController
+import androidx.test.espresso.device.controller.DeviceControllerOperationException
 
 /** Action to set the test device to the provided screen orientation. */
 internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation) : DeviceAction {
   companion object {
     private val TAG = "ScreenOrientationAction"
+    private val TIMEOUT_MS: Long = 5000
   }
 
   override fun perform(context: ActionContext, deviceController: DeviceController) {
-    val currentOrientation =
+    var currentOrientation =
       context.applicationContext.getResources().getConfiguration().orientation
     val requestedOrientation =
       if (screenOrientation == ScreenOrientation.LANDSCAPE) Configuration.ORIENTATION_LANDSCAPE
@@ -40,6 +42,18 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
 
     deviceController.setScreenOrientation(screenOrientation.orientation)
 
-    // TODO(b/203218147): Synchronize setting screen orientation after DeviceController call.
+    currentOrientation = context.applicationContext.getResources().getConfiguration().orientation
+    val startTimeMs = System.currentTimeMillis()
+    var elapsedTimeMs: Long = 0
+    while (currentOrientation != requestedOrientation && elapsedTimeMs < TIMEOUT_MS) {
+      currentOrientation = context.applicationContext.getResources().getConfiguration().orientation
+      elapsedTimeMs = System.currentTimeMillis() - startTimeMs
+    }
+
+    if (currentOrientation != requestedOrientation) {
+      throw DeviceControllerOperationException(
+        "Failed to set the screen orientation after 5 seconds."
+      )
+    }
   }
 }
