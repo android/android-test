@@ -19,7 +19,7 @@ package androidx.test.services.events.platform;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.os.Parcel;
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 import androidx.test.services.events.TestCaseInfo;
 import androidx.test.services.events.TestStatus;
 import androidx.test.services.events.TimeStamp;

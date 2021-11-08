@@ -23,8 +23,8 @@ import static androidx.test.services.events.ParcelableConverter.getTestCaseFromD
 import static java.util.Collections.emptyList;
 
 import android.os.ConditionVariable;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import androidx.test.services.events.FailureInfo;
 import androidx.test.services.events.TestCaseInfo;

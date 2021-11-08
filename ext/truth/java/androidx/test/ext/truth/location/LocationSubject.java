@@ -20,7 +20,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import android.location.Location;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 import androidx.test.ext.truth.os.BundleSubject;
 import com.google.common.truth.DoubleSubject;
 import com.google.common.truth.FailureMetadata;

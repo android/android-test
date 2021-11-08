@@ -20,7 +20,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 
 /** An activity which starts another activity in {@link #onCreate(Bundle)}. */
 public class RedirectingActivity extends Activity {

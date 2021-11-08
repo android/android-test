@@ -24,7 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.hamcrest.Matchers.allOf;
 
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.Adapter;

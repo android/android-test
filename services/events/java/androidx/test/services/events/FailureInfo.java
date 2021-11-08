@@ -20,7 +20,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 import androidx.annotation.NonNull;
 
 /**

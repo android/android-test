@@ -16,7 +16,7 @@
 
 package androidx.test.internal.events.client;
 
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 import org.junit.runner.Description;
 
 /** JUnit has bugs that can lead to generating invalid data. */

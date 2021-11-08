@@ -16,7 +16,7 @@
 
 package com.google.android.apps.common.testing.ui.multiprocess.testapp.idling;
 
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 import androidx.test.espresso.IdlingResource;
 import java.util.concurrent.atomic.AtomicBoolean;
 

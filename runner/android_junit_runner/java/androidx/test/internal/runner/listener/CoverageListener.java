@@ -17,7 +17,7 @@ package androidx.test.internal.runner.listener;
 
 import android.app.Instrumentation;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.internal.runner.coverage.InstrumentationCoverageReporter;
 import androidx.test.platform.io.PlatformTestStorage;

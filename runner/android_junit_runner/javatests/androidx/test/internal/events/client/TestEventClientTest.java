@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.internal.runner.RunnerArgs;

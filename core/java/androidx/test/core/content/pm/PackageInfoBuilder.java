@@ -20,7 +20,7 @@ import static androidx.test.internal.util.Checks.checkState;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 
 /** Builder for {@link PackageInfo}. */
 public final class PackageInfoBuilder {

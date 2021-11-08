@@ -20,7 +20,7 @@ import static androidx.test.multiprocess.app.Util.setCurrentRunningProcess;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;

@@ -25,7 +25,7 @@ import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;

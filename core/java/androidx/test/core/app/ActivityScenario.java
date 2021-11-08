@@ -28,7 +28,7 @@ import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import androidx.annotation.GuardedBy;
 import androidx.lifecycle.Lifecycle.Event;

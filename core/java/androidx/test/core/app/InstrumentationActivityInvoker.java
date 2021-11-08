@@ -32,7 +32,7 @@ import android.content.IntentSender;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import androidx.test.internal.platform.app.ActivityInvoker;
 import androidx.test.internal.platform.app.ActivityLifecycleTimeout;

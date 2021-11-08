@@ -16,7 +16,7 @@
 
 package androidx.test.internal.events.client;
 
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 import androidx.test.services.events.discovery.TestDiscoveryEvent;
 
 /**

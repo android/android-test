@@ -19,7 +19,7 @@ package androidx.test.internal.events.client;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.os.RemoteException;
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 import androidx.test.services.events.run.ITestRunEvent;
 import androidx.test.services.events.run.TestRunEvent;
 

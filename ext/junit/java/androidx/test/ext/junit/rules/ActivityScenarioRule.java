@@ -20,7 +20,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
 import androidx.test.core.app.ActivityScenario;

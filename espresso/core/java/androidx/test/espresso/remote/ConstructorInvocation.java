@@ -20,7 +20,7 @@ import static androidx.test.internal.util.LogUtil.logDebug;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import com.google.common.cache.Cache;

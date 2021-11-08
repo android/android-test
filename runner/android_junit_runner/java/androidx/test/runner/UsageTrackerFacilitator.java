@@ -18,8 +18,8 @@ package androidx.test.runner;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
