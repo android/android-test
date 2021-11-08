@@ -25,7 +25,8 @@ public final class ActivityInvoker$$CC {
 
   private ActivityInvoker$$CC() {}
 
-  public static Intent getIntentForActivity(Class<? extends Activity> activityClass) {
+  public static Intent getIntentForActivity$$dflt$$(ActivityInvoker invoker,
+            Class<? extends Activity> activityClass) {
     Intent intent =
         Intent.makeMainActivity(
             new ComponentName(getInstrumentation().getTargetContext(), activityClass));
