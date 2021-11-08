@@ -16,6 +16,7 @@ android_library(
         exclude = [
             "internal/runner/runtime/ExposedInstrumentationApi.java",
             "internal/runner/hidden/ExposedInstrumentationApi.java",
+            "internal/platform/app/ActivityInvoker$$CC.java",
         ],
     ),
     deps = [
@@ -54,8 +55,16 @@ android_library(
 # group of targets to use to produce release binary + docs
 android_library(
     name = "monitor_release_lib",
+    srcs = [
+        # only needed for external release backwards compatibility
+        "internal/platform/app/ActivityInvoker$$CC.java",
+    ],
     exports = [
         ":monitor",
+    ],
+    deps = [
+        ":monitor",
+        "//third_party/java/androidx/annotation",
     ],
 )
 
