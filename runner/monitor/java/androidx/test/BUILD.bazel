@@ -64,7 +64,7 @@ android_library(
     ],
     deps = [
         ":monitor",
-        "//third_party/java/androidx/annotation",
+        "//:androidx_annotation",
     ],
 )
 
