@@ -18,9 +18,9 @@ package androidx.test.espresso.contrib;
 
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 
-import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.UiController;

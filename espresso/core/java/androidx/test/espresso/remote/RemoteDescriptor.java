@@ -20,9 +20,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import androidx.annotation.Nullable;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;

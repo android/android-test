@@ -16,10 +16,10 @@
 package androidx.test.ext.truth.view;
 
 import android.os.Build;
-import androidx.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.MotionEvent.PointerCoords;
 import android.view.MotionEvent.PointerProperties;
+import androidx.annotation.Nullable;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.FloatSubject;
 import com.google.common.truth.IntegerSubject;

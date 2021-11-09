@@ -20,8 +20,8 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-import androidx.annotation.NonNull;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.test.services.events.ErrorInfo;
 import androidx.test.services.events.ParcelableConverter;
 import androidx.test.services.events.TestCaseInfo;

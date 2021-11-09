@@ -23,9 +23,9 @@ import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import androidx.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.View;
+import androidx.annotation.NonNull;
 import androidx.test.espresso.InjectEventSecurityException;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;

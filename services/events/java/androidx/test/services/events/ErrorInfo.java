@@ -20,8 +20,8 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Denotes an android test error. Has details of the error including stack trace, type, and message.

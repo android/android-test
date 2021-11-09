@@ -18,8 +18,8 @@ package androidx.test.core.app.testing;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.Window;
+import androidx.annotation.Nullable;
 
 /**
  * A minimum activity to demonstrate unit testing relating to Activity's life cycle events. It

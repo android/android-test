@@ -20,9 +20,9 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import android.content.Context;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.Log;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunListener;
 

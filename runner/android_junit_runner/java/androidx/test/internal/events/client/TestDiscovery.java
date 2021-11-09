@@ -19,8 +19,8 @@ package androidx.test.internal.events.client;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.services.events.ParcelableConverter.getTestCaseFromDescription;
 
-import androidx.annotation.NonNull;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.test.services.events.TestEventException;
 import androidx.test.services.events.discovery.TestDiscoveryFinishedEvent;
 import androidx.test.services.events.discovery.TestDiscoveryStartedEvent;

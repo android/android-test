@@ -17,9 +17,9 @@
 package androidx.test.internal.events.client;
 
 import android.content.Context;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.Log;
 
 /**
  * Provides arguments to {@link TestEventClient#connect(Context, TestEventClientConnectListener,
