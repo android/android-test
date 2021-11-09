@@ -43,6 +43,7 @@ import androidx.test.espresso.util.TreeIterables;
 import androidx.test.internal.util.Checks;
 import androidx.test.platform.app.InstrumentationRegistry;
 import com.google.common.util.concurrent.ListenableFutureTask;
+import com.google.errorprone.annotations.CheckReturnValue;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -50,7 +51,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.CheckReturnValue;
 import org.hamcrest.Matcher;
 
 /**

@@ -178,15 +178,15 @@ package androidx.test.espresso.web.sugar {
     method public <E> androidx.test.espresso.web.sugar.Web.WebInteraction<E!>! check(androidx.test.espresso.web.assertion.WebAssertion<E!>!);
     method public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! forceJavascriptEnabled();
     method public R! get();
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! inWindow(androidx.test.espresso.web.model.WindowReference!);
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! inWindow(androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.WindowReference!>!);
+    method @CheckResult @com.google.errorprone.annotations.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! inWindow(androidx.test.espresso.web.model.WindowReference!);
+    method @CheckResult @com.google.errorprone.annotations.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! inWindow(androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.WindowReference!>!);
     method public <E> androidx.test.espresso.web.sugar.Web.WebInteraction<E!>! perform(androidx.test.espresso.web.model.Atom<E!>!);
     method public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! reset();
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! withContextualElement(androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.ElementReference!>!);
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! withElement(androidx.test.espresso.web.model.ElementReference!);
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! withElement(androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.ElementReference!>!);
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! withNoTimeout();
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! withTimeout(long, java.util.concurrent.TimeUnit!);
+    method @CheckResult @com.google.errorprone.annotations.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! withContextualElement(androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.ElementReference!>!);
+    method @CheckResult @com.google.errorprone.annotations.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! withElement(androidx.test.espresso.web.model.ElementReference!);
+    method @CheckResult @com.google.errorprone.annotations.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! withElement(androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.ElementReference!>!);
+    method @CheckResult @com.google.errorprone.annotations.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! withNoTimeout();
+    method @CheckResult @com.google.errorprone.annotations.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! withTimeout(long, java.util.concurrent.TimeUnit!);
   }
 
 }

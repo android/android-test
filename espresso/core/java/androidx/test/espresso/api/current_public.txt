@@ -23,13 +23,13 @@ package androidx.test.espresso {
   }
 
   public class DataInteraction {
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.DataInteraction! atPosition(Integer!);
+    method @CheckResult @com.google.errorprone.annotations.CheckReturnValue public androidx.test.espresso.DataInteraction! atPosition(Integer!);
     method public androidx.test.espresso.ViewInteraction! check(androidx.test.espresso.ViewAssertion!);
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.DataInteraction! inAdapterView(org.hamcrest.Matcher<android.view.View!>!);
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.DataInteraction! inRoot(org.hamcrest.Matcher<androidx.test.espresso.Root!>!);
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.DataInteraction! onChildView(org.hamcrest.Matcher<android.view.View!>!);
+    method @CheckResult @com.google.errorprone.annotations.CheckReturnValue public androidx.test.espresso.DataInteraction! inAdapterView(org.hamcrest.Matcher<android.view.View!>!);
+    method @CheckResult @com.google.errorprone.annotations.CheckReturnValue public androidx.test.espresso.DataInteraction! inRoot(org.hamcrest.Matcher<androidx.test.espresso.Root!>!);
+    method @CheckResult @com.google.errorprone.annotations.CheckReturnValue public androidx.test.espresso.DataInteraction! onChildView(org.hamcrest.Matcher<android.view.View!>!);
     method public androidx.test.espresso.ViewInteraction! perform(androidx.test.espresso.ViewAction!...);
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.DataInteraction! usingAdapterViewProtocol(androidx.test.espresso.action.AdapterViewProtocol!);
+    method @CheckResult @com.google.errorprone.annotations.CheckReturnValue public androidx.test.espresso.DataInteraction! usingAdapterViewProtocol(androidx.test.espresso.action.AdapterViewProtocol!);
   }
 
   public static final class DataInteraction.DisplayDataMatcher extends org.hamcrest.TypeSafeMatcher<android.view.View> {
@@ -41,10 +41,10 @@ package androidx.test.espresso {
   public final class Espresso {
     method public static void closeSoftKeyboard();
     method @Deprecated public static java.util.List<androidx.test.espresso.IdlingResource!>! getIdlingResources();
-    method @CheckResult @javax.annotation.CheckReturnValue public static androidx.test.espresso.DataInteraction! onData(org.hamcrest.Matcher<?>!);
+    method @CheckResult @com.google.errorprone.annotations.CheckReturnValue public static androidx.test.espresso.DataInteraction! onData(org.hamcrest.Matcher<?>!);
     method public static <T> T! onIdle(java.util.concurrent.Callable<T!>!);
     method public static void onIdle();
-    method @CheckResult @javax.annotation.CheckReturnValue public static androidx.test.espresso.ViewInteraction! onView(org.hamcrest.Matcher<android.view.View!>!);
+    method @CheckResult @com.google.errorprone.annotations.CheckReturnValue public static androidx.test.espresso.ViewInteraction! onView(org.hamcrest.Matcher<android.view.View!>!);
     method public static void openActionBarOverflowOrOptionsMenu(android.content.Context!);
     method public static void openContextualActionModeOverflowMenu();
     method public static void pressBack();

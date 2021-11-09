@@ -36,13 +36,13 @@ import androidx.test.espresso.web.model.Atom;
 import androidx.test.espresso.web.model.ElementReference;
 import androidx.test.espresso.web.model.WindowReference;
 import androidx.test.internal.platform.util.TestOutputEmitter;
+import com.google.errorprone.annotations.CheckReturnValue;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import org.hamcrest.Matcher;
 
