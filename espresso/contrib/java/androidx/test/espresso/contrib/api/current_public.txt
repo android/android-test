@@ -44,6 +44,7 @@ package androidx.test.espresso.contrib {
     method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.ViewAction! actionOnItemAtPosition(int, androidx.test.espresso.ViewAction!);
     method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.contrib.RecyclerViewActions.PositionableRecyclerViewAction! scrollTo(org.hamcrest.Matcher<android.view.View!>!);
     method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.contrib.RecyclerViewActions.PositionableRecyclerViewAction! scrollToHolder(org.hamcrest.Matcher<VH!>!);
+    method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.ViewAction! scrollToLastPosition();
     method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.ViewAction! scrollToPosition(int);
   }
 

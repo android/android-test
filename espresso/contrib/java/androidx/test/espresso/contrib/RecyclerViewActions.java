@@ -127,6 +127,11 @@ public final class RecyclerViewActions {
     return new ScrollToPositionViewAction(position);
   }
 
+  /** Returns a {@link ViewAction} which scrolls {@link RecyclerView} to the last position. */
+  public static <VH extends ViewHolder> ViewAction scrollToLastPosition() {
+    return new ScrollToLastPositionViewAction();
+  }
+
   /**
    * Performs a {@link ViewAction} on a view matched by viewHolderMatcher.
    *
@@ -410,6 +415,30 @@ public final class RecyclerViewActions {
       RecyclerView recyclerView = (RecyclerView) view;
       recyclerView.scrollToPosition(position);
       uiController.loopMainThreadUntilIdle();
+    }
+  }
+
+  /**
+   * {@link ViewAction} which scrolls {@link RecyclerView} to the last position. See {@link
+   * RecyclerViewActions#scrollToLastPosition} for more details.
+   */
+  private static final class ScrollToLastPositionViewAction implements ViewAction {
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Matcher<View> getConstraints() {
+      return allOf(isAssignableFrom(RecyclerView.class), isDisplayed());
+    }
+
+    @Override
+    public String getDescription() {
+      return "scroll RecyclerView to last position";
+    }
+
+    @Override
+    public void perform(UiController uiController, View view) {
+      RecyclerView recyclerView = (RecyclerView) view;
+      recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
     }
   }
 
