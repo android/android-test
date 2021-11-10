@@ -23,12 +23,13 @@ import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.action.setFlatMode
 import androidx.test.espresso.device.action.setScreenOrientation
+import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ui.app.R
 import androidx.test.ui.app.ScreenOrientationActivity
-import org.junit.Assert.assertTrue
+import org.junit.Assert.assertThrows
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -41,17 +42,10 @@ class EspressoDeviceTest {
     ActivityScenarioRule(ScreenOrientationActivity::class.java)
 
   @Test
-  fun setFlatModeWithPerform_returnsDeviceInteraction() {
-    val deviceInteraction = onDevice().perform(setFlatMode())
-
-    assertTrue(deviceInteraction is DeviceInteraction)
-  }
-
-  @Test
-  fun setFlatMode_returnsDeviceInteraction() {
-    val deviceInteraction = onDevice().setFlatMode()
-
-    assertTrue(deviceInteraction is DeviceInteraction)
+  fun setFlatModeOnNonFoldableDevice_throwsException() {
+    assertThrows(DeviceControllerOperationException::class.java) {
+      EspressoDevice.onDevice().setFlatMode()
+    }
   }
 
   @Test

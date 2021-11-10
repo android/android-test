@@ -21,6 +21,8 @@ import com.android.emulator.control.EmulatorControllerGrpc
 import com.android.emulator.control.ParameterValue
 import com.android.emulator.control.PhysicalModelValue
 import com.android.emulator.control.PhysicalModelValue.PhysicalType
+import com.android.emulator.control.Posture
+import com.android.emulator.control.Posture.PostureValue
 import io.grpc.StatusRuntimeException
 
 /** Implementation of {@link DeviceController} for tests run on an Emulator. */
@@ -35,13 +37,29 @@ constructor(
   }
 
   override fun setDeviceMode(deviceMode: Int) {
-    if (!DeviceMode.values().any { it.mode == deviceMode }) {
+    if (!(deviceMode == DeviceMode.FLAT.mode || deviceMode == DeviceMode.TABLETOP.mode)) {
       throw UnsupportedDeviceOperationException(
         "The provided device mode is not supported on this device."
       )
     }
 
-    // TODO(b/200863559) Set the connected test device to the provided device mode.
+    val postureValue: PostureValue =
+      if (deviceMode == DeviceMode.FLAT.mode) {
+        PostureValue.POSTURE_OPENED
+      } else {
+        PostureValue.POSTURE_HALF_OPENED
+      }
+    val posture: Posture = Posture.newBuilder().setValue(postureValue).build()
+    try {
+      val result = emulatorControllerStub.setPosture(posture)
+    } catch (e: StatusRuntimeException) {
+      throw DeviceControllerOperationException(
+        "Failed to set device mode. Please make sure the connected Emulator is foldable.",
+        e
+      )
+    }
+
+    // TODO(b/200863559) Handle hinge position if deviceMode is BOOK or TABLETOP.
   }
 
   override fun setScreenOrientation(orientation: Int) {

@@ -18,6 +18,7 @@ kt_android_app_instrumentation_tests(
         ["*.kt"],
         exclude = [
             "EspressoDeviceTest.kt",
+            "FoldableEspressoDeviceTest.kt",
         ],
     ),
     binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
