@@ -26,7 +26,7 @@ import org.junit.runner.notification.RunNotifier;
  *
  * <p>Patterned after org.junit.internal.runners.ErrorReportingRunner, which sadly is not public.
  */
-class ErrorReportingRunner extends Runner {
+public class ErrorReportingRunner extends Runner {
   private final String className;
   private final Throwable cause;
 
