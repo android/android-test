@@ -19,11 +19,13 @@ package androidx.test.internal.events.client;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.services.events.discovery.TestDiscoveryErrorEvent;
 import androidx.test.services.events.discovery.TestDiscoveryEvent;
 import androidx.test.services.events.discovery.TestDiscoveryFinishedEvent;
 import androidx.test.services.events.discovery.TestDiscoveryStartedEvent;
@@ -31,14 +33,16 @@ import androidx.test.services.events.discovery.TestFoundEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.Description;
+import org.junit.runner.Result;
 import org.junit.runner.RunWith;
+import org.junit.runner.notification.Failure;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-/** Unit tests fpr {@link TestDiscovery}. */
+/** Unit tests fpr {@link TestDiscoveryListener}. */
 @RunWith(AndroidJUnit4.class)
-public class TestDiscoveryTest {
+public class TestDiscoveryListenerTest {
   @Mock TestEventClientConnectListener mockConnectListener;
   @Mock TestDiscoveryEventService discoveryEventService;
 
@@ -48,11 +52,13 @@ public class TestDiscoveryTest {
   }
 
   @Test
-  public void addTests() throws TestEventClientException {
-    TestDiscovery testDiscovery = new TestDiscovery(discoveryEventService);
+  public void testFound() throws TestEventClientException {
+    TestDiscoveryListener testDiscoveryListener = new TestDiscoveryListener(discoveryEventService);
     Description testDescription = Description.createTestDescription(getClass(), "sampleTest");
 
-    testDiscovery.addTests(testDescription);
+    testDiscoveryListener.testRunStarted(Description.EMPTY);
+    testDiscoveryListener.testFinished(testDescription);
+    testDiscoveryListener.testRunFinished(new Result());
 
     ArgumentCaptor<TestDiscoveryEvent> argument = ArgumentCaptor.forClass(TestDiscoveryEvent.class);
     verify(discoveryEventService, times(3)).send(argument.capture());
@@ -67,16 +73,35 @@ public class TestDiscoveryTest {
   }
 
   @Test
-  public void addBogusTest() throws TestEventClientException {
+  public void testFailure_initError() throws TestEventClientException {
     ArgumentCaptor<TestDiscoveryEvent> argument = ArgumentCaptor.forClass(TestDiscoveryEvent.class);
-
-    TestDiscovery testDiscovery = new TestDiscovery(discoveryEventService);
+    TestDiscoveryListener testDiscoveryListener = new TestDiscoveryListener(discoveryEventService);
     Description testDescription = Description.createTestDescription("a.b", "initializationError");
-    testDiscovery.addTests(testDescription);
 
-    verify(discoveryEventService, times(2)).send(argument.capture());
+    testDiscoveryListener.testRunStarted(Description.EMPTY);
+    testDiscoveryListener.testFailure(new Failure(testDescription, new RuntimeException()));
+    testDiscoveryListener.testFinished(testDescription);
+    testDiscoveryListener.testRunFinished(new Result());
+
+    verify(discoveryEventService, times(3)).send(argument.capture());
     assertThat(argument.getAllValues().get(0), instanceOf(TestDiscoveryStartedEvent.class));
-    assertThat(argument.getAllValues().get(1), instanceOf(TestDiscoveryFinishedEvent.class));
+    assertThat(argument.getAllValues().get(1), instanceOf(TestDiscoveryErrorEvent.class));
+    assertThat(argument.getAllValues().get(2), instanceOf(TestDiscoveryFinishedEvent.class));
+    verifyNoMoreInteractions(discoveryEventService);
+  }
+
+  @Test
+  public void reportProcessCrashed() throws TestEventClientException {
+    ArgumentCaptor<TestDiscoveryEvent> argument = ArgumentCaptor.forClass(TestDiscoveryEvent.class);
+    TestDiscoveryListener testDiscoveryListener = new TestDiscoveryListener(discoveryEventService);
+
+    boolean result = testDiscoveryListener.reportProcessCrash(new RuntimeException());
+
+    assertTrue(result);
+    verify(discoveryEventService, times(3)).send(argument.capture());
+    assertThat(argument.getAllValues().get(0), instanceOf(TestDiscoveryStartedEvent.class));
+    assertThat(argument.getAllValues().get(1), instanceOf(TestDiscoveryErrorEvent.class));
+    assertThat(argument.getAllValues().get(2), instanceOf(TestDiscoveryFinishedEvent.class));
     verifyNoMoreInteractions(discoveryEventService);
   }
 }
