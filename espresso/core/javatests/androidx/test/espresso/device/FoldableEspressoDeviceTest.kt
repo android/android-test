@@ -31,4 +31,11 @@ class FoldableEspressoDeviceTest {
 
     assertTrue(deviceInteraction is DeviceInteraction)
   }
+
+  @Test
+  fun setTabletopMode_returnsDeviceInteraction() {
+    val deviceInteraction = EspressoDevice.onDevice().setTabletopMode()
+
+    assertTrue(deviceInteraction is DeviceInteraction)
+  }
 }

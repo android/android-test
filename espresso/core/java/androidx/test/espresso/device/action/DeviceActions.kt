@@ -21,10 +21,13 @@ package androidx.test.espresso.device.action
 /** Entry point for device action operations. */
 
 /**
- * Set device screen to be completely flat, like a tablet.
+ * Set device screen to be completely flat, like a tablet. For details on foldable postures, see
+ * https://developer.android.com/guide/topics/large-screens/learn-about-foldables#foldable_postures
  *
- * Currently only supported for tests run on Android foldable Emulators.
- * @throws UnsupportedDeviceOperationException if used on a real device or a non-foldable Emulator.
+ * This action is for foldable devices only. Currently only supported for tests run on Android
+ * Emulators.
+ * @throws UnsupportedDeviceOperationException if used on a real device.
+ * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
 fun setFlatMode(): DeviceAction {
   return FlatModeAction()
@@ -36,6 +39,20 @@ fun setFlatMode(): DeviceAction {
  */
 fun setScreenOrientation(orientation: ScreenOrientation): DeviceAction {
   return ScreenOrientationAction(orientation)
+}
+
+/**
+ * Set device screen to be folded with the hinge in the horizontal position. For details on foldable
+ * postures, see
+ * https://developer.android.com/guide/topics/large-screens/learn-about-foldables#foldable_postures
+ *
+ * This action is for foldable devices only. Currently only supported for tests run on Android
+ * Emulators.
+ * @throws UnsupportedDeviceOperationException if used on a real device.
+ * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
+ */
+fun setTabletopMode(): DeviceAction {
+  return TabletopModeAction()
 }
 
 /** Enum for screen orientations a device can be set to. */

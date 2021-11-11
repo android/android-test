@@ -19,12 +19,16 @@ package androidx.test.espresso.device
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.action.setFlatMode as getSetFlatModeDeviceAction
 import androidx.test.espresso.device.action.setScreenOrientation as getSetScreenOrientationDeviceAction
+import androidx.test.espresso.device.action.setTabletopMode as getSetTabletopModeDeviceAction
 
 /**
- * Set device screen to be completely flat, like a tablet.
+ * Set device screen to be completely flat, like a tablet. For details on foldable postures, see
+ * https://developer.android.com/guide/topics/large-screens/learn-about-foldables#foldable_postures
  *
- * Currently only supported for tests run on Android foldable Emulators.
- * @throws UnsupportedDeviceOperationException if used on a real device or a non-foldable Emulator.
+ * This action is for foldable devices only. Currently only supported for tests run on Android
+ * Emulators.
+ * @throws UnsupportedDeviceOperationException if used on a real device.
+ * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
 fun DeviceInteraction.setFlatMode(): DeviceInteraction {
   perform(getSetFlatModeDeviceAction())
@@ -37,5 +41,20 @@ fun DeviceInteraction.setFlatMode(): DeviceInteraction {
  */
 fun DeviceInteraction.setScreenOrientation(orientation: ScreenOrientation): DeviceInteraction {
   perform(getSetScreenOrientationDeviceAction(orientation))
+  return this
+}
+
+/**
+ * Set device screen to be folded with the hinge in the horizontal position. For details on foldable
+ * postures, see
+ * https://developer.android.com/guide/topics/large-screens/learn-about-foldables#foldable_postures
+ *
+ * This action is for foldable devices only. Currently only supported for tests run on Android
+ * Emulators.
+ * @throws UnsupportedDeviceOperationException if used on a real device.
+ * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
+ */
+fun DeviceInteraction.setTabletopMode(): DeviceInteraction {
+  perform(getSetTabletopModeDeviceAction())
   return this
 }

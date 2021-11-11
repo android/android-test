@@ -49,6 +49,13 @@ class EspressoDeviceTest {
   }
 
   @Test
+  fun setTabletopModeOnNonFoldableDevice_throwsException() {
+    assertThrows(DeviceControllerOperationException::class.java) {
+      EspressoDevice.onDevice().setTabletopMode()
+    }
+  }
+
+  @Test
   fun onDevice_setScreenOrientationToLandscape() {
     onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
 

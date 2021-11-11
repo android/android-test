@@ -40,6 +40,15 @@ class EmulatorControllerTest {
   }
 
   @Test
+  fun setDeviceModeToBookMode_throwsUnsupportedDeviceOperationException() {
+    val deviceController = EmulatorController(stub)
+
+    assertThrows(UnsupportedDeviceOperationException::class.java) {
+      deviceController.setDeviceMode(DeviceMode.BOOK.mode)
+    }
+  }
+
+  @Test
   fun setScreenOrientationWithInvalidPort_throwsDeviceControllerOperationException() {
     val deviceController = EmulatorController(createStubWithInvalidPort())
 
