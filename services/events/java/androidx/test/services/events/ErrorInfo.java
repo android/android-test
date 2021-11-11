@@ -22,6 +22,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.test.services.events.internal.StackTrimmer;
+import org.junit.runner.notification.Failure;
 
 /**
  * Denotes an android test error. Has details of the error including stack trace, type, and message.
@@ -81,4 +83,11 @@ public final class ErrorInfo implements Parcelable {
           return new ErrorInfo[size];
         }
       };
+
+  public static ErrorInfo createFromFailure(Failure failure) {
+    return new ErrorInfo(
+        StackTrimmer.getTrimmedMessage(failure),
+        failure.getException().getClass().getName(),
+        StackTrimmer.getTrimmedStackTrace(failure));
+  }
 }

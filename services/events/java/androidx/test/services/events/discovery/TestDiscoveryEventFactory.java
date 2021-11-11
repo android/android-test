@@ -34,6 +34,8 @@ final class TestDiscoveryEventFactory implements Creator<TestDiscoveryEvent> {
         return new TestDiscoveryStartedEvent();
       case TEST_FOUND:
         return new TestFoundEvent(source);
+      case ERROR:
+        return new TestDiscoveryErrorEvent(source);
       case FINISHED:
         return new TestDiscoveryFinishedEvent();
     }

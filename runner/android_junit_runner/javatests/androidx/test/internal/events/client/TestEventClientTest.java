@@ -19,7 +19,6 @@ package androidx.test.internal.events.client;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -62,8 +61,7 @@ public class TestEventClientTest {
 
     TestEventClient client = TestEventClient.connect(context, listener, args);
 
-    assertThat(client.isTestDiscoveryEnabled(), is(false));
-    assertThat(client.isTestRunEventsEnabled(), is(false));
+    assertThat(client.isOrchestrationServiceEnabled(), is(false));
   }
 
   @Test
@@ -74,8 +72,7 @@ public class TestEventClientTest {
 
     TestEventClient client = TestEventClient.connect(context, listener, args);
 
-    assertThat(client.isTestDiscoveryEnabled(), is(false));
-    assertThat(client.isTestRunEventsEnabled(), is(true));
+    assertThat(client.isOrchestrationServiceEnabled(), is(true));
   }
 
   @Test
@@ -87,8 +84,7 @@ public class TestEventClientTest {
 
     TestEventClient client = TestEventClient.connect(context, listener, args);
 
-    assertThat(client.isTestDiscoveryEnabled(), is(false));
-    assertThat(client.isTestRunEventsEnabled(), is(true));
+    assertThat(client.isOrchestrationServiceEnabled(), is(true));
   }
 
   @Test
@@ -100,12 +96,11 @@ public class TestEventClientTest {
 
     TestEventClient client = TestEventClient.connect(context, listener, args);
 
-    assertThat(client.isTestDiscoveryEnabled(), is(true));
-    assertThat(client.isTestRunEventsEnabled(), is(false));
+    assertThat(client.isOrchestrationServiceEnabled(), is(true));
   }
 
   @Test
-  public void getNotificationRunListener_listTestsArgTrue_returnsNull() {
+  public void getNotificationRunListener_listTestsArgTrue_returnsDiscoveryListener() {
     Bundle bundle = new Bundle();
     bundle.putString(ARGUMENT_ORCHESTRATOR_SERVICE, "foo.OrchestratorService");
     bundle.putString(ARGUMENT_LIST_TESTS_FOR_ORCHESTRATOR, "true");
@@ -113,7 +108,7 @@ public class TestEventClientTest {
 
     TestEventClient client = TestEventClient.connect(context, listener, args);
 
-    assertThat(client.getRunListener(), nullValue());
+    assertThat(client.getRunListener(), instanceOf(RunListener.class));
   }
 
   @Test
@@ -129,7 +124,7 @@ public class TestEventClientTest {
   }
 
   @Test
-  public void addTests_listTestsArgFalse_doesNotThrow() {
+  public void addTests_listTestsArgFalse_doesNotThrow() throws Exception {
     Bundle bundle = new Bundle();
     bundle.putString(ARGUMENT_ORCHESTRATOR_SERVICE, "foo.OrchestratorService");
     bundle.putString(ARGUMENT_LIST_TESTS_FOR_ORCHESTRATOR, "false");
@@ -137,11 +132,13 @@ public class TestEventClientTest {
 
     TestEventClient client = TestEventClient.connect(context, listener, args);
 
-    client.addTests(Description.createTestDescription(getClass(), "sampleTest"));
+    client
+        .getRunListener()
+        .testFinished(Description.createTestDescription(getClass(), "sampleTest"));
   }
 
   @Test
-  public void addTests_listTestsArgTrue_doesNotThrow() {
+  public void addTests_listTestsArgTrue_doesNotThrow() throws Exception {
     Bundle bundle = new Bundle();
     bundle.putString(ARGUMENT_ORCHESTRATOR_SERVICE, "foo.OrchestratorService");
     bundle.putString(ARGUMENT_LIST_TESTS_FOR_ORCHESTRATOR, "true");
@@ -149,7 +146,9 @@ public class TestEventClientTest {
 
     TestEventClient client = TestEventClient.connect(context, listener, args);
 
-    client.addTests(Description.createTestDescription(getClass(), "sampleTest"));
+    client
+        .getRunListener()
+        .testFinished(Description.createTestDescription(getClass(), "sampleTest"));
   }
 
   private static TestEventClientArgs argsFromBundle(Bundle bundle) {

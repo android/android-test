@@ -17,8 +17,6 @@
 package androidx.test.internal.events.client;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
@@ -30,7 +28,6 @@ import androidx.test.services.events.TestRunInfo;
 import androidx.test.services.events.TestStatus;
 import androidx.test.services.events.TestStatus.Status;
 import androidx.test.services.events.TimeStamp;
-import androidx.test.services.events.internal.StackTrimmer;
 import androidx.test.services.events.platform.TestCaseErrorEvent;
 import androidx.test.services.events.platform.TestCaseFinishedEvent;
 import androidx.test.services.events.platform.TestCaseStartedEvent;
@@ -98,7 +95,6 @@ public final class TestPlatformListener extends RunListener {
   /** {@inheritDoc} */
   @Override
   public void testRunStarted(Description description) throws Exception {
-    TimeStamp timeStamp = getTimeStamp();
     initListener();
     ongoingResultListener.get().testRunStarted(description);
     setRunDescription(description);
@@ -111,7 +107,7 @@ public final class TestPlatformListener extends RunListener {
     }
     try {
       memoizedTestRun = convertToTestRun(testRunDescription);
-      notificationService.send(new TestRunStartedEvent(memoizedTestRun, timeStamp));
+      notificationService.send(new TestRunStartedEvent(memoizedTestRun, TimeStamp.now()));
     } catch (TestEventException e) {
       Log.e(TAG, "Unable to send TestRunStartedEvent to Test Platform", e);
     }
@@ -120,7 +116,6 @@ public final class TestPlatformListener extends RunListener {
   /** {@inheritDoc} */
   @Override
   public void testRunFinished(Result result) throws Exception {
-    TimeStamp timeStamp = getTimeStamp();
     ongoingResultListener.get().testRunFinished(result);
     Status status = result.wasSuccessful() ? Status.PASSED : Status.FAILED;
     // If the process crashed at any point, this is failed.
@@ -140,13 +135,13 @@ public final class TestPlatformListener extends RunListener {
             // The test was supposed to be run but was never finished
             testCaseToStatus.put(test, Status.CANCELLED);
           }
-          testFinishedInternal(test, timeStamp);
+          testFinishedInternal(test, TimeStamp.now());
         }
       }
     }
     try {
       notificationService.send(
-          new TestRunFinishedEvent(memoizedTestRun, new TestStatus(status), timeStamp));
+          new TestRunFinishedEvent(memoizedTestRun, new TestStatus(status), TimeStamp.now()));
     } catch (TestEventException e) {
       Log.e(TAG, "Unable to send TestRunFinishedEvent to Test Platform", e);
     }
@@ -155,7 +150,6 @@ public final class TestPlatformListener extends RunListener {
   /** {@inheritDoc} */
   @Override
   public void testStarted(Description description) throws Exception {
-    TimeStamp timeStamp = getTimeStamp();
     if (isInitError(description)) {
       return; // This isn't a real test method, don't send an update to the service
     }
@@ -163,7 +157,8 @@ public final class TestPlatformListener extends RunListener {
     startedTestCases.add(description);
     currentTestCase.set(description); // Caches the test description in case of a crash
     try {
-      notificationService.send(new TestCaseStartedEvent(convertToTestCase(description), timeStamp));
+      notificationService.send(
+          new TestCaseStartedEvent(convertToTestCase(description), TimeStamp.now()));
     } catch (TestEventException e) {
       Log.e(TAG, "Unable to send TestStartedEvent to Test Platform", e);
     }
@@ -172,8 +167,7 @@ public final class TestPlatformListener extends RunListener {
   /** {@inheritDoc} */
   @Override
   public void testFinished(Description description) throws Exception {
-    TimeStamp timeStamp = getTimeStamp();
-    testFinishedInternal(description, timeStamp);
+    testFinishedInternal(description, TimeStamp.now());
   }
 
   // If the test is marked as finished during the test run finish, we use the same timestamp
@@ -200,14 +194,13 @@ public final class TestPlatformListener extends RunListener {
   /** {@inheritDoc} */
   @Override
   public void testFailure(Failure failure) throws Exception {
-    TimeStamp timeStamp = getTimeStamp();
     Description description = failure.getDescription();
     ongoingResultListener.get().testFailure(failure);
     if (description.isTest() && !isInitError(description)) {
       testCaseToStatus.put(description, Status.FAILED);
     }
     try {
-      TestPlatformEvent event = createErrorEvent(failure, timeStamp);
+      TestPlatformEvent event = createErrorEvent(failure, TimeStamp.now());
       notificationService.send(event);
     } catch (TestEventException e) {
       throw new IllegalStateException("Unable to send error event", e);
@@ -217,13 +210,12 @@ public final class TestPlatformListener extends RunListener {
   /** {@inheritDoc} */
   @Override
   public void testAssumptionFailure(Failure failure) {
-    TimeStamp timeStamp = getTimeStamp();
     ongoingResultListener.get().testAssumptionFailure(failure);
     if (failure.getDescription().isTest()) {
       testCaseToStatus.put(failure.getDescription(), Status.SKIPPED);
     }
     try {
-      TestPlatformEvent event = createErrorEvent(failure, timeStamp);
+      TestPlatformEvent event = createErrorEvent(failure, TimeStamp.now());
       notificationService.send(event);
     } catch (TestEventException e) {
       Log.e(TAG, "Unable to send TestAssumptionFailureEvent to Test Platform", e);
@@ -233,7 +225,6 @@ public final class TestPlatformListener extends RunListener {
   /** {@inheritDoc} */
   @Override
   public void testIgnored(Description description) throws Exception {
-    TimeStamp timeStamp = getTimeStamp();
     ongoingResultListener.get().testIgnored(description);
     Log.i(
         TAG,
@@ -244,7 +235,7 @@ public final class TestPlatformListener extends RunListener {
             + "#"
             + description.getMethodName());
     testCaseToStatus.put(description, Status.IGNORED);
-    testFinishedInternal(description, timeStamp);
+    testFinishedInternal(description, TimeStamp.now());
   }
 
   /**
@@ -258,7 +249,7 @@ public final class TestPlatformListener extends RunListener {
    *   <li>The test run has finished.
    * </ol>
    */
-  public void reportProcessCrash(Throwable t) {
+  public boolean reportProcessCrash(Throwable t) {
     processCrashed.set(true);
     boolean isTestCase = true;
     Description failingDescription = currentTestCase.get();
@@ -267,6 +258,7 @@ public final class TestPlatformListener extends RunListener {
       failingDescription = testRunDescription;
     }
     try {
+      Log.e("TestPlatformListener", "reporting crash as testfailure", t);
       testFailure(new Failure(failingDescription, t));
       if (isTestCase) {
         testFinished(failingDescription);
@@ -274,7 +266,9 @@ public final class TestPlatformListener extends RunListener {
       testRunFinished(ongoingResult.get());
     } catch (Exception e) {
       Log.e(TAG, "An exception was encountered while reporting the process crash", e);
+      return false;
     }
+    return true;
   }
 
   private void initListener() {
@@ -322,11 +316,7 @@ public final class TestPlatformListener extends RunListener {
     if (!descriptionToUse.isTest() || isInitError(descriptionToUse)) {
       descriptionToUse = testRunDescription;
     }
-    ErrorInfo errorInfo =
-        new ErrorInfo(
-            StackTrimmer.getTrimmedMessage(failure),
-            failure.getException().getClass().getName(),
-            StackTrimmer.getTrimmedStackTrace(failure));
+    ErrorInfo errorInfo = ErrorInfo.createFromFailure(failure);
     // If the description is a run description, report a run error. Otherwise report a test error.
     if (!descriptionToUse.equals(testRunDescription)) {
       try {
@@ -342,9 +332,4 @@ public final class TestPlatformListener extends RunListener {
     return new TestRunErrorEvent(memoizedTestRun, errorInfo, timeStamp);
   }
 
-  private TimeStamp getTimeStamp() {
-    long epochNanos = System.nanoTime();
-    long epochSeconds = NANOSECONDS.toSeconds(epochNanos);
-    return new TimeStamp(epochSeconds, (int) (epochNanos - SECONDS.toNanos(epochSeconds)));
-  }
 }

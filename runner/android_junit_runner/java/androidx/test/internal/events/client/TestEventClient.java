@@ -23,6 +23,7 @@ import android.content.Context;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunListener;
 
@@ -60,13 +61,14 @@ public final class TestEventClient {
    * At most one of these should not be null - the non-null value determines how this client
    * operates.
    */
-  @Nullable private final TestDiscovery testDiscovery;
+  @Nullable private final TestDiscoveryListener testDiscoveryListener;
   @Nullable private final OrchestratedInstrumentationListener notificationRunListener;
   @Nullable private final TestPlatformListener testPlatformListener;
+  private final AtomicBoolean isConnectedToOrchestrator = new AtomicBoolean(false);
 
   /** Creates a no-op TestEventClient that doesn't send test discovery or run events. */
   private TestEventClient() {
-    this.testDiscovery = null;
+    this.testDiscoveryListener = null;
     this.notificationRunListener = null;
     this.testPlatformListener = null;
   }
@@ -75,9 +77,9 @@ public final class TestEventClient {
    * Creates a TestEventClient in test discovery mode. Call {@link #addTests(Description)} from the
    * test runner to send the test case info to the remote service.
    */
-  private TestEventClient(@NonNull TestDiscovery testDiscovery) {
-    checkNotNull(testDiscovery, "testDiscovery cannot be null");
-    this.testDiscovery = testDiscovery;
+  private TestEventClient(@NonNull TestDiscoveryListener testDiscoveryListener) {
+    checkNotNull(testDiscoveryListener, "testDiscovery cannot be null");
+    this.testDiscoveryListener = testDiscoveryListener;
     this.notificationRunListener = null;
     this.testPlatformListener = null;
   }
@@ -88,7 +90,7 @@ public final class TestEventClient {
    */
   private TestEventClient(@NonNull OrchestratedInstrumentationListener runListener) {
     checkNotNull(runListener, "runListener cannot be null");
-    this.testDiscovery = null;
+    this.testDiscoveryListener = null;
     this.notificationRunListener = runListener;
     this.testPlatformListener = null;
   }
@@ -99,7 +101,7 @@ public final class TestEventClient {
    */
   private TestEventClient(@NonNull TestPlatformListener runListener) {
     checkNotNull(runListener, "runListener cannot be null");
-    this.testDiscovery = null;
+    this.testDiscoveryListener = null;
     this.notificationRunListener = null;
     this.testPlatformListener = runListener;
   }
@@ -135,8 +137,9 @@ public final class TestEventClient {
     if (args.isTestDiscoveryRequested) {
       Log.v(TAG, "Test discovery events requested");
       TestDiscoveryEventService testDiscoveryEventService = (TestDiscoveryEventService) connection;
-      TestDiscovery testDiscovery = new TestDiscovery(testDiscoveryEventService);
-      result = new TestEventClient(testDiscovery);
+      TestDiscoveryListener testDiscoveryListener =
+          new TestDiscoveryListener(testDiscoveryEventService);
+      result = new TestEventClient(testDiscoveryListener);
     } else if (args.isTestRunEventsRequested) {
       Log.v(TAG, "Test run events requested");
       if (args.testPlatformMigration) {
@@ -155,14 +158,24 @@ public final class TestEventClient {
   }
 
   /**
+   * Returns true if an orchestration service (either discovery or test run events service) was
+   * requested.
+   *
+   * @return
+   */
+  public boolean isOrchestrationServiceEnabled() {
+    return isTestDiscoveryEnabled() || isTestRunEventsEnabled();
+  }
+
+  /**
    * Returns true if test discovery was requested by providing both the {@link
    * TestEventClientArgs.Builder#orchestratorService} and {@link
    * TestEventClientArgs.Builder#isTestDiscoveryRequested} arguments.
    *
    * @return true if in test discovery mode, false if in the default test run mode
    */
-  public boolean isTestDiscoveryEnabled() {
-    return testDiscovery != null;
+  private boolean isTestDiscoveryEnabled() {
+    return testDiscoveryListener != null;
   }
 
   /**
@@ -172,41 +185,27 @@ public final class TestEventClient {
    *
    * @return true if in orchestrated test run mode
    */
-  public boolean isTestRunEventsEnabled() {
+  private boolean isTestRunEventsEnabled() {
     return notificationRunListener != null || testPlatformListener != null;
   }
 
   /**
-   * Returns the {@link OrchestratedInstrumentationListener} instance if available.
+   * Returns the main {@link RunListener} for reporting test results
    *
-   * @return an {@link OrchestratedInstrumentationListener} instance
+   * @return an {@link RunListener} instance or null if testEventClient is not enabled
    */
   @Nullable
   public RunListener getRunListener() {
-    if (!isTestRunEventsEnabled()) {
-      Log.e(TAG, "Orchestrator service not connected - can't send test run notifications");
-    }
-    if (notificationRunListener != null) {
-      return notificationRunListener;
+    if (isTestDiscoveryEnabled()) {
+      return testDiscoveryListener;
+    } else if (isTestRunEventsEnabled()) {
+      if (notificationRunListener != null) {
+        return notificationRunListener;
+      } else {
+        return testPlatformListener;
+      }
     } else {
-      return testPlatformListener;
-    }
-  }
-
-  /**
-   * Sends a single test case to the orchestrator during test discovery mode.
-   *
-   * @param description the JUnit {@link Description} representing a test which is to be run
-   */
-  public void addTests(@NonNull Description description) {
-    if (!isTestDiscoveryEnabled()) {
-      Log.e(TAG, "Orchestrator service not connected - can't send tests");
-      return;
-    }
-    try {
-      testDiscovery.addTests(description);
-    } catch (TestEventClientException e) {
-      Log.e(TAG, "Failed to add test [" + description + "]", e);
+      return null;
     }
   }
 
@@ -237,13 +236,25 @@ public final class TestEventClient {
         "TestEventClientArgs misconfiguration - can't determine which service connection to use.");
   }
 
-  /** Reports the process crash event with a given exception. */
-  public void reportProcessCrash(Throwable t) {
-    reportProcessCrash(t, /* timeout */ SECONDS.toMillis(20));
+  /**
+   * Reports the process crash event with a given exception.
+   *
+   * @return true if process crash was reported to a test event service, false otherwise
+   */
+  public boolean reportProcessCrash(Throwable t) {
+    return reportProcessCrash(t, /* timeout */ SECONDS.toMillis(20));
   }
 
-  /** Reports the process crash event with a given exception. */
-  public void reportProcessCrash(Throwable t, long timeoutMillis) {
+  /**
+   * Reports the process crash event with a given exception.
+   *
+   * @return true if process crash was reported to a test event service, false otherwise
+   */
+  public boolean reportProcessCrash(Throwable t, long timeoutMillis) {
+    if (!isConnectedToOrchestrator.get()) {
+      Log.w(TAG, "Process crashed before connection to orchestrator");
+      return false;
+    }
     if (isTestRunEventsEnabled()) {
       // Waits until the orchestrator gets a chance to handle the test failure (if any) and
       // report the process crashed event to the orchestrator before bringing down the entire
@@ -252,16 +263,20 @@ public final class TestEventClient {
       // It's also possible that the process crashes in the middle of a test, so no TestFinish event
       // will be received. In this case, it will wait until timeoutMillis is reached.
       if (notificationRunListener != null) {
-        Log.d(TAG, "Test run event service is available.");
-        notificationRunListener.reportProcessCrash(t, timeoutMillis);
+        Log.d(TAG, "Reporting process crashed to orchestration test run event service.");
+        return notificationRunListener.reportProcessCrash(t, timeoutMillis);
       }
       // Ignores timeoutMillis, this listener reports the error and allows the process to exit
       // quickly. We don't wait for the test to handle the exception.
       if (testPlatformListener != null) {
-        Log.d(TAG, "Platform test event service is available.");
-        testPlatformListener.reportProcessCrash(t);
+        Log.d(TAG, "Reporting process crash to platform test event service.");
+        return testPlatformListener.reportProcessCrash(t);
       }
+    } else if (isTestDiscoveryEnabled()) {
+      Log.d(TAG, "Reporting process crash to platform test discovery service.");
+      return testDiscoveryListener.reportProcessCrash(t);
     }
+    return false;
   }
 
   /**
@@ -274,5 +289,9 @@ public final class TestEventClient {
    */
   public static void setOrchestratorConnection(TestEventServiceConnection conn) {
     defaultConn = checkNotNull(conn);
+  }
+
+  public void setConnectedToOrchestrator(boolean b) {
+    isConnectedToOrchestrator.set(b);
   }
 }
