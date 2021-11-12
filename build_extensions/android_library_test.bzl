@@ -42,6 +42,7 @@ def axt_android_library_test(
             srcs = srcs,
             exports_manifest = True,
             deps = deps,
+            testonly = 1,
         )
         deps = [":%s_kt_lib" % name]
         srcs = []
