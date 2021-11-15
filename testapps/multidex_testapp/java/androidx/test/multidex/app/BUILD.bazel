@@ -17,6 +17,7 @@
 
 android_library(
     name = "src",
+    testonly = True,
     srcs = [
         "MultiDexActivity.java",
         "MultiDexApplication.java",
@@ -30,6 +31,7 @@ android_library(
 
 android_binary(
     name = "multidex_testapp",
+    testonly = True,
     main_dex_list = "main_dex_list.txt",
     manifest = "AndroidManifest.xml",
     multidex = "manual_main_dex",
