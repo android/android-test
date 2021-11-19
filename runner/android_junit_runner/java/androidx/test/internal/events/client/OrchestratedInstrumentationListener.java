@@ -230,7 +230,7 @@ public final class OrchestratedInstrumentationListener extends RunListener {
   }
 
   /** Reports the process crash event with a given exception. */
-  public void reportProcessCrash(Throwable t, long timeoutMillis) {
+  public boolean reportProcessCrash(Throwable t, long timeoutMillis) {
     // Waits until the orchestrator gets a chance to handle the test failure (if any) before
     // bringing down the entire Instrumentation process.
     //
@@ -245,7 +245,9 @@ public final class OrchestratedInstrumentationListener extends RunListener {
     if (!isTestFailed.get()) {
       Log.i(TAG, "No test failure has been reported. Report the process crash.");
       reportProcessCrash(t);
+      return true;
     }
+    return false;
   }
 
   /** Reports the process crash event with a given exception. */

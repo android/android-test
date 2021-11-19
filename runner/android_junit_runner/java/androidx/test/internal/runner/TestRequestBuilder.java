@@ -748,7 +748,7 @@ public class TestRequestBuilder {
         && runnerArgs.shardIndex < runnerArgs.numShards) {
       addShardingFilter(runnerArgs.numShards, runnerArgs.shardIndex);
     }
-    if (runnerArgs.logOnly) {
+    if (runnerArgs.logOnly || runnerArgs.listTestsForOrchestrator) {
       setSkipExecution(true);
     }
     if (runnerArgs.classLoader != null) {

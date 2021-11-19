@@ -28,8 +28,10 @@ public class TraceRunListener extends RunListener {
   @Override
   public void testStarted(Description description) throws Exception {
     startedThread = Thread.currentThread();
-    Trace.beginSection(
-        description.getTestClass().getSimpleName() + "#" + description.getMethodName());
+    String testClassName =
+        description.getTestClass() != null ? description.getTestClass().getSimpleName() : "None";
+    String methodName = description.getMethodName() != null ? description.getMethodName() : "None";
+    Trace.beginSection(testClassName + "#" + methodName);
   }
 
   @Override
