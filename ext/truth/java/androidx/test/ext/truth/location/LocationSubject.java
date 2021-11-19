@@ -49,7 +49,7 @@ public class LocationSubject extends Subject {
 
   @Override
   public void isEqualTo(@Nullable Object otherObj) {
-    if (VERSION.SDK_INT > VERSION_CODES.R) {
+    if (VERSION.SDK_INT >= VERSION_CODES.S) {
       // from android S+, Location.equals() is well defined
       super.isEqualTo(otherObj);
       return;

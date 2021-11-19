@@ -16,7 +16,7 @@
 package androidx.test.ext.truth.location;
 
 import android.location.Location;
-import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import com.google.common.base.Objects;
 import com.google.common.truth.Correspondence;
@@ -32,6 +32,11 @@ public final class LocationCorrespondences {
   public static Correspondence<Location, Location> equality() {
     return Correspondence.from(
         (actual, expected) -> {
+          if (VERSION.SDK_INT >= VERSION_CODES.S) {
+            // from android S+, Location.equals() is well defined
+            return Objects.equal(actual, expected);
+          }
+
           if (actual == expected) {
             return true;
           }
@@ -44,7 +49,7 @@ public final class LocationCorrespondences {
           if (actual.getTime() != expected.getTime()) {
             return false;
           }
-          if (Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
+          if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
             if (actual.getElapsedRealtimeNanos() != expected.getElapsedRealtimeNanos()) {
               return false;
             }
@@ -67,7 +72,7 @@ public final class LocationCorrespondences {
           if (actual.getAccuracy() != expected.getAccuracy()) {
             return false;
           }
-          if (Build.VERSION.SDK_INT >= VERSION_CODES.O) {
+          if (VERSION.SDK_INT >= VERSION_CODES.O) {
             if (actual.getVerticalAccuracyMeters() != expected.getVerticalAccuracyMeters()) {
               return false;
             }
