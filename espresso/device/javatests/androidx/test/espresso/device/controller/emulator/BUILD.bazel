@@ -1,0 +1,34 @@
+# Description:
+#   Tests for Espresso device controllers
+
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load(
+    "//build_extensions:kt_android_app_instrumentation_tests.bzl",
+    "kt_android_app_instrumentation_tests",
+)
+load(
+    "//build_extensions:test_devices.bzl",
+    "devices",
+)
+
+licenses(["notice"])
+
+kt_android_app_instrumentation_tests(
+    name = "instrumentation_tests",
+    srcs = glob(
+        ["*.kt"],
+        exclude = [
+            "EmulatorControllerTest.kt",
+        ],
+    ),
+    binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+    target_devices = devices(),
+    deps = [
+        "//espresso/device/java/androidx/test/espresso/device/controller:controller_impl",
+        "//espresso/device/java/androidx/test/espresso/device/controller",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "@maven//:junit_junit",
+    ],
+)

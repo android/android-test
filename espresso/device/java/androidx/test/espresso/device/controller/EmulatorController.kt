@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package androidx.test.espresso.device.controller
 
 import androidx.test.espresso.device.action.ScreenOrientation
@@ -38,7 +37,8 @@ constructor(
   }
 
   override fun setDeviceMode(deviceMode: Int) {
-    if (!(deviceMode == DeviceMode.FLAT.mode ||
+    if (
+      !(deviceMode == DeviceMode.FLAT.mode ||
         deviceMode == DeviceMode.TABLETOP.mode ||
         deviceMode == DeviceMode.BOOK.mode)
     ) {
@@ -55,7 +55,7 @@ constructor(
       }
     val posture: Posture = Posture.newBuilder().setValue(postureValue).build()
     try {
-      val result = emulatorControllerStub.setPosture(posture)
+      emulatorControllerStub.setPosture(posture)
     } catch (e: StatusRuntimeException) {
       throw DeviceControllerOperationException(
         "Failed to set device mode. Please make sure the connected Emulator is foldable.",
@@ -74,13 +74,12 @@ constructor(
     val parameters =
       ParameterValue.newBuilder().addData(0F).addData(0F).addData(degreesToRotate).build()
     try {
-      val test =
-        emulatorControllerStub.setPhysicalModel(
-          PhysicalModelValue.newBuilder()
-            .setTarget(PhysicalModelValue.PhysicalType.ROTATION)
-            .setValue(parameters)
-            .build()
-        )
+      emulatorControllerStub.setPhysicalModel(
+        PhysicalModelValue.newBuilder()
+          .setTarget(PhysicalModelValue.PhysicalType.ROTATION)
+          .setValue(parameters)
+          .build()
+      )
     } catch (e: StatusRuntimeException) {
       throw DeviceControllerOperationException(
         "Failed to set screen orientation. Status: ${e.getStatus()}.",
