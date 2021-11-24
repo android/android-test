@@ -16,8 +16,8 @@
 
 package androidx.test.espresso.contrib;
 
-import androidx.core.view.GravityCompat;
 import android.view.View;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.test.espresso.matcher.BoundedMatcher;
 import org.hamcrest.Description;

@@ -19,10 +19,10 @@ package androidx.test.ui.app;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.core.view.ViewCompat;
 import android.transition.Transition;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.core.view.ViewCompat;
 
 /**
  * Our secondary Activity which is launched from {@link TransitionActivityMain}.
