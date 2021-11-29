@@ -16,14 +16,28 @@
 
 package androidx.test.espresso.device
 
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
+import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.action.setFlatMode
+import androidx.test.espresso.device.action.setScreenOrientation
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.ui.app.R
+import androidx.test.ui.app.ScreenOrientationActivity
 import org.junit.Assert.assertTrue
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
 class FoldableEspressoDeviceTest {
+  @get:Rule
+  val activityScenario: ActivityScenarioRule<ScreenOrientationActivity> =
+    ActivityScenarioRule(ScreenOrientationActivity::class.java)
 
   @Test
   fun setFlatMode_returnsDeviceInteraction() {
@@ -37,5 +51,19 @@ class FoldableEspressoDeviceTest {
     val deviceInteraction = EspressoDevice.onDevice().setTabletopMode()
 
     assertTrue(deviceInteraction is DeviceInteraction)
+  }
+
+  @Test
+  fun onDevice_setScreenOrientationToLandscape() {
+    onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
+
+    onView(withId(R.id.current_screen_orientation)).check(matches(withText("landscape")))
+  }
+
+  @Test
+  fun onDevice_setScreenOrientationToPortrait() {
+    onDevice().perform(setScreenOrientation(ScreenOrientation.PORTRAIT))
+
+    onView(withId(R.id.current_screen_orientation)).check(matches(withText("portrait")))
   }
 }
