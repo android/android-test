@@ -90,4 +90,15 @@ class EspressoDeviceTest {
     onView(withId(R.id.current_screen_orientation)).perform(click())
     onView(withId(R.id.current_screen_orientation)).check(matches(withText("landscape")))
   }
+
+  @Test
+  fun onDevice_throwsFromScenarioOnActivity() {
+    activityScenario
+      .getScenario()
+      .onActivity({ activity: ScreenOrientationActivity ->
+        assertThrows(IllegalStateException::class.java) {
+          onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
+        }
+      })
+  }
 }

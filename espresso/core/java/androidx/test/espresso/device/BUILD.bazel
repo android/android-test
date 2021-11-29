@@ -28,5 +28,6 @@ kt_android_library(
         "//espresso/core/java/androidx/test/espresso/device/controller",
         "//espresso/core/java/androidx/test/espresso/device/dagger",
         "//opensource/dagger",
+        "//runner/monitor/java/androidx/test:monitor",
     ],
 )

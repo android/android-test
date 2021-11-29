@@ -19,6 +19,7 @@ import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.espresso.device.action.DeviceAction
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceController
+import androidx.test.internal.util.Checks.checkNotMainThread
 import javax.inject.Inject
 
 /**
@@ -32,12 +33,15 @@ class DeviceInteraction
 constructor(private val context: ActionContext, private val deviceController: DeviceController) {
 
   /**
-   * Performs the given action on the test device.
+   * Performs the given action on the test device. This method should not be called on the main
+   * thread.
    *
    * @param action the DeviceAction to execute.
    * @return this interaction for further perform/verification calls.
+   * @throws IllegalStateException when being invoked on the main thread.
    */
   fun perform(action: DeviceAction): DeviceInteraction {
+    checkNotMainThread()
     action.perform(context, deviceController)
     return this
   }
