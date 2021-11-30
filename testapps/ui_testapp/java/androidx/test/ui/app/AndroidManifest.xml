@@ -189,6 +189,10 @@
         android:name=".ScreenOrientationActivity"
         android:configChanges="orientation|screenSize"
         android:exported="false"/>
+    <activity
+        android:label="screen orientation without onConfigurationChanged activity"
+        android:name=".ScreenOrientationWithoutOnConfigurationChangedActivity"
+        android:exported="false"/>
     <service android:name=".ChatHeadService"/>
 
     <provider
