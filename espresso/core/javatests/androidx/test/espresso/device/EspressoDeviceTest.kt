@@ -77,7 +77,6 @@ class EspressoDeviceTest {
 
     onDevice().perform(setScreenOrientation(ScreenOrientation.PORTRAIT))
 
-    onView(withId(R.id.current_screen_orientation)).perform(click())
     onView(withId(R.id.current_screen_orientation)).check(matches(withText("portrait")))
   }
 
@@ -85,6 +84,13 @@ class EspressoDeviceTest {
   fun onDevice_clickAndThenSetScreenOrientationToLandscape() {
     onView(withId(R.id.current_screen_orientation)).perform(click())
 
+    onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
+
+    onView(withId(R.id.current_screen_orientation)).check(matches(withText("landscape")))
+  }
+
+  @Test
+  fun onDevice_setScreenOrientationToLandscapeThenClick() {
     onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
 
     onView(withId(R.id.current_screen_orientation)).perform(click())

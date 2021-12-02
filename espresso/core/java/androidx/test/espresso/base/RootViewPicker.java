@@ -20,6 +20,7 @@ import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static com.google.common.base.Preconditions.checkState;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +29,7 @@ import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.espresso.NoMatchingRootException;
 import androidx.test.espresso.Root;
 import androidx.test.espresso.UiController;
+import androidx.test.espresso.internal.inject.TargetContext;
 import androidx.test.internal.platform.os.ControlledLooper;
 import androidx.test.internal.util.LogUtil;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
@@ -64,6 +66,7 @@ public final class RootViewPicker implements Provider<View> {
   private final AtomicReference<Boolean> needsActivity;
   private final RootResultFetcher rootResultFetcher;
   private final ControlledLooper controlledLooper;
+  private final Context appContext;
 
   @Inject
   RootViewPicker(
@@ -71,12 +74,14 @@ public final class RootViewPicker implements Provider<View> {
       RootResultFetcher rootResultFetcher,
       ActivityLifecycleMonitor activityLifecycleMonitor,
       AtomicReference<Boolean> needsActivity,
-      ControlledLooper controlledLooper) {
+      ControlledLooper controlledLooper,
+      @TargetContext Context appContext) {
     this.uiController = uiController;
     this.rootResultFetcher = rootResultFetcher;
     this.activityLifecycleMonitor = activityLifecycleMonitor;
     this.needsActivity = needsActivity;
     this.controlledLooper = controlledLooper;
+    this.appContext = appContext;
   }
 
   @Override
@@ -192,6 +197,11 @@ public final class RootViewPicker implements Provider<View> {
           "No activities in stage RESUMED. Did you forget to "
               + "launch the activity. (test.getActivity() or similar)?");
     }
+
+    // Wait for configuration changes to finish on the activity if there are any in progress.
+    Activity currentActivity = (Activity) resumedActivities.toArray()[0];
+    ConfigurationSynchronizationUtils.waitForConfigurationChangesOnActivity(
+        currentActivity, uiController, appContext);
   }
 
   /** Returns the list of all non-destroyed activities. */
