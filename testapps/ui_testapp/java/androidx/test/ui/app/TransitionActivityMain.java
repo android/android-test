@@ -19,7 +19,6 @@ package androidx.test.ui.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.core.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -30,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 
 /**
  * Our main Activity in this sample. Displays a transition_grid of items whith an image and title.
