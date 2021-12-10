@@ -23,13 +23,12 @@ import androidx.test.internal.util.Checks;
 import androidx.tracing.Trace;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
 /**
@@ -47,34 +46,35 @@ public final class TestExecutor {
     instr = builder.instr;
   }
 
-  /** Execute the tests */
-  public Bundle execute(Request request) {
+  /**
+   * Execute the tests and report the test results.
+   *
+   * <p>If an error occurred during the test execution, the exception will be thrown, and it's the
+   * caller's responsibility to handle the exception properly.
+   */
+  public Bundle execute(Request request) throws UnsupportedEncodingException {
     Trace.beginSection("execute tests");
     try {
-      Bundle resultBundle = new Bundle();
-      Result junitResults = new Result();
-      try {
-        JUnitCore testRunner = new JUnitCore();
-        setUpListeners(testRunner);
-        junitResults = testRunner.run(request);
-      } catch (Throwable t) {
-        final String msg = "Fatal exception when running tests";
-        Log.e(LOG_TAG, msg, t);
-        junitResults.getFailures().add(new Failure(Description.createSuiteDescription(msg), t));
-      } finally {
-        ByteArrayOutputStream summaryStream = new ByteArrayOutputStream();
-        // create the stream used to output summary data to the user
-        PrintStream summaryWriter = new PrintStream(summaryStream);
-        reportRunEnded(listeners, summaryWriter, resultBundle, junitResults);
-        summaryWriter.close();
-        resultBundle.putString(
-            Instrumentation.REPORT_KEY_STREAMRESULT,
-            String.format("\n%s", summaryStream.toString()));
-      }
-      return resultBundle;
+      return execute(new JUnitCore(), request);
     } finally {
       Trace.endSection();
     }
+  }
+
+  Bundle execute(JUnitCore junitRunner, Request request) throws UnsupportedEncodingException {
+    Bundle resultBundle = new Bundle();
+    setUpListeners(junitRunner);
+    Result junitResults = junitRunner.run(request);
+
+    ByteArrayOutputStream summaryStream = new ByteArrayOutputStream();
+    // create the stream used to output summary data to the user
+    try (PrintStream summaryWriter = new PrintStream(summaryStream)) {
+      reportRunEnded(listeners, summaryWriter, resultBundle, junitResults);
+    }
+    resultBundle.putString(
+        Instrumentation.REPORT_KEY_STREAMRESULT,
+        String.format("\n%s", summaryStream.toString("UTF_8")));
+    return resultBundle;
   }
 
   /** Initialize listeners and add them to the JUnitCore runner */
