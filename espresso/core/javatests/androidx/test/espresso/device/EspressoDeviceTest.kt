@@ -16,6 +16,7 @@
 
 package androidx.test.espresso.device
 
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -29,6 +30,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ui.app.R
 import androidx.test.ui.app.ScreenOrientationActivity
+import androidx.test.ui.app.ScreenOrientationWithoutOnConfigurationChangedActivity
 import org.junit.Assert.assertThrows
 import org.junit.Rule
 import org.junit.Test
@@ -106,5 +108,36 @@ class EspressoDeviceTest {
           onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
         }
       })
+  }
+
+  @Test
+  fun onDevice_setScreenOrientationToLandscapeAndThenToPortraitWithoutConfigurationHandling() {
+    ActivityScenario.launch(ScreenOrientationWithoutOnConfigurationChangedActivity::class.java)
+    onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
+
+    onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
+
+    onDevice().perform(setScreenOrientation(ScreenOrientation.PORTRAIT))
+
+    onView(withId(R.id.screen_orientation)).check(matches(withText("portrait")))
+  }
+
+  @Test
+  fun onDevice_clickAndThenSetScreenOrientationToLandscapeWithoutConfigurationHandling() {
+    ActivityScenario.launch(ScreenOrientationWithoutOnConfigurationChangedActivity::class.java)
+    onView(withId(R.id.screen_orientation)).perform(click())
+
+    onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
+
+    onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
+  }
+
+  @Test
+  fun onDevice_setScreenOrientationToLandscapeThenClickWithoutConfigurationHandling() {
+    ActivityScenario.launch(ScreenOrientationWithoutOnConfigurationChangedActivity::class.java)
+    onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
+
+    onView(withId(R.id.screen_orientation)).perform(click())
+    onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
   }
 }

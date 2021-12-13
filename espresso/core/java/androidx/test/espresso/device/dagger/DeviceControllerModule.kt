@@ -16,13 +16,13 @@
 
 package androidx.test.espresso.device.dagger
 
-import android.os.Build
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.context.InstrumentationTestActionContext
 import androidx.test.espresso.device.controller.DeviceController
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.controller.EmulatorController
 import androidx.test.espresso.device.controller.PhysicalDeviceController
+import androidx.test.espresso.device.util.isTestDeviceAnEmulator
 import com.android.emulator.control.EmulatorControllerGrpc
 import dagger.Module
 import dagger.Provides
@@ -35,18 +35,6 @@ import javax.inject.Singleton
 /** Dagger module for DeviceController. */
 @Module
 internal class DeviceControllerModule {
-  companion object {
-    /**
-     * Detects if the test is running on an emulator or a real device using some heuristics based on
-     * the device properties.
-     */
-    private fun isEmulator(): Boolean {
-      val qemu: String? = System.getProperty("ro.kernel.qemu", "?")
-      return qemu.equals("1") ||
-        Build.HARDWARE.contains("goldfish") ||
-        Build.HARDWARE.contains("ranchu")
-    }
-  }
 
   @Provides
   @Singleton
@@ -60,7 +48,7 @@ internal class DeviceControllerModule {
   @Provides
   @Singleton
   fun provideDeviceController(): DeviceController {
-    if (isEmulator()) {
+    if (isTestDeviceAnEmulator()) {
       return EmulatorController(getEmulatorControllerStub())
     } else {
       return PhysicalDeviceController()

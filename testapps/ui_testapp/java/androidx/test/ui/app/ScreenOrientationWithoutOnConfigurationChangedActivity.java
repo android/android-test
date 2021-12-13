@@ -29,7 +29,7 @@ public class ScreenOrientationWithoutOnConfigurationChangedActivity extends Acti
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.screen_orientation_activity);
+    setContentView(R.layout.screen_orientation_without_onconfigurationchanged_activity);
 
     String orientation;
     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -38,7 +38,7 @@ public class ScreenOrientationWithoutOnConfigurationChangedActivity extends Acti
       orientation = "portrait";
     }
 
-    TextView textView = (TextView) findViewById(R.id.current_screen_orientation);
+    TextView textView = (TextView) findViewById(R.id.screen_orientation);
     textView.setText(orientation);
     Log.d(TAG, "onCreate. Orientation set to " + orientation);
   }

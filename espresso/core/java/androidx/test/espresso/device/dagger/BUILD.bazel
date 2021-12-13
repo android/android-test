@@ -17,6 +17,7 @@ kt_android_library(
         "//espresso/core/java/androidx/test/espresso/device/context:context_impl",
         "//espresso/core/java/androidx/test/espresso/device/controller",
         "//espresso/core/java/androidx/test/espresso/device/controller:controller_impl",
+        "//espresso/core/java/androidx/test/espresso/device/util",
         "//grpc:core_android",
         "//grpc:okhttp_android",
         "//opensource/dagger",

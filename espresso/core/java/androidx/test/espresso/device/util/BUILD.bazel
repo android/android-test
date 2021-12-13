@@ -1,4 +1,5 @@
-#  Device Actions for espresso.
+# Description:
+#  Utility classes
 
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 
@@ -9,12 +10,9 @@ package(default_visibility = [
 ])
 
 kt_android_library(
-    name = "action",
+    name = "util",
     srcs = glob(["*.kt"]),
     deps = [
-        "//espresso/core/java/androidx/test/espresso/device/context",
-        "//espresso/core/java/androidx/test/espresso/device/controller",
-        "//espresso/core/java/androidx/test/espresso/device/util",
         "//runner/monitor",
     ],
 )
