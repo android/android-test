@@ -18,8 +18,8 @@ def _development_repositories():
 
     http_archive(
         name = "robolectric",
-        strip_prefix = "robolectric-bazel-4.7.2",
-        urls = ["https://github.com/robolectric/robolectric-bazel/archive/4.7.2.tar.gz"],
+        strip_prefix = "robolectric-bazel-4.7.3",
+        urls = ["https://github.com/robolectric/robolectric-bazel/archive/4.7.3.tar.gz"],
     )
     # uncomment to test with new robolectric version. Change path to point to local filesystem
     # clone of https://github.com/robolectric/robolectric-bazel

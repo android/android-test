@@ -3,9 +3,9 @@ workspace(name = "android_test_support")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-RULES_JVM_EXTERNAL_TAG = "4.1"
+RULES_JVM_EXTERNAL_TAG = "4.2"
 
-RULES_JVM_EXTERNAL_SHA = "f36441aa876c4f6427bfb2d1f2d723b48e9d930b62662bf723ddfb8fc80f0140"
+RULES_JVM_EXTERNAL_SHA = "cd1a77b7b02e8e008439ca76fd34f5b07aecb8c752961f9640dea15e9e5ba1ca"
 
 http_archive(
     name = "rules_jvm_external",
@@ -135,7 +135,7 @@ maven_install(
         "org.mockito:mockito-core:2.25.0",
         "org.objenesis:objenesis:2.1",
         "org.pantsbuild:jarjar:1.7.2",
-        "org.robolectric:robolectric:4.7.2",
+        "org.robolectric:robolectric:4.7.3",
     ],
     repositories = [
         "https://maven.google.com",
