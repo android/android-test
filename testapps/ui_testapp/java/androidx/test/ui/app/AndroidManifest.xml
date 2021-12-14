@@ -193,6 +193,10 @@
         android:label="screen orientation without onConfigurationChanged activity"
         android:name=".ScreenOrientationWithoutOnConfigurationChangedActivity"
         android:exported="false"/>
+    <activity
+        android:label="Truncated View Hierarchy Activity"
+        android:name=".TruncatedViewHierarchyActivity"
+        android:exported="false" />
     <service android:name=".ChatHeadService"/>
 
     <provider

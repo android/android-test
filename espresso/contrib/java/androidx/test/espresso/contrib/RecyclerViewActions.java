@@ -476,9 +476,9 @@ public final class RecyclerViewActions {
                 position,
                 HumanReadables.getViewHierarchyErrorMessage(
                     cachedViewHolder.itemView,
-                    null,
+                    /* problemViews= */ null,
                     "\n\n*** Matched ViewHolder item at position: " + position + " ***",
-                    null)));
+                    /* problemViewSuffix= */ null)));
         adapter.onViewRecycled((T) cachedViewHolder);
         if (matchedItems.size() == max) {
           break;

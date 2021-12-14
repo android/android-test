@@ -17,6 +17,7 @@
 package androidx.test.espresso.util;
 
 import static androidx.test.espresso.util.TreeIterables.depthFirstViewTraversalWithDistance;
+import static java.lang.Math.max;
 
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -46,7 +47,7 @@ public final class HumanReadables {
   private HumanReadables() {}
 
   /**
-   * Prints out an error message feature the view hierarchy starting at the rootView.
+   * Prints out an error message featuring the view hierarchy starting at the rootView.
    *
    * @param rootView the root of the hierarchy tree to print out.
    * @param problemViews list of the views that you would like to point out are causing the error
@@ -60,8 +61,32 @@ public final class HumanReadables {
   public static String getViewHierarchyErrorMessage(
       View rootView,
       final List<View> problemViews,
-      String errorHeader,
+      final String errorHeader,
       final String problemViewSuffix) {
+    return getViewHierarchyErrorMessage(
+        rootView, problemViews, errorHeader, problemViewSuffix, Integer.MAX_VALUE);
+  }
+
+  /**
+   * Prints out an error message featuring the view hierarchy starting at the rootView.
+   *
+   * @param rootView the root of the hierarchy tree to print out.
+   * @param problemViews list of the views that you would like to point out are causing the error
+   *     message or null, if you want to skip this feature.
+   * @param errorHeader the header of the error message (should contain the description of why the
+   *     error is happening).
+   * @param problemViewSuffix the message to append to the view description in the tree printout.
+   *     Required if problemViews is supplied. Otherwise, null is acceptable.
+   * @param maxMsgLen the maximum message length. Use {@link Integer#MAX_VALUE} to avoid truncating
+   *     the message.
+   * @return a string for human consumption.
+   */
+  public static String getViewHierarchyErrorMessage(
+      View rootView,
+      final List<View> problemViews,
+      final String errorHeader,
+      final String problemViewSuffix,
+      int maxMsgLen) {
     Preconditions.checkArgument(problemViews == null || problemViewSuffix != null);
     StringBuilder errorMessage = new StringBuilder(errorHeader);
     if (problemViewSuffix != null) {
@@ -92,6 +117,15 @@ public final class HumanReadables {
                     }));
 
     errorMessage.append("\n\nView Hierarchy:\n").append(viewHierarchyDump);
+
+    if (maxMsgLen < Integer.MAX_VALUE) {
+      String suffix = " [truncated]";
+      if (errorMessage.length() + suffix.length() > maxMsgLen) {
+        errorMessage.delete(max(0, maxMsgLen - suffix.length()), errorMessage.length());
+        errorMessage.append(suffix);
+      }
+    }
+
     return errorMessage.toString();
   }
 

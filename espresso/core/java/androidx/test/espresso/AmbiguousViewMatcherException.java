@@ -19,6 +19,7 @@ package androidx.test.espresso;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.view.View;
+import androidx.test.espresso.util.EspressoOptional;
 import androidx.test.espresso.util.HumanReadables;
 import androidx.test.internal.platform.util.TestOutputEmitter;
 import com.google.common.collect.ImmutableSet;
@@ -27,8 +28,8 @@ import java.util.Locale;
 import org.hamcrest.Matcher;
 
 /**
- * An exception which indicates that a Matcher<View> matched multiple views in the hierarchy when
- * only one view was expected. It should be called only from the main thread.
+ * An exception which indicates that a {@code Matcher<View>} matched multiple views in the hierarchy
+ * when only one view was expected. It should be called only from the main thread.
  *
  * <p>Contains details about the matcher and the current view hierarchy to aid in debugging.
  *
@@ -78,12 +79,21 @@ public final class AmbiguousViewMatcherException extends RuntimeException
                   Locale.ROOT,
                   "'%s' matches multiple views in the hierarchy.",
                   builder.viewMatcher),
-              "****MATCHES****");
+              "****MATCHES****",
+              builder.maxMsgLen);
+
+      if (builder.viewHierarchyFile.isPresent()) {
+        errorMessage +=
+            String.format(
+                "\nThe complete view hierarchy is available in artifact file '%s'.",
+                builder.viewHierarchyFile.get());
+      }
     } else {
       errorMessage =
           String.format(
-              Locale.ROOT, "Multiple Ambiguous Views found for matcher %s", builder.viewMatcher);
+              Locale.ROOT, "Multiple ambiguous views found for matcher %s", builder.viewMatcher);
     }
+
     return errorMessage;
   }
 
@@ -101,6 +111,8 @@ public final class AmbiguousViewMatcherException extends RuntimeException
     private View view2;
     private View[] others;
     private boolean includeViewHierarchy = true;
+    private int maxMsgLen = Integer.MAX_VALUE;
+    private EspressoOptional<String> viewHierarchyFile = EspressoOptional.absent();
 
     public Builder from(AmbiguousViewMatcherException exception) {
       this.viewMatcher = exception.viewMatcher;
@@ -138,6 +150,16 @@ public final class AmbiguousViewMatcherException extends RuntimeException
 
     public Builder includeViewHierarchy(boolean includeViewHierarchy) {
       this.includeViewHierarchy = includeViewHierarchy;
+      return this;
+    }
+
+    public Builder withMaxMsgLen(int maxMsgLen) {
+      this.maxMsgLen = maxMsgLen;
+      return this;
+    }
+
+    public Builder withViewHierarchyFile(EspressoOptional<String> viewHierarchyFile) {
+      this.viewHierarchyFile = viewHierarchyFile;
       return this;
     }
 

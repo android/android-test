@@ -18,7 +18,9 @@ package androidx.test.espresso.base;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -30,6 +32,7 @@ import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.io.PlatformTestStorage;
+import com.google.common.collect.ImmutableMap;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -62,10 +65,16 @@ public class ViewHierarchyExceptionHandlerTest {
         .thenReturn(new ByteArrayOutputStream());
     noMatchingViewExceptionHandler =
         new ViewHierarchyExceptionHandler<>(
-            testStorage, failureCount, NoMatchingViewException.class);
+            testStorage,
+            failureCount,
+            NoMatchingViewException.class,
+            DefaultFailureHandler.getNoMatchingViewExceptionTruncater());
     ambiguousViewMatcherExceptionHandler =
         new ViewHierarchyExceptionHandler<>(
-            testStorage, failureCount, AmbiguousViewMatcherException.class);
+            testStorage,
+            failureCount,
+            AmbiguousViewMatcherException.class,
+            DefaultFailureHandler.getAmbiguousViewMatcherExceptionTruncater());
     alwaysFalseMatcher =
         new BaseMatcher<View>() {
           @Override
@@ -171,6 +180,64 @@ public class ViewHierarchyExceptionHandlerTest {
                     exceptionUnderTest, alwaysFalseMatcher));
 
     assertThat(thrown).hasMessageThat().containsMatch(expectedMsg);
+    verify(testStorage).openOutputFile(eq("view-hierarchy-1.txt"));
+  }
+
+  @Test
+  public void handle_ambiguousViewMatcherException_withTruncatedMessage() throws IOException {
+    ViewGroup layoutUnderTest = new RelativeLayout(getInstrumentation().getContext());
+    View child1 = new TextView(getInstrumentation().getContext());
+    child1.setId(1);
+    View child2 = new TextView(getInstrumentation().getContext());
+    child2.setId(2);
+    layoutUnderTest.addView(child1);
+    layoutUnderTest.addView(child2);
+
+    AmbiguousViewMatcherException exceptionUnderTest =
+        new AmbiguousViewMatcherException.Builder()
+            .withViewMatcher(alwaysFalseMatcher)
+            .withRootView(layoutUnderTest)
+            .withView1(layoutUnderTest)
+            .withView2(child1)
+            .withOtherAmbiguousViews(child2)
+            .build();
+
+    ImmutableMap<String, String> inputArgs = ImmutableMap.of("view_hierarchy_char_limit", "505");
+    when(testStorage.getInputArgs()).thenReturn(inputArgs);
+    doAnswer(invocation -> inputArgs.get(invocation.getArgument(0)))
+        .when(testStorage)
+        .getInputArg(anyString());
+
+    // Note: Expected match must be a regexp as the class names (e.g. LayoutParams@) are followed
+    // by their runtime ids (replaced by @.* below). There are a number of regexp-sensitive
+    // characters (+${}|) which are replaced below by a simple . match.
+    String expectedMsg =
+        "'A view matcher' matches multiple views in the hierarchy.\n"
+            + "Problem views are marked with '.*MATCHES.*' below.\n"
+            + "\n"
+            + "View Hierarchy:\n"
+            + "+>RelativeLayout{id=-1, visibility=VISIBLE, width=0, height=0, has-focus=false,"
+            + " has-focusable=false, has-window-focus=false, is-clickable=false, is-enabled=true,"
+            + " is-focused=false, is-focusable=false, is-layout-requested=true, is-selected=false,"
+            + " layout-params=null, tag=null, root-is-layout-requested=true,"
+            + " has-input-connection=false, x=0.0, y=0.0, child-count=2}  [truncated]";
+    expectedMsg = expectedMsg.replaceAll("([+${}|\\[\\]])", ".");
+
+    failureCount.incrementAndGet();
+    AmbiguousViewMatcherException thrown =
+        assertThrows(
+            AmbiguousViewMatcherException.class,
+            () ->
+                ambiguousViewMatcherExceptionHandler.handle(
+                    exceptionUnderTest, alwaysFalseMatcher));
+
+    assertThat(thrown).hasMessageThat().containsMatch(expectedMsg);
+
+    assertThat(thrown)
+        .hasMessageThat()
+        .containsMatch(
+            "The complete view hierarchy is available in artifact file 'view-hierarchy-1.txt'.");
+
     verify(testStorage).openOutputFile(eq("view-hierarchy-1.txt"));
   }
 

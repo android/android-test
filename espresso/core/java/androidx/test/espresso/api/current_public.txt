@@ -10,10 +10,12 @@ package androidx.test.espresso {
     method public androidx.test.espresso.AmbiguousViewMatcherException! build();
     method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! from(androidx.test.espresso.AmbiguousViewMatcherException!);
     method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! includeViewHierarchy(boolean);
+    method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withMaxMsgLen(int);
     method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withOtherAmbiguousViews(android.view.View!...);
     method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withRootView(android.view.View!);
     method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withView1(android.view.View!);
     method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withView2(android.view.View!);
+    method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withViewHierarchyFile(androidx.test.espresso.util.EspressoOptional<java.lang.String!>!);
     method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withViewMatcher(org.hamcrest.Matcher<? super android.view.View>!);
   }
 
@@ -114,7 +116,9 @@ package androidx.test.espresso {
     method public androidx.test.espresso.NoMatchingViewException.Builder! withAdapterViewWarning(androidx.test.espresso.util.EspressoOptional<java.lang.String!>!);
     method public androidx.test.espresso.NoMatchingViewException.Builder! withAdapterViews(java.util.List<android.view.View!>!);
     method public androidx.test.espresso.NoMatchingViewException.Builder! withCause(Throwable!);
+    method public androidx.test.espresso.NoMatchingViewException.Builder! withMaxMsgLen(int);
     method public androidx.test.espresso.NoMatchingViewException.Builder! withRootView(android.view.View!);
+    method public androidx.test.espresso.NoMatchingViewException.Builder! withViewHierarchyFile(androidx.test.espresso.util.EspressoOptional<java.lang.String!>!);
     method public androidx.test.espresso.NoMatchingViewException.Builder! withViewMatcher(org.hamcrest.Matcher<? super android.view.View>!);
   }
 
@@ -907,6 +911,7 @@ package androidx.test.espresso.util {
     method public static String! describe(android.database.Cursor!);
     method public static String! describe(android.view.View!);
     method public static String! getViewHierarchyErrorMessage(android.view.View!, java.util.List<android.view.View!>!, String!, String!);
+    method public static String! getViewHierarchyErrorMessage(android.view.View!, java.util.List<android.view.View!>!, String!, String!, int);
   }
 
   public final class TreeIterables {

@@ -87,11 +87,23 @@ public final class NoMatchingViewException extends RuntimeException implements R
       }
       errorMessage =
           HumanReadables.getViewHierarchyErrorMessage(
-              builder.rootView, null /* problemViews */, message, null /* problemViewSuffix */);
+              builder.rootView,
+              /* problemViews= */ null,
+              message,
+              /* problemViewSuffix= */ null,
+              builder.maxMsgLen);
+
+      if (builder.viewHierarchyFile.isPresent()) {
+        errorMessage +=
+            String.format(
+                "\nThe complete view hierarchy is available in artifact file '%s'.",
+                builder.viewHierarchyFile.get());
+      }
     } else {
       errorMessage =
           String.format(Locale.ROOT, "Could not find a view that matches %s", builder.viewMatcher);
     }
+
     return errorMessage;
   }
 
@@ -104,6 +116,8 @@ public final class NoMatchingViewException extends RuntimeException implements R
     private boolean includeViewHierarchy = true;
     private EspressoOptional<String> adapterViewWarning = EspressoOptional.<String>absent();
     private Throwable cause;
+    private int maxMsgLen = Integer.MAX_VALUE;
+    private EspressoOptional<String> viewHierarchyFile = EspressoOptional.absent();
 
     public Builder from(NoMatchingViewException exception) {
       this.viewMatcher = exception.viewMatcher;
@@ -141,6 +155,16 @@ public final class NoMatchingViewException extends RuntimeException implements R
 
     public Builder withCause(Throwable cause) {
       this.cause = cause;
+      return this;
+    }
+
+    public Builder withMaxMsgLen(int maxMsgLen) {
+      this.maxMsgLen = maxMsgLen;
+      return this;
+    }
+
+    public Builder withViewHierarchyFile(EspressoOptional<String> viewHierarchyFile) {
+      this.viewHierarchyFile = viewHierarchyFile;
       return this;
     }
 

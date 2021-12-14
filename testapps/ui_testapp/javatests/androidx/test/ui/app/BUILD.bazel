@@ -5,7 +5,10 @@ licenses(["notice"])  # Apache License 2.0
 
 TESTAPP_TEST_SRCS = glob(
     ["**/*.java"],
-    exclude = ["DuplicateViewActivityTest.java"],
+    exclude = [
+        "DuplicateViewActivityTest.java",
+        "TruncatedViewHierarchyActivityTest.java",
+    ],
 )
 
 TESTAPP_DEPS = [
@@ -86,6 +89,6 @@ API_LEVELS = [
         # Install test services, this is required as the services are not part of the image
         "--install_test_services=True",  # Required for Bazel 0.11, can be removed in 0.12
     ],
-    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
+    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % api_level,
     test_app = ":espresso_ui_testapp_tests",
 ) for api_level in API_LEVELS]

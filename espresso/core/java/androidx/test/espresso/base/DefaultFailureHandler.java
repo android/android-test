@@ -29,6 +29,7 @@ import androidx.test.espresso.EspressoException;
 import androidx.test.espresso.FailureHandler;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.PerformException;
+import androidx.test.espresso.base.ViewHierarchyExceptionHandler.Truncater;
 import androidx.test.espresso.internal.inject.TargetContext;
 import androidx.test.internal.platform.util.TestOutputEmitter;
 import androidx.test.platform.io.PlatformTestStorage;
@@ -71,15 +72,39 @@ public final class DefaultFailureHandler implements FailureHandler {
     this.testStorage = testStorage;
     handlers.add(
         new ViewHierarchyExceptionHandler<>(
-            testStorage, failureCount, NoMatchingViewException.class));
+            testStorage,
+            failureCount,
+            NoMatchingViewException.class,
+            getNoMatchingViewExceptionTruncater()));
     handlers.add(
         new ViewHierarchyExceptionHandler<>(
-            testStorage, failureCount, AmbiguousViewMatcherException.class));
+            testStorage,
+            failureCount,
+            AmbiguousViewMatcherException.class,
+            getAmbiguousViewMatcherExceptionTruncater()));
     handlers.add(new PerformExceptionHandler(checkNotNull(appContext), PerformException.class));
     // On API 15, junit.framework.AssertionFailedError is not a subclass of AssertionError.
     handlers.add(new AssertionErrorHandler(AssertionFailedError.class, AssertionError.class));
     handlers.add(new EspressoExceptionHandler(EspressoException.class));
     handlers.add(new ThrowableHandler());
+  }
+
+  static Truncater<NoMatchingViewException> getNoMatchingViewExceptionTruncater() {
+    return (exception, msgLen, viewHierarchyFile) ->
+        new NoMatchingViewException.Builder()
+            .from(exception)
+            .withMaxMsgLen(msgLen)
+            .withViewHierarchyFile(viewHierarchyFile)
+            .build();
+  }
+
+  static Truncater<AmbiguousViewMatcherException> getAmbiguousViewMatcherExceptionTruncater() {
+    return (exception, msgLen, viewHierarchyFile) ->
+        new AmbiguousViewMatcherException.Builder()
+            .from(exception)
+            .withMaxMsgLen(msgLen)
+            .withViewHierarchyFile(viewHierarchyFile)
+            .build();
   }
 
   @Override
