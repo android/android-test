@@ -82,6 +82,7 @@ public final class ViewInteraction {
   private final TestFlowVisualizer testFlowVisualizer;
   // test thread only
   private boolean hasRootMatcher = false;
+  public static boolean bypassIdleChecking = false;
 
   @Inject
   ViewInteraction(
@@ -240,7 +241,9 @@ public final class ViewInteraction {
       final SingleExecutionViewAction viewAction, int actionIndex, boolean testFlowEnabled) {
     checkNotNull(viewAction);
     final Matcher<? extends View> constraints = checkNotNull(viewAction.getConstraints());
-    uiController.loopMainThreadUntilIdle();
+    if (!bypassIdleChecking) {
+      uiController.loopMainThreadUntilIdle();
+    }
     View targetView = viewFinder.getView();
     Log.i(
         TAG,
@@ -301,7 +304,9 @@ public final class ViewInteraction {
         new Callable<Void>() {
           @Override
           public Void call() {
-            uiController.loopMainThreadUntilIdle();
+            if (!bypassIdleChecking) {
+              uiController.loopMainThreadUntilIdle();
+            }
 
             View targetView = null;
             NoMatchingViewException missingViewException = null;
