@@ -35,3 +35,10 @@ http_archive(
 load("@android_test_support//:repo.bzl", "android_test_repositories")
 android_test_repositories()
 ```
+
+## Releases
+
+Androidx.test no longer uses github to track releases.
+
+See https://developer.android.com/jetpack/androidx/releases/test for release notes, and
+https://maven.google.com for release artifacts and source snapshots.
