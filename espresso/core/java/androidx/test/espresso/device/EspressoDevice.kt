@@ -33,6 +33,7 @@ class EspressoDevice private constructor() {
      * <p>This API is experimental and subject to change or removal.
      */
     @ExperimentalTestApi
+    @JvmStatic
     fun onDevice(): DeviceInteraction {
       checkNotMainThread()
       return DeviceInteraction(BASE.actionContext(), BASE.deviceController())
