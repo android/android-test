@@ -62,7 +62,7 @@ internal class DeviceControllerModule {
     if (gRpcPort.isBlank()) {
       throw DeviceControllerOperationException(
         "Unable to connect to Emulator gRPC port. Please make sure the controller gRPC service is" +
-          "enabled on the emulator."
+          " enabled on the emulator."
       )
     }
     val port = gRpcPort.toInt()
