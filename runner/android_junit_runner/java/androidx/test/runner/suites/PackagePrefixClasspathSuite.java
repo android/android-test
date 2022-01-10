@@ -22,6 +22,8 @@ import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
 import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.runner.ClassPathScanner;
+import androidx.test.internal.runner.ClassPathScanner.ChainedClassNameFilter;
+import androidx.test.internal.runner.ClassPathScanner.ExternalClassNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.InclusivePackageNamesFilter;
 import androidx.test.internal.runner.ErrorReportingRunner;
 import androidx.test.internal.runner.TestLoader;
@@ -69,10 +71,12 @@ public final class PackagePrefixClasspathSuite extends Suite {
 
   private static List<Runner> getRunnersForClasses(Class<?> klass, RunnerBuilder builder) {
     try {
+      ChainedClassNameFilter filter = new ChainedClassNameFilter();
+      filter.add(new InclusivePackageNamesFilter(Arrays.asList(klass.getPackage().getName())));
+      filter.add(new ExternalClassNameFilter());
       Collection<String> classNames =
           new ClassPathScanner(getDefaultClasspaths(getInstrumentation()))
-              .getClassPathEntries(
-                  new InclusivePackageNamesFilter(Arrays.asList(klass.getPackage().getName())));
+              .getClassPathEntries(filter);
       classNames.remove(klass.getName());
       return TestLoader.Factory.create(null, builder, true).getRunnersFor(classNames);
     } catch (IOException e) {
