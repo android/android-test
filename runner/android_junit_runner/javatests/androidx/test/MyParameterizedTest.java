@@ -17,7 +17,6 @@ package androidx.test;
 
 import android.app.Instrumentation;
 import androidx.test.filters.SmallTest;
-import androidx.test.filters.Suppress;
 import java.util.Arrays;
 import java.util.Collection;
 import org.junit.Assert;
@@ -29,7 +28,6 @@ import org.junit.runners.Parameterized.Parameters;
 /**
  * Placeholder to verify {@link Instrumentation} can be injected into {@link Parameterized} tests
  */
-@Suppress // b/26110951
 @RunWith(Parameterized.class)
 @SmallTest
 public class MyParameterizedTest {

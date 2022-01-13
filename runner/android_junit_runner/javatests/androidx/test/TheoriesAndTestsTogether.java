@@ -23,7 +23,6 @@ import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeThat;
 
 import androidx.test.filters.SmallTest;
-import androidx.test.filters.Suppress;
 import org.junit.Assume;
 import org.junit.Test;
 import org.junit.experimental.theories.DataPoint;
@@ -31,7 +30,6 @@ import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
-@Suppress // b/26110951
 @RunWith(Theories.class)
 @SmallTest
 public class TheoriesAndTestsTogether {
