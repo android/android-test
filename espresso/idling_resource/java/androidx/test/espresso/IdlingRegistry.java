@@ -19,6 +19,7 @@ package androidx.test.espresso;
 import static java.util.Collections.synchronizedSet;
 
 import android.os.Looper;
+import android.util.Log;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -38,6 +39,7 @@ import java.util.Set;
  */
 public final class IdlingRegistry {
 
+  private static final String TAG = IdlingRegistry.class.getSimpleName();
   private static final IdlingRegistry instance = new IdlingRegistry();
   private final Set<IdlingResource> resources = synchronizedSet(new HashSet<IdlingResource>());
   private final Set<Looper> loopers = synchronizedSet(new HashSet<Looper>());
@@ -63,6 +65,7 @@ public final class IdlingRegistry {
     if (null == idlingResources) {
       throw new NullPointerException("idlingResources cannot be null!");
     }
+    Log.d(TAG, "Registering idling resources: " + Arrays.toString(idlingResources));
     return resources.addAll(Arrays.asList(idlingResources));
   }
 
@@ -75,6 +78,7 @@ public final class IdlingRegistry {
     if (null == idlingResources) {
       throw new NullPointerException("idlingResources cannot be null!");
     }
+    Log.d(TAG, "Unregistering idling resources: " + Arrays.toString(idlingResources));
     return resources.removeAll(Arrays.asList(idlingResources));
   }
 
