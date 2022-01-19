@@ -11,15 +11,16 @@ kt_android_library(
     srcs = glob(["*.kt"]),
     plugins = ["//opensource/dagger:dagger_plugin"],  # Add programmatically
     deps = [
-        "//android/emulator:emulator_controller_java_grpc",
-        "//android/emulator:emulator_controller_kt_proto",
         "//espresso/core/java/androidx/test/espresso/device/context",
         "//espresso/core/java/androidx/test/espresso/device/context:context_impl",
         "//espresso/core/java/androidx/test/espresso/device/controller",
         "//espresso/core/java/androidx/test/espresso/device/controller:controller_impl",
         "//espresso/core/java/androidx/test/espresso/device/util",
-        "//grpc:core_android",
-        "//grpc:okhttp_android",
         "//opensource/dagger",
+        # TODO(b/215420259) fix gRPC dependency
+        # "//android/emulator:emulator_controller_java_grpc",
+        # "//android/emulator:emulator_controller_kt_proto",
+        # "//grpc:core_android",
+        # "//grpc:okhttp_android",
     ],
 )

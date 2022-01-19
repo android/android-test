@@ -26,6 +26,7 @@ android_app_instrumentation_tests(
     binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
     target_devices = devices(),
     deps = [
+        ":utils",
         "//:androidx_annotation",
         "//core",
         "//espresso/core/java/androidx/test/espresso",

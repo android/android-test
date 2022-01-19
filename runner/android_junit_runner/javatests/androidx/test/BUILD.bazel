@@ -139,7 +139,7 @@ android_local_test(
     srcs = ["internal/runner/TestRequestBuilderLocalTest.java"],
     test_class = "androidx.test.internal.runner.TestRequestBuilderLocalTest",
     deps = [
-        "runner/android_junit_runner",
+        "//runner/android_junit_runner",
         "@maven//:com_google_truth_truth",
         "@maven//:org_mockito_mockito_core",
     ],

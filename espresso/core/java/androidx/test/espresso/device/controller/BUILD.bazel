@@ -29,9 +29,10 @@ kt_android_library(
     ],
     deps = [
         ":controller",
-        "//android/emulator:emulator_controller_java_grpc",
-        "//android/emulator:emulator_controller_kt_proto",
         "//espresso/core/java/androidx/test/espresso/device/action",
-        "//grpc:core_android",
+        # TODO(b/215420259) fix gRPC dependency
+        # "//android/emulator:emulator_controller_java_grpc",
+        # "//android/emulator:emulator_controller_kt_proto",
+        # "//grpc:core_android",
     ],
 )
