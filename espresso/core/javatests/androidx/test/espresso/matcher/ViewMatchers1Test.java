@@ -93,8 +93,6 @@ import org.mockito.stubbing.Answer;
 @RunWith(AndroidJUnit4.class)
 public class ViewMatchers1Test {
 
-  private static final int UNRECOGNIZED_INPUT_TYPE = 999999;
-
   private Context context;
 
   @Before
@@ -829,7 +827,7 @@ public class ViewMatchers1Test {
   }
 
   /** This interface is used to mock the {@link View#getGlobalVisibleRect(Rect, Point)} method. */
-  private interface GlobalVisibleRectProvider {
+  interface GlobalVisibleRectProvider {
     boolean get(Rect r, Point offset);
   }
 
