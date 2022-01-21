@@ -25,7 +25,6 @@ import static org.junit.Assert.fail;
 
 import android.os.Build;
 import android.os.Looper;
-import android.os.SystemClock;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -167,29 +166,24 @@ public class UiControllerImplIntegrationTest {
     try (ActivityScenario<SendActivity> activityScenario =
         ActivityScenario.launch(SendActivity.class)) {
 
-      final int[] coords = CoordinatesUtil.getCoordinatesInMiddleOfSendButton(activityScenario);
-
+      final int[] intCoords = CoordinatesUtil.getCoordinatesInMiddleOfSendButton(activityScenario);
+      final float[] coords = new float[] {intCoords[0], intCoords[1]};
+      final float[] precision = new float[] {1f, 1f};
       getInstrumentation()
           .runOnMainSync(
               () -> {
                 uiController.loopMainThreadForAtLeast(100);
 
-                long downTime = SystemClock.uptimeMillis();
+                final MotionEvent downEvent = MotionEvents.obtainDownEvent(coords, precision);
+                final MotionEvent upEvent = MotionEvents.obtainUpEvent(downEvent, coords);
                 try {
-                  MotionEvent event =
-                      MotionEvent.obtain(
-                          downTime,
-                          SystemClock.uptimeMillis(),
-                          MotionEvent.ACTION_DOWN,
-                          coords[0],
-                          coords[1],
-                          0);
-
-                  assertThat(uiController.injectMotionEvent(event)).isTrue();
-
-                  event.recycle();
+                  assertThat(uiController.injectMotionEvent(downEvent)).isTrue();
+                  assertThat(uiController.injectMotionEvent(upEvent)).isTrue();
                 } catch (InjectEventSecurityException e) {
                   throw new RuntimeException(e);
+                } finally {
+                  downEvent.recycle();
+                  upEvent.recycle();
                 }
               });
     }
@@ -206,15 +200,12 @@ public class UiControllerImplIntegrationTest {
           .runOnMainSync(
               () -> {
                 uiController.loopMainThreadForAtLeast(100);
-                long downTime = SystemClock.uptimeMillis();
                 List<MotionEvent> events = new ArrayList<>();
                 try {
                   MotionEvent down = MotionEvents.obtainDownEvent(steps[0], new float[] {16f, 16f});
                   events.add(down);
                   for (int i = 1; i < events.size() - 1; i++) {
-                    events.add(
-                        MotionEvents.obtainMovement(
-                            downTime, SystemClock.uptimeMillis(), steps[i]));
+                    events.add(MotionEvents.obtainMovement(down, steps[i]));
                   }
                   events.add(MotionEvents.obtainUpEvent(down, steps[steps.length - 1]));
 

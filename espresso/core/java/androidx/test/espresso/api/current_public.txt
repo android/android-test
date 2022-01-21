@@ -304,9 +304,12 @@ package androidx.test.espresso.action {
   public final class MotionEvents {
     method public static android.view.MotionEvent! obtainDownEvent(float[]!, float[]!, int, int);
     method public static android.view.MotionEvent! obtainDownEvent(float[]!, float[]!);
-    method public static android.view.MotionEvent! obtainMovement(long, float[]!);
-    method public static android.view.MotionEvent! obtainMovement(long, long, float[]!);
+    method public static android.view.MotionEvent! obtainMovement(android.view.MotionEvent!, float[]!);
+    method public static android.view.MotionEvent! obtainMovement(android.view.MotionEvent!, long, float[]!);
+    method @Deprecated public static android.view.MotionEvent! obtainMovement(long, float[]!);
+    method @Deprecated public static android.view.MotionEvent! obtainMovement(long, long, float[]!);
     method public static android.view.MotionEvent! obtainUpEvent(android.view.MotionEvent!, float[]!);
+    method public static android.view.MotionEvent! obtainUpEvent(android.view.MotionEvent!, long, float[]!);
     method public static void sendCancel(androidx.test.espresso.UiController!, android.view.MotionEvent!);
     method public static androidx.test.espresso.action.MotionEvents.DownResultHolder! sendDown(androidx.test.espresso.UiController!, float[]!, float[]!);
     method public static androidx.test.espresso.action.MotionEvents.DownResultHolder! sendDown(androidx.test.espresso.UiController!, float[]!, float[]!, int, int);

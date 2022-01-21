@@ -100,17 +100,10 @@ public enum Swipe implements Swiper {
       long eventTime = downEvent.getDownTime();
       for (float[] step : steps) {
         eventTime += intervalMS;
-        events.add(MotionEvents.obtainMovement(downEvent.getDownTime(), eventTime, step));
+        events.add(MotionEvents.obtainMovement(downEvent, eventTime, step));
       }
       eventTime += intervalMS;
-      events.add(
-          MotionEvent.obtain(
-              downEvent.getDownTime(),
-              eventTime,
-              MotionEvent.ACTION_UP,
-              endCoordinates[0],
-              endCoordinates[1],
-              0));
+      events.add(MotionEvents.obtainUpEvent(downEvent, eventTime, endCoordinates));
       uiController.injectMotionEventSequence(events);
     } catch (Exception e) {
       return Swiper.Status.FAILURE;

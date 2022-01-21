@@ -18,7 +18,6 @@ package androidx.test.espresso.action;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.InputDevice;
@@ -57,16 +56,16 @@ public final class MotionEvents {
     checkNotNull(coordinates);
     checkNotNull(precision);
 
-    // Algorithm of sending click event adopted from android.test.TouchUtils.
-    // When the click event was first initiated. Needs to be same for both down and up press
-    // events.
     long downTime = SystemClock.uptimeMillis();
-    // Down press.
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      return downPressGingerBread(downTime, coordinates, precision);
-    } else {
-      return downPressICS(downTime, coordinates, precision, inputDevice, buttonState);
-    }
+    return obtain(
+        downTime,
+        downTime,
+        MotionEvent.ACTION_DOWN,
+        coordinates,
+        precision[0],
+        precision[1],
+        inputDevice,
+        buttonState);
   }
 
   public static MotionEvent obtainDownEvent(float[] coordinates, float[] precision) {
@@ -85,7 +84,7 @@ public final class MotionEvents {
     checkNotNull(precision);
 
     for (int retry = 0; retry < MAX_CLICK_ATTEMPTS; retry++) {
-      MotionEvent motionEvent = null;
+      MotionEvent motionEvent;
       try {
         motionEvent = obtainDownEvent(coordinates, precision, inputDevice, buttonState);
         // The down event should be considered a tap if it is long enough to be detected
@@ -115,7 +114,6 @@ public final class MotionEvents {
 
         if (!injectEventSucceeded) {
           motionEvent.recycle();
-          motionEvent = null;
           continue;
         }
 
@@ -140,14 +138,14 @@ public final class MotionEvents {
   }
 
   public static MotionEvent obtainUpEvent(MotionEvent downEvent, float[] coordinates) {
+    return obtainUpEvent(downEvent, SystemClock.uptimeMillis(), coordinates);
+  }
+
+  public static MotionEvent obtainUpEvent(
+      MotionEvent downEvent, long eventTime, float[] coordinates) {
     checkNotNull(downEvent);
     checkNotNull(coordinates);
-    // Up press.
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      return upPressGingerBread(downEvent, coordinates);
-    } else {
-      return upPressICS(downEvent, coordinates);
-    }
+    return obtain(downEvent, eventTime, MotionEvent.ACTION_UP, coordinates);
   }
 
   public static boolean sendUp(
@@ -181,7 +179,6 @@ public final class MotionEvents {
     } finally {
       if (null != motionEvent) {
         motionEvent.recycle();
-        motionEvent = null;
       }
     }
     return true;
@@ -194,14 +191,9 @@ public final class MotionEvents {
     MotionEvent motionEvent = null;
     try {
       // Up press.
+      final float[] coordinates = new float[] {downEvent.getX(), downEvent.getY()};
       motionEvent =
-          MotionEvent.obtain(
-              downEvent.getDownTime(),
-              SystemClock.uptimeMillis(),
-              MotionEvent.ACTION_CANCEL,
-              downEvent.getX(),
-              downEvent.getY(),
-              0);
+          obtain(downEvent, SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, coordinates);
       boolean injectEventSucceeded = uiController.injectMotionEvent(motionEvent);
 
       if (!injectEventSucceeded) {
@@ -224,11 +216,23 @@ public final class MotionEvents {
     } finally {
       if (null != motionEvent) {
         motionEvent.recycle();
-        motionEvent = null;
       }
     }
   }
 
+  public static MotionEvent obtainMovement(MotionEvent downEvent, float[] coordinates) {
+    return obtainMovement(downEvent, SystemClock.uptimeMillis(), coordinates);
+  }
+
+  public static MotionEvent obtainMovement(
+      MotionEvent downEvent, long eventTime, float[] coordinates) {
+    checkNotNull(downEvent);
+    checkNotNull(coordinates);
+    return obtain(downEvent, eventTime, MotionEvent.ACTION_MOVE, coordinates);
+  }
+
+  /** @deprecated Use {@link #obtainMovement(MotionEvent, float[])} instead. */
+  @Deprecated
   public static MotionEvent obtainMovement(long downTime, float[] coordinates) {
     return MotionEvent.obtain(
         downTime,
@@ -239,9 +243,11 @@ public final class MotionEvents {
         0);
   }
 
+  /** @deprecated Use {@link #obtainMovement(MotionEvent, long, float[])} instead. */
+  @Deprecated
   public static MotionEvent obtainMovement(long downTime, long eventTime, float[] coordinates) {
     return MotionEvent.obtain(
-        downTime, eventTime, MotionEvent.ACTION_MOVE, coordinates[0], coordinates[1], 0);
+        downTime, eventTime, MotionEvent.ACTION_MOVE, coordinates[1], coordinates[1], 0);
   }
 
   public static boolean sendMovement(
@@ -252,7 +258,7 @@ public final class MotionEvents {
 
     MotionEvent motionEvent = null;
     try {
-      motionEvent = obtainMovement(downEvent.getDownTime(), coordinates);
+      motionEvent = obtainMovement(downEvent, coordinates);
       boolean injectEventSucceeded = uiController.injectMotionEvent(motionEvent);
 
       if (!injectEventSucceeded) {
@@ -275,34 +281,36 @@ public final class MotionEvents {
     } finally {
       if (null != motionEvent) {
         motionEvent.recycle();
-        motionEvent = null;
       }
     }
 
     return true;
   }
 
-  private static MotionEvent downPressGingerBread(
-      long downTime, float[] coordinates, float[] precision) {
-    return MotionEvent.obtain(
-        downTime,
-        SystemClock.uptimeMillis(),
-        MotionEvent.ACTION_DOWN,
-        coordinates[0],
-        coordinates[1],
-        0, // pressure
-        1, // size
-        0, // metaState
-        precision[0], // xPrecision
-        precision[1], // yPrecision
-        0, // deviceId
-        0); // edgeFlags
+  private static MotionEvent obtain(
+      MotionEvent downEvent, long eventTime, int action, float[] coordinates) {
+    return obtain(
+        downEvent.getDownTime(),
+        eventTime,
+        action,
+        coordinates,
+        downEvent.getXPrecision(),
+        downEvent.getYPrecision(),
+        downEvent.getSource(),
+        downEvent.getButtonState());
   }
 
-  private static MotionEvent downPressICS(
-      long downTime, float[] coordinates, float[] precision, int inputDevice, int buttonState) {
-    MotionEvent.PointerCoords[] pointerCoords = {new MotionEvent.PointerCoords()};
-    MotionEvent.PointerProperties[] pointerProperties = getPointerProperties(inputDevice);
+  private static MotionEvent obtain(
+      long downTime,
+      long eventTime,
+      int action,
+      float[] coordinates,
+      float xPrecision,
+      float yPrecision,
+      int source,
+      int buttonState) {
+    final MotionEvent.PointerCoords[] pointerCoords = {new MotionEvent.PointerCoords()};
+    final MotionEvent.PointerProperties[] pointerProperties = getPointerProperties(source);
     pointerCoords[0].clear();
     pointerCoords[0].x = coordinates[0];
     pointerCoords[0].y = coordinates[1];
@@ -311,54 +319,18 @@ public final class MotionEvents {
 
     return MotionEvent.obtain(
         downTime,
-        SystemClock.uptimeMillis(),
-        MotionEvent.ACTION_DOWN,
+        eventTime,
+        action,
         1, // pointerCount
         pointerProperties,
         pointerCoords,
         0, // metaState
         buttonState,
-        precision[0],
-        precision[1],
+        xPrecision,
+        yPrecision,
         0, // deviceId
         0, // edgeFlags
-        inputDevice,
-        0); // flags
-  }
-
-  private static MotionEvent upPressGingerBread(MotionEvent downEvent, float[] coordinates) {
-    return MotionEvent.obtain(
-        downEvent.getDownTime(),
-        SystemClock.uptimeMillis(),
-        MotionEvent.ACTION_UP,
-        coordinates[0],
-        coordinates[1],
-        0);
-  }
-
-  private static MotionEvent upPressICS(MotionEvent downEvent, float[] coordinates) {
-    MotionEvent.PointerCoords[] pointerCoords = {new MotionEvent.PointerCoords()};
-    MotionEvent.PointerProperties[] pointerProperties = getPointerProperties(downEvent.getSource());
-    pointerCoords[0].clear();
-    pointerCoords[0].x = coordinates[0];
-    pointerCoords[0].y = coordinates[1];
-    pointerCoords[0].pressure = 0;
-    pointerCoords[0].size = 1;
-
-    return MotionEvent.obtain(
-        downEvent.getDownTime(),
-        SystemClock.uptimeMillis(),
-        MotionEvent.ACTION_UP,
-        1, // pointerCount
-        pointerProperties,
-        pointerCoords,
-        0, // metaState
-        downEvent.getButtonState(),
-        downEvent.getXPrecision(),
-        downEvent.getYPrecision(),
-        0, // deviceId
-        0, // edgeFlags
-        downEvent.getSource(),
+        source,
         0); // flags
   }
 
