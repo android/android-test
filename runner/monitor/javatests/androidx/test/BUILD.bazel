@@ -38,6 +38,9 @@ android_library_instrumentation_tests(
             "internal/util/LogUtilsTest.java",
         ],
     ),
+    binary_args = {
+        "multidex": "native",
+    },
     target_devices = devices(),
     deps = [
         "//:androidx_annotation",
