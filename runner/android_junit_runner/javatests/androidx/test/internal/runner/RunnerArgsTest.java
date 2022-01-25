@@ -17,6 +17,7 @@ package androidx.test.internal.runner;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -65,9 +66,9 @@ public class RunnerArgsTest {
     Bundle b = new Bundle();
     b.putString(RunnerArgs.ARGUMENT_TEST_CLASS, "ClassName");
     RunnerArgs args = new RunnerArgs.Builder().fromBundle(getInstrumentation(), b).build();
-    assertEquals(1, args.tests.size());
-    assertEquals("ClassName", args.tests.get(0).testClassName);
-    assertNull(args.tests.get(0).methodName);
+    assertThat(args.tests).hasSize(1);
+    assertThat(args.tests.get(0).testClassName).isEqualTo("ClassName");
+    assertThat(args.tests.get(0).methodName).isNull();
   }
 
   /** Test parsing bundle when multiple class names are provided. */
@@ -107,6 +108,38 @@ public class RunnerArgsTest {
     assertEquals("method", args.tests.get(0).methodName);
     assertEquals("ClassName2", args.tests.get(1).testClassName);
     assertNull(args.tests.get(1).methodName);
+  }
+
+  /**
+   * Test case where there is a comma as part of the method filter, which can happen for
+   * parameterized tests.
+   */
+  @Test
+  public void testFromBundle_classAndMethodWithComma() {
+    Bundle b = new Bundle();
+    b.putString(RunnerArgs.ARGUMENT_TEST_CLASS, "ClassName1#method[foo,bar],Class2");
+    RunnerArgs args = new RunnerArgs.Builder().fromBundle(getInstrumentation(), b).build();
+    assertThat(args.tests).hasSize(2);
+    assertThat(args.tests.get(0).testClassName).isEqualTo("ClassName1");
+    assertThat(args.tests.get(0).methodName).isEqualTo("method[foo,bar]");
+    assertThat(args.tests.get(1).testClassName).isEqualTo("Class2");
+    assertThat(args.tests.get(1).methodName).isNull();
+  }
+
+  /**
+   * Test case where there is a hash as part of the method filter, which can happen for
+   * parameterized tests.
+   */
+  @Test
+  public void testFromBundle_classAndMethodWithHash() {
+    Bundle b = new Bundle();
+    b.putString(RunnerArgs.ARGUMENT_TEST_CLASS, "ClassName1#method[foo#bar],Class2#method2");
+    RunnerArgs args = new RunnerArgs.Builder().fromBundle(getInstrumentation(), b).build();
+    assertThat(args.tests).hasSize(2);
+    assertThat(args.tests.get(0).testClassName).isEqualTo("ClassName1");
+    assertThat(args.tests.get(0).methodName).isEqualTo("method[foo#bar]");
+    assertThat(args.tests.get(1).testClassName).isEqualTo("Class2");
+    assertThat(args.tests.get(1).methodName).isEqualTo("method2");
   }
 
   /** Simple test for parsing test class name */

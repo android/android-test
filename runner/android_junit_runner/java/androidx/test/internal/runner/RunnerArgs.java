@@ -409,13 +409,7 @@ public class RunnerArgs {
      * @return list of {@link TestArg} data, empty list if input is null
      */
     private List<TestArg> parseTestClasses(String classesArg) {
-      List<TestArg> tests = new ArrayList<TestArg>();
-      if (classesArg != null) {
-        for (String className : classesArg.split(CLASS_SEPARATOR)) {
-          tests.add(parseTestClass(className));
-        }
-      }
-      return tests;
+      return ClassesArgTokenizer.parse(classesArg);
     }
 
     /**
@@ -670,4 +664,5 @@ public class RunnerArgs {
       return new RunnerArgs(this);
     }
   }
+
 }
