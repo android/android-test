@@ -402,6 +402,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
 
   @Override
   public void onStart() {
+    Log.d(LOG_TAG, "onStart is called.");
     Trace.beginSection("AndroidJUnitRunner#onStart");
     try {
       setJsBridgeClassName("androidx.test.espresso.web.bridge.JavaScriptBridge");
