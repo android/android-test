@@ -63,6 +63,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.hamcrest.MockitoHamcrest;
@@ -268,8 +269,8 @@ public class ViewInteractionTest {
     when(mockRemoteInteraction.isRemoteProcess()).thenReturn(false);
     // noinspection unchecked
     when(mockRemoteInteraction.createRemoteCheckCallable(
-            any(Matcher.class),
-            any(Matcher.class),
+            ArgumentMatchers.any(),
+            ArgumentMatchers.any(),
             MockitoHamcrest.argThat(
                 allOf(
                     hasEntry(
@@ -303,8 +304,8 @@ public class ViewInteractionTest {
     when(mockRemoteInteraction.isRemoteProcess()).thenReturn(false);
     // noinspection unchecked
     when(mockRemoteInteraction.createRemoteCheckCallable(
-            any(Matcher.class),
-            any(Matcher.class),
+            ArgumentMatchers.any(),
+            ArgumentMatchers.any(),
             MockitoHamcrest.argThat(
                 allOf(
                     hasEntry(
@@ -325,8 +326,8 @@ public class ViewInteractionTest {
       // noinspection unchecked
       verify(mockRemoteInteraction)
           .createRemoteCheckCallable(
-              any(Matcher.class),
-              any(Matcher.class),
+              ArgumentMatchers.any(),
+              ArgumentMatchers.any(),
               MockitoHamcrest.argThat(
                   allOf(
                       hasEntry(
@@ -346,8 +347,8 @@ public class ViewInteractionTest {
     // noinspection unchecked
     verify(mockRemoteInteraction)
         .createRemoteCheckCallable(
-            any(Matcher.class),
-            any(Matcher.class),
+            ArgumentMatchers.any(),
+            ArgumentMatchers.any(),
             MockitoHamcrest.argThat(
                 allOf(
                     hasEntry(
@@ -371,8 +372,8 @@ public class ViewInteractionTest {
     // noinspection unchecked
     verify(mockRemoteInteraction)
         .createRemotePerformCallable(
-            any(Matcher.class),
-            any(Matcher.class),
+            ArgumentMatchers.any(),
+            ArgumentMatchers.any(),
             MockitoHamcrest.argThat(
                 allOf(
                     hasEntry(
@@ -401,8 +402,8 @@ public class ViewInteractionTest {
     // noinspection unchecked
     verify(mockRemoteInteraction)
         .createRemoteCheckCallable(
-            any(Matcher.class),
-            any(Matcher.class),
+            ArgumentMatchers.any(),
+            ArgumentMatchers.any(),
             MockitoHamcrest.argThat(
                 allOf(
                     hasEntry(
@@ -443,14 +444,14 @@ public class ViewInteractionTest {
   private void initWithRunPerformWithSuccessfulRemoteInteraction() {
     initWithRemoteInteraction();
     when(mockRemoteInteraction.createRemotePerformCallable(
-            any(Matcher.class), any(Matcher.class), anyMap(), any(ViewAction.class)))
+            ArgumentMatchers.any(), ArgumentMatchers.any(), anyMap(), any(ViewAction.class)))
         .thenReturn(createSuccessfulListenableFutureStub());
   }
 
   private void initWithRunCheckWithSuccessfulRemoteInteraction() {
     initWithRemoteInteraction();
     when(mockRemoteInteraction.createRemoteCheckCallable(
-            any(Matcher.class), any(Matcher.class), anyMap(), any(ViewAssertion.class)))
+            ArgumentMatchers.any(), ArgumentMatchers.any(), anyMap(), any(ViewAssertion.class)))
         .thenReturn(createSuccessfulListenableFutureStub());
   }
 
