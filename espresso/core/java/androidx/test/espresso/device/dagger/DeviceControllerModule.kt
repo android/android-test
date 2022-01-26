@@ -23,6 +23,7 @@ import androidx.test.espresso.device.controller.DeviceControllerOperationExcepti
 import androidx.test.espresso.device.controller.EmulatorController
 import androidx.test.espresso.device.controller.PhysicalDeviceController
 import androidx.test.espresso.device.util.isTestDeviceAnEmulator
+import androidx.test.internal.platform.ServiceLoaderWrapper
 import com.android.emulator.control.EmulatorControllerGrpc
 import dagger.Module
 import dagger.Provides
@@ -39,19 +40,24 @@ internal class DeviceControllerModule {
   @Provides
   @Singleton
   fun provideActionContext(): ActionContext {
-    // TODO(b/203570026) Initialize ActionContext depending on whether the test is an
-    // instrumentation
-    // test or Robolectric
     return InstrumentationTestActionContext()
   }
 
   @Provides
   @Singleton
   fun provideDeviceController(): DeviceController {
-    if (isTestDeviceAnEmulator()) {
-      return EmulatorController(getEmulatorControllerStub())
+    val platformDeviceController: androidx.test.platform.device.DeviceController? =
+      ServiceLoaderWrapper.loadSingleServiceOrNull(
+        androidx.test.platform.device.DeviceController::class.java
+      )
+    if (platformDeviceController == null) {
+      if (isTestDeviceAnEmulator()) {
+        return EmulatorController(getEmulatorControllerStub())
+      } else {
+        return PhysicalDeviceController()
+      }
     } else {
-      return PhysicalDeviceController()
+      return EspressoDeviceControllerAdpater(platformDeviceController)
     }
   }
 
@@ -71,5 +77,17 @@ internal class DeviceControllerModule {
     val emulatorControllerStub: EmulatorControllerGrpc.EmulatorControllerBlockingStub =
       EmulatorControllerGrpc.newBlockingStub(channel)
     return emulatorControllerStub
+  }
+
+  private class EspressoDeviceControllerAdpater(
+    val deviceController: androidx.test.platform.device.DeviceController
+  ) : DeviceController {
+    override fun setDeviceMode(deviceMode: Int) {
+      deviceController.setDeviceMode(deviceMode)
+    }
+
+    override fun setScreenOrientation(screenOrientation: Int) {
+      deviceController.setScreenOrientation(screenOrientation)
+    }
   }
 }

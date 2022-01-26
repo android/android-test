@@ -22,5 +22,6 @@ kt_android_library(
         # "//android/emulator:emulator_controller_kt_proto",
         # "//grpc:core_android",
         # "//grpc:okhttp_android",
+        "//runner/monitor",
     ],
 )
