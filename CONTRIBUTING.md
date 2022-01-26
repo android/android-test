@@ -28,7 +28,7 @@ and run the Robolectric tests.
     [clone](https://help.github.com/articles/cloning-a-repository/) the
     [AndroidX Test repo](https://github.com/android/android-test)
 *   Install [bazel](https://docs.bazel.build/versions/master/install.html).
-    Version 4.2.1 is recommended. For instrumentation testing on Linux make sure your environment
+    Version 4.2.2 is recommended. For instrumentation testing on Linux make sure your environment
     meets the following
     [prerequisites](https://docs.bazel.build/versions/master/android-instrumentation-test.html#prerequisites)
 *   Install [maven](http://maven.apache.org/install.html) and make it available
