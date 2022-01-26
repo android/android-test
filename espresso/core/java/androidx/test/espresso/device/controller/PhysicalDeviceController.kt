@@ -16,6 +16,8 @@
 
 package androidx.test.espresso.device.controller
 
+import androidx.test.platform.device.DeviceController
+
 /** Implementation of {@link DeviceController} for tests run on a physical device. */
 class PhysicalDeviceController : DeviceController {
   override fun setDeviceMode(deviceMode: Int) {

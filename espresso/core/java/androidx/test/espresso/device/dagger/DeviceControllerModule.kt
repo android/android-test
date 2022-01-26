@@ -18,12 +18,12 @@ package androidx.test.espresso.device.dagger
 
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.context.InstrumentationTestActionContext
-import androidx.test.espresso.device.controller.DeviceController
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.controller.EmulatorController
 import androidx.test.espresso.device.controller.PhysicalDeviceController
 import androidx.test.espresso.device.util.isTestDeviceAnEmulator
 import androidx.test.internal.platform.ServiceLoaderWrapper
+import androidx.test.platform.device.DeviceController
 import com.android.emulator.control.EmulatorControllerGrpc
 import dagger.Module
 import dagger.Provides

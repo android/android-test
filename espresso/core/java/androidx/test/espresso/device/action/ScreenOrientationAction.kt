@@ -22,10 +22,10 @@ import android.content.pm.ActivityInfo.CONFIG_ORIENTATION
 import android.content.res.Configuration
 import android.util.Log
 import androidx.test.espresso.device.context.ActionContext
-import androidx.test.espresso.device.controller.DeviceController
 import androidx.test.espresso.device.util.getResumedActivityOrNull
 import androidx.test.espresso.device.util.isConfigurationChangeHandled
 import androidx.test.espresso.device.util.isRobolectricTest
+import androidx.test.platform.device.DeviceController
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage

@@ -17,8 +17,8 @@
 package androidx.test.espresso.device.action
 
 import androidx.test.espresso.device.context.ActionContext
-import androidx.test.espresso.device.controller.DeviceController
 import androidx.test.espresso.device.controller.DeviceMode
+import androidx.test.platform.device.DeviceController
 
 /** Action to set the test device to be folded with the hinge in a horizontal position. */
 internal class TabletopModeAction() : DeviceAction {

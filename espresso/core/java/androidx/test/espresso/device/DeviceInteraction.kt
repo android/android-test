@@ -18,8 +18,8 @@ package androidx.test.espresso.device
 import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.espresso.device.action.DeviceAction
 import androidx.test.espresso.device.context.ActionContext
-import androidx.test.espresso.device.controller.DeviceController
 import androidx.test.internal.util.Checks.checkNotMainThread
+import androidx.test.platform.device.DeviceController
 import javax.inject.Inject
 
 /**

@@ -17,6 +17,7 @@
 package androidx.test.espresso.device.controller
 
 import androidx.test.espresso.device.action.ScreenOrientation
+import androidx.test.platform.device.DeviceController
 import com.android.emulator.control.EmulatorControllerGrpc
 import com.android.emulator.control.ParameterValue
 import com.android.emulator.control.PhysicalModelValue

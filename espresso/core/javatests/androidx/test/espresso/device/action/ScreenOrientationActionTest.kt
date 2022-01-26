@@ -17,7 +17,7 @@
 package androidx.test.espresso.device.action
 
 import androidx.test.espresso.device.context.InstrumentationTestActionContext
-import androidx.test.espresso.device.controller.DeviceController
+import androidx.test.platform.device.DeviceController
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
