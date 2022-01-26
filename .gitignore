@@ -3,3 +3,6 @@ bazel-*
 
 # Android Studio
 .aswb
+
+# Intellij IDEA
+.idea
