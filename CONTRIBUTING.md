@@ -43,8 +43,8 @@ and run the Robolectric tests.
     'system-images;android-23;default;x86'`
 *   Set the `ANDROID_HOME` environment variable to point to the SDK install
     location. For example
-    *   On Linux: export ANDROID_HOME=/home/$USER/Android/Sdk
-    *   On Mac: export ANDROID_HOME=/Users/$USER/Library/Android/sdk
+    *   On Linux: `export ANDROID_HOME=/home/$USER/Android/Sdk`
+    *   On Mac: `export ANDROID_HOME=/Users/$USER/Library/Android/sdk`
     You can also add this command to your ~/.bashrc, ~/.zshrc, or ~/.profile file to make it
     permanent.
 
