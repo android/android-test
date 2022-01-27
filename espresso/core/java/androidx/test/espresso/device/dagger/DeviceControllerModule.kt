@@ -46,10 +46,8 @@ internal class DeviceControllerModule {
   @Provides
   @Singleton
   fun provideDeviceController(): DeviceController {
-    val platformDeviceController: androidx.test.platform.device.DeviceController? =
-      ServiceLoaderWrapper.loadSingleServiceOrNull(
-        androidx.test.platform.device.DeviceController::class.java
-      )
+    val platformDeviceController: DeviceController? =
+      ServiceLoaderWrapper.loadSingleServiceOrNull(DeviceController::class.java)
     if (platformDeviceController == null) {
       if (isTestDeviceAnEmulator()) {
         return EmulatorController(getEmulatorControllerStub())
@@ -80,7 +78,7 @@ internal class DeviceControllerModule {
   }
 
   private class EspressoDeviceControllerAdpater(
-    val deviceController: androidx.test.platform.device.DeviceController
+    val deviceController: DeviceController
   ) : DeviceController {
     override fun setDeviceMode(deviceMode: Int) {
       deviceController.setDeviceMode(deviceMode)
