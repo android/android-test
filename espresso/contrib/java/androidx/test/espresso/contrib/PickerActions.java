@@ -58,7 +58,6 @@ public final class PickerActions {
         return "set date";
       }
 
-      @SuppressWarnings("unchecked")
       @Override
       public Matcher<View> getConstraints() {
         return allOf(isAssignableFrom(DatePicker.class), isDisplayed());
@@ -83,7 +82,6 @@ public final class PickerActions {
         return "set time";
       }
 
-      @SuppressWarnings("unchecked")
       @Override
       public Matcher<View> getConstraints() {
         return allOf(isAssignableFrom(TimePicker.class), isDisplayed());
