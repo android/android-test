@@ -40,9 +40,22 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** Text converters for various Android objects. */
 public final class HumanReadables {
+
+  /** Regex that matches a valid Java identifier. */
+  private static final String JAVA_ID = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
+
+  /**
+   * Pattern that matches a result from the default Object.toString method; that is, a
+   * fully-qualified Java class name, an at sign ("@"), and an unsigned hexadecimal hash code. In a
+   * match, group 2 will be the subsequence containing the hexadecimal value.
+   */
+  private static final Pattern OBJECT_HASH_CODE_PATTERN =
+      Pattern.compile(JAVA_ID + "(\\." + JAVA_ID + ")*@([0-9A-Fa-f]+)");
 
   private HumanReadables() {}
 
@@ -227,7 +240,7 @@ public final class HumanReadables {
         .add("is-focusable", v.isFocusable())
         .add("is-layout-requested", v.isLayoutRequested())
         .add("is-selected", v.isSelected())
-        .add("layout-params", v.getLayoutParams())
+        .add("layout-params", replaceHashCodes(v.getLayoutParams()))
         .add("tag", v.getTag());
 
     if (null != v.getRootView()) {
@@ -262,6 +275,19 @@ public final class HumanReadables {
       innerDescribe((ViewGroup) v, helper);
     }
     return helper.toString();
+  }
+
+  /** Replaces every hexadecimal hash code with "YYYYYY". */
+  private static String replaceHashCodes(Object instance) {
+    if (instance == null) {
+      return null;
+    }
+    String str = instance.toString();
+    Matcher matcher = OBJECT_HASH_CODE_PATTERN.matcher(str);
+    if (matcher.find()) {
+      str = str.substring(0, matcher.start(2)) + "YYYYYY" + str.substring(matcher.end(2));
+    }
+    return str;
   }
 
   private static void innerDescribe(TextView textBox, ToStringHelper helper) {

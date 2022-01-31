@@ -142,34 +142,46 @@ public class ViewHierarchyExceptionHandlerTest {
             .withOtherAmbiguousViews(child2)
             .build();
 
-    // Note: Expected match must be a regexp as the class names (e.g. LayoutParams@) are followed
-    // by their runtime ids (replaced by @.* below). There are a number of regexp-sensitive
-    // characters (+${}|) which are replaced below by a simple . match.
     String expectedMsg =
-        "'A view matcher' matches multiple views in the hierarchy.\n"
-            + "Problem views are marked with '.*MATCHES.*' below.\n"
-            + "\n"
+        "'A view matcher' matches 3 views in the hierarchy:\n"
+            + "- [1] RelativeLayout{id=-1, visibility=VISIBLE, width=0, height=0, has-focus=false,"
+            + " has-focusable=false, has-window-focus=false, is-clickable=false, is-enabled=true,"
+            + " is-focused=false, is-focusable=false, is-layout-requested=true, is-selected=false,"
+            + " layout-params=null, tag=null, root-is-layout-requested=true,"
+            + " has-input-connection=false, x=0.0, y=0.0, child-count=2}\n"
+            + "- [2] TextView{id=1, visibility=VISIBLE, width=0, height=0, has-focus=false,"
+            + " has-focusable=false, has-window-focus=false, is-clickable=false, is-enabled=true,"
+            + " is-focused=false, is-focusable=false, is-layout-requested=true, is-selected=false,"
+            + " layout-params=android.widget.RelativeLayout$LayoutParams@YYYYYY, tag=null,"
+            + " root-is-layout-requested=true, has-input-connection=false, x=0.0, y=0.0, text=,"
+            + " input-type=0, ime-target=false, has-links=false}\n"
+            + "- [3] TextView{id=2, visibility=VISIBLE, width=0, height=0, has-focus=false,"
+            + " has-focusable=false, has-window-focus=false, is-clickable=false, is-enabled=true,"
+            + " is-focused=false, is-focusable=false, is-layout-requested=true, is-selected=false,"
+            + " layout-params=android.widget.RelativeLayout$LayoutParams@YYYYYY, tag=null,"
+            + " root-is-layout-requested=true, has-input-connection=false, x=0.0, y=0.0, text=,"
+            + " input-type=0, ime-target=false, has-links=false}\n"
+            + "Problem views are marked with '****MATCHES****' below.\n\n"
             + "View Hierarchy:\n"
             + "+>RelativeLayout{id=-1, visibility=VISIBLE, width=0, height=0, has-focus=false,"
             + " has-focusable=false, has-window-focus=false, is-clickable=false, is-enabled=true,"
             + " is-focused=false, is-focusable=false, is-layout-requested=true, is-selected=false,"
             + " layout-params=null, tag=null, root-is-layout-requested=true,"
-            + " has-input-connection=false, x=0.0, y=0.0, child-count=2} .*MATCHES.*\n"
+            + " has-input-connection=false, x=0.0, y=0.0, child-count=2} ****MATCHES****\n"
             + "|\n"
             + "+->TextView{id=1, visibility=VISIBLE, width=0, height=0, has-focus=false,"
             + " has-focusable=false, has-window-focus=false, is-clickable=false, is-enabled=true,"
             + " is-focused=false, is-focusable=false, is-layout-requested=true, is-selected=false,"
-            + " layout-params=android.widget.RelativeLayout$LayoutParams@.*, tag=null,"
+            + " layout-params=android.widget.RelativeLayout$LayoutParams@YYYYYY, tag=null,"
             + " root-is-layout-requested=true, has-input-connection=false, x=0.0, y=0.0, text=,"
-            + " input-type=0, ime-target=false, has-links=false} .*MATCHES.*\n"
+            + " input-type=0, ime-target=false, has-links=false} ****MATCHES****\n"
             + "|\n"
             + "+->TextView{id=2, visibility=VISIBLE, width=0, height=0, has-focus=false,"
             + " has-focusable=false, has-window-focus=false, is-clickable=false, is-enabled=true,"
             + " is-focused=false, is-focusable=false, is-layout-requested=true, is-selected=false,"
-            + " layout-params=android.widget.RelativeLayout$LayoutParams@.*, tag=null,"
+            + " layout-params=android.widget.RelativeLayout$LayoutParams@YYYYYY, tag=null,"
             + " root-is-layout-requested=true, has-input-connection=false, x=0.0, y=0.0, text=,"
-            + " input-type=0, ime-target=false, has-links=false} .*MATCHES.*";
-    expectedMsg = expectedMsg.replaceAll("([+${}|])", ".");
+            + " input-type=0, ime-target=false, has-links=false} ****MATCHES****";
 
     failureCount.incrementAndGet();
     AmbiguousViewMatcherException thrown =
@@ -179,7 +191,8 @@ public class ViewHierarchyExceptionHandlerTest {
                 ambiguousViewMatcherExceptionHandler.handle(
                     exceptionUnderTest, alwaysFalseMatcher));
 
-    assertThat(thrown).hasMessageThat().containsMatch(expectedMsg);
+    assertThat(thrown).hasMessageThat().contains(expectedMsg);
+
     verify(testStorage).openOutputFile(eq("view-hierarchy-1.txt"));
   }
 
@@ -202,26 +215,39 @@ public class ViewHierarchyExceptionHandlerTest {
             .withOtherAmbiguousViews(child2)
             .build();
 
-    ImmutableMap<String, String> inputArgs = ImmutableMap.of("view_hierarchy_char_limit", "505");
+    ImmutableMap<String, String> inputArgs = ImmutableMap.of("view_hierarchy_char_limit", "1772");
     when(testStorage.getInputArgs()).thenReturn(inputArgs);
     doAnswer(invocation -> inputArgs.get(invocation.getArgument(0)))
         .when(testStorage)
         .getInputArg(anyString());
 
-    // Note: Expected match must be a regexp as the class names (e.g. LayoutParams@) are followed
-    // by their runtime ids (replaced by @.* below). There are a number of regexp-sensitive
-    // characters (+${}|) which are replaced below by a simple . match.
     String expectedMsg =
-        "'A view matcher' matches multiple views in the hierarchy.\n"
-            + "Problem views are marked with '.*MATCHES.*' below.\n"
-            + "\n"
+        "'A view matcher' matches 3 views in the hierarchy:\n"
+            + "- [1] RelativeLayout{id=-1, visibility=VISIBLE, width=0, height=0, has-focus=false,"
+            + " has-focusable=false, has-window-focus=false, is-clickable=false, is-enabled=true,"
+            + " is-focused=false, is-focusable=false, is-layout-requested=true, is-selected=false,"
+            + " layout-params=null, tag=null, root-is-layout-requested=true,"
+            + " has-input-connection=false, x=0.0, y=0.0, child-count=2}\n"
+            + "- [2] TextView{id=1, visibility=VISIBLE, width=0, height=0, has-focus=false,"
+            + " has-focusable=false, has-window-focus=false, is-clickable=false, is-enabled=true,"
+            + " is-focused=false, is-focusable=false, is-layout-requested=true, is-selected=false,"
+            + " layout-params=android.widget.RelativeLayout$LayoutParams@YYYYYY, tag=null,"
+            + " root-is-layout-requested=true, has-input-connection=false, x=0.0, y=0.0, text=,"
+            + " input-type=0, ime-target=false, has-links=false}\n"
+            + "- [3] TextView{id=2, visibility=VISIBLE, width=0, height=0, has-focus=false,"
+            + " has-focusable=false, has-window-focus=false, is-clickable=false, is-enabled=true,"
+            + " is-focused=false, is-focusable=false, is-layout-requested=true, is-selected=false,"
+            + " layout-params=android.widget.RelativeLayout$LayoutParams@YYYYYY, tag=null,"
+            + " root-is-layout-requested=true, has-input-connection=false, x=0.0, y=0.0, text=,"
+            + " input-type=0, ime-target=false, has-links=false}\n"
+            + "Problem views are marked with '****MATCHES****' below.\n\n"
             + "View Hierarchy:\n"
             + "+>RelativeLayout{id=-1, visibility=VISIBLE, width=0, height=0, has-focus=false,"
             + " has-focusable=false, has-window-focus=false, is-clickable=false, is-enabled=true,"
             + " is-focused=false, is-focusable=false, is-layout-requested=true, is-selected=false,"
             + " layout-params=null, tag=null, root-is-layout-requested=true,"
-            + " has-input-connection=false, x=0.0, y=0.0, child-count=2}  [truncated]";
-    expectedMsg = expectedMsg.replaceAll("([+${}|\\[\\]])", ".");
+            + " has-input-connection=false, x=0.0, y=0.0, child-count=2} ****MATCHES****"
+            + " [truncated]";
 
     failureCount.incrementAndGet();
     AmbiguousViewMatcherException thrown =
@@ -231,7 +257,7 @@ public class ViewHierarchyExceptionHandlerTest {
                 ambiguousViewMatcherExceptionHandler.handle(
                     exceptionUnderTest, alwaysFalseMatcher));
 
-    assertThat(thrown).hasMessageThat().containsMatch(expectedMsg);
+    assertThat(thrown).hasMessageThat().contains(expectedMsg);
 
     assertThat(thrown)
         .hasMessageThat()

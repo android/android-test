@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.notNullValue;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -44,35 +45,32 @@ public class AmbiguousViewMatcherExceptionTest {
   private View child2;
   private View child3;
   private View child4;
+  private View child5;
+  private View child6;
 
   @Before
   public void setUp() throws Exception {
     alwaysTrueMatcher = notNullValue(View.class);
     testView = new RelativeLayout(getInstrumentation().getContext());
-    child1 = new TextView(getInstrumentation().getContext());
-    child1.setId(1);
-    child2 = new TextView(getInstrumentation().getContext());
-    child2.setId(2);
-    child3 = new TextView(getInstrumentation().getContext());
-    child3.setId(3);
-    child4 = new TextView(getInstrumentation().getContext());
-    child4.setId(4);
-    testView.addView(child1);
-    testView.addView(child2);
-    testView.addView(child3);
-    testView.addView(child4);
+    child1 = createView(testView, 1);
+    child2 = createView(testView, 2);
+    child3 = createView(testView, 3);
+    child4 = createView(testView, 4);
+    child5 = createView(testView, 5);
+    child6 = createView(testView, 6);
   }
+
 
   @Test
   public void exceptionContainsMatcherDescription() {
     StringBuilder matcherDescription = new StringBuilder();
     alwaysTrueMatcher.describeTo(new StringDescription(matcherDescription));
-    assertThat(createException().getMessage(), containsString(matcherDescription.toString()));
+    assertThat(createException4Views().getMessage(), containsString(matcherDescription.toString()));
   }
 
   @Test
   public void exceptionContainsView() {
-    String exceptionMessage = createException().getMessage();
+    String exceptionMessage = createException4Views().getMessage();
 
     assertThat(
         "missing elements",
@@ -85,14 +83,63 @@ public class AmbiguousViewMatcherExceptionTest {
             containsString("{id=-1,"))); // root
   }
 
-  private AmbiguousViewMatcherException createException() {
+  @Test
+  public void exceptionMessageWithViewList() {
+    String exceptionMessage = createException4Views().getMessage();
 
+    assertThat(
+        exceptionMessage.replaceAll("\\{[^}]+\\}", "{...}").replaceAll("[\n\r]+", "\n"),
+        containsString(
+            "'not null' matches 5 views in the hierarchy:\n"
+                + "- [1] RelativeLayout{...}\n"
+                + "- [2] TextView{...}\n"
+                + "- [3] TextView{...}\n"
+                + "- [4] TextView{...}\n"
+                + "- [5] TextView{...}\n"
+                + "Problem views are marked with '****MATCHES****' below."));
+  }
+
+  @Test
+  public void exceptionMessageWithTruncatedViewList() {
+    String exceptionMessage = createException6Views().getMessage();
+
+    assertThat(
+        exceptionMessage.replaceAll("\\{[^}]+\\}", "{...}").replaceAll("[\n\r]+", "\n"),
+        containsString(
+            "'not null' matches 7 views in the hierarchy:\n"
+                + "- [1] RelativeLayout{...}\n"
+                + "- [2] TextView{...}\n"
+                + "- [3] TextView{...}\n"
+                + "- [4] TextView{...}\n"
+                + "- [5] TextView{...}\n"
+                + "- [truncated, listing 5 out of 7 views].\n"
+                + "Problem views are marked with '****MATCHES****' below."));
+  }
+
+  private static View createView(ViewGroup parent, int index) {
+    View v = new TextView(getInstrumentation().getContext());
+    v.setId(index);
+    parent.addView(v);
+    return v;
+  }
+
+  private AmbiguousViewMatcherException createException4Views() {
     return new AmbiguousViewMatcherException.Builder()
         .withViewMatcher(alwaysTrueMatcher)
         .withRootView(testView)
         .withView1(testView)
         .withView2(child1)
         .withOtherAmbiguousViews(child2, child3, child4)
+        .build();
+  }
+
+  private AmbiguousViewMatcherException createException6Views() {
+    return new AmbiguousViewMatcherException.Builder()
+        .withViewMatcher(alwaysTrueMatcher)
+        .withRootView(testView)
+        .withView1(testView)
+        .withView2(child1)
+        .withOtherAmbiguousViews(child2, child3, child4, child5, child6)
         .build();
   }
 }

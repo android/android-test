@@ -24,6 +24,7 @@ import androidx.test.espresso.util.HumanReadables;
 import androidx.test.internal.platform.util.TestOutputEmitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
 import java.util.Locale;
 import org.hamcrest.Matcher;
 
@@ -55,7 +56,7 @@ public final class AmbiguousViewMatcherException extends RuntimeException
   }
 
   private AmbiguousViewMatcherException(Builder builder) {
-    super(getErrorMessage(builder));
+    this(getErrorMessage(builder));
     this.viewMatcher = builder.viewMatcher;
     this.rootView = builder.rootView;
     this.view1 = builder.view1;
@@ -66,19 +67,40 @@ public final class AmbiguousViewMatcherException extends RuntimeException
   private static String getErrorMessage(Builder builder) {
     String errorMessage = "";
     if (builder.includeViewHierarchy) {
-      ImmutableSet<View> ambiguousViews =
-          ImmutableSet.<View>builder()
-              .add(builder.view1, builder.view2)
-              .add(builder.others)
-              .build();
+      ArrayList<View> ambiguousViews =
+          Lists.newArrayList(
+              ImmutableSet.<View>builder()
+                  .add(builder.view1, builder.view2)
+                  .add(builder.others)
+                  .build());
+
+      StringBuilder viewsAsText = new StringBuilder();
+      int numViews = ambiguousViews.size();
+      for (int i = 0; i < numViews; i++) {
+        if (i < 5) {
+          viewsAsText.append(
+              String.format(
+                  Locale.ROOT,
+                  "\n- [%d] %s",
+                  i + 1,
+                  HumanReadables.describe(ambiguousViews.get(i))));
+        } else {
+          viewsAsText.append(
+              String.format(Locale.ROOT, "\n- [truncated, listing 5 out of %d views].", numViews));
+          break;
+        }
+      }
+
       errorMessage =
           HumanReadables.getViewHierarchyErrorMessage(
               builder.rootView,
-              Lists.newArrayList(ambiguousViews),
+              ambiguousViews,
               String.format(
                   Locale.ROOT,
-                  "'%s' matches multiple views in the hierarchy.",
-                  builder.viewMatcher),
+                  "'%s' matches %d views in the hierarchy:%s",
+                  builder.viewMatcher,
+                  numViews,
+                  viewsAsText),
               "****MATCHES****",
               builder.maxMsgLen);
 
