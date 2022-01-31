@@ -15,6 +15,8 @@
  */
 package androidx.test.ext.truth.content;
 
+import static com.google.common.truth.Fact.fact;
+
 import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
@@ -60,22 +62,26 @@ public final class IntentSubject extends Subject {
 
   /** @see #hasComponentClass(Class) */
   public final void hasComponentClass(String className) {
+    failIfIntentIsNull();
     check("getComponent().getClassName()")
         .that(actual.getComponent().getClassName())
         .isEqualTo(className);
   }
 
   public final void hasComponentPackage(String packageName) {
+    failIfIntentIsNull();
     check("getComponent().getPackageName()")
         .that(actual.getComponent().getPackageName())
         .isEqualTo(packageName);
   }
 
   public final void hasPackage(String packageName) {
+    failIfIntentIsNull();
     check("getPackage()").that(actual.getPackage()).isEqualTo(packageName);
   }
 
   public final void hasAction(String action) {
+    failIfIntentIsNull();
     check("getAction()").that(actual.getAction()).isEqualTo(action);
   }
 
@@ -84,31 +90,43 @@ public final class IntentSubject extends Subject {
   }
 
   public final void hasData(Uri uri) {
+    failIfIntentIsNull();
     check("getData()").that(actual.getData()).isEqualTo(uri);
   }
 
   public final void hasType(String type) {
+    failIfIntentIsNull();
     check("getType()").that(actual.getType()).isEqualTo(type);
   }
 
   public final BundleSubject extras() {
+    failIfIntentIsNull();
     return check("getExtras()").about(BundleSubject.bundles()).that(actual.getExtras());
   }
 
   public final IterableSubject categories() {
+    failIfIntentIsNull();
     return check("getCategories()").that(actual.getCategories());
   }
 
   /** Assert that the intent has the given flag set. */
   public final void hasFlags(int flag) {
+    failIfIntentIsNull();
     List<String> actualFlags = FlagUtil.flagNames(actual.getFlags());
     List<String> expectedFlags = FlagUtil.flagNames(flag);
     check("getFlags()").that(actualFlags).containsAtLeastElementsIn(expectedFlags);
   }
 
   public final void filtersEquallyTo(Intent intent) {
+    failIfIntentIsNull();
     if (!actual.filterEquals(intent)) {
       failWithActual("expected to be equal for intent filters to", intent);
+    }
+  }
+
+  private final void failIfIntentIsNull() {
+    if (actual == null) {
+      failWithoutActual(fact("Intent not expected to be", null));
     }
   }
 }

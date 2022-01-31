@@ -18,7 +18,7 @@ package androidx.test.ext.truth.content;
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.ext.truth.content.IntentSubject.assertThat;
 import static com.google.common.truth.ExpectFailure.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertThrows;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -49,6 +49,13 @@ public class IntentSubjectTest {
   }
 
   @Test
+  public void hasAction_failsWithNullIntent() {
+    AssertionError e =
+        assertThrows(AssertionError.class, () -> assertThat((Intent) null).hasAction("BAR"));
+    assertThat(e).factValue("Intent not expected to be").isEqualTo("null");
+  }
+
+  @Test
   public void hasNoAction() {
     Intent intent = new Intent();
     assertThat(intent).hasNoAction();
@@ -66,6 +73,13 @@ public class IntentSubjectTest {
   }
 
   @Test
+  public void hasNoAction_failsWithNullIntent() {
+    AssertionError e =
+        assertThrows(AssertionError.class, () -> assertThat((Intent) null).hasNoAction());
+    assertThat(e).factValue("Intent not expected to be").isEqualTo("null");
+  }
+
+  @Test
   public void hasComponentClass() {
     Intent intent = new Intent();
     intent.setClassName(getApplicationContext(), "Foo");
@@ -73,10 +87,26 @@ public class IntentSubjectTest {
   }
 
   @Test
+  public void hasComponentClass_failsWithNullIntent() {
+    AssertionError e =
+        assertThrows(
+            AssertionError.class, () -> assertThat((Intent) null).hasComponentClass("Foo"));
+    assertThat(e).factValue("Intent not expected to be").isEqualTo("null");
+  }
+
+  @Test
   public void hasComponentPackage() {
     Intent intent = new Intent();
     intent.setClassName("com.foo", "Foo");
     assertThat(intent).hasComponentPackage("com.foo");
+  }
+
+  @Test
+  public void hasComponentPackage_failsWithNullIntent() {
+    AssertionError e =
+        assertThrows(
+            AssertionError.class, () -> assertThat((Intent) null).hasComponentPackage("com.foo"));
+    assertThat(e).factValue("Intent not expected to be").isEqualTo("null");
   }
 
   @Test
@@ -88,6 +118,14 @@ public class IntentSubjectTest {
   }
 
   @Test
+  public void hasComponent_failsWithNullIntent() {
+    AssertionError e =
+        assertThrows(
+            AssertionError.class, () -> assertThat((Intent) null).hasComponent("com.foo", "Foo"));
+    assertThat(e).factValue("Intent not expected to be").isEqualTo("null");
+  }
+
+  @Test
   public void hasData() {
     Intent intent = new Intent();
     intent.setData(Uri.parse("http://developer.android.com"));
@@ -95,19 +133,36 @@ public class IntentSubjectTest {
   }
 
   @Test
+  public void hasData_failsWithNullIntent() {
+    AssertionError e =
+        assertThrows(
+            AssertionError.class,
+            () -> assertThat((Intent) null).hasData(Uri.parse("http://developer.android.com")));
+    assertThat(e).factValue("Intent not expected to be").isEqualTo("null");
+  }
+
+  @Test
   public void hasFlags() {
     Intent intent = new Intent();
     intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-    try {
-      assertThat(intent)
-          .hasFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT | Intent.FLAG_ACTIVITY_NEW_TASK);
-      fail("assertion unexpectedly passed");
-    } catch (AssertionError e) {
-      // test error message formatting
-      Truth.assertThat(e.getMessage()).contains("0x2000000, 0x10000000");
-      Truth.assertThat(e.getMessage()).contains("0x8000, 0x400000");
-    }
+    AssertionError e =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                assertThat(intent)
+                    .hasFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT | Intent.FLAG_ACTIVITY_NEW_TASK));
+    Truth.assertThat(e.getMessage()).contains("0x2000000, 0x10000000");
+    Truth.assertThat(e.getMessage()).contains("0x8000, 0x400000");
     assertThat(intent).hasFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+  }
+
+  @Test
+  public void hasFlags_failsWithNullIntent() {
+    AssertionError e =
+        assertThrows(
+            AssertionError.class,
+            () -> assertThat((Intent) null).hasFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT));
+    assertThat(e).factValue("Intent not expected to be").isEqualTo("null");
   }
 
   @Test
@@ -119,10 +174,27 @@ public class IntentSubjectTest {
   }
 
   @Test
+  public void extras_failsWithNullIntent() {
+    AssertionError e =
+        assertThrows(
+            AssertionError.class, () -> assertThat((Intent) null).extras().containsKey("extra"));
+    assertThat(e).factValue("Intent not expected to be").isEqualTo("null");
+  }
+
+  @Test
   public void categories() {
     Intent intent = new Intent();
     intent.addCategory("cat");
     assertThat(intent).categories().containsExactly("cat");
+  }
+
+  @Test
+  public void categories_failsWithNullIntent() {
+    AssertionError e =
+        assertThrows(
+            AssertionError.class,
+            () -> assertThat((Intent) null).categories().containsExactly("cat"));
+    assertThat(e).factValue("Intent not expected to be").isEqualTo("null");
   }
 
   @Test
@@ -136,14 +208,22 @@ public class IntentSubjectTest {
 
   @Test
   public void filtersEquallyTo_notEqual() {
-    try {
-      assertThat(new Intent("FOO")).filtersEquallyTo(new Intent("BAR"));
-      fail("Should have thrown");
-    } catch (AssertionError e) {
-      assertThat(e)
-          .factValue("expected to be equal for intent filters to")
-          .isEqualTo("Intent { act=BAR }");
-      assertThat(e).factValue("but was").isEqualTo("Intent { act=FOO }");
-    }
+    AssertionError e =
+        assertThrows(
+            AssertionError.class,
+            () -> assertThat(new Intent("FOO")).filtersEquallyTo(new Intent("BAR")));
+    assertThat(e)
+        .factValue("expected to be equal for intent filters to")
+        .isEqualTo("Intent { act=BAR }");
+    assertThat(e).factValue("but was").isEqualTo("Intent { act=FOO }");
+  }
+
+  @Test
+  public void filtersEquallyTo_failsWithNullIntent() {
+    AssertionError e =
+        assertThrows(
+            AssertionError.class,
+            () -> assertThat((Intent) null).filtersEquallyTo(new Intent(Intent.ACTION_ASSIST)));
+    assertThat(e).factValue("Intent not expected to be").isEqualTo("null");
   }
 }
