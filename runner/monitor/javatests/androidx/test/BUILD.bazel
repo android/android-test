@@ -21,11 +21,16 @@ licenses(["notice"])  # Apache License 2.0
 
 android_library_local_tests(
     name = "monitor_robolectric_tests",
-    srcs = ["internal/util/LogUtilsTest.java"],
+    srcs = [
+        "internal/util/LogUtilsTest.java",
+        "platform/tracing/AndroidXTracerTest.java",
+    ],
     deps = [
+        "//:androidx_tracing",
         "//runner/monitor",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
+        "@maven//:org_robolectric_annotations",
         "@maven//:org_robolectric_shadows_framework",
     ],
 )
@@ -36,6 +41,7 @@ android_library_instrumentation_tests(
         ["**/*.java"],
         exclude = [
             "internal/util/LogUtilsTest.java",
+            "platform/tracing/AndroidXTracerTest.java",
         ],
     ),
     target_devices = devices(),

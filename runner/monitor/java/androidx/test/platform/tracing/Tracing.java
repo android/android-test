@@ -47,7 +47,9 @@ public final class Tracing {
   private static final Tracing singleton = new Tracing();
   private final List<Tracer> tracers = Collections.synchronizedList(new ArrayList<>());
 
-  private Tracing() {}
+  private Tracing() {
+    registerTracer(new AndroidXTracer());
+  }
 
   /**
    * Static getter for external access to the singleton. <br>
