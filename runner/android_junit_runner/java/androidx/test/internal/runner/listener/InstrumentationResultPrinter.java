@@ -21,6 +21,7 @@ import android.util.Log;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.services.events.internal.StackTrimmer;
 import java.io.PrintStream;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.internal.TextListener;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
@@ -100,12 +101,12 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
    */
   public static final String REPORT_KEY_STACK = "stack";
 
+  private final AtomicInteger testNum = new AtomicInteger(0);
+  private Description description = Description.EMPTY;
   private final Bundle resultTemplate;
   @VisibleForTesting Bundle testResult;
-  int testNum = 0;
-  int testResultCode = -999;
-  String testClass = null;
-  private Description description = Description.EMPTY;
+  private int testResultCode = -999;
+  private String testClass = null;
 
   public InstrumentationResultPrinter() {
     resultTemplate = new Bundle();
@@ -121,13 +122,14 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
   /** send a status for the start of a each test, so long tests can be seen as "running" */
   @Override
   public void testStarted(Description description) throws Exception {
+    testNum.incrementAndGet();
     this.description = description; // cache Description in case of a crash
     String testClass = description.getClassName();
     String testName = description.getMethodName();
     testResult = new Bundle(resultTemplate);
     testResult.putString(REPORT_KEY_NAME_CLASS, testClass);
     testResult.putString(REPORT_KEY_NAME_TEST, testName);
-    testResult.putInt(REPORT_KEY_NUM_CURRENT, ++testNum);
+    testResult.putInt(REPORT_KEY_NUM_CURRENT, testNum.get());
     // pretty printing
     if (testClass != null && !testClass.equals(this.testClass)) {
       testResult.putString(
@@ -192,6 +194,9 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
   /**
    * Produce a more meaningful crash report including stack trace and report it back to
    * Instrumentation results.
+   *
+   * <p>Note: The Instrumentation process could crash for various reasons. Always try to do the
+   * minimum in this method.
    */
   public void reportProcessCrash(Throwable t) {
     try {
@@ -230,6 +235,6 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
   }
 
   private boolean isAnyTestStarted() {
-    return !description.equals(Description.EMPTY) || testNum != 0 || testClass != null;
+    return testNum.get() > 0;
   }
 }
