@@ -22,7 +22,16 @@ import java.util.ArrayDeque;
 /**
  * AndroidX Tracing wrapper implementation of the Tracer API.
  *
- * <p>The AndroidX tracer is always enabled. A default instance is created and registered in {@link
+ * <p>Registering this tracer does not guarantee trace collection as the underlying Android tracing
+ * feature has its own enabling logic. The Android tracing API depends on the runtime SDK API: <br>
+ * - Below API 18 (JB MR2), AndroidX Tracing is a no-op as the underlying feature did not exist.<br>
+ * - API 18 up to 28: Tracing is enabled by a call to {@link Trace#forceEnableAppTracing()}.<br>
+ * - API 29 or 30: Tracing can also be enabled via a manifest flag. <br>
+ * - API 31 and above: Tracing is enabled by default, unless it's disabled.
+ *
+ * <p>See details below in the AndroidX Tracing {@link Trace} documentation.
+ *
+ * <p>For API 18+, an instance of this wrapper is automatically created and registered in {@link
  * Tracing}.
  *
  * @see <a

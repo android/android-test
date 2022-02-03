@@ -18,6 +18,7 @@ package androidx.test.platform.tracing;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 
+import android.os.Build;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.test.annotation.ExperimentalTestApi;
@@ -48,7 +49,10 @@ public final class Tracing {
   private final List<Tracer> tracers = Collections.synchronizedList(new ArrayList<>());
 
   private Tracing() {
-    registerTracer(new AndroidXTracer());
+    // The Android Tracing API only exists starting with JB MR2 (API 18).
+    if (Build.VERSION.SDK_INT >= 18) {
+      registerTracer(new AndroidXTracer());
+    }
   }
 
   /**
