@@ -7,3 +7,19 @@ android_library(
     visibility = ["//visibility:public"],
     exports = ["//espresso/core/java/androidx/test/espresso"],
 )
+
+package_group(
+    name = "device_api_allowlist",
+    packages = [
+        "//third_party/android/androidx_test/...",
+    ],
+)
+
+android_library(
+    name = "device",
+    testonly = 1,
+    visibility = [
+        ":device_api_allowlist",
+    ],
+    exports = ["//third_party/android/androidx_test/espresso/core/java/androidx/test/espresso/device"],
+)
