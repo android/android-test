@@ -18,6 +18,11 @@
 
 package androidx.test.espresso.device.action
 
+import android.os.Handler
+import android.os.Looper
+import androidx.test.espresso.device.controller.DeviceMode
+import java.util.concurrent.Executor
+
 /** Entry point for device action operations. */
 
 /**
@@ -40,7 +45,7 @@ fun setBookMode(): DeviceAction {
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
 fun setFlatMode(): DeviceAction {
-  return FlatModeAction()
+  return BaseDeviceModeAction(DeviceMode.FLAT, mainExecutor)
 }
 
 /**
@@ -70,3 +75,5 @@ enum class ScreenOrientation(val orientation: Int) {
   PORTRAIT(0),
   LANDSCAPE(1)
 }
+
+private val mainExecutor = Executor { command -> Handler(Looper.getMainLooper()).post(command) }

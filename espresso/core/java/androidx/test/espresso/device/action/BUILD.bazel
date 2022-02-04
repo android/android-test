@@ -16,5 +16,7 @@ kt_android_library(
         "//espresso/core/java/androidx/test/espresso/device/controller",
         "//espresso/core/java/androidx/test/espresso/device/util",
         "//runner/monitor",
+        "//window",
+        "//window/java",
     ],
 )

@@ -32,10 +32,10 @@ class DeviceActionsTest {
   }
 
   @Test
-  fun setFlatMode_returnsFlatModeAction() {
+  fun setFlatMode_returnsBaseDeviceModeAction() {
     val action = setFlatMode()
 
-    assertTrue(action is FlatModeAction)
+    assertTrue(action is BaseDeviceModeAction)
   }
 
   @Test
