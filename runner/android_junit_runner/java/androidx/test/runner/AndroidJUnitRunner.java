@@ -221,9 +221,9 @@ import org.junit.runners.model.RunnerBuilder;
  *
  * <p></b>Note:</b>The new order will become the default in the future.
  *
- * <p><a
- * href="http://junit.org/javadoc/latest/org/junit/runner/notification/RunListener.html"><code>
- *    can also be specified via java.util.ServiceLoader metadata.
+ * <p><a href="http://junit.org/javadoc/latest/org/junit/runner/notification/RunListener.html">
+ * <code>
+ * RunListener</code></a> can also be specified via java.util.ServiceLoader metadata.
  *
  * <p><b> To specify a custom {@link java.lang.ClassLoader} to load the test class: </b> -e
  * classLoader com.foo.CustomClassLoader
@@ -231,9 +231,8 @@ import org.junit.runners.model.RunnerBuilder;
  * <p><b>Set timeout (in milliseconds) that will be applied to each test:</b> -e timeout_msec 5000
  *
  * <p>Supported for both JUnit3 and JUnit4 style tests. For JUnit3 tests, this flag is the only way
- * to specify timeouts. For JUnit4 tests, this flag is only supported when using the
- * the {@link androidx.test.ext.junit.runners.AndroidJUnit4) runner. It overrides timeouts
- * specified via <a
+ * to specify timeouts. For JUnit4 tests, this flag is only supported when using the the {@link
+ * androidx.test.ext.junit.runners.AndroidJUnit4} runner. It overrides timeouts specified via <a
  * href="http://junit.org/javadoc/latest/org/junit/rules/Timeout.html"><code>org.junit.rules.Timeout
  * </code></a>. Please note that in JUnit4 <a
  * href="http://junit.org/javadoc/latest/org/junit/Test.html#timeout()"><code>
