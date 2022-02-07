@@ -42,6 +42,8 @@ import androidx.test.espresso.base.IdlingResourceRegistry;
 import androidx.test.espresso.util.TreeIterables;
 import androidx.test.internal.util.Checks;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.platform.tracing.Tracer.Span;
+import androidx.test.platform.tracing.Tracing;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -62,6 +64,7 @@ public final class Espresso {
   private static final String TAG = Espresso.class.getSimpleName();
   private static final BaseLayerComponent BASE = GraphHolder.baseLayer();
   private static final IdlingResourceRegistry baseRegistry = BASE.idlingResourceRegistry();
+  private static final Tracing tracer = BASE.tracer();
   private static final int TIMEOUT_SECONDS = 5;
 
   private Espresso() {}
@@ -198,7 +201,9 @@ public final class Espresso {
 
   /** Closes soft keyboard if open. */
   public static void closeSoftKeyboard() {
-    onView(isRoot()).perform(ViewActions.closeSoftKeyboard());
+    try (Span ignored = tracer.beginSpan("Espresso-closeSoftKeyboard")) {
+      onView(isRoot()).perform(ViewActions.closeSoftKeyboard());
+    }
   }
 
   /**
@@ -211,11 +216,13 @@ public final class Espresso {
    * button (if present) has no impact on it.
    */
   public static void openContextualActionModeOverflowMenu() {
-    onView(isRoot()).perform(new TransitionBridgingViewAction());
+    try (Span ignored = tracer.beginSpan("Espresso-openContextualActionModeOverflowMenu")) {
+      onView(isRoot()).perform(new TransitionBridgingViewAction());
 
-    // provide an pressBack rollback action to the click, to handle occasional flakiness where the
-    // click is interpreted as a long press
-    onView(OVERFLOW_BUTTON_MATCHER).perform(click(ViewActions.pressBack()));
+      // provide an pressBack rollback action to the click, to handle occasional flakiness where the
+      // click is interpreted as a long press
+      onView(OVERFLOW_BUTTON_MATCHER).perform(click(ViewActions.pressBack()));
+    }
   }
 
   /**
@@ -225,7 +232,9 @@ public final class Espresso {
    *     button would result in application closing.
    */
   public static void pressBack() {
-    onView(isRoot()).perform(ViewActions.pressBack());
+    try (Span ignored = tracer.beginSpan("Espresso-pressBack")) {
+      onView(isRoot()).perform(ViewActions.pressBack());
+    }
   }
 
   /**
@@ -233,7 +242,9 @@ public final class Espresso {
    * outside the application or process under test.
    */
   public static void pressBackUnconditionally() {
-    onView(isRoot()).perform(ViewActions.pressBackUnconditionally());
+    try (Span ignored = tracer.beginSpan("Espresso-pressBackUnconditionally")) {
+      onView(isRoot()).perform(ViewActions.pressBackUnconditionally());
+    }
   }
 
   /**
@@ -246,37 +257,40 @@ public final class Espresso {
    * ActionBars and can only be interacted with via menu key presses.
    */
   public static void openActionBarOverflowOrOptionsMenu(Context context) {
-    // We need to wait for Activity#onPrepareOptionsMenu to be called before trying to open
-    // overflow or it's missing. onPrepareOptionsMenu is called by Choreographer after onResume and
-    // view is attached to window. To ensure the options menu is created before we try to open,
-    // wait for all processing tasks in this frame to be finished.
-    waitUntilNextFrame(2);
+    try (Span ignored = tracer.beginSpan("Espresso-openActionBarOverflowOrOptionsMenu")) {
+      // We need to wait for Activity#onPrepareOptionsMenu to be called before trying to open
+      // overflow or it's missing. onPrepareOptionsMenu is called by Choreographer after onResume
+      // and view is attached to window. To ensure the options menu is created before we try to
+      // open, wait for all processing tasks in this frame to be finished.
+      waitUntilNextFrame(2);
 
-    if (context.getApplicationInfo().targetSdkVersion < Build.VERSION_CODES.HONEYCOMB) {
-      // regardless of the os level of the device, this app will be rendering a menukey
-      // in the virtual navigation bar (if present) or responding to hardware option keys on
-      // any activity.
-      onView(isRoot()).perform(pressMenuKey());
-    } else if (hasVirtualOverflowButton(context)) {
-      // If we're using virtual keys - theres a chance we're in mid animation of switching
-      // between a contextual action bar and the non-contextual action bar. In this case there
-      // are 2 'More Options' buttons present. Lets wait till that is no longer the case.
-      onView(isRoot()).perform(new TransitionBridgingViewAction());
+      if (context.getApplicationInfo().targetSdkVersion < Build.VERSION_CODES.HONEYCOMB) {
+        // regardless of the os level of the device, this app will be rendering a menukey
+        // in the virtual navigation bar (if present) or responding to hardware option keys on
+        // any activity.
+        onView(isRoot()).perform(pressMenuKey());
+      } else if (hasVirtualOverflowButton(context)) {
+        // If we're using virtual keys - theres a chance we're in mid animation of switching
+        // between a contextual action bar and the non-contextual action bar. In this case there
+        // are 2 'More Options' buttons present. Lets wait till that is no longer the case.
+        onView(isRoot()).perform(new TransitionBridgingViewAction());
 
-      onView(OVERFLOW_BUTTON_MATCHER).perform(click());
-    } else {
-      // either a hardware button exists, or we're on a pre-HC os.
-      onView(isRoot()).perform(pressMenuKey());
+        onView(OVERFLOW_BUTTON_MATCHER).perform(click());
+      } else {
+        // either a hardware button exists, or we're on a pre-HC os.
+        onView(isRoot()).perform(pressMenuKey());
+      }
+
+      // Again, we need to wait for the next rendering frame so that overflow menu is rendered on
+      // screen. This wait is especially important for API 29+ devices. If we skip this wait and you
+      // try clicking on overflow menu, the click may delivered to unexpected view which is
+      // positioned the same location but under the overflow menu. This happens because the context
+      // menu is there in view hierarchy but not rendered yet so Espresso is able to calculate
+      // coordinate but injected motion event goes to the wrong view. Waits for two frames because
+      // runnable to display the menu is registered in the current frame and it is executed in the
+      // next frame.
+      waitUntilNextFrame(2);
     }
-
-    // Again, we need to wait for the next rendering frame so that overflow menu is rendered on
-    // screen. This wait is especially important for API 29+ devices. If we skip this wait and you
-    // try clicking on overflow menu, the click may delivered to unexpected view which is positioned
-    // the same location but under the overflow menu. This happens because the context menu is
-    // there in view hierarchy but not rendered yet so Espresso is able to calculate coordinate but
-    // injected motion event goes to the wrong view. Waits for two frames because runnable to
-    // display the menu is registered in the current frame and it is executed in the next frame.
-    waitUntilNextFrame(2);
   }
 
   private static void waitUntilNextFrame(int times) {
@@ -314,33 +328,35 @@ public final class Espresso {
    * @throws RuntimeException when being invoked on the main thread.
    */
   public static <T> T onIdle(Callable<T> action) {
-    Checks.checkNotMainThread();
+    try (Span ignored = tracer.beginSpan("Espresso-onIdle")) {
+      Checks.checkNotMainThread();
 
-    Executor mainThreadExecutor = BASE.mainThreadExecutor();
-    ListenableFutureTask<Void> idleFuture =
-        ListenableFutureTask.create(
-            new Runnable() {
-              @Override
-              public void run() {
-                BASE.uiController().loopMainThreadUntilIdle();
-              }
-            },
-            null);
-    FutureTask<T> actionTask = new FutureTask<>(action);
-    idleFuture.addListener(actionTask, mainThreadExecutor);
-    mainThreadExecutor.execute(idleFuture);
-    BASE.controlledLooper().drainMainThreadUntilIdle();
+      Executor mainThreadExecutor = BASE.mainThreadExecutor();
+      ListenableFutureTask<Void> idleFuture =
+          ListenableFutureTask.create(
+              new Runnable() {
+                @Override
+                public void run() {
+                  BASE.uiController().loopMainThreadUntilIdle();
+                }
+              },
+              null);
+      FutureTask<T> actionTask = new FutureTask<>(action);
+      idleFuture.addListener(actionTask, mainThreadExecutor);
+      mainThreadExecutor.execute(idleFuture);
+      BASE.controlledLooper().drainMainThreadUntilIdle();
 
-    try {
-      idleFuture.get();
-      return actionTask.get();
-    } catch (InterruptedException ie) {
-      throw new RuntimeException(ie);
-    } catch (ExecutionException ee) {
-      if (ee.getCause() instanceof AppNotIdleException) {
-        throw (AppNotIdleException) ee.getCause();
-      } else {
-        throw new RuntimeException(ee);
+      try {
+        idleFuture.get();
+        return actionTask.get();
+      } catch (InterruptedException ie) {
+        throw new RuntimeException(ie);
+      } catch (ExecutionException ee) {
+        if (ee.getCause() instanceof AppNotIdleException) {
+          throw (AppNotIdleException) ee.getCause();
+        } else {
+          throw new RuntimeException(ee);
+        }
       }
     }
   }

@@ -23,6 +23,7 @@ import androidx.test.espresso.base.MainThread;
 import androidx.test.espresso.base.UiControllerModule;
 import androidx.test.internal.platform.os.ControlledLooper;
 import androidx.test.platform.io.PlatformTestStorage;
+import androidx.test.platform.tracing.Tracing;
 import dagger.Component;
 import java.util.concurrent.Executor;
 import javax.inject.Singleton;
@@ -49,4 +50,6 @@ public interface BaseLayerComponent {
   ControlledLooper controlledLooper();
 
   PlatformTestStorage testStorage();
+
+  Tracing tracer();
 }

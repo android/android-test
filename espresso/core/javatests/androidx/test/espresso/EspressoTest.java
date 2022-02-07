@@ -29,14 +29,16 @@ import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.any;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasValue;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
@@ -48,6 +50,7 @@ import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.platform.tracing.Tracing;
 import androidx.test.ui.app.ActionBarTestActivity;
 import androidx.test.ui.app.KeyboardTestActivity;
 import androidx.test.ui.app.MainActivity;
@@ -56,6 +59,8 @@ import androidx.test.ui.app.SendActivity;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.hamcrest.Matcher;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,6 +75,19 @@ public class EspressoTest {
   @Rule
   public ActivityScenarioRule<MainActivity> rule = new ActivityScenarioRule<>(MainActivity.class);
 
+  private TestTracer tracer;
+
+  @Before
+  public void setUp() throws Exception {
+    tracer = new TestTracer();
+    Tracing.getInstance().registerTracer(tracer);
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    Tracing.getInstance().unregisterTracer(tracer);
+  }
+
   @Test
   public void openOverflowFromActionBar() {
     onData(allOf(instanceOf(Map.class), hasValue(ActionBarTestActivity.class.getSimpleName())))
@@ -78,6 +96,24 @@ public class EspressoTest {
     openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
     onView(withText("World")).perform(click());
     onView(withId(R.id.text_action_bar_result)).check(matches(withText("World")));
+
+    assertThat(
+        tracer.getSpans(),
+        contains(
+            "beginSpan: Espresso-perform-AdapterDataLoaderAction",
+            "+-endSpan: Espresso-perform-AdapterDataLoaderAction",
+            "beginSpan: Espresso-perform-GeneralClickAction",
+            "+-endSpan: Espresso-perform-GeneralClickAction",
+            "beginSpan: Espresso-perform-GeneralClickAction",
+            "+-endSpan: Espresso-perform-GeneralClickAction",
+            "beginSpan: Espresso-openActionBarOverflowOrOptionsMenu",
+            "beginSpan: Espresso-perform-KeyEventAction",
+            "+-endSpan: Espresso-perform-KeyEventAction",
+            "+-endSpan: Espresso-openActionBarOverflowOrOptionsMenu",
+            "beginSpan: Espresso-perform-GeneralClickAction",
+            "+-endSpan: Espresso-perform-GeneralClickAction",
+            "beginSpan: Espresso-check-MatchesViewAssertion",
+            "+-endSpan: Espresso-check-MatchesViewAssertion"));
   }
 
   @Test
@@ -87,6 +123,24 @@ public class EspressoTest {
     openContextualActionModeOverflowMenu();
     onView(withText("Key")).perform(click());
     onView(withId(R.id.text_action_bar_result)).check(matches(withText("Key")));
+
+    assertThat(
+        tracer.getSpans(),
+        contains(
+            "beginSpan: Espresso-perform-AdapterDataLoaderAction",
+            "+-endSpan: Espresso-perform-AdapterDataLoaderAction",
+            "beginSpan: Espresso-perform-GeneralClickAction",
+            "+-endSpan: Espresso-perform-GeneralClickAction",
+            "beginSpan: Espresso-openContextualActionModeOverflowMenu",
+            "beginSpan: Espresso-perform-TransitionBridgingViewAction",
+            "+-endSpan: Espresso-perform-TransitionBridgingViewAction",
+            "beginSpan: Espresso-perform-GeneralClickAction",
+            "+-endSpan: Espresso-perform-GeneralClickAction",
+            "+-endSpan: Espresso-openContextualActionModeOverflowMenu",
+            "beginSpan: Espresso-perform-GeneralClickAction",
+            "+-endSpan: Espresso-perform-GeneralClickAction",
+            "beginSpan: Espresso-check-MatchesViewAssertion",
+            "+-endSpan: Espresso-check-MatchesViewAssertion"));
   }
 
   @Test
@@ -123,6 +177,18 @@ public class EspressoTest {
             });
 
     onView(withId(R.id.enter_data_edit_text)).perform(ViewActions.closeSoftKeyboard());
+
+    assertThat(
+        tracer.getSpans(),
+        contains(
+            "beginSpan: Espresso-perform-AdapterDataLoaderAction",
+            "+-endSpan: Espresso-perform-AdapterDataLoaderAction",
+            "beginSpan: Espresso-perform-GeneralClickAction",
+            "+-endSpan: Espresso-perform-GeneralClickAction",
+            "beginSpan: Espresso-perform-show soft input",
+            "+-endSpan: Espresso-perform-show soft input",
+            "beginSpan: Espresso-perform-CloseKeyboardAction",
+            "+-endSpan: Espresso-perform-CloseKeyboardAction"));
   }
 
   /**
@@ -143,6 +209,26 @@ public class EspressoTest {
     onView(withId(R.id.editTextUserInput))
         .perform(typeText(", just works!"), ViewActions.closeSoftKeyboard());
     onView(withId(R.id.changeTextBt)).perform(click());
+
+    assertThat(
+        tracer.getSpans(),
+        contains(
+            "beginSpan: Espresso-perform-AdapterDataLoaderAction",
+            "+-endSpan: Espresso-perform-AdapterDataLoaderAction",
+            "beginSpan: Espresso-perform-GeneralClickAction",
+            "+-endSpan: Espresso-perform-GeneralClickAction",
+            "beginSpan: Espresso-perform-TypeTextAction",
+            "+-endSpan: Espresso-perform-TypeTextAction",
+            "beginSpan: Espresso-perform-CloseKeyboardAction",
+            "+-endSpan: Espresso-perform-CloseKeyboardAction",
+            "beginSpan: Espresso-perform-GeneralClickAction",
+            "+-endSpan: Espresso-perform-GeneralClickAction",
+            "beginSpan: Espresso-perform-TypeTextAction",
+            "+-endSpan: Espresso-perform-TypeTextAction",
+            "beginSpan: Espresso-perform-CloseKeyboardAction",
+            "+-endSpan: Espresso-perform-CloseKeyboardAction",
+            "beginSpan: Espresso-perform-GeneralClickAction",
+            "+-endSpan: Espresso-perform-GeneralClickAction"));
   }
 
   @Test
@@ -226,6 +312,8 @@ public class EspressoTest {
                   thrown.getMessage(),
                   containsString("Method cannot be called on the main application thread"));
             });
+
+    assertThat(tracer.getSpans(), empty());
   }
 
   @Test
@@ -247,6 +335,8 @@ public class EspressoTest {
                   thrown.getMessage(),
                   containsString("Method cannot be called on the main application thread"));
             });
+
+    assertThat(tracer.getSpans(), empty());
   }
 
   @Test
@@ -261,6 +351,9 @@ public class EspressoTest {
                   thrown.getMessage(),
                   containsString("Method cannot be called on the main application thread"));
             });
+
+    assertThat(
+        tracer.getSpans(), contains("beginSpan: Espresso-onIdle", "+-endSpan: Espresso-onIdle"));
   }
 
   private static class DummyIdlingResource implements IdlingResource {

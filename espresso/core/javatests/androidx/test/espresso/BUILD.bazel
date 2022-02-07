@@ -15,9 +15,17 @@ licenses(["notice"])  # Apache License 2.0
 
 android_library(
     name = "utils",
-    srcs = ["StringPatternMatcher.java"],
+    srcs = [
+      "StringPatternMatcher.java",
+      "TestTracer.java",
+    ],
     visibility = ["//visibility:private"],
-    deps = ["@maven//:org_hamcrest_hamcrest_all",],
+    deps = [
+      "//runner/monitor",
+      "//:androidx_annotation",
+      "@maven//:com_google_guava_guava",
+      "@maven//:org_hamcrest_hamcrest_all",
+    ],
 )
 
 android_app_instrumentation_tests(
@@ -45,7 +53,9 @@ android_app_instrumentation_tests(
         "//runner/android_junit_runner",
         "//runner/rules",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "//:androidx_annotation",
         "@maven//:com_google_guava_guava",
+        "@maven//:com_google_truth_truth",
         "@maven//:com_linkedin_dexmaker_dexmaker",
         "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
         "@maven//:junit_junit",

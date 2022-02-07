@@ -26,6 +26,8 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.action.ScrollToAction;
 import androidx.test.espresso.base.InterruptableUiController;
 import androidx.test.espresso.base.MainThread;
@@ -38,6 +40,9 @@ import androidx.test.espresso.remote.RemoteInteraction;
 import androidx.test.espresso.util.HumanReadables;
 import androidx.test.internal.platform.os.ControlledLooper;
 import androidx.test.internal.util.Checks;
+import androidx.test.platform.tracing.Tracer.Span;
+import androidx.test.platform.tracing.Tracing;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -80,6 +85,7 @@ public final class ViewInteraction {
   private final RemoteInteraction remoteInteraction;
   private final ListeningExecutorService remoteExecutor;
   private final TestFlowVisualizer testFlowVisualizer;
+  private final Tracing tracer;
   // test thread only
   private boolean hasRootMatcher = false;
 
@@ -95,7 +101,8 @@ public final class ViewInteraction {
       RemoteInteraction remoteInteraction,
       ListeningExecutorService remoteExecutor,
       ControlledLooper controlledLooper,
-      TestFlowVisualizer testFlowVisualizer) {
+      TestFlowVisualizer testFlowVisualizer,
+      Tracing tracer) {
     this.viewFinder = checkNotNull(viewFinder);
     this.uiController = (InterruptableUiController) checkNotNull(uiController);
     this.failureHandler = checkNotNull(failureHandler);
@@ -107,6 +114,7 @@ public final class ViewInteraction {
     this.remoteExecutor = checkNotNull(remoteExecutor);
     this.controlledLooper = checkNotNull(controlledLooper);
     this.testFlowVisualizer = checkNotNull(testFlowVisualizer);
+    this.tracer = tracer;
   }
 
   /**
@@ -171,16 +179,21 @@ public final class ViewInteraction {
 
   private void desugaredPerform(
       final SingleExecutionViewAction va, int actionIndex, boolean testFlowEnabled) {
+    ViewAction innerViewAction = va.getInnerViewAction();
+
     Callable<Void> performInteraction =
         new Callable<Void>() {
           @Override
           public Void call() {
-            doPerform(va, actionIndex, testFlowEnabled);
+            try (Span ignored =
+                tracer.beginSpan(
+                    "Espresso-perform-"
+                        + getSpanDescription(innerViewAction, innerViewAction.getDescription()))) {
+              doPerform(va, actionIndex, testFlowEnabled);
+            }
             return null;
           }
         };
-
-    ViewAction innerViewAction = va.getInnerViewAction();
 
     List<ListenableFuture<Void>> interactions = new ArrayList<>();
     interactions.add(postAsynchronouslyOnUiThread(performInteraction));
@@ -196,6 +209,28 @@ public final class ViewInteraction {
     }
 
     waitForAndHandleInteractionResults(interactions);
+  }
+
+  /**
+   * Creates a span description based on the action class name. If not suitable name can be infered,
+   * the default description is used as a last resort.
+   */
+  @NonNull
+  @VisibleForTesting
+  static String getSpanDescription(Object action, @NonNull String defaultDescription) {
+    // Note: getSimpleName() may return an empty string for an anonymous class.
+    // Ideally we would use Class.getTypeName() but this is not supported in legacy
+    // Android with compiler < 1.8.
+    String name = action == null ? null : action.getClass().getSimpleName();
+    if (Strings.isNullOrEmpty(name)) {
+      name = checkNotNull(defaultDescription);
+    }
+    // Sanitize the string in length and content.
+    name = name.replaceAll("[^0-9A-Za-z_$-]+", " ").trim();
+    if (name.length() > 64) {
+      name = name.substring(0, 64).trim();
+    }
+    return name;
   }
 
   /**
@@ -301,21 +336,25 @@ public final class ViewInteraction {
         new Callable<Void>() {
           @Override
           public Void call() {
-            uiController.loopMainThreadUntilIdle();
+            try (Span ignored =
+                tracer.beginSpan(
+                    "Espresso-check-" + getSpanDescription(viewAssert, "ViewAssertion"))) {
+              uiController.loopMainThreadUntilIdle();
 
-            View targetView = null;
-            NoMatchingViewException missingViewException = null;
-            try {
-              targetView = viewFinder.getView();
-            } catch (NoMatchingViewException nsve) {
-              missingViewException = nsve;
+              View targetView = null;
+              NoMatchingViewException missingViewException = null;
+              try {
+                targetView = viewFinder.getView();
+              } catch (NoMatchingViewException nsve) {
+                missingViewException = nsve;
+              }
+              Log.i(
+                  TAG,
+                  String.format(
+                      Locale.ROOT, "Checking '%s' assertion on view %s", viewAssert, viewMatcher));
+              singleExecutionViewAssertion.check(targetView, missingViewException);
+              return null;
             }
-            Log.i(
-                TAG,
-                String.format(
-                    Locale.ROOT, "Checking '%s' assertion on view %s", viewAssert, viewMatcher));
-            singleExecutionViewAssertion.check(targetView, missingViewException);
-            return null;
           }
         };
 

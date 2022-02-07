@@ -130,17 +130,17 @@ public class TracingTest {
     assertThat(tracer1.actions)
         .containsExactly(
             "beginSpan: span0",
-            " beginChildSpan: span01",
-            "  beginChildSpan: span011",
-            "  endSpan: span011",
-            "  beginChildSpan: span012",
-            "  endSpan: span012",
-            " endSpan: span01",
-            " beginChildSpan: span02",
-            " endSpan: span02",
-            "endSpan: span0",
+            "+ childSpan: span01",
+            "| + childSpan: span011",
+            "| | +-endSpan: span011",
+            "| + childSpan: span012",
+            "| | +-endSpan: span012",
+            "| +-endSpan: span01",
+            "+ childSpan: span02",
+            "| +-endSpan: span02",
+            "+-endSpan: span0",
             "beginSpan: span1",
-            "endSpan: span1")
+            "+-endSpan: span1")
         .inOrder();
   }
 
@@ -174,11 +174,11 @@ public class TracingTest {
     assertThat(tracer1.actions)
         .containsExactly(
             "beginSpan: span0",
-            " beginChildSpan: span01",
-            "  beginChildSpan: span011",
-            "  endSpan: span011",
-            " endSpan: span01",
-            "endSpan: span0")
+            "+ childSpan: span01",
+            "| + childSpan: span011",
+            "| | +-endSpan: span011",
+            "| +-endSpan: span01",
+            "+-endSpan: span0")
         .inOrder();
   }
 
@@ -205,14 +205,13 @@ public class TracingTest {
 
     @Override
     public Span beginChildSpan(String name) {
-      int childLevel = level + 1;
-      actions.add(Strings.repeat(" ", childLevel) + "beginChildSpan: " + name);
-      return new MyTracerSpan(actions, name, childLevel);
+      actions.add(Strings.repeat("| ", level) + "+ childSpan: " + name);
+      return new MyTracerSpan(actions, name, level + 1);
     }
 
     @Override
     public void close() {
-      actions.add(Strings.repeat(" ", level) + "endSpan: " + spanName);
+      actions.add(Strings.repeat("| ", level) + "+-endSpan: " + spanName);
     }
   }
 }

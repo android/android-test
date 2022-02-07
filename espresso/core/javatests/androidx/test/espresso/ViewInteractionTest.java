@@ -20,6 +20,8 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 import static com.google.common.base.Throwables.throwIfUnchecked;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.instanceOf;
@@ -38,6 +40,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import android.os.IBinder;
 import android.view.View;
+import androidx.annotation.NonNull;
 import androidx.test.espresso.base.InterruptableUiController;
 import androidx.test.espresso.internal.data.TestFlowVisualizer;
 import androidx.test.espresso.matcher.RootMatchers;
@@ -48,6 +51,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import androidx.test.internal.platform.os.ControlledLooper;
 import androidx.test.platform.io.PlatformTestStorageRegistry;
+import androidx.test.platform.tracing.Tracing;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -91,6 +95,7 @@ public class ViewInteractionTest {
   private Matcher<View> actionConstraint;
   private AtomicReference<Matcher<Root>> rootMatcherRef;
   private AtomicReference<Boolean> needsActivity;
+  private TestTracer tracer;
 
   private static Callable<Void> createSuccessfulListenableFutureStub() {
     return new Callable<Void>() {
@@ -121,10 +126,30 @@ public class ViewInteractionTest {
           }
         };
     when(mockRemoteInteraction.isRemoteProcess()).thenReturn(true);
+
+    // perform(mockAction) and check(mockAssertion) calls report the mock proxy class name in
+    // their span output, which is currently "$Proxy8" and "$Proxy9". It is reasonable to expect
+    // this could vary with different Mockito versions, thus we re-write the tracer span names to
+    // ensure test stability.
+    final String mockActionName = mockAction.getClass().getSimpleName();
+    final String mockAssertionName = mockAssertion.getClass().getSimpleName();
+
+    tracer =
+        new TestTracer() {
+          @NonNull
+          @Override
+          public String rewriteSpanName(@NonNull String spanName) {
+            return spanName
+                .replace(mockActionName, "MockAction")
+                .replace(mockAssertionName, "MockAssert");
+          }
+        };
+    Tracing.getInstance().registerTracer(tracer);
   }
 
   @After
   public void tearDown() throws Exception {
+    Tracing.getInstance().unregisterTracer(tracer);
     ActivityLifecycleMonitorRegistry.registerInstance(realLifecycleMonitor);
   }
 
@@ -141,6 +166,11 @@ public class ViewInteractionTest {
         throw re;
       }
     }
+
+    assertThat(
+        tracer.getSpans(),
+        contains(
+            "beginSpan: Espresso-perform-MockAction", "+-endSpan: Espresso-perform-MockAction"));
   }
 
   @Test
@@ -156,6 +186,11 @@ public class ViewInteractionTest {
       verify(mockAction).perform(mockUiController, targetView);
       assertThat(exceptionToRaise, is(re));
     }
+
+    assertThat(
+        tracer.getSpans(),
+        contains(
+            "beginSpan: Espresso-perform-MockAction", "+-endSpan: Espresso-perform-MockAction"));
   }
 
   @Test
@@ -172,6 +207,10 @@ public class ViewInteractionTest {
       verify(mockAssertion).check(targetView, null);
       assertThat(re, is(exceptionToRaise));
     }
+
+    assertThat(
+        tracer.getSpans(),
+        contains("beginSpan: Espresso-check-MockAssert", "+-endSpan: Espresso-check-MockAssert"));
   }
 
   @Test
@@ -189,6 +228,16 @@ public class ViewInteractionTest {
 
     testInteraction.check(mockAssertion);
     verify(mockAssertion).check(secondView, null);
+
+    assertThat(
+        tracer.getSpans(),
+        contains(
+            "beginSpan: Espresso-perform-MockAction",
+            "+-endSpan: Espresso-perform-MockAction",
+            "beginSpan: Espresso-perform-MockAction",
+            "+-endSpan: Espresso-perform-MockAction",
+            "beginSpan: Espresso-check-MockAssert",
+            "+-endSpan: Espresso-check-MockAssert"));
   }
 
   @Test
@@ -200,6 +249,14 @@ public class ViewInteractionTest {
 
     testInteraction.check(mockAssertion);
     verify(mockAssertion).check(targetView, null);
+
+    assertThat(
+        tracer.getSpans(),
+        contains(
+            "beginSpan: Espresso-perform-MockAction",
+            "+-endSpan: Espresso-perform-MockAction",
+            "beginSpan: Espresso-check-MockAssert",
+            "+-endSpan: Espresso-check-MockAssert"));
   }
 
   @Test
@@ -208,6 +265,10 @@ public class ViewInteractionTest {
     initWithViewInteraction();
     testInteraction.check(mockAssertion);
     verify(mockAssertion).check(targetView, null);
+
+    assertThat(
+        tracer.getSpans(),
+        contains("beginSpan: Espresso-check-MockAssert", "+-endSpan: Espresso-check-MockAssert"));
   }
 
   @Test
@@ -216,6 +277,8 @@ public class ViewInteractionTest {
     Matcher<Root> testMatcher = nullValue(Root.class);
     testInteraction.inRoot(testMatcher);
     assertEquals(testMatcher, rootMatcherRef.get());
+
+    assertThat(tracer.getSpans(), empty());
   }
 
   @Test
@@ -226,6 +289,8 @@ public class ViewInteractionTest {
       fail("should throw");
     } catch (NullPointerException expected) {
     }
+
+    assertThat(tracer.getSpans(), empty());
   }
 
   @Test
@@ -240,6 +305,10 @@ public class ViewInteractionTest {
     initWithViewInteraction();
     testInteraction.check(mockAssertion);
     verify(mockAssertion).check(null, noViewException);
+
+    assertThat(
+        tracer.getSpans(),
+        contains("beginSpan: Espresso-check-MockAssert", "+-endSpan: Espresso-check-MockAssert"));
   }
 
   @Test
@@ -252,6 +321,11 @@ public class ViewInteractionTest {
     testInteraction.withFailureHandler(customFailureHandler).perform(mockAction);
     verify(mockAction).perform(mockUiController, targetView);
     verify(customFailureHandler).handle(exceptionToRaise, viewMatcher);
+
+    assertThat(
+        tracer.getSpans(),
+        contains(
+            "beginSpan: Espresso-perform-MockAction", "+-endSpan: Espresso-perform-MockAction"));
   }
 
   @Test
@@ -281,6 +355,10 @@ public class ViewInteractionTest {
     initWithViewInteraction();
     testInteraction.check(mockAssertion);
     verify(mockAssertion).check(targetView, null);
+
+    assertThat(
+        tracer.getSpans(),
+        contains("beginSpan: Espresso-check-MockAssert", "+-endSpan: Espresso-check-MockAssert"));
   }
 
   @Test
@@ -335,6 +413,10 @@ public class ViewInteractionTest {
                           instanceOf(IBinder.class)))),
               any(ViewAssertion.class));
     }
+
+    assertThat(
+        tracer.getSpans(),
+        contains("beginSpan: Espresso-check-MockAssert", "+-endSpan: Espresso-check-MockAssert"));
   }
 
   @Test
@@ -355,6 +437,10 @@ public class ViewInteractionTest {
                         equalTo(RemoteInteraction.BUNDLE_EXECUTION_STATUS),
                         instanceOf(IBinder.class)))),
             any(ViewAssertion.class));
+
+    assertThat(
+        tracer.getSpans(),
+        contains("beginSpan: Espresso-check-MockAssert", "+-endSpan: Espresso-check-MockAssert"));
   }
 
   @Test
@@ -384,6 +470,12 @@ public class ViewInteractionTest {
 
     verify(bindableMock).getId();
     verify(bindableMock).getIBinder();
+
+    assertThat(
+        tracer.getSpans(),
+        contains(
+            "beginSpan: Espresso-perform-BindableViewAction",
+            "+-endSpan: Espresso-perform-BindableViewAction"));
   }
 
   @Test
@@ -414,6 +506,57 @@ public class ViewInteractionTest {
 
     verify(bindableMock).getId();
     verify(bindableMock).getIBinder();
+
+    assertThat(
+        tracer.getSpans(),
+        contains(
+            "beginSpan: Espresso-check-BindableViewAssertion",
+            "+-endSpan: Espresso-check-BindableViewAssertion"));
+  }
+
+  @Test
+  public void getSpanDescription() {
+    final ViewAction anonymousViewAction =
+        new ViewAction() {
+          @Override
+          public Matcher<View> getConstraints() {
+            return null;
+          }
+
+          @Override
+          public String getDescription() {
+            return null;
+          }
+
+          @Override
+          public void perform(UiController uiController, View view) {}
+        };
+
+    final ViewAssertion anonymousViewAssertion =
+        new ViewAssertion() {
+          @Override
+          public void check(View view, NoMatchingViewException noViewFoundException) {}
+        };
+
+    assertThat(ViewInteraction.getSpanDescription(null, "alternative"), is("alternative"));
+
+    // Alternative string is used for anonymous classes.
+    assertThat(
+        ViewInteraction.getSpanDescription(anonymousViewAction, "This action does something!"),
+        is("This action does something"));
+    assertThat(
+        ViewInteraction.getSpanDescription(
+            anonymousViewAssertion,
+            "An action with a long description.\n"
+                + " It is sanitized and shortened. This part is removed."),
+        is("An action with a long description It is sanitized and shortened"));
+
+    assertThat(
+        ViewInteraction.getSpanDescription(new BindableViewAction(null, null), "alternative"),
+        is("BindableViewAction"));
+    assertThat(
+        ViewInteraction.getSpanDescription(new BindableViewAssertion(null, null), "alternative"),
+        is("BindableViewAssertion"));
   }
 
   private void initWithViewInteraction() {
@@ -438,7 +581,8 @@ public class ViewInteractionTest {
                     new LinkedBlockingQueue<Runnable>(),
                     new ThreadFactoryBuilder().setNameFormat("Espresso Remote #%d").build())),
             mockControlledLooper,
-            TestFlowVisualizer.getInstance(PlatformTestStorageRegistry.getInstance()));
+            TestFlowVisualizer.getInstance(PlatformTestStorageRegistry.getInstance()),
+            Tracing.getInstance());
   }
 
   private void initWithRunPerformWithSuccessfulRemoteInteraction() {
