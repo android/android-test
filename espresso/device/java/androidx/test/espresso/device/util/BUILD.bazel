@@ -6,7 +6,7 @@ load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 licenses(["notice"])
 
 package(default_visibility = [
-    "//espresso/core/java/androidx/test/espresso/device:device_pkg",
+    "//espresso/device/java/androidx/test/espresso/device:device_pkg",
 ])
 
 kt_android_library(

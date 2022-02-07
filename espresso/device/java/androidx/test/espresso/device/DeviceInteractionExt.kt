@@ -23,6 +23,21 @@ import androidx.test.espresso.device.action.setScreenOrientation as getSetScreen
 import androidx.test.espresso.device.action.setTabletopMode as getSetTabletopModeDeviceAction
 
 /**
+ * Set device screen to be folded with the hinge in the horizontal position. For details on foldable
+ * postures, see
+ * https://developer.android.com/guide/topics/large-screens/learn-about-foldables#foldable_postures
+ *
+ * This action is for foldable devices only. Currently only supported for tests run on Android
+ * Emulators.
+ * @throws UnsupportedDeviceOperationException if used on a real device.
+ * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
+ */
+fun DeviceInteraction.setTabletopMode(): DeviceInteraction {
+  perform(getSetTabletopModeDeviceAction())
+  return this
+}
+
+/**
  * Set device screen to be folded with the hinge in the vertical position. For details on foldable
  * postures, see
  * https://developer.android.com/guide/topics/large-screens/learn-about-foldables#foldable_postures
@@ -48,21 +63,6 @@ fun DeviceInteraction.setBookMode(): DeviceInteraction {
  */
 fun DeviceInteraction.setFlatMode(): DeviceInteraction {
   perform(getSetFlatModeDeviceAction())
-  return this
-}
-
-/**
- * Set device screen to be folded with the hinge in the horizontal position. For details on foldable
- * postures, see
- * https://developer.android.com/guide/topics/large-screens/learn-about-foldables#foldable_postures
- *
- * This action is for foldable devices only. Currently only supported for tests run on Android
- * Emulators.
- * @throws UnsupportedDeviceOperationException if used on a real device.
- * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
- */
-fun DeviceInteraction.setTabletopMode(): DeviceInteraction {
-  perform(getSetTabletopModeDeviceAction())
   return this
 }
 

@@ -1,0 +1,19 @@
+# Alias for androidx.test.espresso.device dependency
+
+licenses(["notice"])
+
+package_group(
+    name = "device_api_allowlist",
+    packages = [
+        "//...",
+    ],
+)
+
+android_library(
+    name = "device",
+    testonly = 1,
+    visibility = [
+        ":device_api_allowlist",
+    ],
+    exports = ["//espresso/device/java/androidx/test/espresso/device"],
+)

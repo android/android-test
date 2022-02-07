@@ -5,28 +5,29 @@ load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 licenses(["notice"])
 
 package(default_visibility = [
-    "//espresso/core/java/androidx/test/espresso/device:device_pkg",
+    "//espresso/device/java/androidx/test/espresso/device:device_pkg",
 ])
 
 # Add only device packages here.
 package_group(
     name = "device_pkg",
     packages = [
-        "//espresso/core/java/androidx/test/espresso/device/...",
-        "//espresso/core/javatests/androidx/test/espresso/device/...",
+        "//espresso/device/...",
     ],
 )
 
 kt_android_library(
     name = "device",
     srcs = glob(["*.kt"]),
+    exports = [
+        "//espresso/device/java/androidx/test/espresso/device/action",
+    ],
     plugins = ["//opensource/dagger:dagger_plugin"],  # Add programmatically
     deps = [
         "//annotation/java/androidx/test/annotation",
-        "//espresso/core/java/androidx/test/espresso/device/action",
-        "//espresso/core/java/androidx/test/espresso/device/context",
-        "//espresso/core/java/androidx/test/espresso/device/controller",
-        "//espresso/core/java/androidx/test/espresso/device/dagger",
+        "//espresso/device/java/androidx/test/espresso/device/action",
+        "//espresso/device/java/androidx/test/espresso/device/context",
+        "//espresso/device/java/androidx/test/espresso/device/dagger",
         "//opensource/dagger",
         "//runner/monitor/java/androidx/test:monitor",
     ],

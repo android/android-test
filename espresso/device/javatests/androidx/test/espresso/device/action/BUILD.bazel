@@ -1,5 +1,5 @@
 # Description:
-#   Tests for Espresso device controllers
+#   Tests for Espresso device actions
 
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 load(
@@ -18,17 +18,20 @@ kt_android_app_instrumentation_tests(
     srcs = glob(
         ["*.kt"],
         exclude = [
-            "EmulatorControllerTest.kt",
+            "ScreenOrientationActionTest.kt",
         ],
     ),
     binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
     target_devices = devices(),
     deps = [
-        "//espresso/core/java/androidx/test/espresso/device/controller:controller_impl",
-        "//espresso/core/java/androidx/test/espresso/device/controller",
+        "//espresso/device/java/androidx/test/espresso/device/action",
+        "//espresso/device/java/androidx/test/espresso/device/context",
+        "//espresso/device/java/androidx/test/espresso/device/context:context_impl",
+        "//espresso/device/java/androidx/test/espresso/device/controller",
         "//ext/junit",
         "//runner/android_junit_runner",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
         "@maven//:junit_junit",
+        "@maven//:org_mockito_mockito_core",
     ],
 )
