@@ -212,21 +212,21 @@ public final class ViewInteraction {
   }
 
   /**
-   * Creates a span description based on the action class name. If not suitable name can be infered,
-   * the default description is used as a last resort.
+   * Creates a span description based on the action class name. If not suitable name can be
+   * inferred, the default description is used if provided.
    */
   @NonNull
   @VisibleForTesting
-  static String getSpanDescription(Object action, @NonNull String defaultDescription) {
+  static String getSpanDescription(Object action, String defaultDescription) {
     // Note: getSimpleName() may return an empty string for an anonymous class.
     // Ideally we would use Class.getTypeName() but this is not supported in legacy
     // Android with compiler < 1.8.
     String name = action == null ? null : action.getClass().getSimpleName();
     if (Strings.isNullOrEmpty(name)) {
-      name = checkNotNull(defaultDescription);
+      name = defaultDescription;
     }
     // Sanitize the string in length and content.
-    name = name.replaceAll("[^0-9A-Za-z_$-]+", " ").trim();
+    name = name == null ? "" : name.replaceAll("[^0-9A-Za-z_$-]+", " ").trim();
     if (name.length() > 64) {
       name = name.substring(0, 64).trim();
     }
@@ -235,9 +235,9 @@ public final class ViewInteraction {
 
   /**
    * Replaces the default failure handler (@see Espresso.setFailureHandler) with a custom
-   * failurehandler for this particular interaction.
+   * FailureHandler for this particular interaction.
    *
-   * @param failureHandler a non-null failurehandler to use to report failures.
+   * @param failureHandler a non-null FailureHandler to use to report failures.
    * @return this interaction for further perform/verification calls.
    */
   public ViewInteraction withFailureHandler(FailureHandler failureHandler) {

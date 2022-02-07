@@ -538,6 +538,8 @@ public class ViewInteractionTest {
           public void check(View view, NoMatchingViewException noViewFoundException) {}
         };
 
+    // This utility method should be defensive and silently accept null arguments.
+    assertThat(ViewInteraction.getSpanDescription(null, null), is(""));
     assertThat(ViewInteraction.getSpanDescription(null, "alternative"), is("alternative"));
 
     // Alternative string is used for anonymous classes.
