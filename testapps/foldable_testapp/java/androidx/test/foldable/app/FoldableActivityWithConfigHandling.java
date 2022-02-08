@@ -17,9 +17,11 @@
 package androidx.test.foldable.app;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
 import androidx.window.java.layout.WindowInfoTrackerCallbackAdapter;
@@ -28,7 +30,7 @@ import androidx.window.layout.WindowLayoutInfo;
 import java.util.concurrent.Executor;
 
 /** Activity that updates a TextView with its device mode when it is folded or unfolded. */
-public class FoldableActivity extends Activity {
+public class FoldableActivityWithConfigHandling extends Activity {
   private static final String TAG = "FoldableActivity";
 
   @Nullable private WindowInfoTrackerCallbackAdapter windowInfoTracker;
@@ -39,7 +41,7 @@ public class FoldableActivity extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.foldable_activity);
+    setContentView(R.layout.foldable_activity_with_config_handling);
 
     stateContainer = new WindowLayoutInfoConsumer(findViewById(R.id.current_fold_mode));
     windowInfoTracker = new WindowInfoTrackerCallbackAdapter(WindowInfoTracker.getOrCreate(this));
@@ -55,5 +57,11 @@ public class FoldableActivity extends Activity {
   public void onStop() {
     super.onStop();
     windowInfoTracker.removeWindowLayoutInfoListener(stateContainer);
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    Log.d(TAG, "onConfigurationChanged.");
   }
 }

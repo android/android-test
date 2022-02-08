@@ -48,6 +48,12 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+    <activity
+        android:label="foldable activity with config handling"
+        android:name=".FoldableActivityWithConfigHandling"
+        android:configChanges="orientation|screenSize|screenLayout"
+        android:exported="true">
+    </activity>
   </application>
 
 </manifest>
