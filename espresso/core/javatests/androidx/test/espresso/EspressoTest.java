@@ -29,6 +29,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static com.google.common.truth.Truth.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.any;
@@ -178,17 +179,16 @@ public class EspressoTest {
 
     onView(withId(R.id.enter_data_edit_text)).perform(ViewActions.closeSoftKeyboard());
 
-    assertThat(
-        tracer.getSpans(),
-        contains(
-            "beginSpan: Espresso-perform-AdapterDataLoaderAction",
-            "+-endSpan: Espresso-perform-AdapterDataLoaderAction",
-            "beginSpan: Espresso-perform-GeneralClickAction",
-            "+-endSpan: Espresso-perform-GeneralClickAction",
+    assertThat(tracer.getSpans())
+        .containsAtLeast(
             "beginSpan: Espresso-perform-show soft input",
-            "+-endSpan: Espresso-perform-show soft input",
+            "+-endSpan: Espresso-perform-show soft input")
+        .inOrder();
+    assertThat(tracer.getSpans())
+        .containsAtLeast(
             "beginSpan: Espresso-perform-CloseKeyboardAction",
-            "+-endSpan: Espresso-perform-CloseKeyboardAction"));
+            "+-endSpan: Espresso-perform-CloseKeyboardAction")
+        .inOrder();
   }
 
   /**
@@ -210,25 +210,11 @@ public class EspressoTest {
         .perform(typeText(", just works!"), ViewActions.closeSoftKeyboard());
     onView(withId(R.id.changeTextBt)).perform(click());
 
-    assertThat(
-        tracer.getSpans(),
-        contains(
-            "beginSpan: Espresso-perform-AdapterDataLoaderAction",
-            "+-endSpan: Espresso-perform-AdapterDataLoaderAction",
-            "beginSpan: Espresso-perform-GeneralClickAction",
-            "+-endSpan: Espresso-perform-GeneralClickAction",
-            "beginSpan: Espresso-perform-TypeTextAction",
-            "+-endSpan: Espresso-perform-TypeTextAction",
+    assertThat(tracer.getSpans())
+        .containsAtLeast(
             "beginSpan: Espresso-perform-CloseKeyboardAction",
-            "+-endSpan: Espresso-perform-CloseKeyboardAction",
-            "beginSpan: Espresso-perform-GeneralClickAction",
-            "+-endSpan: Espresso-perform-GeneralClickAction",
-            "beginSpan: Espresso-perform-TypeTextAction",
-            "+-endSpan: Espresso-perform-TypeTextAction",
-            "beginSpan: Espresso-perform-CloseKeyboardAction",
-            "+-endSpan: Espresso-perform-CloseKeyboardAction",
-            "beginSpan: Espresso-perform-GeneralClickAction",
-            "+-endSpan: Espresso-perform-GeneralClickAction"));
+            "+-endSpan: Espresso-perform-CloseKeyboardAction")
+        .inOrder();
   }
 
   @Test
