@@ -16,6 +16,7 @@
 
 package androidx.test.espresso.intent.matcher;
 
+import static androidx.test.espresso.intent.matcher.BundleMatchers.doesNotHaveKey;
 import static androidx.test.espresso.intent.matcher.BundleMatchers.hasEntry;
 import static androidx.test.espresso.intent.matcher.BundleMatchers.hasKey;
 import static androidx.test.espresso.intent.matcher.BundleMatchers.hasValue;
@@ -115,6 +116,43 @@ public class BundleMatchersTest {
 
     assertTrue(hasKey("key2").matches(bundle));
     assertTrue(hasKey(equalTo("key2")).matches(bundle));
+  }
+
+  @Test
+  public void doesNotHaveKeyTesting() {
+    Bundle bundle = new Bundle();
+    bundle.putBoolean("key", true);
+
+    assertTrue(doesNotHaveKey("key2").matches(bundle));
+    assertTrue(doesNotHaveKey(equalTo("key2")).matches(bundle));
+  }
+
+  @Test
+  public void doesNotHaveKeyDoesNotMatch() {
+    Bundle bundle = new Bundle();
+    bundle.putBoolean("key", true);
+
+    assertFalse(doesNotHaveKey("key").matches(bundle));
+    assertFalse(doesNotHaveKey(equalTo("key")).matches(bundle));
+    assertFalse(doesNotHaveKey("key").matches(null));
+    assertFalse(doesNotHaveKey("key").matches("key"));
+  }
+
+  @Test
+  public void doesNotHaveKeyWithMultipleEntries() {
+    Bundle bundle = new Bundle();
+    bundle.putDouble("key", 10000000);
+    bundle.putDouble("key1", 10000001);
+    bundle.putBundle("key2", new Bundle());
+
+    assertFalse(doesNotHaveKey("key").matches(bundle));
+    assertFalse(doesNotHaveKey(equalTo("key")).matches(bundle));
+    assertFalse(doesNotHaveKey("key1").matches(bundle));
+    assertFalse(doesNotHaveKey(equalTo("key1")).matches(bundle));
+    assertFalse(doesNotHaveKey("key2").matches(bundle));
+    assertFalse(doesNotHaveKey(equalTo("key2")).matches(bundle));
+    assertTrue(doesNotHaveKey("key3").matches(bundle));
+    assertTrue(doesNotHaveKey(equalTo("key3")).matches(bundle));
   }
 
   @Test

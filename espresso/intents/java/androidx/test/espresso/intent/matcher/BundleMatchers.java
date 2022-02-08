@@ -24,6 +24,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 import android.os.Bundle;
+import androidx.annotation.NonNull;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -35,26 +36,37 @@ public final class BundleMatchers {
   private static class BundleMatcher extends TypeSafeMatcher<Bundle> {
     private final Matcher<String> keyMatcher;
     private final Matcher<?> valueMatcher;
+    /**
+     * Whether the matcher should check for presence or absence of the key and value.
+     *
+     * <p>If true, the matcher will match bundles that have a matching key-value pair. If false, the
+     * matcher will match bundles that do not have a matching key-value pair (including empty
+     * bundles).
+     */
+    private final boolean shouldBePresent;
 
-    BundleMatcher(Matcher<String> keyMatcher, Matcher<?> valueMatcher) {
+    BundleMatcher(Matcher<String> keyMatcher, Matcher<?> valueMatcher, boolean shouldBePresent) {
       super(Bundle.class);
       this.keyMatcher = checkNotNull(keyMatcher);
       this.valueMatcher = checkNotNull(valueMatcher);
+      this.shouldBePresent = shouldBePresent;
     }
 
     @Override
     public boolean matchesSafely(Bundle bundle) {
       for (String key : bundle.keySet()) {
         if (keyMatcher.matches(key) && valueMatcher.matches(bundle.get(key))) {
-          return true;
+          return shouldBePresent;
         }
       }
-      return false;
+      return !shouldBePresent;
     }
 
     @Override
     public void describeTo(Description description) {
-      description.appendText("has bundle with: key: ");
+      description.appendText("has bundle ");
+      description.appendText(shouldBePresent ? "with" : "without");
+      description.appendText(": key: ");
       description.appendDescriptionOf(keyMatcher);
       description.appendText(" value: ");
       description.appendDescriptionOf(valueMatcher);
@@ -91,7 +103,7 @@ public final class BundleMatchers {
   }
 
   public static Matcher<Bundle> hasEntry(Matcher<String> keyMatcher, Matcher<?> valueMatcher) {
-    return new BundleMatcher(keyMatcher, valueMatcher);
+    return new BundleMatcher(keyMatcher, valueMatcher, /* shouldBePresent= */ true);
   }
 
   public static Matcher<Bundle> hasKey(String key) {
@@ -99,7 +111,17 @@ public final class BundleMatchers {
   }
 
   public static Matcher<Bundle> hasKey(Matcher<String> keyMatcher) {
-    return new BundleMatcher(keyMatcher, anything());
+    return new BundleMatcher(keyMatcher, anything(), /* shouldBePresent= */ true);
+  }
+
+  @NonNull
+  public static Matcher<Bundle> doesNotHaveKey(String key) {
+    return doesNotHaveKey(is(key));
+  }
+
+  @NonNull
+  public static Matcher<Bundle> doesNotHaveKey(Matcher<String> keyMatcher) {
+    return new BundleMatcher(keyMatcher, anything(), /* shouldBePresent= */ false);
   }
 
   public static <T> Matcher<Bundle> hasValue(T value) {
@@ -107,6 +129,6 @@ public final class BundleMatchers {
   }
 
   public static Matcher<Bundle> hasValue(Matcher<?> valueMatcher) {
-    return new BundleMatcher(any(String.class), valueMatcher);
+    return new BundleMatcher(any(String.class), valueMatcher, /* shouldBePresent= */ true);
   }
 }

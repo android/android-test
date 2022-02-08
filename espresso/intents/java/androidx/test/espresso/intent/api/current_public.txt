@@ -73,6 +73,8 @@ package androidx.test.espresso.intent {
 package androidx.test.espresso.intent.matcher {
 
   public final class BundleMatchers {
+    method public static org.hamcrest.Matcher<android.os.Bundle!> doesNotHaveKey(String!);
+    method public static org.hamcrest.Matcher<android.os.Bundle!> doesNotHaveKey(org.hamcrest.Matcher<java.lang.String!>!);
     method public static <T> org.hamcrest.Matcher<android.os.Bundle!>! hasEntry(String!, T!);
     method public static org.hamcrest.Matcher<android.os.Bundle!>! hasEntry(String!, org.hamcrest.Matcher<?>!);
     method public static org.hamcrest.Matcher<android.os.Bundle!>! hasEntry(org.hamcrest.Matcher<java.lang.String!>!, org.hamcrest.Matcher<?>!);
@@ -96,6 +98,8 @@ package androidx.test.espresso.intent.matcher {
 
   public final class IntentMatchers {
     method public static org.hamcrest.Matcher<android.content.Intent!>! anyIntent();
+    method public static org.hamcrest.Matcher<android.content.Intent!> doesNotHaveExtraWithKey(String!);
+    method public static org.hamcrest.Matcher<android.content.Intent!> doesNotHaveExtraWithKey(org.hamcrest.Matcher<java.lang.String!>!);
     method public static org.hamcrest.Matcher<android.content.Intent!>! filterEquals(android.content.Intent!);
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasAction(String!);
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasAction(org.hamcrest.Matcher<java.lang.String!>!);

@@ -10,6 +10,7 @@ android_library(
     testonly = 1,
     srcs = glob(["*.java"]),
     deps = [
+        "//:androidx_annotation",
         "//core",
         "//espresso/intents/java/androidx/test/espresso/intent:precondition_checks",
         "//espresso/intents/java/androidx/test/espresso/intent:resolved_intent_interface",

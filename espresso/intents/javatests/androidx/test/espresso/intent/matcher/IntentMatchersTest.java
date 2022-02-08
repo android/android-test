@@ -18,6 +18,7 @@ package androidx.test.espresso.intent.matcher;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.intent.matcher.BundleMatchers.hasEntry;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.doesNotHaveExtraWithKey;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.filterEquals;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasCategories;
@@ -105,7 +106,6 @@ public class IntentMatchersTest {
         matcher.matches(new Intent(Intent.ACTION_VIEW).setData(uri).addCategory("category")));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void matchesIntentWithTypeAndMatcherWithNoType() {
     Matcher<Intent> matcher = hasAction(equalTo(Intent.ACTION_VIEW));
@@ -116,7 +116,6 @@ public class IntentMatchersTest {
     assertTrue(matcher.matches(intent));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void matchesIntentWithNoExtraAndMatcherWithOneExtra() {
     Matcher<Intent> matcher =
@@ -173,21 +172,18 @@ public class IntentMatchersTest {
                 .putExtra("key2", "value2")));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void matchesIntentWithNoCategoryAndMatcherWithOneCategory() {
     Matcher<Intent> matcher = hasCategories(hasItem(equalTo("category")));
     assertFalse(matcher.matches(new Intent(Intent.ACTION_VIEW, uri)));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void matchesIntentWithOneCategoryAndMatcherWithNoCategory() {
     Matcher<Intent> matcher = hasAction(equalTo(Intent.ACTION_VIEW));
     assertTrue(matcher.matches(new Intent(Intent.ACTION_VIEW, uri).addCategory("category")));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void matchesIntentAndMatcherWithMultipleCategory() {
     Matcher<Intent> matcher =
@@ -197,7 +193,6 @@ public class IntentMatchersTest {
             new Intent(Intent.ACTION_VIEW, uri).addCategory("category").addCategory("category1")));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void matchesIntentWithOneCategoryAndMatcherWithMultipleCategories() {
     Matcher<Intent> matcher =
@@ -355,6 +350,13 @@ public class IntentMatchersTest {
   }
 
   @Test
+  public void doesNotHaveExtraWithKeyTesting() {
+    Intent intent = new Intent().putExtra("key1", "value1").putExtra("key2", 100.0);
+    assertTrue(doesNotHaveExtraWithKey("key3").matches(intent));
+    assertTrue(doesNotHaveExtraWithKey("key4").matches(intent));
+  }
+
+  @Test
   public void hasExtraTesting() {
     Intent intent =
         new Intent()
@@ -376,6 +378,14 @@ public class IntentMatchersTest {
   public void hasExtraWithKeyDoesNotMatch() {
     Intent intent = new Intent().putExtra("key1", "value1");
     assertFalse(hasExtraWithKey("key2").matches(intent));
+  }
+
+  @Test
+  public void doesNotHaveExtraWithKeyDoesNotMatch() {
+    Intent intent = new Intent().putExtra("key1", "value1");
+    assertFalse(doesNotHaveExtraWithKey("key1").matches(intent));
+    assertFalse(doesNotHaveExtraWithKey("key1").matches(null));
+    assertFalse(doesNotHaveExtraWithKey("key1").matches("key1"));
   }
 
   @Test

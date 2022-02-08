@@ -18,6 +18,7 @@ package androidx.test.espresso.intent.matcher;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.intent.Checks.checkNotNull;
+import static androidx.test.espresso.intent.matcher.BundleMatchers.doesNotHaveKey;
 import static androidx.test.espresso.intent.matcher.BundleMatchers.hasEntry;
 import static androidx.test.espresso.intent.matcher.BundleMatchers.hasKey;
 import static androidx.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName;
@@ -30,6 +31,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
 import androidx.test.espresso.intent.ResolvedIntent;
 import java.util.Set;
 import org.hamcrest.Description;
@@ -191,6 +193,16 @@ public final class IntentMatchers {
 
   public static Matcher<Intent> hasExtraWithKey(Matcher<String> keyMatcher) {
     return hasExtras(hasKey(keyMatcher));
+  }
+
+  @NonNull
+  public static Matcher<Intent> doesNotHaveExtraWithKey(String key) {
+    return doesNotHaveExtraWithKey(is(key));
+  }
+
+  @NonNull
+  public static Matcher<Intent> doesNotHaveExtraWithKey(Matcher<String> keyMatcher) {
+    return hasExtras(doesNotHaveKey(keyMatcher));
   }
 
   public static <T> Matcher<Intent> hasExtra(String key, T value) {
