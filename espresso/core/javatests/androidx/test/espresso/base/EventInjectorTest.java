@@ -168,7 +168,7 @@ public class EventInjectorTest {
         };
     ActivityLifecycleMonitorRegistry.getInstance().addLifecycleCallback(callback);
     try {
-      ActivityScenario activityScenario = ActivityScenario.launch(SendActivity.class);
+      ActivityScenario<SendActivity> activityScenario = ActivityScenario.launch(SendActivity.class);
       assertTrue(activityStarted.await(20, TimeUnit.SECONDS));
       final int[] xy = CoordinatesUtil.getCoordinatesInMiddleOfSendButton(activityScenario);
 

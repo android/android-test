@@ -42,12 +42,13 @@ class CoordinatesUtil {
     return xyMiddle;
   }
 
-  static int[] getCoordinatesInMiddleOfSendButton(ActivityScenario activityScenario) {
+  static <A extends Activity> int[] getCoordinatesInMiddleOfSendButton(
+      ActivityScenario<A> activityScenario) {
     final int[] xyMiddle = new int[2];
     activityScenario.onActivity(
-        new ActivityAction() {
+        new ActivityAction<A>() {
           @Override
-          public void perform(Activity activity) {
+          public void perform(A activity) {
             final View sendButton = activity.findViewById(R.id.send_button);
             final int[] xy = new int[2];
             sendButton.getLocationOnScreen(xy);
