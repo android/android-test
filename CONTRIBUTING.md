@@ -17,7 +17,7 @@ again.
 
 ## Building and Testing
 
-AndroidX Test uses the [bazel](https://bazel.build) build system.
+AndroidX Test uses the [Bazel](https://bazel.build) build system.
 
 Currently only Linux is fully supported. For Mac and windows users, you may be able to build
 and run the Robolectric tests.
@@ -27,7 +27,7 @@ and run the Robolectric tests.
 *   [Fork](https://help.github.com/articles/fork-a-repo/) and
     [clone](https://help.github.com/articles/cloning-a-repository/) the
     [AndroidX Test repo](https://github.com/android/android-test)
-*   Install [bazel](https://docs.bazel.build/versions/master/install.html).
+*   Install [Bazel](https://docs.bazel.build/versions/master/install.html).
     Version 4.2.2 is recommended. For instrumentation testing on Linux make sure your environment
     meets the following
     [prerequisites](https://docs.bazel.build/versions/master/android-instrumentation-test.html#prerequisites)
@@ -43,8 +43,8 @@ and run the Robolectric tests.
     'system-images;android-23;default;x86'`
 *   Set the `ANDROID_HOME` environment variable to point to the SDK install
     location. For example
-    *   On Linux: export ANDROID_HOME=/home/$USER/Android/Sdk
-    *   On Mac: export ANDROID_HOME=/Users/$USER/Library/Android/sdk
+    *   On Linux: `export ANDROID_HOME=/home/$USER/Android/Sdk`
+    *   On Mac: `export ANDROID_HOME=/Users/$USER/Library/Android/sdk`
     You can also add this command to your ~/.bashrc, ~/.zshrc, or ~/.profile file to make it
     permanent.
 
