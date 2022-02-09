@@ -58,8 +58,10 @@ android_library(
         "LooperIdlingResourceInterrogationHandler.java",
     ],
     deps = [
+        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource",
+        "//runner/monitor",
         "@maven//:com_google_dagger_dagger",
         "@maven//:com_google_guava_guava",
         "@maven//:javax_annotation_javax_annotation_api",

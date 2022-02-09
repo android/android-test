@@ -24,10 +24,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.test.espresso.IdlingPolicies;
 import androidx.test.espresso.IdlingPolicy;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.IdlingResource.ResourceCallback;
+import androidx.test.platform.tracing.Tracer;
+import androidx.test.platform.tracing.Tracer.Span;
+import androidx.test.platform.tracing.Tracing;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
@@ -74,13 +78,19 @@ public final class IdlingResourceRegistry {
   private final Looper looper;
   private final Handler handler;
   private final Dispatcher dispatcher;
+  private final Tracing tracer;
   private IdleNotificationCallback idleNotificationCallback = NO_OP_CALLBACK;
 
   @Inject
-  public IdlingResourceRegistry(Looper looper) {
+  IdlingResourceRegistry(Looper looper, @NonNull Tracing tracer) {
     this.looper = looper;
+    this.tracer = tracer;
     this.dispatcher = new Dispatcher();
     this.handler = new Handler(looper, dispatcher);
+  }
+
+  public IdlingResourceRegistry(Looper looper) {
+    this(looper, Tracing.getInstance());
   }
 
   /**
@@ -206,6 +216,7 @@ public final class IdlingResourceRegistry {
         boolean found = false;
         for (int i = 0; i < idlingStates.size(); i++) {
           if (idlingStates.get(i).resource.getName().equals(resource.getName())) {
+            idlingStates.get(i).closeSpan();
             idlingStates.remove(i);
             found = true;
             break;
@@ -265,9 +276,11 @@ public final class IdlingResourceRegistry {
     for (IdlingState is : idlingStates) {
       if (is.idle) {
         // ensure resource has not gone busy.
-        is.idle = is.resource.isIdleNow();
+        is.setIdle(is.resource.isIdleNow());
       }
-
+      // TODO(b/214584779): We should not return early here as this call also has the side effect of
+      // updating all the current idle states so we may miss a chance to notice another resource
+      // has gone busy and start a tracing span for it.
       if (!is.idle) {
         return false;
       }
@@ -375,13 +388,15 @@ public final class IdlingResourceRegistry {
     }
   }
 
-  private static class IdlingState implements ResourceCallback {
+  private class IdlingState implements ResourceCallback {
     // on main
     final IdlingResource resource;
     // from anywhere
     final Handler handler;
     // on main
-    boolean idle;
+    private boolean idle;
+    // on main
+    Tracer.Span tracerSpan;
 
     private IdlingState(IdlingResource resource, Handler handler) {
       this.resource = resource;
@@ -391,7 +406,41 @@ public final class IdlingResourceRegistry {
     private void registerSelf() {
       // on main, once at initialization.
       resource.registerIdleTransitionCallback(this);
-      idle = resource.isIdleNow();
+      setIdle(resource.isIdleNow());
+    }
+
+    private void closeSpan() {
+      // Resource is being unregistered. End the tracing span.
+      if (tracerSpan != null) {
+        tracerSpan.close();
+        tracerSpan = null;
+        if (!idle) {
+          Log.w(TAG, "Closing span for resource not idle: " + resource.getName());
+        }
+      }
+    }
+
+    /** Must be invoked from main thread. */
+    public void setIdle(boolean idle) {
+      if (!idle && tracerSpan == null) {
+        // Resource is busy. Start a tracing span if we haven't done so yet.
+        tracerSpan = createUnmanagedTracerSpan("IdleResource-" + resource.getName());
+      } else if (idle && tracerSpan != null) {
+        // Resource is no longer busy. End any current tracing span.
+        tracerSpan.close();
+        tracerSpan = null;
+      }
+
+      this.idle = idle;
+    }
+
+    /**
+     * Internal method to create a Span that does not enforce try-resource usage. Caller
+     * <em>must</em> manually call {@link Span#close()} later on the resource.
+     */
+    @SuppressWarnings("MustBeClosedChecker")
+    private Span createUnmanagedTracerSpan(String name) {
+      return tracer.beginSpan(name);
     }
 
     @Override
@@ -428,7 +477,7 @@ public final class IdlingResourceRegistry {
 
     private void handleResourceIdled(Message m) {
       IdlingState is = (IdlingState) m.obj;
-      is.idle = true;
+      is.setIdle(true);
       boolean unknownResource = true;
       boolean allIdle = true;
       for (IdlingState state : idlingStates) {

@@ -30,6 +30,7 @@ import androidx.test.espresso.IdlingResourceTimeoutException;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.platform.tracing.Tracing;
 import com.google.common.collect.Lists;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -103,7 +104,8 @@ public class UiControllerImplTest {
           }
         });
     testThread.start();
-    idlingResourceRegistry = new IdlingResourceRegistry(testThread.getLooper());
+    idlingResourceRegistry =
+        new IdlingResourceRegistry(testThread.getLooper(), Tracing.getInstance());
     asyncPool =
         new ThreadPoolExecutor(3, 3, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
     EventInjector injector = null;

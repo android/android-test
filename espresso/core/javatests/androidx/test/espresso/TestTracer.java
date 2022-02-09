@@ -35,7 +35,7 @@ import java.util.List;
  *   Tracing.getInstance().unregisterTracer(tracer);
  * </pre>
  */
-class TestTracer implements Tracer {
+public class TestTracer implements Tracer {
   private final List<String> spans = new ArrayList<>();
 
   public List<String> getSpans() {

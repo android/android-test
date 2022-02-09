@@ -16,6 +16,7 @@
 
 package androidx.test.espresso.base;
 
+import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -24,10 +25,13 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.test.espresso.IdlingResource;
+import androidx.test.espresso.TestTracer;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.platform.tracing.Tracing;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.util.List;
@@ -37,6 +41,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,12 +53,28 @@ public class IdlingResourceRegistryTest {
 
   private IdlingResourceRegistry registry;
   private Handler handler;
+  private TestTracer tracer;
 
   @Before
   public void setUp() throws Exception {
     Looper looper = Looper.getMainLooper();
     handler = new Handler(looper);
-    registry = new IdlingResourceRegistry(looper);
+    registry = new IdlingResourceRegistry(looper, Tracing.getInstance());
+    tracer =
+        new TestTracer() {
+          @NonNull
+          @Override
+          public String rewriteSpanName(@NonNull String spanName) {
+            // Remove thread ids from span names as they vary between tests.
+            return spanName.replaceAll("-[0-9]+-", "-ThreadId-");
+          }
+        };
+    Tracing.getInstance().registerTracer(tracer);
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    Tracing.getInstance().unregisterTracer(tracer);
   }
 
   @Test
@@ -83,6 +104,14 @@ public class IdlingResourceRegistryTest {
     resourcesIdle = createIdleCheckTask(registry);
     handler.post(resourcesIdle);
     assertTrue(resourcesIdle.get());
+
+    assertThat(tracer.getSpans())
+        .containsExactly(
+            "beginSpan: IdleResource-r1",
+            "+-endSpan: IdleResource-r1",
+            "beginSpan: IdleResource-r2",
+            "+-endSpan: IdleResource-r2")
+        .inOrder();
   }
 
   @Test
@@ -93,6 +122,8 @@ public class IdlingResourceRegistryTest {
     assertFalse(registry.registerResources(Lists.newArrayList(r1)));
     assertFalse(registry.registerResources(Lists.newArrayList(r1dup)));
     assertEquals(1, registry.getResources().size());
+
+    assertThat(tracer.getSpans()).containsExactly("beginSpan: IdleResource-r1").inOrder();
   }
 
   @Test
@@ -108,13 +139,15 @@ public class IdlingResourceRegistryTest {
 
     // r1 should still be registered
     assertFalse(resourcesIdle.get());
+
+    assertThat(tracer.getSpans()).containsExactly("beginSpan: IdleResource-r1").inOrder();
   }
 
   @Test
   public void unregisteredResourceIsDisconnected() throws Exception {
     // This repros a bug where a resource which has been registered and then
     // unregistered could still send an onTransitionToIdle() message back to
-    // the IRR and corrupt it's internal data structures.
+    // the IRR and corrupt its internal data structures.
 
     OnDemandIdlingResource r1 = new OnDemandIdlingResource("r1");
     OnDemandIdlingResource r2 = new OnDemandIdlingResource("r2");
@@ -147,6 +180,16 @@ public class IdlingResourceRegistryTest {
 
     // if this is false, r3's message broke the IRR
     assertTrue(resourcesIdle.get());
+
+    assertThat(tracer.getSpans())
+        .containsExactly(
+            "beginSpan: IdleResource-r1",
+            "beginSpan: IdleResource-r2",
+            "beginSpan: IdleResource-r3",
+            "+-endSpan: IdleResource-r3",
+            "+-endSpan: IdleResource-r2",
+            "+-endSpan: IdleResource-r1")
+        .inOrder();
   }
 
   @Test
@@ -166,6 +209,8 @@ public class IdlingResourceRegistryTest {
     resourcesIdle = createIdleCheckTask(registry);
     handler.post(resourcesIdle);
     assertTrue(resourcesIdle.get());
+
+    assertThat(tracer.getSpans()).isEmpty();
   }
 
   @Test
@@ -182,6 +227,10 @@ public class IdlingResourceRegistryTest {
     resourcesIdle = createIdleCheckTask(registry);
     handler.post(resourcesIdle);
     assertTrue(resourcesIdle.get());
+
+    assertThat(tracer.getSpans())
+        .containsExactly("beginSpan: IdleResource-r1", "+-endSpan: IdleResource-r1")
+        .inOrder();
   }
 
   @Test
@@ -204,6 +253,16 @@ public class IdlingResourceRegistryTest {
     assertTrue(registry.unregisterResources(Lists.newArrayList(r2)));
 
     assertFalse(registry.unregisterResources(Lists.newArrayList(r3, r3)));
+
+    assertThat(tracer.getSpans())
+        .containsExactly(
+            "beginSpan: IdleResource-r1",
+            "beginSpan: IdleResource-r2",
+            "beginSpan: IdleResource-r3",
+            "+-endSpan: IdleResource-r1",
+            "+-endSpan: IdleResource-r2",
+            "+-endSpan: IdleResource-r3")
+        .inOrder();
   }
 
   @Test
@@ -218,6 +277,14 @@ public class IdlingResourceRegistryTest {
 
     registry.unregisterResources(Lists.newArrayList(r1, r2));
     assertEquals(0, registry.getResources().size());
+
+    assertThat(tracer.getSpans())
+        .containsExactly(
+            "beginSpan: IdleResource-r1",
+            "beginSpan: IdleResource-r2",
+            "+-endSpan: IdleResource-r1",
+            "+-endSpan: IdleResource-r2")
+        .inOrder();
   }
 
   @Test
@@ -237,6 +304,8 @@ public class IdlingResourceRegistryTest {
     resourcesIdle = createIdleCheckTask(registry);
     handler.post(resourcesIdle);
     assertFalse(resourcesIdle.get());
+
+    assertThat(tracer.getSpans()).containsExactly("beginSpan: IdleResource-r3").inOrder();
   }
 
   @Test
@@ -256,6 +325,16 @@ public class IdlingResourceRegistryTest {
 
       r1.reset();
     }
+
+    assertThat(tracer.getSpans())
+        .containsExactly(
+            "beginSpan: IdleResource-r1",
+            "+-endSpan: IdleResource-r1",
+            "beginSpan: IdleResource-r1",
+            "+-endSpan: IdleResource-r1",
+            "beginSpan: IdleResource-r1",
+            "+-endSpan: IdleResource-r1")
+        .inOrder();
   }
 
   @Test
@@ -315,6 +394,16 @@ public class IdlingResourceRegistryTest {
     assertTrue(allResourcesIdleLatch.await(200, TimeUnit.MILLISECONDS));
     assertEquals(1, busyWarningLatch.getCount());
     assertEquals(1, timeoutLatch.getCount());
+
+    assertThat(tracer.getSpans())
+        .containsExactly(
+            "beginSpan: IdleResource-r1",
+            "beginSpan: IdleResource-r2",
+            "beginSpan: IdleResource-r3",
+            "+-endSpan: IdleResource-r3",
+            "+-endSpan: IdleResource-r2",
+            "+-endSpan: IdleResource-r1")
+        .inOrder();
   }
 
   @Test
@@ -373,6 +462,15 @@ public class IdlingResourceRegistryTest {
     assertTrue("Should have timed out", timeoutLatch.await(2, TimeUnit.SECONDS));
     assertEquals(1, busysFromWarning.get().size());
     assertEquals(1, allResourcesIdleLatch.getCount());
+
+    assertThat(tracer.getSpans())
+        .containsExactly(
+            "beginSpan: IdleResource-r1",
+            "beginSpan: IdleResource-r2",
+            "beginSpan: IdleResource-r3",
+            "+-endSpan: IdleResource-r1",
+            "+-endSpan: IdleResource-r2")
+        .inOrder();
   }
 
   @Test

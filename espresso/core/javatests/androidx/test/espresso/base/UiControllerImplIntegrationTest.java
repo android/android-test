@@ -37,6 +37,7 @@ import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallba
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.Suppress;
+import androidx.test.platform.tracing.Tracing;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SendActivity;
 import java.io.IOException;
@@ -77,11 +78,12 @@ public class UiControllerImplIntegrationTest {
             new Provider<IdleNotifier<IdleNotificationCallback>>() {
               @Override
               public IdleNotifier<IdleNotificationCallback> get() {
-                return new IdlingResourceRegistry(Looper.getMainLooper()).asIdleNotifier();
+                return new IdlingResourceRegistry(Looper.getMainLooper(), Tracing.getInstance())
+                    .asIdleNotifier();
               }
             },
             Looper.getMainLooper(),
-            new IdlingResourceRegistry(Looper.getMainLooper()));
+            new IdlingResourceRegistry(Looper.getMainLooper(), Tracing.getInstance()));
   }
 
   @Test

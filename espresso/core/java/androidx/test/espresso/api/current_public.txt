@@ -500,7 +500,7 @@ package androidx.test.espresso.base {
   }
 
   @javax.inject.Singleton public final class IdlingResourceRegistry {
-    ctor @javax.inject.Inject public IdlingResourceRegistry(android.os.Looper!);
+    ctor public IdlingResourceRegistry(android.os.Looper!);
     method public java.util.List<androidx.test.espresso.IdlingResource!>! getResources();
     method public void registerLooper(android.os.Looper!, boolean);
     method public boolean registerResources(java.util.List<? extends androidx.test.espresso.IdlingResource>!);
