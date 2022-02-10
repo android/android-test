@@ -1,0 +1,195 @@
+// Signature format: 3.0
+package androidx.test.internal.platform {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class ServiceLoaderWrapper {
+    method public static <T> java.util.List<T!>! loadService(Class<T!>!);
+    method public static <T> T! loadSingleService(Class<T!>!, androidx.test.internal.platform.ServiceLoaderWrapper.Factory<T!>!);
+    method public static <T> T! loadSingleServiceOrNull(Class<T!>!);
+  }
+
+  public static interface ServiceLoaderWrapper.Factory<T> {
+    method public T! create();
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public interface ThreadChecker {
+    method public void checkMainThread();
+    method public void checkNotMainThread();
+  }
+
+}
+
+package androidx.test.internal.platform.app {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public interface ActivityInvoker {
+    method public void finishActivity(android.app.Activity!);
+    method public android.app.Instrumentation.ActivityResult! getActivityResult();
+    method public default android.content.Intent! getIntentForActivity(Class<? extends android.app.Activity>!);
+    method public void pauseActivity(android.app.Activity!);
+    method public void recreateActivity(android.app.Activity!);
+    method public void resumeActivity(android.app.Activity!);
+    method public void startActivity(android.content.Intent!, android.os.Bundle?);
+    method public void startActivity(android.content.Intent!);
+    method public void stopActivity(android.app.Activity!);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ActivityLifecycleTimeout {
+    ctor public ActivityLifecycleTimeout();
+    method public static long getMillis();
+  }
+
+}
+
+package androidx.test.internal.platform.content {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public interface PermissionGranter {
+    method public void addPermissions(java.lang.String!...);
+    method public void requestPermissions();
+  }
+
+}
+
+package androidx.test.internal.platform.os {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public interface ControlledLooper {
+    method public void drainMainThreadUntilIdle();
+    method public void simulateWindowFocus(android.view.View!);
+    field public static final androidx.test.internal.platform.os.ControlledLooper! NO_OP_CONTROLLED_LOOPER;
+  }
+
+}
+
+package androidx.test.internal.platform.reflect {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ReflectionException extends java.lang.Exception {
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ReflectiveField<T> {
+    ctor public ReflectiveField(String!, String!);
+    method public T! get(Object!) throws androidx.test.internal.platform.reflect.ReflectionException;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ReflectiveMethod<T> {
+    ctor public ReflectiveMethod(String!, String!, Class<?>!...);
+    method public T! invoke(Object!, java.lang.Object!...) throws androidx.test.internal.platform.reflect.ReflectionException;
+    method public T! invokeStatic(java.lang.Object!...) throws androidx.test.internal.platform.reflect.ReflectionException;
+  }
+
+}
+
+package androidx.test.internal.platform.util {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestOutputEmitter {
+    method public static boolean addOutputProperties(java.util.Map<java.lang.String!,java.io.Serializable!>!);
+    method public static boolean captureWindowHierarchy(String!);
+    method public static void dumpThreadStates(String!);
+    method public static boolean takeScreenshot(String!);
+  }
+
+}
+
+package androidx.test.internal.runner {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class InstrumentationConnection {
+    method public java.util.Set<android.os.Messenger!>! getClientsForType(String!);
+    method public static androidx.test.internal.runner.InstrumentationConnection! getInstance();
+    method public void init(android.app.Instrumentation!, androidx.test.runner.MonitoringInstrumentation.ActivityFinisher!);
+    method public void registerClient(String!, android.os.Messenger!);
+    method public void requestRemoteInstancesActivityCleanup();
+    method public void terminate();
+    method public void unregisterClient(String!, android.os.Messenger!);
+    field public static final String BROADCAST_FILTER = "androidx.test.runner.InstrumentationConnection.event";
+  }
+
+}
+
+package androidx.test.internal.runner.intent {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class IntentMonitorImpl implements androidx.test.runner.intent.IntentMonitor {
+    ctor public IntentMonitorImpl();
+    method public void addIntentCallback(androidx.test.runner.intent.IntentCallback);
+    method public void removeIntentCallback(androidx.test.runner.intent.IntentCallback);
+    method public void signalIntent(android.content.Intent!);
+  }
+
+}
+
+package androidx.test.internal.runner.lifecycle {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class ActivityLifecycleMonitorImpl implements androidx.test.runner.lifecycle.ActivityLifecycleMonitor {
+    ctor public ActivityLifecycleMonitorImpl();
+    ctor public ActivityLifecycleMonitorImpl(boolean);
+    method public void addLifecycleCallback(androidx.test.runner.lifecycle.ActivityLifecycleCallback!);
+    method public java.util.Collection<android.app.Activity!>! getActivitiesInStage(androidx.test.runner.lifecycle.Stage!);
+    method public androidx.test.runner.lifecycle.Stage! getLifecycleStageOf(android.app.Activity!);
+    method public void removeLifecycleCallback(androidx.test.runner.lifecycle.ActivityLifecycleCallback!);
+    method public void signalLifecycleChange(androidx.test.runner.lifecycle.Stage!, android.app.Activity!);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ApplicationLifecycleMonitorImpl implements androidx.test.runner.lifecycle.ApplicationLifecycleMonitor {
+    ctor public ApplicationLifecycleMonitorImpl();
+    method public void addLifecycleCallback(androidx.test.runner.lifecycle.ApplicationLifecycleCallback!);
+    method public void removeLifecycleCallback(androidx.test.runner.lifecycle.ApplicationLifecycleCallback!);
+    method public void signalLifecycleChange(android.app.Application!, androidx.test.runner.lifecycle.ApplicationStage!);
+  }
+
+}
+
+package androidx.test.internal.util {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class Checks {
+    method public static void checkArgument(boolean);
+    method public static void checkArgument(boolean, Object!);
+    method public static void checkArgument(boolean, String!, java.lang.Object!...);
+    method public static void checkMainThread();
+    method public static void checkNotMainThread();
+    method public static <T> T! checkNotNull(T!);
+    method public static <T> T! checkNotNull(T!, Object!);
+    method public static <T> T! checkNotNull(T!, String!, java.lang.Object!...);
+    method public static void checkState(boolean);
+    method public static void checkState(boolean, Object!);
+    method public static void checkState(boolean, String!, java.lang.Object!...);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class LogUtil {
+    ctor public LogUtil();
+    method public static void logDebug(String!, String!, java.lang.Object!...);
+    method public static void logDebugWithProcess(String!, String!, java.lang.Object!...);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ParcelableIBinder implements android.os.Parcelable {
+    ctor public ParcelableIBinder(android.os.IBinder!);
+    ctor protected ParcelableIBinder(android.os.Parcel!);
+    method public int describeContents();
+    method public android.os.IBinder! getIBinder();
+    method public void writeToParcel(android.os.Parcel!, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.internal.util.ParcelableIBinder!>! CREATOR;
+  }
+
+  @Deprecated @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ReflectionUtil {
+    ctor @Deprecated public ReflectionUtil();
+    method @Deprecated public static Object! callStaticMethod(String!, String!, androidx.test.internal.util.ReflectionUtil.ReflectionParams!...) throws androidx.test.internal.util.ReflectionUtil.ReflectionException;
+    method @Deprecated public static Object! callStaticMethod(Class<?>!, String!, androidx.test.internal.util.ReflectionUtil.ReflectionParams!...) throws androidx.test.internal.util.ReflectionUtil.ReflectionException;
+  }
+
+  @Deprecated @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static class ReflectionUtil.ReflectionException extends java.lang.Exception {
+  }
+
+  @Deprecated public static class ReflectionUtil.ReflectionParams {
+    ctor @Deprecated public ReflectionUtil.ReflectionParams(Class<?>!, Object!);
+    method @Deprecated public static Class<?>![]! getTypes(androidx.test.internal.util.ReflectionUtil.ReflectionParams![]!);
+    method @Deprecated public static Object![]! getValues(androidx.test.internal.util.ReflectionUtil.ReflectionParams![]!);
+  }
+
+}
+
+package androidx.test.platform.view.inspector {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class WindowInspectorCompat {
+    method public static java.util.List<android.view.View!>! getGlobalWindowViews() throws androidx.test.platform.view.inspector.WindowInspectorCompat.ViewRetrievalException;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static class WindowInspectorCompat.ViewRetrievalException extends java.lang.Exception {
+  }
+
+}
+
