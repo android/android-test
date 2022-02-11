@@ -31,6 +31,7 @@ import io.grpc.Channel
 import io.grpc.InsecureChannelCredentials
 import io.grpc.okhttp.OkHttpChannelBuilder
 import java.lang.reflect.Method
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 /** Dagger module for DeviceController. */
@@ -73,7 +74,9 @@ internal class DeviceControllerModule {
     }
     val port = gRpcPort.toInt()
     val channel: Channel =
-      OkHttpChannelBuilder.forAddress("10.0.2.2", port, InsecureChannelCredentials.create()).build()
+      OkHttpChannelBuilder.forAddress("10.0.2.2", port, InsecureChannelCredentials.create())
+        .idleTimeout(30, TimeUnit.SECONDS)
+        .build()
     val emulatorControllerStub: EmulatorControllerGrpc.EmulatorControllerBlockingStub =
       EmulatorControllerGrpc.newBlockingStub(channel)
     return emulatorControllerStub
