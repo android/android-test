@@ -16,6 +16,7 @@
 
 package androidx.test.espresso.intent;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -52,11 +53,14 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThrows;
 import static org.junit.rules.ExpectedException.none;
 
 import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -310,9 +314,7 @@ public class IntentsIntegrationTest {
     clickToDisplayActivity();
     intended(
         hasComponent(
-            allOf(
-                hasPackageName("androidx.test.ui.app"),
-                hasShortClassName(".DisplayActivity"))));
+            allOf(hasPackageName("androidx.test.ui.app"), hasShortClassName(".DisplayActivity"))));
   }
 
   @Test
@@ -323,6 +325,23 @@ public class IntentsIntegrationTest {
     // Validate that we're still on the same screen (i.e. the intent to the DisplayActivity was
     // stubbed)
     onView(withId(R.id.send_button)).check(matches(isDisplayed()));
+  }
+
+  @Test
+  public void browserIntentNotResolved() {
+    Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+    browserIntent.setData(Uri.parse("http://developer.android.com"));
+    browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+    Intents.intending(hasAction(Intent.ACTION_VIEW))
+        .respondWithFunction(
+            intent -> {
+              throw new ActivityNotFoundException();
+            });
+
+    assertThrows(
+        ActivityNotFoundException.class,
+        () -> getApplicationContext().startActivity(browserIntent));
   }
 
   private void pick(String phoneNumber) {

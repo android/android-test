@@ -703,8 +703,16 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
         try {
           return task.get();
         } catch (ExecutionException e) {
-          throw new RuntimeException(
-              String.format("Could not retrieve stub result for intent %s", intent), e);
+          String msg = String.format("Could not retrieve stub result for intent %s", intent);
+          // try to preserve original exception
+          if (e.getCause() instanceof RuntimeException) {
+            Log.w(TAG, msg, e);
+            throw (RuntimeException) e.getCause();
+          } else if (e.getCause() != null) {
+            throw new RuntimeException(msg, e.getCause());
+          } else {
+            throw new RuntimeException(msg, e);
+          }
         } catch (InterruptedException e) {
           Thread.currentThread().interrupt();
           throw new RuntimeException(e);
