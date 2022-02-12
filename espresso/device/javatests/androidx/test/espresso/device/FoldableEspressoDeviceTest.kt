@@ -24,9 +24,9 @@ import androidx.test.espresso.device.action.setFlatMode
 import androidx.test.espresso.device.action.setScreenOrientation
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.foldable.app.FoldableActivity
 import androidx.test.foldable.app.R
+import androidx.test.rule.ActivityTestRule
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -35,8 +35,8 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4::class)
 class FoldableEspressoDeviceTest {
   @get:Rule
-  val activityScenario: ActivityScenarioRule<FoldableActivity> =
-    ActivityScenarioRule(FoldableActivity::class.java)
+  val activityRule: ActivityTestRule<FoldableActivity> =
+    ActivityTestRule(FoldableActivity::class.java)
 
   @Test
   fun setFlatMode() {
