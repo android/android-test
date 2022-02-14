@@ -34,7 +34,7 @@ import java.util.concurrent.CountDownLatch
 /** Action to set the test device to the provided screen orientation. */
 internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation) : DeviceAction {
   companion object {
-    private val TAG = "ScreenOrientationAction"
+    private val TAG = ScreenOrientationAction::class.java.simpleName
   }
 
   /**

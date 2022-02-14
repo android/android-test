@@ -32,7 +32,7 @@ constructor(
   private val emulatorControllerStub: EmulatorControllerGrpc.EmulatorControllerBlockingStub
 ) : DeviceController {
   companion object {
-    private val TAG = "EmulatorController"
+    private val TAG = EmulatorController::class.java.simpleName
     private val DEGREES_TO_ROTATE_LANDSCAPE_TO_PORTRAIT = -45F
     private val DEGREES_TO_ROTATE_PORTRAIT_TO_LANDSCAPE = 90F
   }
