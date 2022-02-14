@@ -19,14 +19,14 @@ package androidx.test.espresso.device.action
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceMode
 import androidx.test.platform.device.DeviceController
+import androidx.window.layout.FoldingFeature
+import java.util.concurrent.Executor
 
 /** Action to set the test device to be completely flat, like a tablet. */
-internal class FlatModeAction() : DeviceAction {
+internal class FlatModeAction(private val mainExecutor: Executor) :
+  BaseSingleFoldDeviceAction(DeviceMode.FLAT, FoldingFeature.State.FLAT, mainExecutor) {
   override fun perform(context: ActionContext, deviceController: DeviceController) {
     // TODO(b/203801760): Check current device mode and return if already in flat mode.
-
-    deviceController.setDeviceMode(DeviceMode.FLAT.mode)
-
-    // TODO(b/203801783): Synchronize device controller call.
+    super.perform(context, deviceController)
   }
 }

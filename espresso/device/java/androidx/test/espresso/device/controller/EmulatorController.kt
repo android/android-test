@@ -38,7 +38,10 @@ constructor(
   }
 
   override fun setDeviceMode(deviceMode: Int) {
-    if (!(deviceMode == DeviceMode.FLAT.mode || deviceMode == DeviceMode.TABLETOP.mode)) {
+    if (!(deviceMode == DeviceMode.FLAT.mode ||
+        deviceMode == DeviceMode.TABLETOP.mode ||
+        deviceMode == DeviceMode.BOOK.mode)
+    ) {
       throw UnsupportedDeviceOperationException(
         "The provided device mode is not supported on this device."
       )
@@ -59,8 +62,6 @@ constructor(
         e
       )
     }
-
-    // TODO(b/200863559) Handle hinge position if deviceMode is BOOK or TABLETOP.
   }
 
   override fun setScreenOrientation(orientation: Int) {

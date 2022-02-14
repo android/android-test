@@ -16,17 +16,41 @@
 
 package androidx.test.espresso.device.action
 
+import android.content.res.Configuration
+import android.util.Log
 import androidx.test.espresso.device.context.ActionContext
+import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.controller.DeviceMode
 import androidx.test.platform.device.DeviceController
+import androidx.window.layout.FoldingFeature
+import java.util.concurrent.Executor
 
 /** Action to set the test device to be folded with the hinge in a horizontal position. */
-internal class TabletopModeAction() : DeviceAction {
+internal class TabletopModeAction(private val mainExecutor: Executor) :
+  BaseSingleFoldDeviceAction(DeviceMode.TABLETOP, FoldingFeature.State.HALF_OPENED, mainExecutor) {
+  companion object {
+    private val TAG = TabletopModeAction::class.java.simpleName
+  }
+
   override fun perform(context: ActionContext, deviceController: DeviceController) {
     // TODO(b/203801760): Check current device mode and return if already in tabletop mode.
+    super.perform(context, deviceController)
 
-    deviceController.setDeviceMode(DeviceMode.TABLETOP.mode)
-
-    // TODO(b/203801783): Synchronize device controller call.
+    if (super.foldingFeatureOrientation == null) {
+      throw DeviceControllerOperationException(
+        "Unable to set device to tabletop mode because no folding features were found."
+      )
+    } else if (super.foldingFeatureOrientation != FoldingFeature.Orientation.HORIZONTAL) {
+      Log.d(TAG, "FoldingFeature orientation needs to be rotated.")
+      val orientationToRotateTo =
+        if (context.applicationContext.getResources().getConfiguration().orientation ==
+            Configuration.ORIENTATION_PORTRAIT
+        ) {
+          ScreenOrientation.LANDSCAPE
+        } else {
+          ScreenOrientation.PORTRAIT
+        }
+      ScreenOrientationAction(orientationToRotateTo).perform(context, deviceController)
+    }
   }
 }

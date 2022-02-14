@@ -19,9 +19,8 @@ package androidx.test.espresso.device
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
-import androidx.test.espresso.device.action.ScreenOrientation
+import androidx.test.espresso.device.action.setBookMode
 import androidx.test.espresso.device.action.setFlatMode
-import androidx.test.espresso.device.action.setScreenOrientation
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.foldable.app.FoldableActivity
@@ -39,20 +38,23 @@ class FoldableEspressoDeviceTest {
     ActivityTestRule(FoldableActivity::class.java)
 
   @Test
+  fun setTabletopMode() {
+    onDevice().setTabletopMode()
+
+    onView(withId(R.id.current_fold_mode)).check(matches(withText("tabletopmode")))
+  }
+
+  @Test
+  fun setBookMode() {
+    onDevice().setBookMode()
+
+    onView(withId(R.id.current_fold_mode)).check(matches(withText("bookmode")))
+  }
+
+  @Test
   fun setFlatMode() {
     onDevice().setFlatMode()
 
     onView(withId(R.id.current_fold_mode)).check(matches(withText("flatmode")))
-  }
-
-  @Test
-  fun setTabletopMode() {
-    // Rotate the fold to be horizontal.
-    // TODO(b/217579879) Remove this once fold orientation is handled by TabletopModeAction.
-    onDevice().setScreenOrientation(ScreenOrientation.LANDSCAPE)
-
-    onDevice().setTabletopMode()
-
-    onView(withId(R.id.current_fold_mode)).check(matches(withText("tabletopmode")))
   }
 }
