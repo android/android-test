@@ -21,6 +21,9 @@ import io.grpc.Channel
 import io.grpc.InsecureChannelCredentials
 import io.grpc.okhttp.OkHttpChannelBuilder
 import java.lang.reflect.Method
+import java.net.InetAddress
+import java.net.Socket
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,6 +32,14 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4::class)
 class EmulatorControllerTest {
   private val stub: EmulatorControllerGrpc.EmulatorControllerBlockingStub = createStub()
+
+  @Test
+  fun canAccessAndReadGrpcHeader() {
+    // A failure in this tests indicates that the gRPC endpoint is not reachable.
+    val socket = Socket(InetAddress.getByName("10.0.2.2"), getGrpcPort())
+    val inputStream = socket.getInputStream()
+    assertNotEquals(inputStream.read(), -1)
+  }
 
   @Test
   fun setDeviceModeToInvalidDeviceMode_throwsUnsupportedDeviceOperationException() {
@@ -48,14 +59,20 @@ class EmulatorControllerTest {
     }
   }
 
-  private fun createStub(): EmulatorControllerGrpc.EmulatorControllerBlockingStub {
+  private fun getGrpcPort(): Int {
     val clazz = Class.forName("android.os.SystemProperties")
     val getter: Method = clazz.getMethod("get", String::class.java)
     var gRpcPort = getter.invoke(clazz, "mdevx.grpc_port") as String
     if (gRpcPort.isBlank()) {
-      throw DeviceControllerOperationException("Unable to connect to Emulator gRPC port.")
+      throw DeviceControllerOperationException(
+        "gRPC port not found in SystemProperties, is mdevx.grpc_port set?"
+      )
     }
-    val port = gRpcPort.toInt()
+    return gRpcPort.toInt()
+  }
+
+  private fun createStub(): EmulatorControllerGrpc.EmulatorControllerBlockingStub {
+    val port = getGrpcPort()
     val channel: Channel =
       OkHttpChannelBuilder.forAddress("10.0.2.2", port, InsecureChannelCredentials.create()).build()
     val emulatorControllerStub: EmulatorControllerGrpc.EmulatorControllerBlockingStub =
