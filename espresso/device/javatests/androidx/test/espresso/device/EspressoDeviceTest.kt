@@ -27,7 +27,7 @@ import androidx.test.espresso.device.action.setScreenOrientation
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.rule.ActivityTestRule
 import androidx.test.ui.app.R
 import androidx.test.ui.app.ScreenOrientationActivity
 import androidx.test.ui.app.ScreenOrientationWithoutOnConfigurationChangedActivity
@@ -40,8 +40,8 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4::class)
 class EspressoDeviceTest {
   @get:Rule
-  val activityScenario: ActivityScenarioRule<ScreenOrientationActivity> =
-    ActivityScenarioRule(ScreenOrientationActivity::class.java)
+  val activityRule: ActivityTestRule<ScreenOrientationActivity> =
+    ActivityTestRule(ScreenOrientationActivity::class.java)
 
   @Test
   fun setFlatModeOnNonFoldableDevice_throwsException() {
@@ -101,13 +101,13 @@ class EspressoDeviceTest {
 
   @Test
   fun onDevice_throwsFromScenarioOnActivity() {
-    activityScenario
-      .getScenario()
-      .onActivity({ activity: ScreenOrientationActivity ->
-        assertThrows(IllegalStateException::class.java) {
-          onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
-        }
-      })
+    val scenario: ActivityScenario<ScreenOrientationActivity> =
+      ActivityScenario.launch(ScreenOrientationActivity::class.java)
+    scenario.onActivity({ activity: ScreenOrientationActivity ->
+      assertThrows(IllegalStateException::class.java) {
+        onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
+      }
+    })
   }
 
   @Test
