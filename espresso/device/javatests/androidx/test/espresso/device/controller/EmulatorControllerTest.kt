@@ -16,6 +16,12 @@
 
 package androidx.test.espresso.device.controller
 
+import android.net.ConnectivityManager
+import android.net.ConnectivityManager.NetworkCallback
+import android.net.Network
+import android.net.NetworkCapabilities.TRANSPORT_CELLULAR
+import android.net.NetworkRequest
+import androidx.test.platform.app.InstrumentationRegistry
 import com.android.emulator.control.EmulatorControllerGrpc
 import io.grpc.Channel
 import io.grpc.InsecureChannelCredentials
@@ -29,16 +35,34 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
+private val realContext: Context
+  get() = InstrumentationRegistry.getContext()
+
 @RunWith(JUnit4::class)
 class EmulatorControllerTest {
   private val stub: EmulatorControllerGrpc.EmulatorControllerBlockingStub = createStub()
-
+  private val mCM = realContext.getSystemService(ConnectivityManager::class.java)!!
   @Test
   fun canAccessAndReadGrpcHeader() {
-    // A failure in this tests indicates that the gRPC endpoint is not reachable.
-    val socket = Socket(InetAddress.getByName("10.0.2.2"), getGrpcPort())
-    val inputStream = socket.getInputStream()
-    assertNotEquals(inputStream.read(), -1)
+    val callback =
+      object : NetworkCallback() {
+        override fun onAvailable(network: Network) {
+          // A failure in this tests indicates that the gRPC endpoint is not reachable.
+          val socket = Socket(InetAddress.getByName("10.0.2.2"), getGrpcPort())
+          network.bindSocket(socket)
+          val inputStream = socket.getInputStream()
+          assertNotEquals(inputStream.read(), -1)
+        }
+        override fun onUnavailable() {
+          throw DeviceControllerOperationException(
+            "Network request is unavailable on Android emulator."
+          )
+        }
+      }
+    mCM.requestNetwork(
+      NetworkRequest.Builder().addTransportType(TRANSPORT_CELLULAR).build(),
+      callback
+    )
   }
 
   @Test
