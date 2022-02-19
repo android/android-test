@@ -22,9 +22,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
 import androidx.test.espresso.device.action.ScreenOrientation
-import androidx.test.espresso.device.action.setFlatMode
 import androidx.test.espresso.device.action.setScreenOrientation
-import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.rule.ActivityTestRule
@@ -42,20 +40,6 @@ class EspressoDeviceTest {
   @get:Rule
   val activityRule: ActivityTestRule<ScreenOrientationActivity> =
     ActivityTestRule(ScreenOrientationActivity::class.java)
-
-  @Test
-  fun setFlatModeOnNonFoldableDevice_throwsException() {
-    assertThrows(DeviceControllerOperationException::class.java) {
-      EspressoDevice.onDevice().setFlatMode()
-    }
-  }
-
-  @Test
-  fun setTabletopModeOnNonFoldableDevice_throwsException() {
-    assertThrows(DeviceControllerOperationException::class.java) {
-      EspressoDevice.onDevice().setTabletopMode()
-    }
-  }
 
   @Test
   fun onDevice_setScreenOrientationToLandscape() {
