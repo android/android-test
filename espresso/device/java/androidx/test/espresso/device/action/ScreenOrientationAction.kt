@@ -30,6 +30,7 @@ import androidx.test.runner.lifecycle.ActivityLifecycleCallback
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 /** Action to set the test device to the provided screen orientation. */
 internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation) : DeviceAction {
@@ -63,11 +64,31 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
    * @param deviceController the controller to use to interact with the device.
    */
   override fun perform(context: ActionContext, deviceController: DeviceController) {
-    var currentOrientation =
-      context.applicationContext.getResources().getConfiguration().orientation
     val requestedOrientation =
       if (screenOrientation == ScreenOrientation.LANDSCAPE) Configuration.ORIENTATION_LANDSCAPE
       else Configuration.ORIENTATION_PORTRAIT
+
+    // In some cases the test starts in one orientation and then is rotated.
+    // Wait up to one second for a configuration change and then check if the device is no longer in
+    // the requested orientation.
+    val waitForConfigChangesLatch: CountDownLatch = CountDownLatch(1)
+    context.applicationContext.registerComponentCallbacks(
+      object : ComponentCallbacks {
+        override fun onConfigurationChanged(newConfig: Configuration) {
+          if (newConfig.orientation != requestedOrientation) {
+            Log.d(
+              TAG,
+              "Application's orientation changed from requested orientation, need to rotate."
+            )
+            waitForConfigChangesLatch.countDown()
+          }
+        }
+        override fun onLowMemory() {}
+      }
+    )
+    waitForConfigChangesLatch.await(1, TimeUnit.SECONDS)
+    var currentOrientation =
+      context.applicationContext.getResources().getConfiguration().orientation
     if (currentOrientation == requestedOrientation) {
       if (Log.isLoggable(TAG, Log.DEBUG)) {
         Log.d(TAG, "Device screen is already in the requested orientation, no need to rotate.")
