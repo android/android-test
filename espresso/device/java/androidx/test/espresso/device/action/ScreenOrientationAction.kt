@@ -104,6 +104,7 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
               if (Log.isLoggable(TAG, Log.DEBUG)) {
                 Log.d(TAG, "Application's orientation was set to the requested orientation.")
               }
+              context.applicationContext.unregisterComponentCallbacks(this)
               latch.countDown()
             }
           }
