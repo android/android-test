@@ -53,6 +53,7 @@ import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.ApplicationLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.ApplicationStage;
 import androidx.test.runner.lifecycle.Stage;
+import androidx.tracing.Trace;
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -408,15 +409,16 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       finished = true;
     }
 
+    Trace.beginSection("MonitoringInstrumentation#finish");
     if (shouldWaitForActivitiesToComplete()) {
       handlerForMainLooper.post(new ActivityFinisher());
-      long startTime = System.currentTimeMillis();
       waitForActivitiesToComplete();
-      long endTime = System.currentTimeMillis();
-      Log.i(TAG, String.format("waitForActivitiesToComplete() took: %sms", endTime - startTime));
     }
     ActivityLifecycleMonitorRegistry.registerInstance(null);
     restoreUncaughtExceptionHandler();
+    Trace.endSection();
+
+    // super.finish kills the current process, so this needs to be called last
     super.finish(resultCode, results);
   }
 

@@ -403,6 +403,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   public void onStart() {
     Log.d(LOG_TAG, "onStart is called.");
     Trace.beginSection("AndroidJUnitRunner#onStart");
+    Bundle results = new Bundle();
     try {
       setJsBridgeClassName("androidx.test.espresso.web.bridge.JavaScriptBridge");
       super.onStart();
@@ -431,7 +432,6 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
 
       registerTestStorage(runnerArgs);
 
-      Bundle results = new Bundle();
       try {
         TestExecutor.Builder executorBuilder = new TestExecutor.Builder(this);
         addListeners(runnerArgs, executorBuilder);
@@ -441,10 +441,12 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
         Log.e(LOG_TAG, msg, t);
         onException(this, t);
       }
-      finish(Activity.RESULT_OK, results);
+
     } finally {
       Trace.endSection();
     }
+    // finish kills the process, so this needs to happen after Trace.endSection
+    finish(Activity.RESULT_OK, results);
   }
 
   @VisibleForTesting
@@ -534,16 +536,6 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     }
   }
 
-  @Override
-  public void finish(int resultCode, Bundle results) {
-    Trace.beginSection("AndroidJUnitRunner#finish");
-    try {
-      super.finish(resultCode, results);
-    } finally {
-      Trace.endSection();
-    }
-  }
-
   private void addScreenCaptureProcessors(RunnerArgs args) {
     Screenshot.addScreenCaptureProcessors(
         new HashSet<ScreenCaptureProcessor>(args.screenCaptureProcessors));
@@ -591,7 +583,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
       return false;
     }
 
-    Log.w(LOG_TAG, "An unhandled exception was thrown by the app.");
+    Log.w(LOG_TAG, "An unhandled exception was thrown by the app.", e);
     appExceptionsHandled.add(cause);
 
     // Report better error message back to Instrumentation results.
