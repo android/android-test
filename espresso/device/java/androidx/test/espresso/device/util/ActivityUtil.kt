@@ -21,8 +21,11 @@ package androidx.test.espresso.device.util
 import android.app.Activity
 import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.runner.lifecycle.ActivityLifecycleCallback
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 /** Collection of utility methods for interacting with activities. */
 private val TAG = "ActivityUtil"
@@ -39,7 +42,10 @@ fun Activity.isConfigurationChangeHandled(configBit: Int): Boolean {
   return (activityInfo.configChanges and configBit) != 0
 }
 
-/** Returns the first activity found in the RESUMED stage, or null if none are found. */
+/**
+ * Returns the first activity found in the RESUMED stage, or null if none are found after waiting up
+ * to two seconds for one.
+ */
 fun getResumedActivityOrNull(): Activity? {
   var activity: Activity? = null
   InstrumentationRegistry.getInstrumentation().runOnMainSync {
@@ -52,9 +58,28 @@ fun getResumedActivityOrNull(): Activity? {
           TAG,
           "More than one activity was found in the RESUMED stage. Activities found: $activityNames"
         )
+      } else if (activities.isEmpty()) {
+        Log.d(TAG, "No activity found in the RESUMED stage. Waiting up to 2 seconds for one.")
+        val latch = CountDownLatch(1)
+        ActivityLifecycleMonitorRegistry.getInstance()
+          .addLifecycleCallback(
+            object : ActivityLifecycleCallback {
+              override fun onActivityLifecycleChanged(newActivity: Activity, stage: Stage) {
+                if (stage == Stage.RESUMED) {
+                  Log.d(TAG, "Found ${newActivity.getLocalClassName()} in the RESUMED stage.")
+                  ActivityLifecycleMonitorRegistry.getInstance().removeLifecycleCallback(this)
+                  latch.countDown()
+                  activity = newActivity
+                }
+              }
+            }
+          )
+        latch.await(2, TimeUnit.SECONDS)
+      } else {
+        activity = activities.elementAtOrNull(0)
       }
-      activity = activities.elementAtOrNull(0)
     }
   }
+  InstrumentationRegistry.getInstrumentation().waitForIdleSync()
   return activity
 }
