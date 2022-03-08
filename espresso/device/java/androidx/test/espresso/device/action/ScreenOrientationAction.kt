@@ -121,9 +121,12 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
         .addLifecycleCallback(
           object : ActivityLifecycleCallback {
             override fun onActivityLifecycleChanged(activity: Activity, stage: Stage) {
-              if (activity.getLocalClassName() == currentActivityName && stage == Stage.PAUSED) {
+              if (activity.getLocalClassName() == currentActivityName &&
+                  stage == Stage.RESUMED &&
+                  activity.getResources().getConfiguration().orientation == requestedOrientation
+              ) {
                 if (Log.isLoggable(TAG, Log.DEBUG)) {
-                  Log.d(TAG, "Test activity was paused.")
+                  Log.d(TAG, "Test activity was resumed in the requested orientation.")
                 }
                 ActivityLifecycleMonitorRegistry.getInstance().removeLifecycleCallback(this)
                 latch.countDown()
