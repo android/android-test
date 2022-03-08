@@ -24,22 +24,35 @@ import android.widget.TextView;
 
 /** Activity that updates a TextView when its screen orientation is changed. */
 public class ScreenOrientationWithoutOnConfigurationChangedActivity extends Activity {
-  private static final String TAG = "ScreenOrientationWithoutOnConfigurationChangedActivity";
+  private static final String TAG =
+      ScreenOrientationWithoutOnConfigurationChangedActivity.class.getSimpleName();
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.screen_orientation_without_onconfigurationchanged_activity);
 
-    String orientation;
-    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-      orientation = "landscape";
+    String orientation = setOrientationString(getResources().getConfiguration().orientation);
+    Log.d(TAG, "onCreate. Orientation set to " + orientation);
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    String orientation = setOrientationString(getResources().getConfiguration().orientation);
+    Log.d(TAG, "onResume. Orientation set to " + orientation);
+  }
+
+  private String setOrientationString(int orientation) {
+    String orientationString;
+    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+      orientationString = "landscape";
     } else {
-      orientation = "portrait";
+      orientationString = "portrait";
     }
 
     TextView textView = (TextView) findViewById(R.id.screen_orientation);
-    textView.setText(orientation);
-    Log.d(TAG, "onCreate. Orientation set to " + orientation);
+    textView.setText(orientationString);
+    return orientationString;
   }
 }
