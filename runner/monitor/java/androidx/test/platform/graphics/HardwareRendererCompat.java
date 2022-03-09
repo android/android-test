@@ -53,8 +53,10 @@ public class HardwareRendererCompat {
     try {
       return isDrawingEnabledReflectiveCall.invokeStatic();
     } catch (ReflectionException e) {
-      Log.i(
-          TAG, "Failed to reflectively call HardwareRenderer#isDrawingEnabled, returning true", e);
+      Log.d(
+          TAG,
+          "Failed to reflectively call HardwareRenderer#isDrawingEnabled. It probably doesn't exist"
+              + " on this platform. Returning true.");
       return true;
     }
   }
@@ -73,7 +75,10 @@ public class HardwareRendererCompat {
     try {
       setDrawingEnabledReflectiveCall.invokeStatic(renderingEnabled);
     } catch (ReflectionException e) {
-      Log.i(TAG, "Failed to reflectively call HardwareRenderer#setDrawingEnabled, ignoring", e);
+      Log.i(
+          TAG,
+          "Failed to reflectively call HardwareRenderer#setDrawingEnabled.  It probably doesn't"
+              + " exist on this platform. Ignoring.");
     }
   }
 
