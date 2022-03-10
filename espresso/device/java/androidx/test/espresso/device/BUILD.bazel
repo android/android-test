@@ -18,11 +18,20 @@ package_group(
 
 kt_android_library(
     name = "device",
+    exports = [
+        ":device_api",
+        "//espresso/device/java/androidx/test/espresso/device/action",
+        "//espresso/device/java/androidx/test/espresso/device/rules",
+    ],
+)
+
+kt_android_library(
+    name = "device_api",
     srcs = glob(["*.kt"]),
+    plugins = ["//opensource/dagger:dagger_plugin"],  # Add programmatically
     exports = [
         "//espresso/device/java/androidx/test/espresso/device/action",
     ],
-    plugins = ["//opensource/dagger:dagger_plugin"],  # Add programmatically
     deps = [
         "//annotation/java/androidx/test/annotation",
         "//espresso/device/java/androidx/test/espresso/device/action",

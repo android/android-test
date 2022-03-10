@@ -23,6 +23,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.action.setScreenOrientation
+import androidx.test.espresso.device.rules.ScreenOrientationRule
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.rule.ActivityTestRule
@@ -40,6 +41,10 @@ class EspressoDeviceTest {
   @get:Rule
   val activityRule: ActivityTestRule<ScreenOrientationActivity> =
     ActivityTestRule(ScreenOrientationActivity::class.java)
+
+  @get:Rule
+  val screenOrientationRule: ScreenOrientationRule =
+    ScreenOrientationRule(ScreenOrientation.PORTRAIT)
 
   @Test
   fun onDevice_setScreenOrientationToLandscape() {
