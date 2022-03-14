@@ -36,7 +36,7 @@ class EmulatorControllerTest {
   @Test
   fun canAccessAndReadGrpcHeader() {
     // A failure in this tests indicates that the gRPC endpoint is not reachable.
-    val socket = Socket(InetAddress.getByName("10.0.2.2"), getGrpcPort())
+    val socket = Socket(InetAddress.getByName("localhost"), getGrpcPort())
     val inputStream = socket.getInputStream()
     assertNotEquals(inputStream.read(), -1)
   }
@@ -62,10 +62,10 @@ class EmulatorControllerTest {
   private fun getGrpcPort(): Int {
     val clazz = Class.forName("android.os.SystemProperties")
     val getter: Method = clazz.getMethod("get", String::class.java)
-    var gRpcPort = getter.invoke(clazz, "mdevx.grpc_port") as String
+    var gRpcPort = getter.invoke(clazz, "mdevx.grpc_guest_port") as String
     if (gRpcPort.isBlank()) {
       throw DeviceControllerOperationException(
-        "gRPC port not found in SystemProperties, is mdevx.grpc_port set?"
+        "gRPC port not found in SystemProperties, is mdevx.grpc_guest_port set?"
       )
     }
     return gRpcPort.toInt()
@@ -74,7 +74,8 @@ class EmulatorControllerTest {
   private fun createStub(): EmulatorControllerGrpc.EmulatorControllerBlockingStub {
     val port = getGrpcPort()
     val channel: Channel =
-      OkHttpChannelBuilder.forAddress("10.0.2.2", port, InsecureChannelCredentials.create()).build()
+      OkHttpChannelBuilder.forAddress("localhost", port, InsecureChannelCredentials.create())
+        .build()
     val emulatorControllerStub: EmulatorControllerGrpc.EmulatorControllerBlockingStub =
       EmulatorControllerGrpc.newBlockingStub(channel)
     return emulatorControllerStub
@@ -83,7 +84,8 @@ class EmulatorControllerTest {
   private fun createStubWithInvalidPort(): EmulatorControllerGrpc.EmulatorControllerBlockingStub {
     val port = -1
     val channel: Channel =
-      OkHttpChannelBuilder.forAddress("10.0.2.2", port, InsecureChannelCredentials.create()).build()
+      OkHttpChannelBuilder.forAddress("localhost", port, InsecureChannelCredentials.create())
+        .build()
     val emulatorControllerStub: EmulatorControllerGrpc.EmulatorControllerBlockingStub =
       EmulatorControllerGrpc.newBlockingStub(channel)
     return emulatorControllerStub
