@@ -6,6 +6,7 @@ licenses(["notice"])
 
 package(default_visibility = [
     "//espresso/device/java/androidx/test/espresso/device:device_pkg",
+    "//espresso/device/java/androidx/test/espresso/device:device_whitelist",
 ])
 
 # Add only device packages here.
@@ -14,6 +15,12 @@ package_group(
     packages = [
         "//espresso/device/...",
     ],
+)
+
+# Add packages here to access EspressoDevice APIs.
+package_group(
+    name = "device_whitelist",
+    packages = [],
 )
 
 kt_android_library(
