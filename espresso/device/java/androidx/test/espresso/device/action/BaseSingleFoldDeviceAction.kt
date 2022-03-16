@@ -21,7 +21,6 @@ import androidx.core.util.Consumer
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.controller.DeviceMode
-import androidx.test.espresso.device.controller.UnsupportedDeviceOperationException
 import androidx.test.espresso.device.util.getResumedActivityOrNull
 import androidx.test.espresso.device.util.isRobolectricTest
 import androidx.test.platform.device.DeviceController
@@ -79,13 +78,11 @@ internal open class BaseSingleFoldDeviceAction(
   ) : Consumer<WindowLayoutInfo> {
     override fun accept(windowLayoutInfo: WindowLayoutInfo) {
       val foldingFeatures = windowLayoutInfo.displayFeatures.filterIsInstance<FoldingFeature>()
-      if (foldingFeatures.size < 1) {
-        Log.d(TAG, "Cannot set device mode because no folding features were found.")
-        return
-      }
-      if (foldingFeatures.size > 1) {
-        throw UnsupportedDeviceOperationException(
-          "This device mode is only supported on devices with a single folding feature."
+      if (foldingFeatures.size != 1) {
+        windowInfoTrackerCallbackAdapter.removeWindowLayoutInfoListener(this)
+        throw DeviceControllerOperationException(
+          "This device mode is only supported on devices with a single folding feature. " +
+            "${foldingFeatures.size} were found."
         )
       }
       val foldingFeature = foldingFeatures.single()
