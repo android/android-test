@@ -93,6 +93,13 @@ public final class CloseKeyboardAction implements ViewAction {
         Log.w(TAG, "Attempting to close soft keyboard, while it is not shown.");
         return;
       }
+      // If we received the result synchronously we're running in Robolectric
+      // (see ShadowInputMethodManager), return immediately.
+      // TODO(b/223190122): Don't infer the environment, this is a hack to workaround that
+      //  Robolectric does not advance the looper when idling resources so the timeouts don't work.
+      if (idlingResult.receivedResult) {
+        return;
+      }
       // set 2 second timeout
       idlingResult.scheduleTimeout(2000);
       uiController.loopMainThreadUntilIdle();
