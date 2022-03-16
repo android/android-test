@@ -17,6 +17,7 @@
 package androidx.test.internal.runner.junit4;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 
 import androidx.test.filters.SmallTest;
@@ -101,7 +102,7 @@ public class AndroidAnnotatedBuilderTest {
     assertEquals(0, runner.testCount());
   }
 
-  @Test(expected = InvocationTargetException.class)
+  @Test
   public void nonAndroidJUnit4RunWithAnnotation_DefaultsToDefaultAnnotatedBuilder()
       throws Exception {
     AndroidAnnotatedBuilder ab =
@@ -116,7 +117,8 @@ public class AndroidAnnotatedBuilderTest {
           }
         };
     // attempt to create a runner for a class annotated with @RunWith(JUnit4.class)
-    ab.runnerForClass(RunWithJUnit4Class.class);
+    assertThrows(
+        InvocationTargetException.class, () -> ab.runnerForClass(RunWithJUnit4Class.class));
   }
 
   @Test

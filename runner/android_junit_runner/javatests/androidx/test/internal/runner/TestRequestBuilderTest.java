@@ -22,6 +22,7 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
@@ -1280,9 +1281,11 @@ public class TestRequestBuilderTest {
   }
 
   /** Test exception is thrown when no apk path and no class has been provided */
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testNoApkPath() throws Exception {
-    builder.addTestPackage("androidx.test.internal.runner").build();
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> builder.addTestPackage("androidx.test.internal.runner").build());
   }
 
   @Rule public ExpectedException thrown = ExpectedException.none();

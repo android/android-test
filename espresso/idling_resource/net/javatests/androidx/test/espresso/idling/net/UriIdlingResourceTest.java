@@ -19,6 +19,7 @@ package androidx.test.espresso.idling.net;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
@@ -91,21 +92,25 @@ public class UriIdlingResourceTest {
     // Implicit transition to idle after postDelayed called
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void testInvalidStateDetected() throws Exception {
     resource.beginLoad(GOOD_URL);
     resource.endLoad(GOOD_URL);
-    resource.endLoad(GOOD_URL);
+    assertThrows(IllegalStateException.class, () -> resource.endLoad(GOOD_URL));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testNegativeTimeout() throws Exception {
-    resource = new UriIdlingResource(RESOURCE_NAME, -1, true, handler);
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> resource = new UriIdlingResource(RESOURCE_NAME, -1, true, handler));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testZeroTimeout() throws Exception {
-    resource = new UriIdlingResource(RESOURCE_NAME, 0, true, handler);
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> resource = new UriIdlingResource(RESOURCE_NAME, 0, true, handler));
   }
 
   @Test

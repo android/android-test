@@ -18,6 +18,7 @@ package androidx.test.rule;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.runner.JUnitCore.runClasses;
 
@@ -177,10 +178,10 @@ public class UiThreadTestRuleTest {
     verifyRunsOnUiThread();
   }
 
-  @Test(timeout = 100, expected = RuntimeException.class)
+  @Test(timeout = 100)
   public void attemptingToCreateHandlerNotOnUiThreadThrows() {
     verifyRunsNotOnUiThread();
-    new Handler();
+    assertThrows(RuntimeException.class, () -> new Handler());
   }
 
   @Test()

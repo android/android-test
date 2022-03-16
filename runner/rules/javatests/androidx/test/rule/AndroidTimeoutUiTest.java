@@ -19,6 +19,7 @@
 package androidx.test.rule;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -94,11 +95,12 @@ public class AndroidTimeoutUiTest {
     verifyRunsOnUiThread();
   }
 
-  @Test(timeout = 100, expected = RuntimeException.class)
+  @Test(timeout = 100)
   public void attemptingToCreateHandlerNotOnUiThreadThrows() {
     verifyRunsNotOnUiThread();
     // Creating a new handler outside of the UI thread will throw an exception
-    new Handler();
+
+    assertThrows(RuntimeException.class, () -> new Handler());
   }
 
   @Test
