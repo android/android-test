@@ -228,7 +228,8 @@ public class DataInteraction {
       this.adapterViewProtocol = checkNotNull(adapterViewProtocol);
       this.adapterViewProtocolClass = adapterViewProtocol.getClass();
       this.adapterDataLoaderAction = checkNotNull(adapterDataLoaderAction);
-      checkNotNull(loadDataFunction).apply(adapterDataLoaderAction);
+      // TODO(b/223229374): This return value was unused, but likely should have been used.
+      Object unused = checkNotNull(loadDataFunction).apply(adapterDataLoaderAction);
     }
 
     /**
