@@ -929,10 +929,6 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
         activities.addAll(lifecycleMonitor.getActivitiesInStage(s));
       }
 
-      if (activities.size() > 0) {
-        Log.i(TAG, "Activities that are still in CREATED to STOPPED: " + activities.size());
-      }
-
       for (Activity activity : activities) {
         if (!activity.isFinishing()) {
           try {
