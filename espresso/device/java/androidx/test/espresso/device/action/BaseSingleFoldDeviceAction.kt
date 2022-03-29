@@ -79,11 +79,15 @@ internal open class BaseSingleFoldDeviceAction(
     override fun accept(windowLayoutInfo: WindowLayoutInfo) {
       val foldingFeatures = windowLayoutInfo.displayFeatures.filterIsInstance<FoldingFeature>()
       if (foldingFeatures.size != 1) {
-        windowInfoTrackerCallbackAdapter.removeWindowLayoutInfoListener(this)
-        throw DeviceControllerOperationException(
+        // TODO(b/218872245) It is currently possible that some devices will emit an empty list
+        // before emitting a list of FoldingFeatures. Throw a DeviceControllerOperationException
+        // once this issue is fixed.
+        Log.w(
+          TAG,
           "This device mode is only supported on devices with a single folding feature. " +
             "${foldingFeatures.size} were found."
         )
+        return
       }
       val foldingFeature = foldingFeatures.single()
       if (foldingFeatureState == foldingFeature.state) {
