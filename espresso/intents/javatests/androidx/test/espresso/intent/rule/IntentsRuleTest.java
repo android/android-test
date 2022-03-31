@@ -61,7 +61,7 @@ public class IntentsRuleTest {
 
   @Test
   public void withNoLaunchConstructor_WillNotBeInitializedAfterCreation() {
-    new IntentsTestRule<>(StubActivity.class, false, false);
+    var unused = new IntentsTestRule<>(StubActivity.class, false, false);
 
     assertThat(IntentStubberRegistry.isLoaded(), is(false));
   }

@@ -91,7 +91,7 @@ public class AndroidTimeoutUiTest {
   @UiThreadTest
   public void verifyOnUiThreadWhenTimeoutUsed() {
     // Create a new handler to check if we are actually running on the UI thread
-    new Handler();
+    var unused = new Handler();
     verifyRunsOnUiThread();
   }
 

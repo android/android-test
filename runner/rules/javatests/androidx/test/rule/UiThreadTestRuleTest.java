@@ -174,7 +174,7 @@ public class UiThreadTestRuleTest {
   @Test(timeout = 1000)
   @UiThreadTest
   public void verifyOnUiThreadWhenTimeoutUsed() {
-    new Handler();
+    var unused = new Handler();
     verifyRunsOnUiThread();
   }
 
