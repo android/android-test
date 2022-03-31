@@ -22,6 +22,7 @@ import static androidx.test.services.events.ParcelableConverter.getFailuresFromL
 import static androidx.test.services.events.ParcelableConverter.getTestCaseFromDescription;
 import static java.util.Collections.emptyList;
 
+import android.os.ConditionVariable;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,6 +52,7 @@ public final class OrchestratedInstrumentationListener extends RunListener {
   // TODO(b/161754141): replace references to the word "orchestrator" with "test event service"
   private static final String TAG = "OrchestrationListener";
   private final TestRunEventService notificationService;
+  private final ConditionVariable testFinishedCondition = new ConditionVariable();
   private final AtomicBoolean isTestFailed = new AtomicBoolean(false);
   private Description description = Description.EMPTY; // Cached test description
 
@@ -229,6 +231,13 @@ public final class OrchestratedInstrumentationListener extends RunListener {
 
   /** Reports the process crash event with a given exception. */
   public boolean reportProcessCrash(Throwable t, long timeoutMillis) {
+    // Waits until the orchestrator gets a chance to handle the test failure (if any) before
+    // bringing down the entire Instrumentation process.
+    //
+    // It's also possible that the process crashes in the middle of a test, so no TestFinish event
+    // will be received. In this case, it will wait until timeoutMillis is reached.
+    waitUntilTestFinished(timeoutMillis);
+
     // Need to report the process crashed event to the orchestrator.
     // This is to handle the case when the test body finishes but process crashes during
     // Instrumentation cleanup (e.g. stopping the app). Otherwise, the test will be marked as
@@ -245,5 +254,18 @@ public final class OrchestratedInstrumentationListener extends RunListener {
   private void reportProcessCrash(Throwable t) {
     testFailure(new Failure(description, t));
     testFinished(description);
+  }
+
+  /**
+   * Blocks until the test running within this Instrumentation has finished, whether the test
+   * succeeds or fails.
+   *
+   * <p>We consider a test finished when the {@link #testFinished(Description)} method has been
+   * called.
+   */
+  private void waitUntilTestFinished(long timeoutMillis) {
+    if (!testFinishedCondition.block(timeoutMillis)) {
+      Log.w(TAG, "Timeout waiting for the test to finish");
+    }
   }
 }
