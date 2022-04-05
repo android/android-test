@@ -634,6 +634,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
       builder.addPathsToScan(ClassPathScanner.getDefaultClasspaths(this));
     }
     builder.addFromRunnerArgs(runnerArgs);
+    builder.addAdditionalFilters();
 
     return builder.build();
   }

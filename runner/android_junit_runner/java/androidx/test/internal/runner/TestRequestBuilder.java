@@ -22,6 +22,7 @@ import android.util.Log;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.filters.RequiresDevice;
 import androidx.test.filters.SdkSuppress;
+import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.runner.ClassPathScanner.ChainedClassNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExcludeClassNamesFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExcludePackageNameFilter;
@@ -759,6 +760,18 @@ public class TestRequestBuilder {
     }
     if (runnerArgs.testsRegEx != null) {
       setTestsRegExFilter(runnerArgs.testsRegEx);
+    }
+    return this;
+  }
+
+  /**
+   * Convenience method to add additional filters. Other libraries can create custom test filters
+   * that extend ParentFilter and plug them into AJUR here.
+   */
+  public TestRequestBuilder addAdditionalFilters() {
+    List<ParentFilter> additionalFilters = ServiceLoaderWrapper.loadService(ParentFilter.class);
+    for (ParentFilter filter : additionalFilters) {
+      addFilter(filter);
     }
     return this;
   }
