@@ -16,7 +16,6 @@
 
 package androidx.test.espresso.base;
 
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import androidx.annotation.RestrictTo;
@@ -95,8 +94,6 @@ public class UiControllerModule {
     }
 
     @Override
-    public void interruptEspressoTasks() {
-      Log.w("UiController", "interruptEspressoTasks called, no-op");
-    }
+    public void interruptEspressoTasks() {}
   }
 }
