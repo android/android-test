@@ -96,7 +96,7 @@ package androidx.test.espresso.intent.matcher {
     method public static org.hamcrest.Matcher<android.content.ComponentName!>! hasShortClassName(org.hamcrest.Matcher<java.lang.String!>!);
   }
 
-  public final class IntentMatchers {
+  @com.google.errorprone.annotations.CheckReturnValue public final class IntentMatchers {
     method public static org.hamcrest.Matcher<android.content.Intent!>! anyIntent();
     method public static org.hamcrest.Matcher<android.content.Intent!> doesNotHaveExtraWithKey(String!);
     method public static org.hamcrest.Matcher<android.content.Intent!> doesNotHaveExtraWithKey(org.hamcrest.Matcher<java.lang.String!>!);

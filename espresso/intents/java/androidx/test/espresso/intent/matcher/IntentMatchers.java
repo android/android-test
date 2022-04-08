@@ -33,6 +33,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.test.espresso.intent.ResolvedIntent;
+import com.google.errorprone.annotations.CheckReturnValue;
 import java.util.Set;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -40,6 +41,7 @@ import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 
 /** A collection of hamcrest matchers for matching {@link Intent} objects. */
+@CheckReturnValue
 public final class IntentMatchers {
 
   private IntentMatchers() {}
