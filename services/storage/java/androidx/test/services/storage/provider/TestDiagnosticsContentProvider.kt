@@ -127,6 +127,25 @@ class TestDiagnosticsContentProvider : ContentProvider() {
    * [ContentValues].
    */
   override fun insert(uri: Uri, contentValues: ContentValues?): Uri? {
+    if (contentValues!!.containsKey("span")) {
+      ByteArrayInputStream(contentValues!!.getAsByteArray("span")).use {
+        ObjectInputStream(it).use { ois ->
+          val receivedSpans = SpanDataWrapper.readObject(ois)
+          Log.i(TAG, "Received diagnostics events")
+
+          if (!serverPort.isInitialized()) {
+            try {
+              connectToAtpServer()
+            } catch (e: Exception) {
+              Log.w(TAG, "Connecting to the diagnostics service resulted in an error: $e")
+              return null
+            }
+          }
+          sendDiagnosticsEvents(receivedSpans)
+        }
+      }
+    }
+
     if (contentValues!!.containsKey("FINISH")) {
       if (::grpcDiagnosticsOrchestrationStrategy.isInitialized) {
         grpcDiagnosticsOrchestrationStrategy.diagnosticsEvents.close()
@@ -136,22 +155,6 @@ class TestDiagnosticsContentProvider : ContentProvider() {
       return null
     }
 
-    ByteArrayInputStream(contentValues!!.getAsByteArray("span")).use {
-      ObjectInputStream(it).use { ois ->
-        val receivedSpans = SpanDataWrapper.readObject(ois)
-        Log.i(TAG, "Received diagnostics events")
-
-        if (!serverPort.isInitialized()) {
-          try {
-            connectToAtpServer()
-          } catch (e: Exception) {
-            Log.w(TAG, "Connecting to the diagnostics service resulted in an error: $e")
-            return null
-          }
-        }
-        sendDiagnosticsEvents(receivedSpans)
-      }
-    }
     return null
   }
 
