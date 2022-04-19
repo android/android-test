@@ -38,7 +38,8 @@ public class NotificationSubjectTest {
   @Test
   public void contentIntent() {
     PendingIntent pendingIntent =
-        PendingIntent.getActivity(activityTestRule.getActivity(), 0, new Intent(), 0);
+        PendingIntent.getActivity(
+            activityTestRule.getActivity(), 0, new Intent(), PendingIntent.FLAG_IMMUTABLE);
     Notification notification = new Notification();
     notification.contentIntent = pendingIntent;
 
@@ -48,7 +49,8 @@ public class NotificationSubjectTest {
   @Test
   public void deleteIntent() {
     PendingIntent pendingIntent =
-        PendingIntent.getActivity(activityTestRule.getActivity(), 0, new Intent(), 0);
+        PendingIntent.getActivity(
+            activityTestRule.getActivity(), 0, new Intent(), PendingIntent.FLAG_IMMUTABLE);
     Notification notification = new Notification();
     notification.deleteIntent = pendingIntent;
 
