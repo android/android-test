@@ -22,6 +22,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 
 import android.net.Uri;
+import com.google.errorprone.annotations.CheckReturnValue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -35,6 +36,7 @@ import org.hamcrest.TypeSafeMatcher;
  * A collection of matchers for {@link Uri}s, which can match Uris on their properties (host, path,
  * ...).
  */
+@CheckReturnValue
 public final class UriMatchers {
 
   /** Container class for paramName and pramValues. */

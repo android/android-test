@@ -72,7 +72,7 @@ package androidx.test.espresso.intent {
 
 package androidx.test.espresso.intent.matcher {
 
-  public final class BundleMatchers {
+  @com.google.errorprone.annotations.CheckReturnValue public final class BundleMatchers {
     method public static org.hamcrest.Matcher<android.os.Bundle!> doesNotHaveKey(String!);
     method public static org.hamcrest.Matcher<android.os.Bundle!> doesNotHaveKey(org.hamcrest.Matcher<java.lang.String!>!);
     method public static <T> org.hamcrest.Matcher<android.os.Bundle!>! hasEntry(String!, T!);
@@ -86,7 +86,7 @@ package androidx.test.espresso.intent.matcher {
     method public static org.hamcrest.Matcher<android.os.Bundle!>! isEmptyOrNull();
   }
 
-  public final class ComponentNameMatchers {
+  @com.google.errorprone.annotations.CheckReturnValue public final class ComponentNameMatchers {
     method public static org.hamcrest.Matcher<android.content.ComponentName!>! hasClassName(String!);
     method public static org.hamcrest.Matcher<android.content.ComponentName!>! hasClassName(org.hamcrest.Matcher<java.lang.String!>!);
     method public static org.hamcrest.Matcher<android.content.ComponentName!>! hasMyPackageName();
@@ -129,7 +129,7 @@ package androidx.test.espresso.intent.matcher {
     method public static org.hamcrest.Matcher<android.content.Intent!>! toPackage(String!);
   }
 
-  public final class UriMatchers {
+  @com.google.errorprone.annotations.CheckReturnValue public final class UriMatchers {
     method public static org.hamcrest.Matcher<android.net.Uri!>! hasHost(String!);
     method public static org.hamcrest.Matcher<android.net.Uri!>! hasHost(org.hamcrest.Matcher<java.lang.String!>!);
     method public static org.hamcrest.Matcher<android.net.Uri!>! hasParamWithName(String!);

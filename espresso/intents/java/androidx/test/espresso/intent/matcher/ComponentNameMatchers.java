@@ -22,11 +22,13 @@ import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 
 import android.content.ComponentName;
+import com.google.errorprone.annotations.CheckReturnValue;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 /** A collection of hamcrest matchers to match {@link ComponentName} objects. */
+@CheckReturnValue
 public final class ComponentNameMatchers {
   private ComponentNameMatchers() {}
 

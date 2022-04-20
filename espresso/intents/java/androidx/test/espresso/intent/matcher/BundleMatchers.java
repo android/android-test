@@ -25,11 +25,13 @@ import static org.hamcrest.Matchers.nullValue;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import com.google.errorprone.annotations.CheckReturnValue;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 /** A collection of hamcrest matchers to match {@link Bundle} objects. */
+@CheckReturnValue
 public final class BundleMatchers {
   private BundleMatchers() {}
 
