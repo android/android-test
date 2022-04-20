@@ -23,6 +23,7 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 
 import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Build.VERSION;
 import android.os.Bundle;
@@ -458,7 +459,11 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
     if (!equals(startActivityIntent.getType(), activityIntent.getType())) {
       return false;
     }
-    if (!equals(startActivityIntent.getPackage(), activityIntent.getPackage())) {
+    boolean isActivityInSamePackage =
+        hasPackageEquivalentComponent(startActivityIntent)
+            && hasPackageEquivalentComponent(activityIntent);
+    if (!isActivityInSamePackage
+        && !equals(startActivityIntent.getPackage(), activityIntent.getPackage())) {
       return false;
     }
     if (startActivityIntent.getComponent() != null) {
@@ -476,6 +481,20 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
     }
 
     return true;
+  }
+
+  /**
+   * Return {@code true} if the component name is not null and is in the same package that this
+   * intent limited to. otherwise return {@code false}. Note: this code is copied from {@code
+   * Intent#hasPackageEquivalentComponent}.
+   */
+  private static boolean hasPackageEquivalentComponent(Intent intent) {
+    ComponentName componentName = intent.getComponent();
+    String packageName = intent.getPackage();
+    // packageName may be null when the resolved Activity is in the same package to this
+    // running process.
+    return componentName != null
+        && (packageName == null || packageName.equals(componentName.getPackageName()));
   }
 
   // reimplementation of Objects.equals since it is only available on APIs >= 19
