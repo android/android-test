@@ -36,6 +36,7 @@ import androidx.test.runner.intent.IntentStubberRegistry;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
+import com.google.errorprone.annotations.CheckReturnValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -148,6 +149,7 @@ public final class Intents {
    *     provided
    * @return {@link OngoingStubbing} object to set stubbed response
    */
+  @CheckReturnValue
   public static OngoingStubbing intending(Matcher<Intent> matcher) {
     return checkNotNull(defaultInstance, "Intents not initialized. Did you forget to call init()?")
         .internalIntending(matcher);

@@ -21,7 +21,7 @@ package androidx.test.espresso.intent {
     method public static void init();
     method public static void intended(org.hamcrest.Matcher<android.content.Intent!>!);
     method public static void intended(org.hamcrest.Matcher<android.content.Intent!>!, androidx.test.espresso.intent.VerificationMode!);
-    method public static androidx.test.espresso.intent.OngoingStubbing! intending(org.hamcrest.Matcher<android.content.Intent!>!);
+    method @com.google.errorprone.annotations.CheckReturnValue public static androidx.test.espresso.intent.OngoingStubbing! intending(org.hamcrest.Matcher<android.content.Intent!>!);
     method public static void release();
     method public static androidx.test.espresso.intent.VerificationMode! times(int);
   }
