@@ -41,7 +41,7 @@ import org.junit.runners.model.InitializationError;
  *   <li>Supports a per-test timeout - specfied via a 'timeout_msec' {@link
  *       androidx.test.runner.AndroidJUnitRunner} argument.
  *   <li>Supports running tests on the application's UI Thread, for tests annotated with {@link
- *       UiThreadTest}.
+ *       androidx.test.annotation.UiThreadTest}.
  * </ul>
  *
  * <p>Usage {@code @RunWith(AndroidJUnit4.class)}
