@@ -412,7 +412,7 @@ package androidx.test.espresso.action {
     method public void perform(androidx.test.espresso.UiController!, android.view.View!);
   }
 
-  public final class ViewActions {
+  @com.google.errorprone.annotations.CheckReturnValue public final class ViewActions {
     method public static androidx.test.espresso.ViewAction! actionWithAssertions(androidx.test.espresso.ViewAction!);
     method public static void addGlobalAssertion(String!, androidx.test.espresso.ViewAssertion!);
     method public static void clearGlobalAssertions();

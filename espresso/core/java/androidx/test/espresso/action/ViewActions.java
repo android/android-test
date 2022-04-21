@@ -33,12 +33,14 @@ import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewAssertion;
+import com.google.errorprone.annotations.CheckReturnValue;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import javax.annotation.Nonnull;
 import org.hamcrest.Matcher;
 
 /** A collection of common {@link ViewActions}. */
+@CheckReturnValue
 public final class ViewActions {
 
   private ViewActions() {}
