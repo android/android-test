@@ -52,6 +52,7 @@
   <string name="make_alert_dialog_button">Make an alert dialog</string>
   <string name="make_popup_menu_button">Make a Popup Window</string>
   <string name="make_popup_view_button">Make a Popup Window</string>
+  <string name="multi_window_mode_text">Multi-window mode text has not been set.</string>
   <string name="popup_window_text">I am in a popup window</string>
   <string name="popup_title">A popup window</string>
   <string name="gesture_title">Show Gesture Activity</string>

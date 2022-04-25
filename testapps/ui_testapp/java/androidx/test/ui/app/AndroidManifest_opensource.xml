@@ -176,6 +176,11 @@
         android:label="Duplicate View Activity"
         android:name=".DuplicateViewActivity" />
     <activity
+        android:label="Multi-Window activity"
+        android:name=".MultiWindowActivity"
+        android:resizeableActivity="true"
+        android:exported="false"/>
+    <activity
         android:label="screen orientation activity"
         android:name=".ScreenOrientationActivity"
         android:configChanges="orientation|screenSize"
