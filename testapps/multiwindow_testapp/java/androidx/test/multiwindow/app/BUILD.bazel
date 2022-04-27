@@ -1,0 +1,36 @@
+#  Description: Test App used for testing API integration tests in multi-window mode.
+licenses(["notice"])
+
+package(default_visibility = [
+    "//espresso/core/java/androidx/test/espresso:espresso_pkg",
+    "//testapps/ui_testapp/javatests/androidx/test/ui/app:__pkg__",
+])
+
+android_library(
+    name = "lib",
+    srcs = glob(
+        ["**/*.java"],
+    ),
+    assets = glob(["assets/**"]),
+    assets_dir = "assets",
+    manifest = "AndroidManifest_opensource.xml",
+    resource_files = glob(["res/**"]),
+    deps = [
+        "//:androidx_annotation",
+        "//:androidx_appcompat",
+    ],
+)
+
+android_binary(
+    name = "testapp",
+    testonly = 1,
+    assets = glob(["assets/**"]),
+    assets_dir = "assets",
+    manifest = "AndroidManifest_opensource.xml",
+    multidex = "legacy",
+    resource_files = glob(["res/**"]),
+    deps = [
+        ":lib",
+        "//:androidx_multidex",
+    ],
+)
