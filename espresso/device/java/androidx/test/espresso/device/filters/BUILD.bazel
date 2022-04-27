@@ -1,0 +1,30 @@
+# Description:
+#   Filters that can be used to skip tests based on device properties.
+
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("//build_extensions:java_service_map.bzl", "java_service_map")
+
+licenses(["notice"])
+
+package(default_visibility = ["//espresso/device/java/androidx/test/espresso/device:__subpackages__"])
+
+kt_android_library(
+    name = "filters",
+    testonly = 1,
+    srcs = glob(["*.kt"]),
+    deps = [
+        ":devicefilters_service",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "@maven//:junit_junit",
+    ],
+)
+
+java_service_map(
+    name = "devicefilters_service",
+    providers = {
+        "internal.runner.filters.ParentFilter": [
+            "espresso.device.filters.RequiresDeviceModeFilter",
+        ],
+    },
+)
