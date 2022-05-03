@@ -1,5 +1,0 @@
-rule com.google.common.base.Optional androidx.test.espresso.core.internal.deps.guava.base.Optional
-rule com.google.common.** androidx.test.espresso.remote.internal.deps.guava.@1
-rule com.google.android.aidl.** androidx.test.espresso.remote.internal.deps.aidl.@1
-rule com.google.protobuf.** androidx.test.espresso.remote.internal.deps.protobuf.@1
-rule com.google.devtools.build.android.desugar.runtime.** androidx.test.espresso.remote.internal.deps.desugar.@1

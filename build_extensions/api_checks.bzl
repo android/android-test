@@ -8,7 +8,7 @@ load("//tools/build_defs/golden_test:def.bzl", "golden_test")
 
 def api_checks(
         name,
-        deploy_jar,
+        runtime_deps,
         src_jar):
     """Generates api definitions and checks for a macro.
 
@@ -17,14 +17,15 @@ def api_checks(
 
     Args:
       name: name of rule
-      deploy_jar: runtime jar that contains the compiled source classea and all their dependencies
+      runtime_deps: the android_library targets that contains the compiled source classes and all their dependencies
       src_jar: contains the source to generate api for
    """
 
     generate_api(
         name = "%s_public_api" % name,
-        jar = deploy_jar,
+        runtime_deps = runtime_deps,
         src_jar = src_jar,
+        testonly = 1,
     )
 
     golden_test(
@@ -38,9 +39,10 @@ def api_checks(
 
     generate_api(
         name = "%s_internal_api" % name,
-        jar = deploy_jar,
+        runtime_deps = runtime_deps,
         src_jar = src_jar,
         internal = True,
+        testonly = 1,
     )
 
     golden_test(

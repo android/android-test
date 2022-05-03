@@ -1,5 +1,0 @@
-# rename guava classes into espresso.web namespace to avoid conflicts
-rule com.google.common.** androidx.test.espresso.web.internal.deps.guava.@1
-rule com.google.thirdparty.publicsuffix.** androidx.test.espresso.web.internal.deps.publicsuffix.@1
-rule com.google.android.aidl.** androidx.test.espresso.web.internal.deps.aidl.@1
-rule com.google.android.apps.common.testing.testrunner.web.** androidx.test.espresso.web.bridge.@1

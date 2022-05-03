@@ -2,11 +2,11 @@
 package androidx.test {
 
   @Deprecated public final class InstrumentationRegistry {
-    method @Deprecated public static android.os.Bundle! getArguments();
+    method @Deprecated @com.google.errorprone.annotations.InlineMe(replacement="androidx.test.platform.app.InstrumentationRegistry.getArguments()") public static android.os.Bundle! getArguments();
     method @Deprecated public static android.content.Context! getContext();
-    method @Deprecated public static android.app.Instrumentation! getInstrumentation();
+    method @Deprecated @com.google.errorprone.annotations.InlineMe(replacement="androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()") public static android.app.Instrumentation! getInstrumentation();
     method @Deprecated public static android.content.Context! getTargetContext();
-    method @Deprecated public static void registerInstance(android.app.Instrumentation!, android.os.Bundle!);
+    method @Deprecated @com.google.errorprone.annotations.InlineMe(replacement="androidx.test.platform.app.InstrumentationRegistry.registerInstance(instrumentation," + " arguments)") public static void registerInstance(android.app.Instrumentation!, android.os.Bundle!);
   }
 
 }
@@ -67,12 +67,6 @@ package androidx.test.runner {
   public class MonitoringInstrumentation extends androidx.test.internal.runner.hidden.ExposedInstrumentationApi {
     ctor public MonitoringInstrumentation();
     method protected void dumpThreadStateToOutputs(String!);
-    method public void execStartActivities(android.content.Context!, android.os.IBinder!, android.os.IBinder!, android.app.Activity!, android.content.Intent![]!, android.os.Bundle!);
-    method public android.app.Instrumentation.ActivityResult! execStartActivity(android.content.Context!, android.os.IBinder!, android.os.IBinder!, android.app.Activity!, android.content.Intent!, int);
-    method public android.app.Instrumentation.ActivityResult! execStartActivity(android.content.Context!, android.os.IBinder!, android.os.IBinder!, android.app.Activity!, android.content.Intent!, int, android.os.Bundle!);
-    method public android.app.Instrumentation.ActivityResult! execStartActivity(android.content.Context!, android.os.IBinder!, android.os.IBinder!, String!, android.content.Intent!, int, android.os.Bundle!);
-    method public android.app.Instrumentation.ActivityResult! execStartActivity(android.content.Context!, android.os.IBinder!, android.os.IBinder!, android.app.Activity!, android.content.Intent!, int, android.os.Bundle!, android.os.UserHandle!);
-    method public android.app.Instrumentation.ActivityResult! execStartActivity(android.content.Context!, android.os.IBinder!, android.os.IBinder!, android.app.Fragment!, android.content.Intent!, int, android.os.Bundle!);
     method protected String! getThreadState();
     method protected void installMultidex();
     method protected void installOldMultiDex(Class<?>!) throws java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.NoSuchMethodException;

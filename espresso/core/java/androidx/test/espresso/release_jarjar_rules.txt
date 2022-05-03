@@ -1,5 +1,0 @@
-rule com.google.common.** androidx.test.espresso.core.internal.deps.guava.@1
-rule dagger.** androidx.test.espresso.core.internal.deps.dagger.@1
-rule com.google.thirdparty.publicsuffix.** androidx.test.espresso.core.internal.deps.publicsuffix.@1
-rule com.google.android.aidl.** androidx.test.espresso.core.internal.deps.aidl.@1
-rule com.google.devtools.build.android.desugar.runtime.** androidx.test.espresso.core.internal.deps.desugar.@1
