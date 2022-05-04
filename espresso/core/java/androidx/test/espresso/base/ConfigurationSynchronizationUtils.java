@@ -18,6 +18,7 @@ package androidx.test.espresso.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.espresso.UiController;
@@ -40,6 +41,12 @@ final class ConfigurationSynchronizationUtils {
    */
   public static void waitForConfigurationChangesOnActivity(
       Activity currentActivity, UiController uiController, Context appContext) {
+    // The activity's orientation can differ from application's orientation when the activity is in
+    // multi-window mode.
+    if (Build.VERSION.SDK_INT >= 24 && currentActivity.isInMultiWindowMode()) {
+      return;
+    }
+
     int applicationOrientation = appContext.getResources().getConfiguration().orientation;
     if (applicationOrientation != currentActivity.getResources().getConfiguration().orientation) {
       for (long waitTime : ORIENTATION_WAIT_TIMES) {
