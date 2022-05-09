@@ -77,7 +77,6 @@ public final class Tracing {
     if (tracers.contains(tracer)) {
       Log.w(TAG, "Tracer already present: " + tracer.getClass());
     } else {
-      Log.i(TAG, "Tracer added: " + tracer.getClass());
       tracers.add(tracer);
     }
   }
@@ -93,7 +92,6 @@ public final class Tracing {
    */
   public void unregisterTracer(Tracer tracer) {
     tracers.remove(tracer);
-    Log.i(TAG, "Tracer removed: " + (tracer == null ? null : tracer.getClass()));
   }
 
   /**
