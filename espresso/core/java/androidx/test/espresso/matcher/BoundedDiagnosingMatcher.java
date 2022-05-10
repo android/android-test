@@ -68,7 +68,8 @@ public abstract class BoundedDiagnosingMatcher<S, T extends S> extends BaseMatch
     matcher.describeTo(description);
     Description implDescription = new StringDescription();
     describeMoreTo(implDescription);
-    String implDescriptionString = implDescription.toString();
+    // workaround for #1351 - javac generates bytecode not handled by older ART versions
+    String implDescriptionString = ((Object) implDescription).toString();
     if (!implDescriptionString.isEmpty()) {
       description.appendText(" and ").appendText(implDescriptionString);
     }
