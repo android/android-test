@@ -85,7 +85,11 @@ public final class Espresso {
   @CheckReturnValue
   @CheckResult
   public static ViewInteraction onView(final Matcher<View> viewMatcher) {
-    return BASE.plus(new ViewInteractionModule(viewMatcher)).viewInteraction();
+    ViewInteraction viewInteraction;
+    try (Span ignored = tracer.beginSpan("Espresso-onview-" + TAG)) {
+      viewInteraction = BASE.plus(new ViewInteractionModule(viewMatcher)).viewInteraction();
+    }
+    return viewInteraction;
   }
 
   /**
