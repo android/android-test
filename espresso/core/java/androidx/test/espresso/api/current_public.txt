@@ -272,6 +272,7 @@ package androidx.test.espresso.action {
   }
 
   public enum GeneralLocation implements androidx.test.espresso.action.CoordinatesProvider {
+    method public static androidx.test.espresso.action.CoordinatesProvider! translate(androidx.test.espresso.action.CoordinatesProvider!, float, float);
     enum_constant public static final androidx.test.espresso.action.GeneralLocation BOTTOM_CENTER;
     enum_constant public static final androidx.test.espresso.action.GeneralLocation BOTTOM_LEFT;
     enum_constant public static final androidx.test.espresso.action.GeneralLocation BOTTOM_RIGHT;
