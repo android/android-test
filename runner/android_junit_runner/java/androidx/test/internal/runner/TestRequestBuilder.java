@@ -27,7 +27,7 @@ import androidx.test.internal.runner.ClassPathScanner.ExcludeClassNamesFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExcludePackageNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExternalClassNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.InclusivePackageNamesFilter;
-import androidx.test.internal.runner.filters.ParentFilter;
+import androidx.test.internal.runner.filters.AbstractFilter;
 import androidx.test.internal.runner.filters.TestsRegExFilter;
 import androidx.test.internal.util.AndroidRunnerParams;
 import androidx.test.internal.util.Checks;
@@ -129,7 +129,7 @@ public class TestRequestBuilder {
   }
 
   /** Filter that only runs tests whose method or class has been annotated with given filter. */
-  private static class AnnotationInclusionFilter extends ParentFilter {
+  private static class AnnotationInclusionFilter extends AbstractFilter {
 
     private final Class<? extends Annotation> annotationClass;
 
@@ -167,7 +167,7 @@ public class TestRequestBuilder {
    * <p>Will match if test method has given size annotation, or class does, but only if method does
    * not have any other size annotations. ie method size annotation overrides class size annotation.
    */
-  private static class SizeFilter extends ParentFilter {
+  private static class SizeFilter extends AbstractFilter {
 
     private final TestSize testSize;
 
@@ -200,7 +200,7 @@ public class TestRequestBuilder {
   }
 
   /** Filter out tests whose method or class has been annotated with given filter. */
-  private static class AnnotationExclusionFilter extends ParentFilter {
+  private static class AnnotationExclusionFilter extends AbstractFilter {
 
     private final Class<? extends Annotation> annotationClass;
 
@@ -244,7 +244,7 @@ public class TestRequestBuilder {
     }
   }
 
-  private class SdkSuppressFilter extends ParentFilter {
+  private class SdkSuppressFilter extends AbstractFilter {
 
     @Override
     protected boolean evaluateTest(Description description) {
@@ -381,7 +381,7 @@ public class TestRequestBuilder {
   }
 
   /** A {@link Filter} to support the ability to filter out multiple class#method combinations. */
-  private static class ClassAndMethodFilter extends ParentFilter {
+  private static class ClassAndMethodFilter extends AbstractFilter {
 
     private Map<String, MethodFilter> methodFilters = new HashMap<>();
 
@@ -425,7 +425,7 @@ public class TestRequestBuilder {
   }
 
   /** A {@link Filter} used to filter out desired test methods from a given class */
-  private static class MethodFilter extends ParentFilter {
+  private static class MethodFilter extends AbstractFilter {
 
     private final String className;
     private Set<String> includedMethods = new HashSet<>();

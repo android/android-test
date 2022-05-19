@@ -19,7 +19,7 @@ import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 
 /** Helper parent class for {@link Filter} that allows suites to run if any child matches. */
-public abstract class ParentFilter extends Filter {
+public abstract class AbstractFilter extends Filter {
   /** {@inheritDoc} */
   @Override
   public boolean shouldRun(Description description) {

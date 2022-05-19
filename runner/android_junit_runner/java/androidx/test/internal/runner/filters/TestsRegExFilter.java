@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import org.junit.runner.Description;
 
 /** A JUnit filter for filtering tests whose name match one of the given regular expression */
-public final class TestsRegExFilter extends ParentFilter {
+public final class TestsRegExFilter extends AbstractFilter {
 
   private Pattern pattern = null;
 
