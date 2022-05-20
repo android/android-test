@@ -1,0 +1,36 @@
+# Description:
+#   Tests for Espresso device filters
+
+load(
+    "//build_extensions:kt_android_app_instrumentation_tests.bzl",
+    "kt_android_app_instrumentation_tests",
+)
+load(
+    "//build_extensions:test_devices.bzl",
+    "devices",
+)
+
+licenses(["notice"])
+
+kt_android_app_instrumentation_tests(
+    name = "instrumentation_tests_requires_device_mode",
+    timeout = "long",
+    srcs =
+        ["RequiresDeviceModeTest.kt"],
+    binary_args = {"multidex": "legacy"},
+    binary_target = "//third_party/android/androidx_test/testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+    target_devices = devices(min_sdk = 18) + [
+        "//tools/mobile/devices/android/generic_foldable:google_32_x86_64",
+        "//tools/mobile/devices/android/generic_foldable:google_33_x86_64",
+    ],
+    deps = [
+        "//core/java/androidx/test/core",
+        "//espresso/core/java/androidx/test/espresso",
+        "//espresso/device/java/androidx/test/espresso/device/filters",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/rules",
+        "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "//third_party/java/junit:junit-android",
+    ],
+)
