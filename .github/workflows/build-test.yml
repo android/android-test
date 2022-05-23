@@ -14,6 +14,16 @@ jobs:
         uses: actions/checkout@v2
       - name: Check java version
         run: java --version
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2.0.7
+      - name: Install Android 13 SDK
+        run: /usr/local/lib/android/sdk/tools/bin/sdkmanager "build-tools;33.0.0-rc4" "platforms;android-Tiramisu"
+      - name: Rename Tiramisu to 33 for bazel
+        run: cp -R /usr/local/lib/android/sdk/platforms/android-Tiramisu /usr/local/lib/android/sdk/platforms/android-33
+      - name: Rename D8 to DX for bazel
+        run: cp /usr/local/lib/android/sdk/build-tools/33.0.0-rc4/d8 /usr/local/lib/android/sdk/build-tools/33.0.0-rc4/dx
+      - name: Rename D8 jar to DX jar for bazel
+        run: cp /usr/local/lib/android/sdk/build-tools/33.0.0-rc4/lib/d8.jar /usr/local/lib/android/sdk/build-tools/33.0.0-rc4/lib/dx.jar
       - name: Build maven artifacts
         run: bazelisk build //:axt_m2repository
   test:
@@ -21,5 +31,15 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2.0.7
+      - name: Install Android 13 SDK
+        run: /usr/local/lib/android/sdk/tools/bin/sdkmanager "build-tools;33.0.0-rc4" "platforms;android-Tiramisu"
+      - name: Rename Tiramisu to 33 for bazel
+        run: cp -R /usr/local/lib/android/sdk/platforms/android-Tiramisu /usr/local/lib/android/sdk/platforms/android-33
+      - name: Rename D8 to DX for bazel
+        run: cp /usr/local/lib/android/sdk/build-tools/33.0.0-rc4/d8 /usr/local/lib/android/sdk/build-tools/33.0.0-rc4/dx
+      - name: Rename D8 jar to DX jar for bazel
+        run: cp /usr/local/lib/android/sdk/build-tools/33.0.0-rc4/lib/d8.jar /usr/local/lib/android/sdk/build-tools/33.0.0-rc4/lib/dx.jar
       - name: Run Robolectric tests
         run: bazelisk test --test_tag_filters=robolectric,-gcb_ignore --build_tag_filters=robolectric --test_output=all ...
