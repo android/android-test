@@ -150,10 +150,6 @@ public class TestRequestBuilder {
           || (testClass != null && testClass.isAnnotationPresent(annotationClass));
     }
 
-    protected Class<? extends Annotation> getAnnotationClass() {
-      return annotationClass;
-    }
-
     /** {@inheritDoc} */
     @Override
     public String describe() {
@@ -235,7 +231,8 @@ public class TestRequestBuilder {
             "Internal Error: "
                 + Suite.class.getName()
                 + "(Class<?>, List<Runner>) should never throw an "
-                + "InitializationError when passed a null Class");
+                + "InitializationError when passed a null Class",
+            e);
       }
     }
 
