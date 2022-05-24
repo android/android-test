@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.internal.runner.filters;
+package androidx.test.filters;
 
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;

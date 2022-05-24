@@ -20,6 +20,8 @@ import android.app.Instrumentation;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
+import androidx.test.filters.AbstractFilter;
+import androidx.test.filters.CustomFilter;
 import androidx.test.filters.RequiresDevice;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.internal.runner.ClassPathScanner.ChainedClassNameFilter;
@@ -27,13 +29,13 @@ import androidx.test.internal.runner.ClassPathScanner.ExcludeClassNamesFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExcludePackageNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExternalClassNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.InclusivePackageNamesFilter;
-import androidx.test.internal.runner.filters.AbstractFilter;
 import androidx.test.internal.runner.filters.TestsRegExFilter;
 import androidx.test.internal.util.AndroidRunnerParams;
 import androidx.test.internal.util.Checks;
 import androidx.tracing.Trace;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -78,7 +80,8 @@ public class TestRequestBuilder {
           .intersect(new SdkSuppressFilter())
           .intersect(new RequiresDeviceFilter())
           .intersect(classMethodFilter)
-          .intersect(testsRegExFilter);
+          .intersect(testsRegExFilter)
+          .intersect(new CustomFilters());
   private List<Class<? extends RunnerBuilder>> customRunnerBuilderClasses = new ArrayList<>();
   private boolean skipExecution = false;
   private final DeviceBuild deviceBuild;
@@ -238,6 +241,41 @@ public class TestRequestBuilder {
 
     ExtendedSuite(List<Runner> runners) throws InitializationError {
       super(null, runners);
+    }
+  }
+
+  private static class CustomFilters extends AbstractFilter {
+    @Override
+    protected boolean evaluateTest(Description description) {
+      Collection<Annotation> allAnnotations = description.getAnnotations();
+
+      for (Annotation a : allAnnotations) {
+        CustomFilter filter = a.annotationType().getAnnotation(CustomFilter.class);
+        if (filter != null) {
+          // @CustomFilter is present on this annotation, initialize filter class and check if this
+          // test should run
+          Class<? extends AbstractFilter> filterClass = filter.filterClass();
+          try {
+            if (!filterClass.getConstructor().newInstance().shouldRun(description)) {
+              return false; // skip the test
+            }
+          } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException(
+                "Must have no argument constructor for class " + filterClass.getName(), e);
+          } catch (ClassCastException e) {
+            throw new IllegalArgumentException(
+                filterClass.getName() + " does not extend androidx.test.filters.AbstractFilter", e);
+          } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+            throw new IllegalArgumentException("Failed to create: " + filterClass.getName(), e);
+          }
+        }
+      }
+      return true; // run the test
+    }
+
+    @Override
+    public String describe() {
+      return "skip tests annotated with custom filters if necessary";
     }
   }
 

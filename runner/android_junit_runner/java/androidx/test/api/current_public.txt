@@ -1,6 +1,12 @@
 // Signature format: 3.0
 package androidx.test.filters {
 
+  public abstract class AbstractFilter extends org.junit.runner.manipulation.Filter {
+    ctor public AbstractFilter();
+    method protected abstract boolean evaluateTest(org.junit.runner.Description!);
+    method public boolean shouldRun(org.junit.runner.Description!);
+  }
+
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.METHOD, java.lang.annotation.ElementType.TYPE}) public @interface FlakyTest {
     method public abstract int bugId() default -1;
     method public abstract String detail() default "";

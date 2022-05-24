@@ -15,6 +15,7 @@
  */
 package androidx.test.internal.runner.filters;
 
+import androidx.test.filters.AbstractFilter;
 import java.util.regex.Pattern;
 import org.junit.runner.Description;
 

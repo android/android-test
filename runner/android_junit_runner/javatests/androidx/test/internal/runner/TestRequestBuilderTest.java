@@ -29,6 +29,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.AbstractFilter;
+import androidx.test.filters.CustomFilter;
 import androidx.test.filters.FlakyTest;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.MediumTest;
@@ -49,6 +51,10 @@ import androidx.test.testing.fixtures.RunWithAndroidJUnit4Failing;
 import androidx.test.testing.fixtures.RunWithJUnit4Failing;
 import androidx.test.testing.fixtures.SampleJUnit3Test;
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -200,6 +206,62 @@ public class TestRequestBuilderTest {
     @Suppress
     public void testSuppressed() {}
   }
+
+  public static class SampleCustomFilterTestClass {
+    @Test
+    @SampleCustomAnnotation(runTest = true)
+    public void testRun() {}
+
+    @Test
+    @SampleCustomAnnotation(runTest = false)
+    public void testNotRun() {}
+  }
+
+  public static class SampleCustomFilter extends AbstractFilter {
+    public SampleCustomFilter() {}
+
+    @Override
+    protected boolean evaluateTest(Description description) {
+      return description.getAnnotation(SampleCustomAnnotation.class).runTest();
+    }
+
+    @Override
+    public String describe() {
+      return "skip tests if runTest is false";
+    }
+  }
+
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target({ElementType.TYPE, ElementType.METHOD})
+  @CustomFilter(filterClass = SampleCustomFilter.class)
+  public @interface SampleCustomAnnotation {
+    boolean runTest() default true;
+  }
+
+  public static class MalformedCustomFilterTestClass {
+    @Test
+    @MalformedCustomAnnotation()
+    public void test() {}
+  }
+
+  public static class CustomFilterWithPrivateConstructor extends AbstractFilter {
+    private CustomFilterWithPrivateConstructor() {}
+
+    @Override
+    protected boolean evaluateTest(Description description) {
+      return description.getAnnotation(SampleCustomAnnotation.class).runTest();
+    }
+
+    @Override
+    public String describe() {
+      return "skip tests if runTest is false";
+    }
+  }
+
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target({ElementType.TYPE, ElementType.METHOD})
+  @CustomFilter(filterClass = CustomFilterWithPrivateConstructor.class)
+  public @interface MalformedCustomAnnotation {}
 
   public static class SampleJUnit3 extends TestCase {
     public void testFromSuper() {}
@@ -972,6 +1034,30 @@ public class TestRequestBuilderTest {
     JUnitCore testRunner = new JUnitCore();
     Result result = testRunner.run(request);
     Assert.assertEquals(2, result.getRunCount());
+  }
+
+  /** Test that {@link CustomFilter} filters tests as appropriate */
+  @Test
+  public void testCustomFilterAnnotation() {
+    Request request = builder.addTestClass(SampleCustomFilterTestClass.class.getName()).build();
+    JUnitCore testRunner = new JUnitCore();
+    Result result = testRunner.run(request);
+    Assert.assertEquals(1, result.getRunCount());
+  }
+
+  /** Test that {@link CustomFilter} throws when the filter class cannot be instantiated */
+  @Test
+  public void testMalformedCustomFilterAnnotation() {
+    Request request = builder.addTestClass(MalformedCustomFilterTestClass.class.getName()).build();
+    JUnitCore testRunner = new JUnitCore();
+    IllegalArgumentException e =
+        assertThrows(IllegalArgumentException.class, () -> testRunner.run(request));
+    assertThat(e)
+        .hasMessageThat()
+        .isEqualTo(
+            "Must have no argument constructor for class"
+                + " androidx.test.internal.runner.TestRequestBuilderTest"
+                + "$CustomFilterWithPrivateConstructor");
   }
 
   /** Test that a custom filter is applied */
