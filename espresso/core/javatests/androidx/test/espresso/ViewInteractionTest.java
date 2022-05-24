@@ -141,7 +141,9 @@ public class ViewInteractionTest {
           public String rewriteSpanName(@NonNull String spanName) {
             return spanName
                 .replace(mockActionName, "MockAction")
-                .replace(mockAssertionName, "MockAssert");
+                .replace(mockAssertionName, "MockAssert")
+                .replaceAll("\\((\\w+), .*\\)$", "($1, Matcher Description)")
+                .replaceAll("(onView)\\(.*\\)$", "$1(Matcher Description)");
           }
         };
     Tracing.getInstance().registerTracer(tracer);
@@ -170,7 +172,8 @@ public class ViewInteractionTest {
     assertThat(
         tracer.getSpans(),
         contains(
-            "beginSpan: Espresso-perform-MockAction", "+-endSpan: Espresso-perform-MockAction"));
+            "beginSpan: Espresso.perform(MockAction, Matcher Description)",
+            "+-endSpan: Espresso.perform(MockAction, Matcher Description)"));
   }
 
   @Test
@@ -190,7 +193,8 @@ public class ViewInteractionTest {
     assertThat(
         tracer.getSpans(),
         contains(
-            "beginSpan: Espresso-perform-MockAction", "+-endSpan: Espresso-perform-MockAction"));
+            "beginSpan: Espresso.perform(MockAction, Matcher Description)",
+            "+-endSpan: Espresso.perform(MockAction, Matcher Description)"));
   }
 
   @Test
@@ -210,7 +214,9 @@ public class ViewInteractionTest {
 
     assertThat(
         tracer.getSpans(),
-        contains("beginSpan: Espresso-check-MockAssert", "+-endSpan: Espresso-check-MockAssert"));
+        contains(
+            "beginSpan: Espresso.check(MockAssert, Matcher Description)",
+            "+-endSpan: Espresso.check(MockAssert, Matcher Description)"));
   }
 
   @Test
@@ -232,12 +238,12 @@ public class ViewInteractionTest {
     assertThat(
         tracer.getSpans(),
         contains(
-            "beginSpan: Espresso-perform-MockAction",
-            "+-endSpan: Espresso-perform-MockAction",
-            "beginSpan: Espresso-perform-MockAction",
-            "+-endSpan: Espresso-perform-MockAction",
-            "beginSpan: Espresso-check-MockAssert",
-            "+-endSpan: Espresso-check-MockAssert"));
+            "beginSpan: Espresso.perform(MockAction, Matcher Description)",
+            "+-endSpan: Espresso.perform(MockAction, Matcher Description)",
+            "beginSpan: Espresso.perform(MockAction, Matcher Description)",
+            "+-endSpan: Espresso.perform(MockAction, Matcher Description)",
+            "beginSpan: Espresso.check(MockAssert, Matcher Description)",
+            "+-endSpan: Espresso.check(MockAssert, Matcher Description)"));
   }
 
   @Test
@@ -253,10 +259,10 @@ public class ViewInteractionTest {
     assertThat(
         tracer.getSpans(),
         contains(
-            "beginSpan: Espresso-perform-MockAction",
-            "+-endSpan: Espresso-perform-MockAction",
-            "beginSpan: Espresso-check-MockAssert",
-            "+-endSpan: Espresso-check-MockAssert"));
+            "beginSpan: Espresso.perform(MockAction, Matcher Description)",
+            "+-endSpan: Espresso.perform(MockAction, Matcher Description)",
+            "beginSpan: Espresso.check(MockAssert, Matcher Description)",
+            "+-endSpan: Espresso.check(MockAssert, Matcher Description)"));
   }
 
   @Test
@@ -268,7 +274,9 @@ public class ViewInteractionTest {
 
     assertThat(
         tracer.getSpans(),
-        contains("beginSpan: Espresso-check-MockAssert", "+-endSpan: Espresso-check-MockAssert"));
+        contains(
+            "beginSpan: Espresso.check(MockAssert, Matcher Description)",
+            "+-endSpan: Espresso.check(MockAssert, Matcher Description)"));
   }
 
   @Test
@@ -308,7 +316,9 @@ public class ViewInteractionTest {
 
     assertThat(
         tracer.getSpans(),
-        contains("beginSpan: Espresso-check-MockAssert", "+-endSpan: Espresso-check-MockAssert"));
+        contains(
+            "beginSpan: Espresso.check(MockAssert, Matcher Description)",
+            "+-endSpan: Espresso.check(MockAssert, Matcher Description)"));
   }
 
   @Test
@@ -325,7 +335,8 @@ public class ViewInteractionTest {
     assertThat(
         tracer.getSpans(),
         contains(
-            "beginSpan: Espresso-perform-MockAction", "+-endSpan: Espresso-perform-MockAction"));
+            "beginSpan: Espresso.perform(MockAction, Matcher Description)",
+            "+-endSpan: Espresso.perform(MockAction, Matcher Description)"));
   }
 
   @Test
@@ -358,7 +369,9 @@ public class ViewInteractionTest {
 
     assertThat(
         tracer.getSpans(),
-        contains("beginSpan: Espresso-check-MockAssert", "+-endSpan: Espresso-check-MockAssert"));
+        contains(
+            "beginSpan: Espresso.check(MockAssert, Matcher Description)",
+            "+-endSpan: Espresso.check(MockAssert, Matcher Description)"));
   }
 
   @Test
@@ -416,7 +429,9 @@ public class ViewInteractionTest {
 
     assertThat(
         tracer.getSpans(),
-        contains("beginSpan: Espresso-check-MockAssert", "+-endSpan: Espresso-check-MockAssert"));
+        contains(
+            "beginSpan: Espresso.check(MockAssert, Matcher Description)",
+            "+-endSpan: Espresso.check(MockAssert, Matcher Description)"));
   }
 
   @Test
@@ -440,7 +455,9 @@ public class ViewInteractionTest {
 
     assertThat(
         tracer.getSpans(),
-        contains("beginSpan: Espresso-check-MockAssert", "+-endSpan: Espresso-check-MockAssert"));
+        contains(
+            "beginSpan: Espresso.check(MockAssert, Matcher Description)",
+            "+-endSpan: Espresso.check(MockAssert, Matcher Description)"));
   }
 
   @Test
@@ -474,8 +491,8 @@ public class ViewInteractionTest {
     assertThat(
         tracer.getSpans(),
         contains(
-            "beginSpan: Espresso-perform-BindableViewAction",
-            "+-endSpan: Espresso-perform-BindableViewAction"));
+            "beginSpan: Espresso.perform(BindableViewAction, Matcher Description)",
+            "+-endSpan: Espresso.perform(BindableViewAction, Matcher Description)"));
   }
 
   @Test
@@ -510,55 +527,8 @@ public class ViewInteractionTest {
     assertThat(
         tracer.getSpans(),
         contains(
-            "beginSpan: Espresso-check-BindableViewAssertion",
-            "+-endSpan: Espresso-check-BindableViewAssertion"));
-  }
-
-  @Test
-  public void getSpanDescription() {
-    final ViewAction anonymousViewAction =
-        new ViewAction() {
-          @Override
-          public Matcher<View> getConstraints() {
-            return null;
-          }
-
-          @Override
-          public String getDescription() {
-            return null;
-          }
-
-          @Override
-          public void perform(UiController uiController, View view) {}
-        };
-
-    final ViewAssertion anonymousViewAssertion =
-        new ViewAssertion() {
-          @Override
-          public void check(View view, NoMatchingViewException noViewFoundException) {}
-        };
-
-    // This utility method should be defensive and silently accept null arguments.
-    assertThat(ViewInteraction.getSpanDescription(null, null), is(""));
-    assertThat(ViewInteraction.getSpanDescription(null, "alternative"), is("alternative"));
-
-    // Alternative string is used for anonymous classes.
-    assertThat(
-        ViewInteraction.getSpanDescription(anonymousViewAction, "This action does something!"),
-        is("This action does something"));
-    assertThat(
-        ViewInteraction.getSpanDescription(
-            anonymousViewAssertion,
-            "An action with a long description.\n"
-                + " It is sanitized and shortened. This part is removed."),
-        is("An action with a long description It is sanitized and shortened"));
-
-    assertThat(
-        ViewInteraction.getSpanDescription(new BindableViewAction(null, null), "alternative"),
-        is("BindableViewAction"));
-    assertThat(
-        ViewInteraction.getSpanDescription(new BindableViewAssertion(null, null), "alternative"),
-        is("BindableViewAssertion"));
+            "beginSpan: Espresso.check(BindableViewAssertion, Matcher Description)",
+            "+-endSpan: Espresso.check(BindableViewAssertion, Matcher Description)"));
   }
 
   private void initWithViewInteraction() {

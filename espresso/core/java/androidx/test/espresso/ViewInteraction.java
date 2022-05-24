@@ -26,8 +26,6 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.action.ScrollToAction;
 import androidx.test.espresso.base.InterruptableUiController;
 import androidx.test.espresso.base.MainThread;
@@ -38,11 +36,11 @@ import androidx.test.espresso.remote.Bindable;
 import androidx.test.espresso.remote.IInteractionExecutionStatus;
 import androidx.test.espresso.remote.RemoteInteraction;
 import androidx.test.espresso.util.HumanReadables;
+import androidx.test.espresso.util.TracingUtil;
 import androidx.test.internal.platform.os.ControlledLooper;
 import androidx.test.internal.util.Checks;
 import androidx.test.platform.tracing.Tracer.Span;
 import androidx.test.platform.tracing.Tracing;
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -185,10 +183,14 @@ public final class ViewInteraction {
         new Callable<Void>() {
           @Override
           public Void call() {
-            try (Span ignored =
-                tracer.beginSpan(
-                    "Espresso-perform-"
-                        + getSpanDescription(innerViewAction, innerViewAction.getDescription()))) {
+            String spanName =
+                TracingUtil.getSpanName(
+                    "Espresso",
+                    "perform",
+                    TracingUtil.getClassName(
+                        innerViewAction, /* defaultName= */ innerViewAction.getDescription()),
+                    viewMatcher);
+            try (Span ignored = tracer.beginSpan(spanName)) {
               doPerform(va, actionIndex, testFlowEnabled);
             }
             return null;
@@ -209,28 +211,6 @@ public final class ViewInteraction {
     }
 
     waitForAndHandleInteractionResults(interactions);
-  }
-
-  /**
-   * Creates a span description based on the action class name. If not suitable name can be
-   * inferred, the default description is used if provided.
-   */
-  @NonNull
-  @VisibleForTesting
-  static String getSpanDescription(Object action, String defaultDescription) {
-    // Note: getSimpleName() may return an empty string for an anonymous class.
-    // Ideally we would use Class.getTypeName() but this is not supported in legacy
-    // Android with compiler < 1.8.
-    String name = action == null ? null : action.getClass().getSimpleName();
-    if (Strings.isNullOrEmpty(name)) {
-      name = defaultDescription;
-    }
-    // Sanitize the string in length and content.
-    name = name == null ? "" : name.replaceAll("[^0-9A-Za-z_$-]+", " ").trim();
-    if (name.length() > 64) {
-      name = name.substring(0, 64).trim();
-    }
-    return name;
   }
 
   /**
@@ -336,9 +316,13 @@ public final class ViewInteraction {
         new Callable<Void>() {
           @Override
           public Void call() {
-            try (Span ignored =
-                tracer.beginSpan(
-                    "Espresso-check-" + getSpanDescription(viewAssert, "ViewAssertion"))) {
+            String spanName =
+                TracingUtil.getSpanName(
+                    "Espresso",
+                    "check",
+                    TracingUtil.getClassName(viewAssert, /* defaultName= */ "ViewAssertion"),
+                    viewMatcher);
+            try (Span ignored = tracer.beginSpan(spanName)) {
               uiController.loopMainThreadUntilIdle();
 
               View targetView = null;

@@ -35,7 +35,6 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasValue;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -46,6 +45,7 @@ import static org.junit.Assert.assertTrue;
 import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import androidx.annotation.NonNull;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -80,7 +80,19 @@ public class EspressoTest {
 
   @Before
   public void setUp() throws Exception {
-    tracer = new TestTracer();
+    tracer =
+        new TestTracer() {
+          @NonNull
+          @Override
+          public String rewriteSpanName(@NonNull String spanName) {
+            // Replace the IDs with a constant string "ID" to get rid of the unstable value of these
+            // IDs.
+            // The ID may contain non-digits but always starts with digits, different from class
+            // types.
+            // The string may be cut off by sanitization of length.
+            return spanName.replaceAll(" [0-9]+", " <ID>");
+          }
+        };
     Tracing.getInstance().registerTracer(tracer);
   }
 
@@ -101,20 +113,44 @@ public class EspressoTest {
     assertThat(
         tracer.getSpans(),
         contains(
-            "beginSpan: Espresso-perform-AdapterDataLoaderAction",
-            "+-endSpan: Espresso-perform-AdapterDataLoaderAction",
-            "beginSpan: Espresso-perform-GeneralClickAction",
-            "+-endSpan: Espresso-perform-GeneralClickAction",
-            "beginSpan: Espresso-perform-GeneralClickAction",
-            "+-endSpan: Espresso-perform-GeneralClickAction",
-            "beginSpan: Espresso-openActionBarOverflowOrOptionsMenu",
-            "beginSpan: Espresso-perform-KeyEventAction",
-            "+-endSpan: Espresso-perform-KeyEventAction",
-            "+-endSpan: Espresso-openActionBarOverflowOrOptionsMenu",
-            "beginSpan: Espresso-perform-GeneralClickAction",
-            "+-endSpan: Espresso-perform-GeneralClickAction",
-            "beginSpan: Espresso-check-MatchesViewAssertion",
-            "+-endSpan: Espresso-check-MatchesViewAssertion"));
+            "beginSpan: Espresso.onView(is assignable from class class"
+                + " android.widget.AdapterView)",
+            "+-endSpan: Espresso.onView(is assignable from class class"
+                + " android.widget.AdapterView)",
+            "beginSpan: Espresso.perform(AdapterDataLoaderAction, is assignable from class class"
+                + " android.widget.AdapterView)",
+            "+-endSpan: Espresso.perform(AdapterDataLoaderAction, is assignable from class class"
+                + " android.widget.AdapterView)",
+            "beginSpan: Espresso.onView(displaying data matching: (an instance of java.util.Map and"
+                + " map containing [ANYTHING",
+            "+-endSpan: Espresso.onView(displaying data matching: (an instance of java.util.Map and"
+                + " map containing [ANYTHING",
+            "beginSpan: Espresso.perform(GeneralClickAction, displaying data matching: (an instance"
+                + " of java.util.Map and map",
+            "+-endSpan: Espresso.perform(GeneralClickAction, displaying data matching: (an instance"
+                + " of java.util.Map and map",
+            "beginSpan: Espresso.onView(view.getId() is <ID>)",
+            "+-endSpan: Espresso.onView(view.getId() is <ID>)",
+            "beginSpan: Espresso.perform(GeneralClickAction, view.getId() is <ID>)",
+            "+-endSpan: Espresso.perform(GeneralClickAction, view.getId() is <ID>)",
+            "beginSpan: Espresso.openActionBarOverflowOrOptionsMenu",
+            "beginSpan: Espresso.onView(view.getRootView() to equal view)",
+            "+-endSpan: Espresso.onView(view.getRootView() to equal view)",
+            "beginSpan: Espresso.perform(KeyEventAction, view.getRootView() to equal view)",
+            "+-endSpan: Espresso.perform(KeyEventAction, view.getRootView() to equal view)",
+            "+-endSpan: Espresso.openActionBarOverflowOrOptionsMenu",
+            "beginSpan: Espresso.onView(an instance of android.widget.TextView and view.getText()"
+                + " with or without transforma",
+            "+-endSpan: Espresso.onView(an instance of android.widget.TextView and view.getText()"
+                + " with or without transforma",
+            "beginSpan: Espresso.perform(GeneralClickAction, an instance of android.widget.TextView"
+                + " and view.getText() with",
+            "+-endSpan: Espresso.perform(GeneralClickAction, an instance of android.widget.TextView"
+                + " and view.getText() with",
+            "beginSpan: Espresso.onView(view.getId() is <ID>)",
+            "+-endSpan: Espresso.onView(view.getId() is <ID>)",
+            "beginSpan: Espresso.check(MatchesViewAssertion, view.getId() is <ID>)",
+            "+-endSpan: Espresso.check(MatchesViewAssertion, view.getId() is <ID>)"));
   }
 
   @Test
@@ -128,20 +164,50 @@ public class EspressoTest {
     assertThat(
         tracer.getSpans(),
         contains(
-            "beginSpan: Espresso-perform-AdapterDataLoaderAction",
-            "+-endSpan: Espresso-perform-AdapterDataLoaderAction",
-            "beginSpan: Espresso-perform-GeneralClickAction",
-            "+-endSpan: Espresso-perform-GeneralClickAction",
-            "beginSpan: Espresso-openContextualActionModeOverflowMenu",
-            "beginSpan: Espresso-perform-TransitionBridgingViewAction",
-            "+-endSpan: Espresso-perform-TransitionBridgingViewAction",
-            "beginSpan: Espresso-perform-GeneralClickAction",
-            "+-endSpan: Espresso-perform-GeneralClickAction",
-            "+-endSpan: Espresso-openContextualActionModeOverflowMenu",
-            "beginSpan: Espresso-perform-GeneralClickAction",
-            "+-endSpan: Espresso-perform-GeneralClickAction",
-            "beginSpan: Espresso-check-MatchesViewAssertion",
-            "+-endSpan: Espresso-check-MatchesViewAssertion"));
+            "beginSpan: Espresso.onView(is assignable from class class"
+                + " android.widget.AdapterView)",
+            "+-endSpan: Espresso.onView(is assignable from class class"
+                + " android.widget.AdapterView)",
+            "beginSpan: Espresso.perform(AdapterDataLoaderAction, is assignable from class class"
+                + " android.widget.AdapterView)",
+            "+-endSpan: Espresso.perform(AdapterDataLoaderAction, is assignable from class class"
+                + " android.widget.AdapterView)",
+            "beginSpan: Espresso.onView(displaying data matching: (an instance of java.util.Map and"
+                + " map containing [ANYTHING",
+            "+-endSpan: Espresso.onView(displaying data matching: (an instance of java.util.Map and"
+                + " map containing [ANYTHING",
+            "beginSpan: Espresso.perform(GeneralClickAction, displaying data matching: (an instance"
+                + " of java.util.Map and map",
+            "+-endSpan: Espresso.perform(GeneralClickAction, displaying data matching: (an instance"
+                + " of java.util.Map and map",
+            "beginSpan: Espresso.openContextualActionModeOverflowMenu",
+            "beginSpan: Espresso.onView(view.getRootView() to equal view)",
+            "+-endSpan: Espresso.onView(view.getRootView() to equal view)",
+            "beginSpan: Espresso.perform(TransitionBridgingViewAction, view.getRootView() to equal"
+                + " view)",
+            "+-endSpan: Espresso.perform(TransitionBridgingViewAction, view.getRootView() to equal"
+                + " view)",
+            "beginSpan: Espresso.onView((((view has effective visibility VISIBLE and"
+                + " view.getGlobalVisibleRect() to return n",
+            "+-endSpan: Espresso.onView((((view has effective visibility VISIBLE and"
+                + " view.getGlobalVisibleRect() to return n",
+            "beginSpan: Espresso.perform(GeneralClickAction, (((view has effective visibility"
+                + " VISIBLE and view.getGlobalVisi",
+            "+-endSpan: Espresso.perform(GeneralClickAction, (((view has effective visibility"
+                + " VISIBLE and view.getGlobalVisi",
+            "+-endSpan: Espresso.openContextualActionModeOverflowMenu",
+            "beginSpan: Espresso.onView(an instance of android.widget.TextView and view.getText()"
+                + " with or without transforma",
+            "+-endSpan: Espresso.onView(an instance of android.widget.TextView and view.getText()"
+                + " with or without transforma",
+            "beginSpan: Espresso.perform(GeneralClickAction, an instance of android.widget.TextView"
+                + " and view.getText() with",
+            "+-endSpan: Espresso.perform(GeneralClickAction, an instance of android.widget.TextView"
+                + " and view.getText() with",
+            "beginSpan: Espresso.onView(view.getId() is <ID>)",
+            "+-endSpan: Espresso.onView(view.getId() is <ID>)",
+            "beginSpan: Espresso.check(MatchesViewAssertion, view.getId() is <ID>)",
+            "+-endSpan: Espresso.check(MatchesViewAssertion, view.getId() is <ID>)"));
   }
 
   @Test
@@ -181,13 +247,13 @@ public class EspressoTest {
 
     assertThat(tracer.getSpans())
         .containsAtLeast(
-            "beginSpan: Espresso-perform-show soft input",
-            "+-endSpan: Espresso-perform-show soft input")
+            "beginSpan: Espresso.perform(show soft input, view.getId() is <ID>)",
+            "+-endSpan: Espresso.perform(show soft input, view.getId() is <ID>)")
         .inOrder();
     assertThat(tracer.getSpans())
         .containsAtLeast(
-            "beginSpan: Espresso-perform-CloseKeyboardAction",
-            "+-endSpan: Espresso-perform-CloseKeyboardAction")
+            "beginSpan: Espresso.perform(CloseKeyboardAction, view.getId() is <ID>)",
+            "+-endSpan: Espresso.perform(CloseKeyboardAction, view.getId() is <ID>)")
         .inOrder();
   }
 
@@ -212,8 +278,10 @@ public class EspressoTest {
 
     assertThat(tracer.getSpans())
         .containsAtLeast(
-            "beginSpan: Espresso-perform-CloseKeyboardAction",
-            "+-endSpan: Espresso-perform-CloseKeyboardAction")
+            "beginSpan: Espresso.perform(CloseKeyboardAction, view.getId() is"
+                + " <ID>/androidx.test.ui.app:id/editTextUse",
+            "+-endSpan: Espresso.perform(CloseKeyboardAction, view.getId() is"
+                + " <ID>/androidx.test.ui.app:id/editTextUse")
         .inOrder();
   }
 
@@ -299,7 +367,8 @@ public class EspressoTest {
                   containsString("Method cannot be called on the main application thread"));
             });
 
-    assertThat(tracer.getSpans(), empty());
+    // onView start & end span
+    assertThat(tracer.getSpans()).hasSize(2);
   }
 
   @Test
@@ -322,7 +391,8 @@ public class EspressoTest {
                   containsString("Method cannot be called on the main application thread"));
             });
 
-    assertThat(tracer.getSpans(), empty());
+    // onView start & end span
+    assertThat(tracer.getSpans()).hasSize(2);
   }
 
   @Test
@@ -339,7 +409,7 @@ public class EspressoTest {
             });
 
     assertThat(
-        tracer.getSpans(), contains("beginSpan: Espresso-onIdle", "+-endSpan: Espresso-onIdle"));
+        tracer.getSpans(), contains("beginSpan: Espresso.onIdle", "+-endSpan: Espresso.onIdle"));
   }
 
   private static class DummyIdlingResource implements IdlingResource {

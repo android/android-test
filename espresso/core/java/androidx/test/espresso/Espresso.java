@@ -39,6 +39,7 @@ import android.view.ViewConfiguration;
 import androidx.annotation.CheckResult;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.base.IdlingResourceRegistry;
+import androidx.test.espresso.util.TracingUtil;
 import androidx.test.espresso.util.TreeIterables;
 import androidx.test.internal.util.Checks;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -85,7 +86,10 @@ public final class Espresso {
   @CheckReturnValue
   @CheckResult
   public static ViewInteraction onView(final Matcher<View> viewMatcher) {
-    return BASE.plus(new ViewInteractionModule(viewMatcher)).viewInteraction();
+    String spanName = TracingUtil.getSpanName("Espresso", "onView", viewMatcher);
+    try (Span ignored = tracer.beginSpan(spanName)) {
+      return BASE.plus(new ViewInteractionModule(viewMatcher)).viewInteraction();
+    }
   }
 
   /**
@@ -201,7 +205,7 @@ public final class Espresso {
 
   /** Closes soft keyboard if open. */
   public static void closeSoftKeyboard() {
-    try (Span ignored = tracer.beginSpan("Espresso-closeSoftKeyboard")) {
+    try (Span ignored = tracer.beginSpan("Espresso.closeSoftKeyboard")) {
       onView(isRoot()).perform(ViewActions.closeSoftKeyboard());
     }
   }
@@ -216,7 +220,7 @@ public final class Espresso {
    * button (if present) has no impact on it.
    */
   public static void openContextualActionModeOverflowMenu() {
-    try (Span ignored = tracer.beginSpan("Espresso-openContextualActionModeOverflowMenu")) {
+    try (Span ignored = tracer.beginSpan("Espresso.openContextualActionModeOverflowMenu")) {
       onView(isRoot()).perform(new TransitionBridgingViewAction());
 
       // provide an pressBack rollback action to the click, to handle occasional flakiness where the
@@ -232,7 +236,7 @@ public final class Espresso {
    *     button would result in application closing.
    */
   public static void pressBack() {
-    try (Span ignored = tracer.beginSpan("Espresso-pressBack")) {
+    try (Span ignored = tracer.beginSpan("Espresso.pressBack")) {
       onView(isRoot()).perform(ViewActions.pressBack());
     }
   }
@@ -242,7 +246,7 @@ public final class Espresso {
    * outside the application or process under test.
    */
   public static void pressBackUnconditionally() {
-    try (Span ignored = tracer.beginSpan("Espresso-pressBackUnconditionally")) {
+    try (Span ignored = tracer.beginSpan("Espresso.pressBackUnconditionally")) {
       onView(isRoot()).perform(ViewActions.pressBackUnconditionally());
     }
   }
@@ -257,7 +261,7 @@ public final class Espresso {
    * ActionBars and can only be interacted with via menu key presses.
    */
   public static void openActionBarOverflowOrOptionsMenu(Context context) {
-    try (Span ignored = tracer.beginSpan("Espresso-openActionBarOverflowOrOptionsMenu")) {
+    try (Span ignored = tracer.beginSpan("Espresso.openActionBarOverflowOrOptionsMenu")) {
       // We need to wait for Activity#onPrepareOptionsMenu to be called before trying to open
       // overflow or it's missing. onPrepareOptionsMenu is called by Choreographer after onResume
       // and view is attached to window. To ensure the options menu is created before we try to
@@ -328,7 +332,7 @@ public final class Espresso {
    * @throws RuntimeException when being invoked on the main thread.
    */
   public static <T> T onIdle(Callable<T> action) {
-    try (Span ignored = tracer.beginSpan("Espresso-onIdle")) {
+    try (Span ignored = tracer.beginSpan("Espresso.onIdle")) {
       Checks.checkNotMainThread();
 
       Executor mainThreadExecutor = BASE.mainThreadExecutor();

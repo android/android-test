@@ -918,6 +918,11 @@ package androidx.test.espresso.util {
     method public static String! getViewHierarchyErrorMessage(android.view.View!, java.util.List<android.view.View!>!, String!, String!, int);
   }
 
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY) public final class TracingUtil {
+    method public static String! getClassName(Object!, String!);
+    method public static String! getSpanName(String!, String!, java.lang.Object!...);
+  }
+
   public final class TreeIterables {
     method public static Iterable<android.view.View!>! breadthFirstViewTraversal(android.view.View!);
     method public static Iterable<android.view.View!>! depthFirstViewTraversal(android.view.View!);
