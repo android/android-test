@@ -15,6 +15,9 @@
  */
 package androidx.test.filters;
 
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 
@@ -43,4 +46,41 @@ public abstract class AbstractFilter extends Filter {
    * @return <code>true</code> if matched
    */
   protected abstract boolean evaluateTest(Description description);
+
+  /**
+   * Get a list of method annotations that are annotated with @CustomFilter with this class as the
+   * filter class.
+   *
+   * @param description the {@link Description} describing the test
+   * @return a list of annotations on methods that are handled by this filter
+   */
+  protected List<Annotation> getMethodAnnotations(Description description) {
+    ArrayList<Annotation> testAnnotations = new ArrayList<>();
+    for (Annotation annotation : description.getAnnotations()) {
+      CustomFilter customFilterAnnotation =
+          annotation.annotationType().getAnnotation(CustomFilter.class);
+      if (customFilterAnnotation != null && customFilterAnnotation.filterClass().isInstance(this)) {
+        testAnnotations.add(annotation);
+      }
+    }
+    return testAnnotations;
+  }
+
+  /**
+   * Get a list of class annotations that are annotated with @CustomFilter with this class as the
+   * filter class.
+   *
+   * @param description the {@link Description} describing the test
+   * @return a list of annotations on the test class that are handled by this filter
+   */
+  protected List<Annotation> getClassAnnotations(Description description) {
+    ArrayList<Annotation> testAnnotations = new ArrayList<>();
+    for (Annotation c : description.getTestClass().getAnnotations()) {
+      CustomFilter customFilterAnnotation = c.annotationType().getAnnotation(CustomFilter.class);
+      if (customFilterAnnotation != null && customFilterAnnotation.filterClass().isInstance(this)) {
+        testAnnotations.add(c);
+      }
+    }
+    return testAnnotations;
+  }
 }

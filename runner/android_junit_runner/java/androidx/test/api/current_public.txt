@@ -4,6 +4,8 @@ package androidx.test.filters {
   public abstract class AbstractFilter extends org.junit.runner.manipulation.Filter {
     ctor public AbstractFilter();
     method protected abstract boolean evaluateTest(org.junit.runner.Description!);
+    method protected java.util.List<java.lang.annotation.Annotation!>! getClassAnnotations(org.junit.runner.Description!);
+    method protected java.util.List<java.lang.annotation.Annotation!>! getMethodAnnotations(org.junit.runner.Description!);
     method public boolean shouldRun(org.junit.runner.Description!);
   }
 
