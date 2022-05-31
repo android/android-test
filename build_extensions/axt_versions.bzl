@@ -1,18 +1,18 @@
 """Defines current AXT versions and dependencies."""
 
 # AXT versions
-RUNNER_VERSION = "1.5.0-alpha03"  # stable 1.4.0
-RULES_VERSION = "1.4.1-alpha06"  # stable 1.4.0
-MONITOR_VERSION = "1.6.0-alpha03"  # stable 1.5.0
-ESPRESSO_VERSION = "3.5.0-alpha06"  # stable 3.4.0
-CORE_VERSION = "1.4.1-alpha06"  # stable 1.4.0
-ANDROIDX_JUNIT_VERSION = "1.1.4-alpha06"  # stable 1.1.3
-ANDROIDX_TRUTH_VERSION = "1.5.0-alpha06"  # stable 1.4.0
+RUNNER_VERSION = "1.5.0-alpha04"  # stable 1.4.0
+RULES_VERSION = "1.4.1-alpha07"  # stable 1.4.0
+MONITOR_VERSION = "1.6.0-alpha04"  # stable 1.5.0
+ESPRESSO_VERSION = "3.5.0-alpha07"  # stable 3.4.0
+CORE_VERSION = "1.4.1-alpha07"  # stable 1.4.0
+ANDROIDX_JUNIT_VERSION = "1.1.4-alpha07"  # stable 1.1.3
+ANDROIDX_TRUTH_VERSION = "1.5.0-alpha07"  # stable 1.4.0
 UIAUTOMATOR_VERSION = "2.2.0"
 JANK_VERSION = "1.0.1"
-SERVICES_VERSION = "1.4.2-alpha03"  # stable 1.4.1
-ORCHESTRATOR_VERSION = "1.4.2-alpha03"  # stable 1.4.1
-ANNOTATION_VERSION = "1.0.0"  # stable 1.0.0
+SERVICES_VERSION = "1.4.2-alpha04"  # stable 1.4.1
+ORCHESTRATOR_VERSION = "1.4.2-alpha04"  # stable 1.4.1
+ANNOTATION_VERSION = "1.0.1-alpha01"  # stable 1.0.0
 
 # Maven dependency versions
 ANDROIDX_ANNOTATION_VERSION = "1.2.0"
@@ -30,7 +30,7 @@ ANDROIDX_RECYCLERVIEW_VERSION = "1.2.1"
 ANDROIDX_TRACING_VERSION = "1.0.0"
 ANDROIDX_VIEWPAGER_VERSION = "1.0.0"
 GOOGLE_MATERIAL_VERSION = "1.4.0"
-KOTLIN_VERSION = "1.6.10"
+KOTLIN_VERSION = "1.6.21"
 
 # accessibilitytestframework
 ATF_VERSION = "3.1.2"
