@@ -1,5 +1,6 @@
 package androidx.test.espresso.device.filter
 
+import androidx.test.espresso.device.controller.DeviceMode
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,22 +15,16 @@ class RequiresDeviceModeInstrumentationTest {
   }
 
   @Test
-  @RequiresDeviceMode(mode = 0)
+  @RequiresDeviceMode(mode = DeviceMode.FLAT)
   fun requiresDeviceMode() {
     assertThat(true).isTrue()
   }
 
   @Test
-  @RequiresDeviceMode(mode = 0)
-  @RequiresDeviceMode(mode = 1)
-  @RequiresDeviceMode(mode = 2)
+  @RequiresDeviceMode(mode = DeviceMode.FLAT)
+  @RequiresDeviceMode(mode = DeviceMode.TABLETOP)
+  @RequiresDeviceMode(mode = DeviceMode.BOOK)
   fun requiresMultipleDeviceModes() {
     assertThat(true).isTrue()
-  }
-
-  @RequiresDeviceMode(mode = -1)
-  @Test
-  fun requiresDeviceModeWithInvalidMode_shouldNeverRun() {
-    assertThat(false).isTrue()
   }
 }

@@ -1,5 +1,6 @@
 package androidx.test.espresso.device.filter
 
+import androidx.test.espresso.device.controller.DeviceMode
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.internal.runner.TestRequestBuilder
 import androidx.test.platform.app.InstrumentationRegistry.getArguments
@@ -14,23 +15,20 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class RequiresDeviceModeUnitTest {
   class SampleRequiresDeviceModeClass {
-    @RequiresDeviceMode(0) @Test fun testRequireFlatMode() {}
+    @RequiresDeviceMode(DeviceMode.FLAT) @Test fun testRequireFlatMode() {}
 
-    @RequiresDeviceMode(1) @Test fun testRequireTabletopMode() {}
+    @RequiresDeviceMode(DeviceMode.TABLETOP) @Test fun testRequireTabletopMode() {}
 
-    @RequiresDeviceMode(2) @Test fun testRequireBookMode() {}
+    @RequiresDeviceMode(DeviceMode.BOOK) @Test fun testRequireBookMode() {}
 
     @Test fun testAlwaysRun() {}
   }
 
   class RequiresMultipleDeviceModesClass {
-    @RequiresDeviceMode(0) @RequiresDeviceMode(1) @Test fun testRequireInvalidMode() {}
-
-    @Test fun testAlwaysRun() {}
-  }
-
-  class RequiresDeviceModeClassWithInvalidDeviceModeClass {
-    @RequiresDeviceMode(-1) @Test fun testRequireInvalidMode() {}
+    @RequiresDeviceMode(DeviceMode.FLAT)
+    @RequiresDeviceMode(DeviceMode.TABLETOP)
+    @Test
+    fun testRequireInvalidMode() {}
 
     @Test fun testAlwaysRun() {}
   }
@@ -65,17 +63,6 @@ class RequiresDeviceModeUnitTest {
     } else {
       assertEquals(1, result.getRunCount())
     }
-  }
-
-  @Test
-  fun requiresDeviceMode_invalidDeviceMode() {
-    val b: TestRequestBuilder = createBuilder()
-    val testRunner: JUnitCore = JUnitCore()
-    val request: Request =
-      b.addTestClass(RequiresDeviceModeClassWithInvalidDeviceModeClass::class.java.name).build()
-    val result: Result = testRunner.run(request)
-
-    assertEquals(1, result.getRunCount())
   }
 
   private fun createBuilder(): TestRequestBuilder {

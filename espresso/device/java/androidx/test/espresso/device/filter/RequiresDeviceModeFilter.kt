@@ -61,22 +61,22 @@ class RequiresDeviceModeFilter(
     return true
   }
 
-  private fun getSupportedDeviceModes(): List<Int> {
+  private fun getSupportedDeviceModes(): List<DeviceMode> {
     if (Build.VERSION.SDK_INT < 29) {
       // Foldable postures are not available on device running on API 29 and below.
       return emptyList()
     }
 
-    val supportedModes = mutableListOf<Int>()
+    val supportedModes = mutableListOf<DeviceMode>()
     if (Build.VERSION.SDK_INT == 30 || Build.VERSION.SDK_INT == 31) {
       // The "device_state print-states" shell command does not work on APIs 30-31. For these
       // devices, check if any folding feaures are present and assume that devices that have
       // folding features can be half-open and open.
       val displayFeatures = executeShellCommand("cmd settings get global display_features")
       if (displayFeatures.contains("fold") || displayFeatures.contains("hinge")) {
-        supportedModes.add(DeviceMode.TABLETOP.mode)
-        supportedModes.add(DeviceMode.BOOK.mode)
-        supportedModes.add(DeviceMode.FLAT.mode)
+        supportedModes.add(DeviceMode.TABLETOP)
+        supportedModes.add(DeviceMode.BOOK)
+        supportedModes.add(DeviceMode.FLAT)
       }
     } else { // API 32+
       // Example output on a foldable device:
@@ -87,11 +87,11 @@ class RequiresDeviceModeFilter(
       // ]"
       val modes = executeShellCommand("cmd device_state print-states")
       if (modes.contains("HALF_OPENED")) {
-        supportedModes.add(DeviceMode.TABLETOP.mode)
-        supportedModes.add(DeviceMode.BOOK.mode)
+        supportedModes.add(DeviceMode.TABLETOP)
+        supportedModes.add(DeviceMode.BOOK)
       }
       if (modes.contains("OPENED")) {
-        supportedModes.add(DeviceMode.FLAT.mode)
+        supportedModes.add(DeviceMode.FLAT)
       }
     }
     return supportedModes

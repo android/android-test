@@ -15,6 +15,7 @@
  */
 package androidx.test.espresso.device.filter
 
+import androidx.test.espresso.device.controller.DeviceMode
 import androidx.test.filters.CustomFilter
 import java.lang.annotation.Repeatable
 
@@ -29,7 +30,7 @@ import java.lang.annotation.Repeatable
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 @Repeatable(RequiresDeviceModes::class)
 @CustomFilter(filterClass = RequiresDeviceModeFilter::class)
-annotation class RequiresDeviceMode(val mode: Int = 1)
+annotation class RequiresDeviceMode(val mode: DeviceMode)
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
