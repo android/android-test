@@ -87,4 +87,42 @@ public class AndroidXTracerTest {
         .containsExactly("span11", "span12", "span1")
         .inOrder();
   }
+
+  /**
+   * android.os.Trace throws if the name is > 127 character so we cut it at that exact length in the
+   * stored span name.
+   */
+  @Test
+  public void beginSpan_withSpanNameShortened() {
+    assertThat(ShadowTrace.getCurrentSections()).isEmpty();
+    assertThat(ShadowTrace.getPreviousSections()).isEmpty();
+
+    final String suffix130 =
+        "0.........10........20........30........"
+            + "40........50........60........70........"
+            + "80........90........100.......110......."
+            + "120.......130.......";
+
+    AndroidXTracer tracer = new AndroidXTracer();
+    try (Span span1 = tracer.beginSpan("span1_" + suffix130)) {
+      assertThat(span1).isNotNull();
+
+      try (Span span11 = span1.beginChildSpan("span11_" + suffix130)) {
+        assertThat(span11).isNotNull();
+      }
+    }
+
+    assertThat(ShadowTrace.getCurrentSections()).isEmpty();
+    assertThat(ShadowTrace.getPreviousSections())
+        .containsExactly(
+            "span11_"
+                + "0.........10........20........30........"
+                + "40........50........60........70........"
+                + "80........90........100.......110.......",
+            "span1_"
+                + "0.........10........20........30........"
+                + "40........50........60........70........"
+                + "80........90........100.......110.......1")
+        .inOrder();
+  }
 }

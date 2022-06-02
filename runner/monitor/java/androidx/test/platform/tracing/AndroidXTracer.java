@@ -16,6 +16,8 @@
 
 package androidx.test.platform.tracing;
 
+import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.tracing.Trace;
 import java.util.ArrayDeque;
 
@@ -38,19 +40,25 @@ import java.util.ArrayDeque;
  *     href="https://developer.android.com/reference/androidx/tracing/Trace">androidx.tracing.Trace</a>
  */
 class AndroidXTracer implements Tracer {
+  private static final String TAG = AndroidXTracer.class.getSimpleName();
 
+  /** android.os.Trace.beginSection() has a limit on name length. */
+  private static final int MAX_SECTION_NAME_LEN = 127;
+
+  @NonNull
   @Override
-  public Span beginSpan(String name) {
-    Trace.beginSection(name);
+  public Span beginSpan(@NonNull String name) {
+    Trace.beginSection(sanitizeSpanName(name));
     return new AndroidXTracerSpan();
   }
 
   private static class AndroidXTracerSpan implements Span {
     private final ArrayDeque<AndroidXTracerSpan> nestedSpans = new ArrayDeque<>();
 
+    @NonNull
     @Override
-    public Span beginChildSpan(String name) {
-      Trace.beginSection(name);
+    public Span beginChildSpan(@NonNull String name) {
+      Trace.beginSection(sanitizeSpanName(name));
 
       AndroidXTracerSpan span = new AndroidXTracerSpan();
       nestedSpans.add(span);
@@ -66,5 +74,18 @@ class AndroidXTracer implements Tracer {
 
       Trace.endSection();
     }
+  }
+
+  /**
+   * android.os.Trace.beginSection() has a hard limit on the name length and throws if the name is
+   * too long. We shorten here with a warning if needed.
+   */
+  @NonNull
+  private static String sanitizeSpanName(@NonNull String name) {
+    if (name.length() > MAX_SECTION_NAME_LEN) {
+      Log.w(TAG, "Span name exceeds limits: " + name);
+      name = name.substring(0, MAX_SECTION_NAME_LEN);
+    }
+    return name;
   }
 }

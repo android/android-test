@@ -107,10 +107,10 @@ public class IdlingResourceRegistryTest {
 
     assertThat(tracer.getSpans())
         .containsExactly(
-            "beginSpan: IdleResource-r1",
-            "+-endSpan: IdleResource-r1",
-            "beginSpan: IdleResource-r2",
-            "+-endSpan: IdleResource-r2")
+            "beginSpan: IdleResource.r1",
+            "+-endSpan: IdleResource.r1",
+            "beginSpan: IdleResource.r2",
+            "+-endSpan: IdleResource.r2")
         .inOrder();
   }
 
@@ -123,7 +123,7 @@ public class IdlingResourceRegistryTest {
     assertFalse(registry.registerResources(Lists.newArrayList(r1dup)));
     assertEquals(1, registry.getResources().size());
 
-    assertThat(tracer.getSpans()).containsExactly("beginSpan: IdleResource-r1").inOrder();
+    assertThat(tracer.getSpans()).containsExactly("beginSpan: IdleResource.r1").inOrder();
   }
 
   @Test
@@ -140,7 +140,7 @@ public class IdlingResourceRegistryTest {
     // r1 should still be registered
     assertFalse(resourcesIdle.get());
 
-    assertThat(tracer.getSpans()).containsExactly("beginSpan: IdleResource-r1").inOrder();
+    assertThat(tracer.getSpans()).containsExactly("beginSpan: IdleResource.r1").inOrder();
   }
 
   @Test
@@ -183,12 +183,12 @@ public class IdlingResourceRegistryTest {
 
     assertThat(tracer.getSpans())
         .containsExactly(
-            "beginSpan: IdleResource-r1",
-            "beginSpan: IdleResource-r2",
-            "beginSpan: IdleResource-r3",
-            "+-endSpan: IdleResource-r3",
-            "+-endSpan: IdleResource-r2",
-            "+-endSpan: IdleResource-r1")
+            "beginSpan: IdleResource.r1",
+            "beginSpan: IdleResource.r2",
+            "beginSpan: IdleResource.r3",
+            "+-endSpan: IdleResource.r3",
+            "+-endSpan: IdleResource.r2",
+            "+-endSpan: IdleResource.r1")
         .inOrder();
   }
 
@@ -229,7 +229,7 @@ public class IdlingResourceRegistryTest {
     assertTrue(resourcesIdle.get());
 
     assertThat(tracer.getSpans())
-        .containsExactly("beginSpan: IdleResource-r1", "+-endSpan: IdleResource-r1")
+        .containsExactly("beginSpan: IdleResource.r1", "+-endSpan: IdleResource.r1")
         .inOrder();
   }
 
@@ -256,12 +256,12 @@ public class IdlingResourceRegistryTest {
 
     assertThat(tracer.getSpans())
         .containsExactly(
-            "beginSpan: IdleResource-r1",
-            "beginSpan: IdleResource-r2",
-            "beginSpan: IdleResource-r3",
-            "+-endSpan: IdleResource-r1",
-            "+-endSpan: IdleResource-r2",
-            "+-endSpan: IdleResource-r3")
+            "beginSpan: IdleResource.r1",
+            "beginSpan: IdleResource.r2",
+            "beginSpan: IdleResource.r3",
+            "+-endSpan: IdleResource.r1",
+            "+-endSpan: IdleResource.r2",
+            "+-endSpan: IdleResource.r3")
         .inOrder();
   }
 
@@ -280,10 +280,10 @@ public class IdlingResourceRegistryTest {
 
     assertThat(tracer.getSpans())
         .containsExactly(
-            "beginSpan: IdleResource-r1",
-            "beginSpan: IdleResource-r2",
-            "+-endSpan: IdleResource-r1",
-            "+-endSpan: IdleResource-r2")
+            "beginSpan: IdleResource.r1",
+            "beginSpan: IdleResource.r2",
+            "+-endSpan: IdleResource.r1",
+            "+-endSpan: IdleResource.r2")
         .inOrder();
   }
 
@@ -305,7 +305,7 @@ public class IdlingResourceRegistryTest {
     handler.post(resourcesIdle);
     assertFalse(resourcesIdle.get());
 
-    assertThat(tracer.getSpans()).containsExactly("beginSpan: IdleResource-r3").inOrder();
+    assertThat(tracer.getSpans()).containsExactly("beginSpan: IdleResource.r3").inOrder();
   }
 
   @Test
@@ -328,12 +328,12 @@ public class IdlingResourceRegistryTest {
 
     assertThat(tracer.getSpans())
         .containsExactly(
-            "beginSpan: IdleResource-r1",
-            "+-endSpan: IdleResource-r1",
-            "beginSpan: IdleResource-r1",
-            "+-endSpan: IdleResource-r1",
-            "beginSpan: IdleResource-r1",
-            "+-endSpan: IdleResource-r1")
+            "beginSpan: IdleResource.r1",
+            "+-endSpan: IdleResource.r1",
+            "beginSpan: IdleResource.r1",
+            "+-endSpan: IdleResource.r1",
+            "beginSpan: IdleResource.r1",
+            "+-endSpan: IdleResource.r1")
         .inOrder();
   }
 
@@ -397,12 +397,12 @@ public class IdlingResourceRegistryTest {
 
     assertThat(tracer.getSpans())
         .containsExactly(
-            "beginSpan: IdleResource-r1",
-            "beginSpan: IdleResource-r2",
-            "beginSpan: IdleResource-r3",
-            "+-endSpan: IdleResource-r3",
-            "+-endSpan: IdleResource-r2",
-            "+-endSpan: IdleResource-r1")
+            "beginSpan: IdleResource.r1",
+            "beginSpan: IdleResource.r2",
+            "beginSpan: IdleResource.r3",
+            "+-endSpan: IdleResource.r3",
+            "+-endSpan: IdleResource.r2",
+            "+-endSpan: IdleResource.r1")
         .inOrder();
   }
 
@@ -465,11 +465,11 @@ public class IdlingResourceRegistryTest {
 
     assertThat(tracer.getSpans())
         .containsExactly(
-            "beginSpan: IdleResource-r1",
-            "beginSpan: IdleResource-r2",
-            "beginSpan: IdleResource-r3",
-            "+-endSpan: IdleResource-r1",
-            "+-endSpan: IdleResource-r2")
+            "beginSpan: IdleResource.r1",
+            "beginSpan: IdleResource.r2",
+            "beginSpan: IdleResource.r3",
+            "+-endSpan: IdleResource.r1",
+            "+-endSpan: IdleResource.r2")
         .inOrder();
   }
 

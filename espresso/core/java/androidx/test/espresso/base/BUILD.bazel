@@ -60,6 +60,7 @@ android_library(
     deps = [
         "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource",
         "//runner/monitor",
         "@maven//:com_google_dagger_dagger",

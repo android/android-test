@@ -29,6 +29,7 @@ import androidx.test.espresso.IdlingPolicies;
 import androidx.test.espresso.IdlingPolicy;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.IdlingResource.ResourceCallback;
+import androidx.test.espresso.util.TracingUtil;
 import androidx.test.platform.tracing.Tracer;
 import androidx.test.platform.tracing.Tracer.Span;
 import androidx.test.platform.tracing.Tracing;
@@ -424,7 +425,8 @@ public final class IdlingResourceRegistry {
     public void setIdle(boolean idle) {
       if (!idle && tracerSpan == null) {
         // Resource is busy. Start a tracing span if we haven't done so yet.
-        tracerSpan = createUnmanagedTracerSpan("IdleResource-" + resource.getName());
+        tracerSpan =
+            createUnmanagedTracerSpan(TracingUtil.getSpanName("IdleResource", resource.getName()));
       } else if (idle && tracerSpan != null) {
         // Resource is no longer busy. End any current tracing span.
         tracerSpan.close();
