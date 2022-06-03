@@ -12,6 +12,7 @@ kt_android_library(
     testonly = 1,
     srcs = glob(["*.kt"]),
     deps = [
+        "//annotation/java/androidx/test/annotation",
         "//espresso/device/java/androidx/test/espresso/device/controller",
         "//ext/junit",
         "//runner/android_junit_runner",
