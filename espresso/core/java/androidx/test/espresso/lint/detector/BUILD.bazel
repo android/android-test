@@ -1,0 +1,15 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+
+licenses(["notice"])
+
+kt_jvm_library(
+    name = "OnViewInOnActivityCheck",
+    srcs = [
+        "OnViewInOnActivityCheck.kt",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//espresso/core/java/androidx/test/espresso/lint/handler:OnViewInOnActivityHandler",
+        "@maven//:com_android_tools_lint_lint_api",
+    ],
+)

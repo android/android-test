@@ -1,0 +1,22 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+
+licenses(["notice"])
+
+package(default_testonly = 1)
+
+kt_jvm_library(
+    name = "OnViewInOnActivityHandlerTestLib",
+    srcs = ["OnViewInOnActivityHandlerTest.kt"],
+    deps = [
+        "//espresso/core/java/androidx/test/espresso/lint/handler:OnViewInOnActivityHandler",
+        "@maven//:com_android_tools_lint_lint_api",
+        "@maven//:com_nhaarman_mockitokotlin2_mockito_kotlin",
+        "@maven//:junit_junit",
+    ],
+)
+
+java_test(
+    name = "OnViewInOnActivityHandlerTest",
+    test_class = "androidx.test.espresso.lint.handler.OnViewInOnActivityHandlerTest",
+    runtime_deps = [":OnViewInOnActivityHandlerTestLib"],
+)
