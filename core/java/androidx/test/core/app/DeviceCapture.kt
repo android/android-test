@@ -88,7 +88,7 @@ fun takeScreenshot(): Bitmap {
 @Suppress("FutureReturnValueIgnored")
 @Throws(RuntimeException::class)
 fun takeScreenshotNoSync(): Bitmap {
-  Checks.checkNotMainThread()
+  Checks.checkState(Looper.myLooper() != Looper.getMainLooper())
 
   val bitmapFuture: ResolvableFuture<Bitmap> = ResolvableFuture.create()
   val mainExecutor = HandlerExecutor(Handler(Looper.getMainLooper()))
