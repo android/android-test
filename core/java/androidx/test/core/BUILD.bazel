@@ -30,6 +30,7 @@ kt_android_library(
             "**/*.java",
             "**/*.kt",
         ],
+        exclude = glob(["lint/*.kt"]),
     ),
     exports_manifest = 1,
     # not supported in bazel

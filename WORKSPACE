@@ -7,6 +7,9 @@ RULES_JVM_EXTERNAL_TAG = "4.2"
 
 RULES_JVM_EXTERNAL_SHA = "cd1a77b7b02e8e008439ca76fd34f5b07aecb8c752961f9640dea15e9e5ba1ca"
 
+# This needs to be consistent with the KOTLIN_VERSION specified in //third_party/android/androidx_test/build_extensions/axt_versions.bzl.
+KOTLIN_VERSION = "1.6.21"
+
 http_archive(
     name = "rules_jvm_external",
     sha256 = RULES_JVM_EXTERNAL_SHA,
@@ -85,6 +88,7 @@ maven_install(
         "androidx.viewpager:viewpager:" + ANDROIDX_VIEWPAGER_VERSION,
         "aopalliance:aopalliance:1.0",
         "com.android.tools.lint:lint-api:30.1.0",
+        "com.android.tools.lint:lint-checks:30.1.0",
         "com.beust:jcommander:1.72",
                 maven.artifact(
             group = "com.google.android.apps.common.testing.accessibility.framework",
@@ -169,9 +173,6 @@ http_archive(
 )
 
 load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", "kotlinc_version")
-
-# This needs to be consistent with the KOTLIN_VERSION specified in //third_party/android/androidx_test/build_extensions/axt_versions.bzl.
-KOTLIN_VERSION = "1.6.21"
 
 # Get from https://github.com/JetBrains/kotlin/releases/
 KOTLINC_RELEASE_SHA = "632166fed89f3f430482f5aa07f2e20b923b72ef688c8f5a7df3aa1502c6d8ba"
