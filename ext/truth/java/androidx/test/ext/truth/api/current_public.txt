@@ -120,6 +120,7 @@ package androidx.test.ext.truth.os {
     method public <T extends android.os.Parcelable, SubjectT extends com.google.common.truth.Subject> SubjectT! parcelableAsType(String!, com.google.common.truth.Subject.Factory<SubjectT!,T!>!);
     method public com.google.common.truth.Subject! serializable(String!);
     method public com.google.common.truth.StringSubject! string(String!);
+    method public com.google.common.truth.ObjectArraySubject<java.lang.String!>! stringArray(String!);
     method public com.google.common.truth.IterableSubject! stringArrayList(String!);
   }
 

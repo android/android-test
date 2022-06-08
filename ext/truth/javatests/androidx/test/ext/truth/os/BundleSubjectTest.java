@@ -115,6 +115,14 @@ public class BundleSubjectTest {
   }
 
   @Test
+  public void stringArray() {
+    Bundle bundle = new Bundle();
+    bundle.putStringArray("foo", new String[] {"bar", "baz"});
+
+    assertThat(bundle).stringArray("foo").asList().containsExactly("bar", "baz").inOrder();
+  }
+
+  @Test
   public void stringArrayList() {
     Bundle bundle = new Bundle();
     bundle.putStringArrayList("foo", Lists.newArrayList("bar", "baz"));

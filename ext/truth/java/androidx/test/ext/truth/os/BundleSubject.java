@@ -25,6 +25,7 @@ import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.IntegerSubject;
 import com.google.common.truth.IterableSubject;
 import com.google.common.truth.LongSubject;
+import com.google.common.truth.ObjectArraySubject;
 import com.google.common.truth.StringSubject;
 import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
@@ -92,6 +93,10 @@ public final class BundleSubject extends Subject {
   public <T extends Parcelable, SubjectT extends Subject> SubjectT parcelableAsType(
       String key, Subject.Factory<SubjectT, T> subjectFactory) {
     return check("getParcelable(%s)", key).about(subjectFactory).that(actual.<T>getParcelable(key));
+  }
+
+  public ObjectArraySubject<String> stringArray(String key) {
+    return check("getStringArray(%s)", key).that(actual.getStringArray(key));
   }
 
   public IterableSubject stringArrayList(String key) {
