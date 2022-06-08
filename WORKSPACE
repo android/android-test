@@ -84,6 +84,7 @@ maven_install(
         "androidx.test.uiautomator:uiautomator:" + UIAUTOMATOR_VERSION,
         "androidx.viewpager:viewpager:" + ANDROIDX_VIEWPAGER_VERSION,
         "aopalliance:aopalliance:1.0",
+        "com.android.tools.lint:lint-api:30.1.0",
         "com.beust:jcommander:1.72",
                 maven.artifact(
             group = "com.google.android.apps.common.testing.accessibility.framework",
@@ -121,6 +122,7 @@ maven_install(
         "com.googlecode.jarjar:jarjar:1.3",
         "com.linkedin.dexmaker:dexmaker-mockito:jar:2.28.1",
         "com.linkedin.dexmaker:dexmaker:2.28.1",
+        "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0",
         "com.squareup:javapoet:1.9.0",
         "javax.annotation:javax.annotation-api:1.3.1",
         "javax.inject:javax.inject:1",
@@ -157,14 +159,31 @@ load("@robolectric//bazel:robolectric.bzl", "robolectric_repositories")
 robolectric_repositories()
 
 # Kotlin toolchains
+
+rules_kotlin_version = "1.5.0"
+rules_kotlin_sha = "12d22a3d9cbcf00f2e2d8f0683ba87d3823cb8c7f6837568dd7e48846e023307"
 http_archive(
     name = "io_bazel_rules_kotlin",
-    sha256 = "58edd86f0f3c5b959c54e656b8e7eb0b0becabd412465c37a2078693c2571f7f",
-    urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v1.5.0-beta-3/rules_kotlin_release.tgz"],
+    urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v%s/rules_kotlin_release.tgz" % rules_kotlin_version],
+    sha256 = rules_kotlin_sha,
 )
-load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", )
+
+load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", "kotlinc_version")
+
+# This needs to be consistent with the KOTLIN_VERSION specified in //third_party/android/androidx_test/build_extensions/axt_versions.bzl.
+KOTLIN_VERSION = "1.6.21"
+
+# Get from https://github.com/JetBrains/kotlin/releases/
+KOTLINC_RELEASE_SHA = "632166fed89f3f430482f5aa07f2e20b923b72ef688c8f5a7df3aa1502c6d8ba"
+
+kotlin_repositories(
+    compiler_release = kotlinc_version(
+        release = KOTLIN_VERSION,
+        sha256 = KOTLINC_RELEASE_SHA,
+    ),
+)
+
 load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
-kotlin_repositories()
 kt_register_toolchains()
 
 # Android bazel rules
