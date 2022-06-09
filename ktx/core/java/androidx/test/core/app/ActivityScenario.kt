@@ -30,8 +30,11 @@ import androidx.lifecycle.Lifecycle.State
  *
  * @param intent an intent to start activity or null to use the default one
  * @param activityOptions an activity options bundle to be passed along with the intent to start
+ * ```
  *        activity
- * @throws AssertionError if the lifecycle state transition never completes within the timeout
+ * @throws AssertionError
+ * ```
+ * if the lifecycle state transition never completes within the timeout
  * @return ActivityScenario which you can use to make further state transitions
  */
 inline fun <reified A : Activity> launchActivity(
@@ -41,4 +44,27 @@ inline fun <reified A : Activity> launchActivity(
   when (intent) {
     null -> ActivityScenario.launch(A::class.java, activityOptions)
     else -> ActivityScenario.launch(intent, activityOptions)
+  }
+
+/**
+ * Launches an activity of a given class and constructs ActivityScenario with the activity. Waits
+ * for the lifecycle state transitions to be complete. Broadcasts activity result.
+ *
+ * Normally this would be [State.RESUMED], but may be another state.
+ *
+ * This method cannot be called from the main thread except in Robolectric tests.
+ *
+ * @param intent an intent to start activity or null to use the default one
+ * @param activityOptions an activity options bundle to be passed along with the intent to start
+ * activity
+ * @throws AssertionError if the lifecycle state transition never completes within the timeout
+ * @return ActivityScenario which you can use to make further state transitions
+ */
+inline fun <reified A : Activity> launchActivityForResult(
+  intent: Intent? = null,
+  activityOptions: Bundle? = null
+): ActivityScenario<A> =
+  when (intent) {
+    null -> ActivityScenario.launchActivityForResult(A::class.java, activityOptions)
+    else -> ActivityScenario.launchActivityForResult(intent, activityOptions)
   }

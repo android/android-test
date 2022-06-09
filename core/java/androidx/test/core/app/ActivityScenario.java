@@ -187,6 +187,8 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    *
    * <p>If you need to supply parameters to the start activity intent, use {@link #launch(Intent)}.
    *
+   * <p>If you need to get the activity result, use {@link #launchActivityForResult(Class)}.
+   *
    * <p>This method cannot be called from the main thread except in Robolectric tests.
    *
    * @param activityClass an activity class to launch
@@ -195,7 +197,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    */
   public static <A extends Activity> ActivityScenario<A> launch(Class<A> activityClass) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(activityClass));
-    scenario.launchInternal(/*activityOptions=*/ null);
+    scenario.launchInternal(/*activityOptions=*/ null, false);
     return scenario;
   }
 
@@ -207,7 +209,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   public static <A extends Activity> ActivityScenario<A> launch(
       Class<A> activityClass, @Nullable Bundle activityOptions) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(activityClass));
-    scenario.launchInternal(activityOptions);
+    scenario.launchInternal(activityOptions, false);
     return scenario;
   }
 
@@ -218,6 +220,8 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * {@link Activity#finish} from your {@link Activity#onCreate}, the state is {@link
    * State#DESTROYED} when this method returns.
    *
+   * <p>If you need to get the activity result, use {@link #launchActivityForResult(Intent)}.
+   *
    * <p>This method cannot be called from the main thread except in Robolectric tests.
    *
    * @param startActivityIntent an intent to start the activity
@@ -226,19 +230,89 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    */
   public static <A extends Activity> ActivityScenario<A> launch(Intent startActivityIntent) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(startActivityIntent));
-    scenario.launchInternal(/*activityOptions=*/ null);
+    scenario.launchInternal(/*activityOptions=*/ null, false);
     return scenario;
   }
 
   /**
-   * @see #launch(Intent)
+   * Launches an activity by a given intent and activity options and constructs ActivityScenario
+   * with the activity. @see #launch(Intent)
+   *
    * @param activityOptions an activity options bundle to be passed along with the intent to start
    *     activity.
    */
   public static <A extends Activity> ActivityScenario<A> launch(
       Intent startActivityIntent, @Nullable Bundle activityOptions) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(startActivityIntent));
-    scenario.launchInternal(activityOptions);
+    scenario.launchInternal(activityOptions, false);
+    return scenario;
+  }
+
+  /**
+   * Launches an activity of a given class and constructs ActivityScenario with the activity. Waits
+   * for the lifecycle state transitions to be complete. Typically the initial state of the activity
+   * is {@link State#RESUMED} but can be in another state. For instance, if your activity calls
+   * {@link Activity#finish} from your {@link Activity#onCreate}, the state is {@link
+   * State#DESTROYED} when this method returns. Broadcasts activity result.
+   *
+   * <p>If you need to supply parameters to the start activity intent, use {@link #launch(Intent)}.
+   *
+   * <p>This method cannot be called from the main thread except in Robolectric tests.
+   *
+   * @param activityClass an activity class to launch
+   * @throws AssertionError if the lifecycle state transition never completes within the timeout
+   * @return ActivityScenario which you can use to make further state transitions
+   */
+  public static <A extends Activity> ActivityScenario<A> launchActivityForResult(
+      Class<A> activityClass) {
+    ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(activityClass));
+    scenario.launchInternal(/*activityOptions=*/ null, true);
+    return scenario;
+  }
+
+  /**
+   * Launches an activity of a given class and activity options and constructs ActivityScenario with
+   * the activity. @see #launchActivityForResult(Class)
+   *
+   * @param activityOptions an activity options bundle to be passed along with the intent to start
+   *     activity.
+   */
+  public static <A extends Activity> ActivityScenario<A> launchActivityForResult(
+      Class<A> activityClass, @Nullable Bundle activityOptions) {
+    ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(activityClass));
+    scenario.launchInternal(activityOptions, true);
+    return scenario;
+  }
+
+  /**
+   * Launches an activity by a given intent and constructs ActivityScenario with the activity. Waits
+   * for the lifecycle state transitions to be complete. Typically the initial state of the activity
+   * is {@link State#RESUMED} but can be in another state. For instance, if your activity calls
+   * {@link Activity#finish} from your {@link Activity#onCreate}, the state is {@link
+   * State#DESTROYED} when this method returns. Broadcasts activity result.
+   *
+   * <p>This method cannot be called from the main thread except in Robolectric tests.
+   *
+   * @param startActivityIntent an intent to start the activity
+   * @throws AssertionError if the lifecycle state transition never completes within the timeout
+   * @return ActivityScenario which you can use to make further state transitions
+   */
+  public static <A extends Activity> ActivityScenario<A> launchActivityForResult(
+      Intent startActivityIntent) {
+    ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(startActivityIntent));
+    scenario.launchInternal(/*activityOptions=*/ null, true);
+    return scenario;
+  }
+
+  /**
+   * @see #launchActivityForResult(Intent)
+   * @param activityOptions an activity options bundle to be passed along with the intent to start
+   *     activity.
+   */
+  public static <A extends Activity> ActivityScenario<A> launchActivityForResult(
+      Intent startActivityIntent, @Nullable Bundle activityOptions) {
+    ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(startActivityIntent));
+    scenario.launchInternal(activityOptions, true);
     return scenario;
   }
 
@@ -248,7 +322,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    *
    * @param activityOptions activity options bundle to be passed when launching this activity
    */
-  private void launchInternal(@Nullable Bundle activityOptions) {
+  private void launchInternal(@Nullable Bundle activityOptions, boolean launchActivityForResult) {
     checkState(
         Settings.System.getInt(
                 getInstrumentation().getTargetContext().getContentResolver(),
@@ -269,9 +343,17 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
       // prefer the single argument variant for startActivity for backwards compatibility with older
       // Robolectric versions
       if (activityOptions == null) {
-        activityInvoker.startActivity(startActivityIntent);
+        if (launchActivityForResult) {
+          activityInvoker.startActivityForResult(startActivityIntent);
+        } else {
+          activityInvoker.startActivity(startActivityIntent);
+        }
       } else {
-        activityInvoker.startActivity(startActivityIntent, activityOptions);
+        if (launchActivityForResult) {
+          activityInvoker.startActivityForResult(startActivityIntent, activityOptions);
+        } else {
+          activityInvoker.startActivity(startActivityIntent, activityOptions);
+        }
       }
 
       // Accept any steady states. An activity may start another activity in its onCreate method.
