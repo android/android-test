@@ -321,7 +321,7 @@ public final class ActivityScenarioTest {
   @Test
   public void activityResultWithNoResultData() throws Exception {
     try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
+        ActivityScenario.launchActivityForResult(RecreationRecordingActivity.class)) {
       scenario.onActivity(
           activity -> {
             activity.setResult(RESULT_OK);
@@ -335,7 +335,7 @@ public final class ActivityScenarioTest {
   @Test
   public void activityResultWithResultData() throws Exception {
     try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
+        ActivityScenario.launchActivityForResult(RecreationRecordingActivity.class)) {
       scenario.onActivity(
           activity -> {
             activity.setResult(RESULT_OK, new Intent().setAction(Intent.ACTION_SEND));
@@ -349,7 +349,7 @@ public final class ActivityScenarioTest {
   @Test
   public void activityResultWithResultDataAfterRecreate() throws Exception {
     try (ActivityScenario<RecreationRecordingActivity> scenario =
-        ActivityScenario.launch(RecreationRecordingActivity.class)) {
+        ActivityScenario.launchActivityForResult(RecreationRecordingActivity.class)) {
       scenario.recreate();
       scenario.onActivity(
           activity -> {
