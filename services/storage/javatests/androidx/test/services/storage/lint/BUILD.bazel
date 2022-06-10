@@ -1,0 +1,22 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+
+licenses(["notice"])
+
+package(default_testonly = 1)
+
+kt_jvm_library(
+    name = "HardcodeStoragePathCheckTestLib",
+    srcs = ["HardcodeStoragePathCheckTest.kt"],
+    deps = [
+        "//services/storage/java/androidx/test/services/storage/lint/Check:HardcodeStoragePathCheck",
+        "@maven//:com_android_tools_lint_lint_api",
+        "@maven//:com_nhaarman_mockitokotlin2_mockito_kotlin",
+        "@maven//:junit_junit",
+    ],
+)
+
+java_test(
+    name = "HardcodeStoragePathCheckTest",
+    test_class = "androidx.test.services.storage.lint.HardcodeStoragePathCheckTest",
+    runtime_deps = [":HardcodeStoragePathCheckTestLib"],
+)
