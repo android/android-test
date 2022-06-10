@@ -9,6 +9,10 @@ package androidx.test.core.app {
     method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A!>! launch(Class<A!>!, android.os.Bundle?);
     method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A!>! launch(android.content.Intent!);
     method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A!>! launch(android.content.Intent!, android.os.Bundle?);
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A!>! launchActivityForResult(Class<A!>!);
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A!>! launchActivityForResult(Class<A!>!, android.os.Bundle?);
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A!>! launchActivityForResult(android.content.Intent!);
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A!>! launchActivityForResult(android.content.Intent!, android.os.Bundle?);
     method public androidx.test.core.app.ActivityScenario<A!>! moveToState(androidx.lifecycle.Lifecycle.State!);
     method public androidx.test.core.app.ActivityScenario<A!>! onActivity(androidx.test.core.app.ActivityScenario.ActivityAction<A!>!);
     method public androidx.test.core.app.ActivityScenario<A!>! recreate();
