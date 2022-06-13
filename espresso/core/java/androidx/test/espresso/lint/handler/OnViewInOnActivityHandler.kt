@@ -27,7 +27,8 @@ import org.jetbrains.uast.ULambdaExpression
 
 /**
  * A lint handler that reports a warning if it detects the incorrect Java/Kotlin code pattern of
- * calling the [Espresso#onView] method in [ActivityScenario#onActivity] code block.
+ * calling the `androidx.test.espresso.Espresso.onView` method in
+ * `androidx.test.core.app.ActivityScenario.onActivity` code block.
  *
  * For example,
  * ```java
@@ -36,9 +37,9 @@ import org.jetbrains.uast.ULambdaExpression
  *     });
  * ```
  *
- * The code pattern may cause runtime failures since [ActivityScenario#onActivity] will be running
- * on the main thread but `Espresso#onView` must be on the test thread. This handler reports
- * warnings when it detects the code pattern.
+ * The code pattern may cause runtime failures since the `ActivityScenario.onActivity` code block
+ * will be running on the main thread but the `Espresso.onView` must be called on the test thread in
+ * an instrumentation test.
  */
 class OnViewInOnActivityHandler(private val context: JavaContext, private val issue: Issue) :
   UElementHandler() {
@@ -46,15 +47,15 @@ class OnViewInOnActivityHandler(private val context: JavaContext, private val is
   companion object {
     private const val SEARCH_CALLS_MAX_DEPTH = 10
 
-    // TODO(b/234640851): make warning messages of Lint checks comprehensive and actionable.
     private val REPORT_MESSAGE =
       """
-        The code block passed into the `ActivityScenario#onActivity` method will be running on the
-        main thread, while you are only supposed to call the `onView` method on the test thread in
+        The code block passed into the `ActivityScenario.onActivity` method will be running on the \
+        main thread, while you are only supposed to call the `onView` method on the test thread in \
         an instrumentation test.
-        Please move the `onView` call out of `ActivityScenario#onActivity` to avoid failures and
+        
+        Please move the `onView` call out of `ActivityScenario.onActivity` to avoid failures and \
         make your tests compatible with the instrumentation test environment.
-    """.trimIndent()
+    """.trimIndent().replace("\\\n", "")
   }
 
   override fun visitCallExpression(node: UCallExpression) {
