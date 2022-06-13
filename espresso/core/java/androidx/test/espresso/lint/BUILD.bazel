@@ -1,0 +1,9 @@
+licenses(["notice"])
+
+package_group(
+    name = "espresso_lint_pkg",
+    packages = [
+        "//espresso/core/java/androidx/test/espresso/lint/...",
+        "//espresso/core/javatests/androidx/test/espresso/lint/...",
+    ],
+)
