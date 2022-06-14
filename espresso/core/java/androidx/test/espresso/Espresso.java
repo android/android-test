@@ -41,12 +41,16 @@ import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.base.IdlingResourceRegistry;
 import androidx.test.espresso.util.TracingUtil;
 import androidx.test.espresso.util.TreeIterables;
+import androidx.test.internal.platform.util.TestOutputEmitter;
 import androidx.test.internal.util.Checks;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.platform.tracing.Tracer.Span;
 import androidx.test.platform.tracing.Tracing;
 import com.google.common.util.concurrent.ListenableFutureTask;
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -68,7 +72,12 @@ public final class Espresso {
   private static final Tracing tracer = BASE.tracer();
   private static final int TIMEOUT_SECONDS = 5;
 
-  private Espresso() {}
+  private Espresso() {
+    // Add usage data for Espresso as test output properties. By default it's no-op.
+    Map<String, Serializable> usageProperties = new HashMap<>();
+    usageProperties.put("Espresso", "1");
+    TestOutputEmitter.addOutputProperties(usageProperties);
+  }
 
   /**
    * Creates a {@link ViewInteraction} for a given view. Note: the view has to be part of the view

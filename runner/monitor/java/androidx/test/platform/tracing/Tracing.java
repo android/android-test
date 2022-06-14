@@ -22,8 +22,10 @@ import android.os.Build;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.test.annotation.ExperimentalTestApi;
+import androidx.test.internal.platform.util.TestOutputEmitter;
 import androidx.test.platform.tracing.Tracer.Span;
 import com.google.errorprone.annotations.MustBeClosed;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -52,6 +54,11 @@ public final class Tracing {
     // The Android Tracing API only exists starting with JB MR2 (API 18).
     if (Build.VERSION.SDK_INT >= 18) {
       registerTracer(new AndroidXTracer());
+
+      // Add usage data for AndroidX Tracer as test output properties. By default it's no-op.
+      Map<String, Serializable> usageProperties = new HashMap<>();
+      usageProperties.put("AndroidX-Tracer", "1");
+      TestOutputEmitter.addOutputProperties(usageProperties);
     }
   }
 
