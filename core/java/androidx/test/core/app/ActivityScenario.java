@@ -167,6 +167,8 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   @Nullable
   private A currentActivity;
 
+  private boolean isActivityLaunchedForResult = false;
+
   /** Private constructor. Use {@link #launch} to instantiate this class. */
   private ActivityScenario(Intent startActivityIntent) {
     this.startActivityIntent = checkNotNull(startActivityIntent);
@@ -265,6 +267,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   public static <A extends Activity> ActivityScenario<A> launchActivityForResult(
       Class<A> activityClass) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(activityClass));
+    scenario.isActivityLaunchedForResult = true;
     scenario.launchInternal(/*activityOptions=*/ null);
     return scenario;
   }
@@ -279,6 +282,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   public static <A extends Activity> ActivityScenario<A> launchActivityForResult(
       Class<A> activityClass, @Nullable Bundle activityOptions) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(activityClass));
+    scenario.isActivityLaunchedForResult = true;
     scenario.launchInternal(activityOptions);
     return scenario;
   }
@@ -299,6 +303,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   public static <A extends Activity> ActivityScenario<A> launchActivityForResult(
       Intent startActivityIntent) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(startActivityIntent));
+    scenario.isActivityLaunchedForResult = true;
     scenario.launchInternal(/*activityOptions=*/ null);
     return scenario;
   }
@@ -313,6 +318,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   public static <A extends Activity> ActivityScenario<A> launchActivityForResult(
       Intent startActivityIntent, @Nullable Bundle activityOptions) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(startActivityIntent));
+    scenario.isActivityLaunchedForResult = true;
     scenario.launchInternal(activityOptions);
     return scenario;
   }
@@ -802,6 +808,12 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * @return activity result of the activity that managed by this scenario class.
    */
   public ActivityResult getResult() {
+    if (!isActivityLaunchedForResult) {
+      Log.w(
+          TAG,
+          "Make sure you are using launchActivityForResult() to launch an Activity before calling"
+              + " getResult().");
+    }
     return activityInvoker.getActivityResult();
   }
 
