@@ -588,19 +588,23 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
 
     // Report better error message back to Instrumentation results.
     InstrumentationResultPrinter instResultPrinter = getInstrumentationResultPrinter();
-    if (instResultPrinter.getInstrumentation() == null) {
-      // App could crash before #onCreate(Bundle) is called, where the instrumentation instance is
-      // not properly set yet. Setting the Instrumentation here rather than in the constructor to
-      // minimize the dependencies during initialization.
-      instResultPrinter.setInstrumentation(this);
-    }
+    // If the app crashes before instrumentation has started, instrumentationResultPrinter could
+    // be null
+    if (instResultPrinter != null) {
+      if (instResultPrinter.getInstrumentation() == null) {
+        // App could crash before #onCreate(Bundle) is called, where the instrumentation instance is
+        // not properly set yet. Setting the Instrumentation here rather than in the constructor to
+        // minimize the dependencies during initialization.
+        instResultPrinter.setInstrumentation(this);
+      }
 
-    // Allows DISK_WRITE as `sendStatus` writes to standard output.
-    final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-    try {
-      instResultPrinter.reportProcessCrash(e);
-    } finally {
-      StrictMode.setThreadPolicy(oldPolicy);
+      // Allows DISK_WRITE as `sendStatus` writes to standard output.
+      final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+      try {
+        instResultPrinter.reportProcessCrash(e);
+      } finally {
+        StrictMode.setThreadPolicy(oldPolicy);
+      }
     }
 
     // If the app crashes before instrumentation has started, `testEventClient` could possibly be
