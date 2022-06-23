@@ -18,6 +18,7 @@ package_group(
 
 kt_android_library(
     name = "device",
+    testonly = 1,
     exports = [
         ":device_api",
         "//espresso/device/java/androidx/test/espresso/device/action",
@@ -27,6 +28,7 @@ kt_android_library(
 
 kt_android_library(
     name = "device_api",
+    testonly = 1,
     srcs = glob(["*.kt"]),
     plugins = ["//opensource/dagger:dagger_plugin"],  # Add programmatically
     exports = [
@@ -37,6 +39,7 @@ kt_android_library(
         "//espresso/device/java/androidx/test/espresso/device/action",
         "//espresso/device/java/androidx/test/espresso/device/context",
         "//espresso/device/java/androidx/test/espresso/device/dagger",
+        "//espresso/device/java/androidx/test/espresso/device/sizeclass",
         "//opensource/dagger",
         "//runner/monitor/java/androidx/test:monitor",
     ],

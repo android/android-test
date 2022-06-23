@@ -22,6 +22,7 @@ kt_android_library(
 
 kt_android_library(
     name = "controller_impl",
+    testonly = 1,
     srcs = [
         "EmulatorController.kt",
         "PhysicalDeviceController.kt",

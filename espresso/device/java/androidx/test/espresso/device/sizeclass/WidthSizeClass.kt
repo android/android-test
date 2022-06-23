@@ -68,5 +68,18 @@ private constructor(
         else -> EXPANDED
       }
     }
+    /**
+     * Returns a recommended width of a window in DP given the [WidthSizeClass].
+     * @param sizeClass the size class
+     * @return A recommended width in DP in this size class
+     */
+    @JvmStatic
+    public fun getWidthDpInSizeClass(sizeClass: WidthSizeClass): Int {
+      return when (sizeClass) {
+        WidthSizeClass.COMPACT -> 400
+        WidthSizeClass.MEDIUM -> 700
+        else -> 1000 // WidthSizeClass.EXPANDED
+      }
+    }
   }
 }

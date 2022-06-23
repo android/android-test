@@ -17,8 +17,11 @@
 package androidx.test.multiwindow.app;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 /** Activity that updates a TextView when entering or exiting multi-window mode. */
@@ -36,8 +39,49 @@ public class MultiWindowActivity extends Activity {
     } else {
       multiWindowModeText = "Device is not in multi-window mode.";
     }
-    Log.d(TAG, "onCreate. " + multiWindowModeText);
+    Log.d(TAG, "onCreate." + multiWindowModeText);
     TextView textView = (TextView) findViewById(R.id.multi_window_mode);
     textView.setText(multiWindowModeText);
+
+    ViewGroup container = (ViewGroup) getWindow().findViewById(android.R.id.content);
+    container.addView(
+        new View(this) {
+          @Override
+          protected void onConfigurationChanged(Configuration newConfig) {
+            super.onConfigurationChanged(newConfig);
+            computeWindowSizeClasses();
+          }
+        });
+    computeWindowSizeClasses();
+  }
+
+  private void computeWindowSizeClasses() {
+    TextView screenWidthTextView = (TextView) findViewById(R.id.screen_width_display_size);
+    float width =
+        this.getResources().getDisplayMetrics().widthPixels
+            / this.getResources().getDisplayMetrics().density;
+    String screenWidthText;
+    if (width < 600f) {
+      screenWidthText = "Compact width";
+    } else if (width < 840f) {
+      screenWidthText = "Medium width";
+    } else {
+      screenWidthText = "Expanded width";
+    }
+    screenWidthTextView.setText(screenWidthText);
+
+    TextView screenHeightTextView = (TextView) findViewById(R.id.screen_height_display_size);
+    float height =
+        this.getResources().getDisplayMetrics().heightPixels
+            / this.getResources().getDisplayMetrics().density;
+    String screenHeightText;
+    if (height < 480f) {
+      screenHeightText = "Compact height";
+    } else if (height < 900f) {
+      screenHeightText = "Medium height";
+    } else {
+      screenHeightText = "Expanded height";
+    }
+    screenHeightTextView.setText(screenHeightText);
   }
 }

@@ -18,9 +18,12 @@ package androidx.test.espresso.device
 
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.action.setBookMode as getSetBookModeDeviceAction
+import androidx.test.espresso.device.action.setDisplaySize as getSetDisplaySizeDeviceAction
 import androidx.test.espresso.device.action.setFlatMode as getSetFlatModeDeviceAction
 import androidx.test.espresso.device.action.setScreenOrientation as getSetScreenOrientationDeviceAction
 import androidx.test.espresso.device.action.setTabletopMode as getSetTabletopModeDeviceAction
+import androidx.test.espresso.device.sizeclass.HeightSizeClass
+import androidx.test.espresso.device.sizeclass.WidthSizeClass
 
 /**
  * Set device screen to be folded with the hinge in the horizontal position. For details on foldable
@@ -72,5 +75,18 @@ fun DeviceInteraction.setFlatMode(): DeviceInteraction {
  */
 fun DeviceInteraction.setScreenOrientation(orientation: ScreenOrientation): DeviceInteraction {
   perform(getSetScreenOrientationDeviceAction(orientation))
+  return this
+}
+
+/**
+ * Set device's display size.
+ * @param widthSizeClass the width to set the device display to
+ * @param heightSizeClass the height to set the device display to
+ */
+fun DeviceInteraction.setDisplaySize(
+  widthSizeClass: WidthSizeClass,
+  heightSizeClass: HeightSizeClass
+): DeviceInteraction {
+  perform(getSetDisplaySizeDeviceAction(widthSizeClass, heightSizeClass))
   return this
 }

@@ -25,5 +25,15 @@
         android:layout_width="fill_parent"
         android:layout_height="94105dp"
         android:text="@string/multi_window_mode_text" />
+    <TextView
+        android:id="@+id/screen_width_display_size"
+        android:layout_width="fill_parent"
+        android:layout_height="94105dp"
+        android:text="@string/screen_width_text" />
+    <TextView
+        android:id="@+id/screen_height_display_size"
+        android:layout_width="fill_parent"
+        android:layout_height="94105dp"
+        android:text="@string/screen_height_text" />
 
 </LinearLayout>

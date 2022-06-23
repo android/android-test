@@ -20,6 +20,8 @@ package androidx.test.espresso.device.action
 
 import android.os.Handler
 import android.os.Looper
+import androidx.test.espresso.device.sizeclass.HeightSizeClass
+import androidx.test.espresso.device.sizeclass.WidthSizeClass
 import java.util.concurrent.Executor
 
 /** Entry point for device action operations. */
@@ -72,6 +74,15 @@ fun setFlatMode(): DeviceAction {
  */
 fun setScreenOrientation(orientation: ScreenOrientation): DeviceAction {
   return ScreenOrientationAction(orientation)
+}
+
+/**
+ * Set device's window size.
+ * @param widthSizeClass the window width to set the device to
+ * @param heightSizeClass the window height to set the device to
+ */
+fun setDisplaySize(widthSizeClass: WidthSizeClass, heightSizeClass: HeightSizeClass): DeviceAction {
+  return DisplaySizeAction(widthDisplaySize = widthSizeClass, heightDisplaySize = heightSizeClass)
 }
 
 /** Enum for screen orientations a device can be set to. */

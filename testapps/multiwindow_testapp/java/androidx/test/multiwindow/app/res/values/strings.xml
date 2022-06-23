@@ -17,5 +17,16 @@
 
 <resources>
     <string name="app_name">MultiWindow Test App</string>
-    <string name="multi_window_mode_text">Multi-window mode text has not been set.</string>
+    <string name="multi_window_mode_text"
+      description="Displayed when the test device is in multiwindow mode [CHAR_LIMIT=NONE]">
+      Multi-window mode text has not been set.
+    </string>
+    <string name="screen_height_text"
+            description="Displays the current display size class width [CHAR_LIMIT=NONE]">
+      Screen height text has not been set.
+    </string>
+    <string name="screen_width_text"
+            description="Displays the current display size class height [CHAR_LIMIT=NONE]">
+      Screen width text has not been set.
+    </string>
  </resources>

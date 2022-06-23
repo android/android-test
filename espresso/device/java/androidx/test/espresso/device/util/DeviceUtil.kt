@@ -40,3 +40,8 @@ fun isTestDeviceAnEmulator(): Boolean {
 fun isRobolectricTest(): Boolean {
   return Build.FINGERPRINT.equals("robolectric")
 }
+
+/** Returns the API level of the current test device. */
+fun getDeviceApiLevel(): Int {
+  return Build.VERSION.SDK_INT
+}

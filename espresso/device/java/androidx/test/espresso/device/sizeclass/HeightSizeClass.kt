@@ -67,5 +67,18 @@ private constructor(
         else -> EXPANDED
       }
     }
+    /**
+     * Returns a recommended height of a window in DP given the [HeightSizeClass].
+     * @param sizeClass the size class
+     * @return A recommended height in DP in this size class
+     */
+    @JvmStatic
+    public fun getHeightDpInSizeClass(sizeClass: HeightSizeClass): Int {
+      return when (sizeClass) {
+        HeightSizeClass.COMPACT -> 400
+        HeightSizeClass.MEDIUM -> 700
+        else -> 1000 // WidthSizeClass.EXPANDED
+      }
+    }
   }
 }
