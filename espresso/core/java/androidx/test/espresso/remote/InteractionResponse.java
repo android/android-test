@@ -29,6 +29,7 @@ import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.proto.UiInteraction.Error;
 import androidx.test.espresso.proto.UiInteraction.InteractionResultProto;
 import androidx.test.espresso.remote.EspressoRemoteMessage.To;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageLite;
 import java.util.Arrays;
@@ -231,6 +232,7 @@ public final class InteractionResponse implements To<MessageLite> {
     @Nullable private RemoteError remoteError;
     private byte[] interactionResultProtoByteArray;
 
+    @CanIgnoreReturnValue
     public Builder setStatus(@NonNull Status status) {
       this.status = checkNotNull(status);
       return this;
@@ -242,6 +244,7 @@ public final class InteractionResponse implements To<MessageLite> {
      * @param remoteError the remote error to set
      * @return fluent interface {@link Builder}
      */
+    @CanIgnoreReturnValue
     public Builder setRemoteError(@Nullable RemoteError remoteError) {
       this.remoteError = remoteError;
       return this;
@@ -255,6 +258,7 @@ public final class InteractionResponse implements To<MessageLite> {
      * @param protoByteArray the proto byte array to set
      * @return fluent interface {@link Builder}
      */
+    @CanIgnoreReturnValue
     public Builder setResultProto(@NonNull byte[] protoByteArray) {
       this.interactionResultProtoByteArray =
           checkNotNull(protoByteArray, "protoByteArray cannot be" + "null!");

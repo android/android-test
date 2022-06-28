@@ -33,6 +33,7 @@ import androidx.test.internal.runner.filters.TestsRegExFilter;
 import androidx.test.internal.util.AndroidRunnerParams;
 import androidx.test.internal.util.Checks;
 import androidx.tracing.Trace;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -561,6 +562,7 @@ public class TestRequestBuilder {
    *
    * @param paths the list of paths (.dex and .apk files) to scan
    */
+  @CanIgnoreReturnValue
   public TestRequestBuilder addPathsToScan(Iterable<String> paths) {
     for (String path : paths) {
       addPathToScan(path);
@@ -574,6 +576,7 @@ public class TestRequestBuilder {
    *
    * @param path a filepath to scan for test methods (.dex and .apk files)
    */
+  @CanIgnoreReturnValue
   public TestRequestBuilder addPathToScan(String path) {
     pathsToScan.add(path);
     return this;
@@ -584,6 +587,7 @@ public class TestRequestBuilder {
    *
    * @param loader {@link ClassLoader} to load test cases with.
    */
+  @CanIgnoreReturnValue
   public TestRequestBuilder setClassLoader(ClassLoader loader) {
     classLoader = loader;
     return this;
@@ -594,6 +598,7 @@ public class TestRequestBuilder {
    *
    * @param ignoreSuiteMethods true to ignore all suite methods.
    */
+  @CanIgnoreReturnValue
   public TestRequestBuilder ignoreSuiteMethods(boolean ignoreSuiteMethods) {
     this.ignoreSuiteMethods = ignoreSuiteMethods;
     return this;
@@ -605,6 +610,7 @@ public class TestRequestBuilder {
    *
    * @param className
    */
+  @CanIgnoreReturnValue
   public TestRequestBuilder addTestClass(String className) {
     includedClasses.add(className);
     return this;
@@ -615,12 +621,14 @@ public class TestRequestBuilder {
    *
    * @param className
    */
+  @CanIgnoreReturnValue
   public TestRequestBuilder removeTestClass(String className) {
     excludedClasses.add(className);
     return this;
   }
 
   /** Adds a test method to run. */
+  @CanIgnoreReturnValue
   public TestRequestBuilder addTestMethod(String testClassName, String testMethodName) {
     includedClasses.add(testClassName);
     classMethodFilter.addMethod(testClassName, testMethodName);
@@ -628,6 +636,7 @@ public class TestRequestBuilder {
   }
 
   /** Excludes a test method from being run. */
+  @CanIgnoreReturnValue
   public TestRequestBuilder removeTestMethod(String testClassName, String testMethodName) {
     classMethodFilter.removeMethod(testClassName, testMethodName);
     return this;
@@ -641,6 +650,7 @@ public class TestRequestBuilder {
    *
    * @param testPackage the fully qualified java package name
    */
+  @CanIgnoreReturnValue
   public TestRequestBuilder addTestPackage(String testPackage) {
     includedPackages.add(testPackage);
     return this;
@@ -654,6 +664,7 @@ public class TestRequestBuilder {
    *
    * @param testPackage the fully qualified java package name
    */
+  @CanIgnoreReturnValue
   public TestRequestBuilder removeTestPackage(String testPackage) {
     excludedPackages.add(testPackage);
     return this;
@@ -666,6 +677,7 @@ public class TestRequestBuilder {
    *
    * @param testsRegex a regex for matching against <code>java_package.class#method</code>
    */
+  @CanIgnoreReturnValue
   public TestRequestBuilder setTestsRegExFilter(String testsRegex) {
     this.testsRegExFilter.setPattern(testsRegex);
     return this;
@@ -676,6 +688,7 @@ public class TestRequestBuilder {
    *
    * @param forTestSize
    */
+  @CanIgnoreReturnValue
   public TestRequestBuilder addTestSizeFilter(TestSize forTestSize) {
     if (!TestSize.NONE.equals(forTestSize)) {
       addFilter(new SizeFilter(forTestSize));
@@ -690,6 +703,7 @@ public class TestRequestBuilder {
    *
    * @param annotation the full class name of annotation
    */
+  @CanIgnoreReturnValue
   public TestRequestBuilder addAnnotationInclusionFilter(String annotation) {
     Class<? extends Annotation> annotationClass = loadAnnotationClass(annotation);
     if (annotationClass != null) {
@@ -703,6 +717,7 @@ public class TestRequestBuilder {
    *
    * @param notAnnotation the full class name of annotation
    */
+  @CanIgnoreReturnValue
   public TestRequestBuilder addAnnotationExclusionFilter(String notAnnotation) {
     Class<? extends Annotation> annotationClass = loadAnnotationClass(notAnnotation);
     if (annotationClass != null) {
@@ -715,11 +730,13 @@ public class TestRequestBuilder {
     return addFilter(new ShardingFilter(numShards, shardIndex));
   }
 
+  @CanIgnoreReturnValue
   public TestRequestBuilder addFilter(Filter filter) {
     this.filter = this.filter.intersect(filter);
     return this;
   }
 
+  @CanIgnoreReturnValue
   public TestRequestBuilder addCustomRunnerBuilderClass(
       Class<? extends RunnerBuilder> runnerBuilderClass) {
     customRunnerBuilderClasses.add(runnerBuilderClass);
@@ -730,18 +747,21 @@ public class TestRequestBuilder {
    * Build a request that will generate test started and test ended events, but will skip actual
    * test execution.
    */
+  @CanIgnoreReturnValue
   public TestRequestBuilder setSkipExecution(boolean b) {
     skipExecution = b;
     return this;
   }
 
   /** Sets milliseconds timeout value applied to each test where 0 means no timeout */
+  @CanIgnoreReturnValue
   public TestRequestBuilder setPerTestTimeout(long millis) {
     perTestTimeout = millis;
     return this;
   }
 
   /** Convenience method to set builder attributes from {@link RunnerArgs} */
+  @CanIgnoreReturnValue
   public TestRequestBuilder addFromRunnerArgs(RunnerArgs runnerArgs) {
     for (RunnerArgs.TestArg test : runnerArgs.tests) {
       if (test.methodName == null) {

@@ -19,6 +19,7 @@ import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.MotionEvent.PointerCoords;
 import android.view.MotionEvent.PointerProperties;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +61,7 @@ public class MotionEventBuilder {
    *
    * @see MotionEvent#getDownTime()
    */
+  @CanIgnoreReturnValue
   public MotionEventBuilder setDownTime(long downTime) {
     this.downTime = downTime;
     return this;
@@ -70,6 +72,7 @@ public class MotionEventBuilder {
    *
    * @see MotionEvent#getEventTime()
    */
+  @CanIgnoreReturnValue
   public MotionEventBuilder setEventTime(long eventTime) {
     this.eventTime = eventTime;
     return this;
@@ -80,6 +83,7 @@ public class MotionEventBuilder {
    *
    * @see MotionEvent#getAction()
    */
+  @CanIgnoreReturnValue
   public MotionEventBuilder setAction(int action) {
     this.action = action;
     return this;
@@ -90,6 +94,7 @@ public class MotionEventBuilder {
    *
    * @see MotionEvent#getActionIndex()
    */
+  @CanIgnoreReturnValue
   public MotionEventBuilder setActionIndex(int pointerIndex) {
     checkState(pointerIndex <= 0xFF, "pointerIndex must be less than 0xff");
     this.actionIndex = pointerIndex;
@@ -101,6 +106,7 @@ public class MotionEventBuilder {
    *
    * @see MotionEvent#getMetaState()
    */
+  @CanIgnoreReturnValue
   public MotionEventBuilder setMetaState(int metastate) {
     this.metaState = metastate;
     return this;
@@ -111,6 +117,7 @@ public class MotionEventBuilder {
    *
    * @see MotionEvent#getButtonState()
    */
+  @CanIgnoreReturnValue
   public MotionEventBuilder setButtonState(int buttonState) {
     this.buttonState = buttonState;
     return this;
@@ -121,6 +128,7 @@ public class MotionEventBuilder {
    *
    * @see MotionEvent#getXPrecision()
    */
+  @CanIgnoreReturnValue
   public MotionEventBuilder setXPrecision(float xPrecision) {
     this.xPrecision = xPrecision;
     return this;
@@ -131,6 +139,7 @@ public class MotionEventBuilder {
    *
    * @see MotionEvent#getYPrecision()
    */
+  @CanIgnoreReturnValue
   public MotionEventBuilder setYPrecision(float yPrecision) {
     this.yPrecision = yPrecision;
     return this;
@@ -141,6 +150,7 @@ public class MotionEventBuilder {
    *
    * @see MotionEvent#getDeviceId()
    */
+  @CanIgnoreReturnValue
   public MotionEventBuilder setDeviceId(int deviceId) {
     this.deviceId = deviceId;
     return this;
@@ -151,6 +161,7 @@ public class MotionEventBuilder {
    *
    * @see MotionEvent#getEdgeFlags()
    */
+  @CanIgnoreReturnValue
   public MotionEventBuilder setEdgeFlags(int edgeFlags) {
     this.edgeFlags = edgeFlags;
     return this;
@@ -161,6 +172,7 @@ public class MotionEventBuilder {
    *
    * @see MotionEvent#getSource()
    */
+  @CanIgnoreReturnValue
   public MotionEventBuilder setSource(int source) {
     this.source = source;
     return this;
@@ -171,6 +183,7 @@ public class MotionEventBuilder {
    *
    * @see MotionEvent#getFlags()
    */
+  @CanIgnoreReturnValue
   public MotionEventBuilder setFlags(int flags) {
     this.flags = flags;
     return this;
@@ -194,6 +207,7 @@ public class MotionEventBuilder {
    * An expanded variant of {@link #setPointer(float, float)} that supports specifying all pointer
    * properties and coords data.
    */
+  @CanIgnoreReturnValue
   public MotionEventBuilder setPointer(
       PointerProperties pointerProperties, PointerCoords pointerCoords) {
     pointerPropertiesList.add(pointerProperties);

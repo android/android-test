@@ -46,6 +46,7 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -128,6 +129,7 @@ public final class ViewInteraction {
    * @return this interaction for further perform/verification calls.
    * @throws RuntimeException when being invoked on the main thread.
    */
+  @CanIgnoreReturnValue
   public ViewInteraction perform(final ViewAction... viewActions) {
     checkNotNull(viewActions);
     for (ViewAction va : viewActions) {
@@ -220,12 +222,14 @@ public final class ViewInteraction {
    * @param failureHandler a non-null FailureHandler to use to report failures.
    * @return this interaction for further perform/verification calls.
    */
+  @CanIgnoreReturnValue
   public ViewInteraction withFailureHandler(FailureHandler failureHandler) {
     this.failureHandler = checkNotNull(failureHandler);
     return this;
   }
 
   /** Makes this ViewInteraction scoped to the root selected by the given root matcher. */
+  @CanIgnoreReturnValue
   public ViewInteraction inRoot(Matcher<Root> rootMatcher) {
     hasRootMatcher = true;
     this.rootMatcherRef.set(checkNotNull(rootMatcher));
@@ -233,6 +237,7 @@ public final class ViewInteraction {
   }
 
   /** Removes the need of waiting for an Activity before performing a ViewAction/ViewAssertion */
+  @CanIgnoreReturnValue
   public ViewInteraction noActivity() {
     if (!hasRootMatcher) {
       this.rootMatcherRef.set(
@@ -306,6 +311,7 @@ public final class ViewInteraction {
    * @return this interaction for further perform/verification calls.
    * @throws RuntimeException when being invoked on the main thread.
    */
+  @CanIgnoreReturnValue
   public ViewInteraction check(final ViewAssertion viewAssert) {
     checkNotNull(viewAssert);
 

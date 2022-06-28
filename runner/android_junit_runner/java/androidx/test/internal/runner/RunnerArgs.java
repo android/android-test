@@ -28,6 +28,7 @@ import android.util.Log;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.runner.lifecycle.ApplicationLifecycleCallback;
 import androidx.test.runner.screenshot.ScreenCaptureProcessor;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -246,6 +247,7 @@ public class RunnerArgs {
      *
      * <p>Note: This will override any manifest-provided args
      */
+    @CanIgnoreReturnValue
     public Builder fromBundle(Instrumentation instr, Bundle bundle) {
       this.debug = parseBoolean(bundle.getString(ARGUMENT_DEBUG));
       this.delayInMillis =

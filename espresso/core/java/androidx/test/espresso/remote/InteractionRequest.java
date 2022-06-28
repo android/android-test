@@ -29,6 +29,7 @@ import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.proto.UiInteraction.InteractionRequestProto;
 import androidx.test.espresso.proto.UiInteraction.InteractionRequestProto.ActionOrAssertionCase;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageLite;
 import org.hamcrest.Matcher;
@@ -177,6 +178,7 @@ public final class InteractionRequest implements EspressoRemoteMessage.To<Messag
      * @param rootMatcher the root matcher to set
      * @return fluent interface
      */
+    @CanIgnoreReturnValue
     public Builder setRootMatcher(@NonNull Matcher<Root> rootMatcher) {
       this.rootMatcher = checkNotNull(rootMatcher);
       checkArgument(
@@ -192,6 +194,7 @@ public final class InteractionRequest implements EspressoRemoteMessage.To<Messag
      * @param viewMatcher the view matcher to set
      * @return fluent interface
      */
+    @CanIgnoreReturnValue
     public Builder setViewMatcher(@NonNull Matcher<View> viewMatcher) {
       this.viewMatcher = checkNotNull(viewMatcher);
       checkArgument(
@@ -211,6 +214,7 @@ public final class InteractionRequest implements EspressoRemoteMessage.To<Messag
      *     InteractionRequest} supports only one of {@link ViewAction} or {@link ViewAssertion}, but
      *     not both.
      */
+    @CanIgnoreReturnValue
     public Builder setViewAction(@NonNull ViewAction viewAction) {
       this.viewAction = checkNotNull(viewAction);
       checkArgument(
@@ -229,6 +233,7 @@ public final class InteractionRequest implements EspressoRemoteMessage.To<Messag
      *     InteractionRequest.Builder#setViewAction(ViewAction)} before. {@link InteractionRequest}
      *     supports only one of {@link ViewAction} or {@link ViewAssertion}, but not both.
      */
+    @CanIgnoreReturnValue
     public Builder setViewAssertion(@NonNull ViewAssertion viewAssertion) {
       this.viewAssertion = checkNotNull(viewAssertion);
       checkArgument(
@@ -246,6 +251,7 @@ public final class InteractionRequest implements EspressoRemoteMessage.To<Messag
      * @param protoByteArray the proto byte array to set
      * @return fluent interface {@link Builder}
      */
+    @CanIgnoreReturnValue
     public Builder setRequestProto(@NonNull byte[] protoByteArray) {
       this.interactionRequestProtoByteArray =
           checkNotNull(protoByteArray, "protoByteArray cannot be null!");

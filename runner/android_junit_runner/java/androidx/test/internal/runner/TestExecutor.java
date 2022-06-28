@@ -21,6 +21,7 @@ import android.util.Log;
 import androidx.test.internal.runner.listener.InstrumentationRunListener;
 import androidx.test.internal.util.Checks;
 import androidx.tracing.Trace;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -115,6 +116,7 @@ public final class TestExecutor {
      * @param listener the listener to add
      * @return the {@link androidx.test.internal.runner.TestExecutor.Builder}
      */
+    @CanIgnoreReturnValue
     public Builder addRunListener(RunListener listener) {
       listeners.add(listener);
       return this;

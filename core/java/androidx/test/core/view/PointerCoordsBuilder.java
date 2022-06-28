@@ -1,6 +1,7 @@
 package androidx.test.core.view;
 
 import android.view.MotionEvent.PointerCoords;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 /** Builder for {@link PointerCoords}. */
 public class PointerCoordsBuilder {
@@ -21,34 +22,40 @@ public class PointerCoordsBuilder {
     return new PointerCoordsBuilder();
   }
 
+  @CanIgnoreReturnValue
   public PointerCoordsBuilder setCoords(float x, float y) {
     this.x = x;
     this.y = y;
     return this;
   }
 
+  @CanIgnoreReturnValue
   public PointerCoordsBuilder setPressure(float pressure) {
     this.pressure = pressure;
     return this;
   }
 
+  @CanIgnoreReturnValue
   public PointerCoordsBuilder setSize(float size) {
     this.size = size;
     return this;
   }
 
+  @CanIgnoreReturnValue
   public PointerCoordsBuilder setTouch(float touchMajor, float touchMinor) {
     this.touchMajor = touchMajor;
     this.touchMinor = touchMinor;
     return this;
   }
 
+  @CanIgnoreReturnValue
   public PointerCoordsBuilder setTool(float toolMajor, float toolMinor) {
     this.toolMajor = toolMajor;
     this.toolMinor = toolMinor;
     return this;
   }
 
+  @CanIgnoreReturnValue
   public PointerCoordsBuilder setOrientation(float orientation) {
     this.orientation = orientation;
     return this;

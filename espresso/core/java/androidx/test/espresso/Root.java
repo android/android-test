@@ -25,6 +25,7 @@ import android.view.WindowManager.LayoutParams;
 import androidx.test.espresso.util.EspressoOptional;
 import androidx.test.espresso.util.HumanReadables;
 import com.google.common.base.MoreObjects.ToStringHelper;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 /**
  * Represents a root view in the application and optionally the layout params of the window holding
@@ -90,11 +91,13 @@ public final class Root {
       return new Root(this);
     }
 
+    @CanIgnoreReturnValue
     public Builder withDecorView(View view) {
       this.decorView = view;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withWindowLayoutParams(WindowManager.LayoutParams windowLayoutParams) {
       this.windowLayoutParams = windowLayoutParams;
       return this;

@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.util.Log;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -113,36 +114,43 @@ public final class IdlingPolicy {
       return new IdlingPolicy(this);
     }
 
+    @CanIgnoreReturnValue
     public Builder withTimeoutIfDebuggerAttached(boolean timeoutIfDebuggerAttached) {
       this.timeoutIfDebuggerAttached = timeoutIfDebuggerAttached;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withDisableOnTimeout(boolean disableOnTimeout) {
       this.disableOnTimeout = disableOnTimeout;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withIdlingTimeout(long idleTimeout) {
       this.idleTimeout = idleTimeout;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withIdlingTimeoutUnit(TimeUnit unit) {
       this.unit = unit;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder throwAppNotIdleException() {
       this.errorHandler = ResponseAction.THROW_APP_NOT_IDLE;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder throwIdlingResourceTimeoutException() {
       this.errorHandler = ResponseAction.THROW_IDLE_TIMEOUT;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder logWarning() {
       this.errorHandler = ResponseAction.LOG_ERROR;
       return this;

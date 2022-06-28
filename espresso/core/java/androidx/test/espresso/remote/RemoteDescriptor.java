@@ -27,6 +27,7 @@ import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.protobuf.Parser;
 import java.util.List;
 import java.util.Locale;
@@ -210,6 +211,7 @@ public final class RemoteDescriptor {
      * @param instanceType
      * @return fluent builder interface
      */
+    @CanIgnoreReturnValue
     public Builder setInstanceType(@NonNull Class<?> instanceType) {
       this.instanceType = instanceType;
       return this;
@@ -227,6 +229,7 @@ public final class RemoteDescriptor {
      * @param fieldDescriptors
      * @return fluent builder interface
      */
+    @CanIgnoreReturnValue
     public Builder setInstanceFieldDescriptors(@Nullable FieldDescriptor... fieldDescriptors) {
       this.instanceFieldDescriptorList = ImmutableList.copyOf(fieldDescriptors);
       return this;
@@ -239,6 +242,7 @@ public final class RemoteDescriptor {
      * @param remoteType the remote message class
      * @return fluent builder interface
      */
+    @CanIgnoreReturnValue
     public Builder setRemoteType(@NonNull Class<?> remoteType) {
       this.remoteType = remoteType;
       return this;
@@ -259,6 +263,7 @@ public final class RemoteDescriptor {
      * @param remoteConstrTypes
      * @return fluent builder interface
      */
+    @CanIgnoreReturnValue
     public Builder setRemoteConstrTypes(@Nullable Class<?>... remoteConstrTypes) {
       this.remoteConstrTypes = ImmutableList.copyOf(remoteConstrTypes);
       return this;
@@ -270,6 +275,7 @@ public final class RemoteDescriptor {
      * @param protoType the proto message class
      * @return fluent builder interface
      */
+    @CanIgnoreReturnValue
     public Builder setProtoType(@NonNull Class<?> protoType) {
       this.protoType = protoType;
       return this;
@@ -284,6 +290,7 @@ public final class RemoteDescriptor {
      * @param protoBuilderType the proto message builder class
      * @return fluent builder interface
      */
+    @CanIgnoreReturnValue
     public Builder setProtoBuilderType(@NonNull Class<?> protoBuilderType) {
       this.protoBuilderType = protoBuilderType;
       return this;
@@ -298,6 +305,7 @@ public final class RemoteDescriptor {
      * @param protoParser the proto parser
      * @return fluent builder interface
      */
+    @CanIgnoreReturnValue
     public Builder setProtoParser(@NonNull Parser<?> protoParser) {
       this.protoParser = protoParser;
       return this;

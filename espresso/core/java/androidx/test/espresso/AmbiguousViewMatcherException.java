@@ -24,6 +24,7 @@ import androidx.test.espresso.util.HumanReadables;
 import androidx.test.internal.platform.util.TestOutputEmitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.ArrayList;
 import java.util.Locale;
 import org.hamcrest.Matcher;
@@ -136,6 +137,7 @@ public final class AmbiguousViewMatcherException extends RuntimeException
     private int maxMsgLen = Integer.MAX_VALUE;
     private EspressoOptional<String> viewHierarchyFile = EspressoOptional.absent();
 
+    @CanIgnoreReturnValue
     public Builder from(AmbiguousViewMatcherException exception) {
       this.viewMatcher = exception.viewMatcher;
       this.rootView = exception.rootView;
@@ -145,41 +147,49 @@ public final class AmbiguousViewMatcherException extends RuntimeException
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withViewMatcher(Matcher<? super View> viewMatcher) {
       this.viewMatcher = viewMatcher;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withRootView(View rootView) {
       this.rootView = rootView;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withView1(View view1) {
       this.view1 = view1;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withView2(View view2) {
       this.view2 = view2;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withOtherAmbiguousViews(View... others) {
       this.others = others;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder includeViewHierarchy(boolean includeViewHierarchy) {
       this.includeViewHierarchy = includeViewHierarchy;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withMaxMsgLen(int maxMsgLen) {
       this.maxMsgLen = maxMsgLen;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withViewHierarchyFile(EspressoOptional<String> viewHierarchyFile) {
       this.viewHierarchyFile = viewHierarchyFile;
       return this;

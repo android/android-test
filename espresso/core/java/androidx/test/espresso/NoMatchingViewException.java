@@ -22,6 +22,7 @@ import android.view.View;
 import androidx.test.espresso.util.EspressoOptional;
 import androidx.test.espresso.util.HumanReadables;
 import com.google.common.collect.Lists;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.List;
 import java.util.Locale;
 import org.hamcrest.Matcher;
@@ -119,6 +120,7 @@ public final class NoMatchingViewException extends RuntimeException implements R
     private int maxMsgLen = Integer.MAX_VALUE;
     private EspressoOptional<String> viewHierarchyFile = EspressoOptional.absent();
 
+    @CanIgnoreReturnValue
     public Builder from(NoMatchingViewException exception) {
       this.viewMatcher = exception.viewMatcher;
       this.rootView = exception.rootView;
@@ -128,41 +130,49 @@ public final class NoMatchingViewException extends RuntimeException implements R
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withViewMatcher(Matcher<? super View> viewMatcher) {
       this.viewMatcher = viewMatcher;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withRootView(View rootView) {
       this.rootView = rootView;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withAdapterViews(List<View> adapterViews) {
       this.adapterViews = adapterViews;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder includeViewHierarchy(boolean includeViewHierarchy) {
       this.includeViewHierarchy = includeViewHierarchy;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withAdapterViewWarning(EspressoOptional<String> adapterViewWarning) {
       this.adapterViewWarning = adapterViewWarning;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withCause(Throwable cause) {
       this.cause = cause;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withMaxMsgLen(int maxMsgLen) {
       this.maxMsgLen = maxMsgLen;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withViewHierarchyFile(EspressoOptional<String> viewHierarchyFile) {
       this.viewHierarchyFile = viewHierarchyFile;
       return this;

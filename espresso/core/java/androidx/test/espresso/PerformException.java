@@ -19,6 +19,7 @@ package androidx.test.espresso;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import androidx.test.internal.platform.util.TestOutputEmitter;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Locale;
 
 /**
@@ -60,6 +61,7 @@ public final class PerformException extends RuntimeException implements Espresso
     private String viewDescription;
     private Throwable cause;
 
+    @CanIgnoreReturnValue
     public Builder from(PerformException instance) {
       this.actionDescription = instance.getActionDescription();
       this.viewDescription = instance.getViewDescription();
@@ -67,16 +69,19 @@ public final class PerformException extends RuntimeException implements Espresso
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withActionDescription(String actionDescription) {
       this.actionDescription = actionDescription;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withViewDescription(String viewDescription) {
       this.viewDescription = viewDescription;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withCause(Throwable cause) {
       this.cause = cause;
       return this;

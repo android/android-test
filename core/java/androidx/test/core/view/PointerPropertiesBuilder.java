@@ -1,6 +1,7 @@
 package androidx.test.core.view;
 
 import android.view.MotionEvent.PointerProperties;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 /** Builder for {@link PointerProperties}. */
 public class PointerPropertiesBuilder {
@@ -10,11 +11,13 @@ public class PointerPropertiesBuilder {
 
   private PointerPropertiesBuilder() {}
 
+  @CanIgnoreReturnValue
   public PointerPropertiesBuilder setId(int id) {
     this.id = id;
     return this;
   }
 
+  @CanIgnoreReturnValue
   public PointerPropertiesBuilder setToolType(int toolType) {
     this.toolType = toolType;
     return this;

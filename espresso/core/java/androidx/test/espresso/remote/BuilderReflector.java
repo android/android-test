@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
 import java.util.Locale;
@@ -109,6 +110,7 @@ final class BuilderReflector {
         .invokeMethod();
   }
 
+  @CanIgnoreReturnValue
   private BuilderReflector invokeMethod(
       String methodNameTpl, String methodSuffix, Class<?> type, Object... args) {
     checkState(
