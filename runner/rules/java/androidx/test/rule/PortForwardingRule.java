@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
 import androidx.annotation.VisibleForTesting;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Properties;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -73,6 +74,7 @@ public class PortForwardingRule implements TestRule {
      *
      * @param proxyHost The host address to which the network traffic is forwarded during tests.
      */
+    @CanIgnoreReturnValue
     public Builder withProxyHost(@NonNull String proxyHost) {
       this.proxyHost = checkNotNull(proxyHost);
       return this;
@@ -83,6 +85,7 @@ public class PortForwardingRule implements TestRule {
      *
      * @param proxyPort The port number to which the network traffic is forwarded during tests.
      */
+    @CanIgnoreReturnValue
     public Builder withProxyPort(int proxyPort) {
       checkArgument(
           proxyPort >= MIN_PORT && proxyPort <= MAX_PORT,
@@ -100,6 +103,7 @@ public class PortForwardingRule implements TestRule {
      *
      * @param properties A pre-constructed properties object for testing.
      */
+    @CanIgnoreReturnValue
     public Builder withProperties(@NonNull Properties properties) {
       prop = checkNotNull(properties);
       return this;

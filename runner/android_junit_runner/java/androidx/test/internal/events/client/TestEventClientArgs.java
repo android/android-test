@@ -20,6 +20,7 @@ import android.content.Context;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 /**
  * Provides arguments to {@link TestEventClient#connect(Context, TestEventClientConnectListener,
@@ -78,6 +79,7 @@ public final class TestEventClientArgs {
      * Indicates whether this is the primary instrumentation process, as returned by {@code
      * MonitoringInstrumentation.isPrimaryInstrProcess(RunnerArgs)}.
      */
+    @CanIgnoreReturnValue
     @NonNull
     public Builder setPrimaryInstProcess(boolean isPrimaryInstProcess) {
       this.isPrimaryInstProcess = isPrimaryInstProcess;
@@ -92,6 +94,7 @@ public final class TestEventClientArgs {
      * <p>Requires one of {@link #testDiscoveryRequested} or {@link #testRunEventsRequested} to be
      * set to {@code true}.
      */
+    @CanIgnoreReturnValue
     @NonNull
     public Builder setOrchestratorService(@Nullable String orchestratorService) {
       this.orchestratorService = orchestratorService;
@@ -99,6 +102,7 @@ public final class TestEventClientArgs {
     }
 
     /** Discover all available tests and send them back to the Orchestrator. */
+    @CanIgnoreReturnValue
     @NonNull
     public Builder setTestDiscoveryRequested(boolean discoveryRequested) {
       this.testDiscoveryRequested = discoveryRequested;
@@ -106,6 +110,7 @@ public final class TestEventClientArgs {
     }
 
     /** Send test run status updates to the Orchestrator. */
+    @CanIgnoreReturnValue
     @NonNull
     public Builder setTestRunEventsRequested(boolean runEventsRequested) {
       this.testRunEventsRequested = runEventsRequested;
@@ -113,6 +118,7 @@ public final class TestEventClientArgs {
     }
 
     /** Temporary workaround - should this use the new test platform event client */
+    @CanIgnoreReturnValue
     @NonNull
     public Builder setTestPlatformMigration(boolean testPlatformMigration) {
       this.testPlatformMigration = testPlatformMigration;
@@ -126,6 +132,7 @@ public final class TestEventClientArgs {
      *
      * <p>This implicitly sets {@link #testDiscoveryRequested} to {@code true}.
      */
+    @CanIgnoreReturnValue
     @NonNull
     public Builder setTestDiscoveryService(@Nullable String testDiscoveryService) {
       this.testDiscoveryService = testDiscoveryService;
@@ -138,6 +145,7 @@ public final class TestEventClientArgs {
      *
      * <p>This implicitly sets {@link #testRunEventsRequested} to {@code true}.
      */
+    @CanIgnoreReturnValue
     @NonNull
     public Builder setTestRunEventService(@Nullable String testRunEventService) {
       this.testRunEventService = testRunEventService;
@@ -151,6 +159,7 @@ public final class TestEventClientArgs {
      * androidx.test.orchestrator.OrchestratorService}, i.e. when argument {@link
      * #orchestratorService} is provided.
      */
+    @CanIgnoreReturnValue
     @NonNull
     public Builder setConnectionFactory(@Nullable ConnectionFactory connectionFactory) {
       this.connectionFactory = connectionFactory;

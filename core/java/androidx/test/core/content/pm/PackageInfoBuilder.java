@@ -21,6 +21,7 @@ import static androidx.test.internal.util.Checks.checkState;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import androidx.annotation.Nullable;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 /** Builder for {@link PackageInfo}. */
 public final class PackageInfoBuilder {
@@ -45,6 +46,7 @@ public final class PackageInfoBuilder {
    *
    * @see PackageInfo#packageName
    */
+  @CanIgnoreReturnValue
   public PackageInfoBuilder setPackageName(String packageName) {
     this.packageName = packageName;
     return this;
@@ -57,6 +59,7 @@ public final class PackageInfoBuilder {
    *
    * @see PackageInfo#applicationInfo
    */
+  @CanIgnoreReturnValue
   public PackageInfoBuilder setApplicationInfo(ApplicationInfo applicationInfo) {
     this.applicationInfo = applicationInfo;
     return this;

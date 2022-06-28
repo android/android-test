@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.is;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.widget.AdapterView;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.SelfDescribing;
@@ -152,6 +153,7 @@ public final class CursorMatchers {
      * where a cursor may iterates over a data set with variable columns. By default, the checks are
      * off.
      */
+    @CanIgnoreReturnValue
     public CursorMatcher withStrictColumnChecks(boolean checkColumns) {
       this.checkColumns = checkColumns;
       return this;

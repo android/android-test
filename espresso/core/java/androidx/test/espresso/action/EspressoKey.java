@@ -22,6 +22,7 @@ import android.os.Build;
 import android.view.KeyEvent;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Locale;
 
 /** Class that wraps the key code and meta state of the desired key press. */
@@ -62,12 +63,14 @@ public final class EspressoKey {
     private boolean isAltPressed;
     private boolean isCtrlPressed;
 
+    @CanIgnoreReturnValue
     public Builder withKeyCode(int keyCode) {
       builderKeyCode = keyCode;
       return this;
     }
 
     /** Sets the SHIFT_ON meta state of the resulting key. */
+    @CanIgnoreReturnValue
     public Builder withShiftPressed(boolean shiftPressed) {
       isShiftPressed = shiftPressed;
       return this;
@@ -77,12 +80,14 @@ public final class EspressoKey {
      * On Honeycomb and above, sets the CTRL_ON meta state of the resulting key. On Gingerbread and
      * below, this is a noop.
      */
+    @CanIgnoreReturnValue
     public Builder withCtrlPressed(boolean ctrlPressed) {
       isCtrlPressed = ctrlPressed;
       return this;
     }
 
     /** Sets the ALT_ON meta state of the resulting key. */
+    @CanIgnoreReturnValue
     public Builder withAltPressed(boolean altPressed) {
       isAltPressed = altPressed;
       return this;

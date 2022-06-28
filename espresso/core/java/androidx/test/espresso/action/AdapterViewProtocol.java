@@ -24,6 +24,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import androidx.test.espresso.util.EspressoOptional;
 import androidx.test.espresso.util.HumanReadables;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Locale;
 import javax.annotation.Nullable;
 
@@ -184,16 +185,19 @@ public interface AdapterViewProtocol {
       private Object opaqueToken;
       private DataFunction dataFunction;
 
+      @CanIgnoreReturnValue
       public Builder withDataFunction(@Nullable DataFunction dataFunction) {
         this.dataFunction = dataFunction;
         return this;
       }
 
+      @CanIgnoreReturnValue
       public Builder withData(@Nullable Object data) {
         this.data = data;
         return this;
       }
 
+      @CanIgnoreReturnValue
       public Builder withOpaqueToken(@Nullable Object opaqueToken) {
         this.opaqueToken = opaqueToken;
         return this;

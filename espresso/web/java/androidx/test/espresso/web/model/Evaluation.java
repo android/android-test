@@ -22,6 +22,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import com.google.common.base.Objects;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Map;
 import javax.annotation.Nullable;
 import org.json.JSONException;
@@ -192,17 +193,20 @@ public final class Evaluation implements JSONAble, Parcelable {
     private boolean hasMessage;
     private String message;
 
+    @CanIgnoreReturnValue
     public Builder setMessage(String message) {
       this.message = message;
       hasMessage = true;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder setValue(Object value) {
       this.value = value;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder setStatus(int status) {
       this.status = status;
       return this;

@@ -19,6 +19,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.content.pm.ApplicationInfo;
 import androidx.annotation.Nullable;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 /** Builder for {@link ApplicationInfo}. */
 public final class ApplicationInfoBuilder {
@@ -41,6 +42,7 @@ public final class ApplicationInfoBuilder {
    *
    * @see ApplicationInfo#packageName
    */
+  @CanIgnoreReturnValue
   public ApplicationInfoBuilder setPackageName(String packageName) {
     this.packageName = packageName;
     return this;
@@ -53,6 +55,7 @@ public final class ApplicationInfoBuilder {
    *
    * @see ApplicationInfo#name
    */
+  @CanIgnoreReturnValue
   public ApplicationInfoBuilder setName(@Nullable String name) {
     this.name = name;
     return this;

@@ -23,6 +23,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import androidx.annotation.NonNull;
 import androidx.test.annotation.ExperimentalTestApi;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -84,6 +85,7 @@ public final class ScreenCapture {
    * @param filename the filename to use to save the capture as
    * @return a fluent interface
    */
+  @CanIgnoreReturnValue
   public ScreenCapture setName(String filename) {
     this.filename = filename;
     return this;
@@ -95,6 +97,7 @@ public final class ScreenCapture {
    * @param format the format to use to save the screenshot as
    * @return a fluent interface
    */
+  @CanIgnoreReturnValue
   public ScreenCapture setFormat(CompressFormat format) {
     this.format = format;
     return this;
@@ -105,6 +108,7 @@ public final class ScreenCapture {
    *
    * @param processorSet the set of processor to set.
    */
+  @CanIgnoreReturnValue
   ScreenCapture setProcessors(@NonNull Set<ScreenCaptureProcessor> processorSet) {
     this.processorSet = checkNotNull(processorSet);
     return this;

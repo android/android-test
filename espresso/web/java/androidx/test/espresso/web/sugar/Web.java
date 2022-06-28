@@ -36,6 +36,7 @@ import androidx.test.espresso.web.model.Atom;
 import androidx.test.espresso.web.model.ElementReference;
 import androidx.test.espresso.web.model.WindowReference;
 import androidx.test.internal.platform.util.TestOutputEmitter;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -140,6 +141,7 @@ public final class Web {
      * <p>Enabling Javascript may cause the WebView under test to be reloaded. This is necessary to
      * ensure the test infrastructure javascript bridges are loaded by the WebView.
      */
+    @CanIgnoreReturnValue
     public WebInteraction<R> forceJavascriptEnabled() {
       onView(viewMatcher).perform(new EnableJavascriptAction());
       return this;

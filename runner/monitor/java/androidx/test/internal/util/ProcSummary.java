@@ -18,6 +18,7 @@ package androidx.test.internal.util;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import androidx.annotation.VisibleForTesting;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -135,6 +136,7 @@ public final class ProcSummary {
     private long startTime;
     private String parent;
 
+    @CanIgnoreReturnValue
     Builder withParent(String ppid) {
       try {
         Integer.parseInt(ppid);
@@ -145,16 +147,19 @@ public final class ProcSummary {
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder withCmdline(String cmdline) {
       this.cmdline = cmdline;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder withName(String name) {
       this.name = name;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder withPid(String pid) {
       try {
         Integer.parseInt(pid);
@@ -165,6 +170,7 @@ public final class ProcSummary {
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder withRealUid(String uid) {
       try {
         Integer.parseInt(uid);
@@ -175,6 +181,7 @@ public final class ProcSummary {
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder withStartTime(long startTime) {
       this.startTime = startTime;
       return this;

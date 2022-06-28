@@ -34,6 +34,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.platform.app.InstrumentationRegistry;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -377,6 +378,7 @@ public class ProviderTestRule implements TestRule {
      *
      * @param prefix The non-empty prefix to append to test files.
      */
+    @CanIgnoreReturnValue
     public Builder setPrefix(@NonNull String prefix) {
       checkArgument(!TextUtils.isEmpty(prefix), "The prefix cannot be null or empty");
       this.prefix = prefix;
@@ -399,6 +401,7 @@ public class ProviderTestRule implements TestRule {
      * @param dbName The name of the underlying database used by the ContentProvider under test.
      * @param dbDataFile The SQLite database file that contains the data to restore.
      */
+    @CanIgnoreReturnValue
     public Builder setDatabaseFile(@NonNull String dbName, @NonNull File dbDataFile) {
       checkNotNull(dbName);
       checkNotNull(dbDataFile);
@@ -420,6 +423,7 @@ public class ProviderTestRule implements TestRule {
      * @param dbCmds The SQL commands to run. Each command will be passed to {@link
      *     SQLiteDatabase#execSQL(String)} to execute.
      */
+    @CanIgnoreReturnValue
     public Builder setDatabaseCommands(@NonNull String dbName, @NonNull String... dbCmds) {
       checkNotNull(dbName);
       checkNotNull(dbCmds);
@@ -442,6 +446,7 @@ public class ProviderTestRule implements TestRule {
      *     will be treated as a separate command and passed to {@link
      *     SQLiteDatabase#execSQL(String)} to execute.
      */
+    @CanIgnoreReturnValue
     public Builder setDatabaseCommandsFile(@NonNull String dbName, @NonNull File dbCmdFile) {
       checkNotNull(dbName);
       checkNotNull(dbCmdFile);
@@ -458,6 +463,7 @@ public class ProviderTestRule implements TestRule {
      * @param providerClass The class of the added ContentProvider under test.
      * @param providerAuth The authority defined for the added ContentProvider under test.
      */
+    @CanIgnoreReturnValue
     public <T extends ContentProvider> Builder addProvider(
         @NonNull Class<T> providerClass, @NonNull String providerAuth) {
       checkNotNull(providerClass);

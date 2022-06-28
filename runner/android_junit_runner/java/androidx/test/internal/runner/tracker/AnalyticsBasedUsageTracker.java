@@ -27,6 +27,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -103,37 +104,44 @@ public final class AnalyticsBasedUsageTracker implements UsageTracker {
       this.targetContext = targetContext;
     }
 
+    @CanIgnoreReturnValue
     public Builder withTrackingId(String trackingId) {
       this.trackingId = trackingId;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withAnalyticsUri(Uri analyticsUri) {
       checkNotNull(analyticsUri);
       this.analyticsUri = analyticsUri;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withApiLevel(String apiLevel) {
       this.apiLevel = apiLevel;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withScreenResolution(String resolutionVal) {
       this.screenResolution = resolutionVal;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withUserId(String userId) {
       this.userId = userId;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withModel(String model) {
       this.model = model;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder withTargetPackage(String targetPackage) {
       hashed = false;
       this.targetPackage = targetPackage;

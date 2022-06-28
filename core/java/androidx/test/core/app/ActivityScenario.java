@@ -42,6 +42,7 @@ import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
 import androidx.tracing.Trace;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.Closeable;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -630,6 +631,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * @throws IllegalStateException if Activity is destroyed, finished or finishing
    * @throws AssertionError if Activity never becomes requested state
    */
+  @CanIgnoreReturnValue
   public ActivityScenario<A> moveToState(State newState) {
     checkNotMainThread();
     getInstrumentation().waitForIdleSync();
@@ -684,6 +686,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * @throws IllegalStateException if Activity is destroyed, finished or finishing
    * @throws AssertionError if Activity never be re-created
    */
+  @CanIgnoreReturnValue
   public ActivityScenario<A> recreate() {
     checkNotMainThread();
     getInstrumentation().waitForIdleSync();
@@ -761,6 +764,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    *
    * @throws IllegalStateException if Activity is destroyed, finished or finishing
    */
+  @CanIgnoreReturnValue
   public ActivityScenario<A> onActivity(final ActivityAction<A> action) {
     // A runnable to perform given ActivityAction. This runnable should be invoked from the
     // application main thread.

@@ -16,6 +16,7 @@
 package androidx.test.orchestrator.listeners.result;
 
 import androidx.test.orchestrator.listeners.result.TestResult.TestStatus;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -91,6 +92,7 @@ public class TestResult {
   }
 
   /** Set the {@link TestStatus}. */
+  @CanIgnoreReturnValue
   public TestResult setStatus(TestStatus status) {
     this.status = status;
     return this;
