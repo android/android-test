@@ -126,8 +126,8 @@ open class OnIdleBeforeOnViewCheck : Detector(), SourceCodeScanner {
   private companion object {
     val REPORT_MESSAGE =
       """
-      Calling `onIdle` before `onView` is unnecessary because `onView` does the same synchronization
-      as `onIdle` does internally.
+      Calling `onIdle` before `onView` is unnecessary because `onView` does the same \
+      synchronization as `onIdle` does internally.
 
       Please remove the redundant onIdle().
     """
