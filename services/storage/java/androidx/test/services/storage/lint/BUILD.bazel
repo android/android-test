@@ -1,0 +1,22 @@
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+
+licenses(["notice"])
+
+package(
+    default_visibility = [
+        "//services/storage/java/androidx/test/services/storage/lint:__subpackages__",
+        "//services/storage/javatests/androidx/test/services/storage/lint:__subpackages__",
+    ],
+)
+
+kt_jvm_library(
+    name = "HardcodeStoragePathCheck",
+    srcs = [
+        "HardcodeStoragePathCheck.kt",
+    ],
+    deps = [
+        "//services/storage:storage_constants",
+        "//tools/lint/java/androidx/test/tools/lint:lint_common",
+        "@maven//:com_android_tools_lint_lint_api",
+    ],
+)
