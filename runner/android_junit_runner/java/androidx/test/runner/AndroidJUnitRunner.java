@@ -278,8 +278,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   private static final String LOG_TAG = "AndroidJUnitRunner";
 
   private Bundle arguments;
-  private final InstrumentationResultPrinter instrumentationResultPrinter =
-      new InstrumentationResultPrinter();
+  private InstrumentationResultPrinter instrumentationResultPrinter;
   private RunnerArgs runnerArgs;
   private TestEventClient testEventClient = TestEventClient.NO_OP_CLIENT;
   private final Set<Throwable> appExceptionsHandled =
@@ -291,6 +290,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     Trace.beginSection("AndroidJUnitRunner#onCreate");
     try {
       super.onCreate(arguments);
+
       this.arguments = arguments;
       parseRunnerArgs(this.arguments);
 
@@ -396,6 +396,9 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
 
   @VisibleForTesting
   InstrumentationResultPrinter getInstrumentationResultPrinter() {
+    if (instrumentationResultPrinter == null) {
+      instrumentationResultPrinter = new InstrumentationResultPrinter();
+    }
     return instrumentationResultPrinter;
   }
 
@@ -588,23 +591,19 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
 
     // Report better error message back to Instrumentation results.
     InstrumentationResultPrinter instResultPrinter = getInstrumentationResultPrinter();
-    // If the app crashes before instrumentation has started, instrumentationResultPrinter could
-    // be null
-    if (instResultPrinter != null) {
-      if (instResultPrinter.getInstrumentation() == null) {
+    if (instResultPrinter.getInstrumentation() == null) {
         // App could crash before #onCreate(Bundle) is called, where the instrumentation instance is
         // not properly set yet. Setting the Instrumentation here rather than in the constructor to
         // minimize the dependencies during initialization.
         instResultPrinter.setInstrumentation(this);
-      }
+    }
 
-      // Allows DISK_WRITE as `sendStatus` writes to standard output.
-      final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-      try {
-        instResultPrinter.reportProcessCrash(e);
-      } finally {
-        StrictMode.setThreadPolicy(oldPolicy);
-      }
+    // Allows DISK_WRITE as `sendStatus` writes to standard output.
+    final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+    try {
+      instResultPrinter.reportProcessCrash(e);
+    } finally {
+      StrictMode.setThreadPolicy(oldPolicy);
     }
 
     // If the app crashes before instrumentation has started, `testEventClient` could possibly be
