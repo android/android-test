@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.Log;
 import androidx.annotation.GuardedBy;
@@ -422,12 +423,12 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
         return;
       }
 
-      long now = System.currentTimeMillis();
+      long now = SystemClock.elapsedRealtime();
       long deadline = now + TIMEOUT_MILLISECONDS;
       while (now < deadline
           && !expectedStateSet.contains(STEADY_STATES.get(currentActivityStage))) {
         stateChangedCondition.await(deadline - now, TimeUnit.MILLISECONDS);
-        now = System.currentTimeMillis();
+        now = SystemClock.elapsedRealtime();
       }
 
       if (!expectedStateSet.contains(STEADY_STATES.get(currentActivityStage))) {
@@ -700,11 +701,11 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
     activityInvoker.recreateActivity(prevActivityState.activity);
 
     ActivityState<A> activityState;
-    long now = System.currentTimeMillis();
+    long now = SystemClock.elapsedRealtime();
     long deadline = now + TIMEOUT_MILLISECONDS;
     do {
       waitForActivityToBecomeAnyOf(State.RESUMED);
-      now = System.currentTimeMillis();
+      now = SystemClock.elapsedRealtime();
       activityState = getCurrentActivityState();
     } while (now < deadline && activityState.activity == prevActivityState.activity);
     if (activityState.activity == prevActivityState.activity) {
