@@ -27,12 +27,16 @@ import com.android.tools.lint.detector.api.JavaContext
 import com.android.tools.lint.detector.api.Scope
 import com.android.tools.lint.detector.api.Severity
 import com.android.tools.lint.detector.api.SourceCodeScanner
+import com.intellij.psi.JavaTokenType
+import com.intellij.psi.PsiJavaToken
+import com.intellij.psi.PsiWhiteSpace
 import org.jetbrains.uast.UBinaryExpression
 import org.jetbrains.uast.UCallExpression
 import org.jetbrains.uast.UDeclarationsExpression
 import org.jetbrains.uast.UElement
 import org.jetbrains.uast.UIdentifier
 import org.jetbrains.uast.UMethod
+import org.jetbrains.uast.UQualifiedReferenceExpression
 import org.jetbrains.uast.UReferenceExpression
 import org.jetbrains.uast.UVariable
 import org.jetbrains.uast.visitor.AbstractUastVisitor
@@ -72,25 +76,47 @@ open class OnIdleBeforeOnViewCheck : Detector(), SourceCodeScanner {
   override fun createUastHandler(context: JavaContext) =
     object : UElementHandler() {
       override fun visitMethod(node: UMethod) {
-        val inMethodVisitor =
+        val patternVisitor =
           object : AbstractUastVisitor() {
             // The UAST node recording the location of found onIdle().
-            private var foundOnIdle: UCallExpression? = null
+            private var foundOnIdle: UElement? = null
 
             override fun visitCallExpression(node: UCallExpression): Boolean {
               if (node.matchMethodSignature(ON_IDLE_METHOD_SIGNATURE)) {
-                // Found the onIdle() call. Records the node.
+                // Found the statement which calls onIdle(). Records the node.
                 foundOnIdle = node
+                while (foundOnIdle!!.uastParent is UQualifiedReferenceExpression) {
+                  foundOnIdle = foundOnIdle!!.uastParent as UElement
+                }
               } else if (
                 foundOnIdle != null && node.matchMethodSignature(ON_VIEW_METHOD_SIGNATURE)
               ) {
                 // Found the onView() call and the last call is onIdle(). Reports the warnings and
-                // resets state.
+                // resets state. Deletes the statement of onIdle().
+                val deleteFix = fix().replace().with("")
+                // Includes the semicolon to delete.
+                val sourcePsi = foundOnIdle!!.sourcePsi
+                if (sourcePsi != null) {
+                  var curr = sourcePsi.nextSibling
+                  while (curr != null) {
+                    if (curr is PsiJavaToken && curr.tokenType == JavaTokenType.SEMICOLON) {
+                      deleteFix.range(context.getRangeLocation(sourcePsi, 0, curr, 0))
+                      break
+                    } else if (
+                      curr !is PsiWhiteSpace
+                    ) { // allow whitespace between expression and semicolon
+                      break
+                    }
+                    curr = curr.nextSibling
+                  }
+                }
+                // Reports the warning along with the auto-fix option.
                 context.report(
                   issue,
                   foundOnIdle,
-                  context.getNameLocation(foundOnIdle!!),
-                  REPORT_MESSAGE
+                  context.getLocation(foundOnIdle),
+                  REPORT_MESSAGE,
+                  deleteFix.build()
                 )
               } else {
                 // In other cases, simply resets the state. We do not allow other calls between
@@ -119,7 +145,7 @@ open class OnIdleBeforeOnViewCheck : Detector(), SourceCodeScanner {
               return false
             }
           }
-        node.accept(inMethodVisitor)
+        node.accept(patternVisitor)
       }
     }
 
@@ -143,5 +169,7 @@ open class OnIdleBeforeOnViewCheck : Detector(), SourceCodeScanner {
         "onView",
         listOf("org.hamcrest.Matcher<android.view.View>")
       )
+
+    const val ON_IDLE_IMPORT_NAME = "androidx.test.espresso.Espresso.onIdle"
   }
 }
