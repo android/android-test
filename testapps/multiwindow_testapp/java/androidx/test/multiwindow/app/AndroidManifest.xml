@@ -36,6 +36,7 @@
         android:label="Multi-Window activity"
         android:name=".MultiWindowActivity"
         android:resizeableActivity="true"
+        android:configChanges="screenSize | smallestScreenSize| screenLayout | orientation"
         android:minHeight="1dp"
         android:minWidth="1dp"
         android:exported="true">

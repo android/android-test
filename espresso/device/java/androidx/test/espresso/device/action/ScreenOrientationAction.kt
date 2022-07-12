@@ -121,7 +121,8 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
         .addLifecycleCallback(
           object : ActivityLifecycleCallback {
             override fun onActivityLifecycleChanged(activity: Activity, stage: Stage) {
-              if (activity.getLocalClassName() == currentActivityName &&
+              if (
+                activity.getLocalClassName() == currentActivityName &&
                   stage == Stage.RESUMED &&
                   activity.getResources().getConfiguration().orientation == requestedOrientation
               ) {
