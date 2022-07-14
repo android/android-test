@@ -5,10 +5,10 @@ licenses(["notice"])
 package(default_testonly = 1)
 
 kt_jvm_library(
-    name = "UnclosedActivityScenarioCheckTestLib",
-    srcs = ["UnclosedActivityScenarioCheckTest.kt"],
+    name = "ActivityScenarioNoAutoCloseCheckTestLib",
+    srcs = ["ActivityScenarioNoAutoCloseCheckTest.kt"],
     deps = [
-        "//core/java/androidx/test/core/lint/Check:UnclosedActivityScenarioCheck",
+        "//core/java/androidx/test/core/lint/Check:ActivityScenarioNoAutoCloseCheck",
         "@maven//:com_android_tools_lint_lint_api",
         "@maven//:com_nhaarman_mockitokotlin2_mockito_kotlin",
         "@maven//:junit_junit",
@@ -16,7 +16,7 @@ kt_jvm_library(
 )
 
 java_test(
-    name = "UnclosedActivityScenarioCheckTest",
-    test_class = "androidx.test.core.lint.UnclosedActivityScenarioCheckTest",
-    runtime_deps = [":UnclosedActivityScenarioCheckTestLib"],
+    name = "ActivityScenarioNoAutoCloseCheckTest",
+    test_class = "androidx.test.core.lint.ActivityScenarioNoAutoCloseCheckTest",
+    runtime_deps = [":ActivityScenarioNoAutoCloseCheckTestLib"],
 )

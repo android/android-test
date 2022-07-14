@@ -67,20 +67,20 @@ import org.jetbrains.uast.getParentOfType
  * ```
  */
 @Suppress("DetectorIsMissingAnnotations")
-open class UnclosedActivityScenarioCheck : Detector(), SourceCodeScanner {
+open class ActivityScenarioNoAutoCloseCheck : Detector(), SourceCodeScanner {
 
   // TODO(b/234640486): This issue is not used since the check for external use is not implemented.
   protected open val issue: Issue =
     Issue.create(
-      id = "UnclosedActivityScenario",
-      briefDescription = "Warn about unclosed ActivityScenario",
+      id = "ActivityScenarioNoAutoClose",
+      briefDescription = "Warn about ActivityScenario without automated close",
       explanation = REPORT_MESSAGE,
       moreInfo = "",
       category = Category.CORRECTNESS,
       priority = 5,
       severity = Severity.WARNING,
       implementation =
-        Implementation(UnclosedActivityScenarioCheck::class.java, Scope.JAVA_FILE_SCOPE)
+        Implementation(ActivityScenarioNoAutoCloseCheck::class.java, Scope.JAVA_FILE_SCOPE)
     )
 
   override fun getApplicableMethodNames() = listOf("launch")
@@ -139,11 +139,12 @@ open class UnclosedActivityScenarioCheck : Detector(), SourceCodeScanner {
   private companion object {
     val REPORT_MESSAGE =
       """
-      The ActivityScenario instance may not be closed.
+      We recommend to create an ActivityScenario instance using mechanisms which automatically \
+      close the instance. Please consider to use ActivityScenarioRule, Java's try-with-resources, \
+      or Kotlin's use function.
 
-      We recommend to implement the creation of ActivityScenario under automatic resource \
-      management. Please consider to use Java's try-with-resources, Kotlin's use function, or \
-      ActivityScenarioRule.
+      Note: if you need to set up Dagger modules in your test, you may disregard this warning. \
+      See http://go/hilt/instrumentation-testing#modules-and-activityscenariorule for details.
     """
         .trimIndent()
         .replace("\\\n", "")

@@ -3,9 +3,9 @@ load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 licenses(["notice"])
 
 kt_jvm_library(
-    name = "UnclosedActivityScenarioHandler",
+    name = "ActivityScenarioNoAutoCloseCheck",
     srcs = [
-        "UnclosedActivityScenarioHandler.kt",
+        "ActivityScenarioNoAutoCloseCheck.kt",
     ],
     visibility = ["//visibility:public"],
     deps = [

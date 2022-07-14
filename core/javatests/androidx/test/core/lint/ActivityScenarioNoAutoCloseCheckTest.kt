@@ -31,13 +31,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
-/** Unit tests of UnclosedActivityScenarioCheck. */
+/** Unit tests of ActivityScenarioNoAutoCloseCheck. */
 @RunWith(JUnit4::class)
-class UnclosedActivityScenarioCheckTest {
+class ActivityScenarioNoAutoCloseCheckTest {
   private val mockJavaContext = mock<JavaContext>()
   private val mockCallExpression = mock<UCallExpression>()
   private val mockPsiMethod = mock<PsiMethod>()
-  private val detector = UnclosedActivityScenarioCheck()
+  private val detector = ActivityScenarioNoAutoCloseCheck()
 
   @Before
   fun SetUp() {
