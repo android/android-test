@@ -417,63 +417,65 @@ public final class ActivityScenarioTest {
 
   @Test
   public void launch_callbackSequence() {
-    ActivityScenario<RecordingActivity> activityScenario =
-        ActivityScenario.launch(RecordingActivity.class);
-    Espresso.onIdle();
-    Espresso.onIdle();
-    activityScenario.onActivity(
-        activity ->
-            assertThat(activity.getCallbacks())
-                .containsExactly(
-                    "onCreate",
-                    "onStart",
-                    "onPostCreate",
-                    "onResume",
-                    "onPostResume",
-                    "onAttachedToWindow",
-                    "onWindowFocusChanged true")
-                .inOrder());
+    try (ActivityScenario<RecordingActivity> activityScenario =
+        ActivityScenario.launch(RecordingActivity.class)) {
+      Espresso.onIdle();
+      Espresso.onIdle();
+      activityScenario.onActivity(
+          activity ->
+              assertThat(activity.getCallbacks())
+                  .containsExactly(
+                      "onCreate",
+                      "onStart",
+                      "onPostCreate",
+                      "onResume",
+                      "onPostResume",
+                      "onAttachedToWindow",
+                      "onWindowFocusChanged true")
+                  .inOrder());
+    }
   }
 
   @Test
   public void launch_postingCallbackSequence() throws Exception {
-    ActivityScenario<AsyncRecordingActivity> activityScenario =
-        ActivityScenario.launch(AsyncRecordingActivity.class);
-    Espresso.onIdle();
-    Espresso.onIdle();
+    try (ActivityScenario<AsyncRecordingActivity> activityScenario =
+        ActivityScenario.launch(AsyncRecordingActivity.class)) {
+      Espresso.onIdle();
+      Espresso.onIdle();
 
-    int maxRetry = 3;
-    AtomicBoolean activityHasFocus = new AtomicBoolean(false);
-    for (int attempt = 0; attempt < maxRetry; attempt++) {
-      activityScenario.onActivity(activity -> activityHasFocus.set(activity.hasWindowFocus()));
-      if (activityHasFocus.get()) {
-        break;
+      int maxRetry = 3;
+      AtomicBoolean activityHasFocus = new AtomicBoolean(false);
+      for (int attempt = 0; attempt < maxRetry; attempt++) {
+        activityScenario.onActivity(activity -> activityHasFocus.set(activity.hasWindowFocus()));
+        if (activityHasFocus.get()) {
+          break;
+        }
+        // Retry after the sleep. Window focus is the global state and there is a lag
+        // before onWindowFocusChanged is called after the activity is resumed.
+        // TODO(b/191072024): Find a beter way to monitor focus activity and remove the sleep.
+        Thread.sleep(500);
       }
-      // Retry after the sleep. Window focus is the global state and there is a lag
-      // before onWindowFocusChanged is called after the activity is resumed.
-      // TODO(b/191072024): Find a beter way to monitor focus activity and remove the sleep.
-      Thread.sleep(500);
-    }
 
-    activityScenario.onActivity(
-        activity ->
-            assertThat(activity.getCallbacks())
-                .containsExactly(
-                    "onCreate",
-                    "onStart",
-                    "onPostCreate",
-                    "onResume",
-                    "onPostResume",
-                    "post from onCreate",
-                    "post from onStart",
-                    "post from onPostCreate",
-                    "post from onResume",
-                    "post from onPostResume",
-                    "onAttachedToWindow",
-                    "post from onAttachedToWindow",
-                    "onWindowFocusChanged true",
-                    "post from onWindowFocusChanged true")
-                .inOrder());
+      activityScenario.onActivity(
+          activity ->
+              assertThat(activity.getCallbacks())
+                  .containsExactly(
+                      "onCreate",
+                      "onStart",
+                      "onPostCreate",
+                      "onResume",
+                      "onPostResume",
+                      "post from onCreate",
+                      "post from onStart",
+                      "post from onPostCreate",
+                      "post from onResume",
+                      "post from onPostResume",
+                      "onAttachedToWindow",
+                      "post from onAttachedToWindow",
+                      "onWindowFocusChanged true",
+                      "post from onWindowFocusChanged true")
+                  .inOrder());
+    }
   }
 
   @Test
