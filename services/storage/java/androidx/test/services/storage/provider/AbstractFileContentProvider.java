@@ -136,7 +136,6 @@ abstract class AbstractFileContentProvider extends ContentProvider {
     }
 
     File checkFile = requestedFile.getAbsoluteFile();
-
     while (null != checkFile) {
       if (checkFile.equals(hostedDirectory)) {
         return requestedFile;
@@ -207,7 +206,23 @@ abstract class AbstractFileContentProvider extends ContentProvider {
 
   @Override
   public int delete(Uri uri, String selection, String[] selectionArgs) {
-    // not allowed.
+    Log.d(TAG, "Deleting hosted file " + uri);
+    try {
+      File requestedFile = fromUri(uri);
+      // Only deleting the entire hosted directory is supported. Also, the root hosted directory
+      // will be preserved to avoid recreating between test cases.
+      if (hostedDirectory.equals(requestedFile)) {
+        for (File child : hostedDirectory.listFiles()) {
+          deleteRecursively(child);
+        }
+      } else {
+        throw new StorageContentProviderException(
+            "Deleting file/directory other than the entire hosted directory is not supported!");
+      }
+    } catch (FileNotFoundException fnfe) {
+      Log.w(TAG, "Could not find file for query.", fnfe);
+      throw new StorageContentProviderException("Hosted file " + uri + " was not found!", fnfe);
+    }
     return 0;
   }
 
@@ -228,5 +243,15 @@ abstract class AbstractFileContentProvider extends ContentProvider {
   // @Override since api 11
   public void shutdown() {
     // no open services, this just suppresses a logger warning.
+  }
+
+  /** Deletes the file or directory recursively. */
+  private void deleteRecursively(File fileOrDirectory) {
+    if (fileOrDirectory.isDirectory()) {
+      for (File child : fileOrDirectory.listFiles()) {
+        deleteRecursively(child);
+      }
+    }
+    fileOrDirectory.delete();
   }
 }

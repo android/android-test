@@ -27,6 +27,7 @@ android_library(
         "//services/storage/java/androidx/test/services/storage/provider:storage_content_providers",
         "@androidsdk//:legacy_test-30",
         "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
     ],
 )
 

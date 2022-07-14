@@ -15,6 +15,8 @@
  */
 package androidx.test.services.storage.provider;
 
+import static org.junit.Assert.assertThrows;
+
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -43,7 +45,7 @@ import java.util.List;
 /**
  * Unit tests for {@link TestFileContentProvider}.
  *
- * TODO(b/145236542): Converts the tests to JUnit4.
+ * <p>TODO(b/145236542): Converts the tests to JUnit4.
  */
 public class TestFileContentProviderTest
     extends ProviderTestCase2<TestFileContentProviderTest.TestFileContentProvider> {
@@ -219,6 +221,34 @@ public class TestFileContentProviderTest
     assertEquals("cannot read content back", "hello world", fileContent);
   }
 
+  public void testDelete_deleteIndividualFile() {
+    StorageContentProviderException ex =
+        assertThrows(
+            StorageContentProviderException.class,
+            () -> resolver.delete(makeUri("test-data.txt"), null, null));
+    assertEquals(
+        "Runtime exception expected",
+        "Deleting file/directory other than the entire hosted directory is not supported!",
+        ex.getMessage());
+  }
+
+  public void testDelete_deleteHostedDirectory() throws IOException {
+    // Prepare test files
+    File testFile = new File(hostedDirectory, "test-data.txt");
+    testFile.createNewFile();
+    File testDirectory = new File(hostedDirectory, "test-dir");
+    testDirectory.mkdirs();
+    File testFile2 = new File(testDirectory.getAbsolutePath(), "test-data-2.txt");
+    testFile2.createNewFile();
+
+    resolver.delete(makeUri("/"), null, null);
+
+    assertTrue("The root hosted directory should be preserved.", hostedDirectory.exists());
+    assertTrue(
+        "All the files under the hosted directory should be deleted.",
+        hostedDirectory.list().length == 0);
+  }
+
   @Suppress
   public void testQueryDirectory() throws Exception {
     write("file1 contents", new File(hostedDirectory, "file1.txt"), Charsets.UTF_8);
@@ -254,8 +284,7 @@ public class TestFileContentProviderTest
     for (T item : expectedItems) {
       assertTrue("missing: " + item + " from " + collection, collection.contains(item));
     }
-    assertEquals(
-        "size mismatch: " + collection, expectedItems.length, collection.size());
+    assertEquals("size mismatch: " + collection, expectedItems.length, collection.size());
   }
 
   @Suppress
