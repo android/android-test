@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package androidx.test.core.lint
 
 import com.android.tools.lint.detector.api.JavaContext
@@ -26,12 +25,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
-/** Unit tests of ActivityScenarioNoAutoCloseCheck. */
+/** Unit tests of UnclosedActivityScenarioCheck. */
 @RunWith(JUnit4::class)
-class ActivityScenarioNoAutoCloseCheckTest {
+class UnclosedActivityScenarioCheckTest {
   private val mockJavaContext = mock<JavaContext>()
   private val mockClass = mock<UClass>()
-  private val handler = ActivityScenarioNoAutoCloseCheck().createUastHandler(mockJavaContext)
+  private val handler = UnclosedActivityScenarioCheck().createUastHandler(mockJavaContext)
 
   @Test
   fun visitClass_minimumCoverage() {
