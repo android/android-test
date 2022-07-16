@@ -16,6 +16,7 @@
 
 package androidx.test.core.lint
 
+import androidx.test.tools.lint.LintMethodSignature
 import androidx.test.tools.lint.searchCalls
 import com.android.tools.lint.client.api.UElementHandler
 import com.android.tools.lint.detector.api.Category
@@ -35,13 +36,13 @@ import org.jetbrains.uast.tryResolve
 
 /**
  * A lint detector that reports a warning if it detects an instance of
- * [androidx.test.core.app.ActivityScenario] is created but will not be automatically closed by
+ * [androidx.test.core.app.ActivityScenario] is created but not closed by
  * [androidx.test.core.app.ActivityScenario.close].
  *
  * For example,
  * ```java
  *     ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class));
- *     scenario.close().
+ *     // Without scenario.close().
  * ```
  *
  * To close the `ActivityScenario` safely, we recommend to use the automatic resource management
@@ -61,22 +62,29 @@ import org.jetbrains.uast.tryResolve
  *     ActivityScenarioRule<MyActivity> rule = new ActivityScenarioRule<>(Activity.class);
  *     ActivityScenario<MyActivity> scenario = rule.getScenario();
  * ```
+ *
+ * Lastly, if all above solutions do no apply, the `ActivityScenario` instance must be closed by
+ * `Activity.close()` manually. For example,
+ * ```java
+ *     ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class));
+ *     scenario.close().
+ * ```
  */
 @Suppress("DetectorIsMissingAnnotations")
-open class ActivityScenarioNoAutoCloseCheck : Detector(), SourceCodeScanner {
+open class UnclosedActivityScenarioCheck : Detector(), SourceCodeScanner {
 
-  // TODO(b/234640486): This issue is not used since the check for external use is not implemented.
+  // TODO(b/234640486): This issue is not used since the check is not implemented.
   protected open val issue: Issue =
     Issue.create(
-      id = "ActivityScenarioNoAutoClose",
-      briefDescription = "Warn about ActivityScenario without automated close",
-      explanation = REPORT_MESSAGE,
+      id = "UnclosedActivityScenario",
+      briefDescription = "Warn about unclosed ActivityScenario",
+      explanation = UnclosedActivityScenarioCheck.REPORT_MESSAGE,
       moreInfo = "",
       category = Category.CORRECTNESS,
       priority = 5,
       severity = Severity.WARNING,
       implementation =
-        Implementation(ActivityScenarioNoAutoCloseCheck::class.java, Scope.JAVA_FILE_SCOPE)
+        Implementation(UnclosedActivityScenarioCheck::class.java, Scope.JAVA_FILE_SCOPE)
     )
 
   override fun getApplicableUastTypes() = listOf(UClass::class.java)
@@ -98,36 +106,18 @@ open class ActivityScenarioNoAutoCloseCheck : Detector(), SourceCodeScanner {
 
         for (launchCall in launchCalls) {
           val launchedScenario = getActivityScenarioByLaunchCall(launchCall) ?: continue
-          if (inActivityScenarioRule(launchCall)) {
-            // Ignores the case that the ActivityScenario is part of the implementation of
-            // ActivityScenarioRule.
-            continue
-          } else if (
-            (isJava(node.sourcePsi) && closedWithTryWithResources(launchedScenario)) ||
-              (isKotlin(node.sourcePsi) && closedWithRunBlock(launchCall))
+          if (
+            !inActivityScenarioRule(launchCall) &&
+              !(isJava(node.sourcePsi) && closedWithTryWithResources(launchedScenario)) &&
+              !(isKotlin(node.sourcePsi) && closedWithRunBlock(launchCall)) &&
+              closedManually(
+                launchedScenario,
+                launchCall,
+                closedScenarioReferences,
+                resolvedCloseCalls
+              ) == null
           ) {
-            // The ActivityScenario is automatically closed.
-            continue
-          }
-          val matchedCloseCall =
-            closedManually(
-              launchedScenario,
-              launchCall,
-              closedScenarioReferences,
-              resolvedCloseCalls
-            )
-          if (matchedCloseCall == null) {
-            // The ActivityScenario is not closed at all. Should report UnclosedActivityScenario
-            // warnings.
-            continue
-          } else {
-            // The ActivityScenario is closed but not in an automated way. Reports the warning.
-            context.report(
-              issue,
-              matchedCloseCall,
-              context.getLocation(matchedCloseCall),
-              REPORT_MESSAGE
-            )
+            context.report(issue, launchCall, context.getLocation(launchCall), REPORT_MESSAGE)
           }
         }
       }
@@ -136,14 +126,18 @@ open class ActivityScenarioNoAutoCloseCheck : Detector(), SourceCodeScanner {
   private companion object {
     val REPORT_MESSAGE =
       """
-      We recommend to create an ActivityScenario instance using mechanisms which automatically \
-      close the instance. Please consider to use ActivityScenarioRule, Java's try-with-resources, \
-      or Kotlin's use function.
-
-      Note: if you need to set up Dagger modules in your test, you may disregard this warning. \
-      See http://go/hilt/instrumentation-testing#modules-and-activityscenariorule for details.
+      The ActivityScenario instance must be closed. Please close the instance using \
+      ActivityScenarioRule, Java's try-with-resources, Kotlin's use function, or by manually \
+      calling ActivityScenario.close().
     """
         .trimIndent()
         .replace("\\\n", "")
+
+    val LAUNCH_METHOD_SIGNATURE =
+      LintMethodSignature(
+        "androidx.test.core.app.ActivityScenario",
+        "launch",
+        listOf("java.lang.Class<A>")
+      )
   }
 }
