@@ -3,14 +3,51 @@ load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 licenses(["notice"])
 
 kt_jvm_library(
+    name = "ActivityScenarioCheckUtil",
+    srcs = [
+        "ActivityScenarioCheckUtil.kt",
+    ],
+    deps = [
+        "//tools/lint/java/androidx/test/tools/lint:lint_common",
+        "@maven//:com_android_tools_lint_lint_api",
+        "@maven//:com_android_tools_lint_lint_checks",
+    ],
+)
+
+kt_jvm_library(
     name = "ActivityScenarioNoAutoCloseCheck",
     srcs = [
         "ActivityScenarioNoAutoCloseCheck.kt",
     ],
     visibility = ["//visibility:public"],
     deps = [
+        ":ActivityScenarioCheckUtil",
         "//tools/lint/java/androidx/test/tools/lint:lint_common",
         "@maven//:com_android_tools_lint_lint_api",
-        "@maven//:com_android_tools_lint_lint_checks",
+    ],
+)
+
+kt_jvm_library(
+    name = "UnclosedActivityScenarioCheck",
+    srcs = [
+        "UnclosedActivityScenarioCheck.kt",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":ActivityScenarioCheckUtil",
+        "//tools/lint/java/androidx/test/tools/lint:lint_common",
+        "@maven//:com_android_tools_lint_lint_api",
+    ],
+)
+
+kt_jvm_library(
+    name = "UnusedOnActivityCheck",
+    srcs = [
+        "UnusedOnActivityCheck.kt",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//tools/lint/java/androidx/test/tools/lint:lint_common",
+        "@maven//:com_android_tools_lint_lint_api",
     ],
 )
