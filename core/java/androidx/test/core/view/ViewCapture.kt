@@ -50,6 +50,9 @@ import com.google.common.util.concurrent.ListenableFuture
  * This API is primarily intended for use in lower layer libraries or frameworks. For test authors,
  * its recommended to use espresso or compose's captureToImage.
  *
+ * This API currently does not work for View's hosted in Dialogs on APIs >= 26, as there is no
+ * way to find a Dialog's Window. (see b/195673633).
+ *
  * This API is currently experimental and subject to change or removal.
  */
 @ExperimentalTestApi
