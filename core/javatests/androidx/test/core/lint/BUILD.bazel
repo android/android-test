@@ -37,3 +37,20 @@ java_test(
     test_class = "androidx.test.core.lint.UnclosedActivityScenarioCheckTest",
     runtime_deps = [":UnclosedActivityScenarioCheckTestLib"],
 )
+
+kt_jvm_library(
+    name = "UnusedOnActivityCheckTestLib",
+    srcs = ["UnusedOnActivityCheckTest.kt"],
+    deps = [
+        "//core/java/androidx/test/core/lint/Check:UnusedOnActivityCheck",
+        "@maven//:com_android_tools_lint_lint_api",
+        "@maven//:com_nhaarman_mockitokotlin2_mockito_kotlin",
+        "@maven//:junit_junit",
+    ],
+)
+
+java_test(
+    name = "UnusedOnActivityCheckTest",
+    test_class = "androidx.test.core.lint.UnusedOnActivityCheckTest",
+    runtime_deps = [":UnusedOnActivityCheckTestLib"],
+)
