@@ -26,3 +26,16 @@ kt_jvm_library(
         "@maven//:com_android_tools_lint_lint_api",
     ],
 )
+
+kt_jvm_library(
+    name = "UnclosedActivityScenarioCheck",
+    srcs = [
+        "UnclosedActivityScenarioCheck.kt",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":ActivityScenarioCheckUtil",
+        "//tools/lint/java/androidx/test/tools/lint:lint_common",
+        "@maven//:com_android_tools_lint_lint_api",
+    ],
+)
