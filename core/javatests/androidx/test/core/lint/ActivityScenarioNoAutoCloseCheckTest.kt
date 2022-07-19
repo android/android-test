@@ -17,16 +17,12 @@
 package androidx.test.core.lint
 
 import com.android.tools.lint.detector.api.JavaContext
-import com.intellij.psi.PsiMethod
-import com.intellij.psi.PsiSubstitutor
-import com.intellij.psi.util.MethodSignature
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
-import org.jetbrains.uast.UCallExpression
-import org.junit.Before
+import org.jetbrains.uast.UClass
+import org.jetbrains.uast.visitor.AbstractUastVisitor
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -35,24 +31,13 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4::class)
 class ActivityScenarioNoAutoCloseCheckTest {
   private val mockJavaContext = mock<JavaContext>()
-  private val mockCallExpression = mock<UCallExpression>()
-  private val mockPsiMethod = mock<PsiMethod>()
-  private val detector = ActivityScenarioNoAutoCloseCheck()
-
-  @Before
-  fun SetUp() {
-    val mockMethodSignature =
-      mock<MethodSignature> {
-        on { name } doReturn "launch"
-        on { parameterTypes } doReturn arrayOf()
-      }
-    whenever(mockPsiMethod.getSignature(PsiSubstitutor.EMPTY)).doReturn(mockMethodSignature)
-  }
+  private val mockClass = mock<UClass>()
+  private val handler = ActivityScenarioNoAutoCloseCheck().createUastHandler(mockJavaContext)
 
   @Test
-  fun visitMethodCall_minimumCoverage() {
+  fun visitClass_minimumCoverage() {
     // Should at least reach UCallExpression.matchMethodSignature().
-    detector.visitMethodCall(mockJavaContext, mockCallExpression, mockPsiMethod)
-    verify(mockPsiMethod).getSignature(any())
+    handler.visitClass(mockClass)
+    verify(mockClass, atLeastOnce()).accept(any<AbstractUastVisitor>())
   }
 }

@@ -16,9 +16,8 @@
 
 package androidx.test.core.lint
 
-import androidx.test.tools.lint.LintMethodSignature
-import androidx.test.tools.lint.getMethodSignature
-import com.android.tools.lint.checks.DataFlowAnalyzer
+import androidx.test.tools.lint.searchCalls
+import com.android.tools.lint.client.api.UElementHandler
 import com.android.tools.lint.detector.api.Category
 import com.android.tools.lint.detector.api.Detector
 import com.android.tools.lint.detector.api.Implementation
@@ -29,13 +28,10 @@ import com.android.tools.lint.detector.api.Severity
 import com.android.tools.lint.detector.api.SourceCodeScanner
 import com.android.tools.lint.detector.api.isJava
 import com.android.tools.lint.detector.api.isKotlin
-import com.intellij.psi.PsiMethod
+import com.intellij.psi.PsiElement
 import org.jetbrains.uast.UCallExpression
 import org.jetbrains.uast.UClass
-import org.jetbrains.uast.UElement
-import org.jetbrains.uast.UMethod
-import org.jetbrains.uast.UTryExpression
-import org.jetbrains.uast.getParentOfType
+import org.jetbrains.uast.tryResolve
 
 /**
  * A lint detector that reports a warning if it detects an instance of
@@ -45,7 +41,7 @@ import org.jetbrains.uast.getParentOfType
  * For example,
  * ```java
  *     ActivityScenario<MyActivity> scenario = ActivityScenario.launch(MyActivity.class));
- *     // Without scenario.close().
+ *     scenario.close().
  * ```
  *
  * To close the `ActivityScenario` safely, we recommend to use the automatic resource management
@@ -83,58 +79,59 @@ open class ActivityScenarioNoAutoCloseCheck : Detector(), SourceCodeScanner {
         Implementation(ActivityScenarioNoAutoCloseCheck::class.java, Scope.JAVA_FILE_SCOPE)
     )
 
-  override fun getApplicableMethodNames() = listOf("launch")
+  override fun getApplicableUastTypes() = listOf(UClass::class.java)
 
-  override fun visitMethodCall(context: JavaContext, node: UCallExpression, method: PsiMethod) {
-    if (
-      method.getMethodSignature() != LAUNCH_METHOD_SIGNATURE ||
-        inActivityScenarioRule(node) ||
-        (isJava(node.sourcePsi) && closedWithTryWithResources(node)) ||
-        (isKotlin(node.sourcePsi) && closedWithRunBlock(node))
-    ) {
-      return
-    }
-    context.report(issue, node, context.getNameLocation(node), REPORT_MESSAGE)
-  }
+  override fun createUastHandler(context: JavaContext) =
+    object : UElementHandler() {
+      override fun visitClass(node: UClass) {
+        val launchCalls = searchCalls(node, ActivityScenarioConstants.LAUNCH_METHOD_SIGNATURE)
+        val closeCalls = searchCalls(node, ActivityScenarioConstants.CLOSE_METHOD_SIGNATURE)
 
-  /** Checks whether the call is under a `TestRule` class like `ActivityScenarioRule`. */
-  private fun inActivityScenarioRule(node: UCallExpression) =
-    node.getParentOfType<UClass>()?.qualifiedName == ACTIVITY_SCENARIO_RULE_CLASS_NAME
+        val closedScenarioReferences: MutableList<PsiElement> = mutableListOf()
+        val resolvedCloseCalls: MutableList<UCallExpression> = mutableListOf()
+        for (closeCall in closeCalls) {
+          getActivityScenarioByCloseCall(closeCall)?.tryResolve()?.let {
+            closedScenarioReferences.add(it)
+            resolvedCloseCalls.add(closeCall)
+          }
+        }
 
-  /** Checks whether the call is within Java's try-with-resources. */
-  private fun closedWithTryWithResources(node: UCallExpression): Boolean {
-    val tryNode = node.getParentOfType<UTryExpression>() ?: return false
-    if (!tryNode.hasResources) return false
-    var parentNode = node.uastParent
-    while (parentNode != null && parentNode !== tryNode) {
-      if (parentNode in tryNode.resourceVariables) {
-        return true
-      } else {
-        parentNode = parentNode.uastParent
-      }
-    }
-    return false
-  }
-
-  /** Checks whether the call is using Kotlin's `use` function. */
-  private fun closedWithRunBlock(node: UCallExpression): Boolean {
-    val method = node.getParentOfType<UMethod>() ?: return false
-    var matched = false
-    val searchUseCallVisitor =
-      object : DataFlowAnalyzer(setOf(node as UElement)) {
-        override fun receiver(call: UCallExpression) {
-          // Matches only once.
-          if (matched) return
-          // Since the receiver type is ActivityScenario for sure, we simply match method names
-          // instead of method signatures.
-          if (call.methodName == "use") {
-            matched = true
+        for (launchCall in launchCalls) {
+          val launchedScenario = getActivityScenarioByLaunchCall(launchCall) ?: continue
+          if (inActivityScenarioRule(launchCall)) {
+            // Ignores the case that the ActivityScenario is part of the implementation of
+            // ActivityScenarioRule.
+            continue
+          } else if (
+            (isJava(node.sourcePsi) && closedWithTryWithResources(launchedScenario)) ||
+              (isKotlin(node.sourcePsi) && closedWithRunBlock(launchCall))
+          ) {
+            // The ActivityScenario is automatically closed.
+            continue
+          }
+          val matchedCloseCall =
+            closedManually(
+              launchedScenario,
+              launchCall,
+              closedScenarioReferences,
+              resolvedCloseCalls
+            )
+          if (matchedCloseCall == null) {
+            // The ActivityScenario is not closed at all. Should report UnclosedActivityScenario
+            // warnings.
+            continue
+          } else {
+            // The ActivityScenario is closed but not in an automated way. Reports the warning.
+            context.report(
+              issue,
+              matchedCloseCall,
+              context.getLocation(matchedCloseCall),
+              REPORT_MESSAGE
+            )
           }
         }
       }
-    method.accept(searchUseCallVisitor)
-    return matched
-  }
+    }
 
   private companion object {
     val REPORT_MESSAGE =
@@ -148,15 +145,5 @@ open class ActivityScenarioNoAutoCloseCheck : Detector(), SourceCodeScanner {
     """
         .trimIndent()
         .replace("\\\n", "")
-
-    val LAUNCH_METHOD_SIGNATURE =
-      LintMethodSignature(
-        "androidx.test.core.app.ActivityScenario",
-        "launch",
-        listOf("java.lang.Class<A>")
-      )
-
-    const val ACTIVITY_SCENARIO_RULE_CLASS_NAME =
-      "androidx.test.ext.junit.rules.ActivityScenarioRule"
   }
 }
