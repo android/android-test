@@ -15,6 +15,7 @@
  */
 package androidx.test.espresso.device.filter
 
+import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum
 import androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum
 import androidx.test.filters.CustomFilter
@@ -22,7 +23,10 @@ import androidx.test.filters.CustomFilter
 /**
  * Indicates that a specific test should not be run on a device that does not have the provided
  * display attributes.
+ *
+ * <p>This API is experimental and subject to change or removal.
  */
+@ExperimentalTestApi
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 @CustomFilter(filterClass = RequiresDisplayFilter::class)
