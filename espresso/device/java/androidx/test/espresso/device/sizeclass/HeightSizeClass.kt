@@ -77,8 +77,27 @@ private constructor(
       return when (sizeClass) {
         HeightSizeClass.COMPACT -> 400
         HeightSizeClass.MEDIUM -> 700
-        else -> 1000 // WidthSizeClass.EXPANDED
+        else -> 1000 // HeightSizeClass.EXPANDED
       }
+    }
+    /**
+     * Returns a [HeightSizeClassEnum] given the [HeightSizeClass].
+     * @param sizeClass the size class
+     * @return the relevant HeightSizeClassEnum
+     */
+    @JvmStatic
+    public fun getEnum(sizeClass: HeightSizeClass): HeightSizeClassEnum {
+      return when (sizeClass) {
+        HeightSizeClass.COMPACT -> HeightSizeClassEnum.COMPACT
+        HeightSizeClass.MEDIUM -> HeightSizeClassEnum.MEDIUM
+        else -> HeightSizeClassEnum.EXPANDED
+      }
+    }
+
+    public enum class HeightSizeClassEnum(val description: String) {
+      COMPACT("COMPACT"),
+      MEDIUM("MEDIUM"),
+      EXPANDED("EXPANDED")
     }
   }
 }

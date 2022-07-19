@@ -81,5 +81,24 @@ private constructor(
         else -> 1000 // WidthSizeClass.EXPANDED
       }
     }
+    /**
+     * Returns a [WidthSizeClassEnum] given the [WidthSizeClass].
+     * @param sizeClass the size class
+     * @return the relevant WidthSizeClassEnum
+     */
+    @JvmStatic
+    public fun getEnum(sizeClass: WidthSizeClass): WidthSizeClassEnum {
+      return when (sizeClass) {
+        WidthSizeClass.COMPACT -> WidthSizeClassEnum.COMPACT
+        WidthSizeClass.MEDIUM -> WidthSizeClassEnum.MEDIUM
+        else -> WidthSizeClassEnum.EXPANDED
+      }
+    }
+
+    public enum class WidthSizeClassEnum(val description: String) {
+      COMPACT("COMPACT"),
+      MEDIUM("MEDIUM"),
+      EXPANDED("EXPANDED"),
+    }
   }
 }

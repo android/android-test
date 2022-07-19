@@ -14,6 +14,7 @@ kt_android_library(
     deps = [
         "//annotation/java/androidx/test/annotation",
         "//espresso/device/java/androidx/test/espresso/device/controller",
+        "//espresso/device/java/androidx/test/espresso/device/sizeclass",
         "//ext/junit",
         "//runner/android_junit_runner",
         "//runner/monitor",
