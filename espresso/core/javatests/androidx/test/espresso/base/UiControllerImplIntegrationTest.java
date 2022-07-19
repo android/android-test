@@ -90,16 +90,13 @@ public class UiControllerImplIntegrationTest {
   public void injectKeyEvent() throws InterruptedException {
     try (ActivityScenario<SendActivity> activityScenario =
         ActivityScenario.launch(SendActivity.class)) {
-      activityScenario.onActivity(
-          activity -> {
-            try {
-              KeyCharacterMap keyCharacterMap = UiControllerImpl.getKeyCharacterMap();
-              KeyEvent[] events = keyCharacterMap.getEvents("a".toCharArray());
-              assertThat(uiController.injectKeyEvent(events[0])).isTrue();
-            } catch (InjectEventSecurityException e) {
-              throw new RuntimeException(e);
-            }
-          });
+      try {
+        KeyCharacterMap keyCharacterMap = UiControllerImpl.getKeyCharacterMap();
+        KeyEvent[] events = keyCharacterMap.getEvents("a".toCharArray());
+        assertThat(uiController.injectKeyEvent(events[0])).isTrue();
+      } catch (InjectEventSecurityException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 
