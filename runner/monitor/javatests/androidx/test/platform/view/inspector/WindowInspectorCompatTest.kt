@@ -44,14 +44,14 @@ class WindowInspectorCompatTest {
   @Test
   fun getGlobalWindowViews_activity() {
     ActivityScenario.launch<SimpleActivity>(SimpleActivity::class.java).use { scenario ->
-      scenario.onActivity { assertThat(WindowInspectorCompat.getGlobalWindowViews()).hasSize(1) }
+      assertThat(WindowInspectorCompat.getGlobalWindowViews()).hasSize(1)
     }
   }
 
   @Test
   fun getGlobalWindowViews_activityDialog() {
     ActivityScenario.launch<ActivityWithDialog>(ActivityWithDialog::class.java).use { scenario ->
-      scenario.onActivity { assertThat(WindowInspectorCompat.getGlobalWindowViews()).hasSize(2) }
+      assertThat(WindowInspectorCompat.getGlobalWindowViews()).hasSize(2)
     }
   }
 }
