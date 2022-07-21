@@ -97,37 +97,27 @@ open class ActivityScenarioNoAutoCloseCheck : Detector(), SourceCodeScanner {
         }
 
         for (launchCall in launchCalls) {
-          val launchedScenario = getActivityScenarioByLaunchCall(launchCall) ?: continue
-          if (inActivityScenarioRule(launchCall)) {
-            // Ignores the case that the ActivityScenario is part of the implementation of
-            // ActivityScenarioRule.
-            continue
-          } else if (
-            (isJava(node.sourcePsi) && closedWithTryWithResources(launchedScenario)) ||
-              (isKotlin(node.sourcePsi) && closedWithRunBlock(launchCall))
-          ) {
-            // The ActivityScenario is automatically closed.
-            continue
-          }
-          val matchedCloseCall =
-            closedManually(
-              launchedScenario,
-              launchCall,
-              closedScenarioReferences,
-              resolvedCloseCalls
-            )
-          if (matchedCloseCall == null) {
-            // The ActivityScenario is not closed at all. Should report UnclosedActivityScenario
-            // warnings.
-            continue
-          } else {
-            // The ActivityScenario is closed but not in an automated way. Reports the warning.
-            context.report(
-              issue,
-              matchedCloseCall,
-              context.getLocation(matchedCloseCall),
-              REPORT_MESSAGE
-            )
+          // Ignores the check on ActivityScenarioRule classes.
+          if (inActivityScenarioRule(launchCall)) continue
+          // The instance is closed by Kotlin's use.
+          if (isKotlin(node.sourcePsi) && closedWithRunBlock(launchCall)) continue
+
+          val launchedScenario = getActivityScenarioByLaunchCall(launchCall)
+          if (launchedScenario != null) {
+            // The instance is closed by Java's try-with-resources.
+            // The instance is always a local variable under try-with-resources.
+            if (isJava(node.sourcePsi) && closedWithTryWithResources(launchedScenario)) continue
+            // The instance is manually closed.
+            val closeCall =
+              closedManually(
+                launchedScenario,
+                launchCall,
+                closedScenarioReferences,
+                resolvedCloseCalls
+              )
+            if (closeCall != null) {
+              context.report(issue, closeCall, context.getLocation(closeCall), REPORT_MESSAGE)
+            }
           }
         }
       }

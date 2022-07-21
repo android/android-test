@@ -105,20 +105,27 @@ open class UnclosedActivityScenarioCheck : Detector(), SourceCodeScanner {
         }
 
         for (launchCall in launchCalls) {
-          val launchedScenario = getActivityScenarioByLaunchCall(launchCall) ?: continue
-          if (
-            !inActivityScenarioRule(launchCall) &&
-              !(isJava(node.sourcePsi) && closedWithTryWithResources(launchedScenario)) &&
-              !(isKotlin(node.sourcePsi) && closedWithRunBlock(launchCall)) &&
+          // Ignores the check on ActivityScenarioRule classes.
+          if (inActivityScenarioRule(launchCall)) continue
+          // The instance is closed by Kotlin's use.
+          if (isKotlin(node.sourcePsi) && closedWithRunBlock(launchCall)) continue
+
+          val launchedScenario = getActivityScenarioByLaunchCall(launchCall)
+          if (launchedScenario != null) {
+            // The instance is closed by Java's try-with-resources.
+            if (isJava(node.sourcePsi) && closedWithTryWithResources(launchedScenario)) continue
+            // The instance is manually closed.
+            if (
               closedManually(
                 launchedScenario,
                 launchCall,
                 closedScenarioReferences,
                 resolvedCloseCalls
-              ) == null
-          ) {
-            context.report(issue, launchCall, context.getLocation(launchCall), REPORT_MESSAGE)
+              ) != null
+            )
+              continue
           }
+          context.report(issue, launchCall, context.getLocation(launchCall), REPORT_MESSAGE)
         }
       }
     }

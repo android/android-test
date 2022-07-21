@@ -142,6 +142,11 @@ fun getActivityScenarioByLaunchCall(launchCall: UCallExpression): UElement? {
     val leftValue = variableNode.leftOperand
     if (leftValue is USimpleNameReferenceExpression) {
       return leftValue
+    } else if (
+      leftValue is UQualifiedReferenceExpression &&
+        leftValue.selector is USimpleNameReferenceExpression
+    ) {
+      return leftValue.selector
     }
   }
   return null
@@ -154,6 +159,11 @@ fun getActivityScenarioByCloseCall(closeCall: UCallExpression): UElement? {
     val receiverNode = parentNodeOfClose.receiver
     if (receiverNode is USimpleNameReferenceExpression) {
       return receiverNode
+    } else if (
+      receiverNode is UQualifiedReferenceExpression &&
+        receiverNode.selector is USimpleNameReferenceExpression
+    ) {
+      return receiverNode.selector
     }
   }
   return null
