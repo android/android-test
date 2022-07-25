@@ -266,7 +266,7 @@ maven_artifact(
         "javax.inject:javax.inject:1",
         "org.hamcrest:hamcrest-library:%s" % HAMCREST_VERSION,
         "org.hamcrest:hamcrest-integration:%s" % HAMCREST_VERSION,
-        "com.google.code.findbugs:jsr305:2.0.1",
+        "com.google.code.findbugs:jsr305:2.0.2",
         "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
         "androidx.test:annotation:%s" % ANNOTATION_VERSION,
     ],
