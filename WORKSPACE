@@ -135,7 +135,7 @@ maven_install(
         "net.bytebuddy:byte-buddy-agent:1.9.10",
         "net.bytebuddy:byte-buddy:1.9.10",
         "net.sf.kxml:kxml2:jar:2.3.0",
-        "org.ccil/cowan.tagsoup:tagsoup:1.2",
+        "org.ccil/cowan.tagsoup:tagsoup:1.2.1",
         "org.checkerframework:checker-compat-qual:2.5.5",
         "org.hamcrest:hamcrest-all:1.3",
         "org.mockito:mockito-core:2.28.1",
