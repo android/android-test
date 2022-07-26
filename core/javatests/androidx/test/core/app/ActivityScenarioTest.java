@@ -19,6 +19,7 @@ package androidx.test.core.app;
 import static android.app.Activity.RESULT_OK;
 import static androidx.test.ext.truth.content.IntentSubject.assertThat;
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 
 import android.app.Activity;
@@ -358,6 +359,19 @@ public final class ActivityScenarioTest {
           });
       assertThat(scenario.getResult().getResultCode()).isEqualTo(RESULT_OK);
       assertThat(scenario.getResult().getResultData()).hasAction(Intent.ACTION_SEND);
+    }
+  }
+
+  @Test
+  public void scenarioResultAfterLaunch() throws Exception {
+    try (ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class)) {
+      IllegalStateException e = assertThrows(IllegalStateException.class, scenario::getResult);
+      assertThat(e)
+          .hasMessageThat()
+          .isEqualTo(
+              "You must start Activity first. Make sure you are using launchActivityForResult() to"
+                  + " launch an Activity.");
     }
   }
 
