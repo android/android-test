@@ -111,20 +111,24 @@ open class UnclosedActivityScenarioCheck : Detector(), SourceCodeScanner {
           if (isKotlin(node.sourcePsi) && closedWithRunBlock(launchCall)) continue
 
           val launchedScenario = getActivityScenarioByLaunchCall(launchCall)
-          if (launchedScenario != null) {
-            // The instance is closed by Java's try-with-resources.
-            if (isJava(node.sourcePsi) && closedWithTryWithResources(launchedScenario)) continue
-            // The instance is manually closed.
-            if (
-              closedManually(
-                launchedScenario,
-                launchCall,
-                closedScenarioReferences,
-                resolvedCloseCalls
-              ) != null
-            )
-              continue
-          }
+          // The instance is closed by Java's try-with-resources.
+          if (
+            launchedScenario != null &&
+              isJava(node.sourcePsi) &&
+              closedWithTryWithResources(launchedScenario)
+          )
+            continue
+
+          // The instance is manually closed.
+          if (
+            closedManually(
+              launchedScenario,
+              launchCall,
+              closedScenarioReferences,
+              resolvedCloseCalls
+            ) != null
+          )
+            continue
           context.report(issue, launchCall, context.getLocation(launchCall), REPORT_MESSAGE)
         }
       }

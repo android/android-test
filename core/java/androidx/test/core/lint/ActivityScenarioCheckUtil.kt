@@ -79,12 +79,12 @@ fun closedWithRunBlock(launchCall: UCallExpression): Boolean {
 
 /** Checks whether the call is closed manually. */
 fun closedManually(
-  launchedScenario: UElement,
+  launchedScenario: UElement?,
   launchCall: UCallExpression,
   closedScenarioReferences: List<PsiElement>,
   closeCalls: List<UCallExpression>
 ): UCallExpression? {
-  if (launchedScenario is ULocalVariable) {
+  if (launchedScenario == null || launchedScenario is ULocalVariable) {
     // The ActivityScenario.launch() is in the declaration of a local variable.
     // We can use Lint's data flow analyzer in this case.
     val method = launchCall.getParentOfType<UMethod>() ?: return null
