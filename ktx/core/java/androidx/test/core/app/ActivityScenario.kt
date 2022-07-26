@@ -30,7 +30,7 @@ import androidx.lifecycle.Lifecycle.State
  *
  * @param intent an intent to start activity or null to use the default one
  * @param activityOptions an activity options bundle to be passed along with the intent to start
- * activity
+ *        activity
  * @throws AssertionError if the lifecycle state transition never completes within the timeout
  * @return ActivityScenario which you can use to make further state transitions
  */

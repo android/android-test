@@ -52,20 +52,14 @@ public interface ActivityInvoker {
         new ComponentName(getInstrumentation().getContext(), activityClass));
   }
 
-  /** Starts an activity using the given intent. */
-  void startActivity(Intent intent, @Nullable Bundle activityOptions);
-
-  /** Convenience method to retain backwards compatibility */
-  void startActivity(Intent intent);
-
   /**
    * Starts an activity using the given intent. After the activity finishes you can retrieve its
    * result code and data via {@link #getActivityResult()}.
    */
-  void startActivityForResult(Intent intent, @Nullable Bundle activityOptions);
+  void startActivity(Intent intent, @Nullable Bundle activityOptions);
 
   /** Convenience method to retain backwards compatibility */
-  void startActivityForResult(Intent intent);
+  void startActivity(Intent intent);
 
   /**
    * Returns activity result that is started by {@link #startActivity}. Unlike other methods this
@@ -74,9 +68,6 @@ public interface ActivityInvoker {
    * <p>Note: this method doesn't call {@link Activity#finish()} of the activity that is started by
    * {@link #startActivity}. If you call this method without calling that, it will end up with
    * runtime error and make the test to fail.
-   *
-   * @throws IllegalStateException when you call this method with an Activity that was not started
-   *     by {@link #startActivityForResult}
    */
   ActivityResult getActivityResult();
 

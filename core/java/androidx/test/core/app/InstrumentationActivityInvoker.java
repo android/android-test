@@ -403,34 +403,6 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     getApplicationContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
     getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
 
-    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-    if (Build.VERSION.SDK_INT < 16) {
-      // activityOptions not supported
-      getApplicationContext().startActivity(intent);
-    } else {
-      getApplicationContext().startActivity(intent, activityOptions);
-    }
-  }
-
-  @Override
-  public void startActivity(Intent intent) {
-    startActivity(intent, null);
-  }
-
-  /** Starts an Activity using the given intent. */
-  @Override
-  public void startActivityForResult(Intent intent, @Nullable Bundle activityOptions) {
-    // make sure the intent can resolve an activity
-    ActivityInfo ai = intent.resolveActivityInfo(getApplicationContext().getPackageManager(), 0);
-    if (ai == null) {
-      throw new IllegalStateException("Unable to resolve activity for: " + intent);
-    }
-    // Close empty activities and bootstrap activity if it's running. This might happen if the
-    // previous test crashes before it cleans up the state.
-    getApplicationContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
-    getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
-
     activityResultWaiter = new ActivityResultWaiter(getApplicationContext());
 
     // Note: Instrumentation.startActivitySync(Intent) cannot be used here because BootstrapActivity
@@ -458,18 +430,13 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
   }
 
   @Override
-  public void startActivityForResult(Intent intent) {
-    startActivityForResult(intent, null);
+  public void startActivity(Intent intent) {
+    startActivity(intent, null);
   }
 
   @Override
   public ActivityResult getActivityResult() {
-    if (activityResultWaiter == null) {
-      throw new IllegalStateException(
-          "You must start Activity first. Make sure you are using launchActivityForResult() to"
-              + " launch an Activity.");
-    }
-    return activityResultWaiter.getActivityResult();
+    return checkNotNull(activityResultWaiter, "You must start Activity first").getActivityResult();
   }
 
   /** Resumes the tested activity by finishing empty activities. */
@@ -579,13 +546,11 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     // for the API level above 19.
     startEmptyActivitySync();
     getInstrumentation().runOnMainSync(activity::finish);
-    if (activityResultWaiter != null) {
-      getApplicationContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
-      startEmptyActivitySync();
-      getInstrumentation().runOnMainSync(activity::finish);
-      getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
-      getApplicationContext().sendBroadcast(new Intent(CANCEL_ACTIVITY_RESULT_WAITER));
-    }
+    getApplicationContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
+    startEmptyActivitySync();
+    getInstrumentation().runOnMainSync(activity::finish);
+    getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
+    getApplicationContext().sendBroadcast(new Intent(CANCEL_ACTIVITY_RESULT_WAITER));
   }
 
   private static void checkActivityStageIsIn(Activity activity, Stage... expected) {
