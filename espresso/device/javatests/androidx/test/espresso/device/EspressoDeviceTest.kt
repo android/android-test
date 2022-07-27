@@ -38,11 +38,11 @@ import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
 class EspressoDeviceTest {
-  @get:Rule
+  @get:Rule(order = 1)
   val activityRule: ActivityTestRule<ScreenOrientationActivity> =
     ActivityTestRule(ScreenOrientationActivity::class.java)
 
-  @get:Rule
+  @get:Rule(order = 2)
   val screenOrientationRule: ScreenOrientationRule =
     ScreenOrientationRule(ScreenOrientation.PORTRAIT)
 
@@ -90,43 +90,49 @@ class EspressoDeviceTest {
 
   @Test
   fun onDevice_throwsFromScenarioOnActivity() {
-    val scenario: ActivityScenario<ScreenOrientationActivity> =
-      ActivityScenario.launch(ScreenOrientationActivity::class.java)
-    scenario.onActivity({ activity: ScreenOrientationActivity ->
-      assertThrows(IllegalStateException::class.java) {
-        onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
-      }
-    })
+    ActivityScenario.launch(ScreenOrientationActivity::class.java).use { scenario ->
+      scenario.onActivity({
+        assertThrows(IllegalStateException::class.java) {
+          onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
+        }
+      })
+    }
   }
 
   @Test
   fun onDevice_setScreenOrientationToLandscapeAndThenToPortraitWithoutConfigurationHandling() {
     ActivityScenario.launch(ScreenOrientationWithoutOnConfigurationChangedActivity::class.java)
-    onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
+      .use {
+        onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
 
-    onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
+        onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
 
-    onDevice().perform(setScreenOrientation(ScreenOrientation.PORTRAIT))
+        onDevice().perform(setScreenOrientation(ScreenOrientation.PORTRAIT))
 
-    onView(withId(R.id.screen_orientation)).check(matches(withText("portrait")))
+        onView(withId(R.id.screen_orientation)).check(matches(withText("portrait")))
+      }
   }
 
   @Test
   fun onDevice_clickAndThenSetScreenOrientationToLandscapeWithoutConfigurationHandling() {
     ActivityScenario.launch(ScreenOrientationWithoutOnConfigurationChangedActivity::class.java)
-    onView(withId(R.id.screen_orientation)).perform(click())
+      .use {
+        onView(withId(R.id.screen_orientation)).perform(click())
 
-    onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
+        onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
 
-    onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
+        onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
+      }
   }
 
   @Test
   fun onDevice_setScreenOrientationToLandscapeThenClickWithoutConfigurationHandling() {
     ActivityScenario.launch(ScreenOrientationWithoutOnConfigurationChangedActivity::class.java)
-    onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
+      .use {
+        onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
 
-    onView(withId(R.id.screen_orientation)).perform(click())
-    onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
+        onView(withId(R.id.screen_orientation)).perform(click())
+        onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
+      }
   }
 }
