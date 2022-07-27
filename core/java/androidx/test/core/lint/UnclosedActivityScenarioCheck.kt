@@ -16,7 +16,6 @@
 
 package androidx.test.core.lint
 
-import androidx.test.tools.lint.LintMethodSignature
 import androidx.test.tools.lint.searchCalls
 import com.android.tools.lint.client.api.UElementHandler
 import com.android.tools.lint.detector.api.Category
@@ -143,12 +142,5 @@ open class UnclosedActivityScenarioCheck : Detector(), SourceCodeScanner {
     """
         .trimIndent()
         .replace("\\\n", "")
-
-    val LAUNCH_METHOD_SIGNATURE =
-      LintMethodSignature(
-        "androidx.test.core.app.ActivityScenario",
-        "launch",
-        listOf("java.lang.Class<A>")
-      )
   }
 }

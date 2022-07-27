@@ -16,6 +16,7 @@
 
 package androidx.test.core.lint
 
+import androidx.test.core.lint.ActivityScenarioConstants.ACTIVITY_SCENARIO_CLASS_NAME
 import androidx.test.tools.lint.LintMethodSignature
 import com.android.tools.lint.checks.DataFlowAnalyzer
 import com.intellij.psi.PsiElement
@@ -34,14 +35,10 @@ import org.jetbrains.uast.getParentOfType
 import org.jetbrains.uast.tryResolve
 
 object ActivityScenarioConstants {
+  const val ACTIVITY_SCENARIO_CLASS_NAME = "androidx.test.core.app.ActivityScenario"
   val LAUNCH_METHOD_SIGNATURE =
-    LintMethodSignature(
-      "androidx.test.core.app.ActivityScenario",
-      "launch",
-      listOf("java.lang.Class<A>")
-    )
-  val CLOSE_METHOD_SIGNATURE =
-    LintMethodSignature("androidx.test.core.app.ActivityScenario", "close", listOf())
+    LintMethodSignature(ACTIVITY_SCENARIO_CLASS_NAME, "launch", listOf("java.lang.Class<A>"))
+  val CLOSE_METHOD_SIGNATURE = LintMethodSignature(ACTIVITY_SCENARIO_CLASS_NAME, "close", listOf())
 }
 
 /** Checks whether the call is under a `TestRule` class like `ActivityScenarioRule`. */
@@ -128,25 +125,32 @@ fun closedManually(
 
 /** Finds the ActivityScenario instance that ActivityScenario.launch() returns to. */
 fun getActivityScenarioByLaunchCall(launchCall: UCallExpression): UElement? {
-  // Extend the call expression node to include prefix references.
-  var extendedCallNode: UElement = launchCall
-  while (extendedCallNode.uastParent is UQualifiedReferenceExpression) {
-    extendedCallNode = extendedCallNode.uastParent as UElement
+  // The ActivityScenario.launch() is in declaration of a field or a local variable.
+  val variableNode = launchCall.getParentOfType<UVariable>()
+  if (
+    variableNode != null &&
+      variableNode.type.canonicalText.matches(Regex("$ACTIVITY_SCENARIO_CLASS_NAME<.*>"))
+  ) {
+    return variableNode
   }
 
-  val variableNode = extendedCallNode.uastParent ?: return null
-  // The ActivityScenario.launch() is in declaration of a field or a local variable.
-  if (variableNode is UField || variableNode is ULocalVariable) return variableNode
-  if (variableNode is UBinaryExpression) {
-    // The ActivityScenario.launch() is in an assignment.
-    val leftValue = variableNode.leftOperand
-    if (leftValue is USimpleNameReferenceExpression) {
-      return leftValue
-    } else if (
-      leftValue is UQualifiedReferenceExpression &&
-        leftValue.selector is USimpleNameReferenceExpression
+  // The ActivityScenario.launch() is in an assignment.
+  val assignmentNode = launchCall.getParentOfType<UBinaryExpression>()
+  if (assignmentNode != null) {
+    val assignmentType = assignmentNode.leftOperand.getExpressionType()
+    if (
+      assignmentType != null &&
+        assignmentType.canonicalText.matches(Regex("$ACTIVITY_SCENARIO_CLASS_NAME<.*>"))
     ) {
-      return leftValue.selector
+      val leftValue = assignmentNode.leftOperand
+      if (leftValue is USimpleNameReferenceExpression) {
+        return leftValue
+      } else if (
+        leftValue is UQualifiedReferenceExpression &&
+          leftValue.selector is USimpleNameReferenceExpression
+      ) {
+        return leftValue.selector
+      }
     }
   }
   return null
@@ -155,7 +159,9 @@ fun getActivityScenarioByLaunchCall(launchCall: UCallExpression): UElement? {
 /** Finds the ActivityScenario instance that ActivityScenario.close() uses. */
 fun getActivityScenarioByCloseCall(closeCall: UCallExpression): UElement? {
   val parentNodeOfClose = closeCall.uastParent
-  if (parentNodeOfClose is UQualifiedReferenceExpression) {
+  if (
+    parentNodeOfClose is UQualifiedReferenceExpression && parentNodeOfClose.selector === closeCall
+  ) {
     val receiverNode = parentNodeOfClose.receiver
     if (receiverNode is USimpleNameReferenceExpression) {
       return receiverNode
