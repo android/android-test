@@ -49,7 +49,6 @@ import org.hamcrest.Matcher;
  *
  * <p>An example test that simply validates an outgoing intent:
  *
- * <p><code>
  * <pre>
  * public void testValidateIntentSentToPackage() {
  *   // User action that results in an external "phone" activity being launched.
@@ -60,11 +59,9 @@ import org.hamcrest.Matcher;
  *   intended(toPackage("com.android.phone"));
  * }
  * </pre>
- * </code>
  *
  * <p>An example test with intent stubbing:
  *
- * <p><code>
  * <pre>
  * public void testActivityResultIsHandledProperly() {
  *   // Build a result to return when a particular activity is launched.
@@ -84,7 +81,6 @@ import org.hamcrest.Matcher;
  *   assertTrue(user.waitForText(phoneNumber));
  * }
  * </pre>
- * </code>
  */
 public final class Intents {
   private static Intents defaultInstance;
