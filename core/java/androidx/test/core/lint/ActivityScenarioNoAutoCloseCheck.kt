@@ -31,6 +31,7 @@ import com.android.tools.lint.detector.api.isKotlin
 import com.intellij.psi.PsiElement
 import org.jetbrains.uast.UCallExpression
 import org.jetbrains.uast.UClass
+import org.jetbrains.uast.UElement
 import org.jetbrains.uast.tryResolve
 
 /**
@@ -79,7 +80,7 @@ open class ActivityScenarioNoAutoCloseCheck : Detector(), SourceCodeScanner {
         Implementation(ActivityScenarioNoAutoCloseCheck::class.java, Scope.JAVA_FILE_SCOPE)
     )
 
-  override fun getApplicableUastTypes() = listOf(UClass::class.java)
+  override fun getApplicableUastTypes(): List<Class<out UElement>>? = listOf(UClass::class.java)
 
   override fun createUastHandler(context: JavaContext) =
     object : UElementHandler() {
