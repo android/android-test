@@ -184,11 +184,11 @@ package androidx.test.internal.util {
 
 package androidx.test.platform.tracing {
 
-  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public interface Tracer {
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @androidx.test.annotation.ExperimentalTestApi public interface Tracer {
     method public androidx.test.platform.tracing.Tracer.Span beginSpan(String);
   }
 
-  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static interface Tracer.Span extends java.io.Closeable {
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @androidx.test.annotation.ExperimentalTestApi public static interface Tracer.Span extends java.io.Closeable {
     method public androidx.test.platform.tracing.Tracer.Span beginChildSpan(String);
     method public void close();
   }
