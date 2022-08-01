@@ -19,13 +19,17 @@
 package androidx.test.espresso.device.util
 
 import android.app.Activity
+import android.app.Instrumentation
+import android.os.ParcelFileDescriptor.AutoCloseInputStream
 import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
+import java.nio.charset.Charset
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToInt
 
 /** Collection of utility methods for interacting with activities. */
 private val TAG = "ActivityUtil"
@@ -40,6 +44,35 @@ private val TAG = "ActivityUtil"
 fun Activity.isConfigurationChangeHandled(configBit: Int): Boolean {
   val activityInfo = this.getPackageManager().getActivityInfo(this.getComponentName(), 0)
   return (activityInfo.configChanges and configBit) != 0
+}
+
+/**
+* Calculates the current width and height of the test device's display.
+*
+* @param instrumentation, an instance of Instrumentation used to execute shell commands on the test device 
+* @return a Pair of integers corresponding to the display's width and height
+*/
+fun Activity.calculateCurrentDisplayWidthAndHeight(
+  instrumentation: Instrumentation
+): Pair<Int, Int> {
+  // "wm size" will output a string with the format
+  // "Physical size: WxH
+  //  Override size: WxH"
+  val parcelFileDescriptor = instrumentation.getUiAutomation().executeShellCommand("wm size")
+  val output: String
+  AutoCloseInputStream(parcelFileDescriptor).use { inputStream ->
+    output = inputStream.readBytes().toString(Charset.defaultCharset())
+  }
+
+  val subStringToFind = "Override size: "
+  val displaySizes =
+    output.substring(output.indexOf(subStringToFind) + subStringToFind.length).trim().split("x")
+  val widthPx = displaySizes.get(0).toInt()
+  val heightPx = displaySizes.get(1).toInt()
+
+  val widthDp = (widthPx / this.getResources().displayMetrics.density).roundToInt()
+  val heightDp = (heightPx / this.getResources().displayMetrics.density).roundToInt()
+  return Pair(widthDp, heightDp)
 }
 
 /**

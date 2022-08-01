@@ -21,6 +21,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
 import androidx.test.espresso.device.action.setDisplaySize
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
+import androidx.test.espresso.device.rules.EspressoDeviceRule
 import androidx.test.espresso.device.sizeclass.HeightSizeClass
 import androidx.test.espresso.device.sizeclass.WidthSizeClass
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -37,9 +38,12 @@ import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
 class MultiWindowEspressoDeviceTest {
-  @get:Rule
-  val activityRule: ActivityScenarioRule<MultiWindowActivity> =
+  private val activityScenarioRule: ActivityScenarioRule<MultiWindowActivity> =
     ActivityScenarioRule(MultiWindowActivity::class.java)
+
+  @get:Rule
+  val espressoDeviceRule: EspressoDeviceRule<MultiWindowActivity> =
+    EspressoDeviceRule(activityScenarioRule)
 
   @Test
   fun onDevice_setDisplaySizeToCompactWidthAndHeight() {
