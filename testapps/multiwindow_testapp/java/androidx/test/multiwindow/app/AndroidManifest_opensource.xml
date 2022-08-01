@@ -19,6 +19,8 @@
           tools:overrideLibrary="androidx.test.multiwindow.app.tests"
     package="androidx.test.multiwindow.app">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
   <uses-sdk
       android:minSdkVersion="24"
       android:targetSdkVersion="30"/>
