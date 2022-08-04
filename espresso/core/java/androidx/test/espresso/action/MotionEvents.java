@@ -297,20 +297,44 @@ public final class MotionEvents {
         downEvent.getXPrecision(),
         downEvent.getYPrecision(),
         downEvent.getSource(),
+        downEvent.getToolType(0),
         downEvent.getButtonState());
   }
 
   private static MotionEvent obtain(
-      long downTime,
-      long eventTime,
-      int action,
-      float[] coordinates,
-      float xPrecision,
-      float yPrecision,
-      int source,
-      int buttonState) {
+          long downTime,
+          long eventTime,
+          int action,
+          float[] coordinates,
+          float xPrecision,
+          float yPrecision,
+          int source,
+          int buttonState) {
+    return obtain(
+            downTime,
+            eventTime,
+            action,
+            coordinates,
+            xPrecision,
+            yPrecision,
+            source,
+            mapInputDeviceToToolType(source),
+            buttonState);
+  }
+
+  private static MotionEvent obtain(
+          long downTime,
+          long eventTime,
+          int action,
+          float[] coordinates,
+          float xPrecision,
+          float yPrecision,
+          int source,
+          int toolType,
+          int buttonState
+  ) {
     final MotionEvent.PointerCoords[] pointerCoords = {new MotionEvent.PointerCoords()};
-    final MotionEvent.PointerProperties[] pointerProperties = getPointerProperties(source);
+    final MotionEvent.PointerProperties[] pointerProperties = getPointerProperties(toolType);
     pointerCoords[0].clear();
     pointerCoords[0].x = coordinates[0];
     pointerCoords[0].y = coordinates[1];
@@ -334,25 +358,31 @@ public final class MotionEvents {
         0); // flags
   }
 
-  private static MotionEvent.PointerProperties[] getPointerProperties(int inputDevice) {
+  private static MotionEvent.PointerProperties[] getPointerProperties(int toolType) {
     MotionEvent.PointerProperties[] pointerProperties = {new MotionEvent.PointerProperties()};
     pointerProperties[0].clear();
     pointerProperties[0].id = 0;
+    pointerProperties[0].toolType = toolType;
+    return pointerProperties;
+  }
+
+  private static int mapInputDeviceToToolType(int inputDevice) {
+    int toolType;
     switch (inputDevice) {
       case InputDevice.SOURCE_MOUSE:
-        pointerProperties[0].toolType = MotionEvent.TOOL_TYPE_MOUSE;
+        toolType = MotionEvent.TOOL_TYPE_MOUSE;
         break;
       case InputDevice.SOURCE_STYLUS:
-        pointerProperties[0].toolType = MotionEvent.TOOL_TYPE_STYLUS;
+        toolType = MotionEvent.TOOL_TYPE_STYLUS;
         break;
       case InputDevice.SOURCE_TOUCHSCREEN:
-        pointerProperties[0].toolType = MotionEvent.TOOL_TYPE_FINGER;
+        toolType = MotionEvent.TOOL_TYPE_FINGER;
         break;
       default:
-        pointerProperties[0].toolType = MotionEvent.TOOL_TYPE_UNKNOWN;
+        toolType = MotionEvent.TOOL_TYPE_UNKNOWN;
         break;
     }
-    return pointerProperties;
+    return toolType;
   }
 
   /** Holds the result of a down motion. */
