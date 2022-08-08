@@ -27,6 +27,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.multiwindow.app.MultiWindowActivity
+import androidx.test.espresso.device.util.getDeviceApiLevel
 import androidx.test.multiwindow.app.R
 import com.google.common.truth.Truth.assertThat
 import org.junit.Assert.assertThrows
@@ -75,7 +76,7 @@ class MultiWindowEspressoDeviceTest {
 
   @Test
   fun onDevice_setDisplaySizeToExpandedWidthAndHeight() {
-    if (android.os.Build.MODEL.equals("Generic Foldable (Android)")) {
+    if (android.os.Build.MODEL.equals("Generic Foldable (Android)") || getDeviceApiLevel() == 33) {
       onDevice().perform(setDisplaySize(WidthSizeClass.EXPANDED, HeightSizeClass.EXPANDED))
 
       onView(withId(R.id.screen_width_display_size)).check(matches(withText("Expanded width")))
