@@ -17,8 +17,9 @@
 package androidx.test.espresso.base;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.fail;
 import static org.junit.rules.ExpectedException.none;
 
@@ -40,7 +41,6 @@ import androidx.test.runner.lifecycle.Stage;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SendActivity;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Before;
 import org.junit.Rule;
@@ -76,44 +76,44 @@ public class EventInjectorTest {
 
   @Test
   public void injectKeyEventUpWithNoDown() throws Exception {
-    ActivityScenario<SendActivity> scenario = ActivityScenario.launch(SendActivity.class);
+    try (ActivityScenario<SendActivity> scenario = ActivityScenario.launch(SendActivity.class)) {
 
-    scenario.onActivity(
-        sendActivity -> {
-          View view = sendActivity.findViewById(R.id.send_data_edit_text);
-          assertTrue(view.requestFocus());
-          latch.countDown();
-        });
+      scenario.onActivity(
+          sendActivity -> {
+            View view = sendActivity.findViewById(R.id.send_data_edit_text);
+            assertThat(view.requestFocus()).isTrue();
+            latch.countDown();
+          });
 
-    assertTrue("Timed out!", latch.await(10, TimeUnit.SECONDS));
-    KeyCharacterMap keyCharacterMap = UiControllerImpl.getKeyCharacterMap();
-    KeyEvent[] events = keyCharacterMap.getEvents("a".toCharArray());
-    assertTrue(injector.injectKeyEvent(events[1]));
+      assertWithMessage("Timed out!").that(latch.await(10, SECONDS)).isTrue();
+      KeyCharacterMap keyCharacterMap = UiControllerImpl.getKeyCharacterMap();
+      KeyEvent[] events = keyCharacterMap.getEvents("a".toCharArray());
+      assertThat(injector.injectKeyEvent(events[1])).isTrue();
+    }
   }
 
   @Test
   public void injectStaleKeyEvent() throws Exception {
-    ActivityScenario<SendActivity> scenario = ActivityScenario.launch(SendActivity.class);
+    try (ActivityScenario<SendActivity> scenario = ActivityScenario.launch(SendActivity.class)) {
 
-    scenario.onActivity(
-        sendActivity -> {
-          View view = sendActivity.findViewById(R.id.send_data_edit_text);
-          assertTrue(view.requestFocus());
-          latch.countDown();
-        });
+      scenario.onActivity(
+          sendActivity -> {
+            View view = sendActivity.findViewById(R.id.send_data_edit_text);
+            assertThat(view.requestFocus()).isTrue();
+            latch.countDown();
+          });
 
-    assertTrue("Timed out!", latch.await(10, TimeUnit.SECONDS));
-    assertFalse("SecurityException exception was thrown.", injectEventThrewSecurityException.get());
+      assertWithMessage("Timed out!").that(latch.await(10, SECONDS)).isTrue();
+      assertWithMessage("SecurityException exception was thrown.")
+          .that(injectEventThrewSecurityException.get())
+          .isFalse();
 
-    KeyCharacterMap keyCharacterMap = UiControllerImpl.getKeyCharacterMap();
-    KeyEvent[] events = keyCharacterMap.getEvents("a".toCharArray());
-    KeyEvent event = KeyEvent.changeTimeRepeat(events[0], 1, 0);
+      KeyCharacterMap keyCharacterMap = UiControllerImpl.getKeyCharacterMap();
+      KeyEvent[] events = keyCharacterMap.getEvents("a".toCharArray());
+      KeyEvent event = KeyEvent.changeTimeRepeat(events[0], 1, 0);
 
-    // Stale event does not fail for API < 13.
-    if (Build.VERSION.SDK_INT < 13) {
-      assertTrue(injector.injectKeyEvent(event));
-    } else {
-      assertFalse(injector.injectKeyEvent(event));
+      // Stale event does not fail for API < 13.
+      assertThat(injector.injectKeyEvent(event)).isEqualTo(Build.VERSION.SDK_INT < 13);
     }
   }
 
@@ -121,7 +121,11 @@ public class EventInjectorTest {
   public void injectKeyEvent_securityException() throws InjectEventSecurityException {
     KeyCharacterMap keyCharacterMap = UiControllerImpl.getKeyCharacterMap();
     KeyEvent[] events = keyCharacterMap.getEvents("a".toCharArray());
-    expectedException.expect(InjectEventSecurityException.class);
+    // On API <= 32: injectKeyEvent throws an InjectEventSecurityException.
+    // On API >= 33: injectKeyEvent works for instrumentation and injects the event.
+    if (Build.VERSION.SDK_INT <= 32) {
+      expectedException.expect(InjectEventSecurityException.class);
+    }
     injector.injectKeyEvent(events[0]);
   }
 
@@ -142,7 +146,9 @@ public class EventInjectorTest {
                         0);
                 try {
                   injector.injectMotionEvent(down);
-                  fail("InjectEventSecurityException not thrown");
+                  if (Build.VERSION.SDK_INT <= 32) {
+                    fail("InjectEventSecurityException not thrown");
+                  }
                 } catch (InjectEventSecurityException expected) {
                   injectEventThrewSecurityException.set(true);
                 }
@@ -150,8 +156,10 @@ public class EventInjectorTest {
               }
             });
 
-    latch.await(10, TimeUnit.SECONDS);
-    assertTrue(injectEventThrewSecurityException.get());
+    latch.await(10, SECONDS);
+    // On API <= 32: injectMotionEvent throws an InjectEventSecurityException.
+    // On API >= 33: injectMotionEvent works for instrumentation and injects the event.
+    assertThat(injectEventThrewSecurityException.get()).isEqualTo(Build.VERSION.SDK_INT <= 32);
   }
 
   @Test
@@ -167,9 +175,9 @@ public class EventInjectorTest {
           }
         };
     ActivityLifecycleMonitorRegistry.getInstance().addLifecycleCallback(callback);
-    try {
-      ActivityScenario<SendActivity> activityScenario = ActivityScenario.launch(SendActivity.class);
-      assertTrue(activityStarted.await(20, TimeUnit.SECONDS));
+    try (ActivityScenario<SendActivity> activityScenario =
+        ActivityScenario.launch(SendActivity.class)) {
+      assertThat(activityStarted.await(20, SECONDS)).isTrue();
       final int[] xy = CoordinatesUtil.getCoordinatesInMiddleOfSendButton(activityScenario);
 
       getInstrumentation()
@@ -196,8 +204,10 @@ public class EventInjectorTest {
                 }
               });
 
-      latch.await(10, TimeUnit.SECONDS);
-      assertFalse(injectEventWorked.get());
+      latch.await(10, SECONDS);
+      // On API <= 32: injectMotionEvent throws an InjectEventSecurityException.
+      // On API >= 33: injectMotionEvent works for instrumentation and injects the event.
+      assertThat(injectEventWorked.get()).isEqualTo(Build.VERSION.SDK_INT >= 33);
     } finally {
       ActivityLifecycleMonitorRegistry.getInstance().removeLifecycleCallback(callback);
     }

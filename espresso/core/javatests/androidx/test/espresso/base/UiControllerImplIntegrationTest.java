@@ -156,10 +156,14 @@ public class UiControllerImplIntegrationTest {
               try {
                 uiController.injectString("Hello! \n&*$$$");
               } catch (InjectEventSecurityException e) {
-                // expected
+                // expected on API <= 32
                 return;
               }
-              fail("InjectEventSecurityException not thrown");
+              // On API <= 32: injectString throws an InjectEventSecurityException.
+              // On API >= 33: injectString works for instrumentation and injects the event.
+              if (Build.VERSION.SDK_INT <= 32) {
+                fail("InjectEventSecurityException not thrown");
+              }
             });
   }
 
