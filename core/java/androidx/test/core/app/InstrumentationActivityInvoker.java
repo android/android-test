@@ -139,7 +139,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      registerReceiver(receiver, new IntentFilter(FINISH_BOOTSTRAP_ACTIVITY));
+      registerBroadcastReceiver(this, receiver, new IntentFilter(FINISH_BOOTSTRAP_ACTIVITY));
 
       isTargetActivityStarted =
           (savedInstanceState != null
@@ -266,7 +266,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
           };
       IntentFilter intentFilter = new IntentFilter(BOOTSTRAP_ACTIVITY_RESULT_RECEIVED);
       intentFilter.addAction(CANCEL_ACTIVITY_RESULT_WAITER);
-      context.registerReceiver(receiver, intentFilter);
+      registerBroadcastReceiver(context, receiver, intentFilter);
     }
 
     /**
@@ -312,7 +312,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      registerReceiver(receiver, new IntentFilter(FINISH_EMPTY_ACTIVITIES));
+      registerBroadcastReceiver(this, receiver, new IntentFilter(FINISH_EMPTY_ACTIVITIES));
 
       // disable starting animations
       overridePendingTransition(0, 0);
@@ -361,7 +361,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      registerReceiver(receiver, new IntentFilter(FINISH_EMPTY_ACTIVITIES));
+      registerBroadcastReceiver(this, receiver, new IntentFilter(FINISH_EMPTY_ACTIVITIES));
 
       // disable starting animations
       overridePendingTransition(0, 0);
@@ -465,8 +465,8 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
             latch.countDown();
           }
         };
-    getApplicationContext()
-        .registerReceiver(receiver, new IntentFilter(EMPTY_FLOATING_ACTIVITY_RESUMED));
+    registerBroadcastReceiver(
+        getApplicationContext(), receiver, new IntentFilter(EMPTY_FLOATING_ACTIVITY_RESUMED));
 
     // Starting an arbitrary Activity (android:windowIsFloating = true) forces the tested Activity
     // to the paused state.
@@ -500,7 +500,8 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
             latch.countDown();
           }
         };
-    getApplicationContext().registerReceiver(receiver, new IntentFilter(EMPTY_ACTIVITY_RESUMED));
+    registerBroadcastReceiver(
+        getApplicationContext(), receiver, new IntentFilter(EMPTY_ACTIVITY_RESUMED));
 
     // Starting an arbitrary Activity (android:windowIsFloating = false) forces the tested Activity
     // to the stopped state.
@@ -569,5 +570,14 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
                   expected,
                   stage);
             });
+  }
+
+  private static void registerBroadcastReceiver(
+      Context context, BroadcastReceiver broadcastReceiver, IntentFilter intentFilter) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+      context.registerReceiver(broadcastReceiver, intentFilter);
+    } else {
+      context.registerReceiver(broadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
+    }
   }
 }
