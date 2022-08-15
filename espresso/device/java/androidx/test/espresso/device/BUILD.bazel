@@ -25,6 +25,7 @@ kt_android_library(
         ":device_api",
         "//espresso/device/java/androidx/test/espresso/device/action",
         "//espresso/device/java/androidx/test/espresso/device/rules",
+        "//espresso/device/java/androidx/test/espresso/device/filter",
     ],
 )
 
