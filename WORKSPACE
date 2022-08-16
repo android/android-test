@@ -152,7 +152,7 @@ maven_install(
 
 android_sdk_repository(
     name = "androidsdk",
-    api_level = 31,
+    api_level = 33,
     build_tools_version = "30.0.3",
 )
 
