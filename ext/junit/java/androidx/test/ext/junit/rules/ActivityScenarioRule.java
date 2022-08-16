@@ -36,6 +36,9 @@ import org.junit.rules.ExternalResource;
  * <p>This rule is an upgraded version of the now deprecated {@link
  * androidx.test.rule.ActivityTestRule}.
  *
+ * <p>This rule does not support calling scenario.getResult(). Use
+ * ActivityScenario.launchActivityForResult() when the Activity result is needed.
+ *
  * <p>Example:
  *
  * <pre>
