@@ -29,7 +29,7 @@ import org.junit.runner.Description
  * Class that filters out tests annotated with {@link RequiresDeviceMode} when running on a device
  * that doesn't support the provided device mode.
  */
-class RequiresDeviceModeFilter(
+internal class RequiresDeviceModeFilter(
   private val instrumentation: Instrumentation = InstrumentationRegistry.getInstrumentation()
 ) : AbstractFilter() {
   override fun evaluateTest(description: Description): Boolean {

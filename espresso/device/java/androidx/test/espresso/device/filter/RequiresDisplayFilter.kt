@@ -26,7 +26,7 @@ import org.junit.runner.Description
  * Class that filters out tests annotated with {@link RequiresDisplay} when running on a device that
  * doesn't have the required display attributes.
  */
-class RequiresDisplayFilter(
+internal class RequiresDisplayFilter(
   private val instrumentation: Instrumentation = InstrumentationRegistry.getInstrumentation()
 ) : AbstractFilter() {
   override fun evaluateTest(description: Description): Boolean {
