@@ -3,7 +3,7 @@
 # AXT versions
 RUNNER_VERSION = "1.5.0-alpha04"  # stable 1.4.0
 RULES_VERSION = "1.4.1-alpha07"  # stable 1.4.0
-MONITOR_VERSION = "1.6.0-alpha04"  # stable 1.5.0
+MONITOR_VERSION = "1.6.0-alpha05"  # stable 1.5.0
 ESPRESSO_VERSION = "3.5.0-alpha07"  # stable 3.4.0
 CORE_VERSION = "1.5.0-alpha02"  # stable 1.4.0
 ANDROIDX_JUNIT_VERSION = "1.1.4-alpha07"  # stable 1.1.3
