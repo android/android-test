@@ -10,7 +10,11 @@ ANDROIDX_JUNIT_VERSION = "1.1.4-alpha07"  # stable 1.1.3
 ANDROIDX_TRUTH_VERSION = "1.5.0-alpha07"  # stable 1.4.0
 UIAUTOMATOR_VERSION = "2.2.0"
 JANK_VERSION = "1.0.1"
+
+# LINT.IfChange(SERVICES_VERSION)
 SERVICES_VERSION = "1.4.2-alpha04"  # stable 1.4.1
+
+# LINT.ThenChange(//depot/google3/third_party/android/androidx_test/services/AndroidManifest.xml)
 ORCHESTRATOR_VERSION = "1.4.2-alpha04"  # stable 1.4.1
 ANNOTATION_VERSION = "1.0.1-alpha01"  # stable 1.0.0
 
