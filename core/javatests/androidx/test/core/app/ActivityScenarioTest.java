@@ -489,7 +489,7 @@ public final class ActivityScenarioTest {
   }
 
   @Test
-  @SdkSuppress(minSdkVersion = 16) // ActivityOptions is added in API 16.
+  @SdkSuppress(minSdkVersion = 28) // ActivityOptions is added in API 28.
   public void launch_withActivityOptionsBundle() throws Exception {
     try (ActivityScenario<RecreationRecordingActivity> scenario =
         ActivityScenario.launch(

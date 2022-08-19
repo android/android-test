@@ -406,8 +406,12 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
     if (Build.VERSION.SDK_INT < 28) {
-      // activityOptions not supported
-      getInstrumentation().startActivitySync(intent);
+      if (activityOptions != null) {
+        throw new IllegalStateException(
+            "Starting an activity with activityOptions is not supported on APIs below 28.");
+      } else {
+        getInstrumentation().startActivitySync(intent);
+      }
     } else {
       getInstrumentation().startActivitySync(intent, activityOptions);
     }
