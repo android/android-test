@@ -42,9 +42,12 @@ import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
+import com.google.common.util.concurrent.SettableFuture;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -430,11 +433,17 @@ public final class ActivityScenarioTest {
   }
 
   @Test
-  public void launch_callbackSequence() {
+  public void launch_callbackSequence()
+      throws ExecutionException, InterruptedException, TimeoutException {
     try (ActivityScenario<RecordingActivity> activityScenario =
         ActivityScenario.launch(RecordingActivity.class)) {
-      Espresso.onIdle();
-      Espresso.onIdle();
+
+      // windowFocus event is async, so wait a small amount of time for that
+      SettableFuture<String> windowFocusEvent = SettableFuture.create();
+      activityScenario.onActivity(
+          activity -> activity.listenForEvent(windowFocusEvent, "onWindowFocusChanged true"));
+      windowFocusEvent.get(1, TimeUnit.SECONDS);
+
       activityScenario.onActivity(
           activity ->
               assertThat(activity.getCallbacks())
@@ -454,40 +463,27 @@ public final class ActivityScenarioTest {
   public void launch_postingCallbackSequence() throws Exception {
     try (ActivityScenario<AsyncRecordingActivity> activityScenario =
         ActivityScenario.launch(AsyncRecordingActivity.class)) {
-      Espresso.onIdle();
-      Espresso.onIdle();
 
-      int maxRetry = 3;
-      AtomicBoolean activityHasFocus = new AtomicBoolean(false);
-      for (int attempt = 0; attempt < maxRetry; attempt++) {
-        activityScenario.onActivity(activity -> activityHasFocus.set(activity.hasWindowFocus()));
-        if (activityHasFocus.get()) {
-          break;
-        }
-        // Retry after the sleep. Window focus is the global state and there is a lag
-        // before onWindowFocusChanged is called after the activity is resumed.
-        // TODO(b/191072024): Find a beter way to monitor focus activity and remove the sleep.
-        Thread.sleep(500);
-      }
+      SettableFuture<String> windowFocusEvent = SettableFuture.create();
+      activityScenario.onActivity(
+          activity -> activity.listenForEvent(windowFocusEvent, "onWindowFocusChanged true"));
+      windowFocusEvent.get(1, TimeUnit.SECONDS);
+
+      // wait for windowFocus post
+      Espresso.onIdle();
 
       activityScenario.onActivity(
           activity ->
+              // just assert the first few events, The exact order for the full event sequence is
+              // not deterministic
               assertThat(activity.getCallbacks())
-                  .containsExactly(
+                  .containsAtLeast(
                       "onCreate",
                       "onStart",
                       "onPostCreate",
                       "onResume",
                       "onPostResume",
-                      "post from onCreate",
-                      "post from onStart",
-                      "post from onPostCreate",
-                      "post from onResume",
-                      "post from onPostResume",
-                      "onAttachedToWindow",
-                      "post from onAttachedToWindow",
-                      "onWindowFocusChanged true",
-                      "post from onWindowFocusChanged true")
+                      "post from onCreate")
                   .inOrder());
     }
   }

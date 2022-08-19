@@ -14,6 +14,8 @@ android_library(
     visibility = ["//visibility:public"],
     deps = [
         "//:androidx_annotation",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
     ],
 )
 
