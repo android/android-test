@@ -8,6 +8,8 @@ package(default_visibility = [
     "//espresso/device/java/androidx/test/espresso/device:device_pkg",
 ])
 
+exports_files(["AndroidManifest.xml"])
+
 # Add only device packages here.
 package_group(
     name = "device_pkg",
