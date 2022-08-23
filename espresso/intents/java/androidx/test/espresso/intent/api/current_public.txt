@@ -148,6 +148,11 @@ package androidx.test.espresso.intent.matcher {
 
 package androidx.test.espresso.intent.rule {
 
+  public final class IntentsRule extends org.junit.rules.ExternalResource {
+    ctor public IntentsRule();
+    method protected void before();
+  }
+
   @Deprecated public class IntentsTestRule<T extends android.app.Activity> extends androidx.test.rule.ActivityTestRule<T> {
     ctor @Deprecated public IntentsTestRule(Class<T!>!);
     ctor @Deprecated public IntentsTestRule(Class<T!>!, boolean);

@@ -3,14 +3,22 @@
 
 licenses(["notice"])  # Apache License 2.0
 
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+
 package(default_visibility = ["//visibility:public"])
 
-android_library(
+kt_android_library(
     name = "rule",
     testonly = 1,
-    srcs = glob(["*.java"]),
+    srcs = glob(
+      [
+        "*.java",
+        "*.kt",
+      ],
+    ),
     deps = [
         "//espresso/intents/java/androidx/test/espresso/intent:intents",
         "//runner/rules",
+        "@maven//:junit_junit",
     ],
 )
