@@ -3,7 +3,7 @@
 
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANNOTATION_VERSION", "CORE_VERSION", "ESPRESSO_VERSION", "RUNNER_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANNOTATION_VERSION", "CORE_VERSION", "ESPRESSO_VERSION", "KOTLIN_VERSION", "RUNNER_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 licenses(["notice"])  # Apache License 2.0
@@ -97,6 +97,7 @@ maven_artifact(
         "androidx.test:core:%s" % CORE_VERSION,
         "androidx.test:rules:%s" % RUNNER_VERSION,
         "androidx.test:annotation:%s" % ANNOTATION_VERSION,
+        "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
     ],
     artifact_id = "espresso-intents",
     group_id = "androidx.test.espresso",
