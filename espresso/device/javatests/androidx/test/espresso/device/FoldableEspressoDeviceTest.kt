@@ -25,17 +25,17 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.foldable.app.FoldableActivity
 import androidx.test.foldable.app.R
-import androidx.test.rule.ActivityTestRule
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 
 @RunWith(JUnit4::class)
 class FoldableEspressoDeviceTest {
   @get:Rule
-  val activityRule: ActivityTestRule<FoldableActivity> =
-    ActivityTestRule(FoldableActivity::class.java)
+  val activityRule: ActivityScenarioRule<FoldableActivity> =
+    ActivityScenarioRule(FoldableActivity::class.java)
 
   @Test
   fun setTabletopMode() {
