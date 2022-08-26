@@ -295,6 +295,9 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    *
    * <p>This method cannot be called from the main thread except in Robolectric tests.
    *
+   * <p>If you are using AndroidX based activities, use androidx.activity.result.ActivityResult
+   * instead of this method. See https://developer.android.com/training/basics/intents/result#test
+   *
    * @param startActivityIntent an intent to start the activity
    * @throws AssertionError if the lifecycle state transition never completes within the timeout
    * @return ActivityScenario which you can use to make further state transitions
