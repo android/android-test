@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -120,13 +121,14 @@ public class RuntimePermissionsActivity extends AppCompatActivity {
    * permission. In this case {@link TelephonyManager#getDeviceId()} requires {@link
    * Manifest.permission#READ_PHONE_STATE}
    */
-  private void getDeviceId() {
+  @SuppressLint("MissingPermission")
+  private void getVoiceNetworkType() {
     ((TelephonyManager) getSystemService(RuntimePermissionsActivity.TELEPHONY_SERVICE))
-        .getDeviceId();
+        .getVoiceNetworkType();
   }
 
   private void updateReadPhoneStatePermissionsGranted() {
-    getDeviceId();
+    getVoiceNetworkType();
     updateGrantedUi(mPhoneStatePermissionStatus);
   }
 

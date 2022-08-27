@@ -19,7 +19,7 @@
 
   <uses-sdk
       android:minSdkVersion="14"
-      android:targetSdkVersion="23"/>
+      android:targetSdkVersion="33"/>
 
   <uses-permission android:name="android.permission.CALL_PHONE"/>
   <uses-permission android:name="android.permission.INTERNET"/>
@@ -34,7 +34,7 @@
       android:icon="@drawable/ic_launcher"
       android:label="UI Test App"
       android:supportsRtl="true">
-    <activity
+    <activity android:exported="true"
         android:label="UI Test App"
         android:name=".MainActivity">
       <intent-filter>
@@ -53,26 +53,26 @@
             android:scheme="http"/>
       </intent-filter>
     </activity>
-    <activity
+    <activity android:exported="true"
         android:label="actionbar test activity"
         android:name=".ActionBarTestActivity"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
-    <activity
+    <activity android:exported="true"
         android:label="simple activity"
         android:name=".SimpleActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="send activity"
         android:name=".SendActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="pick activity"
         android:name=".PickActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="pickers activity"
         android:name=".PickersActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="display activity"
         android:name=".DisplayActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="drawer activity"
         android:name=".DrawerActivity"
         android:theme="@style/Theme.AppCompat.Light"/>
@@ -88,94 +88,98 @@
         android:exported="true"
         android:label="list activity"
         android:name=".LongListActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="very long list activity"
         android:name=".VeryLongListViewActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="cursor adapter activity"
         android:name=".CursorAdapterActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="menu activity"
         android:name=".MenuActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="fragment stack activity"
         android:name=".FragmentStack"/>
-    <activity
+    <activity android:exported="true"
         android:label="sync activity"
         android:name=".SyncActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="web view"
         android:name=".SimpleWebViewActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="web form"
         android:name=".WebFormActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="swipe activity"
         android:name=".SwipeActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="view pager activity"
         android:name=".ViewPagerActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="recyclerview activity"
         android:name=".RecyclerViewActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="vertical view pager activity"
         android:name=".VerticalViewPagerActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="large view activity"
         android:name=".LargeViewActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="padding activity"
         android:name=".PaddingActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="action bar with v7 search"
         android:name=".ActionBarSearchActivity"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
-    <activity
+    <activity android:exported="true"
         android:label="layout issues activity"
         android:name=".LayoutIssuesActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="tool bar activity"
         android:name=".ToolbarActivity"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-    <activity
+    <activity android:exported="true"
         android:label="task stack activity"
         android:name=".TaskStackActivity"/>
     <activity
         android:label="transition activity"
         android:name=".TransitionActivityMain"/>
-    <activity android:name=".TransitionDetailActivity"/>
-    <activity
+    <activity android:exported="true" android:name=".TransitionDetailActivity"/>
+    <activity android:exported="true"
         android:label="Keyboard Test Activity"
         android:name=".KeyboardTestActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="NavigationViewActivity"
         android:name=".NavigationViewActivity"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-    <activity
+    <activity android:exported="true"
         android:label="Test Activity for InterceptingActivityFactory"
         android:name=".InterceptingActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="Runtime Permissions"
         android:name=".RuntimePermissionsActivity"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-    <activity
+    <activity android:exported="true"
         android:label="Chat Head Activity"
         android:name=".ChatHeadActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="Delayed Dialog Activity"
         android:name=".DelayedDialogActivity"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-    <activity
+    <activity android:exported="true"
         android:label="Scaled View Activity"
         android:name=".ScaledViewActivity"/>
-    <activity
+    <activity android:exported="true"
         android:label="Idling UI Activity"
         android:name=".IdlingUIActivity" />
+    <activity android:exported="true"
+        android:label="View With 'textAllCaps' Activity"
+        android:name=".ViewWithTextAllCapsActivity" />
     <activity
         android:label="Duplicate View Activity"
-        android:name=".DuplicateViewActivity" />
-    <activity
+        android:name=".DuplicateViewActivity"
+        android:exported="false" />
+     <activity
         android:label="screen orientation activity"
         android:name=".ScreenOrientationActivity"
         android:configChanges="orientation|screenSize"
@@ -184,7 +188,10 @@
         android:label="screen orientation without onConfigurationChanged activity"
         android:name=".ScreenOrientationWithoutOnConfigurationChangedActivity"
         android:exported="false"/>
-
+    <activity
+        android:label="Truncated View Hierarchy Activity"
+        android:name=".TruncatedViewHierarchyActivity"
+        android:exported="false" />
     <service android:name=".ChatHeadService"/>
     <provider
         android:authorities="androidx.test.ui.app.flights"
