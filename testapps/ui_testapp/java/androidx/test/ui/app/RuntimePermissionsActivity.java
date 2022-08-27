@@ -118,17 +118,17 @@ public class RuntimePermissionsActivity extends AppCompatActivity {
 
   /**
    * This method purely serves the purpose of using an API which is guarded by a dangerous runtime
-   * permission. In this case {@link TelephonyManager#getDeviceId()} requires {@link
+   * permission. In this case {@link TelephonyManager#getVoiceMailNumber()} requires {@link
    * Manifest.permission#READ_PHONE_STATE}
    */
   @SuppressLint("MissingPermission")
-  private void getVoiceNetworkType() {
+  private void getVoiceMailNumber() {
     ((TelephonyManager) getSystemService(RuntimePermissionsActivity.TELEPHONY_SERVICE))
-        .getVoiceNetworkType();
+        .getVoiceMailNumber();
   }
 
   private void updateReadPhoneStatePermissionsGranted() {
-    getVoiceNetworkType();
+    getVoiceMailNumber();
     updateGrantedUi(mPhoneStatePermissionStatus);
   }
 
