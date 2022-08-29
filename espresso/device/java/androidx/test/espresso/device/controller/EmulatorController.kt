@@ -38,7 +38,8 @@ constructor(
   }
 
   override fun setDeviceMode(deviceMode: Int) {
-    if (!(deviceMode == DeviceMode.FLAT.mode ||
+    if (
+      !(deviceMode == DeviceMode.FLAT.mode ||
         deviceMode == DeviceMode.TABLETOP.mode ||
         deviceMode == DeviceMode.BOOK.mode)
     ) {
@@ -74,13 +75,12 @@ constructor(
     val parameters =
       ParameterValue.newBuilder().addData(0F).addData(0F).addData(degreesToRotate).build()
     try {
-      val test =
-        emulatorControllerStub.setPhysicalModel(
-          PhysicalModelValue.newBuilder()
-            .setTarget(PhysicalModelValue.PhysicalType.ROTATION)
-            .setValue(parameters)
-            .build()
-        )
+      emulatorControllerStub.setPhysicalModel(
+        PhysicalModelValue.newBuilder()
+          .setTarget(PhysicalModelValue.PhysicalType.ROTATION)
+          .setValue(parameters)
+          .build()
+      )
     } catch (e: StatusRuntimeException) {
       throw DeviceControllerOperationException(
         "Failed to set screen orientation. Status: ${e.getStatus()}.",
