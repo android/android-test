@@ -33,7 +33,7 @@ public final class ApplicationProvider {
   /**
    * Returns the application {@link android.content.Context} for the application under test.
    *
-   * @see {@link android.content.Context#getApplicationContext()}
+   * @see Context#getApplicationContext()
    */
   @SuppressWarnings("unchecked")
   public static <T extends Context> T getApplicationContext() {
