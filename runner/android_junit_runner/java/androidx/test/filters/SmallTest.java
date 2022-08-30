@@ -22,24 +22,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to assign a small test size qualifier to a test. This annotation can be used at a
+ * Annotation to assign a small test size qualifier to a test. This annotation can be used at the
  * method or class level.
  *
  * <p>Test size qualifiers are a great way to structure test code and are used to assign a test to a
- * test suite of similar run time.
+ * test suite or similar runtime.
  *
  * <p>Execution time: &lt;200ms
  *
- * <p>Small tests should be run very frequently. Focused on units of code to verify specific logical
- * conditions. These tests should runs in an isolated environment and use mock objects for external
- * dependencies. Resource access (such as file system, network, or databases) are not permitted.
- * Tests that interact with hardware, make binder calls, or that facilitate android instrumentation
- * should not use this annotation.
+ * <p>Small tests should be run very frequently, focused on units of code to verify specific logical
+ * conditions. Tests should run in an isolated environment and use mock objects for external
+ * dependencies. Resource access (for example, to the file system, network, or databases) is not
+ * permitted. Tests that interact with hardware, make binder calls, or facilitate android
+ * instrumentation should not use this annotation.
  *
- * <p>Note: This class replaces the deprecated Android platform size qualifier <a
- * href="http://developer.android.com/reference/android/test/suitebuilder/annotation/SmallTest.html">
- * android.test.suitebuilder.annotation.SmallTest</a> and is the recommended way to annotate tests
- * written with the AndroidX Test Library.
+ * <p><b>Note:</b> This class replaces the deprecated Android platform size qualifier
+ * <a href="{@docRoot}reference/android/test/suitebuilder/annotation/SmallTest.html">
+ * <code>android.test.suitebuilder.annotation.SmallTest</code></a> and is the recommended way to
+ * annotate tests written with the AndroidX Testing Support Library.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
