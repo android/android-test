@@ -213,6 +213,15 @@ public final class RootViewPicker implements Provider<View> {
     return activities;
   }
 
+  /** Returns the list of all non-destroyed activities. */
+  private List<Activity> getAllActiveActivities() {
+    List<Activity> activities = Lists.newArrayList();
+    for (Stage s : EnumSet.range(Stage.PRE_ON_CREATE, Stage.RESTARTED)) {
+      activities.addAll(activityLifecycleMonitor.getActivitiesInStage(s));
+    }
+    return activities;
+  }
+
   private static class RootResults {
     private final List<Root> allRoots;
     private final List<Root> pickedRoots;
