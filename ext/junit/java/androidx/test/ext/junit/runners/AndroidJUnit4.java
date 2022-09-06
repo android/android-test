@@ -16,6 +16,9 @@
 
 package androidx.test.ext.junit.runners;
 
+import android.os.Build;
+import androidx.test.espresso.accessibility.AccessibilityChecks;
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResult.AccessibilityCheckResultType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -159,6 +162,14 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
 
   @Override
   public void run(RunNotifier runNotifier) {
+    String runnerClassName = getRunnerClassName();
+    if ("androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner".equals(runnerClassName)
+        && !isRobolectric()) {
+      AccessibilityChecks.enable()
+          .setRunChecksFromRootView(true)
+          .setThrowExceptionFor(AccessibilityCheckResultType.ERROR)
+          .setCaptureScreenshots(true);
+    }
     delegate.run(runNotifier);
   }
 
@@ -170,5 +181,9 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
   @Override
   public void sort(Sorter sorter) {
     ((Sortable) delegate).sort(sorter);
+  }
+
+  private static boolean isRobolectric() {
+    return "robolectric".equals(Build.FINGERPRINT);
   }
 }
