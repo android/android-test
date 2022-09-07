@@ -19,7 +19,6 @@ package androidx.test.espresso.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.content.Context;
-import android.os.Build.VERSION;
 import android.util.Log;
 import android.view.View;
 import androidx.test.core.app.DeviceCapture;
@@ -32,7 +31,6 @@ import androidx.test.espresso.PerformException;
 import androidx.test.espresso.base.ViewHierarchyExceptionHandler.Truncater;
 import androidx.test.espresso.internal.inject.TargetContext;
 import androidx.test.internal.platform.util.TestOutputEmitter;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.platform.io.PlatformTestStorage;
 import androidx.test.platform.io.PlatformTestStorageRegistry;
 import java.io.IOException;
@@ -123,9 +121,7 @@ public final class DefaultFailureHandler implements FailureHandler {
 
   private void takeScreenshot(String outputName) {
     try {
-      // takeScreenshot only supported on API >= 18
-      if (VERSION.SDK_INT >= 18
-          && InstrumentationRegistry.getInstrumentation().getUiAutomation() != null) {
+      if (DeviceCapture.canTakeScreenshot()) {
         BitmapStorage.writeToTestStorage(
             DeviceCapture.takeScreenshotNoSync(), testStorage, outputName);
       } else {

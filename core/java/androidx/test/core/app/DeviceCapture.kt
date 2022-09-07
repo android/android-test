@@ -41,6 +41,20 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 /**
+ * Returns false if calling [takeScreenshot] will fail.
+ *
+ * Taking a screenshot requires [UiAutomation] and can only be called off of the main thread. If
+ * this method returns false then attempting to take a screenshot will fail. Note that taking a
+ * screenshot may still fail if this method returns true, for example if the call to [UiAutomation]
+ * fails.
+ */
+@ExperimentalTestApi
+fun canTakeScreenshot(): Boolean =
+  Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
+    && getInstrumentation().uiAutomation != null
+    && Looper.myLooper() != Looper.getMainLooper()
+
+/**
  * Captures an image of the device's screen into a [Bitmap].
  *
  * This is essentially a wrapper for [UIAutomation#takeScreenshot()] that attempts to get a stable
@@ -88,7 +102,7 @@ fun takeScreenshot(): Bitmap {
 @Suppress("FutureReturnValueIgnored")
 @Throws(RuntimeException::class)
 fun takeScreenshotNoSync(): Bitmap {
-  Checks.checkState(Looper.myLooper() != Looper.getMainLooper())
+  Checks.checkState(canTakeScreenshot())
 
   val bitmapFuture: ResolvableFuture<Bitmap> = ResolvableFuture.create()
   val mainExecutor = HandlerExecutor(Handler(Looper.getMainLooper()))
