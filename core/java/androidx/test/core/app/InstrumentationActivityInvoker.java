@@ -403,7 +403,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     getApplicationContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
     getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
 
-    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 
     if (Build.VERSION.SDK_INT < 28) {
       if (activityOptions != null) {
@@ -443,7 +443,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     // package. With PendingIntent we delegate the authority to BootstrapActivity.
     Intent bootstrapIntent =
         getIntentForActivity(BootstrapActivity.class)
-            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
             .putExtra(
                 TARGET_ACTIVITY_INTENT_KEY,
                 PendingIntent.getActivity(
