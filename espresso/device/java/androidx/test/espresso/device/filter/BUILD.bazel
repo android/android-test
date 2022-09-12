@@ -15,7 +15,22 @@ kt_android_library(
         "//annotation/java/androidx/test/annotation",
         "//espresso/device/java/androidx/test/espresso/device/controller",
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
-        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/monitor",
+        "@maven//:junit_junit",
+    ],
+)
+
+kt_android_library(
+    name = "requires_display_filter",
+    testonly = 1,
+    srcs = [
+        "RequiresDisplay.kt",
+        "RequiresDisplayFilter.kt",
+    ],
+    deps = [
+        "//annotation/java/androidx/test/annotation",
+        "//espresso/device/java/androidx/test/espresso/device/sizeclass",
         "//runner/android_junit_runner",
         "//runner/monitor",
         "@maven//:junit_junit",
