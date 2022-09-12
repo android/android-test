@@ -26,6 +26,7 @@ import android.location.Location;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import androidx.core.location.LocationCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,6 +78,13 @@ public class LocationSubjectTest {
       assertThat(e).factValue("expected").isEqualTo("null");
       assertThat(e).factValue("but was").isEqualTo(location.toString());
     }
+  }
+
+  @Test
+  public void provider() {
+    Location location = new Location(GPS_PROVIDER);
+    assertThat(location).provider().isEqualTo(GPS_PROVIDER);
+    assertThat(location).provider().isNotEqualTo(NETWORK_PROVIDER);
   }
 
   @Test
@@ -203,13 +211,24 @@ public class LocationSubjectTest {
 
   @Test
   public void elapsedRealtime() {
-    assumeTrue(VERSION.SDK_INT > VERSION_CODES.JELLY_BEAN_MR1);
+    assumeTrue(VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1);
 
     Location location = new Location(GPS_PROVIDER);
     location.setElapsedRealtimeNanos(100000000);
 
     assertThat(location).elapsedRealtimeNanos().isEqualTo(100000000);
     assertThat(location).elapsedRealtimeMillis().isEqualTo(100);
+  }
+
+  @Test
+  public void elapsedRealtimeUncertainty() {
+    assumeTrue(VERSION.SDK_INT >= VERSION_CODES.Q);
+
+    Location location = new Location(GPS_PROVIDER);
+    location.setElapsedRealtimeUncertaintyNanos(1.1D);
+
+    assertThat(location).hasElapsedRealtimeUncertaintyNanos();
+    assertThat(location).elapsedRealtimeUncertaintyNanos().isEqualTo(1.1D);
   }
 
   @Test
@@ -258,13 +277,29 @@ public class LocationSubjectTest {
 
   @Test
   public void verticalAccuracy() {
-    assumeTrue(VERSION.SDK_INT > VERSION_CODES.O);
-
     Location location = new Location(GPS_PROVIDER);
-    location.setVerticalAccuracyMeters(1f);
+    LocationCompat.setVerticalAccuracyMeters(location, 1f);
 
     assertThat(location).hasVerticalAccuracy();
     assertThat(location).verticalAccuracy().isEqualTo(1);
+  }
+
+  @Test
+  public void speedAccuracy() {
+    Location location = new Location(GPS_PROVIDER);
+    LocationCompat.setSpeedAccuracyMetersPerSecond(location, 1f);
+
+    assertThat(location).hasSpeedAccuracy();
+    assertThat(location).speedAccuracy().isEqualTo(1);
+  }
+
+  @Test
+  public void bearingAccuracy() {
+    Location location = new Location(GPS_PROVIDER);
+    LocationCompat.setBearingAccuracyDegrees(location, 1f);
+
+    assertThat(location).hasBearingAccuracy();
+    assertThat(location).bearingAccuracy().isEqualTo(1);
   }
 
   @Test

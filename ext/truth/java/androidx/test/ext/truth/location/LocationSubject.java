@@ -15,25 +15,27 @@
  */
 package androidx.test.ext.truth.location;
 
+import static com.google.common.truth.Truth.assertAbout;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 import android.location.Location;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import androidx.annotation.Nullable;
+import androidx.core.location.LocationCompat;
 import androidx.test.ext.truth.os.BundleSubject;
 import com.google.common.truth.DoubleSubject;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.FloatSubject;
 import com.google.common.truth.LongSubject;
+import com.google.common.truth.StringSubject;
 import com.google.common.truth.Subject;
-import com.google.common.truth.Truth;
 
 /** Subject for making assertions about {@link Location}s. */
 public class LocationSubject extends Subject {
 
   public static LocationSubject assertThat(Location location) {
-    return Truth.assertAbout(locations()).that(location);
+    return assertAbout(locations()).that(location);
   }
 
   public static Subject.Factory<LocationSubject, Location> locations() {
@@ -60,29 +62,54 @@ public class LocationSubject extends Subject {
     }
     Location other = (Location) otherObj;
 
-    check("getProvider()").that(actual.getProvider()).isEqualTo(other.getProvider());
-    check("getTime()").that(actual.getTime()).isEqualTo(other.getTime());
+    provider().isEqualTo(other.getProvider());
+    isAt(other.getLatitude(), other.getLongitude());
+    time().isEqualTo(other.getTime());
     if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
-      check("getElapsedRealtimeNanos()")
-          .that(actual.getElapsedRealtimeNanos())
-          .isEqualTo(other.getElapsedRealtimeNanos());
+      elapsedRealtimeNanos().isEqualTo(other.getElapsedRealtimeNanos());
     }
-    check("getLatitude()").that(actual.getLatitude()).isEqualTo(other.getLatitude());
-    check("getLongitude()").that(actual.getLongitude()).isEqualTo(other.getLongitude());
-    check("getAltitude()").that(actual.getAltitude()).isEqualTo(other.getAltitude());
-    check("getSpeed()").that(actual.getSpeed()).isEqualTo(other.getSpeed());
-    check("getBearing()").that(actual.getBearing()).isEqualTo(other.getBearing());
-    check("getAccuracy()").that(actual.getAccuracy()).isEqualTo(other.getAccuracy());
-    if (VERSION.SDK_INT >= VERSION_CODES.O) {
-      check("getVerticalAccuracyMeters()")
-          .that(actual.getVerticalAccuracyMeters())
-          .isEqualTo(other.getVerticalAccuracyMeters());
-      check("getSpeedAccuracyMetersPerSecond()")
-          .that(actual.getSpeedAccuracyMetersPerSecond())
-          .isEqualTo(other.getSpeedAccuracyMetersPerSecond());
-      check("getBearingAccuracyDegrees()")
-          .that(actual.getBearingAccuracyDegrees())
-          .isEqualTo(other.getBearingAccuracyDegrees());
+    if (VERSION.SDK_INT >= VERSION_CODES.Q) {
+      if (other.hasElapsedRealtimeUncertaintyNanos()
+          || actual.hasElapsedRealtimeUncertaintyNanos()) {
+        check("hasElapsedRealtimeUncertaintyNanos()")
+            .that(actual.hasElapsedRealtimeUncertaintyNanos())
+            .isEqualTo(other.hasElapsedRealtimeUncertaintyNanos());
+        elapsedRealtimeUncertaintyNanos().isEqualTo(other.getElapsedRealtimeUncertaintyNanos());
+      }
+    }
+    if (other.hasAltitude() || actual.hasAltitude()) {
+      check("hasAltitude()").that(actual.hasAltitude()).isEqualTo(other.hasAltitude());
+      altitude().isEqualTo(other.getAltitude());
+    }
+    if (other.hasSpeed() || actual.hasSpeed()) {
+      check("hasSpeed()").that(actual.hasSpeed()).isEqualTo(other.hasSpeed());
+      speed().isEqualTo(other.getSpeed());
+    }
+    if (other.hasBearing() || actual.hasBearing()) {
+      check("hasBearing()").that(actual.hasBearing()).isEqualTo(other.hasBearing());
+      bearing().isEqualTo(other.getBearing());
+    }
+    if (other.hasAccuracy() || actual.hasAccuracy()) {
+      check("hasAccuracy()").that(actual.hasAccuracy()).isEqualTo(other.hasAccuracy());
+      accuracy().isEqualTo(other.getAccuracy());
+    }
+    if (LocationCompat.hasVerticalAccuracy(other) || LocationCompat.hasVerticalAccuracy(actual)) {
+      check("hasVerticalAccuracy()")
+          .that(LocationCompat.hasVerticalAccuracy(actual))
+          .isEqualTo(LocationCompat.hasVerticalAccuracy(other));
+      verticalAccuracy().isEqualTo(LocationCompat.getVerticalAccuracyMeters(other));
+    }
+    if (LocationCompat.hasSpeedAccuracy(other) || LocationCompat.hasSpeedAccuracy(actual)) {
+      check("hasSpeedAccuracy()")
+          .that(LocationCompat.hasSpeedAccuracy(actual))
+          .isEqualTo(LocationCompat.hasSpeedAccuracy(other));
+      speedAccuracy().isEqualTo(LocationCompat.getSpeedAccuracyMetersPerSecond(other));
+    }
+    if (LocationCompat.hasBearingAccuracy(other) || LocationCompat.hasBearingAccuracy(actual)) {
+      check("hasBearingAccuracy()")
+          .that(LocationCompat.hasBearingAccuracy(actual))
+          .isEqualTo(LocationCompat.hasBearingAccuracy(other));
+      bearingAccuracy().isEqualTo(LocationCompat.getBearingAccuracyDegrees(other));
     }
   }
 
@@ -117,12 +144,22 @@ public class LocationSubject extends Subject {
         .that(actual.distanceTo(location));
   }
 
-  /** Verifies that the location is at most {@code distanceM} meters away from another location. */
+  /**
+   * Verifies that the location is at most {@code distanceM} meters away from another location.
+   *
+   * @deprecated Prefer to use {@link #distanceTo(Location)} for clarity.
+   */
+  @Deprecated
   public void isNearby(Location other, float distanceM) {
     distanceTo(other).isAtMost(distanceM);
   }
 
-  /** Verifies that the location is at least {@code distanceM} meters away from another location. */
+  /**
+   * Verifies that the location is at least {@code distanceM} meters away from another location.
+   *
+   * @deprecated Prefer to use {@link #distanceTo(Location)} for clarity.
+   */
+  @Deprecated
   public void isFaraway(Location other, float distanceM) {
     distanceTo(other).isAtLeast(distanceM);
   }
@@ -152,12 +189,27 @@ public class LocationSubject extends Subject {
         .that(NANOSECONDS.toMillis(actual.getElapsedRealtimeNanos()));
   }
 
+  public void hasElapsedRealtimeUncertaintyNanos() {
+    check("hasElapsedRealtimeUncertaintyNanos()")
+        .that(actual.hasElapsedRealtimeUncertaintyNanos())
+        .isTrue();
+  }
+
+  public DoubleSubject elapsedRealtimeUncertaintyNanos() {
+    return check("getElapsedRealtimeUncertaintyNanos()")
+        .that(actual.getElapsedRealtimeUncertaintyNanos());
+  }
+
+  public StringSubject provider() {
+    return check("getProvider()").that(actual.getProvider());
+  }
+
   public void hasProvider(String provider) {
-    check("getProvider()").that(actual.getProvider()).isEqualTo(provider);
+    provider().isEqualTo(provider);
   }
 
   public void doesNotHaveProvider(String provider) {
-    check("getProvider()").that(actual.getProvider()).isNotEqualTo(provider);
+    provider().isNotEqualTo(provider);
   }
 
   public void hasAltitude() {
@@ -177,12 +229,12 @@ public class LocationSubject extends Subject {
   }
 
   public void hasSpeedAccuracy() {
-    check("hasSpeedAccuracy()").that(actual.hasSpeedAccuracy()).isTrue();
+    check("hasSpeedAccuracy()").that(LocationCompat.hasSpeedAccuracy(actual)).isTrue();
   }
 
   public FloatSubject speedAccuracy() {
     return check("getSpeedAccuracyMetersPerSecond()")
-        .that(actual.getSpeedAccuracyMetersPerSecond());
+        .that(LocationCompat.getSpeedAccuracyMetersPerSecond(actual));
   }
 
   public void hasBearing() {
@@ -194,11 +246,12 @@ public class LocationSubject extends Subject {
   }
 
   public void hasBearingAccuracy() {
-    check("hasBearingAccuracy()").that(actual.hasBearingAccuracy()).isTrue();
+    check("hasBearingAccuracy()").that(LocationCompat.hasBearingAccuracy(actual)).isTrue();
   }
 
   public FloatSubject bearingAccuracy() {
-    return check("getBearingAccuracyDegrees()").that(actual.getBearingAccuracyDegrees());
+    return check("getBearingAccuracyDegrees()")
+        .that(LocationCompat.getBearingAccuracyDegrees(actual));
   }
 
   public void hasAccuracy() {
@@ -210,19 +263,20 @@ public class LocationSubject extends Subject {
   }
 
   public void hasVerticalAccuracy() {
-    check("hasVerticalAccuracy()").that(actual.hasVerticalAccuracy()).isTrue();
+    check("hasVerticalAccuracy()").that(LocationCompat.hasVerticalAccuracy(actual)).isTrue();
   }
 
   public FloatSubject verticalAccuracy() {
-    return check("getVerticalAccuracyMeters()").that(actual.getVerticalAccuracyMeters());
+    return check("getVerticalAccuracyMeters()")
+        .that(LocationCompat.getVerticalAccuracyMeters(actual));
   }
 
   public void isMock() {
-    check("isFromMockProvider()").that(actual.isFromMockProvider()).isTrue();
+    check("isMock()").that(LocationCompat.isMock(actual)).isTrue();
   }
 
   public void isNotMock() {
-    check("isFromMockProvider()").that(actual.isFromMockProvider()).isFalse();
+    check("isMock()").that(LocationCompat.isMock(actual)).isFalse();
   }
 
   public final BundleSubject extras() {

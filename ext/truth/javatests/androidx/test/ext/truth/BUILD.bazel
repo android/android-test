@@ -11,6 +11,7 @@ android_library_instrumentation_tests(
     ),
     target_devices = devices(),
     deps = [
+        "//:androidx_core",
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
         "//core/javatests/androidx/test/core/app/testing:manifest",
@@ -28,6 +29,7 @@ android_library_local_tests(
     name = "local_tests",
     srcs = glob(["**/*.java"]),
     deps = [
+        "//:androidx_core",
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
         "//core/javatests/androidx/test/core/app/testing:manifest",
