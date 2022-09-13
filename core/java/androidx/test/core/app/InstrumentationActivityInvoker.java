@@ -403,7 +403,10 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     getApplicationContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
     getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
 
-    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    intent.addFlags(
+        Intent.FLAG_ACTIVITY_NEW_TASK
+            | Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
     if (Build.VERSION.SDK_INT < 28) {
       if (activityOptions != null) {
