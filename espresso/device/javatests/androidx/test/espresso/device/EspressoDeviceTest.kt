@@ -26,25 +26,27 @@ import androidx.test.espresso.device.action.setScreenOrientation
 import androidx.test.espresso.device.rules.ScreenOrientationRule
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.rule.ActivityTestRule
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ui.app.R
 import androidx.test.ui.app.ScreenOrientationActivity
 import androidx.test.ui.app.ScreenOrientationWithoutOnConfigurationChangedActivity
 import org.junit.Assert.assertThrows
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
 class EspressoDeviceTest {
-  @get:Rule
-  val activityRule: ActivityTestRule<ScreenOrientationActivity> =
-    ActivityTestRule(ScreenOrientationActivity::class.java)
+  private val activityRule: ActivityScenarioRule<ScreenOrientationActivity> =
+    ActivityScenarioRule(ScreenOrientationActivity::class.java)
+
+  private val screenOrientationRule: ScreenOrientationRule =
+    ScreenOrientationRule(ScreenOrientation.PORTRAIT)
 
   @get:Rule
-  val screenOrientationRule: ScreenOrientationRule =
-    ScreenOrientationRule(ScreenOrientation.PORTRAIT)
+  val ruleChain: RuleChain = RuleChain.outerRule(activityRule).around(screenOrientationRule)
 
   @Test
   fun onDevice_setScreenOrientationToLandscape() {
@@ -90,17 +92,18 @@ class EspressoDeviceTest {
 
   @Test
   fun onDevice_throwsFromScenarioOnActivity() {
-    val scenario: ActivityScenario<ScreenOrientationActivity> =
-      ActivityScenario.launch(ScreenOrientationActivity::class.java)
-    scenario.onActivity({ activity: ScreenOrientationActivity ->
-      assertThrows(IllegalStateException::class.java) {
-        onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
-      }
-    })
+    ActivityScenario.launch(ScreenOrientationActivity::class.java).use { scenario ->
+      scenario.onActivity({
+        assertThrows(IllegalStateException::class.java) {
+          onDevice().setScreenOrientation(ScreenOrientation.PORTRAIT)
+        }
+      })
+    }
   }
 
   @Test
   fun onDevice_setScreenOrientationToLandscapeAndThenToPortraitWithoutConfigurationHandling() {
+    // TODO(b/243690268) Close ActivityScneario instances when synchronization issue is resolved.
     ActivityScenario.launch(ScreenOrientationWithoutOnConfigurationChangedActivity::class.java)
     onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
 
