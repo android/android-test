@@ -19,6 +19,7 @@ package androidx.test.orchestrator;
 import static androidx.test.orchestrator.OrchestratorConstants.AJUR_CLASS_ARGUMENT;
 import static androidx.test.orchestrator.OrchestratorConstants.AJUR_COVERAGE;
 import static androidx.test.orchestrator.OrchestratorConstants.AJUR_COVERAGE_FILE;
+import static androidx.test.orchestrator.OrchestratorConstants.CLASS_MODE;
 import static androidx.test.orchestrator.OrchestratorConstants.CLEAR_PKG_DATA;
 import static androidx.test.orchestrator.OrchestratorConstants.COVERAGE_FILE_PATH;
 import static androidx.test.orchestrator.OrchestratorConstants.ISOLATED_ARGUMENT;
@@ -60,10 +61,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
@@ -288,6 +293,16 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     // The first run complete will occur during test collection.
     if (null == test) {
       List<String> allTests = callbackLogic.provideCollectedTests();
+
+      if (runsInClassMode(arguments)) {
+        Set<String> testClasses = new HashSet<>();
+        for (String testName : allTests) {
+          testClasses.add(testName.substring(0, testName.lastIndexOf("#")));
+        }
+        allTests = new ArrayList<>(testClasses);
+        Collections.sort(allTests);
+      }
+
       testIterator = allTests.iterator();
       addListeners(allTests.size());
 
@@ -448,6 +463,10 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   public boolean onException(Object obj, Throwable e) {
     resultPrinter.reportProcessCrash(e);
     return super.onException(obj, e);
+  }
+
+  private static boolean runsInClassMode(Bundle arguments) {
+    return Boolean.parseBoolean(arguments.getString(CLASS_MODE));
   }
 
   private static boolean runsInIsolatedMode(Bundle arguments) {
