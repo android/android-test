@@ -1,7 +1,6 @@
 package androidx.test.internal.runner;
 
 import android.text.TextUtils;
-import android.util.Log;
 import androidx.test.internal.runner.RunnerArgs.TestArg;
 import java.util.ArrayList;
 import java.util.List;
@@ -112,7 +111,6 @@ class ClassesArgTokenizer {
   }
 
   static List<TestArg> parse(String input) {
-    Log.d(TAG, "input: " + input);
     List<TestArg> testargs = new ArrayList<>();
     if (!TextUtils.isEmpty(input)) {
       TokenizerState state = new ClassTokenizerState(testargs, input, 0);
@@ -120,7 +118,6 @@ class ClassesArgTokenizer {
         state = state.parse();
       }
     }
-    Log.d(TAG, "result: " + testargs);
     return testargs;
   }
 }

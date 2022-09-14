@@ -1,10 +1,9 @@
 # Description:
 #   Tests for Espresso device actions
 
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 load(
-    "//build_extensions:kt_android_app_instrumentation_tests.bzl",
-    "kt_android_app_instrumentation_tests",
+    "//build_extensions:android_app_instrumentation_tests.bzl",
+    "android_app_instrumentation_tests",
 )
 load(
     "//build_extensions:test_devices.bzl",
@@ -13,7 +12,7 @@ load(
 
 licenses(["notice"])
 
-kt_android_app_instrumentation_tests(
+android_app_instrumentation_tests(
     name = "instrumentation_tests",
     srcs = glob(
         ["*.kt"],
