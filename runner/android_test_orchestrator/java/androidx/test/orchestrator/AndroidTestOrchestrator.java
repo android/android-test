@@ -110,6 +110,10 @@ import java.util.regex.Pattern;
  * <p>Pass the {@code -e isolated false} flag if you wish the orchestrator to run all your tests in
  * a single process (as if you invoked the target instrumentation directly
  *
+ * <p>Pass the {@code -e classMode true} flag if you wish the orchestrator to run all your tests by
+ * test classes. Each test class is run as an isolated process. This option requires to have
+ * {@code isolated} flag set as {@code true}.
+ *
  * <p>Pass {@code -e coverage true -e coverageFilePath /sdcard/foo/} flag to generate coverage files
  * in the given location (The app must have permission to write to the given location). The coverage
  * file naming convention will look like this {@code com.foo.Class#method1.ec}. Note, this is only
@@ -297,7 +301,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
       if (runsInClassMode(arguments)) {
         Set<String> testClasses = new HashSet<>();
         for (String testName : allTests) {
-          testClasses.add(testName.substring(0, testName.lastIndexOf("#")));
+          testClasses.add(testName.substring(0, testName.lastIndexOf('#')));
         }
         allTests = new ArrayList<>(testClasses);
         Collections.sort(allTests);
