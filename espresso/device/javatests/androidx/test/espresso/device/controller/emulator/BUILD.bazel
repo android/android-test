@@ -21,10 +21,15 @@ android_app_instrumentation_tests(
     target_devices = devices(),
     deps = [
         "//espresso/device/java/androidx/test/espresso/device/controller",
-        "//espresso/device/java/androidx/test/espresso/device/controller:controller_impl",
+        "//espresso/device/java/androidx/test/espresso/device/controller/emulator",
         "//ext/junit",
         "//runner/android_junit_runner",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "@maven//:com_nhaarman_mockitokotlin2_mockito_kotlin",
+        "@maven//:io_grpc_grpc_core",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
+        # TODO(b/215420259) fix gRPC dependency
+        # "//grpc:okhttp_android",
     ],
 )

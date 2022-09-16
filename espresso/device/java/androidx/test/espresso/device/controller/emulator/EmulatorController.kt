@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package androidx.test.espresso.device.controller
+package androidx.test.espresso.device.controller.emulator
 
 import androidx.test.espresso.device.action.ScreenOrientation
+import androidx.test.espresso.device.controller.DeviceControllerOperationException
+import androidx.test.espresso.device.controller.UnsupportedDeviceOperationException
+import androidx.test.espresso.device.controller.DeviceMode
 import androidx.test.platform.device.DeviceController
 import com.android.emulator.control.EmulatorControllerGrpc
 import com.android.emulator.control.ParameterValue
@@ -56,7 +58,7 @@ constructor(
       }
     val posture: Posture = Posture.newBuilder().setValue(postureValue).build()
     try {
-      val result = emulatorControllerStub.setPosture(posture)
+      emulatorControllerStub.setPosture(posture)
     } catch (e: StatusRuntimeException) {
       throw DeviceControllerOperationException(
         "Failed to set device mode. Please make sure the connected Emulator is foldable.",

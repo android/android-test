@@ -24,16 +24,10 @@ kt_android_library(
     name = "controller_impl",
     testonly = 1,
     srcs = [
-        "EmulatorController.kt",
         "PhysicalDeviceController.kt",
     ],
     deps = [
         ":controller",
-        "//espresso/device/java/androidx/test/espresso/device/action",
-        # TODO(b/215420259) fix gRPC dependency
-        # "//android/emulator:emulator_controller_java_grpc",
-        # "//android/emulator:emulator_controller_kt_proto",
-        # "//grpc:core_android",
         "//runner/monitor",
     ],
 )

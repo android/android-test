@@ -1,0 +1,27 @@
+#  Device controller
+
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+
+licenses(["notice"])
+
+package(default_visibility = [
+    "//espresso/core/java/androidx/test/espresso/device:device_pkg",
+])
+
+kt_android_library(
+    name = "emulator",
+    srcs = glob(["*.kt"]),
+    testonly = 1,
+    deps = [
+        "//espresso/device/java/androidx/test/espresso/device/controller",
+        "//espresso/device/java/androidx/test/espresso/device/action",
+        "//:androidx_annotation",
+        "@maven//:io_grpc_grpc_stub",
+        "@maven//:io_grpc_grpc_core",
+        # TODO(b/215420259) fix gRPC dependency
+        # "//android/emulator:emulator_controller_java_grpc",
+        # "//android/emulator:emulator_controller_kt_proto",
+        # "//grpc:okhttp_android",
+        "//runner/monitor"
+    ],
+)
