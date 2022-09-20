@@ -300,7 +300,7 @@ public final class ViewInteraction {
   }
 
   /**
-   * Checks the given {@link ViewAssertion} on the the view selected by the current view matcher.
+   * Checks the given {@link ViewAssertion} on the view selected by the current view matcher.
    *
    * @param viewAssert the assertion to check.
    * @return this interaction for further perform/verification calls.
