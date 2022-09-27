@@ -116,11 +116,19 @@ public final class IdlingRegistry {
 
   /** Returns a set of all currently registered {@link IdlingResource}s. */
   public Collection<IdlingResource> getResources() {
-    return new HashSet<>(resources);
+    HashSet<IdlingResource> result = new HashSet<>();
+    synchronized (resources) {
+      result = new HashSet<>(resources);
+    }
+    return result;
   }
 
-  /** @return a set of all currently registered {@link Looper}s. */
+  /** Returns a set of all currently registered {@link Looper}s. */
   public Collection<Looper> getLoopers() {
-    return new HashSet<>(loopers);
+    HashSet<Looper> result = new HashSet<>();
+    synchronized (loopers) {
+      result = new HashSet<>(loopers);
+    }
+    return result;
   }
 }
