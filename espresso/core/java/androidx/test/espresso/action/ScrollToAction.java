@@ -24,13 +24,11 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 
 import android.graphics.Rect;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ListView;
 import android.widget.ScrollView;
-import androidx.core.widget.NestedScrollView;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
@@ -38,13 +36,11 @@ import androidx.test.espresso.matcher.ViewMatchers.Visibility;
 import androidx.test.espresso.util.HumanReadables;
 import org.hamcrest.Matcher;
 
-/**
- * Enables scrolling to the given view. View must be a descendant of a ScrollView, ListView,
- * NestedScrollView, or RecyclerView.
- */
+/** Enables scrolling to the given view. View must be a descendant of a ScrollView or ListView. */
 public final class ScrollToAction implements ViewAction {
   private static final String TAG = ScrollToAction.class.getSimpleName();
 
+  @SuppressWarnings("unchecked")
   @Override
   public Matcher<View> getConstraints() {
     return allOf(
@@ -53,9 +49,7 @@ public final class ScrollToAction implements ViewAction {
             anyOf(
                 isAssignableFrom(ScrollView.class),
                 isAssignableFrom(HorizontalScrollView.class),
-                isAssignableFrom(ListView.class),
-                isAssignableFrom(NestedScrollView.class),
-                isAssignableFrom(RecyclerView.class))));
+                isAssignableFrom(ListView.class))));
   }
 
   @Override
