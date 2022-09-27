@@ -161,7 +161,10 @@ final class InputManagerEventInjectionStrategy implements EventInjectionStrategy
           SystemClock.sleep(KEYBOARD_DISMISSAL_DELAY_MILLIS);
           innerInjectMotionEvent(motionEvent, false, sync);
         } else {
-          throw new InjectEventSecurityException(cause);
+          throw new InjectEventSecurityException(
+              "Check if Espresso is clicking outside the app (system dialog, navigation bar if"
+                  + " edge-to-edge is enabled, etc.).",
+              cause);
         }
       } else {
         throw new RuntimeException(e);
