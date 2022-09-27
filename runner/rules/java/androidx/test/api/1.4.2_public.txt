@@ -1,0 +1,43 @@
+// Signature format: 3.0
+package androidx.test.annotation {
+
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.METHOD, java.lang.annotation.ElementType.TYPE}) public @interface UiThreadTest {
+  }
+
+}
+
+package androidx.test.rule {
+
+  @Deprecated public class ActivityTestRule<T extends android.app.Activity> implements org.junit.rules.TestRule {
+    ctor @Deprecated public ActivityTestRule(Class<T!>!);
+    ctor @Deprecated public ActivityTestRule(Class<T!>!, boolean);
+    ctor @Deprecated public ActivityTestRule(Class<T!>!, boolean, boolean);
+    ctor @Deprecated public ActivityTestRule(androidx.test.runner.intercepting.SingleActivityFactory<T!>!, boolean, boolean);
+    ctor @Deprecated public ActivityTestRule(Class<T!>!, String, int, boolean, boolean);
+    method @Deprecated protected void afterActivityFinished();
+    method @Deprecated protected void afterActivityLaunched();
+    method @Deprecated public org.junit.runners.model.Statement! apply(org.junit.runners.model.Statement!, org.junit.runner.Description!);
+    method @Deprecated protected void beforeActivityLaunched();
+    method @Deprecated public void finishActivity();
+    method @Deprecated public T! getActivity();
+    method @Deprecated protected android.content.Intent! getActivityIntent();
+    method @Deprecated public android.app.Instrumentation.ActivityResult! getActivityResult();
+    method @Deprecated public T! launchActivity(android.content.Intent?);
+    method @Deprecated public void runOnUiThread(Runnable!) throws java.lang.Throwable;
+  }
+
+  public class DisableOnAndroidDebug implements org.junit.rules.TestRule {
+    ctor public DisableOnAndroidDebug(org.junit.rules.TestRule!);
+    method public final org.junit.runners.model.Statement! apply(org.junit.runners.model.Statement!, org.junit.runner.Description!);
+    method public boolean isDebugging();
+  }
+
+  @Deprecated public class UiThreadTestRule implements org.junit.rules.TestRule {
+    ctor @Deprecated public UiThreadTestRule();
+    method @Deprecated public org.junit.runners.model.Statement! apply(org.junit.runners.model.Statement!, org.junit.runner.Description!);
+    method @Deprecated public void runOnUiThread(Runnable!) throws java.lang.Throwable;
+    method @Deprecated protected boolean shouldRunOnUiThread(org.junit.runner.Description!);
+  }
+
+}
+

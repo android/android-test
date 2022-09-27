@@ -1,0 +1,9 @@
+// Signature format: 3.0
+package androidx.test.core.app {
+
+  public final class DeviceCapture {
+    method @RequiresApi(android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @androidx.test.annotation.ExperimentalTestApi public static android.graphics.Bitmap takeScreenshotNoSync() throws java.lang.RuntimeException;
+  }
+
+}
+

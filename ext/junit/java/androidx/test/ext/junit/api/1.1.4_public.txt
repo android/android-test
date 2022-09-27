@@ -1,0 +1,25 @@
+// Signature format: 3.0
+package androidx.test.ext.junit.rules {
+
+  public final class ActivityScenarioRule<A extends android.app.Activity> extends org.junit.rules.ExternalResource {
+    ctor public ActivityScenarioRule(Class<A!>!);
+    ctor public ActivityScenarioRule(Class<A!>!, android.os.Bundle?);
+    ctor public ActivityScenarioRule(android.content.Intent!);
+    ctor public ActivityScenarioRule(android.content.Intent!, android.os.Bundle?);
+    method public androidx.test.core.app.ActivityScenario<A!>! getScenario();
+  }
+
+}
+
+package androidx.test.ext.junit.runners {
+
+  public final class AndroidJUnit4 extends org.junit.runner.Runner implements org.junit.runner.manipulation.Filterable org.junit.runner.manipulation.Sortable {
+    ctor public AndroidJUnit4(Class<?>!) throws org.junit.runners.model.InitializationError;
+    method public void filter(org.junit.runner.manipulation.Filter!) throws org.junit.runner.manipulation.NoTestsRemainException;
+    method public org.junit.runner.Description! getDescription();
+    method public void run(org.junit.runner.notification.RunNotifier!);
+    method public void sort(org.junit.runner.manipulation.Sorter!);
+  }
+
+}
+

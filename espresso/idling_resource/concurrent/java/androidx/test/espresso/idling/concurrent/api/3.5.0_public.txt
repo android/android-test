@@ -1,0 +1,20 @@
+// Signature format: 3.0
+package androidx.test.espresso.idling.concurrent {
+
+  public class IdlingScheduledThreadPoolExecutor extends java.util.concurrent.ScheduledThreadPoolExecutor implements androidx.test.espresso.IdlingResource {
+    ctor public IdlingScheduledThreadPoolExecutor(String!, int, java.util.concurrent.ThreadFactory!);
+    ctor public IdlingScheduledThreadPoolExecutor(String!, int, java.util.concurrent.ThreadFactory!, boolean);
+    method public String! getName();
+    method public boolean isIdleNow();
+    method public void registerIdleTransitionCallback(androidx.test.espresso.IdlingResource.ResourceCallback!);
+  }
+
+  public class IdlingThreadPoolExecutor extends java.util.concurrent.ThreadPoolExecutor implements androidx.test.espresso.IdlingResource {
+    ctor public IdlingThreadPoolExecutor(String!, int, int, long, java.util.concurrent.TimeUnit!, java.util.concurrent.BlockingQueue<java.lang.Runnable!>!, java.util.concurrent.ThreadFactory!);
+    method public String! getName();
+    method public boolean isIdleNow();
+    method public void registerIdleTransitionCallback(androidx.test.espresso.IdlingResource.ResourceCallback!);
+  }
+
+}
+
