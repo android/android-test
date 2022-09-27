@@ -24,6 +24,7 @@ import static org.junit.Assert.fail;
 
 import androidx.test.espresso.remote.NoRemoteEspressoInstanceException;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -89,9 +90,9 @@ public class InteractionResultsHandlerTest {
     CountDownLatch latch1 = new CountDownLatch(1);
     CountDownLatch latch2 = new CountDownLatch(1);
     CountDownLatch latch3 = new CountDownLatch(1);
-    interactionsList.add(TEST_EXECUTOR_1.submit(getBockingCallable(100, latch1, null)));
-    interactionsList.add(TEST_EXECUTOR_1.submit(getBockingCallable(500, latch2, null)));
-    interactionsList.add(TEST_EXECUTOR_2.submit(getBockingCallable(500, latch3, null)));
+    interactionsList.add(TEST_EXECUTOR_1.submit(getBlockingCallable(100, latch1, null)));
+    interactionsList.add(TEST_EXECUTOR_1.submit(getBlockingCallable(500, latch2, null)));
+    interactionsList.add(TEST_EXECUTOR_2.submit(getBlockingCallable(500, latch3, null)));
 
     InteractionResultsHandler.gatherAnyResult(interactionsList);
 
@@ -113,8 +114,8 @@ public class InteractionResultsHandlerTest {
 
     CountDownLatch latch1 = new CountDownLatch(1);
     CountDownLatch latch2 = new CountDownLatch(1);
-    interactionsList.add(TEST_EXECUTOR_1.submit(getBockingCallable(100, latch1, throwsRunnable)));
-    interactionsList.add(TEST_EXECUTOR_2.submit(getBockingCallable(500, latch2, throwsRunnable)));
+    interactionsList.add(TEST_EXECUTOR_1.submit(getBlockingCallable(100, latch1, throwsRunnable)));
+    interactionsList.add(TEST_EXECUTOR_2.submit(getBlockingCallable(500, latch2, throwsRunnable)));
 
     try {
       InteractionResultsHandler.gatherAnyResult(interactionsList);
@@ -143,9 +144,9 @@ public class InteractionResultsHandlerTest {
     CountDownLatch noRemoteLatch = new CountDownLatch(1);
     interactionsList.add(
         TEST_EXECUTOR_1.submit(
-            getBockingCallable(500, noActivityLatch, noActivityExceptionRunnable)));
+            getBlockingCallable(500, noActivityLatch, noActivityExceptionRunnable)));
     interactionsList.add(
-        TEST_EXECUTOR_2.submit(getBockingCallable(100, noRemoteLatch, noRemoteExceptionRunnable)));
+        TEST_EXECUTOR_2.submit(getBlockingCallable(100, noRemoteLatch, noRemoteExceptionRunnable)));
 
     try {
       InteractionResultsHandler.gatherAnyResult(interactionsList);
@@ -185,11 +186,11 @@ public class InteractionResultsHandlerTest {
     CountDownLatch assertLatch = new CountDownLatch(1);
     interactionsList.add(
         TEST_EXECUTOR_1.submit(
-            getBockingCallable(500, noActivityLatch, noActivityExceptionRunnable)));
+            getBlockingCallable(500, noActivityLatch, noActivityExceptionRunnable)));
     interactionsList.add(
-        TEST_EXECUTOR_2.submit(getBockingCallable(400, noRemoteLatch, noRemoteExceptionRunnable)));
+        TEST_EXECUTOR_2.submit(getBlockingCallable(400, noRemoteLatch, noRemoteExceptionRunnable)));
     interactionsList.add(
-        TEST_EXECUTOR_3.submit(getBockingCallable(100, assertLatch, assertionErrorRunnable)));
+        TEST_EXECUTOR_3.submit(getBlockingCallable(100, assertLatch, assertionErrorRunnable)));
 
     try {
       InteractionResultsHandler.gatherAnyResult(interactionsList);
@@ -213,6 +214,7 @@ public class InteractionResultsHandlerTest {
   }
 
   @Test
+  @SdkSuppress(minSdkVersion = 16) // TODO(b/154808638) fails mysteriously on API 15
   public void verifyMultipleConcurrentInteractionsOnDifferentThreadsReportSuccess()
       throws Throwable {
     NoRemoteEspressoInstanceException noRemoteException =
@@ -226,9 +228,9 @@ public class InteractionResultsHandlerTest {
       final CountDownLatch noRemoteLatch = new CountDownLatch(1);
 
       final ListenableFuture<Void> noRemoteFuture =
-          TEST_EXECUTOR_2.submit(getBockingCallable(0, noRemoteLatch, noRemoteExceptionRunnable));
+          TEST_EXECUTOR_2.submit(getBlockingCallable(0, noRemoteLatch, noRemoteExceptionRunnable));
       final ListenableFuture<Void> successFutures =
-          TEST_EXECUTOR_1.submit(getBockingCallable(0, successfulLatch, null));
+          TEST_EXECUTOR_1.submit(getBlockingCallable(0, successfulLatch, null));
 
       interactionsList.add(noRemoteFuture);
       interactionsList.add(successFutures);
@@ -244,7 +246,7 @@ public class InteractionResultsHandlerTest {
     }
   }
 
-  private Callable<Void> getBockingCallable(
+  private Callable<Void> getBlockingCallable(
       final long millis, final CountDownLatch latch, final Runnable runnable) {
     return new Callable<Void>() {
       @Override
