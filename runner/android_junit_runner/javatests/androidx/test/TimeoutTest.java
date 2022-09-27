@@ -32,7 +32,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.rules.Timeout;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
@@ -51,23 +50,10 @@ public class TimeoutTest {
   }
 
   @Test
-  public void testTimeoutsInJUnit4WithRule() {
+  public void testTimeoutsInJUnit4() {
     Request request =
         builder
-            .addTestClass(JUnit4WithRuleClass.class.getName())
-            .setPerTestTimeout(JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT)
-            .build();
-    JUnitCore junitCore = new JUnitCore();
-    Result result = junitCore.run(request);
-    assertThat(result.getFailures()).isEmpty();
-    assertThat(result.getRunCount()).isEqualTo(2);
-  }
-
-  @Test
-  public void testTimeoutsInJUnit4WithNoRule() {
-    Request request =
-        builder
-            .addTestClass(JUnit4NoRuleClass.class.getName())
+            .addTestClass(JUnit4Class.class.getName())
             .setPerTestTimeout(JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT)
             .build();
     JUnitCore junitCore = new JUnitCore();
@@ -107,7 +93,7 @@ public class TimeoutTest {
     Request request =
         builder
             .addTestClass(JUnit3StyleTimeoutClass.class.getName())
-            .setPerTestTimeout(200)
+            .setPerTestTimeout(2000)
             .build();
     JUnitCore junitCore = new JUnitCore();
     Result result = junitCore.run(request);
@@ -139,35 +125,10 @@ public class TimeoutTest {
   }
 
   /**
-   * Test various timeout functionality without @RunWith(AndroidJUnit4.class) annotation. By default
-   * the Android specific runner should be used.
-   */
-  public static class JUnit4WithRuleClass {
-    @Rule public Timeout globalTimeout = new Timeout(JUnit3StyleTimeoutClass.GLOBAL_RULE_TIMEOUT);
-    @Rule public final ExpectedException thrown = ExpectedException.none();
-
-    @Test
-    public void checkGlobalRuleTimeoutInterruptsOverArgTimeout() throws InterruptedException {
-      thrown.expectMessage(getTimeoutExceptionMessage(JUnit3StyleTimeoutClass.GLOBAL_RULE_TIMEOUT));
-      Thread.sleep(JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT);
-    }
-
-    @Test(timeout = JUnit3StyleTimeoutClass.TEST_TIMEOUT)
-    public void checkTestTimeoutInterruptsOverAllOthers() throws InterruptedException {
-      thrown.expectMessage(getTimeoutExceptionMessage(JUnit3StyleTimeoutClass.TEST_TIMEOUT));
-      Thread.sleep(JUnit3StyleTimeoutClass.GLOBAL_RULE_TIMEOUT);
-    }
-
-    private String getTimeoutExceptionMessage(int millis) {
-      return String.format("test timed out after %s milliseconds", millis);
-    }
-  }
-
-  /**
    * Test various timeout functionality with @RunWith(AndroidJUnit4.class) annotation. All Android
    * specific features should still work when RunWith explicitly defined.
    */
-  public static class JUnit4NoRuleClass {
+  public static class JUnit4Class {
     @Rule public final ExpectedException thrown = ExpectedException.none();
 
     @Test
@@ -180,7 +141,7 @@ public class TimeoutTest {
     @Test(timeout = JUnit3StyleTimeoutClass.TEST_TIMEOUT)
     public void checkTestTimeoutInterruptsOverArgTimeout() throws InterruptedException {
       thrown.expectMessage(getTimeoutExceptionMessage(JUnit3StyleTimeoutClass.TEST_TIMEOUT));
-      Thread.sleep(JUnit3StyleTimeoutClass.GLOBAL_ARG_TIMEOUT);
+      Thread.sleep(JUnit3StyleTimeoutClass.TEST_TIMEOUT + JUnit3StyleTimeoutClass.WAIT_FOR_TIMEOUT);
     }
 
     private String getTimeoutExceptionMessage(int millis) {

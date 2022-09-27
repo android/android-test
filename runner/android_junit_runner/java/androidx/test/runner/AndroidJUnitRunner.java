@@ -228,7 +228,10 @@ import org.junit.runners.model.RunnerBuilder;
  * <p><b> To specify a custom {@link java.lang.ClassLoader} to load the test class: </b> -e
  * classLoader com.foo.CustomClassLoader
  *
- * <p><b>Set timeout (in milliseconds) that will be applied to each test:</b> -e timeout_msec 5000
+ * <p><b>Deprecated: Set timeout (in milliseconds) that will be applied to each test:</b> -e
+ * timeout_msec 5000 <br>
+ * -e timeout essentially reuses the deprecated @Test(timeout) functionality. Use junit's Timeout
+ * Rule instead.
  *
  * <p>Supported for both JUnit3 and JUnit4 style tests. For JUnit3 tests, this flag is the only way
  * to specify timeouts. For JUnit4 tests, this flag is only supported when using the the {@link
