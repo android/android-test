@@ -19,6 +19,7 @@ package androidx.test.espresso;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import androidx.test.annotation.ExperimentalTestApi;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -93,8 +94,6 @@ public final class IdlingPolicies {
    * is attached to the VM. Setting the timeout flag reenables the behaviour of throwing a timeout
    * exception.
    *
-   * <p>The value set in this method is superceded if {@link #unsafeMakeMasterPolicyWarning()} is
-   * also called.
    */
   public static void setMasterPolicyTimeoutWhenDebuggerAttached(
       boolean timeoutWhenDebuggerAttached) {

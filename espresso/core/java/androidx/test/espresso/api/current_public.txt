@@ -72,8 +72,6 @@ package androidx.test.espresso {
     method public static void setIdlingResourceTimeout(long, java.util.concurrent.TimeUnit!);
     method public static void setMasterPolicyTimeout(long, java.util.concurrent.TimeUnit!);
     method public static void setMasterPolicyTimeoutWhenDebuggerAttached(boolean);
-    method public static void unsafeMakeIdlingResourceErrorPolicyWarning();
-    method public static void unsafeMakeMasterPolicyWarning();
   }
 
   public final class IdlingPolicy {
