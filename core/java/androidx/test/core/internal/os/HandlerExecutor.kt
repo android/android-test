@@ -24,7 +24,7 @@ import java.util.concurrent.Executor
  *
  * @hide
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 class HandlerExecutor(val handler: Handler) : Executor {
 
   override fun execute(command: Runnable) {
