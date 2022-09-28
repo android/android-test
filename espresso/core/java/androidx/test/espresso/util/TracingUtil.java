@@ -25,7 +25,11 @@ import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Utility methods for tracing. */
+/**
+ * Utility methods for tracing.
+ *
+ * @hide
+ */
 @RestrictTo(Scope.LIBRARY)
 public final class TracingUtil {
   private static final int SPAN_NAME_MAX_LEN = 100;
