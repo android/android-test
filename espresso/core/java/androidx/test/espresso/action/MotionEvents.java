@@ -137,10 +137,24 @@ public final class MotionEvents {
     return sendUp(uiController, downEvent, new float[] {downEvent.getX(), downEvent.getY()});
   }
 
+  /**
+   * Create a new finger up motion event associated with the specified down motion event, at the
+   * current time.
+   *
+   * @param downEvent the finger down motion event assoicated with this event.
+   * @param coordinates The coordinates of the event
+   */
   public static MotionEvent obtainUpEvent(MotionEvent downEvent, float[] coordinates) {
     return obtainUpEvent(downEvent, SystemClock.uptimeMillis(), coordinates);
   }
 
+  /**
+   * Create a new finger up motion event associated with the specified down motion event.
+   *
+   * @param downEvent the finger down motion event assoicated with this event.
+   * @param eventTime The the time (in ms) when this specific event was generated.
+   * @param coordinates The coordinates of the event
+   */
   public static MotionEvent obtainUpEvent(
       MotionEvent downEvent, long eventTime, float[] coordinates) {
     checkNotNull(downEvent);
@@ -220,10 +234,24 @@ public final class MotionEvents {
     }
   }
 
+  /**
+   * Create a new move motion event associated with the specified down motion event, at the current
+   * time.
+   *
+   * @param downEvent the finger down motion event assoicated with this event.
+   * @param coordinates The coordinates of the event
+   */
   public static MotionEvent obtainMovement(MotionEvent downEvent, float[] coordinates) {
     return obtainMovement(downEvent, SystemClock.uptimeMillis(), coordinates);
   }
 
+  /**
+   * Create a new move motion event associated with the specified down motion event.
+   *
+   * @param downEvent the finger down motion event assoicated with this event.
+   * @param eventTime The the time (in ms) when this specific event was generated.
+   * @param coordinates The coordinates of the event
+   */
   public static MotionEvent obtainMovement(
       MotionEvent downEvent, long eventTime, float[] coordinates) {
     checkNotNull(downEvent);
@@ -231,7 +259,9 @@ public final class MotionEvents {
     return obtain(downEvent, eventTime, MotionEvent.ACTION_MOVE, coordinates);
   }
 
-  /** @deprecated Use {@link #obtainMovement(MotionEvent, float[])} instead. */
+  /**
+   * @deprecated Use {@link #obtainMovement(MotionEvent, float[])} instead.
+   */
   @Deprecated
   public static MotionEvent obtainMovement(long downTime, float[] coordinates) {
     return MotionEvent.obtain(
@@ -243,7 +273,9 @@ public final class MotionEvents {
         0);
   }
 
-  /** @deprecated Use {@link #obtainMovement(MotionEvent, long, float[])} instead. */
+  /**
+   * @deprecated Use {@link #obtainMovement(MotionEvent, long, float[])} instead.
+   */
   @Deprecated
   public static MotionEvent obtainMovement(long downTime, long eventTime, float[] coordinates) {
     return MotionEvent.obtain(
