@@ -33,6 +33,7 @@ import android.view.View;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.filters.SdkSuppress;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SendActivity;
 import java.util.concurrent.Callable;
@@ -214,6 +215,7 @@ public class EspressoEdgeCaseTest {
   }
 
   @Test
+  @SdkSuppress(maxSdkVersion = 28) // TODO(b/248121335)
   public void recoveryFromAsyncTaskTimeout() throws Exception {
     IdlingPolicies.setMasterPolicyTimeout(2, TimeUnit.SECONDS);
     try {
@@ -230,7 +232,7 @@ public class EspressoEdgeCaseTest {
                     }
                   }.execute();
                   // block test execution until loopMainThreadForAtLeast call
-                  // would be satisified
+                  // would be satisfied
                   controller.loopMainThreadForAtLeast(1000);
                 }
               });
