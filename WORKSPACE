@@ -141,7 +141,7 @@ maven_install(
         "org.mockito:mockito-core:2.28.1",
         "org.objenesis:objenesis:2.6",
         "org.pantsbuild:jarjar:1.7.2",
-        "org.robolectric:robolectric:4.8.1",
+        "org.robolectric:robolectric:4.9",
     ],
     repositories = [
         "https://maven.google.com",
