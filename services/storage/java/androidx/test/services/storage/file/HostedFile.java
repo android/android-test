@@ -17,9 +17,11 @@ package androidx.test.services.storage.file;
 
 import android.net.Uri;
 import android.provider.OpenableColumns;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.services.storage.TestStorageConstants;
 
 /** Constants to access hosted file data and convenience methods for building Uris. */
+@ExperimentalTestApi
 public final class HostedFile {
 
   /** An enum of the columns returned by the hosted file service. */

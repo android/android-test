@@ -22,13 +22,20 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.test.services.storage.TestStorageException;
 import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/** Helper methods for the test storage implementations. */
+/**
+ * Helper methods for the test storage implementations.
+ *
+ * @hide
+ */
+@RestrictTo(Scope.LIBRARY)
 public final class TestStorageUtil {
   /**
    * Gets the input stream for a given Uri.
