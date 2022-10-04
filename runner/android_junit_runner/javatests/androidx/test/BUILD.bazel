@@ -105,6 +105,7 @@ android_library_instrumentation_tests(
             # tested separately
             "internal/runner/ClassPathScannerTest.java",
             "internal/runner/TestRequestBuilderLocalTest.java",
+            "runner/TraceRunListenerTest.java",
         ] + UI_THREAD_STATEMENT_TEST_EXAMPLES,
     ),
     args = [
