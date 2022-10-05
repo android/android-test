@@ -84,7 +84,7 @@ maven_artifact(
         "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
         "androidx.test:annotation:%s" % ANNOTATION_VERSION,
     ],
-    artifact_id = "device",
+    artifact_id = "espresso-device",
     group_id = "androidx.test.espresso",
     last_updated = "20220825000000",
     src_jar = ":device_src_jars.jar",
