@@ -91,6 +91,7 @@ android_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//:androidx_annotation",
         "//core/java/androidx/test/core:core_not_test_only",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/internal/inject",

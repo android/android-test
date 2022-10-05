@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
+import androidx.annotation.NonNull;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
@@ -128,6 +129,7 @@ public final class RecyclerViewActions {
   }
 
   /** Returns a {@link ViewAction} which scrolls {@link RecyclerView} to the last position. */
+  @NonNull
   public static <VH extends ViewHolder> ViewAction scrollToLastPosition() {
     return new ScrollToLastPositionViewAction();
   }

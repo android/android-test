@@ -198,12 +198,12 @@ public final class IntentMatchers {
   }
 
   @NonNull
-  public static Matcher<Intent> doesNotHaveExtraWithKey(String key) {
+  public static Matcher<Intent> doesNotHaveExtraWithKey(@NonNull String key) {
     return doesNotHaveExtraWithKey(is(key));
   }
 
   @NonNull
-  public static Matcher<Intent> doesNotHaveExtraWithKey(Matcher<String> keyMatcher) {
+  public static Matcher<Intent> doesNotHaveExtraWithKey(@NonNull Matcher<String> keyMatcher) {
     return hasExtras(doesNotHaveKey(keyMatcher));
   }
 

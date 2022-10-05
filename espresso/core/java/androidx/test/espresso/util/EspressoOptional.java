@@ -26,6 +26,9 @@ import java.util.Set;
  * This class is a wrapper around {@link com.google.common.base.Optional} in order to avoid having
  * public references to Guava API.
  *
+ * <p>This is currently not recommended for use and will be deprecated in the future. New APIS
+ * should use Nullable annotation instead.
+ *
  * @param <T> the type of instance that can be contained. {@code Optional} is naturally covariant on
  *     this type, so it is safe to cast an {@code Optional<T>} to {@code Optional<S>} for any
  *     supertype {@code S} of {@code T}.

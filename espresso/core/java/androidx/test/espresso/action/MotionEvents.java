@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
+import androidx.annotation.NonNull;
 import androidx.test.espresso.InjectEventSecurityException;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
@@ -241,7 +242,9 @@ public final class MotionEvents {
    * @param downEvent the finger down motion event assoicated with this event.
    * @param coordinates The coordinates of the event
    */
-  public static MotionEvent obtainMovement(MotionEvent downEvent, float[] coordinates) {
+  @NonNull
+  public static MotionEvent obtainMovement(
+      @NonNull MotionEvent downEvent, @NonNull float[] coordinates) {
     return obtainMovement(downEvent, SystemClock.uptimeMillis(), coordinates);
   }
 
@@ -252,8 +255,9 @@ public final class MotionEvents {
    * @param eventTime The the time (in ms) when this specific event was generated.
    * @param coordinates The coordinates of the event
    */
+  @NonNull
   public static MotionEvent obtainMovement(
-      MotionEvent downEvent, long eventTime, float[] coordinates) {
+      @NonNull MotionEvent downEvent, long eventTime, @NonNull float[] coordinates) {
     checkNotNull(downEvent);
     checkNotNull(coordinates);
     return obtain(downEvent, eventTime, MotionEvent.ACTION_MOVE, coordinates);

@@ -32,6 +32,7 @@ import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.Log;
 import androidx.annotation.GuardedBy;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle.Event;
 import androidx.lifecycle.Lifecycle.State;
@@ -265,8 +266,9 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * @throws AssertionError if the lifecycle state transition never completes within the timeout
    * @return ActivityScenario which you can use to make further state transitions
    */
+  @NonNull
   public static <A extends Activity> ActivityScenario<A> launchActivityForResult(
-      Class<A> activityClass) {
+      @NonNull Class<A> activityClass) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(activityClass));
     scenario.launchInternal(/*activityOptions=*/ null, /*launchActivityForResult=*/ true);
     return scenario;
@@ -279,8 +281,9 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * @param activityOptions an activity options bundle to be passed along with the intent to start
    *     activity.
    */
+  @NonNull
   public static <A extends Activity> ActivityScenario<A> launchActivityForResult(
-      Class<A> activityClass, @Nullable Bundle activityOptions) {
+      @NonNull Class<A> activityClass, @Nullable Bundle activityOptions) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(activityClass));
     scenario.launchInternal(activityOptions, /*launchActivityForResult=*/ true);
     return scenario;
@@ -302,8 +305,9 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * @throws AssertionError if the lifecycle state transition never completes within the timeout
    * @return ActivityScenario which you can use to make further state transitions
    */
+  @NonNull
   public static <A extends Activity> ActivityScenario<A> launchActivityForResult(
-      Intent startActivityIntent) {
+      @NonNull Intent startActivityIntent) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(startActivityIntent));
     scenario.launchInternal(/*activityOptions=*/ null, /*launchActivityForResult=*/ true);
     return scenario;
@@ -316,8 +320,9 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * @param activityOptions an activity options bundle to be passed along with the intent to start
    *     activity.
    */
+  @NonNull
   public static <A extends Activity> ActivityScenario<A> launchActivityForResult(
-      Intent startActivityIntent, @Nullable Bundle activityOptions) {
+      @NonNull Intent startActivityIntent, @Nullable Bundle activityOptions) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(startActivityIntent));
     scenario.launchInternal(activityOptions, /*launchActivityForResult=*/ true);
     return scenario;

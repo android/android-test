@@ -19,6 +19,7 @@ import static com.google.common.truth.Fact.simpleFact;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import androidx.annotation.NonNull;
 import com.google.common.truth.BooleanSubject;
 import com.google.common.truth.DoubleSubject;
 import com.google.common.truth.FailureMetadata;
@@ -76,7 +77,8 @@ public final class BundleSubject extends Subject {
     return check("getLong(%s)", key).that(actual.getLong(key));
   }
 
-  public DoubleSubject doubleFloat(String key) {
+  @NonNull
+  public DoubleSubject doubleFloat(@NonNull String key) {
     return check("getDouble(%s)", key).that(actual.getDouble(key));
   }
 
@@ -95,7 +97,8 @@ public final class BundleSubject extends Subject {
     return check("getParcelable(%s)", key).about(subjectFactory).that(actual.<T>getParcelable(key));
   }
 
-  public ObjectArraySubject<String> stringArray(String key) {
+  @NonNull
+  public ObjectArraySubject<String> stringArray(@NonNull String key) {
     return check("getStringArray(%s)", key).that(actual.getStringArray(key));
   }
 

@@ -20,9 +20,9 @@ import static com.google.common.base.Throwables.throwIfUnchecked;
 
 import android.util.Log;
 import android.view.View;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.RootViewException;
 import androidx.test.espresso.base.DefaultFailureHandler.TypedFailureHandler;
-import androidx.test.espresso.util.EspressoOptional;
 import androidx.test.espresso.util.HumanReadables;
 import androidx.test.platform.io.PlatformTestStorage;
 import androidx.test.services.storage.TestStorageException;
@@ -49,8 +49,7 @@ class ViewHierarchyExceptionHandler<T extends Throwable & RootViewException>
   private final Truncater<T> truncater;
 
   interface Truncater<T> {
-    Throwable truncateExceptionMessage(
-        T exception, int msgLen, EspressoOptional<String> viewHierarchyFile);
+    Throwable truncateExceptionMessage(T exception, int msgLen, String viewHierarchyFile);
   }
 
   public ViewHierarchyExceptionHandler(
@@ -66,7 +65,7 @@ class ViewHierarchyExceptionHandler<T extends Throwable & RootViewException>
 
   @Override
   public void handleSafely(T exception, Matcher<View> viewMatcher) {
-    EspressoOptional<String> viewHierarchyFile = dumpFullViewHierarchyToFile(exception);
+    String viewHierarchyFile = dumpFullViewHierarchyToFile(exception);
 
     exception.setStackTrace(Thread.currentThread().getStackTrace());
 
@@ -93,7 +92,8 @@ class ViewHierarchyExceptionHandler<T extends Throwable & RootViewException>
     return MAX_MSG_SIZE;
   }
 
-  private EspressoOptional<String> dumpFullViewHierarchyToFile(T error) {
+  @Nullable
+  private String dumpFullViewHierarchyToFile(T error) {
     String viewHierarchyMsg =
         HumanReadables.getViewHierarchyErrorMessage(
             error.getRootView(),
@@ -107,11 +107,11 @@ class ViewHierarchyExceptionHandler<T extends Throwable & RootViewException>
       Log.w(
           TAG,
           "The complete view hierarchy is available in artifact file '" + viewHierarchyFile + "'.");
-      return EspressoOptional.of(viewHierarchyFile);
+      return viewHierarchyFile;
     } catch (IOException e) {
       // Log and ignore.
       Log.w(TAG, "Failed to save the view hierarchy to file " + viewHierarchyFile, e);
-      return EspressoOptional.absent();
+      return null;
     }
   }
 

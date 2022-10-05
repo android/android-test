@@ -19,6 +19,8 @@ package androidx.test.espresso;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.view.View;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.util.EspressoOptional;
 import androidx.test.espresso.util.HumanReadables;
 import com.google.common.collect.Lists;
@@ -93,11 +95,11 @@ public final class NoMatchingViewException extends RuntimeException implements R
               /* problemViewSuffix= */ null,
               builder.maxMsgLen);
 
-      if (builder.viewHierarchyFile.isPresent()) {
+      if (builder.viewHierarchyFile != null) {
         errorMessage +=
             String.format(
                 "\nThe complete view hierarchy is available in artifact file '%s'.",
-                builder.viewHierarchyFile.get());
+                builder.viewHierarchyFile);
       }
     } else {
       errorMessage =
@@ -117,7 +119,7 @@ public final class NoMatchingViewException extends RuntimeException implements R
     private EspressoOptional<String> adapterViewWarning = EspressoOptional.<String>absent();
     private Throwable cause;
     private int maxMsgLen = Integer.MAX_VALUE;
-    private EspressoOptional<String> viewHierarchyFile = EspressoOptional.absent();
+    private String viewHierarchyFile = null;
 
     public Builder from(NoMatchingViewException exception) {
       this.viewMatcher = exception.viewMatcher;
@@ -158,12 +160,14 @@ public final class NoMatchingViewException extends RuntimeException implements R
       return this;
     }
 
+    @NonNull
     public Builder withMaxMsgLen(int maxMsgLen) {
       this.maxMsgLen = maxMsgLen;
       return this;
     }
 
-    public Builder withViewHierarchyFile(EspressoOptional<String> viewHierarchyFile) {
+    @NonNull
+    public Builder withViewHierarchyFile(@Nullable String viewHierarchyFile) {
       this.viewHierarchyFile = viewHierarchyFile;
       return this;
     }

@@ -18,6 +18,7 @@ package androidx.test.espresso.action;
 
 import android.graphics.Rect;
 import android.view.View;
+import androidx.annotation.NonNull;
 
 /** Calculates coordinate position for general locations. */
 public enum GeneralLocation implements CoordinatesProvider {
@@ -90,8 +91,9 @@ public enum GeneralLocation implements CoordinatesProvider {
    * @param dx the distance in x direction
    * @param dy the distance in y direction
    */
+  @NonNull
   public static CoordinatesProvider translate(
-      final CoordinatesProvider coords, final float dx, final float dy) {
+      @NonNull final CoordinatesProvider coords, final float dx, final float dy) {
     return new TranslatedCoordinatesProvider(coords, dx, dy);
   }
 

@@ -17,6 +17,7 @@
 package androidx.test.espresso;
 
 import android.view.View;
+import androidx.annotation.NonNull;
 
 /**
  * An {@link EspressoException} that can provide a Root View.
@@ -27,5 +28,6 @@ import android.view.View;
 public interface RootViewException extends EspressoException {
 
   /** Returns the root view where this exception is thrown. */
+  @NonNull
   View getRootView();
 }

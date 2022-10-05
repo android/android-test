@@ -19,11 +19,13 @@ package androidx.test.espresso;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.view.View;
-import androidx.test.espresso.util.EspressoOptional;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.util.HumanReadables;
 import androidx.test.internal.platform.util.TestOutputEmitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.ArrayList;
 import java.util.Locale;
 import org.hamcrest.Matcher;
@@ -104,11 +106,11 @@ public final class AmbiguousViewMatcherException extends RuntimeException
               "****MATCHES****",
               builder.maxMsgLen);
 
-      if (builder.viewHierarchyFile.isPresent()) {
+      if (builder.viewHierarchyFile != null) {
         errorMessage +=
             String.format(
                 "\nThe complete view hierarchy is available in artifact file '%s'.",
-                builder.viewHierarchyFile.get());
+                builder.viewHierarchyFile);
       }
     } else {
       errorMessage =
@@ -134,7 +136,7 @@ public final class AmbiguousViewMatcherException extends RuntimeException
     private View[] others;
     private boolean includeViewHierarchy = true;
     private int maxMsgLen = Integer.MAX_VALUE;
-    private EspressoOptional<String> viewHierarchyFile = EspressoOptional.absent();
+    private String viewHierarchyFile = null;
 
     public Builder from(AmbiguousViewMatcherException exception) {
       this.viewMatcher = exception.viewMatcher;
@@ -175,12 +177,16 @@ public final class AmbiguousViewMatcherException extends RuntimeException
       return this;
     }
 
+    @CanIgnoreReturnValue
+    @NonNull
     public Builder withMaxMsgLen(int maxMsgLen) {
       this.maxMsgLen = maxMsgLen;
       return this;
     }
 
-    public Builder withViewHierarchyFile(EspressoOptional<String> viewHierarchyFile) {
+    @CanIgnoreReturnValue
+    @NonNull
+    public Builder withViewHierarchyFile(@Nullable String viewHierarchyFile) {
       this.viewHierarchyFile = viewHierarchyFile;
       return this;
     }

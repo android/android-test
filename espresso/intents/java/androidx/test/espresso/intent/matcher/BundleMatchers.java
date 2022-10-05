@@ -117,12 +117,12 @@ public final class BundleMatchers {
   }
 
   @NonNull
-  public static Matcher<Bundle> doesNotHaveKey(String key) {
+  public static Matcher<Bundle> doesNotHaveKey(@NonNull String key) {
     return doesNotHaveKey(is(key));
   }
 
   @NonNull
-  public static Matcher<Bundle> doesNotHaveKey(Matcher<String> keyMatcher) {
+  public static Matcher<Bundle> doesNotHaveKey(@NonNull Matcher<String> keyMatcher) {
     return new BundleMatcher(keyMatcher, anything(), /* shouldBePresent= */ false);
   }
 

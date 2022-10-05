@@ -109,6 +109,7 @@ android_library(
     deps = [
         ":interface",
         ":view-interaction",
+        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/base",
         "//espresso/core/java/androidx/test/espresso/base:default_failure_handler",
         "//espresso/core/java/androidx/test/espresso/base:idling_resource_registry",
@@ -189,6 +190,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//runner/monitor",
+        "//:androidx_annotation",
+        "@maven//:com_google_errorprone_error_prone_annotations",
         "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_all",
