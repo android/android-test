@@ -1,0 +1,70 @@
+// Signature format: 3.0
+package androidx.test.espresso.contrib {
+
+  @Deprecated public final class AccessibilityChecks {
+    method @Deprecated public static androidx.test.espresso.ViewAssertion! accessibilityAssertion();
+    method @Deprecated public static com.google.android.apps.common.testing.accessibility.framework.integrations.espresso.AccessibilityValidator! enable();
+  }
+
+  public final class ActivityResultMatchers {
+    method public static org.hamcrest.Matcher<? super android.app.Instrumentation.ActivityResult>! hasResultCode(int);
+    method public static org.hamcrest.Matcher<? super android.app.Instrumentation.ActivityResult>! hasResultData(org.hamcrest.Matcher<android.content.Intent!>!);
+  }
+
+  public final class DrawerActions {
+    method public static androidx.test.espresso.ViewAction! close();
+    method public static androidx.test.espresso.ViewAction! close(int);
+    method @Deprecated public static void closeDrawer(int);
+    method @Deprecated public static void closeDrawer(int, int);
+    method public static androidx.test.espresso.ViewAction! open();
+    method public static androidx.test.espresso.ViewAction! open(int);
+    method @Deprecated public static void openDrawer(int);
+    method @Deprecated public static void openDrawer(int, int);
+  }
+
+  public final class DrawerMatchers {
+    method public static org.hamcrest.Matcher<android.view.View!>! isClosed(int);
+    method public static org.hamcrest.Matcher<android.view.View!>! isClosed();
+    method public static org.hamcrest.Matcher<android.view.View!>! isOpen(int);
+    method public static org.hamcrest.Matcher<android.view.View!>! isOpen();
+  }
+
+  public final class NavigationViewActions {
+    method public static androidx.test.espresso.ViewAction! navigateTo(int);
+  }
+
+  public final class PickerActions {
+    method public static androidx.test.espresso.ViewAction! setDate(int, int, int);
+    method public static androidx.test.espresso.ViewAction! setTime(int, int);
+  }
+
+  public final class RecyclerViewActions {
+    method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.contrib.RecyclerViewActions.PositionableRecyclerViewAction! actionOnHolderItem(org.hamcrest.Matcher<VH!>!, androidx.test.espresso.ViewAction!);
+    method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.contrib.RecyclerViewActions.PositionableRecyclerViewAction! actionOnItem(org.hamcrest.Matcher<android.view.View!>!, androidx.test.espresso.ViewAction!);
+    method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.ViewAction! actionOnItemAtPosition(int, androidx.test.espresso.ViewAction!);
+    method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.contrib.RecyclerViewActions.PositionableRecyclerViewAction! scrollTo(org.hamcrest.Matcher<android.view.View!>!);
+    method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.contrib.RecyclerViewActions.PositionableRecyclerViewAction! scrollToHolder(org.hamcrest.Matcher<VH!>!);
+    method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.ViewAction! scrollToLastPosition();
+    method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.ViewAction! scrollToPosition(int);
+  }
+
+  public static interface RecyclerViewActions.PositionableRecyclerViewAction extends androidx.test.espresso.ViewAction {
+    method public androidx.test.espresso.contrib.RecyclerViewActions.PositionableRecyclerViewAction! atPosition(int);
+  }
+
+  public final class ViewPagerActions {
+    method public static androidx.test.espresso.ViewAction! clickBetweenTwoTitles(String!, String!);
+    method public static androidx.test.espresso.ViewAction! scrollLeft();
+    method public static androidx.test.espresso.ViewAction! scrollLeft(boolean);
+    method public static androidx.test.espresso.ViewAction! scrollRight();
+    method public static androidx.test.espresso.ViewAction! scrollRight(boolean);
+    method public static androidx.test.espresso.ViewAction! scrollToFirst();
+    method public static androidx.test.espresso.ViewAction! scrollToFirst(boolean);
+    method public static androidx.test.espresso.ViewAction! scrollToLast();
+    method public static androidx.test.espresso.ViewAction! scrollToLast(boolean);
+    method public static androidx.test.espresso.ViewAction! scrollToPage(int);
+    method public static androidx.test.espresso.ViewAction! scrollToPage(int, boolean);
+  }
+
+}
+

@@ -1,0 +1,931 @@
+// Signature format: 3.0
+package androidx.test.espresso {
+
+  public final class AmbiguousViewMatcherException extends java.lang.RuntimeException implements androidx.test.espresso.RootViewException {
+    method public android.view.View! getRootView();
+  }
+
+  public static class AmbiguousViewMatcherException.Builder {
+    ctor public AmbiguousViewMatcherException.Builder();
+    method public androidx.test.espresso.AmbiguousViewMatcherException! build();
+    method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! from(androidx.test.espresso.AmbiguousViewMatcherException!);
+    method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! includeViewHierarchy(boolean);
+    method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withMaxMsgLen(int);
+    method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withOtherAmbiguousViews(android.view.View!...);
+    method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withRootView(android.view.View!);
+    method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withView1(android.view.View!);
+    method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withView2(android.view.View!);
+    method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withViewHierarchyFile(androidx.test.espresso.util.EspressoOptional<java.lang.String!>!);
+    method public androidx.test.espresso.AmbiguousViewMatcherException.Builder! withViewMatcher(org.hamcrest.Matcher<? super android.view.View>!);
+  }
+
+  public final class AppNotIdleException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
+    method @Deprecated public static androidx.test.espresso.AppNotIdleException! create(java.util.List<java.lang.String!>!, int, int);
+    method public static androidx.test.espresso.AppNotIdleException! create(java.util.List<java.lang.String!>!, String!);
+  }
+
+  public class DataInteraction {
+    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.DataInteraction! atPosition(Integer!);
+    method public androidx.test.espresso.ViewInteraction! check(androidx.test.espresso.ViewAssertion!);
+    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.DataInteraction! inAdapterView(org.hamcrest.Matcher<android.view.View!>!);
+    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.DataInteraction! inRoot(org.hamcrest.Matcher<androidx.test.espresso.Root!>!);
+    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.DataInteraction! onChildView(org.hamcrest.Matcher<android.view.View!>!);
+    method public androidx.test.espresso.ViewInteraction! perform(androidx.test.espresso.ViewAction!...);
+    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.DataInteraction! usingAdapterViewProtocol(androidx.test.espresso.action.AdapterViewProtocol!);
+  }
+
+  public static final class DataInteraction.DisplayDataMatcher extends org.hamcrest.TypeSafeMatcher<android.view.View> {
+    method public void describeTo(org.hamcrest.Description!);
+    method public static androidx.test.espresso.DataInteraction.DisplayDataMatcher! displayDataMatcher(org.hamcrest.Matcher<android.view.View!>, org.hamcrest.Matcher<?>, org.hamcrest.Matcher<androidx.test.espresso.Root!>, androidx.test.espresso.util.EspressoOptional<java.lang.Integer!>!, androidx.test.espresso.action.AdapterViewProtocol);
+    method public boolean matchesSafely(android.view.View!);
+  }
+
+  public final class Espresso {
+    method public static void closeSoftKeyboard();
+    method @Deprecated public static java.util.List<androidx.test.espresso.IdlingResource!>! getIdlingResources();
+    method @CheckResult @javax.annotation.CheckReturnValue public static androidx.test.espresso.DataInteraction! onData(org.hamcrest.Matcher<?>!);
+    method public static <T> T! onIdle(java.util.concurrent.Callable<T!>!);
+    method public static void onIdle();
+    method @CheckResult @javax.annotation.CheckReturnValue public static androidx.test.espresso.ViewInteraction! onView(org.hamcrest.Matcher<android.view.View!>!);
+    method public static void openActionBarOverflowOrOptionsMenu(android.content.Context!);
+    method public static void openContextualActionModeOverflowMenu();
+    method public static void pressBack();
+    method public static void pressBackUnconditionally();
+    method @Deprecated public static boolean registerIdlingResources(androidx.test.espresso.IdlingResource!...);
+    method @Deprecated public static void registerLooperAsIdlingResource(android.os.Looper!);
+    method @Deprecated public static void registerLooperAsIdlingResource(android.os.Looper!, boolean);
+    method public static void setFailureHandler(androidx.test.espresso.FailureHandler!);
+    method @Deprecated public static boolean unregisterIdlingResources(androidx.test.espresso.IdlingResource!...);
+  }
+
+  public interface EspressoException extends androidx.test.platform.TestFrameworkException {
+  }
+
+  public interface FailureHandler {
+    method public void handle(Throwable!, org.hamcrest.Matcher<android.view.View!>!);
+  }
+
+  public final class IdlingPolicies {
+    method public static androidx.test.espresso.IdlingPolicy! getDynamicIdlingResourceErrorPolicy();
+    method public static androidx.test.espresso.IdlingPolicy! getDynamicIdlingResourceWarningPolicy();
+    method public static androidx.test.espresso.IdlingPolicy! getMasterIdlingPolicy();
+    method public static void setIdlingResourceTimeout(long, java.util.concurrent.TimeUnit!);
+    method public static void setMasterPolicyTimeout(long, java.util.concurrent.TimeUnit!);
+    method public static void setMasterPolicyTimeoutWhenDebuggerAttached(boolean);
+  }
+
+  public final class IdlingPolicy {
+    method public boolean getDisableOnTimeout();
+    method public long getIdleTimeout();
+    method public java.util.concurrent.TimeUnit! getIdleTimeoutUnit();
+    method public boolean getTimeoutIfDebuggerAttached();
+    method public void handleTimeout(java.util.List<java.lang.String!>!, String!);
+  }
+
+  public final class IdlingResourceTimeoutException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
+    ctor public IdlingResourceTimeoutException(java.util.List<java.lang.String!>!);
+  }
+
+  public final class InjectEventSecurityException extends androidx.test.platform.ui.InjectEventSecurityException implements androidx.test.espresso.EspressoException {
+    ctor public InjectEventSecurityException(String!);
+    ctor public InjectEventSecurityException(Throwable!);
+    ctor public InjectEventSecurityException(String!, Throwable!);
+  }
+
+  public final class NoActivityResumedException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
+    ctor public NoActivityResumedException(String!);
+    ctor public NoActivityResumedException(String!, Throwable!);
+  }
+
+  public final class NoMatchingRootException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
+    method public static androidx.test.espresso.NoMatchingRootException! create(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, java.util.List<androidx.test.espresso.Root!>!);
+  }
+
+  public final class NoMatchingViewException extends java.lang.RuntimeException implements androidx.test.espresso.RootViewException {
+    method public android.view.View! getRootView();
+    method public String! getViewMatcherDescription();
+  }
+
+  public static class NoMatchingViewException.Builder {
+    ctor public NoMatchingViewException.Builder();
+    method public androidx.test.espresso.NoMatchingViewException! build();
+    method public androidx.test.espresso.NoMatchingViewException.Builder! from(androidx.test.espresso.NoMatchingViewException!);
+    method public androidx.test.espresso.NoMatchingViewException.Builder! includeViewHierarchy(boolean);
+    method public androidx.test.espresso.NoMatchingViewException.Builder! withAdapterViewWarning(androidx.test.espresso.util.EspressoOptional<java.lang.String!>!);
+    method public androidx.test.espresso.NoMatchingViewException.Builder! withAdapterViews(java.util.List<android.view.View!>!);
+    method public androidx.test.espresso.NoMatchingViewException.Builder! withCause(Throwable!);
+    method public androidx.test.espresso.NoMatchingViewException.Builder! withMaxMsgLen(int);
+    method public androidx.test.espresso.NoMatchingViewException.Builder! withRootView(android.view.View!);
+    method public androidx.test.espresso.NoMatchingViewException.Builder! withViewHierarchyFile(androidx.test.espresso.util.EspressoOptional<java.lang.String!>!);
+    method public androidx.test.espresso.NoMatchingViewException.Builder! withViewMatcher(org.hamcrest.Matcher<? super android.view.View>!);
+  }
+
+  public final class PerformException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
+    method public String! getActionDescription();
+    method public String! getViewDescription();
+  }
+
+  public static class PerformException.Builder {
+    ctor public PerformException.Builder();
+    method public androidx.test.espresso.PerformException! build();
+    method public androidx.test.espresso.PerformException.Builder! from(androidx.test.espresso.PerformException!);
+    method public androidx.test.espresso.PerformException.Builder! withActionDescription(String!);
+    method public androidx.test.espresso.PerformException.Builder! withCause(Throwable!);
+    method public androidx.test.espresso.PerformException.Builder! withViewDescription(String!);
+  }
+
+  public final class Root {
+    method public android.view.View! getDecorView();
+    method public androidx.test.espresso.util.EspressoOptional<android.view.WindowManager.LayoutParams!>! getWindowLayoutParams();
+    method public boolean isReady();
+  }
+
+  public static class Root.Builder {
+    ctor public Root.Builder();
+    method public androidx.test.espresso.Root! build();
+    method public androidx.test.espresso.Root.Builder! withDecorView(android.view.View!);
+    method public androidx.test.espresso.Root.Builder! withWindowLayoutParams(android.view.WindowManager.LayoutParams!);
+  }
+
+  public interface RootViewException extends androidx.test.espresso.EspressoException {
+    method public android.view.View! getRootView();
+  }
+
+  public interface UiController {
+    method public boolean injectKeyEvent(android.view.KeyEvent!) throws androidx.test.espresso.InjectEventSecurityException;
+    method public boolean injectMotionEvent(android.view.MotionEvent!) throws androidx.test.espresso.InjectEventSecurityException;
+    method public default boolean injectMotionEventSequence(Iterable<android.view.MotionEvent!>!) throws androidx.test.espresso.InjectEventSecurityException;
+    method public boolean injectString(String!) throws androidx.test.espresso.InjectEventSecurityException;
+    method public void loopMainThreadForAtLeast(long);
+    method public void loopMainThreadUntilIdle();
+  }
+
+  public interface ViewAction {
+    method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
+    method public String! getDescription();
+    method public void perform(androidx.test.espresso.UiController!, android.view.View!);
+  }
+
+  public interface ViewAssertion {
+    method public void check(android.view.View!, androidx.test.espresso.NoMatchingViewException!);
+  }
+
+  public interface ViewFinder {
+    method public android.view.View! getView() throws androidx.test.espresso.AmbiguousViewMatcherException, androidx.test.espresso.NoMatchingViewException;
+  }
+
+  public final class ViewInteraction {
+    method public androidx.test.espresso.ViewInteraction! check(androidx.test.espresso.ViewAssertion!);
+    method public androidx.test.espresso.ViewInteraction! inRoot(org.hamcrest.Matcher<androidx.test.espresso.Root!>!);
+    method public androidx.test.espresso.ViewInteraction! noActivity();
+    method public androidx.test.espresso.ViewInteraction! perform(androidx.test.espresso.ViewAction!...);
+    method public androidx.test.espresso.ViewInteraction! withFailureHandler(androidx.test.espresso.FailureHandler!);
+  }
+
+  @androidx.test.espresso.base.RootViewPickerScope @dagger.Subcomponent(modules=ViewInteractionModule.class) public interface ViewInteractionComponent {
+    method public androidx.test.espresso.ViewInteraction! viewInteraction();
+  }
+
+}
+
+package androidx.test.espresso.action {
+
+  public final class AdapterDataLoaderAction implements androidx.test.espresso.ViewAction {
+    ctor public AdapterDataLoaderAction(org.hamcrest.Matcher<?>!, androidx.test.espresso.util.EspressoOptional<java.lang.Integer!>!, androidx.test.espresso.action.AdapterViewProtocol!);
+    method public androidx.test.espresso.action.AdapterViewProtocol.AdaptedData! getAdaptedData();
+    method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
+    method public String! getDescription();
+    method public void perform(androidx.test.espresso.UiController!, android.view.View!);
+  }
+
+  public interface AdapterViewProtocol {
+    method public Iterable<androidx.test.espresso.action.AdapterViewProtocol.AdaptedData!>! getDataInAdapterView(android.widget.AdapterView<? extends android.widget.Adapter>!);
+    method public androidx.test.espresso.util.EspressoOptional<androidx.test.espresso.action.AdapterViewProtocol.AdaptedData!>! getDataRenderedByView(android.widget.AdapterView<? extends android.widget.Adapter>!, android.view.View!);
+    method public boolean isDataRenderedWithinAdapterView(android.widget.AdapterView<? extends android.widget.Adapter>!, androidx.test.espresso.action.AdapterViewProtocol.AdaptedData!);
+    method public void makeDataRenderedWithinAdapterView(android.widget.AdapterView<? extends android.widget.Adapter>!, androidx.test.espresso.action.AdapterViewProtocol.AdaptedData!);
+  }
+
+  public static class AdapterViewProtocol.AdaptedData {
+    method public Object! getData();
+    field @Deprecated public final Object? data;
+    field public final Object! opaqueToken;
+  }
+
+  public static class AdapterViewProtocol.AdaptedData.Builder {
+    ctor public AdapterViewProtocol.AdaptedData.Builder();
+    method public androidx.test.espresso.action.AdapterViewProtocol.AdaptedData! build();
+    method public androidx.test.espresso.action.AdapterViewProtocol.AdaptedData.Builder! withData(Object?);
+    method public androidx.test.espresso.action.AdapterViewProtocol.AdaptedData.Builder! withDataFunction(androidx.test.espresso.action.AdapterViewProtocol.DataFunction?);
+    method public androidx.test.espresso.action.AdapterViewProtocol.AdaptedData.Builder! withOpaqueToken(Object?);
+  }
+
+  public static interface AdapterViewProtocol.DataFunction {
+    method public Object! getData();
+  }
+
+  public final class AdapterViewProtocols {
+    method public static androidx.test.espresso.action.AdapterViewProtocol! standardProtocol();
+  }
+
+  public final class CloseKeyboardAction implements androidx.test.espresso.ViewAction {
+    ctor @androidx.test.espresso.remote.annotation.RemoteMsgConstructor public CloseKeyboardAction();
+    method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
+    method public String! getDescription();
+    method public void perform(androidx.test.espresso.UiController!, android.view.View!);
+  }
+
+  public interface CoordinatesProvider {
+    method public float[]! calculateCoordinates(android.view.View!);
+  }
+
+  public final class EditorAction implements androidx.test.espresso.ViewAction {
+    ctor @androidx.test.espresso.remote.annotation.RemoteMsgConstructor public EditorAction();
+    method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
+    method public String! getDescription();
+    method public void perform(androidx.test.espresso.UiController!, android.view.View!);
+  }
+
+  public final class EspressoKey {
+    method public int getKeyCode();
+    method public int getMetaState();
+  }
+
+  public static class EspressoKey.Builder {
+    ctor public EspressoKey.Builder();
+    method public androidx.test.espresso.action.EspressoKey! build();
+    method public androidx.test.espresso.action.EspressoKey.Builder! withAltPressed(boolean);
+    method public androidx.test.espresso.action.EspressoKey.Builder! withCtrlPressed(boolean);
+    method public androidx.test.espresso.action.EspressoKey.Builder! withKeyCode(int);
+    method public androidx.test.espresso.action.EspressoKey.Builder! withShiftPressed(boolean);
+  }
+
+  public final class GeneralClickAction implements androidx.test.espresso.ViewAction {
+    ctor @Deprecated public GeneralClickAction(androidx.test.espresso.action.Tapper!, androidx.test.espresso.action.CoordinatesProvider!, androidx.test.espresso.action.PrecisionDescriber!);
+    ctor public GeneralClickAction(androidx.test.espresso.action.Tapper!, androidx.test.espresso.action.CoordinatesProvider!, androidx.test.espresso.action.PrecisionDescriber!, int, int);
+    ctor @Deprecated public GeneralClickAction(androidx.test.espresso.action.Tapper!, androidx.test.espresso.action.CoordinatesProvider!, androidx.test.espresso.action.PrecisionDescriber!, androidx.test.espresso.ViewAction!);
+    ctor public GeneralClickAction(androidx.test.espresso.action.Tapper!, androidx.test.espresso.action.CoordinatesProvider!, androidx.test.espresso.action.PrecisionDescriber!, int, int, androidx.test.espresso.ViewAction!);
+    method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
+    method public String! getDescription();
+    method public void perform(androidx.test.espresso.UiController!, android.view.View!);
+  }
+
+  public enum GeneralLocation implements androidx.test.espresso.action.CoordinatesProvider {
+    method public static androidx.test.espresso.action.CoordinatesProvider! translate(androidx.test.espresso.action.CoordinatesProvider!, float, float);
+    enum_constant public static final androidx.test.espresso.action.GeneralLocation BOTTOM_CENTER;
+    enum_constant public static final androidx.test.espresso.action.GeneralLocation BOTTOM_LEFT;
+    enum_constant public static final androidx.test.espresso.action.GeneralLocation BOTTOM_RIGHT;
+    enum_constant public static final androidx.test.espresso.action.GeneralLocation CENTER;
+    enum_constant public static final androidx.test.espresso.action.GeneralLocation CENTER_LEFT;
+    enum_constant public static final androidx.test.espresso.action.GeneralLocation CENTER_RIGHT;
+    enum_constant public static final androidx.test.espresso.action.GeneralLocation TOP_CENTER;
+    enum_constant public static final androidx.test.espresso.action.GeneralLocation TOP_LEFT;
+    enum_constant public static final androidx.test.espresso.action.GeneralLocation TOP_RIGHT;
+    enum_constant public static final androidx.test.espresso.action.GeneralLocation VISIBLE_CENTER;
+  }
+
+  public final class GeneralSwipeAction implements androidx.test.espresso.ViewAction {
+    ctor public GeneralSwipeAction(androidx.test.espresso.action.Swiper!, androidx.test.espresso.action.CoordinatesProvider!, androidx.test.espresso.action.CoordinatesProvider!, androidx.test.espresso.action.PrecisionDescriber!);
+    method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
+    method public String! getDescription();
+    method public void perform(androidx.test.espresso.UiController!, android.view.View!);
+  }
+
+  public final class KeyEventAction implements androidx.test.espresso.ViewAction {
+    ctor public KeyEventAction(androidx.test.espresso.action.EspressoKey!);
+    method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
+    method public String! getDescription();
+    method public void perform(androidx.test.espresso.UiController!, android.view.View!);
+    field public static final int BACK_ACTIVITY_TRANSITION_MILLIS_DELAY = 150; // 0x96
+    field public static final int CLEAR_TRANSITIONING_ACTIVITIES_ATTEMPTS = 4; // 0x4
+    field public static final int CLEAR_TRANSITIONING_ACTIVITIES_MILLIS_DELAY = 150; // 0x96
+  }
+
+  public final class MotionEvents {
+    method public static android.view.MotionEvent! obtainDownEvent(float[]!, float[]!, int, int);
+    method public static android.view.MotionEvent! obtainDownEvent(float[]!, float[]!);
+    method public static android.view.MotionEvent! obtainMovement(android.view.MotionEvent!, float[]!);
+    method public static android.view.MotionEvent! obtainMovement(android.view.MotionEvent!, long, float[]!);
+    method @Deprecated public static android.view.MotionEvent! obtainMovement(long, float[]!);
+    method @Deprecated public static android.view.MotionEvent! obtainMovement(long, long, float[]!);
+    method public static android.view.MotionEvent! obtainUpEvent(android.view.MotionEvent!, float[]!);
+    method public static android.view.MotionEvent! obtainUpEvent(android.view.MotionEvent!, long, float[]!);
+    method public static void sendCancel(androidx.test.espresso.UiController!, android.view.MotionEvent!);
+    method public static androidx.test.espresso.action.MotionEvents.DownResultHolder! sendDown(androidx.test.espresso.UiController!, float[]!, float[]!);
+    method public static androidx.test.espresso.action.MotionEvents.DownResultHolder! sendDown(androidx.test.espresso.UiController!, float[]!, float[]!, int, int);
+    method public static boolean sendMovement(androidx.test.espresso.UiController!, android.view.MotionEvent!, float[]!);
+    method public static boolean sendUp(androidx.test.espresso.UiController!, android.view.MotionEvent!);
+    method public static boolean sendUp(androidx.test.espresso.UiController!, android.view.MotionEvent!, float[]!);
+  }
+
+  public static class MotionEvents.DownResultHolder {
+    field public final android.view.MotionEvent! down;
+    field public final boolean longPress;
+  }
+
+  public final class OpenLinkAction implements androidx.test.espresso.ViewAction {
+    ctor public OpenLinkAction(org.hamcrest.Matcher<java.lang.String!>!, org.hamcrest.Matcher<android.net.Uri!>!);
+    method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
+    method public String! getDescription();
+    method public void perform(androidx.test.espresso.UiController!, android.view.View!);
+  }
+
+  public interface PrecisionDescriber {
+    method public float[]! describePrecision();
+  }
+
+  public enum Press implements androidx.test.espresso.action.PrecisionDescriber {
+    enum_constant public static final androidx.test.espresso.action.Press FINGER;
+    enum_constant public static final androidx.test.espresso.action.Press PINPOINT;
+    enum_constant public static final androidx.test.espresso.action.Press THUMB;
+  }
+
+  public final class PressBackAction implements androidx.test.espresso.ViewAction {
+    ctor public PressBackAction(boolean);
+    ctor public PressBackAction(boolean, androidx.test.espresso.action.EspressoKey!);
+    method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
+    method public String! getDescription();
+    method public void perform(androidx.test.espresso.UiController!, android.view.View!);
+    field public static final int BACK_ACTIVITY_TRANSITION_MILLIS_DELAY = 150; // 0x96
+    field public static final int CLEAR_TRANSITIONING_ACTIVITIES_ATTEMPTS = 4; // 0x4
+    field public static final int CLEAR_TRANSITIONING_ACTIVITIES_MILLIS_DELAY = 150; // 0x96
+  }
+
+  public final class RepeatActionUntilViewState implements androidx.test.espresso.ViewAction {
+    ctor protected RepeatActionUntilViewState(androidx.test.espresso.ViewAction!, org.hamcrest.Matcher<android.view.View!>!, int);
+    method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
+    method public String! getDescription();
+    method public void perform(androidx.test.espresso.UiController!, android.view.View!);
+  }
+
+  public final class ReplaceTextAction implements androidx.test.espresso.ViewAction {
+    ctor @androidx.test.espresso.remote.annotation.RemoteMsgConstructor public ReplaceTextAction(String!);
+    method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
+    method public String! getDescription();
+    method public void perform(androidx.test.espresso.UiController!, android.view.View!);
+  }
+
+  public final class ScrollToAction implements androidx.test.espresso.ViewAction {
+    ctor public ScrollToAction();
+    method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
+    method public String! getDescription();
+    method public void perform(androidx.test.espresso.UiController!, android.view.View!);
+  }
+
+  public enum Swipe implements androidx.test.espresso.action.Swiper {
+    enum_constant public static final androidx.test.espresso.action.Swipe FAST;
+    enum_constant public static final androidx.test.espresso.action.Swipe SLOW;
+  }
+
+  public interface Swiper {
+    method public androidx.test.espresso.action.Swiper.Status! sendSwipe(androidx.test.espresso.UiController!, float[]!, float[]!, float[]!);
+  }
+
+  public enum Swiper.Status {
+    enum_constant public static final androidx.test.espresso.action.Swiper.Status FAILURE;
+    enum_constant public static final androidx.test.espresso.action.Swiper.Status SUCCESS;
+  }
+
+  public enum Tap implements androidx.test.espresso.action.Tapper {
+    enum_constant public static final androidx.test.espresso.action.Tap DOUBLE;
+    enum_constant public static final androidx.test.espresso.action.Tap LONG;
+    enum_constant public static final androidx.test.espresso.action.Tap SINGLE;
+  }
+
+  public interface Tapper {
+    method public androidx.test.espresso.action.Tapper.Status! sendTap(androidx.test.espresso.UiController!, float[]!, float[]!, int, int);
+    method @Deprecated public androidx.test.espresso.action.Tapper.Status! sendTap(androidx.test.espresso.UiController!, float[]!, float[]!);
+  }
+
+  public enum Tapper.Status {
+    enum_constant public static final androidx.test.espresso.action.Tapper.Status FAILURE;
+    enum_constant public static final androidx.test.espresso.action.Tapper.Status SUCCESS;
+    enum_constant public static final androidx.test.espresso.action.Tapper.Status WARNING;
+  }
+
+  public final class TypeTextAction implements androidx.test.espresso.ViewAction {
+    ctor public TypeTextAction(String!);
+    ctor @androidx.test.espresso.remote.annotation.RemoteMsgConstructor public TypeTextAction(String!, boolean);
+    ctor public TypeTextAction(String!, boolean, androidx.test.espresso.action.GeneralClickAction!);
+    method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
+    method public String! getDescription();
+    method public void perform(androidx.test.espresso.UiController!, android.view.View!);
+  }
+
+  @com.google.errorprone.annotations.CheckReturnValue public final class ViewActions {
+    method public static androidx.test.espresso.ViewAction! actionWithAssertions(androidx.test.espresso.ViewAction!);
+    method public static void addGlobalAssertion(String!, androidx.test.espresso.ViewAssertion!);
+    method public static void clearGlobalAssertions();
+    method public static androidx.test.espresso.ViewAction! clearText();
+    method public static androidx.test.espresso.ViewAction! click(int, int);
+    method public static androidx.test.espresso.ViewAction! click();
+    method public static androidx.test.espresso.ViewAction! click(androidx.test.espresso.ViewAction!);
+    method public static androidx.test.espresso.ViewAction! closeSoftKeyboard();
+    method public static androidx.test.espresso.ViewAction! doubleClick();
+    method public static androidx.test.espresso.ViewAction! longClick();
+    method public static androidx.test.espresso.ViewAction! openLink(org.hamcrest.Matcher<java.lang.String!>!, org.hamcrest.Matcher<android.net.Uri!>!);
+    method public static androidx.test.espresso.ViewAction! openLinkWithText(String!);
+    method public static androidx.test.espresso.ViewAction! openLinkWithText(org.hamcrest.Matcher<java.lang.String!>!);
+    method public static androidx.test.espresso.ViewAction! openLinkWithUri(String!);
+    method public static androidx.test.espresso.ViewAction! openLinkWithUri(org.hamcrest.Matcher<android.net.Uri!>!);
+    method public static androidx.test.espresso.ViewAction! pressBack();
+    method public static androidx.test.espresso.ViewAction! pressBackUnconditionally();
+    method public static androidx.test.espresso.ViewAction! pressImeActionButton();
+    method public static androidx.test.espresso.ViewAction! pressKey(int);
+    method public static androidx.test.espresso.ViewAction! pressKey(androidx.test.espresso.action.EspressoKey!);
+    method public static androidx.test.espresso.ViewAction! pressMenuKey();
+    method public static void removeGlobalAssertion(androidx.test.espresso.ViewAssertion!);
+    method public static androidx.test.espresso.ViewAction! repeatedlyUntil(androidx.test.espresso.ViewAction!, org.hamcrest.Matcher<android.view.View!>!, int);
+    method public static androidx.test.espresso.ViewAction! replaceText(String);
+    method public static androidx.test.espresso.ViewAction! scrollTo();
+    method public static androidx.test.espresso.ViewAction! slowSwipeLeft();
+    method public static androidx.test.espresso.ViewAction! swipeDown();
+    method public static androidx.test.espresso.ViewAction! swipeLeft();
+    method public static androidx.test.espresso.ViewAction! swipeRight();
+    method public static androidx.test.espresso.ViewAction! swipeUp();
+    method public static androidx.test.espresso.ViewAction! typeText(String!);
+    method public static androidx.test.espresso.ViewAction! typeTextIntoFocusedView(String!);
+  }
+
+}
+
+package androidx.test.espresso.assertion {
+
+  public final class LayoutAssertions {
+    method public static androidx.test.espresso.ViewAssertion! noEllipsizedText();
+    method public static androidx.test.espresso.ViewAssertion! noMultilineButtons();
+    method public static androidx.test.espresso.ViewAssertion! noOverlaps(org.hamcrest.Matcher<android.view.View!>!);
+    method public static androidx.test.espresso.ViewAssertion! noOverlaps();
+  }
+
+  public final class PositionAssertions {
+    method @Deprecated public static androidx.test.espresso.ViewAssertion! isAbove(org.hamcrest.Matcher<android.view.View!>!);
+    method @Deprecated public static androidx.test.espresso.ViewAssertion! isBelow(org.hamcrest.Matcher<android.view.View!>!);
+    method public static androidx.test.espresso.ViewAssertion! isBottomAlignedWith(org.hamcrest.Matcher<android.view.View!>!);
+    method public static androidx.test.espresso.ViewAssertion! isCompletelyAbove(org.hamcrest.Matcher<android.view.View!>!);
+    method public static androidx.test.espresso.ViewAssertion! isCompletelyBelow(org.hamcrest.Matcher<android.view.View!>!);
+    method public static androidx.test.espresso.ViewAssertion! isCompletelyLeftOf(org.hamcrest.Matcher<android.view.View!>!);
+    method public static androidx.test.espresso.ViewAssertion! isCompletelyRightOf(org.hamcrest.Matcher<android.view.View!>!);
+    method public static androidx.test.espresso.ViewAssertion! isLeftAlignedWith(org.hamcrest.Matcher<android.view.View!>!);
+    method @Deprecated public static androidx.test.espresso.ViewAssertion! isLeftOf(org.hamcrest.Matcher<android.view.View!>!);
+    method public static androidx.test.espresso.ViewAssertion! isPartiallyAbove(org.hamcrest.Matcher<android.view.View!>!);
+    method public static androidx.test.espresso.ViewAssertion! isPartiallyBelow(org.hamcrest.Matcher<android.view.View!>!);
+    method public static androidx.test.espresso.ViewAssertion! isPartiallyLeftOf(org.hamcrest.Matcher<android.view.View!>!);
+    method public static androidx.test.espresso.ViewAssertion! isPartiallyRightOf(org.hamcrest.Matcher<android.view.View!>!);
+    method public static androidx.test.espresso.ViewAssertion! isRightAlignedWith(org.hamcrest.Matcher<android.view.View!>!);
+    method @Deprecated public static androidx.test.espresso.ViewAssertion! isRightOf(org.hamcrest.Matcher<android.view.View!>!);
+    method public static androidx.test.espresso.ViewAssertion! isTopAlignedWith(org.hamcrest.Matcher<android.view.View!>!);
+  }
+
+  public final class ViewAssertions {
+    method public static androidx.test.espresso.ViewAssertion! doesNotExist();
+    method public static androidx.test.espresso.ViewAssertion! matches(org.hamcrest.Matcher<? super android.view.View>!);
+    method public static androidx.test.espresso.ViewAssertion! selectedDescendantsMatch(org.hamcrest.Matcher<android.view.View!>!, org.hamcrest.Matcher<android.view.View!>!);
+  }
+
+}
+
+package androidx.test.espresso.base {
+
+  public interface ActiveRootLister {
+    method public java.util.List<androidx.test.espresso.Root!>! listActiveRoots();
+  }
+
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @javax.inject.Qualifier public @interface Default {
+  }
+
+  public final class DefaultFailureHandler implements androidx.test.espresso.FailureHandler {
+    ctor public DefaultFailureHandler(@androidx.test.espresso.internal.inject.TargetContext android.content.Context!);
+    method public void handle(Throwable!, org.hamcrest.Matcher<android.view.View!>!);
+  }
+
+  @javax.inject.Singleton public final class IdlingResourceRegistry {
+    ctor public IdlingResourceRegistry(android.os.Looper!);
+    method public java.util.List<androidx.test.espresso.IdlingResource!>! getResources();
+    method public void registerLooper(android.os.Looper!, boolean);
+    method public boolean registerResources(java.util.List<? extends androidx.test.espresso.IdlingResource>!);
+    method public void sync(Iterable<androidx.test.espresso.IdlingResource!>!, Iterable<android.os.Looper!>!);
+    method public boolean unregisterResources(java.util.List<? extends androidx.test.espresso.IdlingResource>!);
+  }
+
+  public interface IdlingUiController extends androidx.test.espresso.UiController {
+    method public androidx.test.espresso.base.IdlingResourceRegistry! getIdlingResourceRegistry();
+  }
+
+  public interface InterruptableUiController extends androidx.test.espresso.UiController {
+    method public void interruptEspressoTasks();
+  }
+
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @javax.inject.Qualifier public @interface MainThread {
+  }
+
+  @dagger.Module public class PlatformTestStorageModule {
+    ctor public PlatformTestStorageModule();
+  }
+
+  @androidx.test.espresso.base.RootViewPickerScope public final class RootViewPicker implements javax.inject.Provider<android.view.View> {
+    method public android.view.View! get();
+  }
+
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.CLASS) @javax.inject.Scope public @interface RootViewPickerScope {
+  }
+
+  public final class ViewFinderImpl implements androidx.test.espresso.ViewFinder {
+    method public android.view.View! getView() throws androidx.test.espresso.AmbiguousViewMatcherException, androidx.test.espresso.NoMatchingViewException;
+  }
+
+}
+
+package androidx.test.espresso.matcher {
+
+  public abstract class BoundedDiagnosingMatcher<S, T extends S> extends org.hamcrest.BaseMatcher<S> {
+    ctor public BoundedDiagnosingMatcher(Class<? extends S>!);
+    ctor public BoundedDiagnosingMatcher(Class<? extends S>!, Class<?>!, Class<?>!...);
+    method public final void describeMismatch(Object!, org.hamcrest.Description!);
+    method protected abstract void describeMoreTo(org.hamcrest.Description!);
+    method public final void describeTo(org.hamcrest.Description!);
+    method public final boolean matches(Object!);
+    method protected abstract boolean matchesSafely(T!, org.hamcrest.Description!);
+  }
+
+  public abstract class BoundedMatcher<T, S extends T> extends org.hamcrest.BaseMatcher<T> {
+    ctor public BoundedMatcher(Class<? extends S>!);
+    ctor public BoundedMatcher(Class<?>!, Class<?>!, Class<?>!...);
+    method public final boolean matches(Object!);
+    method protected abstract boolean matchesSafely(S!);
+  }
+
+  public final class CursorMatchers {
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowBlob(int, byte[]!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowBlob(int, org.hamcrest.Matcher<byte[]!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowBlob(String!, byte[]!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowBlob(String!, org.hamcrest.Matcher<byte[]!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowBlob(org.hamcrest.Matcher<java.lang.String!>!, org.hamcrest.Matcher<byte[]!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowDouble(int, double);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowDouble(int, org.hamcrest.Matcher<java.lang.Double!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowDouble(String!, double);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowDouble(String!, org.hamcrest.Matcher<java.lang.Double!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowDouble(org.hamcrest.Matcher<java.lang.String!>!, org.hamcrest.Matcher<java.lang.Double!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowFloat(int, float);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowFloat(int, org.hamcrest.Matcher<java.lang.Float!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowFloat(String!, float);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowFloat(String!, org.hamcrest.Matcher<java.lang.Float!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowFloat(org.hamcrest.Matcher<java.lang.String!>!, org.hamcrest.Matcher<java.lang.Float!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowInt(int, int);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowInt(int, org.hamcrest.Matcher<java.lang.Integer!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowInt(String!, int);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowInt(String!, org.hamcrest.Matcher<java.lang.Integer!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowInt(org.hamcrest.Matcher<java.lang.String!>!, org.hamcrest.Matcher<java.lang.Integer!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowLong(int, long);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowLong(int, org.hamcrest.Matcher<java.lang.Long!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowLong(String!, long);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowLong(String!, org.hamcrest.Matcher<java.lang.Long!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowLong(org.hamcrest.Matcher<java.lang.String!>!, org.hamcrest.Matcher<java.lang.Long!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowShort(int, short);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowShort(int, org.hamcrest.Matcher<java.lang.Short!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowShort(String!, short);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowShort(String!, org.hamcrest.Matcher<java.lang.Short!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowShort(org.hamcrest.Matcher<java.lang.String!>!, org.hamcrest.Matcher<java.lang.Short!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowString(int, String!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowString(int, org.hamcrest.Matcher<java.lang.String!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowString(String!, String!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowString(String!, org.hamcrest.Matcher<java.lang.String!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowString(org.hamcrest.Matcher<java.lang.String!>!, org.hamcrest.Matcher<java.lang.String!>!);
+  }
+
+  public static class CursorMatchers.CursorMatcher extends androidx.test.espresso.matcher.BoundedMatcher<java.lang.Object,android.database.Cursor> {
+    method public void describeTo(org.hamcrest.Description!);
+    method public boolean matchesSafely(android.database.Cursor!);
+    method public androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withStrictColumnChecks(boolean);
+  }
+
+  public final class LayoutMatchers {
+    method public static org.hamcrest.Matcher<android.view.View!>! hasEllipsizedText();
+    method public static org.hamcrest.Matcher<android.view.View!>! hasMultilineText();
+  }
+
+  public final class PreferenceMatchers {
+    method public static org.hamcrest.Matcher<android.preference.Preference!>! isEnabled();
+    method public static org.hamcrest.Matcher<android.preference.Preference!>! withKey(String!);
+    method public static org.hamcrest.Matcher<android.preference.Preference!>! withKey(org.hamcrest.Matcher<java.lang.String!>!);
+    method public static org.hamcrest.Matcher<android.preference.Preference!>! withSummary(int);
+    method public static org.hamcrest.Matcher<android.preference.Preference!>! withSummaryText(String!);
+    method public static org.hamcrest.Matcher<android.preference.Preference!>! withSummaryText(org.hamcrest.Matcher<java.lang.String!>!);
+    method public static org.hamcrest.Matcher<android.preference.Preference!>! withTitle(int);
+    method public static org.hamcrest.Matcher<android.preference.Preference!>! withTitleText(String!);
+    method public static org.hamcrest.Matcher<android.preference.Preference!>! withTitleText(org.hamcrest.Matcher<java.lang.String!>!);
+  }
+
+  public final class RootMatchers {
+    method public static org.hamcrest.Matcher<androidx.test.espresso.Root!>! hasWindowLayoutParams();
+    method public static org.hamcrest.Matcher<androidx.test.espresso.Root!>! isDialog();
+    method public static org.hamcrest.Matcher<androidx.test.espresso.Root!>! isFocusable();
+    method public static org.hamcrest.Matcher<androidx.test.espresso.Root!>! isPlatformPopup();
+    method public static org.hamcrest.Matcher<androidx.test.espresso.Root!>! isSystemAlertWindow();
+    method public static org.hamcrest.Matcher<androidx.test.espresso.Root!>! isTouchable();
+    method public static org.hamcrest.Matcher<androidx.test.espresso.Root!>! withDecorView(org.hamcrest.Matcher<android.view.View!>!);
+    field public static final org.hamcrest.Matcher<androidx.test.espresso.Root!>! DEFAULT;
+  }
+
+  public final class ViewMatchers {
+    method public static <T> void assertThat(T!, org.hamcrest.Matcher<T!>!);
+    method public static <T> void assertThat(String!, T!, org.hamcrest.Matcher<T!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! doesNotHaveFocus();
+    method public static org.hamcrest.Matcher<android.view.View!>! hasChildCount(int);
+    method public static org.hamcrest.Matcher<android.view.View!>! hasContentDescription();
+    method public static org.hamcrest.Matcher<android.view.View!>! hasDescendant(org.hamcrest.Matcher<android.view.View!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! hasErrorText(org.hamcrest.Matcher<java.lang.String!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! hasErrorText(String!);
+    method public static org.hamcrest.Matcher<android.view.View!>! hasFocus();
+    method public static org.hamcrest.Matcher<android.view.View!>! hasImeAction(int);
+    method public static org.hamcrest.Matcher<android.view.View!>! hasImeAction(org.hamcrest.Matcher<java.lang.Integer!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! hasLinks();
+    method public static org.hamcrest.Matcher<android.view.View!>! hasMinimumChildCount(int);
+    method public static org.hamcrest.Matcher<android.view.View!>! hasSibling(org.hamcrest.Matcher<android.view.View!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! isAssignableFrom(Class<? extends android.view.View>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! isChecked();
+    method public static org.hamcrest.Matcher<android.view.View!>! isClickable();
+    method public static org.hamcrest.Matcher<android.view.View!>! isCompletelyDisplayed();
+    method public static org.hamcrest.Matcher<android.view.View!>! isDescendantOfA(org.hamcrest.Matcher<android.view.View!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! isDisplayed();
+    method public static org.hamcrest.Matcher<android.view.View!>! isDisplayingAtLeast(int);
+    method public static org.hamcrest.Matcher<android.view.View!>! isEnabled();
+    method public static org.hamcrest.Matcher<android.view.View!>! isFocusable();
+    method public static org.hamcrest.Matcher<android.view.View!>! isFocused();
+    method public static org.hamcrest.Matcher<android.view.View!>! isJavascriptEnabled();
+    method public static org.hamcrest.Matcher<android.view.View!>! isNotChecked();
+    method public static org.hamcrest.Matcher<android.view.View!>! isNotClickable();
+    method public static org.hamcrest.Matcher<android.view.View!>! isNotEnabled();
+    method public static org.hamcrest.Matcher<android.view.View!>! isNotFocusable();
+    method public static org.hamcrest.Matcher<android.view.View!>! isNotFocused();
+    method public static org.hamcrest.Matcher<android.view.View!>! isNotSelected();
+    method public static org.hamcrest.Matcher<android.view.View!>! isRoot();
+    method public static org.hamcrest.Matcher<android.view.View!>! isSelected();
+    method public static org.hamcrest.Matcher<android.view.View!>! supportsInputMethods();
+    method public static org.hamcrest.Matcher<android.view.View!>! withAlpha(float);
+    method public static org.hamcrest.Matcher<android.view.View!>! withChild(org.hamcrest.Matcher<android.view.View!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withClassName(org.hamcrest.Matcher<java.lang.String!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withContentDescription(int);
+    method public static org.hamcrest.Matcher<android.view.View!>! withContentDescription(String!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withContentDescription(org.hamcrest.Matcher<? extends java.lang.CharSequence>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withEffectiveVisibility(androidx.test.espresso.matcher.ViewMatchers.Visibility!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withHint(String!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withHint(org.hamcrest.Matcher<java.lang.String!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withHint(int);
+    method public static org.hamcrest.Matcher<android.view.View!>! withId(int);
+    method public static org.hamcrest.Matcher<android.view.View!>! withId(org.hamcrest.Matcher<java.lang.Integer!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withInputType(int);
+    method public static org.hamcrest.Matcher<android.view.View!>! withParent(org.hamcrest.Matcher<android.view.View!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withParentIndex(int);
+    method public static org.hamcrest.Matcher<android.view.View!>! withResourceName(String!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withResourceName(org.hamcrest.Matcher<java.lang.String!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withSpinnerText(int);
+    method public static org.hamcrest.Matcher<android.view.View!>! withSpinnerText(org.hamcrest.Matcher<java.lang.String!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withSpinnerText(String!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withSubstring(String!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withTagKey(int);
+    method public static org.hamcrest.Matcher<android.view.View!>! withTagKey(int, org.hamcrest.Matcher<?>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withTagValue(org.hamcrest.Matcher<java.lang.Object!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withText(String!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withText(org.hamcrest.Matcher<java.lang.String!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withText(int);
+  }
+
+  public enum ViewMatchers.Visibility {
+    method public static androidx.test.espresso.matcher.ViewMatchers.Visibility! forViewVisibility(android.view.View!);
+    method public static androidx.test.espresso.matcher.ViewMatchers.Visibility! forViewVisibility(int);
+    method public int getValue();
+    enum_constant public static final androidx.test.espresso.matcher.ViewMatchers.Visibility GONE;
+    enum_constant public static final androidx.test.espresso.matcher.ViewMatchers.Visibility INVISIBLE;
+    enum_constant public static final androidx.test.espresso.matcher.ViewMatchers.Visibility VISIBLE;
+  }
+
+}
+
+package androidx.test.espresso.remote {
+
+  public interface Bindable {
+    method public android.os.IBinder! getIBinder();
+    method public String! getId();
+    method public void setIBinder(android.os.IBinder!);
+  }
+
+  public final class ConstructorInvocation {
+    ctor public ConstructorInvocation(Class<?>, Class<? extends java.lang.annotation.Annotation>?, Class<?>!...);
+    method public Object! invokeConstructor(java.lang.Object!...);
+  }
+
+  public interface Converter<I, O> {
+    method public O! convert(I);
+  }
+
+  public final class EspressoRemote implements androidx.test.espresso.remote.RemoteInteraction {
+    method public java.util.concurrent.Callable<java.lang.Void!>! createRemoteCheckCallable(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, org.hamcrest.Matcher<android.view.View!>!, java.util.Map<java.lang.String!,android.os.IBinder!>!, androidx.test.espresso.ViewAssertion!);
+    method public java.util.concurrent.Callable<java.lang.Void!>! createRemotePerformCallable(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, org.hamcrest.Matcher<android.view.View!>!, java.util.Map<java.lang.String!,android.os.IBinder!>!, androidx.test.espresso.ViewAction!...);
+    method public static androidx.test.espresso.remote.EspressoRemote! getInstance();
+    method public void init();
+    method public boolean isRemoteProcess();
+    method public void terminate();
+  }
+
+  public interface EspressoRemoteMessage {
+  }
+
+  public static interface EspressoRemoteMessage.From<T, M> {
+    method public T! fromProto(M!);
+  }
+
+  public static interface EspressoRemoteMessage.To<M> {
+    method public M! toProto();
+  }
+
+  public final class FieldDescriptor {
+    method public static androidx.test.espresso.remote.FieldDescriptor! of(Class<?>, String, int);
+    field public final String! fieldName;
+    field public final Class<?>! fieldType;
+    field public final int order;
+  }
+
+  public final class GenericRemoteMessage implements androidx.test.espresso.remote.EspressoRemoteMessage.To<MessageLite> {
+    ctor public GenericRemoteMessage(Object);
+    method public MessageLite toProto();
+    field public static final androidx.test.espresso.remote.EspressoRemoteMessage.From<java.lang.Object!,MessageLite>! FROM;
+  }
+
+  public final class InteractionRequest implements androidx.test.espresso.remote.EspressoRemoteMessage.To<MessageLite> {
+    method public org.hamcrest.Matcher<androidx.test.espresso.Root!>! getRootMatcher();
+    method public androidx.test.espresso.ViewAction! getViewAction();
+    method public androidx.test.espresso.ViewAssertion! getViewAssertion();
+    method public org.hamcrest.Matcher<android.view.View!>! getViewMatcher();
+    method public MessageLite toProto();
+  }
+
+  public static class InteractionRequest.Builder {
+    ctor public InteractionRequest.Builder();
+    method public androidx.test.espresso.remote.InteractionRequest! build();
+    method public androidx.test.espresso.remote.InteractionRequest.Builder! setRequestProto(byte[]);
+    method public androidx.test.espresso.remote.InteractionRequest.Builder! setRootMatcher(org.hamcrest.Matcher<androidx.test.espresso.Root!>);
+    method public androidx.test.espresso.remote.InteractionRequest.Builder! setViewAction(androidx.test.espresso.ViewAction);
+    method public androidx.test.espresso.remote.InteractionRequest.Builder! setViewAssertion(androidx.test.espresso.ViewAssertion);
+    method public androidx.test.espresso.remote.InteractionRequest.Builder! setViewMatcher(org.hamcrest.Matcher<android.view.View!>);
+  }
+
+  public final class InteractionResponse implements androidx.test.espresso.remote.EspressoRemoteMessage.To<MessageLite> {
+    method public androidx.test.espresso.remote.InteractionResponse.RemoteError! getRemoteError();
+    method public androidx.test.espresso.remote.InteractionResponse.Status! getStatus();
+    method public boolean hasRemoteError();
+    method public MessageLite toProto();
+  }
+
+  public static class InteractionResponse.Builder {
+    ctor public InteractionResponse.Builder();
+    method public androidx.test.espresso.remote.InteractionResponse! build();
+    method public androidx.test.espresso.remote.InteractionResponse.Builder! setRemoteError(androidx.test.espresso.remote.InteractionResponse.RemoteError?);
+    method public androidx.test.espresso.remote.InteractionResponse.Builder! setResultProto(byte[]);
+    method public androidx.test.espresso.remote.InteractionResponse.Builder! setStatus(androidx.test.espresso.remote.InteractionResponse.Status);
+  }
+
+  public static final class InteractionResponse.RemoteError {
+    method public int getCode();
+    method public String! getDescription();
+    field public static final int REMOTE_ESPRESSO_ERROR_CODE = 0; // 0x0
+    field public static final int REMOTE_PROTOCOL_ERROR_CODE = 1; // 0x1
+  }
+
+  public enum InteractionResponse.Status {
+    enum_constant public static final androidx.test.espresso.remote.InteractionResponse.Status Error;
+    enum_constant public static final androidx.test.espresso.remote.InteractionResponse.Status Ok;
+  }
+
+  public final class NoRemoteEspressoInstanceException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
+    ctor public NoRemoteEspressoInstanceException(String!);
+  }
+
+  public class NoopRemoteInteraction implements androidx.test.espresso.remote.RemoteInteraction {
+    ctor public NoopRemoteInteraction();
+    method public java.util.concurrent.Callable<java.lang.Void!>! createRemoteCheckCallable(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, org.hamcrest.Matcher<android.view.View!>!, java.util.Map<java.lang.String!,android.os.IBinder!>!, androidx.test.espresso.ViewAssertion!);
+    method public java.util.concurrent.Callable<java.lang.Void!>! createRemotePerformCallable(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, org.hamcrest.Matcher<android.view.View!>!, java.util.Map<java.lang.String!,android.os.IBinder!>!, androidx.test.espresso.ViewAction!...);
+    method public boolean isRemoteProcess();
+  }
+
+  public final class ProtoUtils {
+    method public static String! capitalizeFirstChar(String!);
+    method public static <T extends java.lang.Enum> T! checkedGetEnumForProto(int, Class<T!>!);
+    method public static java.util.List<java.lang.reflect.Field!>! getFilteredFieldList(Class<?>!, java.util.List<java.lang.String!>!) throws java.lang.NoSuchFieldException;
+  }
+
+  public final class RemoteDescriptor {
+    method public java.util.List<androidx.test.espresso.remote.FieldDescriptor!>! getInstanceFieldDescriptorList();
+    method public Class<?>! getInstanceType();
+    method public String! getInstanceTypeName();
+    method public Class<?>! getProtoBuilderClass();
+    method public Parser<?> getProtoParser();
+    method public Class<?>! getProtoType();
+    method public Class<?>![]! getRemoteConstrTypes();
+    method public Class<?>! getRemoteType();
+  }
+
+  public static final class RemoteDescriptor.Builder {
+    ctor public RemoteDescriptor.Builder();
+    method public androidx.test.espresso.remote.RemoteDescriptor! build();
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setInstanceFieldDescriptors(androidx.test.espresso.remote.FieldDescriptor!...);
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setInstanceType(Class<?>);
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setProtoBuilderType(Class<?>);
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setProtoParser(Parser<?>);
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setProtoType(Class<?>);
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setRemoteConstrTypes(Class<?>!...);
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setRemoteType(Class<?>);
+  }
+
+  public final class RemoteDescriptorRegistry {
+    method public androidx.test.espresso.remote.RemoteDescriptor! argForInstanceType(Class<?>);
+    method public androidx.test.espresso.remote.RemoteDescriptor! argForMsgType(Class<?>);
+    method public androidx.test.espresso.remote.RemoteDescriptor! argForRemoteTypeUrl(String);
+    method public static androidx.test.espresso.remote.RemoteDescriptorRegistry! getInstance();
+    method public boolean hasArgForInstanceType(Class<?>);
+    method public boolean registerRemoteTypeArgs(java.util.List<androidx.test.espresso.remote.RemoteDescriptor!>);
+    method public void unregisterRemoteTypeArgs(java.util.List<androidx.test.espresso.remote.RemoteDescriptor!>);
+  }
+
+  public class RemoteEspressoException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
+    ctor public RemoteEspressoException(String!);
+    ctor public RemoteEspressoException(String!, Throwable!);
+  }
+
+  public interface RemoteInteraction {
+    method public java.util.concurrent.Callable<java.lang.Void!>! createRemoteCheckCallable(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, org.hamcrest.Matcher<android.view.View!>!, java.util.Map<java.lang.String!,android.os.IBinder!>!, androidx.test.espresso.ViewAssertion!);
+    method public java.util.concurrent.Callable<java.lang.Void!>! createRemotePerformCallable(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, org.hamcrest.Matcher<android.view.View!>!, java.util.Map<java.lang.String!,android.os.IBinder!>!, androidx.test.espresso.ViewAction!...);
+    method public boolean isRemoteProcess();
+    field public static final String BUNDLE_EXECUTION_STATUS = "executionStatus";
+  }
+
+  public class RemoteInteractionRegistry {
+    method public static androidx.test.espresso.remote.RemoteInteraction! getInstance();
+    method public static void registerInstance(androidx.test.espresso.remote.RemoteInteraction!);
+  }
+
+  public class RemoteProtocolException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
+    ctor public RemoteProtocolException(String!);
+    ctor public RemoteProtocolException(String!, Throwable!);
+  }
+
+  public final class TypeProtoConverters {
+    method public static <T> T! anyToType(Any);
+    method public static android.os.Parcelable! byteStringToParcelable(ByteString, Class<android.os.Parcelable!>);
+    method public static <T> T! byteStringToType(ByteString);
+    method public static ByteString parcelableToByteString(android.os.Parcelable);
+    method public static <T> Any typeToAny(T);
+    method public static ByteString typeToByteString(Object);
+  }
+
+}
+
+package androidx.test.espresso.screenshot {
+
+  public final class ViewInteractionCapture {
+  }
+
+}
+
+package androidx.test.espresso.util {
+
+  public final class ActivityLifecycles {
+    method public static boolean hasForegroundActivities(androidx.test.runner.lifecycle.ActivityLifecycleMonitor!);
+    method public static boolean hasTransitioningActivities(androidx.test.runner.lifecycle.ActivityLifecycleMonitor!);
+    method public static boolean hasVisibleActivities(androidx.test.runner.lifecycle.ActivityLifecycleMonitor!);
+  }
+
+  public final class EspressoOptional<T> {
+    method public static <T> androidx.test.espresso.util.EspressoOptional<T!>! absent();
+    method public java.util.Set<T!>! asSet();
+    method public static <T> androidx.test.espresso.util.EspressoOptional<T!>! fromNullable(T!);
+    method public T! get();
+    method public boolean isPresent();
+    method public static <T> androidx.test.espresso.util.EspressoOptional<T!>! of(T!);
+    method public com.google.common.base.Optional<T!>! or(com.google.common.base.Optional<? extends T>!);
+    method public T! or(com.google.common.base.Supplier<? extends T>!);
+    method public T! or(T!);
+    method public T! orNull();
+    method @com.google.common.annotations.Beta public static <T> Iterable<T!>! presentInstances(Iterable<? extends com.google.common.base.Optional<? extends T>>!);
+    method public <V> com.google.common.base.Optional<V!>! transform(com.google.common.base.Function<? super T,V!>!);
+  }
+
+  public final class HumanReadables {
+    method public static String! describe(android.database.Cursor!);
+    method public static String! describe(android.view.View!);
+    method public static String! getViewHierarchyErrorMessage(android.view.View!, java.util.List<android.view.View!>!, String!, String!);
+    method public static String! getViewHierarchyErrorMessage(android.view.View!, java.util.List<android.view.View!>!, String!, String!, int);
+  }
+
+  public final class TreeIterables {
+    method public static Iterable<android.view.View!>! breadthFirstViewTraversal(android.view.View!);
+    method public static Iterable<android.view.View!>! depthFirstViewTraversal(android.view.View!);
+    method public static Iterable<androidx.test.espresso.util.TreeIterables.ViewAndDistance!>! depthFirstViewTraversalWithDistance(android.view.View!);
+  }
+
+  public static class TreeIterables.ViewAndDistance {
+    method public int getDistanceFromRoot();
+    method public android.view.View! getView();
+  }
+
+}
+
