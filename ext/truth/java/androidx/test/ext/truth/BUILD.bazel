@@ -57,7 +57,7 @@ maven_artifact(
         "com.google.guava:guava:%s" % GUAVA_VERSION,
         "com.google.truth:truth:%s" % TRUTH_VERSION,
         "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
-        "androidx.test.annotation:annotation:%s" % ANNOTATION_VERSION,
+        "androidx.test:annotation:%s" % ANNOTATION_VERSION,
     ],
     artifact_id = "truth",
     group_id = "androidx.test.ext",
