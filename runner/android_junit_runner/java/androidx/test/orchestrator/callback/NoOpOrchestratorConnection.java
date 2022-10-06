@@ -17,13 +17,20 @@
 package androidx.test.orchestrator.callback;
 
 import android.content.Context;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.test.internal.events.client.TestDiscoveryEventService;
 import androidx.test.internal.events.client.TestEventServiceConnection;
 import androidx.test.internal.events.client.TestRunEventService;
 import androidx.test.services.events.discovery.TestDiscoveryEvent;
 import androidx.test.services.events.run.TestRunEvent;
 
-/** A no-op connection to the Android test orchestrator. */
+/**
+ * A no-op connection to the Android test orchestrator.
+ *
+ * @hide
+ */
+@RestrictTo(Scope.LIBRARY)
 public class NoOpOrchestratorConnection
     implements TestEventServiceConnection, TestRunEventService, TestDiscoveryEventService {
 

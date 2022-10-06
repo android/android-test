@@ -39,13 +39,6 @@ package androidx.test.filters {
 
 package androidx.test.orchestrator.callback {
 
-  public class NoOpOrchestratorConnection {
-    ctor public NoOpOrchestratorConnection();
-    method public void connect(android.content.Context!);
-    method public void send(androidx.test.services.events.discovery.TestDiscoveryEvent!);
-    method public void send(androidx.test.services.events.run.TestRunEvent!);
-  }
-
   public interface OrchestratorCallback extends android.os.IInterface {
     method public void addTest(String!) throws android.os.RemoteException;
     method public void sendTestNotification(android.os.Bundle!) throws android.os.RemoteException;
