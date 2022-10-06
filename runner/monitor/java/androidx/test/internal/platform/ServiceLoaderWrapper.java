@@ -92,8 +92,20 @@ public final class ServiceLoaderWrapper {
     } else if (impls.size() == 1) {
       return impls.get(0);
     } else {
-      throw new IllegalStateException(
-          "Found more than one implementation for " + serviceClass.getName());
+      StringBuilder message =
+          new StringBuilder()
+              .append("Found more than one implementation for ")
+              .append(serviceClass.getName())
+              .append(":");
+      for (T implClass : impls) {
+        message
+            .append("\n")
+            .append(implClass)
+            .append(" (")
+            .append(implClass.getClass().getName())
+            .append(")");
+      }
+      throw new IllegalStateException(message.toString());
     }
   }
 }
