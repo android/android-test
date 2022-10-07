@@ -21,4 +21,16 @@ package androidx.test.services.shellexecutor;
  *
  * <p>Likely thrown if the ShellCommandExecutor was never started.
  */
-public class ClientNotConnected extends Exception {}
+public class ClientNotConnected extends Exception {
+  public ClientNotConnected() {
+    super();
+  }
+
+  public ClientNotConnected(String message) {
+    super(message);
+  }
+
+  public ClientNotConnected(String message, Throwable cause) {
+    super(message, cause);
+  }
+}

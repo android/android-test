@@ -43,6 +43,14 @@ android_library(
     ],
 )
 
+# Make it easy to deserialize exceptions that are sent over from device to host.
+java_library(
+    name = "exceptions",
+    srcs = [
+        "ClientNotConnected.java",
+    ],
+)
+
 # Do not link to these targets directly, rely on exporting target instead
 package_group(
     name = "export",

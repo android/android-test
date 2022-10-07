@@ -22,7 +22,6 @@ import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
-import androidx.test.services.shellexecutor.Command.Stub;
 import androidx.test.services.speakeasy.SpeakEasyProtocol.FindResult;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,8 +33,8 @@ import java.util.Map;
 
 /**
  * Client for the ShellCommandExecutor service, to allow an instrumentation to executes a shell
- * command in a similar manner and environment as {@link @UiAutomation.executeShellCommand()} (i.e.
- * as either root or shell)
+ * command in a similar manner and environment as {@link UiAutomation.executeShellCommand} (i.e. as
+ * either root or shell).
  *
  * <p>To use this method while running from the shell, you must prefix am instrument with: {@code
  * CLASSPATH=$(pm path com.google.android.apps.common.testing.services) app_process /
@@ -95,15 +94,19 @@ final class ShellCommandClient {
       result = BlockingFind.getResult(Looper.getMainLooper(), context, secret);
       if (!result.found) {
         Log.e(TAG, "Couldn't find a published binder");
-        throw new ClientNotConnected();
+        throw new ClientNotConnected(
+            "Couldn't find a binder published by androidx.test.services. It is very likely that"
+                + " androidx.test.services was killed, which is usually due to low memory"
+                + " conditions. Consider switching to a device with more memory.");
       }
     } catch (InterruptedException e) {
-      throw new ClientNotConnected();
+      throw new ClientNotConnected(
+          "Search for an androidx.test.services binder was interrupted", e);
     }
 
     ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
 
-    Command commandStub = Stub.asInterface(result.binder);
+    Command commandStub = Command.Stub.asInterface(result.binder);
     // Only use timeout version if timeout is greater than 0
     if (timeoutMs > 0L) {
       // NOTICE: this is not be supported on older versions of the Command server.
