@@ -351,6 +351,28 @@ public final class ActivityScenarioTest {
   }
 
   @Test
+  public void activityResultWaitsForActivityToFinish() throws Exception {
+    try (ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launchActivityForResult(RecreationRecordingActivity.class)) {
+      new Thread(
+              () ->
+                  scenario.onActivity(
+                      activity -> {
+                        try {
+                          Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                          fail();
+                        }
+                        activity.setResult(RESULT_OK);
+                        activity.finish();
+                      }))
+          .start();
+      assertThat(scenario.getResult().getResultCode()).isEqualTo(RESULT_OK);
+      assertThat(scenario.getResult().getResultData()).isNull();
+    }
+  }
+
+  @Test
   public void activityResultWithResultDataAfterRecreate() throws Exception {
     try (ActivityScenario<RecreationRecordingActivity> scenario =
         ActivityScenario.launchActivityForResult(RecreationRecordingActivity.class)) {
