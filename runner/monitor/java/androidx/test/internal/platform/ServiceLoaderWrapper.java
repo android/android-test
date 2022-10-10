@@ -92,8 +92,14 @@ public final class ServiceLoaderWrapper {
     } else if (impls.size() == 1) {
       return impls.get(0);
     } else {
+      String combinedImpls = null;
+      for (T impl : impls) {
+        combinedImpls = (combinedImpls != null) ? combinedImpls + ", " : ": ";
+        combinedImpls += impl.getClass().getName();
+      }
+
       throw new IllegalStateException(
-          "Found more than one implementation for " + serviceClass.getName());
+          "Found more than one implementation for " + serviceClass.getName() + combinedImpls);
     }
   }
 }
