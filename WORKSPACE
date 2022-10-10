@@ -141,7 +141,19 @@ maven_install(
         "org.mockito:mockito-core:2.28.1",
         "org.objenesis:objenesis:2.6",
         "org.pantsbuild:jarjar:1.7.2",
-        "org.robolectric:robolectric:4.9",
+	 maven.artifact(
+            group = "org.robolectric",
+            artifact = "robolectric",
+            version = "4.9",
+            exclusions = [
+                # exclude the com.google.guava dependency since that require
+                # java8 compatibility.
+                maven.exclusion(
+                    group = "com.google.guava",
+                    artifact = "guava"
+                ),
+           ]
+        ),
     ],
     repositories = [
         "https://maven.google.com",
