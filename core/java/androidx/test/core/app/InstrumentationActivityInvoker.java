@@ -114,6 +114,10 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
   private static final String FINISH_EMPTY_ACTIVITIES =
       "androidx.test.core.app.InstrumentationActivityInvoker.FINISH_EMPTY_ACTIVITIES";
 
+  /** A permission for broadcasts related to {@link InstrumentationActivityInvoker} */
+  private static final String BROADCAST_PERMISSION =
+      "androidx.test.core.app.InstrumentationActivityInvoker.BROADCAST_PERMISSION";
+
   /**
    * BootstrapActivity starts a test target activity specified by the extras bundle with key {@link
    * #TARGET_ACTIVITY_INTENT_KEY} in the intent that starts this bootstrap activity. The target
@@ -219,7 +223,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
         if (data != null) {
           activityResultReceivedActionIntent.putExtra(BOOTSTRAP_ACTIVITY_RESULT_DATA_KEY, data);
         }
-        sendBroadcast(activityResultReceivedActionIntent);
+        sendBroadcast(activityResultReceivedActionIntent, BROADCAST_PERMISSION);
         finish();
       }
     }
@@ -328,7 +332,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     @Override
     protected void onResume() {
       super.onResume();
-      sendBroadcast(new Intent(EMPTY_ACTIVITY_RESUMED));
+      sendBroadcast(new Intent(EMPTY_ACTIVITY_RESUMED), BROADCAST_PERMISSION);
     }
 
     @Override
@@ -377,7 +381,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     @Override
     protected void onResume() {
       super.onResume();
-      sendBroadcast(new Intent(EMPTY_FLOATING_ACTIVITY_RESUMED));
+      sendBroadcast(new Intent(EMPTY_FLOATING_ACTIVITY_RESUMED), BROADCAST_PERMISSION);
     }
 
     @Override
@@ -400,8 +404,10 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     }
     // Close empty activities and bootstrap activity if it's running. This might happen if the
     // previous test crashes before it cleans up the state.
-    getApplicationContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
-    getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
+    getApplicationContext()
+        .sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY), BROADCAST_PERMISSION);
+    getApplicationContext()
+        .sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES), BROADCAST_PERMISSION);
 
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
@@ -432,8 +438,10 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     }
     // Close empty activities and bootstrap activity if it's running. This might happen if the
     // previous test crashes before it cleans up the state.
-    getApplicationContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
-    getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
+    getApplicationContext()
+        .sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY), BROADCAST_PERMISSION);
+    getApplicationContext()
+        .sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES), BROADCAST_PERMISSION);
 
     activityResultWaiter = new ActivityResultWaiter(getApplicationContext());
 
@@ -480,7 +488,8 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
   @Override
   public void resumeActivity(Activity activity) {
     checkActivityStageIsIn(activity, Stage.RESUMED, Stage.PAUSED, Stage.STOPPED);
-    getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
+    getApplicationContext()
+        .sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES), BROADCAST_PERMISSION);
   }
 
   /**
@@ -585,13 +594,16 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
     startEmptyActivitySync();
     getInstrumentation().runOnMainSync(activity::finish);
     if (activityResultWaiter != null) {
-      getApplicationContext().sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY));
+      getApplicationContext()
+          .sendBroadcast(new Intent(FINISH_BOOTSTRAP_ACTIVITY), BROADCAST_PERMISSION);
       startEmptyActivitySync();
       getInstrumentation().runOnMainSync(activity::finish);
     }
-    getApplicationContext().sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES));
+    getApplicationContext()
+        .sendBroadcast(new Intent(FINISH_EMPTY_ACTIVITIES), BROADCAST_PERMISSION);
     if (activityResultWaiter != null) {
-      getApplicationContext().sendBroadcast(new Intent(CANCEL_ACTIVITY_RESULT_WAITER));
+      getApplicationContext()
+          .sendBroadcast(new Intent(CANCEL_ACTIVITY_RESULT_WAITER), BROADCAST_PERMISSION);
     }
   }
 
@@ -616,9 +628,10 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
   private static void registerBroadcastReceiver(
       Context context, BroadcastReceiver broadcastReceiver, IntentFilter intentFilter) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-      context.registerReceiver(broadcastReceiver, intentFilter);
+      context.registerReceiver(broadcastReceiver, intentFilter, BROADCAST_PERMISSION, null);
     } else {
-      context.registerReceiver(broadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
+      context.registerReceiver(
+          broadcastReceiver, intentFilter, BROADCAST_PERMISSION, null, Context.RECEIVER_EXPORTED);
     }
   }
 }
