@@ -19,6 +19,8 @@ import android.content.res.Configuration
 import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.action.setScreenOrientation
+import androidx.test.espresso.device.util.finishEmptyConfigChangeActivity
+import androidx.test.espresso.device.util.launchEmptyConfigChangeActivity
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.rules.TestRule
 import org.junit.runner.Description
@@ -31,12 +33,18 @@ import org.junit.runners.model.Statement
  * that the test starts with if none is given.
  */
 class ScreenOrientationRule(private val defaultOrientation: ScreenOrientation?) : TestRule {
+  private val context = InstrumentationRegistry.getInstrumentation().targetContext
+
   override fun apply(statement: Statement, description: Description): Statement {
     return object : Statement() {
       override fun evaluate() {
         val orientationToRestore = defaultOrientation ?: getCurrentOrientation()
         statement.evaluate()
-        onDevice().perform(setScreenOrientation(orientationToRestore))
+        if (orientationToRestore != getCurrentOrientation()) {
+          launchEmptyConfigChangeActivity(context)
+          onDevice().perform(setScreenOrientation(orientationToRestore))
+          finishEmptyConfigChangeActivity(context)
+        }
       }
     }
   }

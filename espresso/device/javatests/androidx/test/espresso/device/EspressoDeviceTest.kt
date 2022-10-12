@@ -91,6 +91,17 @@ class EspressoDeviceTest {
   }
 
   @Test
+  fun onDevice_setScreenOrientationToLandscape_noActivity() {
+    activityRule.scenario.close() // close activity launched by ActivityScenarioRule
+
+    onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
+
+    ActivityScenario.launch(ScreenOrientationActivity::class.java).use {
+      onView(withId(R.id.current_screen_orientation)).check(matches(withText("landscape")))
+    }
+  }
+
+  @Test
   fun onDevice_throwsFromScenarioOnActivity() {
     ActivityScenario.launch(ScreenOrientationActivity::class.java).use { scenario ->
       scenario.onActivity({
@@ -105,31 +116,37 @@ class EspressoDeviceTest {
   fun onDevice_setScreenOrientationToLandscapeAndThenToPortraitWithoutConfigurationHandling() {
     // TODO(b/243690268) Close ActivityScneario instances when synchronization issue is resolved.
     ActivityScenario.launch(ScreenOrientationWithoutOnConfigurationChangedActivity::class.java)
-    onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
+      .use {
+        onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
 
-    onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
+        onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
 
-    onDevice().perform(setScreenOrientation(ScreenOrientation.PORTRAIT))
+        onDevice().perform(setScreenOrientation(ScreenOrientation.PORTRAIT))
 
-    onView(withId(R.id.screen_orientation)).check(matches(withText("portrait")))
+        onView(withId(R.id.screen_orientation)).check(matches(withText("portrait")))
+      }
   }
 
   @Test
   fun onDevice_clickAndThenSetScreenOrientationToLandscapeWithoutConfigurationHandling() {
     ActivityScenario.launch(ScreenOrientationWithoutOnConfigurationChangedActivity::class.java)
-    onView(withId(R.id.screen_orientation)).perform(click())
+      .use {
+        onView(withId(R.id.screen_orientation)).perform(click())
 
-    onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
+        onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
 
-    onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
+        onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
+      }
   }
 
   @Test
   fun onDevice_setScreenOrientationToLandscapeThenClickWithoutConfigurationHandling() {
     ActivityScenario.launch(ScreenOrientationWithoutOnConfigurationChangedActivity::class.java)
-    onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
+      .use {
+        onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
 
-    onView(withId(R.id.screen_orientation)).perform(click())
-    onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
+        onView(withId(R.id.screen_orientation)).perform(click())
+        onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
+      }
   }
 }

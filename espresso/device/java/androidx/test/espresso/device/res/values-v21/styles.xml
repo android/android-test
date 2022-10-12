@@ -14,22 +14,15 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="androidx.test.espresso.device" >
 
-    <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="31" />
-
-    <application>
-      <activity
-          android:name="androidx.test.espresso.device.util.EmptyConfigChangeActivity"
-          android:exported="true"
-          android:theme="@style/WhiteBackgroundTheme"
-          android:configChanges="orientation|screenSize">
-          <intent-filter android:priority="-100">
-              <category android:name="android.intent.category.LAUNCHER" />
-          </intent-filter>
-      </activity>
-    </application>
-</manifest>
+<resources>
+    <style name="WhiteBackgroundTheme" parent="@android:style/Theme.Holo.NoActionBar.Fullscreen">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowOverscan">true</item>
+        <item name="android:fadingEdge">none</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowContentTransitions">false</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+</resources>

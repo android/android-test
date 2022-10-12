@@ -22,11 +22,19 @@ package_group(
     ],
 )
 
+android_library(
+    name = "manifest",
+    exports_manifest = 1,
+    manifest = "AndroidManifest.xml",
+    resource_files = glob(["res/**"]),
+)
+
 kt_android_library(
     name = "device",
     testonly = 1,
     exports = [
         ":device_api",
+        ":manifest",
         "//espresso/device/java/androidx/test/espresso/device/action",
         "//espresso/device/java/androidx/test/espresso/device/filter",
         "//espresso/device/java/androidx/test/espresso/device/rules",
@@ -63,11 +71,11 @@ axt_release_lib(
     name = "device_release",
     custom_package = "androidx.test.espresso.device",
     keep_spec = "androidx/test/espresso/device/.*|META-INF/androidx.test.espresso.device.*.kotlin_module",
-    remove_spec = "androidx/test/espresso/device/R[$$\\.]",
     proguard_specs = [
         "//:proguard_binary.cfg",
         "//espresso:proguard_binary.cfg",
     ],
+    remove_spec = "androidx/test/espresso/device/R[$$\\.]",
     deps = [
         "//espresso/device/java/androidx/test/espresso/device/filter:requires_display_filter",
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",

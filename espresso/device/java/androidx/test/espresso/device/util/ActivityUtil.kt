@@ -19,7 +19,13 @@
 package androidx.test.espresso.device.util
 
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
+import androidx.test.internal.platform.app.ActivityLifecycleTimeout
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
@@ -82,4 +88,42 @@ fun getResumedActivityOrNull(): Activity? {
   }
   InstrumentationRegistry.getInstrumentation().waitForIdleSync()
   return activity
+}
+
+fun launchEmptyConfigChangeActivity(applicationContext: Context) {
+  val latch: CountDownLatch = CountDownLatch(1)
+  val receiver: BroadcastReceiver =
+    object : BroadcastReceiver() {
+      override fun onReceive(context: Context, intent: Intent) {
+        Log.d(TAG, "onRecieve in launchEmptyConfigChangeActivity")
+        latch.countDown()
+      }
+    }
+  EmptyConfigChangeActivity.registerBroadcastReceiver(
+    applicationContext,
+    receiver,
+    IntentFilter(EmptyConfigChangeActivity.EMPTY_ACTIVITY_RESUMED)
+  )
+
+  var intent =
+    Intent.makeMainActivity(
+      ComponentName(applicationContext, EmptyConfigChangeActivity::class.java)
+    )
+  intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+  applicationContext.startActivity(intent)
+
+  try {
+    latch.await(ActivityLifecycleTimeout.getMillis(), TimeUnit.MILLISECONDS)
+  } catch (e: InterruptedException) {
+    throw RuntimeException("Failed to stop activity", e)
+  } finally {
+    applicationContext.unregisterReceiver(receiver)
+  }
+}
+
+fun finishEmptyConfigChangeActivity(applicationContext: Context) {
+  applicationContext.sendBroadcast(
+    Intent(EmptyConfigChangeActivity.FINISH_EMPTY_ACTIVITIES)
+  )
 }

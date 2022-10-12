@@ -10,3 +10,15 @@ android_library(
     ],
     exports = ["//espresso/device/java/androidx/test/espresso/device"],
 )
+
+# The manifest entries for ActivityScenario's bootstrap activities.
+# Add this to to your application under test to avoid a separate test process getting launched
+# for the bootstrap activities
+android_library(
+    name = "manifest",
+    testonly = 1,
+    visibility = [
+        "//__subpackages__",
+    ],
+    exports = ["//espresso/device/java/androidx/test/espresso/device:manifest"],
+)

@@ -13,6 +13,7 @@ kt_android_library(
     testonly = 1,
     srcs = glob(["*.kt"]),
     deps = [
+        "//core/java/androidx/test/core",
         "//espresso/device/java/androidx/test/espresso/device/context",
         "//espresso/device/java/androidx/test/espresso/device/controller",
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
