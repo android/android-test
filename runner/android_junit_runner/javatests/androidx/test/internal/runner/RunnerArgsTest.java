@@ -28,20 +28,28 @@ import static org.junit.Assert.fail;
 import android.os.Bundle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import androidx.test.platform.io.PlatformTestStorage;
 import androidx.test.testing.fixtures.AppLifecycleListener;
 import androidx.test.testing.fixtures.BrokenCustomTestFilter;
 import androidx.test.testing.fixtures.CustomRunnerBuilder;
 import androidx.test.testing.fixtures.CustomTestFilter;
 import androidx.test.testing.fixtures.CustomTestFilterTakesBundle;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.junit.Rule;
 import org.junit.Test;
@@ -270,6 +278,73 @@ public class RunnerArgsTest {
     Bundle b = new Bundle();
     b.putString(RunnerArgs.ARGUMENT_TEST_FILE, "idontexist");
     new RunnerArgs.Builder().fromBundle(getInstrumentation(), b).build();
+  }
+
+  /** Test failure reading a testfile from storage */
+  @Test(expected = IllegalArgumentException.class)
+  @SuppressWarnings("TestExceptionChecker")
+  public void testFromBundle_testFileStorageFailure() {
+    Bundle b = new Bundle();
+    b.putString(RunnerArgs.ARGUMENT_USE_TEST_STORAGE_SERVICE, "true");
+    b.putString(RunnerArgs.ARGUMENT_TEST_FILE, "idontexist");
+    new RunnerArgs.Builder().fromBundle(getInstrumentation(), b).build();
+  }
+
+  @Test
+  public void testFromBundle_testFileStorage() throws IOException {
+    FakeTestStorage fakeStorage = new FakeTestStorage();
+    fakeStorage.addInputFile("myTestStorage", "ClassName4#method2");
+    Bundle b = new Bundle();
+    b.putString(RunnerArgs.ARGUMENT_USE_TEST_STORAGE_SERVICE, "true");
+    b.putString(RunnerArgs.ARGUMENT_TEST_FILE, "myTestStorage");
+    RunnerArgs args =
+        new RunnerArgs.Builder(fakeStorage).fromBundle(getInstrumentation(), b).build();
+    assertThat(args.tests).hasSize(1);
+    assertEquals("ClassName4", args.tests.get(0).testClassName);
+    assertEquals("method2", args.tests.get(0).methodName);
+  }
+
+  @Test
+  public void testFromBundle_testFileStorageConvertToRelativePath() throws IOException {
+    FakeTestStorage fakeStorage = new FakeTestStorage();
+    fakeStorage.addInputFile("myTestStorage", "ClassName4#method2");
+    Bundle b = new Bundle();
+    b.putString(RunnerArgs.ARGUMENT_USE_TEST_STORAGE_SERVICE, "true");
+    b.putString(RunnerArgs.ARGUMENT_TEST_FILE, "/myTestStorage");
+    RunnerArgs args =
+        new RunnerArgs.Builder(fakeStorage).fromBundle(getInstrumentation(), b).build();
+    assertThat(args.tests).hasSize(1);
+    assertEquals("ClassName4", args.tests.get(0).testClassName);
+    assertEquals("method2", args.tests.get(0).methodName);
+  }
+
+  @Test
+  public void testFromBundle_testFileStorageFallbackToLocal() throws IOException {
+    final File file = tmpFolder.newFile("myTestFile.txt");
+    writeFiltersToFile(file, Arrays.asList("ClassName4#method2"));
+    FakeTestStorage fakeStorage = new FakeTestStorage();
+    Bundle b = new Bundle();
+    b.putString(RunnerArgs.ARGUMENT_USE_TEST_STORAGE_SERVICE, "true");
+    b.putString(RunnerArgs.ARGUMENT_TEST_FILE, file.getAbsolutePath());
+    RunnerArgs args =
+        new RunnerArgs.Builder(fakeStorage).fromBundle(getInstrumentation(), b).build();
+    assertThat(args.tests).hasSize(1);
+    assertEquals("ClassName4", args.tests.get(0).testClassName);
+    assertEquals("method2", args.tests.get(0).methodName);
+  }
+
+  @Test
+  public void testFromBundle_notTestFileStorage() throws IOException {
+    FakeTestStorage fakeStorage = new FakeTestStorage();
+    fakeStorage.addInputFile("myTestStorage", "ClassName4#method2");
+    Bundle b = new Bundle();
+    b.putString(RunnerArgs.ARGUMENT_USE_TEST_STORAGE_SERVICE, "true");
+    b.putString(RunnerArgs.ARGUMENT_NOT_TEST_FILE, "myTestStorage");
+    RunnerArgs args =
+        new RunnerArgs.Builder(fakeStorage).fromBundle(getInstrumentation(), b).build();
+    assertThat(args.notTests).hasSize(1);
+    assertEquals("ClassName4", args.notTests.get(0).testClassName);
+    assertEquals("method2", args.notTests.get(0).methodName);
   }
 
   /**
@@ -616,5 +691,64 @@ public class RunnerArgsTest {
     b.putString(RunnerArgs.ARGUMENT_USE_TEST_STORAGE_SERVICE, "false");
     RunnerArgs args = new RunnerArgs.Builder().fromBundle(getInstrumentation(), b).build();
     assertFalse(args.useTestStorageService);
+  }
+
+  private static class FakeTestStorage implements PlatformTestStorage {
+
+    private final Map<String, InputStream> inputFileMap = new HashMap<>();
+
+    @Override
+    public InputStream openInputFile(String pathname) throws IOException {
+
+      InputStream is = inputFileMap.get(pathname);
+      if (is == null) {
+        throw new IOException();
+      }
+      return is;
+    }
+
+    public void addInputFile(String key, String value) {
+      inputFileMap.put(key, new ByteArrayInputStream(value.getBytes(Charset.forName("UTF-8"))));
+    }
+
+    @Override
+    public String getInputArg(String argName) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Map<String, String> getInputArgs() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public OutputStream openOutputFile(String pathname) throws IOException {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public OutputStream openOutputFile(String pathname, boolean append) throws IOException {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void addOutputProperties(Map<String, Serializable> properties) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Map<String, Serializable> getOutputProperties() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public InputStream openInternalInputFile(String pathname) throws IOException {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public OutputStream openInternalOutputFile(String pathname) throws IOException {
+      throw new UnsupportedOperationException();
+    }
   }
 }

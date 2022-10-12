@@ -26,11 +26,12 @@ import android.os.ParcelFileDescriptor.AutoCloseInputStream;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
+import androidx.test.platform.io.PlatformTestStorage;
+import androidx.test.platform.io.PlatformTestStorageRegistry;
 import androidx.test.runner.lifecycle.ApplicationLifecycleCallback;
 import androidx.test.runner.screenshot.ScreenCaptureProcessor;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -73,6 +74,7 @@ public class RunnerArgs {
   static final String ARGUMENT_TIMEOUT = "timeout_msec";
   static final String ARGUMENT_TEST_FILE = "testFile";
   static final String ARGUMENT_NOT_TEST_FILE = "notTestFile";
+
   static final String ARGUMENT_DISABLE_ANALYTICS = "disableAnalytics";
   static final String ARGUMENT_APP_LISTENER = "appListener";
   static final String ARGUMENT_CLASS_LOADER = "classLoader";
@@ -240,6 +242,15 @@ public class RunnerArgs {
     private boolean newRunListenerMode = false;
     private String testsRegEx = null;
     private boolean testPlatformMigration = false;
+    private final PlatformTestStorage testStorage;
+
+    public Builder() {
+      this(PlatformTestStorageRegistry.getInstance());
+    }
+
+    Builder(PlatformTestStorage testStorage) {
+      this.testStorage = testStorage;
+    }
 
     /**
      * Populate the arg data from the given Bundle.
@@ -248,6 +259,8 @@ public class RunnerArgs {
      */
     public Builder fromBundle(Instrumentation instr, Bundle bundle) {
       this.debug = parseBoolean(bundle.getString(ARGUMENT_DEBUG));
+      this.useTestStorageService =
+          parseBoolean(bundle.getString(ARGUMENT_USE_TEST_STORAGE_SERVICE));
       this.delayInMillis =
           parseUnsignedInt(bundle.get(ARGUMENT_DELAY_IN_MILLIS), ARGUMENT_DELAY_IN_MILLIS);
       // parse test class args
@@ -257,10 +270,12 @@ public class RunnerArgs {
       this.testPackages.addAll(parseTestPackages(bundle.getString(ARGUMENT_TEST_PACKAGE)));
       this.notTestPackages.addAll(parseTestPackages(bundle.getString(ARGUMENT_NOT_TEST_PACKAGE)));
       // parse test file args, which may include class and package args
-      TestFileArgs testFileArgs = parseFromFile(instr, bundle.getString(ARGUMENT_TEST_FILE));
+      TestFileArgs testFileArgs =
+          parseTestFile(instr, useTestStorageService, bundle.getString(ARGUMENT_TEST_FILE));
       this.tests.addAll(testFileArgs.tests);
       this.testPackages.addAll(testFileArgs.packages);
-      TestFileArgs notTestFileArgs = parseFromFile(instr, bundle.getString(ARGUMENT_NOT_TEST_FILE));
+      TestFileArgs notTestFileArgs =
+          parseTestFile(instr, useTestStorageService, bundle.getString(ARGUMENT_NOT_TEST_FILE));
       this.notTests.addAll(notTestFileArgs.tests);
       this.notTestPackages.addAll(notTestFileArgs.packages);
       this.listeners.addAll(
@@ -295,8 +310,6 @@ public class RunnerArgs {
           parseBoolean(bundle.getString(ARGUMENT_LIST_TESTS_FOR_ORCHESTRATOR));
       this.testDiscoveryService = bundle.getString(ARGUMENT_ORCHESTRATOR_DISCOVERY_SERVICE);
       this.testRunEventsService = bundle.getString(ARGUMENT_ORCHESTRATOR_RUN_EVENTS_SERVICE);
-      this.useTestStorageService =
-          parseBoolean(bundle.getString(ARGUMENT_USE_TEST_STORAGE_SERVICE));
       this.targetProcess = bundle.getString(ARGUMENT_TARGET_PROCESS);
       this.screenCaptureProcessors.addAll(
           parseLoadAndInstantiateClasses(
@@ -308,6 +321,36 @@ public class RunnerArgs {
       this.testsRegEx = bundle.getString(ARGUMENT_TESTS_REGEX);
       this.testPlatformMigration = parseBoolean(bundle.getString(ARGUMENT_TEST_PLATFORM_MIGRATION));
       return this;
+    }
+
+    private TestFileArgs parseTestFile(
+        Instrumentation instr, boolean useStorageService, String filePath) {
+      if (filePath == null) {
+        return new TestFileArgs();
+      }
+
+      if (useStorageService) {
+        String localFilePath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
+        try (BufferedReader reader =
+            new BufferedReader(new InputStreamReader(testStorage.openInputFile(localFilePath)))) {
+          return parseFromFileStream(reader);
+        } catch (IOException e) {
+          Log.w(
+              LOG_TAG,
+              String.format(
+                  "Could not read test file from TestStorage %s. "
+                      + "Attempting to read from local file system",
+                  filePath),
+              e);
+          // fall through
+        }
+      }
+
+      try (BufferedReader reader = openFile(instr, filePath)) {
+        return parseFromFileStream(reader);
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Could not read test file " + filePath, e);
+      }
     }
 
     /** Populate the arg data from the instrumentation:metadata attribute in Manifest. */
@@ -445,21 +488,8 @@ public class RunnerArgs {
       }
     }
 
-    /**
-     * Parse and load the packages, classes and methods of a test file.
-     *
-     * @param instr instrumentation handle.
-     * @param filePath path to test file containing package names, full package names of test
-     *     classes and optionally methods to add.
-     */
-    private TestFileArgs parseFromFile(Instrumentation instr, String filePath) {
-      final TestFileArgs args = new TestFileArgs();
-      if (filePath == null) {
-        return args;
-      }
-      BufferedReader reader = null;
-      try {
-        reader = openFile(instr, filePath);
+    private TestFileArgs parseFromFileStream(BufferedReader reader) throws IOException {
+      TestFileArgs args = new TestFileArgs();
         String line;
         while ((line = reader.readLine()) != null) {
           if (isClassOrMethod(line)) {
@@ -469,19 +499,6 @@ public class RunnerArgs {
             args.packages.addAll(parseTestPackages(line));
           }
         }
-      } catch (FileNotFoundException e) {
-        throw new IllegalArgumentException("testfile not found: " + filePath, e);
-      } catch (IOException e) {
-        throw new IllegalArgumentException("Could not read test file " + filePath, e);
-      } finally {
-        if (reader != null) {
-          try {
-            reader.close();
-          } catch (IOException e) {
-            /* ignore */
-          }
-        }
-      }
       return args;
     }
 

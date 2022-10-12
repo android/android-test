@@ -114,6 +114,8 @@ import org.junit.runners.model.RunnerBuilder;
  * character of the last identifier is a capitalized letter. Valid method names are valid class
  * names with a '#' character and an additional java identifier appended to the end. (expected class
  * format: com.android.foo.FooClassName#testMethodName) (expected package format: com.android.foo)
+ * If -e useTestStorageService is also provided, the testfile will be converted to a relative path
+ * and retrieved from {@link TestStorage}
  *
  * <p><b>Running all tests not listed in a file:</b> adb shell am instrument -w -e notTestFile
  * /sdcard/tmp/notTestFile.txt com.android.foo/com.android.test.runner.AndroidJUnitRunner The file
@@ -124,6 +126,8 @@ import org.junit.runners.model.RunnerBuilder;
  * character of the last identifier is a capitalized letter. Valid method names are valid class
  * names with a '#' character and an additional java identifier appended to the end. (expected class
  * format: com.android.foo.FooClassName#testMethodName) (expected package format: com.android.foo)
+ * If -e useTestStorageService is also provided, the testfile will be converted to a relative path
+ * and retrieved from {@link TestStorage}
  *
  * <p><b>Running all tests in a java package:</b> adb shell am instrument -w -e package
  * com.android.foo.bar com.android.foo/androidx.test.runner.AndroidJUnitRunner
@@ -296,6 +300,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
       super.onCreate(arguments);
       this.arguments = arguments;
       parseRunnerArgs(this.arguments);
+      Log.i(LOG_TAG, "onCreate " + arguments.toString());
 
       if (waitForDebugger(runnerArgs)) {
         Log.i(LOG_TAG, "Waiting for debugger to connect...");
