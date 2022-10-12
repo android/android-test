@@ -32,6 +32,7 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Looper;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.Choreographer;
 import android.view.View;
@@ -45,6 +46,7 @@ import androidx.test.internal.util.Checks;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.platform.tracing.Tracer.Span;
 import androidx.test.platform.tracing.Tracing;
+import com.google.android.apps.common.testing.accessibility.framework.integrations.espresso.AccessibilityValidator;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -68,6 +70,29 @@ public final class Espresso {
   private static final Tracing tracer = BASE.tracer();
   private static final int TIMEOUT_SECONDS = 5;
 
+  private static final AccessibilityValidator accessibilityValidator = new AccessibilityValidator();
+
+  private static final ViewAssertion accessibilityCheckAssertion =
+      new ViewAssertion() {
+        @Override
+        public void check(View view, NoMatchingViewException noViewFoundException) {
+          if (noViewFoundException != null) {
+            throw noViewFoundException;
+          }
+
+          if ((view == null) || (accessibilityValidator == null)) {
+            return;
+          }
+
+          StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
+          try {
+            accessibilityValidator.check(view);
+          } finally {
+            StrictMode.setThreadPolicy(originalPolicy);
+          }
+        }
+      };
+
   private Espresso() {}
 
   /**
@@ -88,7 +113,11 @@ public final class Espresso {
   public static ViewInteraction onView(final Matcher<View> viewMatcher) {
     String spanName = TracingUtil.getSpanName("Espresso", "onView", viewMatcher);
     try (Span ignored = tracer.beginSpan(spanName)) {
-      return BASE.plus(new ViewInteractionModule(viewMatcher)).viewInteraction();
+      ViewInteraction viewInteraction =
+          BASE.plus(new ViewInteractionModule(viewMatcher)).viewInteraction();
+      viewInteraction.check(accessibilityCheckAssertion);
+
+      return viewInteraction;
     }
   }
 
