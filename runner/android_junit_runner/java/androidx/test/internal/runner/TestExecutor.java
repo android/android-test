@@ -17,7 +17,6 @@ package androidx.test.internal.runner;
 
 import android.app.Instrumentation;
 import android.os.Bundle;
-import android.util.Log;
 import androidx.test.internal.runner.listener.InstrumentationRunListener;
 import androidx.test.internal.util.Checks;
 import androidx.tracing.Trace;
@@ -36,7 +35,6 @@ import org.junit.runner.notification.RunListener;
  * executes the test using upstream JUnit
  */
 public final class TestExecutor {
-  private static final String LOG_TAG = "TestExecutor";
 
   private final List<RunListener> listeners;
   private final Instrumentation instr;
@@ -80,7 +78,6 @@ public final class TestExecutor {
   /** Initialize listeners and add them to the JUnitCore runner */
   private void setUpListeners(JUnitCore testRunner) {
     for (RunListener listener : listeners) {
-      Log.d(LOG_TAG, "Adding listener " + listener.getClass().getName());
       testRunner.addListener(listener);
       if (listener instanceof InstrumentationRunListener) {
         ((InstrumentationRunListener) listener).setInstrumentation(instr);

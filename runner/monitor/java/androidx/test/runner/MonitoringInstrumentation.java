@@ -162,7 +162,6 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
    */
   @Override
   public void onCreate(Bundle arguments) {
-    Log.i(TAG, "Instrumentation started!");
     if (VERSION.SDK_INT <= 15) {
       // On API level <= 15, #onCreate is called earlier than #newApplication. We should install
       // Multidex and register the uncaught exception handler here.
@@ -907,7 +906,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
               install.invoke(null);
               isJsBridgeLoaded.set(true);
             } catch (ClassNotFoundException | NoSuchMethodException ignored) {
-              Log.i(TAG, "No JSBridge.");
+              // ignore
             } catch (InvocationTargetException | IllegalAccessException ite) {
               throw new RuntimeException(
                   "JSbridge is available at runtime, but calling it failed.", ite);

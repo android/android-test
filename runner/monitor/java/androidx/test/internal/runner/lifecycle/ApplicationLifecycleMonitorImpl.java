@@ -91,9 +91,7 @@ public class ApplicationLifecycleMonitorImpl implements ApplicationLifecycleMoni
           refIter.remove();
         } else {
           try {
-            Log.d(TAG, "running callback: " + callback);
             callback.onApplicationLifecycleChanged(app, stage);
-            Log.d(TAG, "callback completes: " + callback);
           } catch (RuntimeException re) {
             Log.e(
                 TAG,

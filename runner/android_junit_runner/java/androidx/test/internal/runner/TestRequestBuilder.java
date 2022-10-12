@@ -826,9 +826,6 @@ public class TestRequestBuilder {
         Log.d(TAG, "Using class path scanning to discover tests");
         classNames = getClassNamesFromClassPath();
       } else {
-        Log.d(
-            TAG,
-            String.format("Skipping class path scanning and directly running %s", includedClasses));
         classNames = includedClasses;
       }
 

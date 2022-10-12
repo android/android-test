@@ -135,13 +135,11 @@ public final class TestEventClient {
         defaultConn != null ? defaultConn : getConnection(listener, args);
     TestEventClient result = NO_OP_CLIENT;
     if (args.isTestDiscoveryRequested) {
-      Log.v(TAG, "Test discovery events requested");
       TestDiscoveryEventService testDiscoveryEventService = (TestDiscoveryEventService) connection;
       TestDiscoveryListener testDiscoveryListener =
           new TestDiscoveryListener(testDiscoveryEventService);
       result = new TestEventClient(testDiscoveryListener);
     } else if (args.isTestRunEventsRequested) {
-      Log.v(TAG, "Test run events requested");
       if (args.testPlatformMigration) {
         TestPlatformListener platformListener =
             new TestPlatformListener((TestPlatformEventService) connection);
