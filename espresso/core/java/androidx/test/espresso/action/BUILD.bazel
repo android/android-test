@@ -36,6 +36,7 @@ android_library(
     ),
     deps = [
         ":adapter_view_protocol",
+        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/base:idling_resource_registry",
@@ -45,10 +46,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//runner/android_junit_runner",
-        "//:androidx_annotation",
         "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:androidx_core_core",
-        "@maven//:androidx_recyclerview_recyclerview",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_errorprone_error_prone_annotations",
         "@maven//:com_google_guava_guava",

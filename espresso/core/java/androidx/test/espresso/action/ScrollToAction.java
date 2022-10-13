@@ -24,24 +24,21 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 
 import android.graphics.Rect;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ListView;
 import android.widget.ScrollView;
-import androidx.core.widget.NestedScrollView;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.matcher.ViewMatchers.Visibility;
 import androidx.test.espresso.util.HumanReadables;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-/**
- * Enables scrolling to the given view. View must be a descendant of a ScrollView, ListView,
- * NestedScrollView, or RecyclerView.
- */
+/** Enables scrolling to the given view. View must be a descendant of a ScrollView or ListView. */
 public final class ScrollToAction implements ViewAction {
   private static final String TAG = ScrollToAction.class.getSimpleName();
 
@@ -54,8 +51,27 @@ public final class ScrollToAction implements ViewAction {
                 isAssignableFrom(ScrollView.class),
                 isAssignableFrom(HorizontalScrollView.class),
                 isAssignableFrom(ListView.class),
-                isAssignableFrom(NestedScrollView.class),
-                isAssignableFrom(RecyclerView.class))));
+                isAssignableFromClassName("androidx.core.widget.NestedScrollView"),
+                isAssignableFromClassName("androidx.recyclerview.widget.RecyclerView"),
+                isAssignableFromClassName("androidx.recyclerview.widget.RecyclerView"))));
+  }
+
+  private static Matcher<View> isAssignableFromClassName(String className) {
+    try {
+      Class<? extends View> clazz = (Class<? extends View>) Class.forName(className);
+      return isAssignableFrom(clazz);
+    } catch (ClassNotFoundException e) {
+      // ignore the exception and return an empty matcher: androidx is not on classpath.
+      return new BaseMatcher<View>() {
+        @Override
+        public void describeTo(Description description) {
+        }
+        @Override
+        public boolean matches(Object o) {
+          return false;
+        }
+      };
+    }
   }
 
   @Override
