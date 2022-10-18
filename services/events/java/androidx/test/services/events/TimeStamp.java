@@ -17,12 +17,16 @@
 package androidx.test.services.events;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
+import java.time.Clock;
+import java.time.Instant;
 
 /**
  * Denotes an android test error. Has details of the error including stack trace, type, and message.
@@ -34,6 +38,10 @@ public final class TimeStamp implements Parcelable {
 
   /** Timestamp nanoseconds - must be non negative even if seconds is negative. */
   @NonNull public final Integer nanos;
+
+  /** Clock, package-private for testing. */
+  @SuppressWarnings("AndroidJdkLibsChecker")
+  static Clock clock = null;
 
   /** Constructor to create a {@link TimeStamp}. */
   public TimeStamp(@NonNull Long seconds, @NonNull Integer nanos) {
@@ -76,9 +84,32 @@ public final class TimeStamp implements Parcelable {
         }
       };
 
+  @TargetApi(Build.VERSION_CODES.O)
+  @SuppressWarnings("AndroidJdkLibsChecker")
+  private static TimeStamp modernNow() {
+    if (clock == null) {
+      clock = Clock.systemUTC();
+    }
+    Instant now = Instant.now(clock);
+    return new TimeStamp(now.getEpochSecond(), now.getNano());
+  }
+
+  @TargetApi(Build.VERSION_CODES.N_MR1)
+  @SuppressWarnings({"MillisTo_Seconds", "MillisTo_Nanos", "SecondsTo_Nanos"})
+  private static TimeStamp legacyNow() {
+    // System.nanoTime() only gives you a high-resolution time source and makes no guarantees
+    // about the event it references; it can be negative!
+    long now = System.currentTimeMillis();
+    long seconds = MILLISECONDS.toSeconds(now);
+    long nanosOffset = MILLISECONDS.toNanos(now) - SECONDS.toNanos(seconds);
+    return new TimeStamp(seconds, (int) nanosOffset);
+  }
+
   public static TimeStamp now() {
-    long epochNanos = System.nanoTime();
-    long epochSeconds = NANOSECONDS.toSeconds(epochNanos);
-    return new TimeStamp(epochSeconds, (int) (epochNanos - SECONDS.toNanos(epochSeconds)));
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      return modernNow();
+    } else {
+      return legacyNow();
+    }
   }
 }
