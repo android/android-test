@@ -68,8 +68,7 @@ public interface ActivityInvoker {
   void startActivityForResult(Intent intent);
 
   /**
-   * Returns activity result that is started by {@link #startActivity}. Unlike other methods this
-   * method blocks execution until the result becomes available.
+   * Returns activity result that is started by {@link #startActivity}.
    *
    * <p>Note: this method doesn't call {@link Activity#finish()} of the activity that is started by
    * {@link #startActivity}. If you call this method without calling that, it will end up with

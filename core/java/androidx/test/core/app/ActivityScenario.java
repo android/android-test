@@ -806,13 +806,13 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   }
 
   /**
-   * Waits for the activity to be finished and returns the activity result.
+   * Returns the activity result.
    *
    * <p>ActivityScenario.launchActivityForResult() must be used to launch an Activity before this
    * method is called.
    *
    * <p>Note: This method doesn't call {@link Activity#finish()}. The activity must be finishing or
-   * finished otherwise this method will throws runtime exception after the timeout.
+   * finished otherwise this method will throws runtime exception.
    *
    * <pre>{@code
    * Example:
