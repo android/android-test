@@ -26,10 +26,10 @@ import android.graphics.Rect
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.PixelCopy
 import android.view.SurfaceView
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.Window
 import androidx.annotation.RequiresApi
@@ -50,8 +50,8 @@ import com.google.common.util.concurrent.ListenableFuture
  * This API is primarily intended for use in lower layer libraries or frameworks. For test authors,
  * its recommended to use espresso or compose's captureToImage.
  *
- * This API currently does not work for View's hosted in Dialogs on APIs >= 26, as there is no
- * way to find a Dialog's Window. (see b/195673633).
+ * This API currently does not work for View's hosted in Dialogs on APIs >= 26, as there is no way
+ * to find a Dialog's Window. (see b/195673633).
  *
  * This API is currently experimental and subject to change or removal.
  */
@@ -123,11 +123,7 @@ private fun View.generateBitmap(bitmapFuture: ResolvableFuture<Bitmap>) {
       if (window != null) {
         generateBitmapFromPixelCopy(window, destBitmap, bitmapFuture)
       } else {
-        Log.i(
-          "View.captureToImage",
-          "Could not find window for view. Falling back to View#draw instead of PixelCopy"
-        )
-        generateBitmapFromDraw(destBitmap, bitmapFuture)
+        bitmapFuture.setException(IllegalStateException("Could not find window for view."))
       }
     }
   }
@@ -169,7 +165,18 @@ private fun View.getActivity(): Activity? {
       else -> null
     }
   }
-  return context.getActivity()
+
+  val activity = context.getActivity()
+  if (activity != null) {
+    return activity
+  } else if (this is ViewGroup && this.childCount > 0) {
+    // getActivity is known to fail if View is a DecorView such as specified via espresso's
+    // isRoot().
+    // Make another attempt to find the activity from its first child view
+    return getChildAt(0).getActivity()
+  } else {
+    return null
+  }
 }
 
 private fun View.generateBitmapFromPixelCopy(
