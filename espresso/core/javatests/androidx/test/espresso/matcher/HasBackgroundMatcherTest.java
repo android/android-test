@@ -19,10 +19,11 @@ package androidx.test.espresso.matcher;
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.os.Build.VERSION;
 import android.view.View;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
@@ -43,10 +44,15 @@ public class HasBackgroundMatcherTest {
     context = getApplicationContext();
   }
 
+  // placeholder test so at least one test is found on API 15
   @Test
-  // TODO(b/117557353): investigate why this fails on 28
-  @SdkSuppress(minSdkVersion = 16, maxSdkVersion = 27)
+  public void emptyTest() {}
+
+  @Test
+  @SdkSuppress(minSdkVersion = 16)
   public void verifyViewHasBackground() {
+    // TODO(b/117557353): investigate failures on API 28
+    assumeFalse(VERSION.SDK_INT == 28);
     View viewWithBackground = new View(context);
     int drawable1 = androidx.test.ui.app.R.drawable.drawable_1;
     int drawable2 = androidx.test.ui.app.R.drawable.drawable_2;
@@ -65,40 +71,6 @@ public class HasBackgroundMatcherTest {
     int drawable1 = androidx.test.ui.app.R.drawable.drawable_1;
 
     assertFalse(new HasBackgroundMatcher(drawable1).matches(view));
-  }
-
-  @Test
-  public void compareSameBitmapImage() {
-    Bitmap bitmap = null;
-    try {
-      bitmap =
-          BitmapFactory.decodeResource(context.getResources(), android.R.drawable.alert_dark_frame);
-      assertTrue(HasBackgroundMatcher.compareBitmaps(bitmap, bitmap));
-    } finally {
-      recycle(bitmap);
-      bitmap = null;
-    }
-  }
-
-  @Test
-  public void compareDifferentBitmapImages() {
-    Bitmap bitmap1 = null;
-    Bitmap bitmap2 = null;
-
-    try {
-      bitmap1 =
-          BitmapFactory.decodeResource(context.getResources(), android.R.drawable.alert_dark_frame);
-      bitmap2 =
-          BitmapFactory.decodeResource(
-              context.getResources(), android.R.drawable.alert_light_frame);
-
-      assertFalse(HasBackgroundMatcher.compareBitmaps(bitmap1, bitmap2));
-    } finally {
-      recycle(bitmap1);
-      recycle(bitmap2);
-      bitmap1 = null;
-      bitmap2 = null;
-    }
   }
 
   private void recycle(Bitmap bitmap) {

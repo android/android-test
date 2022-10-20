@@ -24,7 +24,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.view.View;
-import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
@@ -237,7 +236,6 @@ public final class Intents {
    * <p>Callers can then verify the list of captured intents using their choice of assertion
    * framework, such as <a href="http://google.github.io/truth">truth</a>.
    */
-  @ExperimentalTestApi
   public static List<Intent> getIntents() {
     final FutureTask<List<Intent>> getIntents =
         new FutureTask<>(

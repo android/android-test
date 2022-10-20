@@ -16,15 +16,15 @@
 
 package androidx.test.runner.screenshot;
 
-import androidx.test.annotation.ExperimentalTestApi;
 import java.io.IOException;
 
 /**
  * Interface for an object that is capable of processing {@link ScreenCapture}s.
  *
- * <p><b>This API is currently in beta.</b>
+ * @deprecated use androidx.test.espresso.screenshot.captureToBitmap or
+ *     androidx.test.core.app.DeviceCapture instead
  */
-@ExperimentalTestApi
+@Deprecated
 public interface ScreenCaptureProcessor {
 
   /**

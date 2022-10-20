@@ -18,6 +18,7 @@ package androidx.test.espresso.intent {
 
   public final class Intents {
     method public static void assertNoUnverifiedIntents();
+    method public static java.util.List<android.content.Intent!>! getIntents();
     method public static void init();
     method public static void intended(org.hamcrest.Matcher<android.content.Intent!>!);
     method public static void intended(org.hamcrest.Matcher<android.content.Intent!>!, androidx.test.espresso.intent.VerificationMode!);

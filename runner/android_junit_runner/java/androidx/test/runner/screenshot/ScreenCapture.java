@@ -22,7 +22,6 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import androidx.annotation.NonNull;
-import androidx.test.annotation.ExperimentalTestApi;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,9 +38,10 @@ import java.util.Set;
  * will take precedence over the set of global processors and the {@link
  * BasicScreenCaptureProcessor}.
  *
- * <p><b>This API is currently in beta.</b>
+ * @deprecated use androidx.test.espresso.screenshot.captureToBitmap or
+ *     androidx.test.core.app.DeviceCapture instead
  */
-@ExperimentalTestApi
+@Deprecated
 public final class ScreenCapture {
   private static final Bitmap.CompressFormat DEFAULT_FORMAT = PNG;
 

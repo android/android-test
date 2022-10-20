@@ -24,7 +24,6 @@ import android.os.IBinder;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.util.Checks;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.util.concurrent.CountDownLatch;
@@ -68,12 +67,7 @@ import org.junit.runners.model.Statement;
  *     assertTrue("True wasn't returned", service.doSomethingToReturnTrue());
  * }
  * </pre>
- *
- * <p>
- *
- * <p><b>This API is currently in beta.</b>
  */
-@ExperimentalTestApi
 public class ServiceTestRule implements TestRule {
 
   private static final String TAG = "ServiceTestRule";

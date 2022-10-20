@@ -1,14 +1,14 @@
 """Defines current AXT versions and dependencies."""
 
 # AXT versions
-RUNNER_VERSION = "1.5.0-beta01"  # stable 1.4.0
-RULES_VERSION = "1.4.1-beta01"  # stable 1.4.0
+RUNNER_VERSION = "1.5.0-beta02"  # stable 1.4.0
+RULES_VERSION = "1.5.0-beta01"  # stable 1.4.0
 MONITOR_VERSION = "1.6.0-beta01"  # stable 1.5.0
-ESPRESSO_VERSION = "3.5.0-beta01"  # stable 3.4.0
+ESPRESSO_VERSION = "3.5.0-beta02"  # stable 3.4.0
 CORE_VERSION = "1.5.0-beta01"  # stable 1.4.0
 ESPRESSO_DEVICE_VERSION = "1.0.0-alpha01"
 ANDROIDX_JUNIT_VERSION = "1.1.4-beta01"  # stable 1.1.3
-ANDROIDX_TRUTH_VERSION = "1.5.0-beta01"  # stable 1.4.0
+ANDROIDX_TRUTH_VERSION = "1.5.0-beta02"  # stable 1.4.0
 UIAUTOMATOR_VERSION = "2.2.0"
 JANK_VERSION = "1.0.1"
 

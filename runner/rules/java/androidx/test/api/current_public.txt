@@ -32,11 +32,62 @@ package androidx.test.rule {
     method public boolean isDebugging();
   }
 
+  public class GrantPermissionRule implements org.junit.rules.TestRule {
+    method public final org.junit.runners.model.Statement! apply(org.junit.runners.model.Statement!, org.junit.runner.Description!);
+    method public static androidx.test.rule.GrantPermissionRule! grant(java.lang.String!...);
+  }
+
+  public class ServiceTestRule implements org.junit.rules.TestRule {
+    ctor public ServiceTestRule();
+    ctor protected ServiceTestRule(long, java.util.concurrent.TimeUnit!);
+    method protected void afterService();
+    method public org.junit.runners.model.Statement! apply(org.junit.runners.model.Statement!, org.junit.runner.Description!);
+    method protected void beforeService();
+    method public android.os.IBinder! bindService(android.content.Intent) throws java.util.concurrent.TimeoutException;
+    method public android.os.IBinder! bindService(android.content.Intent, android.content.ServiceConnection, int) throws java.util.concurrent.TimeoutException;
+    method public void startService(android.content.Intent) throws java.util.concurrent.TimeoutException;
+    method public void unbindService();
+    method public static androidx.test.rule.ServiceTestRule! withTimeout(long, java.util.concurrent.TimeUnit!);
+  }
+
   @Deprecated public class UiThreadTestRule implements org.junit.rules.TestRule {
     ctor @Deprecated public UiThreadTestRule();
     method @Deprecated public org.junit.runners.model.Statement! apply(org.junit.runners.model.Statement!, org.junit.runner.Description!);
     method @Deprecated public void runOnUiThread(Runnable!) throws java.lang.Throwable;
     method @Deprecated protected boolean shouldRunOnUiThread(org.junit.runner.Description!);
+  }
+
+}
+
+package androidx.test.rule.logging {
+
+  @Deprecated @RequiresApi(21) public class AtraceLogger {
+    method @Deprecated public void atraceStart(java.util.Set<java.lang.String!>!, int, int, java.io.File!, String!) throws java.io.IOException;
+    method @Deprecated public void atraceStop() throws java.io.IOException, java.lang.InterruptedException;
+    method @Deprecated public static androidx.test.rule.logging.AtraceLogger! getAtraceLoggerInstance(android.app.Instrumentation!);
+  }
+
+}
+
+package androidx.test.rule.provider {
+
+  @Deprecated public class ProviderTestRule implements org.junit.rules.TestRule {
+    method @Deprecated protected void afterProviderCleanedUp();
+    method @Deprecated public org.junit.runners.model.Statement! apply(org.junit.runners.model.Statement!, org.junit.runner.Description!);
+    method @Deprecated protected void beforeProviderSetup();
+    method @Deprecated public android.content.ContentResolver! getResolver();
+    method @Deprecated public void revokePermission(String);
+    method @Deprecated public void runDatabaseCommands(String, java.lang.String!...);
+  }
+
+  @Deprecated public static class ProviderTestRule.Builder {
+    ctor @Deprecated public ProviderTestRule.Builder(Class<T!>, String);
+    method @Deprecated public <T extends android.content.ContentProvider> androidx.test.rule.provider.ProviderTestRule.Builder! addProvider(Class<T!>, String);
+    method @Deprecated public androidx.test.rule.provider.ProviderTestRule! build();
+    method @Deprecated public androidx.test.rule.provider.ProviderTestRule.Builder! setDatabaseCommands(String, java.lang.String!...);
+    method @Deprecated public androidx.test.rule.provider.ProviderTestRule.Builder! setDatabaseCommandsFile(String, java.io.File);
+    method @Deprecated public androidx.test.rule.provider.ProviderTestRule.Builder! setDatabaseFile(String, java.io.File);
+    method @Deprecated public androidx.test.rule.provider.ProviderTestRule.Builder! setPrefix(String);
   }
 
 }

@@ -22,7 +22,6 @@ import static android.os.Environment.getExternalStoragePublicDirectory;
 import android.os.Build;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.ExperimentalTestApi;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,9 +36,10 @@ import java.util.UUID;
  * android.os.Environment.getExternalStoragePublicDirectory(DIRECTORY_PICTURES), with a simple name
  * that includes a few characteristics about the device it was saved on followed by a UUID.
  *
- * <p><b>This API is currently in beta.</b>
+ * @deprecated use androidx.test.espresso.screenshot.captureToBitmap or
+ *     androidx.test.core.app.DeviceCapture instead
  */
-@ExperimentalTestApi
+@Deprecated
 public class BasicScreenCaptureProcessor implements ScreenCaptureProcessor {
   private static int sAndroidRuntimeVersion = Build.VERSION.SDK_INT;
   private static String sAndroidDeviceName = Build.DEVICE;

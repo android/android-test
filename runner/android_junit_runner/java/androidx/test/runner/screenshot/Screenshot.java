@@ -26,7 +26,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.InstrumentationRegistry;
-import androidx.test.annotation.ExperimentalTestApi;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,9 +41,10 @@ import java.util.concurrent.FutureTask;
  * passed to each {@link ScreenCapture} object when they are created during any test. These {@link
  * ScreenCaptureProcessor}s are capable of processing the {@link ScreenCapture} that was created.
  *
- * <p><b>This API is currently in beta.</b>
+ * @deprecated use androidx.test.espresso.screenshot.captureToBitmap or
+ *     androidx.test.core.app.DeviceCapture instead
  */
-@ExperimentalTestApi
+@Deprecated
 public final class Screenshot {
   private static int androidRuntimeVersion = Build.VERSION.SDK_INT;
   private static UiAutomationWrapper uiWrapper = new UiAutomationWrapper();
@@ -209,8 +209,13 @@ public final class Screenshot {
     androidRuntimeVersion = sdkInt;
   }
 
-  /** An Exception associated with failing to capture a screenshot. */
-  @ExperimentalTestApi
+  /**
+   * An Exception associated with failing to capture a screenshot.
+   *
+   * @deprecated use androidx.test.espresso.screenshot.captureToBitmap or
+   *     androidx.test.core.app.DeviceCapture instead
+   */
+  @Deprecated
   public static final class ScreenShotException extends RuntimeException {
     ScreenShotException(Throwable cause) {
       super(cause);

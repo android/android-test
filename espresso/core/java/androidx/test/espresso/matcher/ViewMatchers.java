@@ -1651,24 +1651,17 @@ public final class ViewMatchers {
   }
 
   /**
-   * Returns a matcher that matches {@link android.view.View} based on background resource.
+   * Returns a matcher that matches {@link android.view.View} based on background resource Bitmap.
    *
-   * <p>Note: This method compares images at a pixel level and might have significant performance
-   * implications for larger bitmaps.
-   *
-   * <p><b>This API is currently in beta.</b>
+   * @see android.graphics.Bitmap#sameAs
    */
-  @ExperimentalTestApi
   public static Matcher<View> hasBackground(final int drawableId) {
     return new HasBackgroundMatcher(drawableId);
   }
 
   /**
    * Returns a matcher that matches {@link android.widget.TextView} based on it's color.
-   *
-   * <p><b>This API is currently in beta.</b>
    */
-  @ExperimentalTestApi
   public static Matcher<View> hasTextColor(final int colorResId) {
     return new BoundedDiagnosingMatcher<View, TextView>(TextView.class) {
       private Context context;

@@ -32,7 +32,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.io.BufferedReader;
 import java.io.File;
@@ -128,9 +127,10 @@ import org.junit.runners.model.Statement;
  * }
  * </pre>
  *
- * <p><b>This API is currently in beta.</b>
+ * @deprecated relies on deprecated android.test.mock. Consider using a real provider, or
+ *     implementing a fake ContentProvider specific to your use case.
  */
-@ExperimentalTestApi
+@Deprecated
 public class ProviderTestRule implements TestRule {
 
   private static final String TAG = "ProviderTestRule";
@@ -349,7 +349,11 @@ public class ProviderTestRule implements TestRule {
    * specify the prefix to use when renaming test files for isolation by {@link #setPrefix}. If the
    * ContentProvider under test is implemented based on {@link SQLiteDatabase}, users can also pass
    * in database file to restore or database commands to run before tests.
+   *
+   * @deprecated Consider using a real provider, or implementing a fake ContentProvider specific to
+   *     your use case.
    */
+  @Deprecated
   public static class Builder {
 
     private static final String DEFAULT_PREFIX = "test.";

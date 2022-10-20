@@ -52,6 +52,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -878,9 +879,10 @@ public class ViewMatchers2Test {
   }
 
   @Test
-  // TODO(b/117557353): investigate failures on API 28
-  @SdkSuppress(minSdkVersion = 16, maxSdkVersion = 27)
+  @SdkSuppress(minSdkVersion = 16)
   public void hasBackgroundTest() {
+    // TODO(b/117557353): investigate failures on API 28
+    assumeFalse(VERSION.SDK_INT == 28);
     View viewWithBackground = new View(context);
     viewWithBackground.setBackground(context.getResources().getDrawable(R.drawable.drawable_1));
 

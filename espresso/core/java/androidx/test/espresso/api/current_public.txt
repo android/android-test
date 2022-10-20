@@ -598,6 +598,12 @@ package androidx.test.espresso.matcher {
     method public androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withStrictColumnChecks(boolean);
   }
 
+  public final class HasBackgroundMatcher extends org.hamcrest.TypeSafeMatcher<android.view.View> {
+    ctor public HasBackgroundMatcher(int);
+    method public void describeTo(org.hamcrest.Description!);
+    method protected boolean matchesSafely(android.view.View!);
+  }
+
   public final class LayoutMatchers {
     method public static org.hamcrest.Matcher<android.view.View!>! hasEllipsizedText();
     method public static org.hamcrest.Matcher<android.view.View!>! hasMultilineText();
@@ -630,6 +636,7 @@ package androidx.test.espresso.matcher {
     method public static <T> void assertThat(T!, org.hamcrest.Matcher<T!>!);
     method public static <T> void assertThat(String!, T!, org.hamcrest.Matcher<T!>!);
     method public static org.hamcrest.Matcher<android.view.View!>! doesNotHaveFocus();
+    method public static org.hamcrest.Matcher<android.view.View!>! hasBackground(int);
     method public static org.hamcrest.Matcher<android.view.View!>! hasChildCount(int);
     method public static org.hamcrest.Matcher<android.view.View!>! hasContentDescription();
     method public static org.hamcrest.Matcher<android.view.View!>! hasDescendant(org.hamcrest.Matcher<android.view.View!>!);
@@ -641,6 +648,7 @@ package androidx.test.espresso.matcher {
     method public static org.hamcrest.Matcher<android.view.View!>! hasLinks();
     method public static org.hamcrest.Matcher<android.view.View!>! hasMinimumChildCount(int);
     method public static org.hamcrest.Matcher<android.view.View!>! hasSibling(org.hamcrest.Matcher<android.view.View!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! hasTextColor(int);
     method public static org.hamcrest.Matcher<android.view.View!>! isAssignableFrom(Class<? extends android.view.View>!);
     method public static org.hamcrest.Matcher<android.view.View!>! isChecked();
     method public static org.hamcrest.Matcher<android.view.View!>! isClickable();

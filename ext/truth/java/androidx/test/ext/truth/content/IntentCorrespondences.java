@@ -1,7 +1,6 @@
 package androidx.test.ext.truth.content;
 
 import android.content.Intent;
-import androidx.test.annotation.ExperimentalTestApi;
 import com.google.common.base.Objects;
 import com.google.common.truth.Correspondence;
 
@@ -27,7 +26,6 @@ public final class IntentCorrespondences {
         "has getData() equal to");
   }
 
-  @ExperimentalTestApi
   public static Correspondence<Intent, Intent> all(
       final Correspondence<Intent, Intent>... correspondences) {
     StringBuilder combinedString = new StringBuilder();

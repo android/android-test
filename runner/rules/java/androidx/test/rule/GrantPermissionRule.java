@@ -21,7 +21,6 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import android.Manifest.permission;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.content.PermissionGranter;
 import androidx.test.runner.permission.PermissionRequester;
@@ -68,10 +67,7 @@ import org.junit.runners.model.Statement;
  *
  * <p>See <a href="https://developer.android.com/training/permissions/requesting">Request App
  * Permissions</a> for more details on runtime permissions.
- *
- * <p><b>This API is currently in beta.</b>
  */
-@ExperimentalTestApi
 public class GrantPermissionRule implements TestRule {
 
   private PermissionGranter permissionGranter;

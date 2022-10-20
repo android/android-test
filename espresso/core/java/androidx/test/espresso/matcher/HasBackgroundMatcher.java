@@ -20,20 +20,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.util.Log;
 import android.view.View;
-import androidx.test.annotation.ExperimentalTestApi;
-import java.util.Arrays;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 /**
  * Matcher to match {@link android.view.View} based on its background resource.
- *
- * <p><b>This API is currently in beta.</b>
  */
-@ExperimentalTestApi
 public final class HasBackgroundMatcher extends TypeSafeMatcher<View> {
 
   private static final String TAG = "HasBackgroundMatcher";
@@ -53,19 +46,6 @@ public final class HasBackgroundMatcher extends TypeSafeMatcher<View> {
     description.appendText("has background with drawable ID: " + drawableId);
   }
 
-  static boolean compareBitmaps(Bitmap img1, Bitmap img2) {
-    if (img1.getWidth() == img2.getWidth() && img1.getHeight() == img2.getHeight()) {
-      int[] img1Pixels = new int[img1.getWidth() * img1.getHeight()];
-      int[] img2Pixels = new int[img2.getWidth() * img2.getHeight()];
-
-      img1.getPixels(img1Pixels, 0, img1.getWidth(), 0, 0, img1.getWidth(), img1.getHeight());
-      img2.getPixels(img2Pixels, 0, img2.getWidth(), 0, 0, img2.getWidth(), img2.getHeight());
-
-      return Arrays.equals(img1Pixels, img2Pixels);
-    }
-    return false;
-  }
-
   private static boolean assertDrawable(Drawable actual, int expectedId, View v) {
     if (null == actual || !(actual instanceof BitmapDrawable)) {
       return false;
@@ -74,15 +54,7 @@ public final class HasBackgroundMatcher extends TypeSafeMatcher<View> {
     Bitmap expectedBitmap = null;
     try {
       expectedBitmap = BitmapFactory.decodeResource(v.getContext().getResources(), expectedId);
-      if (Build.VERSION.SDK_INT >= 12) {
-        return ((BitmapDrawable) actual).getBitmap().sameAs(expectedBitmap);
-      } else {
-        return compareBitmaps(((BitmapDrawable) actual).getBitmap(), expectedBitmap);
-      }
-    } catch (OutOfMemoryError error) {
-      Log.e(TAG, error.getMessage(), error.getCause());
-      return false;
-
+      return ((BitmapDrawable) actual).getBitmap().sameAs(expectedBitmap);
     } finally {
       if (expectedBitmap != null) {
         expectedBitmap.recycle();

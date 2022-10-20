@@ -17,9 +17,10 @@ package androidx.test.rule.logging;
 
 import android.app.Instrumentation;
 import android.app.UiAutomation;
+import android.os.Build.VERSION;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
-import androidx.test.annotation.ExperimentalTestApi;
+import androidx.annotation.RequiresApi;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,13 +30,18 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Class contains helper methods to dump atrace info asynchronously while running the test case.
  *
- * <p><b>This API is currently in beta.</b>
+ * <p>Supported only for minsdk version 21 and above because of UiAutomation#executeShellCommand
+ * availability.
+ *
+ * @deprecated unsupported. Consider running trace from host such as via Android Studio
  */
-@ExperimentalTestApi
+@RequiresApi(21)
+@Deprecated
 public class AtraceLogger {
 
   private static final String ATRACE_START = "atrace --async_start -b %d -c %s";
@@ -58,13 +64,15 @@ public class AtraceLogger {
   }
 
   /**
-   * To make sure only one instance of atrace logger is created. Note : Supported only for minsdk
-   * version 23 and above because of UiAutomation executeShellCommand limitation.
+   * To make sure only one instance of atrace logger is created.
    *
    * @param instrumentation Used to execute atrace shell commands
    * @return instance of the AtraceLogger
    */
   public static AtraceLogger getAtraceLoggerInstance(Instrumentation instrumentation) {
+    if (VERSION.SDK_INT < 21) {
+      throw new UnsupportedOperationException("AtraceLogger is only supported on APIs >= 21");
+    }
     if (loggerInstance == null) {
       synchronized (AtraceLogger.class) {
         if (loggerInstance == null) {
@@ -135,11 +143,11 @@ public class AtraceLogger {
     atraceRunning = true;
     dumpIOException = null;
     atraceDataList = new ArrayList<ByteArrayOutputStream>();
-    dumpThread =
-        new Thread(
-            new DumpTraceRunnable(
-                traceCategoriesList.toString(), atraceBufferSize, dumpIntervalSecs));
+    DumpTraceRunnable dumpTraceRunnable =
+        new DumpTraceRunnable(traceCategoriesList.toString(), atraceBufferSize, dumpIntervalSecs);
+    dumpThread = new Thread(dumpTraceRunnable);
     dumpThread.start();
+    dumpTraceRunnable.waitForStart();
   }
 
   /**
@@ -223,6 +231,7 @@ public class AtraceLogger {
     private String traceCategories;
     private int bufferSize;
     private int dumpIntervalInSecs;
+    private final CountDownLatch startLatch = new CountDownLatch(1);
 
     DumpTraceRunnable(String traceCategories, int bufferSize, int dumpIntervalInSecs) {
       this.traceCategories = traceCategories;
@@ -230,8 +239,17 @@ public class AtraceLogger {
       this.dumpIntervalInSecs = dumpIntervalInSecs;
     }
 
+    void waitForStart() {
+      try {
+        startLatch.await();
+      } catch (InterruptedException e) {
+        // ignore
+      }
+    }
+
     @Override
     public void run() {
+      startLatch.countDown();
       try {
         while (!Thread.currentThread().isInterrupted()) {
           try {
