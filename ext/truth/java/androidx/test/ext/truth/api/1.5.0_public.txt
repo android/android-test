@@ -29,6 +29,7 @@ package androidx.test.ext.truth.content {
 
   public final class IntentCorrespondences {
     method public static com.google.common.truth.Correspondence<android.content.Intent!,android.content.Intent!>! action();
+    method public static com.google.common.truth.Correspondence<android.content.Intent!,android.content.Intent!>! all(com.google.common.truth.Correspondence<android.content.Intent!,android.content.Intent!>!...);
     method public static com.google.common.truth.Correspondence<android.content.Intent!,android.content.Intent!>! data();
   }
 
@@ -108,7 +109,7 @@ package androidx.test.ext.truth.os {
     method public static com.google.common.truth.Subject.Factory<androidx.test.ext.truth.os.BundleSubject!,android.os.Bundle!>! bundles();
     method public void containsKey(String!);
     method public void doesNotContainKey(String!);
-    method public com.google.common.truth.DoubleSubject! doubleFloat(String!);
+    method public com.google.common.truth.DoubleSubject doubleFloat(String);
     method public void hasSize(int);
     method public com.google.common.truth.IntegerSubject! integer(String!);
     method public void isEmpty();
@@ -119,7 +120,7 @@ package androidx.test.ext.truth.os {
     method public <T extends android.os.Parcelable, SubjectT extends com.google.common.truth.Subject> SubjectT! parcelableAsType(String!, com.google.common.truth.Subject.Factory<SubjectT!,T!>!);
     method public com.google.common.truth.Subject! serializable(String!);
     method public com.google.common.truth.StringSubject! string(String!);
-    method public com.google.common.truth.ObjectArraySubject<java.lang.String!>! stringArray(String!);
+    method public com.google.common.truth.ObjectArraySubject<java.lang.String!> stringArray(String);
     method public com.google.common.truth.IterableSubject! stringArrayList(String!);
   }
 

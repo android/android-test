@@ -249,6 +249,51 @@ package androidx.test.runner.intercepting {
 
 }
 
+package androidx.test.runner.screenshot {
+
+  @Deprecated public class BasicScreenCaptureProcessor implements androidx.test.runner.screenshot.ScreenCaptureProcessor {
+    ctor @Deprecated public BasicScreenCaptureProcessor();
+    method @Deprecated protected String! getDefaultFilename();
+    method @Deprecated protected String! getFilename(String!);
+    method @Deprecated public String! process(androidx.test.runner.screenshot.ScreenCapture!) throws java.io.IOException;
+    field @Deprecated protected String! mDefaultFilenamePrefix;
+    field @Deprecated protected java.io.File! mDefaultScreenshotPath;
+    field @Deprecated protected String! mFileNameDelimiter;
+    field @Deprecated protected String! mTag;
+  }
+
+  @Deprecated public final class ScreenCapture {
+    method @Deprecated public android.graphics.Bitmap! getBitmap();
+    method @Deprecated public android.graphics.Bitmap.CompressFormat! getFormat();
+    method @Deprecated public String! getName();
+    method @Deprecated public void process() throws java.io.IOException;
+    method @Deprecated public void process(java.util.Set<androidx.test.runner.screenshot.ScreenCaptureProcessor!>) throws java.io.IOException;
+    method @Deprecated public androidx.test.runner.screenshot.ScreenCapture! setFormat(android.graphics.Bitmap.CompressFormat!);
+    method @Deprecated public androidx.test.runner.screenshot.ScreenCapture! setName(String!);
+  }
+
+  @Deprecated public interface ScreenCaptureProcessor {
+    method @Deprecated public String! process(androidx.test.runner.screenshot.ScreenCapture!) throws java.io.IOException;
+  }
+
+  @Deprecated public final class Screenshot {
+    ctor @Deprecated public Screenshot();
+    method @Deprecated public static void addScreenCaptureProcessors(java.util.Set<androidx.test.runner.screenshot.ScreenCaptureProcessor!>!);
+    method @Deprecated public static androidx.test.runner.screenshot.ScreenCapture! capture() throws androidx.test.runner.screenshot.Screenshot.ScreenShotException;
+    method @Deprecated public static androidx.test.runner.screenshot.ScreenCapture! capture(android.app.Activity) throws androidx.test.runner.screenshot.Screenshot.ScreenShotException;
+    method @Deprecated public static androidx.test.runner.screenshot.ScreenCapture! capture(android.view.View) throws androidx.test.runner.screenshot.Screenshot.ScreenShotException;
+    method @Deprecated public static void setScreenshotProcessors(java.util.Set<androidx.test.runner.screenshot.ScreenCaptureProcessor!>!);
+  }
+
+  @Deprecated public static final class Screenshot.ScreenShotException extends java.lang.RuntimeException {
+  }
+
+  @Deprecated public class UiAutomationWrapper {
+    method @Deprecated public android.graphics.Bitmap! takeScreenshot();
+  }
+
+}
+
 package androidx.test.runner.suites {
 
   @org.junit.runner.RunWith(RunnerSuite.class) public final class AndroidClasspathSuite {
