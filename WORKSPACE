@@ -3,9 +3,9 @@ workspace(name = "android_test_support")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-RULES_JVM_EXTERNAL_TAG = "4.2"
+RULES_JVM_EXTERNAL_TAG = "4.4.2"
 
-RULES_JVM_EXTERNAL_SHA = "cd1a77b7b02e8e008439ca76fd34f5b07aecb8c752961f9640dea15e9e5ba1ca"
+RULES_JVM_EXTERNAL_SHA = "735602f50813eb2ea93ca3f5e43b1959bd80b213b836a07a62a29d757670b77b"
 
 # This needs to be consistent with the KOTLIN_VERSION specified in //third_party/android/androidx_test/build_extensions/axt_versions.bzl.
 KOTLIN_VERSION = "1.6.21"
