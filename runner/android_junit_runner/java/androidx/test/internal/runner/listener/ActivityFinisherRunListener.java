@@ -19,6 +19,8 @@ package androidx.test.internal.runner.listener;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.app.Instrumentation;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.test.internal.runner.InstrumentationConnection;
 import androidx.test.runner.MonitoringInstrumentation;
 import org.junit.runner.Description;
@@ -44,14 +46,14 @@ public class ActivityFinisherRunListener extends RunListener {
 
   @Override
   public void testStarted(Description description) throws Exception {
-    instrumentation.runOnMainSync(activityFinisher);
+    new Handler(Looper.getMainLooper()).post(activityFinisher);
     waitForActivitiesToFinishRunnable.run();
   }
 
   @Override
   public void testFinished(Description description) throws Exception {
     InstrumentationConnection.getInstance().requestRemoteInstancesActivityCleanup();
-    instrumentation.runOnMainSync(activityFinisher);
+    new Handler(Looper.getMainLooper()).post(activityFinisher);
     waitForActivitiesToFinishRunnable.run();
   }
 }
