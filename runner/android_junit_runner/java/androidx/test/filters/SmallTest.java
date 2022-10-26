@@ -26,12 +26,12 @@ import java.lang.annotation.Target;
  * method or class level.
  *
  * <p>Test size qualifiers are a great way to structure test code and are used to assign a test to a
- * test suite or similar runtime.
+ * suite of test that have similar run times.
  *
  * <p>Execution time: &lt;200ms
  *
  * <p>Small tests should be run very frequently, focused on units of code to verify specific logical
- * conditions. Tests should run in an isolated environment and use mock objects for external
+ * conditions. Tests should run in an isolated environment and use fake objects for external
  * dependencies. Resource access (for example, to the file system, network, or databases) is not
  * permitted. Tests that interact with hardware, make binder calls, or facilitate android
  * instrumentation should not use this annotation.
@@ -39,7 +39,7 @@ import java.lang.annotation.Target;
  * <p><b>Note:</b> This class replaces the deprecated Android platform size qualifier
  * <a href="{@docRoot}reference/android/test/suitebuilder/annotation/SmallTest.html">
  * <code>android.test.suitebuilder.annotation.SmallTest</code></a> and is the recommended way to
- * annotate tests written with the AndroidX Testing Support Library.
+ * annotate tests written with the AndroidX Test libraries.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
