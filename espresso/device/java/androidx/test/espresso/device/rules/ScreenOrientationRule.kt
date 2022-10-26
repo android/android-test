@@ -15,10 +15,13 @@
  */
 package androidx.test.espresso.device.rules
 
+import android.app.Activity
 import android.content.res.Configuration
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.action.setScreenOrientation
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.rules.TestRule
 import org.junit.runner.Description
@@ -30,13 +33,24 @@ import org.junit.runners.model.Statement
  * @param defaultOrientation: the screen orientation will be set to the specified value, or the one
  * that the test starts with if none is given.
  */
-class ScreenOrientationRule(private val defaultOrientation: ScreenOrientation?) : TestRule {
+class ScreenOrientationRule<A : Activity>(
+  private val activityScenarioRule: ActivityScenarioRule<A>,
+  private val defaultOrientation: ScreenOrientation?
+) : TestRule {
   override fun apply(statement: Statement, description: Description): Statement {
     return object : Statement() {
       override fun evaluate() {
         val orientationToRestore = defaultOrientation ?: getCurrentOrientation()
+        var activityClass: Class<A>? = null
+        activityScenarioRule.scenario.onActivity { activity: A ->
+          activityClass = activity.javaClass
+        }
         statement.evaluate()
-        onDevice().perform(setScreenOrientation(orientationToRestore))
+        // TODO(b/246819348) Screen orientation cannot be rotated without an activity in the RESUMED
+        // stage on some API levels.
+        ActivityScenario.launch(activityClass).use {
+          onDevice().perform(setScreenOrientation(orientationToRestore))
+        }
       }
     }
   }

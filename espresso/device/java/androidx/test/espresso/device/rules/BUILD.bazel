@@ -14,8 +14,10 @@ kt_android_library(
     testonly = 1,
     srcs = glob(["*.kt"]),
     deps = [
+        "//core/java/androidx/test/core",
         "//espresso/device/java/androidx/test/espresso/device:device_api",
         "//espresso/device/java/androidx/test/espresso/device/action",
+        "//ext/junit",
         "//runner/monitor",
         "@maven//:junit_junit",
     ],
