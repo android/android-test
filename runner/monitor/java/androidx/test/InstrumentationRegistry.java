@@ -23,21 +23,24 @@ import com.google.errorprone.annotations.InlineMe;
 
 /**
  * An exposed registry instance that holds a reference to the instrumentation running in the process
- * and its arguments. Also provides an easy way for callers to get a hold of instrumentation,
- * application context and instrumentation arguments Bundle.
+ * and the instrumentation arguments. Provides an easy way for callers to get access to the
+ * instrumentation, application context, and instrumentation arguments bundle.
  *
- * @deprecated use {@link androidx.test.core.app.ApplicationProvider} or {@link
- *     androidx.test.platform.app.InstrumentationRegistry} instead
+ * @deprecated Use {@link androidx.test.platform.app.InstrumentationRegistry} or <code>
+ *     <a href="/reference/androidx/test/core/app/ApplicationProvider">
+ *     androidx.test.core.app.ApplicationProvider</a></code> instead.
  */
 @Deprecated
 public final class InstrumentationRegistry {
 
   /**
-   * Returns the instrumentation currently running. Use this to get an {@link Instrumentation} into
-   * your test.
+   * Returns the instrumentation currently running. Use this method to get an <code>
+   * <a href="/reference/android/app/Instrumentation">Instrumentation</a></code> into your test.
    *
-   * @throws IllegalStateException if instrumentation hasn't been registered
-   * @deprecated use {@link androidx.test.platform.app.InstrumentationRegistry#getInstrumentation()}
+   * @return The current instrumentation.
+   * @throws IllegalStateException If instrumentation hasn't been registered.
+   * @deprecated Use {@link androidx.test.platform.app.InstrumentationRegistry#getInstrumentation()
+   *     androidx.test.platform.app.InstrumentationRegistry#getInstrumentation()}.
    */
   @InlineMe(replacement = "androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()")
   @Deprecated
@@ -46,14 +49,17 @@ public final class InstrumentationRegistry {
   }
 
   /**
-   * Returns a copy of instrumentation arguments Bundle. Use this to get a {@link Bundle} containing
-   * the command line arguments passed to {@link Instrumentation} into your test.
+   * Returns a copy of the instrumentation arguments bundle. Use this method to get a <code>
+   * <a href="/reference/android/os/Bundle">Bundle</a></code> containing the command-line arguments
+   * passed to <code><a href="/reference/android/app/Instrumentation">Instrumentation</a></code>
+   * into your test.
    *
-   * <p>This Bundle is not guaranteed to be present under all instrumentations.
+   * <p>The bundle is not guaranteed to be present under all instrumentations.
    *
-   * @return Bundle the arguments for this instrumentation.
-   * @throws IllegalStateException if no argument Bundle has been registered.
-   * @deprecated use {@link androidx.test.platform.app.InstrumentationRegistry#getArguments()}
+   * @return The arguments bundle for this instrumentation.
+   * @throws IllegalStateException If no argument bundle has been registered.
+   * @deprecated Use {@link androidx.test.platform.app.InstrumentationRegistry#getArguments()
+   *     androidx.test.platform.app.InstrumentationRegistry#getArguments()}.
    */
   @InlineMe(replacement = "androidx.test.platform.app.InstrumentationRegistry.getArguments()")
   @Deprecated
@@ -62,14 +68,19 @@ public final class InstrumentationRegistry {
   }
 
   /**
-   * Return the Context of this instrumentation's package. Use this to get a {@link Context}
-   * representing {@link Instrumentation#getContext()} into your test.
+   * Returns the context of this instrumentation's package. Use this method to get a <code>
+   * <a href="/reference/android/content/Context">Context</a></code> representing <code>
+   * <a href="/reference/android/app/Instrumentation#getContext()">Instrumentation#getContext()</a>
+   * </code> into your test.
    *
-   * @deprecated In most scenarios, {@link
-   *     androidx.test.core.app.ApplicationProvider#getApplicationContext()} should be used instead
-   *     of the instrumentation test context. If you do need access to the test context for to
-   *     access its resources, it is recommended to use {@link
-   *     android.content.pm.PackageManager#getResourcesForApplication(String)} instead.
+   * @return The instrumentation context.
+   * @deprecated In most scenarios, <code>
+   *     <a href="/reference/androidx/test/core/app/ApplicationProvider#getApplicationContext()">
+   *     androidx.test.core.app.ApplicationProvider#getApplicationContext()</a></code> should be
+   *     used instead of the instrumentation test context. If you do need access to the test context
+   *     to access its resources, use <code>
+   *     <a href="/reference/android/content/pm/PackageManager#getResourcesForApplication(java.lang.String)">
+   *     android.content.pm.PackageManager#getResourcesForApplication(String)</a></code> instead.
    */
   @Deprecated
   public static Context getContext() {
@@ -77,11 +88,15 @@ public final class InstrumentationRegistry {
   }
 
   /**
-   * Return a Context for the target application being instrumented. Use this to get a {@link
-   * Context} representing {@link Instrumentation#getTargetContext()} into your test.
+   * Returns a context for the target application being instrumented. Use this method to get a
+   * <code><a href="/reference/android/content/Context">Context</a></code> representing <code>
+   * <a href="/reference/android/app/Instrumentation#getTargetContext()">
+   * Instrumentation#getTargetContext()</a></code> into your test.
    *
-   * @deprecated use {@link androidx.test.core.app.ApplicationProvider#getApplicationContext()}
-   *     instead.
+   * @return The target application context.
+   * @deprecated Use <code>
+   *     <a href="/reference/androidx/test/core/app/ApplicationProvider#getApplicationContext()">
+   *     androidx.test.core.app.ApplicationProvider#getApplicationContext()</a></code>.
    */
   @Deprecated
   public static Context getTargetContext() {
@@ -91,15 +106,17 @@ public final class InstrumentationRegistry {
 
   /**
    * Records/exposes the instrumentation currently running and stores a copy of the instrumentation
-   * arguments Bundle in the registry.
+   * arguments bundle in the registry.
    *
-   * <p>This is a global registry - so be aware of the impact of calling this method!
+   * <p>This is a global registry, so be aware of the impact of calling this method!
    *
-   * @param instrumentation the instrumentation currently running.
-   * @param arguments the arguments for this application. Null deregisters any existing arguments.
-   * @deprecated use {@link
+   * @param instrumentation The instrumentation currently running.
+   * @param arguments The arguments for this application. Null deregisters any existing arguments.
+   * @deprecated Use {@link
    *     androidx.test.platform.app.InstrumentationRegistry#registerInstance(Instrumentation,
-   *     Bundle)}
+   *     Bundle)
+   *     androidx.test.platform.app.InstrumentationRegistry#registerInstance(Instrumentation,
+   *     Bundle)}.
    */
   @InlineMe(
       replacement =
