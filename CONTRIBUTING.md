@@ -85,8 +85,7 @@ eg to run the androidx-test-core tests
 bazel test //core/javatests/... --spawn_strategy=local --host_force_python=PY2
 ```
 
-To run all the robolectric local tests (and thus replicate the Google Cloud
-Build CI) `bazel test ... --test_tag_filters=robolectric
+To run all the robolectric local tests (and thus replicate the GitHub CI) `bazel test ... --test_tag_filters=robolectric
 --build_tag_filters=robolectric`
 
 ### Troubleshooting
