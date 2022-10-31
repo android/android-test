@@ -338,37 +338,36 @@ public final class MotionEvents {
   }
 
   private static MotionEvent obtain(
-          long downTime,
-          long eventTime,
-          int action,
-          float[] coordinates,
-          float xPrecision,
-          float yPrecision,
-          int source,
-          int buttonState) {
+      long downTime,
+      long eventTime,
+      int action,
+      float[] coordinates,
+      float xPrecision,
+      float yPrecision,
+      int source,
+      int buttonState) {
     return obtain(
-            downTime,
-            eventTime,
-            action,
-            coordinates,
-            xPrecision,
-            yPrecision,
-            source,
-            mapInputDeviceToToolType(source),
-            buttonState);
+        downTime,
+        eventTime,
+        action,
+        coordinates,
+        xPrecision,
+        yPrecision,
+        source,
+        mapInputDeviceToToolType(source),
+        buttonState);
   }
 
   private static MotionEvent obtain(
-          long downTime,
-          long eventTime,
-          int action,
-          float[] coordinates,
-          float xPrecision,
-          float yPrecision,
-          int source,
-          int toolType,
-          int buttonState
-  ) {
+      long downTime,
+      long eventTime,
+      int action,
+      float[] coordinates,
+      float xPrecision,
+      float yPrecision,
+      int source,
+      int toolType,
+      int buttonState) {
     final MotionEvent.PointerCoords[] pointerCoords = {new MotionEvent.PointerCoords()};
     final MotionEvent.PointerProperties[] pointerProperties = getPointerProperties(toolType);
     pointerCoords[0].clear();

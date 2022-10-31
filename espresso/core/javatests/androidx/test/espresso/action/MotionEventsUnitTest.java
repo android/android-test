@@ -42,6 +42,7 @@ public class MotionEventsUnitTest {
    * source for events obtained through {@link MotionEvent#obtain} may be different.
    */
   private static final int DEFAULT_SOURCE = InputDevice.SOURCE_UNKNOWN;
+
   private static final int DEFAULT_TOOL_TYPE = MotionEvent.TOOL_TYPE_UNKNOWN;
 
   private static void verifyEvent(
@@ -129,9 +130,7 @@ public class MotionEventsUnitTest {
         MotionEvent.TOOL_TYPE_MOUSE);
   }
 
-  /**
-   * Regression test for #1458
-   */ 
+  /** Regression test for #1458 */
   @Test
   public void testObtainUp_toolTypeFromDownEvent() {
     final MotionEvent down =
