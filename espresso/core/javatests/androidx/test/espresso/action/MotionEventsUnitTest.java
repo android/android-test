@@ -43,6 +43,8 @@ public class MotionEventsUnitTest {
    */
   private static final int DEFAULT_SOURCE = InputDevice.SOURCE_UNKNOWN;
 
+  private static final int DEFAULT_TOOL_TYPE = MotionEvent.TOOL_TYPE_UNKNOWN;
+
   private static void verifyEvent(
       MotionEvent event,
       int action,
@@ -50,7 +52,8 @@ public class MotionEventsUnitTest {
       float[] coords,
       float[] precision,
       int source,
-      int buttonState) {
+      int buttonState,
+      int toolType) {
     assertWithMessage("not null").that(event).isNotNull();
     assertWithMessage("action").that(event.getAction()).isEqualTo(action);
     assertWithMessage("down time").that(event.getDownTime()).isEqualTo(downTime);
@@ -60,6 +63,7 @@ public class MotionEventsUnitTest {
     assertWithMessage("Y precision").that(event.getYPrecision()).isEqualTo(precision[1]);
     assertWithMessage("source").that(event.getSource()).isEqualTo(source);
     assertWithMessage("button state").that(event.getButtonState()).isEqualTo(buttonState);
+    assertWithMessage("tool type").that(event.getToolType(0)).isEqualTo(toolType);
   }
 
   @Test
@@ -72,7 +76,8 @@ public class MotionEventsUnitTest {
         COORDINATES,
         PRECISION,
         DEFAULT_SOURCE,
-        DEFAULT_BUTTON_STATE);
+        DEFAULT_BUTTON_STATE,
+        DEFAULT_TOOL_TYPE);
   }
 
   @Test
@@ -87,7 +92,8 @@ public class MotionEventsUnitTest {
         COORDINATES,
         PRECISION,
         InputDevice.SOURCE_MOUSE,
-        BUTTON_STATE);
+        BUTTON_STATE,
+        MotionEvent.TOOL_TYPE_MOUSE);
   }
 
   @Test
@@ -103,7 +109,8 @@ public class MotionEventsUnitTest {
         COORDINATES_1,
         PRECISION,
         InputDevice.SOURCE_MOUSE,
-        BUTTON_STATE);
+        BUTTON_STATE,
+        MotionEvent.TOOL_TYPE_MOUSE);
   }
 
   @Test
@@ -119,6 +126,27 @@ public class MotionEventsUnitTest {
         COORDINATES_1,
         PRECISION,
         InputDevice.SOURCE_MOUSE,
-        BUTTON_STATE);
+        BUTTON_STATE,
+        MotionEvent.TOOL_TYPE_MOUSE);
+  }
+
+  /** Regression test for #1458 */
+  @Test
+  public void testObtainUp_toolTypeFromDownEvent() {
+    final MotionEvent down =
+        MotionEvents.obtainDownEvent(
+            COORDINATES, PRECISION, InputDevice.SOURCE_TOUCHSCREEN, BUTTON_STATE);
+    // toolType here will be TOOL_TYPE_FINGER, but lets reset source
+    down.setSource(InputDevice.SOURCE_UNKNOWN);
+    final MotionEvent up = MotionEvents.obtainUpEvent(down, COORDINATES_1);
+    verifyEvent(
+        up,
+        ACTION_UP,
+        down.getEventTime(),
+        COORDINATES_1,
+        PRECISION,
+        InputDevice.SOURCE_UNKNOWN,
+        BUTTON_STATE,
+        MotionEvent.TOOL_TYPE_FINGER);
   }
 }

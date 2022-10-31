@@ -9,6 +9,10 @@ load(
     "//build_extensions:test_devices.bzl",
     "devices",
 )
+load(
+    "//build_extensions:android_library_local_tests.bzl",
+    "android_library_local_tests",
+)
 
 android_app_instrumentation_tests(
     name = "instrumentation_tests",
@@ -52,5 +56,17 @@ android_app_instrumentation_tests(
         "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:org_mockito_mockito_core",
         "@maven//:org_objenesis_objenesis",
+    ],
+)
+
+android_library_local_tests(
+    name = "localtests",
+    srcs = ["MotionEventsUnitTest.java"],
+    deps = [
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "@maven//:junit_junit",
+        "@maven//:com_google_truth_truth",
     ],
 )
