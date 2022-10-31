@@ -81,7 +81,7 @@ internal class DeviceControllerModule {
   private fun getEmulatorGRPCPort(): Int {
     val clazz = Class.forName("android.os.SystemProperties")
     val getter: Method = clazz.getMethod("get", String::class.java)
-    var gRpcPort = getter.invoke(clazz, "mdevx.grpc_port") as String
+    var gRpcPort = getter.invoke(clazz, "mdevx.grpc_guest_port") as String
     if (gRpcPort.isBlank()) {
       throw DeviceControllerOperationException(
         "Unable to connect to Emulator gRPC port. Please make sure the controller gRPC service is" +
