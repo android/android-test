@@ -19,6 +19,7 @@ android_library(
     ),
     manifest = "AndroidManifest.xml",
     deps = [
+        "//java/com/google/android/apps/common/testing/accessibility/framework/integrations/internal/rules:espresso",
         "//:androidx_annotation",
         "//core",
         "//runner/monitor",

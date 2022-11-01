@@ -16,6 +16,7 @@
 
 package androidx.test.ext.junit.runners;
 
+import com.google.android.apps.common.testing.accessibility.framework.integrations.internal.rules.AccessibilityChecksRule;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -51,6 +52,9 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
   private static final String TAG = "AndroidJUnit4";
 
   private final Runner delegate;
+
+  private final AccessibilityChecksRule accessibilityChecksRule =
+      AccessibilityChecksRule.newBuilder().build();
 
   public AndroidJUnit4(Class<?> klass) throws InitializationError {
     delegate = loadRunner(klass);
