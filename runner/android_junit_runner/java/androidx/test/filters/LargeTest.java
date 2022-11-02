@@ -22,22 +22,22 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to assign a large test size qualifier to a test. This annotation can be used at a
+ * Annotation to assign a large test size qualifier to a test. This annotation can be used at the
  * method or class level.
  *
  * <p>Test size qualifiers are a great way to structure test code and are used to assign a test to a
- * test suite of similar run time.
+ * suite of tests that have similar run times.
  *
  * <p>Execution time: &gt;1000ms
  *
  * <p>Large tests should be focused on testing integration of all application components. These
  * tests fully participate in the system and may make use of all resources such as databases, file
- * systems and network. As a rule of thumb most functional UI tests are large tests.
+ * systems, and networks. As a rule of thumb, most functional UI tests are large tests.
  *
- * <p>Note: This class replaces the deprecated Android platform size qualifier <a
+ * <p><b>Note:</b> This class replaces the deprecated Android platform size qualifier <a
  * href="{@docRoot}reference/android/test/suitebuilder/annotation/LargeTest.html"><code>
  * android.test.suitebuilder.annotation.LargeTest</code></a> and is the recommended way to annotate
- * tests written with the AndroidX Test Library.
+ * tests written with the AndroidX Test libraries.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
