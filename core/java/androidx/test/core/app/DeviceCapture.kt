@@ -126,7 +126,14 @@ fun takeScreenshotNoSync(): Bitmap {
   // committed
   mainExecutor.execute {
     Choreographer.getInstance().postFrameCallback {
-      val bitmap = uiAutomation.takeScreenshot()
+      // do multiple retries of uiAutomation.takeScreenshot because it is known to return null
+      // on API 31+ b/257274080
+      var bitmap: Bitmap? = null
+      var i = 0
+      while (i < 3 && bitmap == null) {
+        bitmap = uiAutomation.takeScreenshot()
+        i++
+      }  
       if (bitmap == null) {
         bitmapFuture.setException(RuntimeException("uiAutomation.takeScreenshot returned null"))
       } else {
