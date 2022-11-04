@@ -27,10 +27,13 @@ import android.os.Build
  * device properties.
  */
 fun isTestDeviceAnEmulator(): Boolean {
-  val qemu: String? = System.getProperty("ro.kernel.qemu", "?")
-  return qemu.equals("1") ||
-    Build.HARDWARE.contains("goldfish") ||
-    Build.HARDWARE.contains("ranchu")
+  // TODO(b/65053549) Remove once we have a more generic solution
+  val EMULATOR_HARDWARE_GOLDFISH = "goldfish"
+  val EMULATOR_HARDWARE_RANCHU = "ranchu"
+  val EMULATOR_HARDWARE_GCE = "gce_x86"
+  val emulatorHardwareNames: HashSet<String> =
+    hashSetOf(EMULATOR_HARDWARE_GOLDFISH, EMULATOR_HARDWARE_RANCHU, EMULATOR_HARDWARE_GCE)
+  return emulatorHardwareNames.contains(Build.HARDWARE)
 }
 
 /**
