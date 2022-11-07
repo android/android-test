@@ -21,6 +21,7 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
 import androidx.test.annotation.ExperimentalTestApi;
@@ -41,7 +42,6 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Provides convenient I/O operations for reading/writing testing relevant files, properties in a
@@ -71,7 +71,7 @@ public final class TestStorage implements PlatformTestStorage {
    * @param contentResolver the content resolver that shall be used to resolve a URI in the test
    *     storage service. Should not be null.
    */
-  public TestStorage(@Nonnull ContentResolver contentResolver) {
+  public TestStorage(@NonNull ContentResolver contentResolver) {
     this.contentResolver = contentResolver;
   }
 
@@ -89,7 +89,7 @@ public final class TestStorage implements PlatformTestStorage {
    *     "/sdcard/test_input_files/path/to/my_input.txt" on device.
    * @return a content Uri to the test file dependency.
    */
-  public static Uri getInputFileUri(@Nonnull String pathname) {
+  public static Uri getInputFileUri(@NonNull String pathname) {
     checkNotNull(pathname);
     return HostedFile.buildUri(HostedFile.FileHost.TEST_FILE, pathname);
   }
@@ -107,7 +107,7 @@ public final class TestStorage implements PlatformTestStorage {
    *     "/path/to/my_output.txt", the file will end up at
    *     "/sdcard/test_output_files/path/to/my_output.txt" on device.
    */
-  public static Uri getOutputFileUri(@Nonnull String pathname) {
+  public static Uri getOutputFileUri(@NonNull String pathname) {
     checkNotNull(pathname);
     return HostedFile.buildUri(HostedFile.FileHost.OUTPUT, pathname);
   }
@@ -124,7 +124,7 @@ public final class TestStorage implements PlatformTestStorage {
    * @throws FileNotFoundException if pathname does not exist
    */
   @Override
-  public InputStream openInputFile(@Nonnull String pathname) throws FileNotFoundException {
+  public InputStream openInputFile(@NonNull String pathname) throws FileNotFoundException {
     Uri dataUri = getInputFileUri(pathname);
     return TestStorageUtil.getInputStream(dataUri, contentResolver);
   }
@@ -144,7 +144,7 @@ public final class TestStorage implements PlatformTestStorage {
    * @param argName the argument name. Should not be null.
    */
   @Override
-  public String getInputArg(@Nonnull String argName) {
+  public String getInputArg(@NonNull String argName) {
     checkNotNull(argName);
 
     Uri testArgUri = PropertyFile.buildUri(Authority.TEST_ARGS, argName);
@@ -199,7 +199,7 @@ public final class TestStorage implements PlatformTestStorage {
    * @return an OutputStream to the given output file.
    */
   @Override
-  public OutputStream openOutputFile(@Nonnull String pathname) throws FileNotFoundException {
+  public OutputStream openOutputFile(@NonNull String pathname) throws FileNotFoundException {
     return openOutputFile(pathname, false);
   }
 
@@ -216,7 +216,7 @@ public final class TestStorage implements PlatformTestStorage {
    * @return an OutputStream to the given output file.
    */
   @Override
-  public OutputStream openOutputFile(@Nonnull String pathname, boolean append)
+  public OutputStream openOutputFile(@NonNull String pathname, boolean append)
       throws FileNotFoundException {
     checkNotNull(pathname);
     Uri outputUri = getOutputFileUri(pathname);

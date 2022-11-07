@@ -25,7 +25,6 @@ android_library(
         "//annotation",
         "//runner/monitor",
         "//services/storage/java/androidx/test/services/storage/file",
-        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
@@ -71,7 +70,6 @@ maven_artifact(
     artifact_deps = [
         "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
         "androidx.test:monitor:[%s]" % MONITOR_VERSION,
-        "com.google.code.findbugs:jsr305:2.0.2",
         "androidx.test:annotation:%s" % ANNOTATION_VERSION,
     ],
     artifact_id = "storage",
