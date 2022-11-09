@@ -1,7 +1,7 @@
 """Defines current AXT versions and dependencies."""
 
 # AXT versions
-RUNNER_VERSION = "1.5.0"  # stable 1.5.0
+RUNNER_VERSION = "1.5.1"  # stable 1.5.1
 RULES_VERSION = "1.5.0"  # stable 1.5.0
 MONITOR_VERSION = "1.6.0"  # stable 1.6.0
 ESPRESSO_VERSION = "3.5.0"  # stable 3.5.0
