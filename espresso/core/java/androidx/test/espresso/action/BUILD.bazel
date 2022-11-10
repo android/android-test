@@ -13,6 +13,7 @@ android_library(
     name = "adapter_view_protocol",
     srcs = ADAPTER_VIEW_PROTOCOL,
     deps = [
+        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/core/java/androidx/test/espresso/util",
         "@com_google_protobuf//:protobuf_javalite",

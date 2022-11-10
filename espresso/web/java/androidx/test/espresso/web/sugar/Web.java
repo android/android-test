@@ -25,6 +25,7 @@ import static org.hamcrest.Matchers.any;
 
 import android.view.View;
 import androidx.annotation.CheckResult;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
@@ -43,7 +44,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
 import org.hamcrest.Matcher;
 
 /**

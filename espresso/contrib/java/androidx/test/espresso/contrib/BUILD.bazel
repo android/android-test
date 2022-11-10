@@ -74,7 +74,6 @@ android_library(
     srcs = ["RecyclerViewActions.java"],
     visibility = ["//visibility:public"],
     deps = [
-        ":guava_checks",
         "//:androidx_annotation",
         "//:androidx_core",
         "//:androidx_legacy_support_core_ui",
@@ -83,6 +82,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
+        "//runner/monitor",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
@@ -127,7 +127,6 @@ android_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        ":guava_checks",
         "//espresso/core/java/androidx/test/espresso",
         "//runner/android_junit_runner",
         "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework",
@@ -174,12 +173,6 @@ android_library(
 )
 
 android_library(
-    name = "guava_checks",
-    srcs = ["Checks.java"],
-    deps = ["@maven//:com_google_code_findbugs_jsr305"],
-)
-
-android_library(
     name = "espresso_contrib_release_lib",
     testonly = 1,
     exports = [
@@ -187,7 +180,6 @@ android_library(
         ":activity_result_matchers",
         ":design_lib_actions",
         ":drawer_actions",
-        ":guava_checks",
         ":picker_actions",
         ":recycler_view",
         ":view_pager_actions",

@@ -22,10 +22,10 @@ import android.database.Cursor;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.util.EspressoOptional;
 import androidx.test.espresso.util.HumanReadables;
 import java.util.Locale;
-import javax.annotation.Nullable;
 
 /**
  * A sadly necessary layer of indirection to interact with AdapterViews.

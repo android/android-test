@@ -30,6 +30,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
@@ -47,7 +48,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import javax.annotation.Nullable;
 import org.hamcrest.Matcher;
 
 /**

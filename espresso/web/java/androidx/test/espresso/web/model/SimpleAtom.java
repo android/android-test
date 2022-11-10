@@ -18,10 +18,10 @@ package androidx.test.espresso.web.model;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.Nullable;
 
 /** A simple implementation of Atom suitable for subclassing. */
 public class SimpleAtom implements Atom<Evaluation> {

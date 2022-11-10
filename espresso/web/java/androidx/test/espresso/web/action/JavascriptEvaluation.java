@@ -29,6 +29,7 @@ import android.os.Message;
 import android.webkit.ValueCallback;
 import android.webkit.WebHistoryItem;
 import android.webkit.WebView;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.web.model.Evaluation;
 import androidx.test.espresso.web.model.ModelCodec;
 import androidx.test.espresso.web.model.WindowReference;
@@ -44,7 +45,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
-import javax.annotation.Nullable;
 
 /**
  * Wraps scripts into WebDriver atoms, which are used to ensure consistent behaviour cross-browser.

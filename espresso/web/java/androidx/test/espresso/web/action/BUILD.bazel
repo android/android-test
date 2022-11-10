@@ -19,6 +19,7 @@ android_library(
     idl_import_root = "idls",
     idl_srcs = glob(["idls/**"]),
     deps = [
+        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
@@ -30,9 +31,9 @@ android_library(
         "//opensource/java_lib:EvaluationAtom",
         "//opensource/java_lib:webbridge",
         "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_guava_guava",
         "@maven//:org_hamcrest_hamcrest_all",
-        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 

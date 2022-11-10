@@ -30,6 +30,7 @@ import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SearchView;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.InjectEventSecurityException;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
@@ -38,7 +39,6 @@ import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import androidx.test.espresso.util.HumanReadables;
 import java.util.Locale;
-import javax.annotation.Nullable;
 import org.hamcrest.Matcher;
 
 /** Enables typing text on views. */

@@ -29,6 +29,7 @@ import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import androidx.annotation.NonNull;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
@@ -36,7 +37,6 @@ import androidx.test.espresso.ViewAssertion;
 import com.google.errorprone.annotations.CheckReturnValue;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-import javax.annotation.Nonnull;
 import org.hamcrest.Matcher;
 
 /** A collection of common {@link ViewActions}. */
@@ -464,7 +464,7 @@ public final class ViewActions {
    *   <li>must be assignable from EditText
    * </ul>
    */
-  public static ViewAction replaceText(@Nonnull String stringToBeSet) {
+  public static ViewAction replaceText(@NonNull String stringToBeSet) {
     return actionWithAssertions(new ReplaceTextAction(stringToBeSet));
   }
 

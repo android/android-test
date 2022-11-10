@@ -18,10 +18,10 @@ package androidx.test.espresso.web.model;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import androidx.annotation.Nullable;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import java.util.List;
-import javax.annotation.Nullable;
 
 /**
  * Decorates another atom and transforms its output to another type.

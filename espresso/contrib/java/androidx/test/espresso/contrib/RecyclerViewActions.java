@@ -16,10 +16,10 @@
 
 package androidx.test.espresso.contrib;
 
-import static androidx.test.espresso.contrib.Checks.checkArgument;
-import static androidx.test.espresso.contrib.Checks.checkNotNull;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.internal.util.Checks.checkArgument;
+import static androidx.test.internal.util.Checks.checkNotNull;
 import static org.hamcrest.Matchers.allOf;
 
 import androidx.recyclerview.widget.RecyclerView;

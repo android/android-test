@@ -16,8 +16,8 @@
 
 package androidx.test.espresso.web.model;
 
+import androidx.annotation.Nullable;
 import java.util.List;
-import javax.annotation.Nullable;
 
 /**
  * An Atom is a thin wrapper around javascript.
