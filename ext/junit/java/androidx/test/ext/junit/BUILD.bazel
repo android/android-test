@@ -19,9 +19,21 @@ android_library(
     ),
     manifest = "AndroidManifest.xml",
     deps = [
+        "//espresso/accessibility/java/androidx/test/espresso/accessibility:accessibility_checks",
+        "//java/com/google/android/apps/common/testing/accessibility/framework",
+        "//java/com/google/android/apps/common/testing/accessibility/framework/integrations/espresso",
+        "//java/com/google/android/apps/common/testing/accessibility/framework/integrations/reporting",
+        "//java/com/google/testing/screendiffing/android",
+        "//third_party/android/androidx_test/espresso/core/java/androidx/test/espresso",
+        "//third_party/android/androidx_test/espresso/core/java/androidx/test/espresso/action",
+        "//third_party/android/androidx_test/services/storage",
+        "//third_party/java/androidx/appcompat",
+        "//third_party/java/android_libs/guava_jdk5:collect",
+        "//third_party/java/checker_framework_annotations",
         "//:androidx_annotation",
         "//core",
         "//runner/monitor",
+       
         "@maven//:junit_junit",
     ],
 )

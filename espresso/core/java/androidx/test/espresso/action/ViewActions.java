@@ -66,6 +66,7 @@ public final class ViewActions {
    *     global assertions.
    */
   public static void addGlobalAssertion(String name, ViewAssertion viewAssertion) {
+
     checkNotNull(name);
     checkNotNull(viewAssertion);
     Pair<String, ViewAssertion> vaPair = new Pair<String, ViewAssertion>(name, viewAssertion);
@@ -104,6 +105,7 @@ public final class ViewActions {
    * @param viewAction the {@code ViewAction} to perform after the assertions
    */
   public static ViewAction actionWithAssertions(final ViewAction viewAction) {
+    
     if (globalAssertions.isEmpty()) {
       return viewAction;
     }

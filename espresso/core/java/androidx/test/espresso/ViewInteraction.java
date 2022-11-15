@@ -71,6 +71,8 @@ public final class ViewInteraction {
 
   private static final String TAG = ViewInteraction.class.getSimpleName();
 
+  private static ViewAction alwaysOnAction = null;
+
   private final InterruptableUiController uiController;
   private final ViewFinder viewFinder;
   private final Executor mainThreadExecutor;
@@ -114,6 +116,10 @@ public final class ViewInteraction {
     this.tracer = tracer;
   }
 
+  public static void setAlwaysOnAction(ViewAction action) {
+    alwaysOnAction = action;
+  }
+
   /**
    * Performs the given action(s) on the view selected by the current view matcher. If more than one
    * action is provided, actions are executed in the order provided with precondition checks running
@@ -129,20 +135,34 @@ public final class ViewInteraction {
    */
   public ViewInteraction perform(final ViewAction... viewActions) {
     checkNotNull(viewActions);
+
+    boolean failed = false;
     for (ViewAction va : viewActions) {
-      int actionIndex = testFlowVisualizer.getLastActionIndexAndIncrement();
-      boolean testFlowEnabled = testFlowVisualizer.isEnabled();
-      if (testFlowEnabled) {
-        testFlowVisualizer.beforeActionGenerateTestArtifact(actionIndex);
-      }
-      SingleExecutionViewAction singleExecutionViewAction =
-          new SingleExecutionViewAction(va, viewMatcher);
-      desugaredPerform(singleExecutionViewAction, actionIndex, testFlowEnabled);
-      if (testFlowEnabled) {
-        testFlowVisualizer.afterActionGenerateTestArtifact(actionIndex);
+      performViewAction(va);
+    }
+
+    if (alwaysOnAction != null) {
+      try {
+        performViewAction(alwaysOnAction);
+      } catch (PerformException e) {
+        failed = true;
       }
     }
     return this;
+  }
+
+  private void performViewAction(ViewAction va) {
+    int actionIndex = testFlowVisualizer.getLastActionIndexAndIncrement();
+    boolean testFlowEnabled = testFlowVisualizer.isEnabled();
+    if (testFlowEnabled) {
+      testFlowVisualizer.beforeActionGenerateTestArtifact(actionIndex);
+    }
+    SingleExecutionViewAction singleExecutionViewAction =
+        new SingleExecutionViewAction(va, viewMatcher);
+    desugaredPerform(singleExecutionViewAction, actionIndex, testFlowEnabled);
+    if (testFlowEnabled) {
+      testFlowVisualizer.afterActionGenerateTestArtifact(actionIndex);
+    }
   }
 
   private static Map<String, IBinder> getIBindersFromBindables(List<Bindable> bindables) {
