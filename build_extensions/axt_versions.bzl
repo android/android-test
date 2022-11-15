@@ -4,7 +4,7 @@
 RUNNER_VERSION = "1.5.1"  # stable 1.5.1
 RULES_VERSION = "1.5.0"  # stable 1.5.0
 MONITOR_VERSION = "1.6.0"  # stable 1.6.0
-ESPRESSO_VERSION = "3.5.0"  # stable 3.5.0
+ESPRESSO_VERSION = "3.6.0-alpha01"  # stable 3.5.0
 CORE_VERSION = "1.5.0"  # stable 1.5.0
 ESPRESSO_DEVICE_VERSION = "1.0.0-alpha03"
 ANDROIDX_JUNIT_VERSION = "1.1.4"  # stable 1.1.4

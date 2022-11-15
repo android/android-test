@@ -51,13 +51,22 @@ public final class DefaultFailureHandler implements FailureHandler {
   private static final AtomicInteger failureCount = new AtomicInteger(0);
   private final List<FailureHandler> handlers = new ArrayList<>();
   private final PlatformTestStorage testStorage;
+  private final boolean captureScreenshotOnFailure;
 
   public DefaultFailureHandler(@TargetContext Context appContext) {
-    this(appContext, PlatformTestStorageRegistry.getInstance());
+    this(appContext, PlatformTestStorageRegistry.getInstance(), true);
+  }
+
+  public DefaultFailureHandler(
+      @TargetContext Context appContext, boolean captureScreenshotOnFailure) {
+    this(appContext, PlatformTestStorageRegistry.getInstance(), captureScreenshotOnFailure);
   }
 
   @Inject
-  DefaultFailureHandler(@TargetContext Context appContext, PlatformTestStorage testStorage) {
+  DefaultFailureHandler(
+      @TargetContext Context appContext,
+      PlatformTestStorage testStorage,
+      boolean captureScreenshotOnFailure) {
     // Adds a chain of exception handlers.
     // Order matters and a matching failure handler in the chain will throw after the exception is
     // handled. Always adds the handler of the child class ahead of its superclasses to make sure
@@ -69,6 +78,7 @@ public final class DefaultFailureHandler implements FailureHandler {
     //                  ---------> Throwable
     // AssertionError ----------->
     this.testStorage = testStorage;
+    this.captureScreenshotOnFailure = captureScreenshotOnFailure;
     handlers.add(
         new ViewHierarchyExceptionHandler<>(
             testStorage,
@@ -120,6 +130,9 @@ public final class DefaultFailureHandler implements FailureHandler {
   }
 
   private void takeScreenshot(String outputName) {
+    if (!captureScreenshotOnFailure) {
+      return;
+    }
     try {
       if (DeviceCapture.canTakeScreenshot()) {
         BitmapStorage.writeToTestStorage(

@@ -194,7 +194,7 @@ public class BaseLayerModule {
   @Provides
   DefaultFailureHandler provideDefaultFailureHander(
       @TargetContext Context context, PlatformTestStorage testStorage) {
-    return new DefaultFailureHandler(context, testStorage);
+    return new DefaultFailureHandler(context, testStorage, true);
   }
 
   @Provides

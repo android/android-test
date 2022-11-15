@@ -495,6 +495,7 @@ package androidx.test.espresso.base {
 
   public final class DefaultFailureHandler implements androidx.test.espresso.FailureHandler {
     ctor public DefaultFailureHandler(@androidx.test.espresso.internal.inject.TargetContext android.content.Context!);
+    ctor public DefaultFailureHandler(@androidx.test.espresso.internal.inject.TargetContext android.content.Context!, boolean);
     method public void handle(Throwable!, org.hamcrest.Matcher<android.view.View!>!);
   }
 
