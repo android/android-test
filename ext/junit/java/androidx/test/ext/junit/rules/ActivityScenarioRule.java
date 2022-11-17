@@ -43,11 +43,12 @@ import org.junit.rules.ExternalResource;
  *
  * <pre>
  *   &#64;Rule
- *   public ActivityScenarioRule<MyActivity> rule = new ActivityScenarioRule<>(MyActivity.class);
+ *   public ActivityScenarioRule&lt;MyActivity&gt; rule =
+ *       new ActivityScenarioRule&lt;&gt;(MyActivity.class);
  *
  *   &#64;Test
  *   public void myTest() {
- *     ActivityScenario<MyActivity> scenario = rule.getScenario();
+ *     ActivityScenario&lt;MyActivity&gt; scenario = rule.getScenario();
  *     // Your test code goes here.
  *   }
  * </pre>
