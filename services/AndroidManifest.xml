@@ -39,7 +39,7 @@
    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
    <application android:label="TestServices"
-                android:name="android.support.multidex.MultiDexApplication"
+                android:name="androidx.multidex.MultiDexApplication"
                 android:directBootAware="true"
                 android:requestLegacyExternalStorage = "true"
                 tools:replace="android:label">
@@ -84,12 +84,6 @@
         android:directBootAware="true"
         android:exported="true"
         android:grantUriPermissions="true" />
-    <provider
-        android:name="androidx.test.services.storage.provider.TestDiagnosticsContentProvider"
-        android:authorities="androidx.test.services.storage.diagnostics"
-        android:directBootAware="true"
-        android:exported="true"
-        android:grantUriPermissions="true"/>
   </application>
 
 </manifest>

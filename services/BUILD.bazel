@@ -20,12 +20,14 @@ android_binary(
         "//:proguard_binary.cfg",
         "proguard_library.cfg",
     ],
+    multidex = "legacy",
     visibility = ["//visibility:public"],
     deps = [
         "//services/shellexecutor:exec_server",
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
         "//services/speakeasy/java/androidx/test/services/speakeasy/server",
         "//services/storage/java/androidx/test/services/storage/provider:storage_content_providers",
+        "//:androidx_multidex",
     ],
 )
 

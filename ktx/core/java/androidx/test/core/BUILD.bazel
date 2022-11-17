@@ -19,11 +19,6 @@ kt_android_library(
     srcs = glob(
         ["**/*.kt"],
     ),
-    # not supported in bazel
-    #kotlincopts = [
-    #    "-module-name",
-    #    "androidx.test.core.ktx",
-    #],
     deps = [
         "//:androidx_lifecycle_common",
         "//core",
@@ -45,7 +40,7 @@ android_library(
 axt_release_lib(
     name = "core_release",
     custom_package = "androidx.test.core.ktx",
-    keep_spec = "androidx/test/core|META-INF/androidx.test.core.kotlin_module",
+    keep_spec = "androidx/test/core|META-INF/ktx_core_java_androidx_test_core-core_kt.kotlin_module",
     overlapping_jars = [
         "//core/java/androidx/test/core:core_release_no_deps.jar",
     ],

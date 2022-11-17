@@ -40,7 +40,7 @@ android_library(
 axt_release_lib(
     name = "junit_release",
     custom_package = "androidx.test.ext.junit.ktx",
-    keep_spec = "androidx/test/ext/junit|META-INF/androidx.test.ext.junit.kotlin_module",
+    keep_spec = "androidx/test/ext/junit|META-INF/ktx_ext_junit_java_androidx_test_ext_junit-junit_kt.kotlin_module",
     overlapping_jars = [
         "//ext/junit/java/androidx/test/ext/junit:junit_release_no_deps.jar",
     ],
