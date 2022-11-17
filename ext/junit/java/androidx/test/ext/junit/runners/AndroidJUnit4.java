@@ -16,9 +16,35 @@
 
 package androidx.test.ext.junit.runners;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.os.Build;
+import android.os.StrictMode;
+import android.view.View;
+import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.ViewAssertion;
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.util.HumanReadables;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.platform.io.PlatformTestStorage;
+import androidx.test.services.storage.TestStorage;
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultDescriptor;
+import com.google.android.apps.common.testing.accessibility.framework.integrations.espresso.AccessibilityValidator;
+import com.google.android.apps.common.testing.accessibility.framework.integrations.internal.rules.CollectingListener;
+import com.google.android.apps.common.testing.accessibility.framework.integrations.internal.rules.UncheckedIOException;
+import com.google.android.apps.common.testing.accessibility.framework.integrations.reporting.ProtoWriter;
+import com.google.android.apps.common.testing.accessibility.framework.integrations.reporting.StepResult;
+import com.google.android.apps.common.testing.accessibility.framework.integrations.reporting.TestCaseResult;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -47,10 +73,67 @@ import org.junit.runners.model.InitializationError;
  * <p>Usage {@code @RunWith(AndroidJUnit4.class)}
  */
 public final class AndroidJUnit4 extends Runner implements Filterable, Sortable {
-
   private static final String TAG = "AndroidJUnit4";
+  private static final String TEST_SERVICES_PACKAGE_NAME =
+      "com.google.android.apps.common.testing.services";
 
   private final Runner delegate;
+  private final ProtoWriter protoWriter = new ProtoWriter();
+  private boolean assertionAdded = false;
+  private final CollectingListener collectingListener = new CollectingListener();
+  private final Logger logger = Logger.getLogger(AndroidJUnit4.class.getSimpleName());
+  private final AccessibilityValidator accessibilityValidator =
+      new AccessibilityValidator()
+          .setResultDescriptor(
+              new AccessibilityCheckResultDescriptor() {
+                @Override
+                public String describeView(View view) {
+                  return HumanReadables.describe(view);
+                }
+              })
+          .enablePassiveScanning()
+          .setRunChecksFromRootView(true)
+          .setSaveImages(false)
+          .setThrowExceptionFor(null)
+          .setCaptureScreenshots(false)
+          .addCheckListener(collectingListener);
+  private PlatformTestStorage testStorage = null;
+  private final ViewAssertion accessibilityCheckAssertion =
+      new ViewAssertion() {
+        @Override
+        public void check(View view, NoMatchingViewException noViewFoundException) {
+          if (noViewFoundException != null) {
+            logger.log(
+                Level.WARNING,
+                String.format(
+                    "'accessibility checks could not be performed because view '%s' was not"
+                        + "found.\n",
+                    noViewFoundException.getViewMatcherDescription()));
+            throw noViewFoundException;
+          }
+
+          if ((view == null) || (accessibilityValidator == null)) {
+            return;
+          }
+
+          StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
+          try {
+            accessibilityValidator.check(view);
+
+            if (testStorage == null) {
+              try {
+                testStorage =
+                    new TestStorage(view.getContext().getApplicationContext().getContentResolver());
+              } catch (Throwable e) {
+                testStorage = null;
+              }
+            }
+
+          } finally {
+            StrictMode.setThreadPolicy(originalPolicy);
+          }
+        }
+      };
 
   public AndroidJUnit4(Class<?> klass) throws InitializationError {
     delegate = loadRunner(klass);
@@ -159,7 +242,54 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
 
   @Override
   public void run(RunNotifier runNotifier) {
+    try {
+      logger.log(Level.INFO, ">>> Build.FINGERPRINT = " + Build.FINGERPRINT);
+    } catch (Throwable e) {
+      logger.log(Level.INFO, ">>> Build.FINGERPRINT is not available");
+    }
+    logger.log(Level.INFO, ">> dislayName = " + delegate.getDescription().getDisplayName());
+    logger.log(Level.INFO, ">> class name = " + delegate.getDescription().getClassName());
+    logger.log(
+        Level.INFO,
+        ">> test class simple Name = " + delegate.getDescription().getTestClass().getSimpleName());
+
+    String runnerClassName = getRunnerClassName();
+    ContentResolver contentResolver = null;
+    boolean isRunningGoogle3Test = false;
+    try {
+      Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+      contentResolver = context.getContentResolver();
+
+      isRunningGoogle3Test = isPackageInstalled(context, TEST_SERVICES_PACKAGE_NAME);
+      logger.log(Level.INFO, ">> isGoogle3Test = " + isRunningGoogle3Test);
+    } catch (RuntimeException e) {
+      contentResolver = null;
+      logger.log(Level.INFO, ">> Could not get content resolver");
+    }
+
+    if (!assertionAdded && isRunningGoogle3Test) {
+      logger.log(Level.INFO, ">> Add a11y checks global assertion");
+
+      try {
+        ViewActions.addGlobalAssertion("Accessibility Checks", accessibilityCheckAssertion);
+        assertionAdded = true;
+      } catch (Throwable e) {
+        logger.log(Level.INFO, ">> Could not add global assertion");
+      }
+    }
+
+    // Run the tests
     delegate.run(runNotifier);
+
+    if (assertionAdded) {
+      logger.log(Level.INFO, ">> Remove a11y checks global assertion");
+
+      ViewActions.removeGlobalAssertion(accessibilityCheckAssertion);
+      assertionAdded = false;
+      if (testStorage != null) {
+        writeFindingsToProtoFile("a11y_results.pb", getTestIdentifier(delegate.getDescription()));
+      }
+    }
   }
 
   @Override
@@ -170,5 +300,64 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
   @Override
   public void sort(Sorter sorter) {
     ((Sortable) delegate).sort(sorter);
+  }
+
+  private String getTestIdentifier(Description description) {
+    return String.format(
+        Locale.ENGLISH,
+        "%s.%s",
+        description.getTestClass().getSimpleName(),
+        description.getMethodName());
+  }
+
+  private void writeFindingsToProtoFile(String filename, String testCase) {
+    ImmutableList<StepResult> stepResults = collectingListener.getStepResults();
+    if (!hasFindings(stepResults)) {
+      // Always write a file even if there are no results.
+      // return;
+    }
+    try (OutputStream out = getTestOutputStream(filename)) {
+      protoWriter.write(out, getTestCaseResult(stepResults, testCase));
+    } catch (IOException e) {
+      throw new UncheckedIOException(String.format("Failed to write proto file: %s ", filename), e);
+    }
+  }
+
+  private TestCaseResult getTestCaseResult(ImmutableList<StepResult> stepResults, String testCase) {
+    return new TestCaseResult(testCase, stepResults);
+  }
+
+  private OutputStream getTestOutputStream(String outputPath) throws IOException {
+    return this.testStorage.openOutputFile(outputPath);
+  }
+
+  private static boolean hasFindings(List<StepResult> results) {
+    return FluentIterable.from(results)
+        .anyMatch(stepResult -> !stepResult.getCheckResults().isEmpty());
+  }
+
+  private static boolean isRobolectric() {
+    try {
+      return "robolectric".equals(Build.FINGERPRINT);
+    } catch (Throwable e) {
+      return false;
+    }
+  }
+
+  private static boolean isEspresso() {
+    try {
+      return "espresso".equals(Build.FINGERPRINT);
+    } catch (Throwable e) {
+      return false;
+    }
+  }
+
+  private static boolean isPackageInstalled(Context context, String packageName) {
+    try {
+      context.getPackageManager().getPackageInfo(packageName, 0);
+      return true;
+    } catch (Throwable e) {
+      return false;
+    }
   }
 }
