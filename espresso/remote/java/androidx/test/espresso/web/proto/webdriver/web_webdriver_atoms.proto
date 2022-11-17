@@ -3,9 +3,9 @@ syntax = "proto3";
 
 package google.test.remote.web.webdriver;
 
-option java_package = "androidx.test.espresso.web.proto.webdriver";
-
 import "google/protobuf/any.proto";
+
+option java_package = "androidx.test.espresso.web.proto.webdriver";
 
 message FindElementSimpleAtomProto {
   string id = 1;

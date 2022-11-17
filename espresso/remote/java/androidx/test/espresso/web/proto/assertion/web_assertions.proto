@@ -3,9 +3,9 @@ syntax = "proto3";
 
 package google.test.remote.web.assertion;
 
-option java_package = "androidx.test.espresso.web.proto.assertion";
-
 import "google/protobuf/any.proto";
+
+option java_package = "androidx.test.espresso.web.proto.assertion";
 
 message CheckResultAssertionProto {
   string id = 1;

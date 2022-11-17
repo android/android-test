@@ -4,21 +4,10 @@ licenses(["notice"])  # Apache License 2.0
 
 package(default_visibility = ["//visibility:public"])
 
-REMOTE_WEB_ASSERTIONS = [
-    "RemoteWebViewAssertions.java",
-    "CheckResultWebAssertionRemoteMessage.java",
-    "DocumentProtoConverters.java",
-    "DocumentToByteStringConverter.java",
-    "ByteStringToDocumentConverter.java",
-    "DocumentToByteStringConverter.java",
-    "CompressorDecompressor.java",
-]
-
 android_library(
     name = "assertion",
     srcs = glob(
         ["*.java"],
-        exclude = REMOTE_WEB_ASSERTIONS,
     ),
     deps = [
         "//:androidx_annotation",
@@ -30,27 +19,7 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/model",
         "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_guava_guava",
-        "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:org_ccil_cowan_tagsoup_tagsoup",
-    ],
-)
-
-android_library(
-    name = "remote_web_assertions",
-    srcs = glob(
-        REMOTE_WEB_ASSERTIONS,
-    ),
-    deps = [
-        ":assertion",
-        "//:androidx_annotation",
-        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
-        "//espresso/core/java/androidx/test/espresso/remote:interface",
-        "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
-        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
-        "//espresso/core/java/androidx/test/espresso/remote:registry",
-        "//espresso/web/java/androidx/test/espresso/web/proto/assertion:web_assertions_proto_android_pb3",
-        "//runner/android_junit_runner/java/androidx/test:runner",
-        "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )

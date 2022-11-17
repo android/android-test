@@ -23,8 +23,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/core/java/androidx/test/espresso/util",
         "@maven//:com_google_guava_guava",
-        "@maven//:org_hamcrest_hamcrest_all",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
 
@@ -38,8 +38,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso/proto/assertion:ui_interaction_view_assertions_android_pb3",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
-        "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
-        "//espresso/core/java/androidx/test/espresso/remote:registry",
+        "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/remote/java/androidx/test/espresso/remote:registry",
         "@maven//:com_google_guava_guava",
     ],
 )

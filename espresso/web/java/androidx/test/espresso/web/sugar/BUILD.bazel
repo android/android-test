@@ -2,15 +2,10 @@ licenses(["notice"])  # Apache License 2.0
 
 package(default_visibility = ["//visibility:public"])
 
-REMOTE_SUGAR = [
-    "RemoteWebSugar.java",
-]
-
 android_library(
     name = "sugar",
     srcs = glob(
         ["*.java"],
-        exclude = REMOTE_SUGAR,
     ),
     deps = [
         "//:androidx_annotation",
@@ -21,26 +16,8 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/assertion",
         "//espresso/web/java/androidx/test/espresso/web/model",
         "//runner/android_junit_runner",
+        "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_guava_guava",
         "@maven//:org_hamcrest_hamcrest_all",
-        "@maven//:com_google_code_findbugs_jsr305",
-    ],
-)
-
-android_library(
-    name = "remote_sugar",
-    srcs = glob(
-        REMOTE_SUGAR,
-    ),
-    deps = [
-        ":sugar",
-        "//:androidx_annotation",
-        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
-        "//espresso/core/java/androidx/test/espresso/remote:interface",
-        "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
-        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
-        "//espresso/core/java/androidx/test/espresso/remote:registry",
-        "//espresso/web/java/androidx/test/espresso/web/proto/sugar:web_sugar_proto_android_pb3",
-        "@maven//:com_google_guava_guava",
     ],
 )

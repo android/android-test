@@ -5,16 +5,10 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])  # Apache License 2.0
 
-REMOTE_WEB_MODEL_ATOMS = [
-    "RemoteWebModelAtoms.java",
-    "ScriptWithArgsSimpleAtomRemoteMessage.java",
-]
-
 android_library(
     name = "model",
     srcs = glob(
         ["*.java"],
-        exclude = REMOTE_WEB_MODEL_ATOMS,
     ),
     custom_package = "androidx.test.espresso.web.model",
     idl_import_root = "idls",
@@ -24,25 +18,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:com_google_guava_guava",
         "@maven//:com_google_code_findbugs_jsr305",
-    ],
-)
-
-android_library(
-    name = "remote_web_model_atoms",
-    srcs = glob(
-        REMOTE_WEB_MODEL_ATOMS,
-    ),
-    deps = [
-        ":model",
-        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
-        "//espresso/core/java/androidx/test/espresso/remote:interface",
-        "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
-        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
-        "//espresso/core/java/androidx/test/espresso/remote:registry",
-        "//espresso/web/java/androidx/test/espresso/web/proto/model:remote_web_model_atoms_proto_android_pb3",
-        "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_guava_guava",
     ],
 )

@@ -1,17 +1,6 @@
 // Signature format: 3.0
 package androidx.test.espresso.remote {
 
-  public interface Bindable {
-    method public android.os.IBinder! getIBinder();
-    method public String! getId();
-    method public void setIBinder(android.os.IBinder!);
-  }
-
-  public final class ConstructorInvocation {
-    ctor public ConstructorInvocation(Class<?>, Class<? extends java.lang.annotation.Annotation>?, Class<?>!...);
-    method public Object! invokeConstructor(java.lang.Object!...);
-  }
-
   public interface Converter<I, O> {
     method public O! convert(I);
   }
@@ -23,17 +12,6 @@ package androidx.test.espresso.remote {
     method public void init();
     method public boolean isRemoteProcess();
     method public void terminate();
-  }
-
-  public interface EspressoRemoteMessage {
-  }
-
-  public static interface EspressoRemoteMessage.From<T, M> {
-    method public T! fromProto(M!);
-  }
-
-  public static interface EspressoRemoteMessage.To<M> {
-    method public M! toProto();
   }
 
   public final class FieldDescriptor {
@@ -94,17 +72,6 @@ package androidx.test.espresso.remote {
     enum_constant public static final androidx.test.espresso.remote.InteractionResponse.Status Ok;
   }
 
-  public final class NoRemoteEspressoInstanceException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
-    ctor public NoRemoteEspressoInstanceException(String!);
-  }
-
-  public class NoopRemoteInteraction implements androidx.test.espresso.remote.RemoteInteraction {
-    ctor public NoopRemoteInteraction();
-    method public java.util.concurrent.Callable<java.lang.Void!>! createRemoteCheckCallable(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, org.hamcrest.Matcher<android.view.View!>!, java.util.Map<java.lang.String!,android.os.IBinder!>!, androidx.test.espresso.ViewAssertion!);
-    method public java.util.concurrent.Callable<java.lang.Void!>! createRemotePerformCallable(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, org.hamcrest.Matcher<android.view.View!>!, java.util.Map<java.lang.String!,android.os.IBinder!>!, androidx.test.espresso.ViewAction!...);
-    method public boolean isRemoteProcess();
-  }
-
   public final class ProtoUtils {
     method public static String! capitalizeFirstChar(String!);
     method public static <T extends java.lang.Enum> T! checkedGetEnumForProto(int, Class<T!>!);
@@ -142,28 +109,6 @@ package androidx.test.espresso.remote {
     method public boolean hasArgForInstanceType(Class<?>);
     method public boolean registerRemoteTypeArgs(java.util.List<androidx.test.espresso.remote.RemoteDescriptor!>);
     method public void unregisterRemoteTypeArgs(java.util.List<androidx.test.espresso.remote.RemoteDescriptor!>);
-  }
-
-  public class RemoteEspressoException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
-    ctor public RemoteEspressoException(String!);
-    ctor public RemoteEspressoException(String!, Throwable!);
-  }
-
-  public interface RemoteInteraction {
-    method public java.util.concurrent.Callable<java.lang.Void!>! createRemoteCheckCallable(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, org.hamcrest.Matcher<android.view.View!>!, java.util.Map<java.lang.String!,android.os.IBinder!>!, androidx.test.espresso.ViewAssertion!);
-    method public java.util.concurrent.Callable<java.lang.Void!>! createRemotePerformCallable(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, org.hamcrest.Matcher<android.view.View!>!, java.util.Map<java.lang.String!,android.os.IBinder!>!, androidx.test.espresso.ViewAction!...);
-    method public boolean isRemoteProcess();
-    field public static final String BUNDLE_EXECUTION_STATUS = "executionStatus";
-  }
-
-  public class RemoteInteractionRegistry {
-    method public static androidx.test.espresso.remote.RemoteInteraction! getInstance();
-    method public static void registerInstance(androidx.test.espresso.remote.RemoteInteraction!);
-  }
-
-  public class RemoteProtocolException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
-    ctor public RemoteProtocolException(String!);
-    ctor public RemoteProtocolException(String!, Throwable!);
   }
 
   public final class TypeProtoConverters {

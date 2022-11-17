@@ -54,23 +54,6 @@ VIEW_INTERACTION = [
     "InteractionResultsHandler.java",
 ]
 
-REMOTE = [
-    "DataInteractionRemote.java",
-]
-
-android_library(
-    name = "data-interaction-remote",
-    srcs = REMOTE,
-    deps = [
-        ":espresso",
-        "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
-        "//espresso/core/java/androidx/test/espresso/proto/matcher:ui_interaction_view_matchers_android_pb3",
-        "//espresso/core/java/androidx/test/espresso/remote:interface",
-        "//espresso/core/java/androidx/test/espresso/remote:registry",
-        "@maven//:com_google_guava_guava",
-    ],
-)
-
 android_library(
     name = "view-interaction",
     srcs = VIEW_INTERACTION,
@@ -125,7 +108,7 @@ android_library(
     name = "espresso",
     srcs = glob(
         ["*.java"],
-        exclude = BASE_LAYER_INTERFACES + PUBLIC_FRAMEWORK_LAYER + ESPRESSO_GRAPH + VIEW_INTERACTION + REMOTE,
+        exclude = BASE_LAYER_INTERFACES + PUBLIC_FRAMEWORK_LAYER + ESPRESSO_GRAPH + VIEW_INTERACTION,
     ),
     exports = [
         # Anything listed here is instantly available to targets that
@@ -186,11 +169,11 @@ android_library(
     srcs = BASE_LAYER_INTERFACES,
     manifest = "AndroidManifest.xml",
     deps = [
+        "//:androidx_annotation",
         "//annotation",
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//runner/monitor",
-        "//:androidx_annotation",
         "@maven//:com_google_errorprone_error_prone_annotations",
         "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",

@@ -4,16 +4,10 @@ licenses(["notice"])  # Apache License 2.0
 
 package(default_visibility = ["//visibility:public"])
 
-REMOTE_WEB_ACTIONS = [
-    "RemoteWebActions.java",
-    "*RemoteMessage.java",
-]
-
 android_library(
     name = "action",
     srcs = glob(
         ["*.java"],
-        exclude = REMOTE_WEB_ACTIONS,
     ),
     custom_package = "androidx.test.espresso.web.action",
     idl_import_root = "idls",
@@ -34,23 +28,5 @@ android_library(
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_guava_guava",
         "@maven//:org_hamcrest_hamcrest_all",
-    ],
-)
-
-android_library(
-    name = "remote_web_actions",
-    srcs = glob(
-        REMOTE_WEB_ACTIONS,
-    ),
-    deps = [
-        ":action",
-        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
-        "//espresso/core/java/androidx/test/espresso/remote:interface",
-        "//espresso/core/java/androidx/test/espresso/remote:protoUtils",
-        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
-        "//espresso/core/java/androidx/test/espresso/remote:registry",
-        "//espresso/web/java/androidx/test/espresso/web/model",
-        "//espresso/web/java/androidx/test/espresso/web/proto/action:web_actions_proto_android_pb3",
-        "@com_google_protobuf//:protobuf_javalite",
     ],
 )

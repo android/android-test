@@ -23,6 +23,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.common.base.Objects;
+import java.util.Locale;
 import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -151,8 +152,12 @@ public final class Evaluation implements JSONAble, Parcelable {
   @Override
   public String toString() {
     return String.format(
+        Locale.US,
         "Evaluation: status: %d value: %s hasMessage: %s message: %s",
-        status, value, hasMessage, message);
+        status,
+        value,
+        hasMessage,
+        message);
   }
 
   @Override

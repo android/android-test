@@ -1,0 +1,9 @@
+# Alias for androidx.test.espresso.remote dependency
+
+licenses(["notice"])  # Apache License 2.0
+
+android_library(
+    name = "remote",
+    visibility = ["//visibility:public"],
+    exports = ["//espresso/remote/java/androidx/test/espresso/remote"],
+)

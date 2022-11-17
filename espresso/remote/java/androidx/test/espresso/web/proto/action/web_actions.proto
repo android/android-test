@@ -3,9 +3,9 @@ syntax = "proto3";
 
 package google.test.remote.web.action;
 
-option java_package = "androidx.test.espresso.web.proto.action";
-
 import "google/protobuf/any.proto";
+
+option java_package = "androidx.test.espresso.web.proto.action";
 
 message AtomActionProto {
   string id = 1;
