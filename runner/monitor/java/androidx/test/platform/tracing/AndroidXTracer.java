@@ -16,9 +16,14 @@
 
 package androidx.test.platform.tracing;
 
+import static androidx.tracing.Trace.beginSection;
+import static androidx.tracing.Trace.endSection;
+import static androidx.tracing.Trace.forceEnableAppTracing;
+
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.tracing.Trace;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.ArrayDeque;
 
 /**
@@ -45,10 +50,23 @@ class AndroidXTracer implements Tracer {
   /** android.os.Trace.beginSection() has a limit on name length. */
   private static final int MAX_SECTION_NAME_LEN = 127;
 
+  /** Enables tracing to systrace for devices with API 18-28. */
+  @CanIgnoreReturnValue
+  public AndroidXTracer enableTracing() {
+    try {
+      forceEnableAppTracing();
+    } catch (RuntimeException e) {
+      // The AndroidX call can fail if reflection is not allowed.
+      // We want to log the error yet we should not break any test in this case.
+      Log.e(TAG, "enableTracing failed", e);
+    }
+    return this;
+  }
+
   @NonNull
   @Override
   public Span beginSpan(@NonNull String name) {
-    Trace.beginSection(sanitizeSpanName(name));
+    beginSection(sanitizeSpanName(name));
     return new AndroidXTracerSpan();
   }
 
@@ -58,7 +76,7 @@ class AndroidXTracer implements Tracer {
     @NonNull
     @Override
     public Span beginChildSpan(@NonNull String name) {
-      Trace.beginSection(sanitizeSpanName(name));
+      beginSection(sanitizeSpanName(name));
 
       AndroidXTracerSpan span = new AndroidXTracerSpan();
       nestedSpans.add(span);
@@ -72,7 +90,7 @@ class AndroidXTracer implements Tracer {
         span.close();
       }
 
-      Trace.endSection();
+      endSection();
     }
   }
 

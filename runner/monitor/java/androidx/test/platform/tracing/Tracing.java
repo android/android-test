@@ -51,7 +51,7 @@ public final class Tracing {
   private Tracing() {
     // The Android Tracing API only exists starting with JB MR2 (API 18).
     if (Build.VERSION.SDK_INT >= 18) {
-      registerTracer(new AndroidXTracer());
+      registerTracer(new AndroidXTracer().enableTracing());
     }
   }
 
