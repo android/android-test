@@ -1,5 +1,10 @@
 # Description:
 #   Top level apk for services required for full orchestrated testing.
+
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "SERVICES_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
 licenses(["notice"])
 
 package(
@@ -20,18 +25,16 @@ android_binary(
         "//:proguard_binary.cfg",
         "proguard_library.cfg",
     ],
+    multidex = "legacy",
     visibility = ["//visibility:public"],
     deps = [
         "//services/shellexecutor:exec_server",
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
         "//services/speakeasy/java/androidx/test/services/speakeasy/server",
         "//services/storage/java/androidx/test/services/storage/provider:storage_content_providers",
+        "//:androidx_multidex",
     ],
 )
-
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "SERVICES_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 combine_jars(
     name = "test_services_jars",

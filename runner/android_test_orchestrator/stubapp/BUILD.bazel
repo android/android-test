@@ -20,7 +20,7 @@ android_binary(
 )
 
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "RUNNER_VERSION")
+load("//build_extensions:axt_versions.bzl", "ORCHESTRATOR_VERSION", "SERVICES_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 combine_jars(
@@ -34,11 +34,11 @@ maven_artifact(
     name = "orchestrator_release_maven_artifact",
     src = ":stubapp.apk",
     artifact_deps = [
-        "androidx.test.services:test-services:%s" % RUNNER_VERSION,
+        "androidx.test.services:test-services:%s" % SERVICES_VERSION,
     ],
     artifact_id = "orchestrator",
     group_id = "androidx.test",
     last_updated = "20170622000000",
     src_jar = ":orchestrator_src_jars.jar",
-    version = "%s" % RUNNER_VERSION,
+    version = "%s" % ORCHESTRATOR_VERSION,
 )

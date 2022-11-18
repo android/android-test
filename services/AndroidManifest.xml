@@ -84,12 +84,6 @@
         android:directBootAware="true"
         android:exported="true"
         android:grantUriPermissions="true" />
-    <provider
-        android:name="androidx.test.services.storage.provider.TestDiagnosticsContentProvider"
-        android:authorities="androidx.test.services.storage.diagnostics"
-        android:directBootAware="true"
-        android:exported="true"
-        android:grantUriPermissions="true"/>
   </application>
 
 </manifest>

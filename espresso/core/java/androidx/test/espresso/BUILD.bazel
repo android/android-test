@@ -194,7 +194,7 @@ axt_release_lib(
         "release_jarjar_rules_stage2.txt",
     ],
     # ensure to include kotlin_module since those define extension functions
-    keep_spec = "androidx/test/espresso|META-INF/androidx.test.espresso.*.kotlin_module",
+    keep_spec = "androidx/test/espresso|META-INF/.*espresso.*.kotlin_module",
     overlapping_jars = [
         "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_release_no_deps.jar",
     ],
