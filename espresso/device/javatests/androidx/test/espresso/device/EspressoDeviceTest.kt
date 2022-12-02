@@ -22,15 +22,21 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
 import androidx.test.espresso.device.action.ScreenOrientation
+import androidx.test.espresso.device.action.setDisplaySize
 import androidx.test.espresso.device.action.setScreenOrientation
 import androidx.test.espresso.device.rules.ScreenOrientationRule
+import androidx.test.espresso.device.sizeclass.HeightSizeClass
+import androidx.test.espresso.device.sizeclass.WidthSizeClass
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.filters.SdkSuppress
 import androidx.test.ui.app.R
 import androidx.test.ui.app.ScreenOrientationActivity
 import androidx.test.ui.app.ScreenOrientationWithoutOnConfigurationChangedActivity
+import com.google.common.truth.Truth.assertThat
 import org.junit.Assert.assertThrows
+import org.junit.AssumptionViolatedException
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
@@ -131,5 +137,17 @@ class EspressoDeviceTest {
 
     onView(withId(R.id.screen_orientation)).perform(click())
     onView(withId(R.id.screen_orientation)).check(matches(withText("landscape")))
+  }
+
+  @SdkSuppress(maxSdkVersion = 23)
+  fun onDevice_setDisplaySizeOnUnsupportedApiLevel_throwsAssumptionViolatedException() {
+    val e: AssumptionViolatedException =
+      assertThrows(AssumptionViolatedException::class.java) {
+        onDevice().perform(setDisplaySize(WidthSizeClass.EXPANDED, HeightSizeClass.EXPANDED))
+      }
+    assertThat(e.message)
+      .isEqualTo(
+        "Setting display size is not supported on devices with APIs below 24. testing this being wrong"
+      )
   }
 }

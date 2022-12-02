@@ -25,7 +25,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
-import androidx.test.espresso.device.controller.UnsupportedDeviceOperationException
 import androidx.test.espresso.device.sizeclass.HeightSizeClass
 import androidx.test.espresso.device.sizeclass.WidthSizeClass
 import androidx.test.espresso.device.util.getDeviceApiLevel
@@ -36,6 +35,7 @@ import java.nio.charset.Charset
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
+import org.junit.Assume.assumeTrue
 
 /** Action to set the test device to the provided display size. */
 internal class DisplaySizeAction(
@@ -44,11 +44,10 @@ internal class DisplaySizeAction(
   val heightDisplaySize: HeightSizeClass
 ) : DeviceAction {
   override fun perform(context: ActionContext, deviceController: DeviceController) {
-    if (getDeviceApiLevel() < 24) {
-      throw UnsupportedDeviceOperationException(
-        "Setting display size is not supported on devices with APIs below 24."
-      )
-    }
+    assumeTrue(
+      "Setting display size is not supported on devices with APIs below 24.",
+      getDeviceApiLevel() >= 24
+    )
 
     val currentActivity = getResumedActivityOrNull()
     if (currentActivity != null) {
