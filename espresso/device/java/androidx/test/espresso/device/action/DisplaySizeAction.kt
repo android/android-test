@@ -30,12 +30,14 @@ import androidx.test.espresso.device.sizeclass.HeightSizeClass
 import androidx.test.espresso.device.sizeclass.WidthSizeClass
 import androidx.test.espresso.device.util.getDeviceApiLevel
 import androidx.test.espresso.device.util.getResumedActivityOrNull
+import androidx.test.espresso.device.util.isRobolectricTest
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.device.DeviceController
 import java.nio.charset.Charset
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
+import org.junit.Assume.assumeFalse
 
 /** Action to set the test device to the provided display size. */
 internal class DisplaySizeAction(
@@ -44,6 +46,11 @@ internal class DisplaySizeAction(
   val heightDisplaySize: HeightSizeClass
 ) : DeviceAction {
   override fun perform(context: ActionContext, deviceController: DeviceController) {
+    assumeFalse(
+      "Setting display size is not currently supported on Robolectric tests.",
+      isRobolectricTest()
+    )
+
     if (getDeviceApiLevel() < 24) {
       throw UnsupportedDeviceOperationException(
         "Setting display size is not supported on devices with APIs below 24."

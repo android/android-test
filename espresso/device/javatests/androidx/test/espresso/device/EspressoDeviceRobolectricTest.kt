@@ -18,9 +18,13 @@ package androidx.test.espresso.device
 
 import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
 import androidx.test.espresso.device.action.ScreenOrientation
+import androidx.test.espresso.device.action.setDisplaySize
 import androidx.test.espresso.device.action.setScreenOrientation
-import java.lang.UnsupportedOperationException
+import androidx.test.espresso.device.sizeclass.HeightSizeClass
+import androidx.test.espresso.device.sizeclass.WidthSizeClass
+import com.google.common.truth.Truth.assertThat
 import org.junit.Assert.assertThrows
+import org.junit.AssumptionViolatedException
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -28,14 +32,33 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class EspressoDeviceRobolectricTest {
   @Test
-  fun onDevice_setScreenOrientationThrowsUnsupportedOperationException() {
-    assertThrows(UnsupportedOperationException::class.java) {
-      onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
-    }
+  fun onDevice_setScreenOrientationThrowsAssumptionViolatedException() {
+    val e: AssumptionViolatedException =
+      assertThrows(AssumptionViolatedException::class.java) {
+        onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
+      }
+
+    assertThat(e.message)
+      .isEqualTo("Setting screen orientation is not currently supported on Robolectric tests.")
   }
 
   @Test
-  fun onDevice_setFlatModeThrowsUnsupportedOperationException() {
-    assertThrows(UnsupportedOperationException::class.java) { onDevice().setFlatMode() }
+  fun onDevice_setFlatModeThrowsAssumptionViolatedException() {
+    val e: AssumptionViolatedException =
+      assertThrows(AssumptionViolatedException::class.java) { onDevice().setFlatMode() }
+
+    assertThat(e.message)
+      .isEqualTo("Setting a device mode is not currently supported on Robolectric tests.")
+  }
+
+  @Test
+  fun onDevice_setDisplaySizeThrowsAssumptionViolatedException() {
+    val e: AssumptionViolatedException =
+      assertThrows(AssumptionViolatedException::class.java) {
+        onDevice().perform(setDisplaySize(WidthSizeClass.EXPANDED, HeightSizeClass.EXPANDED))
+      }
+
+    assertThat(e.message)
+      .isEqualTo("Setting display size is not currently supported on Robolectric tests.")
   }
 }
