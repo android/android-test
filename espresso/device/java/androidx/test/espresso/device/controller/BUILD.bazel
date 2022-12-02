@@ -27,7 +27,7 @@ kt_android_library(
         "PhysicalDeviceController.kt",
     ],
     deps = [
-        ":controller",
         "//runner/monitor",
+        "@maven//:junit_junit",
     ],
 )

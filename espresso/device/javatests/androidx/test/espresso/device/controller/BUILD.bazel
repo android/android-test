@@ -25,6 +25,7 @@ android_app_instrumentation_tests(
         "//ext/junit",
         "//runner/android_junit_runner",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
     ],
 )

@@ -33,8 +33,7 @@ private val mainExecutor = Executor { command -> Handler(Looper.getMainLooper())
  * https://developer.android.com/guide/topics/large-screens/learn-about-foldables#foldable_postures
  *
  * This action is for foldable devices only. Currently only supported for tests run on Android
- * Emulators.
- * @throws UnsupportedDeviceOperationException if used on a real device.
+ * Emulators. Test is skipped if used on a real device.
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
 fun setTabletopMode(): DeviceAction {
@@ -47,8 +46,7 @@ fun setTabletopMode(): DeviceAction {
  * https://developer.android.com/guide/topics/large-screens/learn-about-foldables#foldable_postures
  *
  * This action is for foldable devices only. Currently only supported for tests run on Android
- * Emulators.
- * @throws UnsupportedDeviceOperationException if used on a real device.
+ * Emulators. Test is skipped if used on a real device.
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
 fun setBookMode(): DeviceAction {
@@ -60,8 +58,7 @@ fun setBookMode(): DeviceAction {
  * https://developer.android.com/guide/topics/large-screens/learn-about-foldables#foldable_postures
  *
  * This action is for foldable devices only. Currently only supported for tests run on Android
- * Emulators.
- * @throws UnsupportedDeviceOperationException if used on a real device.
+ * Emulators. Test is skipped if used on a real device.
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
 fun setFlatMode(): DeviceAction {
@@ -69,7 +66,8 @@ fun setFlatMode(): DeviceAction {
 }
 
 /**
- * Set device's screen orientation.
+ * Set device's screen orientation. Currently only supported for tests run on Android Emulators.
+ * Test is skipped if used on a real device.
  * @param orientation the orientation to set the device to (portait or landscape)
  */
 fun setScreenOrientation(orientation: ScreenOrientation): DeviceAction {

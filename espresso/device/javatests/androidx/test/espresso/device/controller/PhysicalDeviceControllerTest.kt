@@ -16,7 +16,9 @@
 
 package androidx.test.espresso.device.controller
 
+import com.google.common.truth.Truth.assertThat
 import org.junit.Assert.assertThrows
+import org.junit.AssumptionViolatedException
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -24,11 +26,14 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4::class)
 class PhysicalDeviceControllerTest {
   @Test
-  fun setDeviceMode_ThrowsUnsupportedDeviceOperationException() {
+  fun setDeviceMode_ThrowsAssumptionViolatedException() {
     val deviceController = PhysicalDeviceController()
 
-    assertThrows(UnsupportedDeviceOperationException::class.java) {
-      deviceController.setDeviceMode(DeviceMode.FLAT.mode)
-    }
+    val e: AssumptionViolatedException =
+      assertThrows(AssumptionViolatedException::class.java) {
+        deviceController.setDeviceMode(DeviceMode.FLAT.mode)
+      }
+
+    assertThat(e.message).isEqualTo("Setting a device mode is not supported on physical devices.")
   }
 }

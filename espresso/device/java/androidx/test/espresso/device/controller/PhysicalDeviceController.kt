@@ -17,19 +17,16 @@
 package androidx.test.espresso.device.controller
 
 import androidx.test.platform.device.DeviceController
+import org.junit.Assume.assumeTrue
 
 /** Implementation of {@link DeviceController} for tests run on a physical device. */
 class PhysicalDeviceController : DeviceController {
   override fun setDeviceMode(deviceMode: Int) {
-    throw UnsupportedDeviceOperationException(
-      "Setting a device mode is not supported on physical devices."
-    )
+    assumeTrue("Setting a device mode is not supported on physical devices.", false)
   }
 
   override fun setScreenOrientation(screenOrientation: Int) {
     // TODO(b/203092519) Investigate suppporting screen orientation rotation on real devices.
-    throw UnsupportedDeviceOperationException(
-      "Setting screen orientation is not supported on physical devices."
-    )
+    assumeTrue("Setting screen orientation is not supported on physical devices.", false)
   }
 }
