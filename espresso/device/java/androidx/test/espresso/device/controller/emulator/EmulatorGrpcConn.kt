@@ -89,6 +89,7 @@ interface EmulatorGrpcConn {
 
   companion object {
     val EMULATOR_ADDRESS = "localhost"
+    val ARGS_EMULATOR_ADDRESS = "grpc.host"
     val ARGS_GRPC_PORT = "grpc.port"
     val ARGS_GRPC_TOKEN = "grpc.token"
     val ARGS_GRPC_KEY = "grpc.key"

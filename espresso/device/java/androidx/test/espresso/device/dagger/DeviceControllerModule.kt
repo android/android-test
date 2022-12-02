@@ -68,9 +68,11 @@ internal class DeviceControllerModule {
     } else {
       getEmulatorGRPCPort()
     }
+    var emulatorAddressArg = args.getString(EmulatorGrpcConn.ARGS_EMULATOR_ADDRESS)
+    var emulatorAddress = if (emulatorAddressArg != null) emulatorAddressArg else EmulatorGrpcConn.EMULATOR_ADDRESS
 
     return EmulatorGrpcConnImpl(
-      EmulatorGrpcConn.EMULATOR_ADDRESS,
+      emulatorAddress,
       grpcPort,
       args.getString(EmulatorGrpcConn.ARGS_GRPC_TOKEN, ""),
       args.getString(EmulatorGrpcConn.ARGS_GRPC_CER, ""),
@@ -79,7 +81,7 @@ internal class DeviceControllerModule {
     )
   }
 
-  /* Gets the emulator gRPC port for emulators running in g3 */
+  /* Gets the emulator gRPC port for emulators that do not specify a port through instrumentation args */
   private fun getEmulatorGRPCPort(): Int {
     val clazz = Class.forName("android.os.SystemProperties")
     val getter: Method = clazz.getMethod("get", String::class.java)
