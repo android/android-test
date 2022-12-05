@@ -31,8 +31,6 @@ import java.util.concurrent.TimeUnit;
  *
  * <p>Overrides parent methods to monitor threads starting, and finishing execution. Uses {@link
  * CountingIdlingResource} to track number of active tasks.
- *
- * <p><b>This API is currently in beta.</b>
  */
 public class IdlingScheduledThreadPoolExecutor extends ScheduledThreadPoolExecutor
     implements IdlingResource {

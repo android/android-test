@@ -37,8 +37,6 @@ import java.util.regex.Pattern;
  * Imagine the case where each response that comes back causes another request to be made until
  * loading is complete. The counter will go from 0->1->0->1->0->1..., but we don't want to report
  * the webview as idle each time this happens.
- *
- * <p><b>This API is currently in beta.</b>
  */
 public class UriIdlingResource implements IdlingResource {
 
