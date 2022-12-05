@@ -20,5 +20,6 @@ kt_android_library(
         "//runner/monitor",
         "//window",
         "//window/java",
+        "@maven//:junit_junit",
     ],
 )

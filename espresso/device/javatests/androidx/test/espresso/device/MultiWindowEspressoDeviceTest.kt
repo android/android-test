@@ -35,6 +35,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import org.junit.AssumptionViolatedException
 
 @RunWith(JUnit4::class)
 class MultiWindowEspressoDeviceTest {
@@ -82,8 +83,8 @@ class MultiWindowEspressoDeviceTest {
       onView(withId(R.id.screen_width_display_size)).check(matches(withText("Expanded width")))
       onView(withId(R.id.screen_height_display_size)).check(matches(withText("Expanded height")))
     } else {
-      val e: DeviceControllerOperationException =
-        assertThrows(DeviceControllerOperationException::class.java) {
+      val e: AssumptionViolatedException =
+        assertThrows(AssumptionViolatedException::class.java) {
           onDevice().perform(setDisplaySize(WidthSizeClass.EXPANDED, HeightSizeClass.EXPANDED))
         }
       assertThat(e.message).isEqualTo("Device could not be set to the requested display size.")

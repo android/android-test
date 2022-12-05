@@ -36,6 +36,7 @@ import java.nio.charset.Charset
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
+import org.junit.Assume.assumeTrue
 
 /** Action to set the test device to the provided display size. */
 internal class DisplaySizeAction(
@@ -101,8 +102,8 @@ internal class DisplaySizeAction(
         instrumentation
           .getUiAutomation()
           .executeShellCommand("wm size ${startingWidth}dpx${startingHeight}dp")
-        throw DeviceControllerOperationException(
-          "Device could not be set to the requested display size."
+        assumeTrue(
+          "Device could not be set to the requested display size.", false
         )
       }
     } else {
