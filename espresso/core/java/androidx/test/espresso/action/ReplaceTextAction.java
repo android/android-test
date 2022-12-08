@@ -18,7 +18,7 @@ package androidx.test.espresso.action;
 
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static androidx.test.internal.util.Checks.checkNotNull;
 import static org.hamcrest.Matchers.allOf;
 
 import android.view.View;

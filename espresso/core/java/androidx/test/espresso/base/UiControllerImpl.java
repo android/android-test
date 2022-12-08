@@ -16,9 +16,9 @@
 
 package androidx.test.espresso.base;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import static androidx.test.internal.util.Checks.checkArgument;
+import static androidx.test.internal.util.Checks.checkNotNull;
+import static androidx.test.internal.util.Checks.checkState;
 import static com.google.common.base.Throwables.throwIfUnchecked;
 
 import android.annotation.SuppressLint;

@@ -16,24 +16,18 @@ android_library(
         "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/core/java/androidx/test/espresso/util",
+        "//runner/monitor",
         "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_guava_guava",
     ],
 )
 
-REMOTE_VIEW_ACTIONS = [
-    "RemoteViewActions.java",
-    # TODO(b/33047831): rename all RemoteMessages to *RemoteMsg
-    "*RemoteMessage.java",
-    "*RemoteMsg.java",
-]
-
 android_library(
     name = "action",
     srcs = glob(
         ["*.java"],
-        exclude = ADAPTER_VIEW_PROTOCOL + REMOTE_VIEW_ACTIONS,
+        exclude = ADAPTER_VIEW_PROTOCOL,
     ),
     deps = [
         ":adapter_view_protocol",
@@ -47,32 +41,10 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//runner/android_junit_runner",
+        "//runner/monitor",
         "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_errorprone_error_prone_annotations",
-        "@maven//:com_google_guava_guava",
-        "@maven//:org_hamcrest_hamcrest_all",
-    ],
-)
-
-android_library(
-    name = "remote_view_actions",
-    srcs = glob(
-        REMOTE_VIEW_ACTIONS,
-    ),
-    deps = [
-        ":action",
-        ":adapter_view_protocol",
-        "//:androidx_annotation",
-        "//espresso/core/java/androidx/test/espresso:framework",
-        "//espresso/core/java/androidx/test/espresso/proto/action:ui_interaction_view_actions_android_pb3",
-        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
-        "//espresso/core/java/androidx/test/espresso/remote:interface",
-        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
-        "//espresso/core/java/androidx/test/espresso/util",
-        "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
-        "//espresso/remote/java/androidx/test/espresso/remote:registry",
-        "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_guava_guava",
         "@maven//:org_hamcrest_hamcrest_all",
     ],

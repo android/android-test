@@ -17,7 +17,7 @@
 package androidx.test.espresso.action;
 
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
-import static com.google.common.base.Preconditions.checkArgument;
+import static androidx.test.internal.util.Checks.checkArgument;
 
 import android.database.Cursor;
 import android.os.Build;

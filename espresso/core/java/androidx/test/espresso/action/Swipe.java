@@ -16,11 +16,11 @@
 
 package androidx.test.espresso.action;
 
-import static com.google.common.base.Preconditions.checkElementIndex;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.view.MotionEvent;
 import androidx.test.espresso.UiController;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,5 +113,29 @@ public enum Swipe implements Swiper {
       }
     }
     return Swiper.Status.SUCCESS;
+  }
+
+  // copy of Guava's method to avoid the extra dependency
+  private static int checkElementIndex(int index, int size) {
+    return checkElementIndex(index, size, "index");
+  }
+
+  @CanIgnoreReturnValue
+  private static int checkElementIndex(int index, int size, String desc) {
+    // Carefully optimized for execution by hotspot (explanatory comment above)
+    if (index < 0 || index >= size) {
+      throw new IndexOutOfBoundsException(badElementIndex(index, size, desc));
+    }
+    return index;
+  }
+
+  private static String badElementIndex(int index, int size, String desc) {
+    if (index < 0) {
+      return String.format("%s (%s) must not be negative", desc, index);
+    } else if (size < 0) {
+      throw new IllegalArgumentException("negative size: " + size);
+    } else { // index >= size
+      return String.format("%s (%s) must be less than size (%s)", desc, index, size);
+    }
   }
 }

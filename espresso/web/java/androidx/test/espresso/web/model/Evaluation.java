@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.web.model;
 
-import static com.google.common.base.Preconditions.checkState;
+import static androidx.test.internal.util.Checks.checkState;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -17,7 +17,7 @@
 package androidx.test.espresso.matcher;
 
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static androidx.test.internal.util.Checks.checkNotNull;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;

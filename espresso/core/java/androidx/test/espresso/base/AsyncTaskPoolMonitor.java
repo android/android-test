@@ -16,8 +16,8 @@
 
 package androidx.test.espresso.base;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import static androidx.test.internal.util.Checks.checkNotNull;
+import static androidx.test.internal.util.Checks.checkState;
 
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;

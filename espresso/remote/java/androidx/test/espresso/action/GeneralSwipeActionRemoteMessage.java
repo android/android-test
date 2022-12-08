@@ -18,7 +18,7 @@ package androidx.test.espresso.action;
 
 import static androidx.test.espresso.remote.TypeProtoConverters.anyToType;
 import static androidx.test.espresso.remote.TypeProtoConverters.typeToAny;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static androidx.test.internal.util.Checks.checkNotNull;
 
 import androidx.annotation.NonNull;
 import androidx.test.espresso.ViewAction;

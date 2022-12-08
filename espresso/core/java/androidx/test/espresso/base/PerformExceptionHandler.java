@@ -15,7 +15,7 @@
  */
 package androidx.test.espresso.base;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -44,7 +44,8 @@ class PerformExceptionHandler extends TypedFailureHandler<PerformException> {
     if (!isAnimationAndTransitionDisabled(appContext)) {
       sb.append(
           "Animations or transitions are enabled on the target device.\n"
-              + "For more info check: https://developer.android.com/training/testing/espresso/setup#set-up-environment\n\n");
+              + "For more info check:"
+              + " https://developer.android.com/training/testing/espresso/setup#set-up-environment\n\n");
     }
     sb.append(viewMatcher);
     // Re-throw the exception with the viewMatcher (used to locate the view) as the view

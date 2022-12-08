@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.action;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.os.SystemClock;
 import android.util.Log;

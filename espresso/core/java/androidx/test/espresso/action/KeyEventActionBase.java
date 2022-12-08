@@ -19,7 +19,7 @@ package androidx.test.espresso.action;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.util.ActivityLifecycles.hasForegroundActivities;
 import static androidx.test.espresso.util.ActivityLifecycles.hasTransitioningActivities;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static androidx.test.internal.util.Checks.checkNotNull;
 import static com.google.common.collect.Iterables.getOnlyElement;
 
 import android.app.Activity;

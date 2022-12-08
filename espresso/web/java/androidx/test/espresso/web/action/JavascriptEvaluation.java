@@ -16,8 +16,8 @@
 
 package androidx.test.espresso.web.action;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import static androidx.test.internal.util.Checks.checkNotNull;
+import static androidx.test.internal.util.Checks.checkState;
 import static com.google.common.util.concurrent.Futures.transform;
 import static com.google.common.util.concurrent.Futures.transformAsync;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;

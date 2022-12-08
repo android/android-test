@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.action;
 
-import static com.google.common.base.Preconditions.checkState;
+import static androidx.test.internal.util.Checks.checkState;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static org.hamcrest.Matchers.any;
 

@@ -17,8 +17,8 @@
 package androidx.test.espresso.base;
 
 import static androidx.test.espresso.util.TreeIterables.breadthFirstViewTraversal;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import static androidx.test.internal.util.Checks.checkNotNull;
+import static androidx.test.internal.util.Checks.checkState;
 
 import android.os.Looper;
 import android.view.View;

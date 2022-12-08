@@ -16,9 +16,9 @@
  */
 package androidx.test.espresso.remote;
 
+import static androidx.test.internal.util.Checks.checkNotNull;
+import static androidx.test.internal.util.Checks.checkState;
 import static androidx.test.internal.util.LogUtil.logDebug;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

@@ -16,7 +16,7 @@
 
 package androidx.test.espresso;
 
-import static com.google.common.base.Preconditions.checkState;
+import static androidx.test.internal.util.Checks.checkState;
 
 import android.os.Looper;
 import androidx.test.internal.platform.util.TestOutputEmitter;

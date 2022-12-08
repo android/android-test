@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.web.assertion;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static androidx.test.internal.util.Checks.checkNotNull;
 
 import java.io.IOException;
 import java.io.StringBufferInputStream;

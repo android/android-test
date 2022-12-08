@@ -16,7 +16,7 @@
 
 package androidx.test.espresso;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static androidx.test.internal.util.Checks.checkNotNull;
 
 import androidx.test.internal.platform.util.TestOutputEmitter;
 import java.util.Locale;

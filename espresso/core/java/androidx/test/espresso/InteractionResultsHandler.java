@@ -16,9 +16,9 @@
 
 package androidx.test.espresso;
 
+import static androidx.test.internal.util.Checks.checkNotNull;
+import static androidx.test.internal.util.Checks.checkState;
 import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 import androidx.test.espresso.remote.NoRemoteEspressoInstanceException;
 import com.google.common.annotations.VisibleForTesting;

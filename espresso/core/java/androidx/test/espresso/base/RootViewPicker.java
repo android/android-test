@@ -17,7 +17,7 @@
 package androidx.test.espresso.base;
 
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
-import static com.google.common.base.Preconditions.checkState;
+import static androidx.test.internal.util.Checks.checkState;
 
 import android.app.Activity;
 import android.content.Context;

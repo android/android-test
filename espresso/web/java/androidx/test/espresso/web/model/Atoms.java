@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.web.model;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static androidx.test.internal.util.Checks.checkNotNull;
 
 import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;

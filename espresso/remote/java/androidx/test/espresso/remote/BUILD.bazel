@@ -29,6 +29,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote:exceptions",
         "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//runner/monitor",
         "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_guava_guava",
     ],

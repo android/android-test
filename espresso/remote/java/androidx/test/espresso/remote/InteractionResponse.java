@@ -17,8 +17,8 @@
 package androidx.test.espresso.remote;
 
 import static androidx.test.espresso.remote.InteractionResponse.Status.Ok;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import static androidx.test.internal.util.Checks.checkNotNull;
+import static androidx.test.internal.util.Checks.checkState;
 
 import android.text.TextUtils;
 import android.util.Log;

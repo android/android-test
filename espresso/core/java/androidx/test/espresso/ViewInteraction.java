@@ -18,8 +18,8 @@ package androidx.test.espresso;
 
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.LogUtil.logDebugWithProcess;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.os.IBinder;
 import android.os.RemoteException;

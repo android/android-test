@@ -28,8 +28,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
         "//espresso/remote/java/androidx/test/espresso/remote:registry",
+        "//runner/monitor",
         "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:com_google_guava_guava",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
 )

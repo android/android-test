@@ -24,6 +24,7 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/model",
         "//opensource/java_lib:EvaluationAtom",
         "//opensource/java_lib:webbridge",
+        "//runner/monitor",
         "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_guava_guava",

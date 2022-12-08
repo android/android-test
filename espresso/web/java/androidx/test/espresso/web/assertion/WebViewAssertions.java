@@ -19,7 +19,7 @@ package androidx.test.espresso.web.assertion;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.web.model.Atoms.script;
 import static androidx.test.espresso.web.model.Atoms.transform;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.webkit.WebView;
 import androidx.annotation.VisibleForTesting;

@@ -1,7 +1,7 @@
 package androidx.test.espresso.matcher;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static androidx.test.internal.util.Checks.checkArgument;
+import static androidx.test.internal.util.Checks.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.List;

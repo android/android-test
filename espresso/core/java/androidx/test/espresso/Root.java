@@ -16,8 +16,8 @@
 
 package androidx.test.espresso;
 
+import static androidx.test.internal.util.Checks.checkNotNull;
 import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.view.View;
 import android.view.WindowManager;

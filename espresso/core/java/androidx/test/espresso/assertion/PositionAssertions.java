@@ -18,7 +18,7 @@ package androidx.test.espresso.assertion;
 
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.util.TreeIterables.breadthFirstViewTraversal;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static androidx.test.internal.util.Checks.checkNotNull;
 import static org.hamcrest.Matchers.is;
 
 import android.util.Log;
@@ -29,7 +29,6 @@ import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.util.HumanReadables;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
@@ -297,8 +296,8 @@ public final class PositionAssertions {
 
   // Helper methods
   static View findView(final Matcher<View> toView, View root) {
-    Preconditions.checkNotNull(toView);
-    Preconditions.checkNotNull(root);
+    checkNotNull(toView);
+    checkNotNull(root);
     final Predicate<View> viewPredicate =
         new Predicate<View>() {
           @Override

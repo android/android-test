@@ -17,6 +17,7 @@
 package androidx.test.espresso.util;
 
 import static androidx.test.espresso.util.TreeIterables.depthFirstViewTraversalWithDistance;
+import static androidx.test.internal.util.Checks.checkArgument;
 import static java.lang.Math.max;
 
 import android.content.res.Resources;
@@ -35,7 +36,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import java.util.List;
@@ -100,7 +100,7 @@ public final class HumanReadables {
       final String errorHeader,
       final String problemViewSuffix,
       int maxMsgLen) {
-    Preconditions.checkArgument(problemViews == null || problemViewSuffix != null);
+    checkArgument(problemViews == null || problemViewSuffix != null);
     StringBuilder errorMessage = new StringBuilder(errorHeader);
     if (problemViewSuffix != null) {
       errorMessage.append(

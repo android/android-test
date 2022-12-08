@@ -18,7 +18,7 @@ package androidx.test.espresso.assertion;
 
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.util.TreeIterables.breadthFirstViewTraversal;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static androidx.test.internal.util.Checks.checkNotNull;
 import static org.hamcrest.Matchers.is;
 
 import android.view.View;
@@ -28,7 +28,6 @@ import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import androidx.test.espresso.util.HumanReadables;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import java.util.ArrayList;
@@ -137,7 +136,7 @@ public final class ViewAssertions {
     @SuppressWarnings("unchecked")
     @Override
     public void check(View view, NoMatchingViewException noViewException) {
-      Preconditions.checkNotNull(view);
+      checkNotNull(view);
 
       final Predicate<View> viewPredicate =
           new Predicate<View>() {

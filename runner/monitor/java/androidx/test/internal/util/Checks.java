@@ -20,7 +20,6 @@ import android.os.Looper;
 import androidx.annotation.RestrictTo;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.ThreadChecker;
-import java.util.List;
 
 /**
  * Utility methods for checking null references, method arguments, and thread state to simplify
@@ -118,7 +117,7 @@ public final class Checks {
    * @throws IllegalStateException if current thread is not the main thread.
    */
   public static void checkMainThread() {
-    THREAD_CHECKER.checkMainThread();
+    ThreadCheckerSingleton.INSTANCE.checkMainThread();
   }
 
   /**
@@ -127,38 +126,36 @@ public final class Checks {
    * @throws IllegalStateException if current thread is the main thread.
    */
   public static void checkNotMainThread() {
-    THREAD_CHECKER.checkNotMainThread();
+    ThreadCheckerSingleton.INSTANCE.checkNotMainThread();
   }
 
-  private static final ThreadChecker THREAD_CHECKER;
+  /**
+   * Lazy load the ThreadChecker singleton using initialization-on-demand holder idiom
+   * https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom
+   */
+  private static class ThreadCheckerSingleton {
 
-  static {
-    List<ThreadChecker> impls = ServiceLoaderWrapper.loadService(ThreadChecker.class);
-    if (impls.isEmpty()) {
-      THREAD_CHECKER =
-          new ThreadChecker() {
-            @Override
-            public void checkMainThread() {
-              checkState(
-                  Thread.currentThread().equals(Looper.getMainLooper().getThread()),
-                  "Method cannot be called off the main application thread (on: %s)",
-                  Thread.currentThread().getName());
-            }
+    private static final ThreadChecker INSTANCE =
+        ServiceLoaderWrapper.loadSingleService(
+            ThreadChecker.class,
+            () ->
+                new ThreadChecker() {
+                  @Override
+                  public void checkMainThread() {
+                    checkState(
+                        Thread.currentThread().equals(Looper.getMainLooper().getThread()),
+                        "Method cannot be called off the main application thread (on: %s)",
+                        Thread.currentThread().getName());
+                  }
 
-            @Override
-            public void checkNotMainThread() {
-              checkState(
-                  !Thread.currentThread().equals(Looper.getMainLooper().getThread()),
-                  "Method cannot be called on the main application thread (on: %s)",
-                  Thread.currentThread().getName());
-            }
-          };
-    } else if (impls.size() == 1) {
-      THREAD_CHECKER = impls.get(0);
-    } else {
-      throw new IllegalStateException(
-          String.format("Found more than one %s implementations.", ThreadChecker.class.getName()));
-    }
+                  @Override
+                  public void checkNotMainThread() {
+                    checkState(
+                        !Thread.currentThread().equals(Looper.getMainLooper().getThread()),
+                        "Method cannot be called on the main application thread (on: %s)",
+                        Thread.currentThread().getName());
+                  }
+                });
   }
 
   private static String format(String template, Object... args) {

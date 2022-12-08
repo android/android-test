@@ -18,8 +18,8 @@
 package androidx.test.espresso.matcher;
 
 import static androidx.test.espresso.util.TreeIterables.breadthFirstViewTraversal;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static androidx.test.internal.util.Checks.checkArgument;
+import static androidx.test.internal.util.Checks.checkNotNull;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 

@@ -20,8 +20,8 @@ package androidx.test.espresso.remote;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.remote.InteractionResponse.RemoteError.REMOTE_ESPRESSO_ERROR_CODE;
 import static androidx.test.espresso.remote.InteractionResponse.RemoteError.REMOTE_PROTOCOL_ERROR_CODE;
+import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.LogUtil.logDebugWithProcess;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.os.Bundle;
 import android.os.Handler;
