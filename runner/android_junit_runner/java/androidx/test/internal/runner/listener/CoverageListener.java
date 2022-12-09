@@ -85,8 +85,10 @@ public class CoverageListener extends InstrumentationRunListener {
   }
 
   @Override
-  public void instrumentationRunFinished(PrintStream writer, Bundle results, Result junitResults) {
-    String actualCoveragePath = coverageReporter.generateCoverageReport(coverageFilePath, writer);
-    results.putString(REPORT_KEY_COVERAGE_PATH, actualCoveragePath);
+  public void instrumentationRunFinished(
+      PrintStream streamResult, Bundle resultBundle, Result junitResults) {
+    String actualCoveragePath =
+        coverageReporter.generateCoverageReport(coverageFilePath, streamResult);
+    resultBundle.putString(REPORT_KEY_COVERAGE_PATH, actualCoveragePath);
   }
 }
