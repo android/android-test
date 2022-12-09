@@ -48,7 +48,7 @@ public class EnableJavascriptAction implements ViewAction {
   }
 
   @Override
-  public void perform(UiController controller, View view) {
+  public void perform(UiController uiController, View view) {
     WebView webView = (WebView) view;
     if (!webView.getSettings().getJavaScriptEnabled()) {
       webView.getSettings().setJavaScriptEnabled(true);

@@ -112,7 +112,7 @@ public final class AtomAction<E> implements ViewAction, Bindable {
   }
 
   @Override
-  public void perform(UiController controller, View view) {
+  public void perform(UiController uiController, View view) {
     WebView webView = (WebView) view;
     if (Build.VERSION.SDK_INT >= 23 && !webView.isHardwareAccelerated()) {
       throw new PerformException.Builder()
