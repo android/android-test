@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Check java version
         run: java --version
       - name: Build maven artifacts
@@ -20,6 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Run Robolectric tests
         run: bazelisk test --test_tag_filters=robolectric,-gcb_ignore --build_tag_filters=robolectric --test_output=all ...
