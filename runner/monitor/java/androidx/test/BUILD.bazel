@@ -47,6 +47,9 @@ android_library(
     srcs = [
         "internal/runner/runtime/ExposedInstrumentationApi.java",
     ],
+    deps = [
+      "//:androidx_annotation",
+    ],
 )
 
 android_library(
@@ -55,6 +58,10 @@ android_library(
         "internal/runner/hidden/ExposedInstrumentationApi.java",
     ],
     neverlink = 1,
+        deps = [
+          "//:androidx_annotation",
+        ],
+
 )
 
 # group of targets to use to produce release binary + docs

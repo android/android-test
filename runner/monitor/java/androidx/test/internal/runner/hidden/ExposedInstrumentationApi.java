@@ -24,6 +24,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.UserHandle;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 
 /**
  * Exposes select hidden android apis to the compiler and to enable recording and stubbing of
@@ -35,6 +37,7 @@ import android.os.UserHandle;
  *
  * @hide
  */
+@RestrictTo(Scope.LIBRARY)
 public class ExposedInstrumentationApi extends Instrumentation {
 
   /**

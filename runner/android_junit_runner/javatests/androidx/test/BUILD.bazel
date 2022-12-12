@@ -34,6 +34,7 @@ android_library(
     srcs = UI_THREAD_STATEMENT_TEST_EXAMPLES,
     deps = [
         "//ext/junit",
+        "//runnner/android_junit_runner",
         "//runner/rules",
         "@maven//:junit_junit",
     ],

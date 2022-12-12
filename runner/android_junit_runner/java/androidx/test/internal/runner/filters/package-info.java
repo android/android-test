@@ -16,7 +16,7 @@
 
 /** @hide */
 @RestrictTo(Scope.LIBRARY)
-package androidx.test.internal;
+package androidx.test.internal.runner.filters;
 
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
