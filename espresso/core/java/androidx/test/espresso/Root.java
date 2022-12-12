@@ -22,6 +22,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.util.EspressoOptional;
 import androidx.test.espresso.util.HumanReadables;
 import com.google.common.base.MoreObjects.ToStringHelper;
@@ -35,18 +36,26 @@ import com.google.common.base.MoreObjects.ToStringHelper;
  */
 public final class Root {
   private final View decorView;
-  private final EspressoOptional<LayoutParams> windowLayoutParams;
+  @Nullable private final LayoutParams windowLayoutParams;
 
   private Root(Builder builder) {
     this.decorView = checkNotNull(builder.decorView);
-    this.windowLayoutParams = EspressoOptional.fromNullable(builder.windowLayoutParams);
+    this.windowLayoutParams = builder.windowLayoutParams;
   }
 
   public View getDecorView() {
     return decorView;
   }
 
+  /**
+   * @deprecated use {@link #getWindowLayoutParams2()}
+   */
+  @Deprecated
   public EspressoOptional<WindowManager.LayoutParams> getWindowLayoutParams() {
+    return EspressoOptional.of(windowLayoutParams);
+  }
+
+  public WindowManager.LayoutParams getWindowLayoutParams2() {
     return windowLayoutParams;
   }
 
@@ -58,7 +67,7 @@ public final class Root {
    */
   public boolean isReady() {
     if (!decorView.isLayoutRequested()) {
-      int flags = windowLayoutParams.get().flags;
+      int flags = windowLayoutParams.flags;
       return decorView.hasWindowFocus()
           || (flags & WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
               == WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
@@ -73,10 +82,10 @@ public final class Root {
             .add("application-window-token", decorView.getApplicationWindowToken())
             .add("window-token", decorView.getWindowToken())
             .add("has-window-focus", decorView.hasWindowFocus());
-    if (windowLayoutParams.isPresent()) {
+    if (windowLayoutParams != null) {
       helper
-          .add("layout-params-type", windowLayoutParams.get().type)
-          .add("layout-params-string", windowLayoutParams.get());
+          .add("layout-params-type", windowLayoutParams.type)
+          .add("layout-params-string", windowLayoutParams);
     }
     helper.add("decor-view-string", HumanReadables.describe(decorView));
     return helper.toString();

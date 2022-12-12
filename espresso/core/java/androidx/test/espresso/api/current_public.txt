@@ -36,7 +36,8 @@ package androidx.test.espresso {
 
   public static final class DataInteraction.DisplayDataMatcher extends org.hamcrest.TypeSafeMatcher<android.view.View> {
     method public void describeTo(org.hamcrest.Description!);
-    method public static androidx.test.espresso.DataInteraction.DisplayDataMatcher! displayDataMatcher(org.hamcrest.Matcher<android.view.View!>, org.hamcrest.Matcher<?>, org.hamcrest.Matcher<androidx.test.espresso.Root!>, androidx.test.espresso.util.EspressoOptional<java.lang.Integer!>!, androidx.test.espresso.action.AdapterViewProtocol);
+    method @Deprecated public static androidx.test.espresso.DataInteraction.DisplayDataMatcher! displayDataMatcher(org.hamcrest.Matcher<android.view.View!>, org.hamcrest.Matcher<?>, org.hamcrest.Matcher<androidx.test.espresso.Root!>, androidx.test.espresso.util.EspressoOptional<java.lang.Integer!>!, androidx.test.espresso.action.AdapterViewProtocol);
+    method public static androidx.test.espresso.DataInteraction.DisplayDataMatcher! displayDataMatcher(org.hamcrest.Matcher<android.view.View!>, org.hamcrest.Matcher<?>, org.hamcrest.Matcher<androidx.test.espresso.Root!>, Integer?, androidx.test.espresso.action.AdapterViewProtocol);
     method public boolean matchesSafely(android.view.View!);
   }
 
@@ -111,7 +112,8 @@ package androidx.test.espresso {
     method public androidx.test.espresso.NoMatchingViewException! build();
     method public androidx.test.espresso.NoMatchingViewException.Builder! from(androidx.test.espresso.NoMatchingViewException!);
     method public androidx.test.espresso.NoMatchingViewException.Builder! includeViewHierarchy(boolean);
-    method public androidx.test.espresso.NoMatchingViewException.Builder! withAdapterViewWarning(androidx.test.espresso.util.EspressoOptional<java.lang.String!>!);
+    method @Deprecated public androidx.test.espresso.NoMatchingViewException.Builder! withAdapterViewWarning(androidx.test.espresso.util.EspressoOptional<java.lang.String!>!);
+    method @com.google.errorprone.annotations.CanIgnoreReturnValue public androidx.test.espresso.NoMatchingViewException.Builder! withAdapterViewWarning(String!);
     method public androidx.test.espresso.NoMatchingViewException.Builder! withAdapterViews(java.util.List<android.view.View!>!);
     method public androidx.test.espresso.NoMatchingViewException.Builder! withCause(Throwable!);
     method public androidx.test.espresso.NoMatchingViewException.Builder withMaxMsgLen(int);
@@ -136,7 +138,8 @@ package androidx.test.espresso {
 
   public final class Root {
     method public android.view.View! getDecorView();
-    method public androidx.test.espresso.util.EspressoOptional<android.view.WindowManager.LayoutParams!>! getWindowLayoutParams();
+    method @Deprecated public androidx.test.espresso.util.EspressoOptional<android.view.WindowManager.LayoutParams!>! getWindowLayoutParams();
+    method public android.view.WindowManager.LayoutParams! getWindowLayoutParams2();
     method public boolean isReady();
   }
 
@@ -191,7 +194,8 @@ package androidx.test.espresso {
 package androidx.test.espresso.action {
 
   public final class AdapterDataLoaderAction implements androidx.test.espresso.ViewAction {
-    ctor public AdapterDataLoaderAction(org.hamcrest.Matcher<?>!, androidx.test.espresso.util.EspressoOptional<java.lang.Integer!>!, androidx.test.espresso.action.AdapterViewProtocol!);
+    ctor @Deprecated public AdapterDataLoaderAction(org.hamcrest.Matcher<?>!, androidx.test.espresso.util.EspressoOptional<java.lang.Integer!>!, androidx.test.espresso.action.AdapterViewProtocol!);
+    ctor public AdapterDataLoaderAction(org.hamcrest.Matcher<?>!, Integer?, androidx.test.espresso.action.AdapterViewProtocol!);
     method public androidx.test.espresso.action.AdapterViewProtocol.AdaptedData! getAdaptedData();
     method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
     method public String! getDescription();
@@ -200,7 +204,8 @@ package androidx.test.espresso.action {
 
   public interface AdapterViewProtocol {
     method public Iterable<androidx.test.espresso.action.AdapterViewProtocol.AdaptedData!>! getDataInAdapterView(android.widget.AdapterView<? extends android.widget.Adapter>!);
-    method public androidx.test.espresso.util.EspressoOptional<androidx.test.espresso.action.AdapterViewProtocol.AdaptedData!>! getDataRenderedByView(android.widget.AdapterView<? extends android.widget.Adapter>!, android.view.View!);
+    method @Deprecated public androidx.test.espresso.util.EspressoOptional<androidx.test.espresso.action.AdapterViewProtocol.AdaptedData!>! getDataRenderedByView(android.widget.AdapterView<? extends android.widget.Adapter>!, android.view.View!);
+    method public default androidx.test.espresso.action.AdapterViewProtocol.AdaptedData? getDataRenderedByView2(android.widget.AdapterView<? extends android.widget.Adapter>!, android.view.View!);
     method public boolean isDataRenderedWithinAdapterView(android.widget.AdapterView<? extends android.widget.Adapter>!, androidx.test.espresso.action.AdapterViewProtocol.AdaptedData!);
     method public void makeDataRenderedWithinAdapterView(android.widget.AdapterView<? extends android.widget.Adapter>!, androidx.test.espresso.action.AdapterViewProtocol.AdaptedData!);
   }
@@ -784,19 +789,19 @@ package androidx.test.espresso.util {
     method public static boolean hasVisibleActivities(androidx.test.runner.lifecycle.ActivityLifecycleMonitor!);
   }
 
-  public final class EspressoOptional<T> {
-    method public static <T> androidx.test.espresso.util.EspressoOptional<T!>! absent();
-    method public java.util.Set<T!>! asSet();
-    method public static <T> androidx.test.espresso.util.EspressoOptional<T!>! fromNullable(T!);
-    method public T! get();
-    method public boolean isPresent();
-    method public static <T> androidx.test.espresso.util.EspressoOptional<T!>! of(T!);
-    method public com.google.common.base.Optional<T!>! or(com.google.common.base.Optional<? extends T>!);
-    method public T! or(com.google.common.base.Supplier<? extends T>!);
-    method public T! or(T!);
-    method public T! orNull();
-    method @com.google.common.annotations.Beta public static <T> Iterable<T!>! presentInstances(Iterable<? extends com.google.common.base.Optional<? extends T>>!);
-    method public <V> com.google.common.base.Optional<V!>! transform(com.google.common.base.Function<? super T,V!>!);
+  @Deprecated public final class EspressoOptional<T> {
+    method @Deprecated public static <T> androidx.test.espresso.util.EspressoOptional<T!>! absent();
+    method @Deprecated public java.util.Set<T!>! asSet();
+    method @Deprecated public static <T> androidx.test.espresso.util.EspressoOptional<T!>! fromNullable(T!);
+    method @Deprecated public T! get();
+    method @Deprecated public boolean isPresent();
+    method @Deprecated public static <T> androidx.test.espresso.util.EspressoOptional<T!>! of(T!);
+    method @Deprecated public com.google.common.base.Optional<T!>! or(com.google.common.base.Optional<? extends T>!);
+    method @Deprecated public T! or(com.google.common.base.Supplier<? extends T>!);
+    method @Deprecated public T! or(T!);
+    method @Deprecated public T! orNull();
+    method @Deprecated @com.google.common.annotations.Beta public static <T> Iterable<T!>! presentInstances(Iterable<? extends com.google.common.base.Optional<? extends T>>!);
+    method @Deprecated public <V> com.google.common.base.Optional<V!>! transform(com.google.common.base.Function<? super T,V!>!);
   }
 
   public final class HumanReadables {

@@ -28,6 +28,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterViewAnimator;
 import android.widget.AdapterViewFlipper;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.util.EspressoOptional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Range;
@@ -97,21 +98,31 @@ public final class AdapterViewProtocols {
       return datas;
     }
 
+    /**
+     * @deprecated use {@link #getDataRenderedByView2(AdapterView, View)}
+     */
     @Override
+    @Deprecated
     public EspressoOptional<AdaptedData> getDataRenderedByView(
+        AdapterView<? extends Adapter> adapterView, View descendantView) {
+      return EspressoOptional.of(getDataRenderedByView2(adapterView, descendantView));
+    }
+
+    @Override
+    @Nullable
+    public AdaptedData getDataRenderedByView2(
         AdapterView<? extends Adapter> adapterView, View descendantView) {
       if (adapterView == descendantView.getParent()) {
         int position = adapterView.getPositionForView(descendantView);
         if (position != AdapterView.INVALID_POSITION) {
-          return EspressoOptional.of(
-              new AdaptedData.Builder()
-                  .withDataFunction(
-                      new StandardDataFunction(adapterView.getItemAtPosition(position), position))
-                  .withOpaqueToken(Integer.valueOf(position))
-                  .build());
+          return new AdaptedData.Builder()
+              .withDataFunction(
+                  new StandardDataFunction(adapterView.getItemAtPosition(position), position))
+              .withOpaqueToken(Integer.valueOf(position))
+              .build();
         }
       }
-      return EspressoOptional.absent();
+      return null;
     }
 
     @Override

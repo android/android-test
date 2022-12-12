@@ -30,6 +30,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.action.AdapterDataLoaderAction;
 import androidx.test.espresso.action.AdapterViewProtocol;
@@ -68,8 +69,8 @@ public class DataInteraction {
 
   private final Matcher<? extends Object> dataMatcher;
   private Matcher<View> adapterMatcher = isAssignableFrom(AdapterView.class);
-  private EspressoOptional<Matcher<View>> childViewMatcher = EspressoOptional.absent();
-  private EspressoOptional<Integer> atPosition = EspressoOptional.absent();
+  @Nullable private Matcher<View> childViewMatcher = null;
+  @Nullable private Integer atPosition = null;
   private AdapterViewProtocol adapterViewProtocol = AdapterViewProtocols.standardProtocol();
   private Matcher<Root> rootMatcher = RootMatchers.DEFAULT;
 
@@ -84,7 +85,7 @@ public class DataInteraction {
   @CheckResult
   @CheckReturnValue
   public DataInteraction onChildView(Matcher<View> childMatcher) {
-    this.childViewMatcher = EspressoOptional.of(checkNotNull(childMatcher));
+    this.childViewMatcher = checkNotNull(childMatcher);
     return this;
   }
 
@@ -111,7 +112,7 @@ public class DataInteraction {
   @CheckResult
   @CheckReturnValue
   public DataInteraction atPosition(Integer atPosition) {
-    this.atPosition = EspressoOptional.of(checkNotNull(atPosition));
+    this.atPosition = checkNotNull(atPosition);
     return this;
   }
 
@@ -150,8 +151,8 @@ public class DataInteraction {
     Matcher<View> targetView =
         displayDataMatcher(
             adapterMatcher, dataMatcher, rootMatcher, atPosition, adapterViewProtocol);
-    if (childViewMatcher.isPresent()) {
-      targetView = allOf(childViewMatcher.get(), isDescendantOfA(targetView));
+    if (childViewMatcher != null) {
+      targetView = allOf(childViewMatcher, isDescendantOfA(targetView));
     }
     return targetView;
   }
@@ -240,12 +241,40 @@ public class DataInteraction {
      * @param adapterMatcher matcher that matches an {@link AdapterView}
      * @param dataMatcher the data matcher for matching a {@link View} by it's adapter data
      * @param adapterViewProtocol the {@link AdapterViewProtocol} used for this data interaction
+     * @deprecated use {@link #displayDataMatcher(Matcher, Matcher, Matcher, Integer,
+     *     AdapterViewProtocol)} instead.
      */
+    @Deprecated
     public static DisplayDataMatcher displayDataMatcher(
         @NonNull Matcher<View> adapterMatcher,
         @NonNull Matcher<? extends Object> dataMatcher,
         @NonNull Matcher<Root> rootMatcher,
         EspressoOptional<Integer> atPosition,
+        @NonNull AdapterViewProtocol adapterViewProtocol) {
+      return new DisplayDataMatcher(
+          adapterMatcher,
+          dataMatcher,
+          rootMatcher,
+          adapterViewProtocol,
+          new AdapterDataLoaderAction(dataMatcher, atPosition, adapterViewProtocol));
+    }
+
+    /**
+     * Returns an instance of {@link DisplayDataMatcher}.
+     *
+     * <p>Note: This is an internal method, do not call from test code!
+     *
+     * @param adapterMatcher matcher that matches an {@link AdapterView}
+     * @param dataMatcher the data matcher for matching a {@link View} by it's adapter data
+     * @param rootMatcher matcher for view's root
+     * @param atPosition optional zero-based position of the data to be matched
+     * @param adapterViewProtocol the {@link AdapterViewProtocol} used for this data interaction
+     */
+    public static DisplayDataMatcher displayDataMatcher(
+        @NonNull Matcher<View> adapterMatcher,
+        @NonNull Matcher<? extends Object> dataMatcher,
+        @NonNull Matcher<Root> rootMatcher,
+        @Nullable Integer atPosition,
         @NonNull AdapterViewProtocol adapterViewProtocol) {
       return new DisplayDataMatcher(
           adapterMatcher,
@@ -271,13 +300,11 @@ public class DataInteraction {
         parent = parent.getParent();
       }
       if (parent != null && adapterMatcher.matches(parent)) {
-        EspressoOptional<AdaptedData> data =
-            adapterViewProtocol.getDataRenderedByView(
+        AdaptedData data =
+            adapterViewProtocol.getDataRenderedByView2(
                 (AdapterView<? extends Adapter>) parent, view);
-        if (data.isPresent()) {
-          return data.get()
-              .opaqueToken
-              .equals(adapterDataLoaderAction.getAdaptedData().opaqueToken);
+        if (data != null) {
+          return data.opaqueToken.equals(adapterDataLoaderAction.getAdaptedData().opaqueToken);
         }
       }
       return false;

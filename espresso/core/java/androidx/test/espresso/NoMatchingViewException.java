@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.test.espresso.util.EspressoOptional;
 import androidx.test.espresso.util.HumanReadables;
 import com.google.common.collect.Lists;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.List;
 import java.util.Locale;
 import org.hamcrest.Matcher;
@@ -46,7 +47,7 @@ public final class NoMatchingViewException extends RuntimeException implements R
   private View rootView;
   private List<View> adapterViews = Lists.newArrayList();
   private boolean includeViewHierarchy = true;
-  private EspressoOptional<String> adapterViewWarning = EspressoOptional.absent();
+  @Nullable private String adapterViewWarning = null;
 
   private NoMatchingViewException(String description) {
     super(description);
@@ -84,8 +85,8 @@ public final class NoMatchingViewException extends RuntimeException implements R
       String message =
           String.format(
               Locale.ROOT, "No views in hierarchy found matching: %s", builder.viewMatcher);
-      if (builder.adapterViewWarning.isPresent()) {
-        message = message + builder.adapterViewWarning.get();
+      if (builder.adapterViewWarning != null) {
+        message = message + builder.adapterViewWarning;
       }
       errorMessage =
           HumanReadables.getViewHierarchyErrorMessage(
@@ -116,7 +117,7 @@ public final class NoMatchingViewException extends RuntimeException implements R
     private View rootView;
     private List<View> adapterViews = Lists.newArrayList();
     private boolean includeViewHierarchy = true;
-    private EspressoOptional<String> adapterViewWarning = EspressoOptional.<String>absent();
+    @Nullable private String adapterViewWarning = null;
     private Throwable cause;
     private int maxMsgLen = Integer.MAX_VALUE;
     private String viewHierarchyFile = null;
@@ -150,7 +151,16 @@ public final class NoMatchingViewException extends RuntimeException implements R
       return this;
     }
 
+    /**
+     * @deprecated use {@link #withAdapterViewWarning(String)} instead
+     */
+    @Deprecated
     public Builder withAdapterViewWarning(EspressoOptional<String> adapterViewWarning) {
+      return withAdapterViewWarning(adapterViewWarning.get());
+    }
+
+    @CanIgnoreReturnValue
+    public Builder withAdapterViewWarning(String adapterViewWarning) {
       this.adapterViewWarning = adapterViewWarning;
       return this;
     }
@@ -176,7 +186,6 @@ public final class NoMatchingViewException extends RuntimeException implements R
       checkNotNull(viewMatcher);
       checkNotNull(rootView);
       checkNotNull(adapterViews);
-      checkNotNull(adapterViewWarning);
       return new NoMatchingViewException(this);
     }
   }

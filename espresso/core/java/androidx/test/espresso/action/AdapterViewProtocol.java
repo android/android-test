@@ -64,6 +64,13 @@ public interface AdapterViewProtocol {
   Iterable<AdaptedData> getDataInAdapterView(AdapterView<? extends Adapter> adapterView);
 
   /**
+   * @deprecated use {@link #getDataRenderedByView2(AdapterView, View)}
+   */
+  @Deprecated
+  EspressoOptional<AdaptedData> getDataRenderedByView(
+      AdapterView<? extends Adapter> adapterView, View descendantView);
+
+  /**
    * Returns the data object this particular view is rendering if possible.
    *
    * <p>Implementations are expected to create a relationship between the data in the AdapterView
@@ -91,8 +98,11 @@ public interface AdapterViewProtocol {
    * @return an optional data object the descendant view is rendering.
    * @throws IllegalArgumentException if this protocol cannot interrogate this class of adapterView
    */
-  EspressoOptional<AdaptedData> getDataRenderedByView(
-      AdapterView<? extends Adapter> adapterView, View descendantView);
+  @Nullable
+  default AdaptedData getDataRenderedByView2(
+      AdapterView<? extends Adapter> adapterView, View descendantView) {
+    return getDataRenderedByView(adapterView, descendantView).get();
+  }
 
   /**
    * Requests that a particular piece of data held in this AdapterView is actually rendered by it.

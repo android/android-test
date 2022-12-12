@@ -20,12 +20,12 @@ import static androidx.test.espresso.remote.TypeProtoConverters.typeToAny;
 import static androidx.test.espresso.remote.TypeProtoConverters.typeToByteString;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.proto.action.ViewActions.AdapterDataLoaderActionProto;
 import androidx.test.espresso.remote.ConstructorInvocation;
 import androidx.test.espresso.remote.EspressoRemoteMessage;
 import androidx.test.espresso.remote.TypeProtoConverters;
-import androidx.test.espresso.util.EspressoOptional;
 import org.hamcrest.Matcher;
 
 /**
@@ -36,7 +36,7 @@ public final class AdapterDataLoaderActionRemoteMsg
     implements EspressoRemoteMessage.To<AdapterDataLoaderActionProto> {
   @VisibleForTesting static final int NO_POSITION_SET = -1;
 
-  private final EspressoOptional<Integer> atPosition;
+  @Nullable private final Integer atPosition;
   private final Matcher<? extends Object> dataToLoadMatcher;
   private final Class<? extends AdapterViewProtocol> adapterViewProtocolClass;
 
@@ -50,7 +50,7 @@ public final class AdapterDataLoaderActionRemoteMsg
   @Override
   public AdapterDataLoaderActionProto toProto() {
     return AdapterDataLoaderActionProto.newBuilder()
-        .setAtPosition(atPosition.or(NO_POSITION_SET))
+        .setAtPosition(atPosition == null ? NO_POSITION_SET : atPosition)
         .setDataToLoadMatcher(typeToAny(dataToLoadMatcher))
         .setAdapterViewProtocolClass(typeToByteString(adapterViewProtocolClass))
         .build();
@@ -73,12 +73,14 @@ public final class AdapterDataLoaderActionRemoteMsg
                   adapterViewProtocolClass.cast(
                       new ConstructorInvocation(adapterViewProtocolClass, null)
                           .invokeConstructor());
+              Integer atPosition =
+                  NO_POSITION_SET == dataLoaderActionProto.getAtPosition()
+                      ? null
+                      : dataLoaderActionProto.getAtPosition();
               return new AdapterDataLoaderAction(
                   TypeProtoConverters.<Matcher<? extends Object>>anyToType(
                       dataLoaderActionProto.getDataToLoadMatcher()),
-                  NO_POSITION_SET == dataLoaderActionProto.getAtPosition()
-                      ? EspressoOptional.<Integer>absent()
-                      : EspressoOptional.of(dataLoaderActionProto.getAtPosition()),
+                  atPosition,
                   adapterViewProtocol);
             }
           };

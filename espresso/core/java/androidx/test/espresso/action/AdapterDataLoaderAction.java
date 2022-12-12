@@ -25,6 +25,7 @@ import static org.hamcrest.Matchers.allOf;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
@@ -42,18 +43,30 @@ import org.hamcrest.StringDescription;
  */
 public final class AdapterDataLoaderAction implements ViewAction {
   final Matcher<? extends Object> dataToLoadMatcher;
-  final EspressoOptional<Integer> atPosition;
+  @Nullable final Integer atPosition;
   final AdapterViewProtocol adapterViewProtocol;
   private AdapterViewProtocol.AdaptedData adaptedData;
   private boolean performed = false;
   private final Object dataLock = new Object();
 
+  /**
+   * @deprecated use {@link AdapterDataLoaderAction(Matcher<? extends Object>, Integer,
+   *     AdapterViewProtocol)} instead.
+   */
+  @Deprecated
   public AdapterDataLoaderAction(
       Matcher<? extends Object> dataToLoadMatcher,
       EspressoOptional<Integer> atPosition,
       AdapterViewProtocol adapterViewProtocol) {
+    this(dataToLoadMatcher, atPosition.get(), adapterViewProtocol);
+  }
+
+  public AdapterDataLoaderAction(
+      Matcher<? extends Object> dataToLoadMatcher,
+      @Nullable Integer atPosition,
+      AdapterViewProtocol adapterViewProtocol) {
     this.dataToLoadMatcher = checkNotNull(dataToLoadMatcher);
-    this.atPosition = checkNotNull(atPosition);
+    this.atPosition = atPosition;
     this.adapterViewProtocol = checkNotNull(adapterViewProtocol);
   }
 
@@ -102,9 +115,9 @@ public final class AdapterDataLoaderAction implements ViewAction {
     synchronized (dataLock) {
       checkState(!performed, "perform called 2x!");
       performed = true;
-      if (atPosition.isPresent()) {
+      if (atPosition != null) {
         int matchedDataItemsSize = matchedDataItems.size() - 1;
-        if (atPosition.get() > matchedDataItemsSize) {
+        if (atPosition > matchedDataItemsSize) {
           throw new PerformException.Builder()
               .withActionDescription(this.getDescription())
               .withViewDescription(HumanReadables.describe(view))
@@ -114,10 +127,10 @@ public final class AdapterDataLoaderAction implements ViewAction {
                           Locale.ROOT,
                           "There are only %d elements that matched but requested %d element.",
                           matchedDataItemsSize,
-                          atPosition.get())))
+                          atPosition)))
               .build();
         } else {
-          adaptedData = matchedDataItems.get(atPosition.get());
+          adaptedData = matchedDataItems.get(atPosition);
         }
       } else {
         if (matchedDataItems.size() != 1) {

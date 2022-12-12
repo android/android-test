@@ -27,7 +27,6 @@ import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewFinder;
 import androidx.test.espresso.matcher.ViewMatchers;
-import androidx.test.espresso.util.EspressoOptional;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -104,7 +103,7 @@ public final class ViewFinderImpl implements ViewFinder {
           .withViewMatcher(viewMatcher)
           .withRootView(root)
           .withAdapterViews(adapterViews)
-          .withAdapterViewWarning(EspressoOptional.of(warning))
+          .withAdapterViewWarning(warning)
           .build();
     } else {
       return matchedView;

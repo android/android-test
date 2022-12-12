@@ -35,7 +35,6 @@ import androidx.test.espresso.matcher.RemoteViewMatchers;
 import androidx.test.espresso.proto.matcher.ViewMatchers.DisplayDataMatcherProto;
 import androidx.test.espresso.remote.GenericRemoteMessage;
 import androidx.test.espresso.remote.RemoteDescriptorRegistry;
-import androidx.test.espresso.util.EspressoOptional;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import com.google.common.base.Function;
@@ -64,8 +63,7 @@ public class DisplayDataMatcherRemoteMsgTest {
     Matcher<String> stringMatcher = allOf(instanceOf(String.class), equalTo(TEXT_VIEW_TEXT));
     AdapterViewProtocol adapterViewProtocol = AdapterViewProtocols.standardProtocol();
     AdapterDataLoaderAction adapterDataLoaderAction =
-        new AdapterDataLoaderAction(
-            stringMatcher, EspressoOptional.<Integer>absent(), adapterViewProtocol);
+        new AdapterDataLoaderAction(stringMatcher, (Integer) null, adapterViewProtocol);
     Function<AdapterDataLoaderAction, ViewInteraction> noOpDataLoaderFunction =
         new Function<AdapterDataLoaderAction, ViewInteraction>() {
           @Override
