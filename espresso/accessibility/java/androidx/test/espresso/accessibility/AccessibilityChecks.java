@@ -62,7 +62,7 @@ public final class AccessibilityChecks {
           }
           StrictMode.ThreadPolicy originalPolicy = StrictMode.allowThreadDiskWrites();
           try {
-            CHECK_EXECUTOR.checkAndReturnResults(view);
+            CHECK_EXECUTOR.check(view);
           } finally {
             StrictMode.setThreadPolicy(originalPolicy);
           }
