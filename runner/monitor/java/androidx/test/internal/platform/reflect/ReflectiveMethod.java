@@ -64,10 +64,13 @@ public class ReflectiveMethod<T> {
     try {
       initIfNecessary();
       return (T) method.invoke(object, paramValues);
-    } catch (ClassNotFoundException
-        | InvocationTargetException
-        | IllegalAccessException
-        | NoSuchMethodException e) {
+    } catch (ClassNotFoundException e) {
+      throw new ReflectionException(e);
+    } catch (InvocationTargetException e) {
+      throw new ReflectionException(e);
+    } catch (NoSuchMethodException e) {
+      throw new ReflectionException(e);
+    } catch (IllegalAccessException e) {
       throw new ReflectionException(e);
     }
   }

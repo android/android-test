@@ -15,8 +15,10 @@
  */
 package androidx.test.platform.io;
 
-import android.util.Log;
+import android.os.Bundle;
 import androidx.test.annotation.ExperimentalTestApi;
+import androidx.test.platform.app.InstrumentationRegistry;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,62 +37,75 @@ import java.util.Map;
 public final class FileTestStorage implements PlatformTestStorage {
 
   private static final String TAG = FileTestStorage.class.getSimpleName();
+  private final OutputDirCalculator outputDirCalculator;
+
+  public FileTestStorage() {
+    outputDirCalculator = new OutputDirCalculator();
+  }
 
   /**
    * Provides an InputStream to a test file dependency.
    *
-   * @param pathname path to the test file dependency. Should not be null. This is an absolute file
-   *     path on the device, and it's the infrastructure/client's responsibility to make sure the
-   *     file path is readable.
+   * @param pathname path to the test file dependency. Should not be null. Can be either a relative
+   *     or absolute path. If relative, the implementation will read the input file from the test
+   *     apk's asset directory
    */
   @Override
   public InputStream openInputFile(String pathname) throws IOException {
-    return new FileInputStream(pathname);
+    File inputFile = new File(pathname);
+    if (inputFile.isAbsolute()) {
+      return new FileInputStream(inputFile);
+    }
+    return InstrumentationRegistry.getInstrumentation().getContext().getAssets().open(pathname);
   }
 
   /**
    * Provides an OutputStream to a test output file.
    *
-   * @param pathname path to the test file dependency. Should not be null. This is an absolute file
-   *     path on the device, and it's the infrastructure/client's responsibility to make sure the
-   *     file path is writable.
+   * @param pathname path to the test file dependency. Should not be null. Can be either a relative
+   *     or absolute path. If relative, the implementation will make a best effort attempt to a
+   *     writable output dir based on API level.
    */
   @Override
   public OutputStream openOutputFile(String pathname) throws IOException {
-    return new FileOutputStream(pathname);
+    File outputFile = new File(pathname);
+    if (!outputFile.isAbsolute()) {
+      outputFile = new File(outputDirCalculator.getOutputDir(), pathname);
+    }
+
+    return new FileOutputStream(outputFile);
   }
 
   @Override
   public OutputStream openOutputFile(String pathname, boolean append) throws IOException {
-    return new FileOutputStream(pathname, append);
+    File outputFile = new File(pathname);
+    if (!outputFile.isAbsolute()) {
+      outputFile = new File(outputDirCalculator.getOutputDir(), pathname);
+    }
+    return new FileOutputStream(outputFile, append);
   }
 
-  /**
-   * Test input arguments is not supported when raw file I/O is used.
-   *
-   * <p><code>null</code> is always returned.
-   */
+  /** Implementation of input arguments that reads from InstrumentationRegistry.getArguments */
   @Override
   public String getInputArg(String argName) {
-    Log.w(TAG, "Test input args is not supported.");
-    return null;
+    return InstrumentationRegistry.getArguments().getString(argName);
   }
 
-  /**
-   * Test input arguments is not supported when raw file I/O is used.
-   *
-   * <p>An empty map is always returned.
-   */
+  /** Implementation of input arguments that reads from InstrumentationRegistry.getArguments */
   @Override
   public Map<String, String> getInputArgs() {
-    Log.w(TAG, "Test input args is not supported.");
-    return new HashMap<>();
+    Map<String, String> argMap = new HashMap<>();
+    Bundle bundle = InstrumentationRegistry.getArguments();
+    for (String key : bundle.keySet()) {
+      argMap.put(key, bundle.getString(key));
+    }
+    return argMap;
   }
 
   /** Test output properties is not supported when raw file I/O is used. */
   @Override
   public void addOutputProperties(Map<String, Serializable> properties) {
-    Log.w(TAG, "Output properties is not supported.");
+    throw new UnsupportedOperationException("Output properties is not supported.");
   }
 
   /**
@@ -100,8 +115,7 @@ public final class FileTestStorage implements PlatformTestStorage {
    */
   @Override
   public Map<String, Serializable> getOutputProperties() {
-    Log.w(TAG, "Output properties is not supported.");
-    return new HashMap<>();
+    throw new UnsupportedOperationException("Output properties is not supported.");
   }
 
   /**
@@ -113,18 +127,18 @@ public final class FileTestStorage implements PlatformTestStorage {
    */
   @Override
   public InputStream openInternalInputFile(String pathname) throws IOException {
-    return new FileInputStream(pathname);
+    return openInputFile(pathname);
   }
 
   /**
    * Provides an OutputStream to an internal file used by the testing infrastructure.
    *
-   * @param pathname path to the internal output file. Should not be null. This is an absolute file
-   *     path on the device, and it's the infrastructure/client's responsibility to make sure the
-   *     file path is writable.
+   * @param pathname path to the test file dependency. Should not be null. Can be either a relative
+   *     or absolute path. If relative, the implementation will read the input file from the test
+   *     apk's asset directory
    */
   @Override
   public OutputStream openInternalOutputFile(String pathname) throws IOException {
-    return new FileOutputStream(pathname);
+    return openOutputFile(pathname);
   }
 }

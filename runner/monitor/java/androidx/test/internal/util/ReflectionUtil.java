@@ -102,7 +102,11 @@ public class ReflectionUtil {
       Method m = clazz.getDeclaredMethod(methodName, types);
       m.setAccessible(true);
       return m.invoke(null, values);
-    } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+    } catch (InvocationTargetException e) {
+      throw new ReflectionException(e);
+    } catch (IllegalAccessException e) {
+      throw new ReflectionException(e);
+    } catch (NoSuchMethodException e) {
       throw new ReflectionException(e);
     }
   }

@@ -905,11 +905,16 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
               Method install = jsBridge.getDeclaredMethod("installBridge");
               install.invoke(null);
               isJsBridgeLoaded.set(true);
-            } catch (ClassNotFoundException | NoSuchMethodException ignored) {
+            } catch (ClassNotFoundException ignored) {
               // ignore
-            } catch (InvocationTargetException | IllegalAccessException ite) {
+            } catch (NoSuchMethodException ignored) {
+              // ignore
+            } catch (InvocationTargetException ite) {
               throw new RuntimeException(
                   "JSbridge is available at runtime, but calling it failed.", ite);
+            } catch (IllegalAccessException iae) {
+              throw new RuntimeException(
+                  "JSbridge is available at runtime, but calling it failed.", iae);
             }
           }
         });

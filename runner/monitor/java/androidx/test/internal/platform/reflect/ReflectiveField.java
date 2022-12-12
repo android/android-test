@@ -57,7 +57,11 @@ public class ReflectiveField<T> {
     try {
       initIfNecessary();
       return (T) field.get(object);
-    } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
+    } catch (ClassNotFoundException e) {
+      throw new ReflectionException(e);
+    } catch (NoSuchFieldException e) {
+      throw new ReflectionException(e);
+    } catch (IllegalAccessException e) {
       throw new ReflectionException(e);
     }
   }
