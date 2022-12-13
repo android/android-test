@@ -16,6 +16,7 @@
 package androidx.test.platform.io;
 
 import android.os.Bundle;
+import android.util.Log;
 import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.io.File;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -105,7 +107,7 @@ public final class FileTestStorage implements PlatformTestStorage {
   /** Test output properties is not supported when raw file I/O is used. */
   @Override
   public void addOutputProperties(Map<String, Serializable> properties) {
-    throw new UnsupportedOperationException("Output properties is not supported.");
+    Log.w(TAG, "Output properties is not supported.");
   }
 
   /**
@@ -115,7 +117,8 @@ public final class FileTestStorage implements PlatformTestStorage {
    */
   @Override
   public Map<String, Serializable> getOutputProperties() {
-    throw new UnsupportedOperationException("Output properties is not supported.");
+    Log.w(TAG, "Output properties is not supported.");
+    return Collections.emptyMap();
   }
 
   /**
