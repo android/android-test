@@ -18,8 +18,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   package="androidx.test.services"
-  android:versionCode="2">
-  android:versionName="1.4.2">
+  android:versionCode="2"
+  android:versionName="1.5.0-alpha01">
 
   <uses-sdk
     android:minSdkVersion="14"

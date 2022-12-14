@@ -1,23 +1,23 @@
 """Defines current AXT versions and dependencies."""
 
 # AXT versions
-RUNNER_VERSION = "1.5.1"  # stable 1.5.1
-RULES_VERSION = "1.5.0"  # stable 1.5.0
-MONITOR_VERSION = "1.6.0"  # stable 1.6.0
+RUNNER_VERSION = "1.6.0-alpha01"  # stable 1.5.1
+RULES_VERSION = "1.6.0-alpha01"  # stable 1.5.0
+MONITOR_VERSION = "1.7.0-alpha01"  # stable 1.6.0
 ESPRESSO_VERSION = "3.6.0-alpha01"  # stable 3.5.0
-CORE_VERSION = "1.5.0"  # stable 1.5.0
-ESPRESSO_DEVICE_VERSION = "1.0.0-alpha03"
-ANDROIDX_JUNIT_VERSION = "1.1.4"  # stable 1.1.4
-ANDROIDX_TRUTH_VERSION = "1.5.0"  # stable 1.5.0
+CORE_VERSION = "1.6.0-alpha01"  # stable 1.5.0
+ESPRESSO_DEVICE_VERSION = "1.0.0-alpha04"
+ANDROIDX_JUNIT_VERSION = "1.2.0-alpha01"  # stable 1.1.4
+ANDROIDX_TRUTH_VERSION = "1.6.0-alpha01"  # stable 1.5.0
 UIAUTOMATOR_VERSION = "2.2.0"
 JANK_VERSION = "1.0.1"
 
 # LINT.IfChange(SERVICES_VERSION)
-SERVICES_VERSION = "1.4.2"  # stable 1.4.2
+SERVICES_VERSION = "1.5.0-alpha01"  # stable 1.4.2
 
 # LINT.ThenChange(//depot/google3/third_party/android/androidx_test/services/AndroidManifest.xml)
-ORCHESTRATOR_VERSION = "1.4.2"  # stable 1.4.2
-ANNOTATION_VERSION = "1.0.1"  # stable 1.0.1
+ORCHESTRATOR_VERSION = "1.5.0-alpha01"  # stable 1.4.2
+ANNOTATION_VERSION = "1.1.0-alpha01"  # stable 1.0.1
 
 # Maven dependency versions
 ANDROIDX_ANNOTATION_VERSION = "1.2.0"
