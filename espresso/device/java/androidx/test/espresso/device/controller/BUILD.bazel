@@ -13,7 +13,6 @@ kt_android_library(
     srcs = [
         "DeviceControllerOperationException.kt",
         "DeviceMode.kt",
-        "UnsupportedDeviceOperationException.kt",
     ],
     deps = [
         "//espresso/core/java/androidx/test/espresso:interface",
@@ -27,7 +26,6 @@ kt_android_library(
         "PhysicalDeviceController.kt",
     ],
     deps = [
-        ":controller",
         "//runner/monitor",
     ],
 )

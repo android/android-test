@@ -34,6 +34,7 @@ public interface DeviceController {
    * Sets the connected device to the provided mode. unsupported device mode.
    *
    * @param deviceMode the mode to put the device in
+   * @throws UnsupportedDeviceOperationException if used on an unsupported device.
    */
   void setDeviceMode(int deviceMode);
 
@@ -41,6 +42,7 @@ public interface DeviceController {
    * Sets the connected device to the provided screen orientation.
    *
    * @param screenOrientation the orientation to put the device in
+   * @throws UnsupportedDeviceOperationException if used on an unsupported device.
    */
   void setScreenOrientation(int screenOrientation);
 

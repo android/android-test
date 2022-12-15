@@ -16,6 +16,7 @@
 
 package androidx.test.espresso.device.controller
 
+import androidx.test.platform.device.UnsupportedDeviceOperationException
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.junit.runner.RunWith

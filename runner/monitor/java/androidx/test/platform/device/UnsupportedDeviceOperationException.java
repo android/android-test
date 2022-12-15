@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
-package androidx.test.espresso.device.controller
+package androidx.test.platform.device;
 
-import androidx.test.espresso.EspressoException
+import androidx.test.platform.TestFrameworkException;
 
 /**
  * An exception which indicates that the device selected does not support an operation called on it.
  */
-class UnsupportedDeviceOperationException : RuntimeException, EspressoException {
-  constructor(description: String) : super(description)
+public class UnsupportedDeviceOperationException extends RuntimeException
+    implements TestFrameworkException {
+  public UnsupportedDeviceOperationException(String description) {
+    super(description);
+  }
 
-  constructor(description: String, cause: Throwable) : super(description, cause)
+  public UnsupportedDeviceOperationException(String description, Throwable cause) {
+    super(description, cause);
+  }
 }

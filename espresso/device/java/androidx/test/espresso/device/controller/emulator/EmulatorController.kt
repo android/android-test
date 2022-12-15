@@ -17,9 +17,9 @@ package androidx.test.espresso.device.controller.emulator
 
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
-import androidx.test.espresso.device.controller.UnsupportedDeviceOperationException
 import androidx.test.espresso.device.controller.DeviceMode
 import androidx.test.platform.device.DeviceController
+import androidx.test.platform.device.UnsupportedDeviceOperationException
 import com.android.emulator.control.EmulatorControllerGrpc
 import com.android.emulator.control.ParameterValue
 import com.android.emulator.control.PhysicalModelValue

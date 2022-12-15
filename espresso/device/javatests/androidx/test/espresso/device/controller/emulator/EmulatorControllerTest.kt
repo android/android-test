@@ -16,9 +16,9 @@
 
 package androidx.test.espresso.device.controller.emulator
 
-import com.android.emulator.control.EmulatorControllerGrpc
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
-import androidx.test.espresso.device.controller.UnsupportedDeviceOperationException
+import androidx.test.platform.device.UnsupportedDeviceOperationException
+import com.android.emulator.control.EmulatorControllerGrpc
 import io.grpc.Channel
 import io.grpc.InsecureChannelCredentials
 import io.grpc.okhttp.OkHttpChannelBuilder

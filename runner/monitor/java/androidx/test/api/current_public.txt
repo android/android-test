@@ -35,6 +35,15 @@ package androidx.test.platform.app {
 
 }
 
+package androidx.test.platform.device {
+
+  public class UnsupportedDeviceOperationException extends java.lang.RuntimeException implements androidx.test.platform.TestFrameworkException {
+    ctor public UnsupportedDeviceOperationException(String!);
+    ctor public UnsupportedDeviceOperationException(String!, Throwable!);
+  }
+
+}
+
 package androidx.test.platform.graphics {
 
   public class HardwareRendererCompat {

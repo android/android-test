@@ -19,7 +19,7 @@ package androidx.test.espresso.device
 import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.action.setScreenOrientation
-import java.lang.UnsupportedOperationException
+import androidx.test.platform.device.UnsupportedDeviceOperationException
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,13 +29,13 @@ import org.robolectric.RobolectricTestRunner
 class EspressoDeviceRobolectricTest {
   @Test
   fun onDevice_setScreenOrientationThrowsUnsupportedOperationException() {
-    assertThrows(UnsupportedOperationException::class.java) {
+    assertThrows(UnsupportedDeviceOperationException::class.java) {
       onDevice().perform(setScreenOrientation(ScreenOrientation.LANDSCAPE))
     }
   }
 
   @Test
   fun onDevice_setFlatModeThrowsUnsupportedOperationException() {
-    assertThrows(UnsupportedOperationException::class.java) { onDevice().setFlatMode() }
+    assertThrows(UnsupportedDeviceOperationException::class.java) { onDevice().setFlatMode() }
   }
 }

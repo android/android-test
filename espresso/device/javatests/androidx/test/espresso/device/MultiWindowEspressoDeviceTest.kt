@@ -20,15 +20,15 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
 import androidx.test.espresso.device.action.setDisplaySize
-import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.sizeclass.HeightSizeClass
 import androidx.test.espresso.device.sizeclass.WidthSizeClass
+import androidx.test.espresso.device.util.getDeviceApiLevel
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.multiwindow.app.MultiWindowActivity
-import androidx.test.espresso.device.util.getDeviceApiLevel
 import androidx.test.multiwindow.app.R
+import androidx.test.platform.device.UnsupportedDeviceOperationException
 import com.google.common.truth.Truth.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Rule
@@ -82,8 +82,8 @@ class MultiWindowEspressoDeviceTest {
       onView(withId(R.id.screen_width_display_size)).check(matches(withText("Expanded width")))
       onView(withId(R.id.screen_height_display_size)).check(matches(withText("Expanded height")))
     } else {
-      val e: DeviceControllerOperationException =
-        assertThrows(DeviceControllerOperationException::class.java) {
+      val e: UnsupportedDeviceOperationException =
+        assertThrows(UnsupportedDeviceOperationException::class.java) {
           onDevice().perform(setDisplaySize(WidthSizeClass.EXPANDED, HeightSizeClass.EXPANDED))
         }
       assertThat(e.message).isEqualTo("Device could not be set to the requested display size.")

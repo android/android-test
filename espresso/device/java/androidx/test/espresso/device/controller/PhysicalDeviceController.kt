@@ -17,6 +17,7 @@
 package androidx.test.espresso.device.controller
 
 import androidx.test.platform.device.DeviceController
+import androidx.test.platform.device.UnsupportedDeviceOperationException
 
 /** Implementation of {@link DeviceController} for tests run on a physical device. */
 class PhysicalDeviceController : DeviceController {

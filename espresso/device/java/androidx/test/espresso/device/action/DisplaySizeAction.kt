@@ -25,13 +25,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
-import androidx.test.espresso.device.controller.UnsupportedDeviceOperationException
 import androidx.test.espresso.device.sizeclass.HeightSizeClass
 import androidx.test.espresso.device.sizeclass.WidthSizeClass
 import androidx.test.espresso.device.util.getDeviceApiLevel
 import androidx.test.espresso.device.util.getResumedActivityOrNull
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.device.DeviceController
+import androidx.test.platform.device.UnsupportedDeviceOperationException
 import java.nio.charset.Charset
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -101,7 +101,7 @@ internal class DisplaySizeAction(
         instrumentation
           .getUiAutomation()
           .executeShellCommand("wm size ${startingWidth}dpx${startingHeight}dp")
-        throw DeviceControllerOperationException(
+        throw UnsupportedDeviceOperationException(
           "Device could not be set to the requested display size."
         )
       }
