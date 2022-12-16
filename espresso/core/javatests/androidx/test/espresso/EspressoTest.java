@@ -90,7 +90,7 @@ public class EspressoTest {
             // The ID may contain non-digits but always starts with digits, different from class
             // types.
             // The string may be cut off by sanitization of length.
-            return spanName.replaceAll(" [0-9]+", " <ID>");
+            return spanName.replaceAll("[0-9]+", "<ID>");
           }
         };
     Tracing.getInstance().registerTracer(tracer);
@@ -119,6 +119,10 @@ public class EspressoTest {
                 + " android.widget.AdapterView)",
             "beginSpan: Espresso.perform(AdapterDataLoaderAction, is assignable from class class"
                 + " android.widget.AdapterView)",
+            "beginSpan: Espresso.doPerform(ListViewid<ID> res-namelist visibilityVISIBLE"
+                + " width<ID> height<ID> has-focustru",
+            "+-endSpan: Espresso.doPerform(ListViewid<ID> res-namelist visibilityVISIBLE width<ID>"
+                + " height<ID> has-focustru",
             "+-endSpan: Espresso.perform(AdapterDataLoaderAction, is assignable from class class"
                 + " android.widget.AdapterView)",
             "beginSpan: Espresso.onView(displaying data matching: (an instance of java.util.Map and"
@@ -127,16 +131,28 @@ public class EspressoTest {
                 + " map containing [ANYTHING",
             "beginSpan: Espresso.perform(GeneralClickAction, displaying data matching: (an instance"
                 + " of java.util.Map and map",
+            "beginSpan: Espresso.doPerform(TextViewid<ID> res-nametext<ID> visibilityVISIBLE"
+                + " width<ID> height<ID> has-focusfal",
+            "+-endSpan: Espresso.doPerform(TextViewid<ID> res-nametext<ID> visibilityVISIBLE"
+                + " width<ID> height<ID> has-focusfal",
             "+-endSpan: Espresso.perform(GeneralClickAction, displaying data matching: (an instance"
                 + " of java.util.Map and map",
             "beginSpan: Espresso.onView(view.getId() is <ID>)",
             "+-endSpan: Espresso.onView(view.getId() is <ID>)",
             "beginSpan: Espresso.perform(GeneralClickAction, view.getId() is <ID>)",
+            "beginSpan: Espresso.doPerform(AppCompatButtonid<ID> res-namehide_contextual_action_bar"
+                + " visibilityVISIBLE",
+            "+-endSpan: Espresso.doPerform(AppCompatButtonid<ID> res-namehide_contextual_action_bar"
+                + " visibilityVISIBLE",
             "+-endSpan: Espresso.perform(GeneralClickAction, view.getId() is <ID>)",
             "beginSpan: Espresso.openActionBarOverflowOrOptionsMenu",
             "beginSpan: Espresso.onView(view.getRootView() to equal view)",
             "+-endSpan: Espresso.onView(view.getRootView() to equal view)",
             "beginSpan: Espresso.perform(KeyEventAction, view.getRootView() to equal view)",
+            "beginSpan: Espresso.doPerform(DecorViewid-<ID> visibilityVISIBLE width<ID> height<ID>"
+                + " has-focusfalse has-focusabletr",
+            "+-endSpan: Espresso.doPerform(DecorViewid-<ID> visibilityVISIBLE width<ID> height<ID>"
+                + " has-focusfalse has-focusabletr",
             "+-endSpan: Espresso.perform(KeyEventAction, view.getRootView() to equal view)",
             "+-endSpan: Espresso.openActionBarOverflowOrOptionsMenu",
             "beginSpan: Espresso.onView(an instance of android.widget.TextView and view.getText()"
@@ -145,11 +161,19 @@ public class EspressoTest {
                 + " with or without transforma",
             "beginSpan: Espresso.perform(GeneralClickAction, an instance of android.widget.TextView"
                 + " and view.getText() with",
+            "beginSpan: Espresso.doPerform(AppCompatTextViewid<ID> res-nametitle visibilityVISIBLE"
+                + " width<ID> height<ID> h",
+            "+-endSpan: Espresso.doPerform(AppCompatTextViewid<ID> res-nametitle visibilityVISIBLE"
+                + " width<ID> height<ID> h",
             "+-endSpan: Espresso.perform(GeneralClickAction, an instance of android.widget.TextView"
                 + " and view.getText() with",
             "beginSpan: Espresso.onView(view.getId() is <ID>)",
             "+-endSpan: Espresso.onView(view.getId() is <ID>)",
             "beginSpan: Espresso.check(MatchesViewAssertion, view.getId() is <ID>)",
+            "beginSpan: Espresso.doCheck(AppCompatTextViewid<ID> res-nametext_action_bar_result"
+                + " visibilityVISIBLE widt",
+            "+-endSpan: Espresso.doCheck(AppCompatTextViewid<ID> res-nametext_action_bar_result"
+                + " visibilityVISIBLE widt",
             "+-endSpan: Espresso.check(MatchesViewAssertion, view.getId() is <ID>)"));
   }
 
@@ -170,6 +194,10 @@ public class EspressoTest {
                 + " android.widget.AdapterView)",
             "beginSpan: Espresso.perform(AdapterDataLoaderAction, is assignable from class class"
                 + " android.widget.AdapterView)",
+            "beginSpan: Espresso.doPerform(ListViewid<ID> res-namelist visibilityVISIBLE"
+                + " width<ID> height<ID> has-focustru",
+            "+-endSpan: Espresso.doPerform(ListViewid<ID> res-namelist visibilityVISIBLE width<ID>"
+                + " height<ID> has-focustru",
             "+-endSpan: Espresso.perform(AdapterDataLoaderAction, is assignable from class class"
                 + " android.widget.AdapterView)",
             "beginSpan: Espresso.onView(displaying data matching: (an instance of java.util.Map and"
@@ -178,6 +206,10 @@ public class EspressoTest {
                 + " map containing [ANYTHING",
             "beginSpan: Espresso.perform(GeneralClickAction, displaying data matching: (an instance"
                 + " of java.util.Map and map",
+            "beginSpan: Espresso.doPerform(TextViewid<ID> res-nametext<ID> visibilityVISIBLE"
+                + " width<ID> height<ID> has-focusfal",
+            "+-endSpan: Espresso.doPerform(TextViewid<ID> res-nametext<ID> visibilityVISIBLE"
+                + " width<ID> height<ID> has-focusfal",
             "+-endSpan: Espresso.perform(GeneralClickAction, displaying data matching: (an instance"
                 + " of java.util.Map and map",
             "beginSpan: Espresso.openContextualActionModeOverflowMenu",
@@ -185,6 +217,10 @@ public class EspressoTest {
             "+-endSpan: Espresso.onView(view.getRootView() to equal view)",
             "beginSpan: Espresso.perform(TransitionBridgingViewAction, view.getRootView() to equal"
                 + " view)",
+            "beginSpan: Espresso.doPerform(DecorViewid-<ID> visibilityVISIBLE width<ID> height<ID>"
+                + " has-focusfalse has-focusabletr",
+            "+-endSpan: Espresso.doPerform(DecorViewid-<ID> visibilityVISIBLE width<ID> height<ID>"
+                + " has-focusfalse has-focusabletr",
             "+-endSpan: Espresso.perform(TransitionBridgingViewAction, view.getRootView() to equal"
                 + " view)",
             "beginSpan: Espresso.onView((((view has effective visibility VISIBLE and"
@@ -193,6 +229,10 @@ public class EspressoTest {
                 + " view.getGlobalVisibleRect() to return n",
             "beginSpan: Espresso.perform(GeneralClickAction, (((view has effective visibility"
                 + " VISIBLE and view.getGlobalVisi",
+            "beginSpan: Espresso.doPerform(OverflowMenuButtonid-<ID> descMore options"
+                + " visibilityVISIBLE width<ID> height<ID> has-fo",
+            "+-endSpan: Espresso.doPerform(OverflowMenuButtonid-<ID> descMore options"
+                + " visibilityVISIBLE width<ID> height<ID> has-fo",
             "+-endSpan: Espresso.perform(GeneralClickAction, (((view has effective visibility"
                 + " VISIBLE and view.getGlobalVisi",
             "+-endSpan: Espresso.openContextualActionModeOverflowMenu",
@@ -202,11 +242,19 @@ public class EspressoTest {
                 + " with or without transforma",
             "beginSpan: Espresso.perform(GeneralClickAction, an instance of android.widget.TextView"
                 + " and view.getText() with",
+            "beginSpan: Espresso.doPerform(AppCompatTextViewid<ID> res-nametitle visibilityVISIBLE"
+                + " width<ID> height<ID> h",
+            "+-endSpan: Espresso.doPerform(AppCompatTextViewid<ID> res-nametitle visibilityVISIBLE"
+                + " width<ID> height<ID> h",
             "+-endSpan: Espresso.perform(GeneralClickAction, an instance of android.widget.TextView"
                 + " and view.getText() with",
             "beginSpan: Espresso.onView(view.getId() is <ID>)",
             "+-endSpan: Espresso.onView(view.getId() is <ID>)",
             "beginSpan: Espresso.check(MatchesViewAssertion, view.getId() is <ID>)",
+            "beginSpan: Espresso.doCheck(AppCompatTextViewid<ID> res-nametext_action_bar_result"
+                + " visibilityVISIBLE widt",
+            "+-endSpan: Espresso.doCheck(AppCompatTextViewid<ID> res-nametext_action_bar_result"
+                + " visibilityVISIBLE widt",
             "+-endSpan: Espresso.check(MatchesViewAssertion, view.getId() is <ID>)"));
   }
 

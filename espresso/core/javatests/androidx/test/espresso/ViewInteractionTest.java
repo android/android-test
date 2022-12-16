@@ -194,6 +194,10 @@ public class ViewInteractionTest {
         tracer.getSpans(),
         contains(
             "beginSpan: Espresso.perform(MockAction, Matcher Description)",
+            "beginSpan: Espresso.doPerform(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-w",
+            "+-endSpan: Espresso.doPerform(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-w",
             "+-endSpan: Espresso.perform(MockAction, Matcher Description)"));
   }
 
@@ -216,6 +220,10 @@ public class ViewInteractionTest {
         tracer.getSpans(),
         contains(
             "beginSpan: Espresso.check(MockAssert, Matcher Description)",
+            "beginSpan: Espresso.doCheck(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-win",
+            "+-endSpan: Espresso.doCheck(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-win",
             "+-endSpan: Espresso.check(MockAssert, Matcher Description)"));
   }
 
@@ -239,10 +247,22 @@ public class ViewInteractionTest {
         tracer.getSpans(),
         contains(
             "beginSpan: Espresso.perform(MockAction, Matcher Description)",
+            "beginSpan: Espresso.doPerform(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-w",
+            "+-endSpan: Espresso.doPerform(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-w",
             "+-endSpan: Espresso.perform(MockAction, Matcher Description)",
             "beginSpan: Espresso.perform(MockAction, Matcher Description)",
+            "beginSpan: Espresso.doPerform(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-w",
+            "+-endSpan: Espresso.doPerform(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-w",
             "+-endSpan: Espresso.perform(MockAction, Matcher Description)",
             "beginSpan: Espresso.check(MockAssert, Matcher Description)",
+            "beginSpan: Espresso.doCheck(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-win",
+            "+-endSpan: Espresso.doCheck(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-win",
             "+-endSpan: Espresso.check(MockAssert, Matcher Description)"));
   }
 
@@ -260,8 +280,16 @@ public class ViewInteractionTest {
         tracer.getSpans(),
         contains(
             "beginSpan: Espresso.perform(MockAction, Matcher Description)",
+            "beginSpan: Espresso.doPerform(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-w",
+            "+-endSpan: Espresso.doPerform(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-w",
             "+-endSpan: Espresso.perform(MockAction, Matcher Description)",
             "beginSpan: Espresso.check(MockAssert, Matcher Description)",
+            "beginSpan: Espresso.doCheck(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-win",
+            "+-endSpan: Espresso.doCheck(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-win",
             "+-endSpan: Espresso.check(MockAssert, Matcher Description)"));
   }
 
@@ -276,6 +304,10 @@ public class ViewInteractionTest {
         tracer.getSpans(),
         contains(
             "beginSpan: Espresso.check(MockAssert, Matcher Description)",
+            "beginSpan: Espresso.doCheck(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-win",
+            "+-endSpan: Espresso.doCheck(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-win",
             "+-endSpan: Espresso.check(MockAssert, Matcher Description)"));
   }
 
@@ -318,6 +350,8 @@ public class ViewInteractionTest {
         tracer.getSpans(),
         contains(
             "beginSpan: Espresso.check(MockAssert, Matcher Description)",
+            "beginSpan: Espresso.doCheck(null)",
+            "+-endSpan: Espresso.doCheck(null)",
             "+-endSpan: Espresso.check(MockAssert, Matcher Description)"));
   }
 
@@ -336,6 +370,10 @@ public class ViewInteractionTest {
         tracer.getSpans(),
         contains(
             "beginSpan: Espresso.perform(MockAction, Matcher Description)",
+            "beginSpan: Espresso.doPerform(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-w",
+            "+-endSpan: Espresso.doPerform(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-w",
             "+-endSpan: Espresso.perform(MockAction, Matcher Description)"));
   }
 
@@ -371,6 +409,10 @@ public class ViewInteractionTest {
         tracer.getSpans(),
         contains(
             "beginSpan: Espresso.check(MockAssert, Matcher Description)",
+            "beginSpan: Espresso.doCheck(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-win",
+            "+-endSpan: Espresso.doCheck(Viewid-1 visibilityVISIBLE width0 height0 has-focusfalse"
+                + " has-focusablefalse has-win",
             "+-endSpan: Espresso.check(MockAssert, Matcher Description)"));
   }
 

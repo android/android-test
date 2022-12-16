@@ -292,7 +292,11 @@ public final class ViewInteraction {
       if (testFlowEnabled) {
         testFlowVisualizer.beforeActionRecordData(actionData, targetView);
       }
-      viewAction.perform(uiController, targetView);
+      String spanName =
+          TracingUtil.getSpanName("Espresso", "doPerform", HumanReadables.describe(targetView));
+      try (Span ignored = tracer.beginSpan(spanName)) {
+        viewAction.perform(uiController, targetView);
+      }
       if (testFlowEnabled) {
         testFlowVisualizer.afterActionRecordData(actionData);
       }
@@ -336,8 +340,13 @@ public final class ViewInteraction {
                   TAG,
                   String.format(
                       Locale.ROOT, "Checking '%s' assertion on view %s", viewAssert, viewMatcher));
-              singleExecutionViewAssertion.check(targetView, missingViewException);
-              return null;
+              String checkOnTargetViewSpan =
+                  TracingUtil.getSpanName(
+                      "Espresso", "doCheck", HumanReadables.describe(targetView));
+              try (Span checkOnTargetViewSpanIgnored = tracer.beginSpan(checkOnTargetViewSpan)) {
+                singleExecutionViewAssertion.check(targetView, missingViewException);
+                return null;
+              }
             }
           }
         };
