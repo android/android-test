@@ -24,9 +24,8 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,15 +34,14 @@ import org.junit.runner.RunWith;
  * Sample test to showcase Idling Resource in a multi-process environment.
  */
 @RunWith(AndroidJUnit4.class)
-@LargeTest
 public class IdlingActivityTest {
 
   private static final String STRING_TO_BE_TYPED = "Hello Multiprocess Espresso!";
   private static final String IDLING_PROC_NAME = "androidx.test.multiprocess.app:idling";
 
   @Rule
-  public ActivityTestRule<IdlingActivity> mActivityRule = new ActivityTestRule<>(
-      IdlingActivity.class);
+  public ActivityScenarioRule<IdlingActivity> activityRule =
+      new ActivityScenarioRule<>(IdlingActivity.class);
 
   @Test
   public void verifyChangingTextAsynchronously() {

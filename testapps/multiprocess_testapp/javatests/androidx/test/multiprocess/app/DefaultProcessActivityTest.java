@@ -31,23 +31,21 @@ import static org.junit.Assert.fail;
 import android.util.Log;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.remote.RemoteEspressoException;
-import androidx.test.filters.SmallTest;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
-@SmallTest
 public class DefaultProcessActivityTest {
   private static final String TAG = "DefaultProcActivityTest";
 
   private static final String DEFAULT_PROC_NAME = "androidx.test.multiprocess.app";
 
   @Rule
-  public ActivityTestRule<DefaultProcessActivity> rule =
-      new ActivityTestRule<>(DefaultProcessActivity.class);
+  public ActivityScenarioRule<DefaultProcessActivity> rule =
+      new ActivityScenarioRule<>(DefaultProcessActivity.class);
 
   @Test
   public void verifyAssertingOnViewInRemoteProcessIsSuccessful() {

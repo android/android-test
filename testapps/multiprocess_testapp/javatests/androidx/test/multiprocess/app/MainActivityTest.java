@@ -25,9 +25,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import android.util.Log;
-import androidx.test.filters.SmallTest;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,19 +36,16 @@ import org.junit.runner.RunWith;
  * {@link android.app.Activity Activities} defined in the manifest.
  */
 @RunWith(AndroidJUnit4.class)
-@SmallTest
 public class MainActivityTest {
   private static final String TAG = "MainActivityTest";
 
   private static final String MAIN_PROC_NAME = "androidx.test.multiprocess.app";
 
   @Rule
-  public ActivityTestRule<MainActivity> rule =
-      new ActivityTestRule<>(MainActivity.class);
+  public ActivityScenarioRule<MainActivity> rule = new ActivityScenarioRule<>(MainActivity.class);
 
   @Test
-  public void verifySynchronizingAgainstCustomIdlingResourceInRemoteProcessIsSuccessful()
-      throws InterruptedException {
+  public void verifySynchronizingAgainstCustomIdlingResourceInRemoteProcessIsSuccessful() {
 
     Log.i(TAG, "About to click on IdlingActivity..");
     onView(withText("IdlingActivity")).perform(click());

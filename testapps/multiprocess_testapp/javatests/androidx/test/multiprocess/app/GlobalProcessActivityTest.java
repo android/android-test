@@ -18,25 +18,24 @@
 
 package androidx.test.multiprocess.app;
 
-import androidx.test.InstrumentationRegistry;
-import androidx.test.filters.SmallTest;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
-import junit.framework.Assert;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static org.junit.Assert.assertNotNull;
+
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
-@SmallTest
 public class GlobalProcessActivityTest {
 
   @Rule
-  public ActivityTestRule<GlobalProcessActivity> rule =
-      new ActivityTestRule<>(GlobalProcessActivity.class);
+  public ActivityScenarioRule<GlobalProcessActivity> rule =
+      new ActivityScenarioRule<>(GlobalProcessActivity.class);
 
   @Test
   public void sanityTest() {
-    Assert.assertNotNull(InstrumentationRegistry.getTargetContext());
+    assertNotNull(getApplicationContext());
   }
 }

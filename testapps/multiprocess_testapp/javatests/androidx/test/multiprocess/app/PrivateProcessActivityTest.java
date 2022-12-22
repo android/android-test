@@ -21,30 +21,21 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import androidx.test.InstrumentationRegistry;
-import androidx.test.filters.SmallTest;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
-import junit.framework.Assert;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
-@SmallTest
 public class PrivateProcessActivityTest {
 
   private static final String PRIVATE_PROC_NAME = "androidx.test.multiprocess.app:PID2";
 
   @Rule
-  public ActivityTestRule<PrivateProcessActivity> rule =
-      new ActivityTestRule<>(PrivateProcessActivity.class);
+  public ActivityScenarioRule<PrivateProcessActivity> rule =
+      new ActivityScenarioRule<>(PrivateProcessActivity.class);
 
-  @Test
-  public void sanityTest() {
-    Assert.assertNotNull(InstrumentationRegistry.getTargetContext());
-  }
-  
   @Test
   public void verifyRunningInPrivateProcess() {
     onView(withId(R.id.textPrivateProcessName)).check(matches(withText(PRIVATE_PROC_NAME)));

@@ -36,9 +36,8 @@ import android.webkit.WebView;
 import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.espresso.web.webdriver.DriverAtoms;
 import androidx.test.espresso.web.webdriver.Locator;
-import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import java.util.Map;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -52,7 +51,6 @@ import org.junit.runner.RunWith;
  * <p>The sample has a simple layout which contains a single {@link WebView}. The HTML page displays
  * a form with an input tag and buttons to submit the form.
  */
-@LargeTest
 @RunWith(AndroidJUnit4.class)
 public class WebViewActivityTest {
   private static final String TAG = "WebViewActivityTest";
@@ -61,7 +59,8 @@ public class WebViewActivityTest {
 
   /** Note: That we're starting the MainActivity here in order to create a multi-process scenario */
   @Rule
-  public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
+  public ActivityScenarioRule<MainActivity> activityRule =
+      new ActivityScenarioRule<>(MainActivity.class);
 
   @SuppressWarnings("rawtypes")
   public static Matcher<Object> withItemContent(final Matcher<String> itemTextMatcher) {
