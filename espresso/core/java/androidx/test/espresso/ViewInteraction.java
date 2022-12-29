@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import androidx.test.espresso.action.ScrollToAction;
+import androidx.test.espresso.action.ViewActions.ViewActionWithAssertions;
 import androidx.test.espresso.base.InterruptableUiController;
 import androidx.test.espresso.base.MainThread;
 import androidx.test.espresso.internal.data.TestFlowVisualizer;
@@ -179,6 +180,11 @@ public final class ViewInteraction {
       final SingleExecutionViewAction va, int actionIndex, boolean testFlowEnabled) {
     ViewAction innerViewAction = va.getInnerViewAction();
 
+    ViewAction viewAction =
+        (innerViewAction instanceof ViewActionWithAssertions)
+            ? ((ViewActionWithAssertions) innerViewAction).getViewAction()
+            : innerViewAction;
+
     Callable<Void> performInteraction =
         new Callable<Void>() {
           @Override
@@ -188,7 +194,7 @@ public final class ViewInteraction {
                     "Espresso",
                     "perform",
                     TracingUtil.getClassName(
-                        innerViewAction, /* defaultName= */ innerViewAction.getDescription()),
+                        viewAction, /* defaultName= */ innerViewAction.getDescription()),
                     viewMatcher);
             try (Span ignored = tracer.beginSpan(spanName)) {
               doPerform(va, actionIndex, testFlowEnabled);

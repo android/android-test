@@ -103,37 +103,48 @@ public final class ViewActions {
    *
    * @param viewAction the {@code ViewAction} to perform after the assertions
    */
-  public static ViewAction actionWithAssertions(final ViewAction viewAction) {
-    if (globalAssertions.isEmpty()) {
+  public static ViewAction actionWithAssertions(ViewAction viewAction) {
+    // TODO(brinko): Return the argument if it is an instance of ViewActionWithAssertions.
+    checkArgument(!(viewAction instanceof ViewActionWithAssertions));
+    return new ViewActionWithAssertions(viewAction);
+  }
+
+  public static final class ViewActionWithAssertions implements ViewAction {
+    private final ViewAction viewAction;
+
+    private ViewActionWithAssertions(ViewAction viewAction) {
+      this.viewAction = viewAction;
+    }
+
+    public ViewAction getViewAction() {
       return viewAction;
     }
-    return new ViewAction() {
-      @Override
-      public String getDescription() {
-        StringBuilder msg = new StringBuilder("Running view assertions[");
-        for (Pair<String, ViewAssertion> vaPair : globalAssertions) {
-          msg.append(vaPair.first);
-          msg.append(", ");
-        }
-        msg.append("] and then running: ");
-        msg.append(viewAction.getDescription());
-        return msg.toString();
-      }
 
-      @Override
-      public Matcher<View> getConstraints() {
-        return viewAction.getConstraints();
+    @Override
+    public String getDescription() {
+      if (globalAssertions.isEmpty()) {
+        return viewAction.getDescription();
       }
+      StringBuilder msg = new StringBuilder("Running view assertions[");
+      for (Pair<String, ViewAssertion> vaPair : globalAssertions) {
+        msg.append(vaPair.first).append(", ");
+      }
+      return msg.append("] and then running: ").append(viewAction.getDescription()).toString();
+    }
 
-      @Override
-      public void perform(UiController uic, View view) {
-        for (Pair<String, ViewAssertion> vaPair : globalAssertions) {
-          Log.i("ViewAssertion", "Asserting " + vaPair.first);
-          vaPair.second.check(view, null);
-        }
-        viewAction.perform(uic, view);
+    @Override
+    public Matcher<View> getConstraints() {
+      return viewAction.getConstraints();
+    }
+
+    @Override
+    public void perform(UiController uic, View view) {
+      for (Pair<String, ViewAssertion> vaPair : globalAssertions) {
+        Log.i("ViewAssertion", "Asserting " + vaPair.first);
+        vaPair.second.check(view, null);
       }
-    };
+      viewAction.perform(uic, view);
+    }
   }
 
   /**
@@ -433,7 +444,7 @@ public final class ViewActions {
    * </ul>
    */
   public static ViewAction typeTextIntoFocusedView(String stringToBeTyped) {
-    return actionWithAssertions(new TypeTextAction(stringToBeTyped, false /* tapToFocus */));
+    return actionWithAssertions(new TypeTextAction(stringToBeTyped, /* tapToFocus= */ false));
   }
 
   /**
