@@ -11,8 +11,10 @@ package(default_visibility = [
 
 kt_android_library(
     name = "util",
+    testonly = 1,
     srcs = glob(["*.kt"]),
     deps = [
+        "//annotation",
         "//runner/monitor",
     ],
 )

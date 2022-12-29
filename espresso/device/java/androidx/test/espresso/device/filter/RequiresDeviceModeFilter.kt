@@ -15,23 +15,18 @@
  */
 package androidx.test.espresso.device.filter
 
-import android.app.Instrumentation
 import android.os.Build
-import android.os.ParcelFileDescriptor.AutoCloseInputStream
 import android.util.Log
 import androidx.test.espresso.device.controller.DeviceMode
+import androidx.test.espresso.device.util.executeShellCommand
 import androidx.test.filters.AbstractFilter
-import androidx.test.platform.app.InstrumentationRegistry
-import java.nio.charset.Charset
 import org.junit.runner.Description
 
 /**
  * Class that filters out tests annotated with {@link RequiresDeviceMode} when running on a device
  * that doesn't support the provided device mode.
  */
-internal class RequiresDeviceModeFilter(
-  private val instrumentation: Instrumentation = InstrumentationRegistry.getInstrumentation()
-) : AbstractFilter() {
+internal class RequiresDeviceModeFilter() : AbstractFilter() {
   override fun evaluateTest(description: Description): Boolean {
     val annotations = getMethodAnnotations(description)
     annotations.addAll(getClassAnnotations(description))
@@ -99,15 +94,6 @@ internal class RequiresDeviceModeFilter(
 
   override fun describe(): String {
     return "skip tests annotated with RequiresDeviceMode if necessary"
-  }
-
-  private fun executeShellCommand(command: String): String {
-    val parcelFileDescriptor = instrumentation.getUiAutomation().executeShellCommand(command)
-    val output: String
-    AutoCloseInputStream(parcelFileDescriptor).use { inputStream ->
-      output = inputStream.readBytes().toString(Charset.defaultCharset())
-    }
-    return output
   }
 
   companion object {

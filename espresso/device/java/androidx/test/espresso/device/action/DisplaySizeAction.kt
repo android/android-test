@@ -17,9 +17,7 @@
 package androidx.test.espresso.device.action
 
 import android.app.Activity
-import android.app.Instrumentation
 import android.content.res.Configuration
-import android.os.ParcelFileDescriptor.AutoCloseInputStream
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -27,19 +25,17 @@ import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.sizeclass.HeightSizeClass
 import androidx.test.espresso.device.sizeclass.WidthSizeClass
+import androidx.test.espresso.device.util.executeShellCommand
 import androidx.test.espresso.device.util.getDeviceApiLevel
 import androidx.test.espresso.device.util.getResumedActivityOrNull
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.device.DeviceController
 import androidx.test.platform.device.UnsupportedDeviceOperationException
-import java.nio.charset.Charset
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
 /** Action to set the test device to the provided display size. */
 internal class DisplaySizeAction(
-  private val instrumentation: Instrumentation = InstrumentationRegistry.getInstrumentation(),
   val widthDisplaySize: WidthSizeClass,
   val heightDisplaySize: HeightSizeClass
 ) : DeviceAction {
@@ -88,7 +84,7 @@ internal class DisplaySizeAction(
       val widthDp = WidthSizeClass.getWidthDpInSizeClass(widthDisplaySize)
       val heightDp = HeightSizeClass.getHeightDpInSizeClass(heightDisplaySize)
 
-      instrumentation.getUiAutomation().executeShellCommand("wm size ${widthDp}dpx${heightDp}dp")
+      executeShellCommand("wm size ${widthDp}dpx${heightDp}dp")
 
       latch.await(5, TimeUnit.SECONDS)
 
@@ -98,9 +94,7 @@ internal class DisplaySizeAction(
           HeightSizeClass.compute(finalSize.second) != heightDisplaySize
       ) {
         // Display could not be set to the requested size, reset to starting size
-        instrumentation
-          .getUiAutomation()
-          .executeShellCommand("wm size ${startingWidth}dpx${startingHeight}dp")
+        executeShellCommand("wm size ${startingWidth}dpx${startingHeight}dp")
         throw UnsupportedDeviceOperationException(
           "Device could not be set to the requested display size."
         )
@@ -117,11 +111,7 @@ internal class DisplaySizeAction(
     // "wm size" will output a string with the format
     // "Physical size: WxH
     //  Override size: WxH"
-    val parcelFileDescriptor = instrumentation.getUiAutomation().executeShellCommand("wm size")
-    val output: String
-    AutoCloseInputStream(parcelFileDescriptor).use { inputStream ->
-      output = inputStream.readBytes().toString(Charset.defaultCharset())
-    }
+    val output = executeShellCommand("wm size")
 
     val subStringToFind = "Override size: "
     val displaySizes =
