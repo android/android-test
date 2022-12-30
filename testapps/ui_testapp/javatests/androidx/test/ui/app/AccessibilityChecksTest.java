@@ -81,7 +81,7 @@ public class AccessibilityChecksTest {
     // accessibility checks will be run, so there will be an error thrown for a small touch target
     AccessibilityChecks.enable();
     try {
-      onView(withId(R.id.large_view)).perform(actionWithAssertions(pressMenuKey()));
+      onView(withId(R.id.large_view)).perform(pressMenuKey());
       fail("Should have thrown an exception for a small touch target");
     } catch (AccessibilityViewCheckException e) {
       assertEquals(1, e.getResults().size());
@@ -137,7 +137,7 @@ public class AccessibilityChecksTest {
     // set the checks to check the whole screen, not just the view being acted upon
         .setRunChecksFromRootView(true);
     try {
-      onView(withId(R.id.large_view)).perform(actionWithAssertions(pressMenuKey()));
+      onView(withId(R.id.large_view)).perform(pressMenuKey());
     } catch (AccessibilityViewCheckException e) {
       // There are framework bugs for APIs 16 and below that cause extra errors.
       if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {

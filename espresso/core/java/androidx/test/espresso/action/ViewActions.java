@@ -104,20 +104,21 @@ public final class ViewActions {
    * @param viewAction the {@code ViewAction} to perform after the assertions
    */
   public static ViewAction actionWithAssertions(final ViewAction viewAction) {
-    if (globalAssertions.isEmpty()) {
-      return viewAction;
-    }
-    return new ViewAction() {
+    // TODO(brinko): Return the argument if it implements ViewActionWithAssertions.
+    checkArgument(
+        !(viewAction instanceof ViewActionWithAssertions),
+        "Assertions already added to ViewAction");
+    return new ViewActionWithAssertions() {
       @Override
       public String getDescription() {
+        if (globalAssertions.isEmpty()) {
+          return viewAction.getDescription();
+        }
         StringBuilder msg = new StringBuilder("Running view assertions[");
         for (Pair<String, ViewAssertion> vaPair : globalAssertions) {
-          msg.append(vaPair.first);
-          msg.append(", ");
+          msg.append(vaPair.first).append(", ");
         }
-        msg.append("] and then running: ");
-        msg.append(viewAction.getDescription());
-        return msg.toString();
+        return msg.append("] and then running: ").append(viewAction.getDescription()).toString();
       }
 
       @Override
@@ -135,6 +136,9 @@ public final class ViewActions {
       }
     };
   }
+
+  /** ViewAction wrapped by {@link #actionWithAssertions(ViewAction)}. */
+  interface ViewActionWithAssertions extends ViewAction {}
 
   /**
    * Returns an action that clears text on the view.<br>
@@ -433,7 +437,7 @@ public final class ViewActions {
    * </ul>
    */
   public static ViewAction typeTextIntoFocusedView(String stringToBeTyped) {
-    return actionWithAssertions(new TypeTextAction(stringToBeTyped, false /* tapToFocus */));
+    return actionWithAssertions(new TypeTextAction(stringToBeTyped, /* tapToFocus= */ false));
   }
 
   /**
