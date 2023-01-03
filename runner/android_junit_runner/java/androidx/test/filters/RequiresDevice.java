@@ -24,7 +24,12 @@ import java.lang.annotation.Target;
  * Indicates that a specific test should not be run on emulator.
  *
  * <p>It will be executed only if the test is running on the physical android device.
+ *
+ * @deprecated modern emulators have high fidelity, and this annotation should provide limited
+ *     benefit. Use a more specific filtering mechanism to tie tests to a specific environment if
+ *     needed
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
+@Deprecated
 public @interface RequiresDevice {}
