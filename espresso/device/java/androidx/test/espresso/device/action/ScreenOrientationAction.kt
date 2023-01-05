@@ -18,10 +18,18 @@ package androidx.test.espresso.device.action
 
 import android.app.Activity
 import android.content.ComponentCallbacks
+import android.content.ContentResolver
+import android.content.Context
 import android.content.pm.ActivityInfo.CONFIG_ORIENTATION
 import android.content.res.Configuration
+import android.database.ContentObserver
+import android.os.Handler
+import android.os.HandlerThread
+import android.provider.Settings
 import android.util.Log
 import androidx.test.espresso.device.context.ActionContext
+import androidx.test.espresso.device.util.executeShellCommand
+import androidx.test.espresso.device.util.getDeviceApiLevel
 import androidx.test.espresso.device.util.getResumedActivityOrNull
 import androidx.test.espresso.device.util.isConfigurationChangeHandled
 import androidx.test.espresso.device.util.isRobolectricTest
@@ -33,9 +41,6 @@ import java.util.concurrent.CountDownLatch
 
 /** Action to set the test device to the provided screen orientation. */
 internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation) : DeviceAction {
-  companion object {
-    private val TAG = ScreenOrientationAction::class.java.simpleName
-  }
 
   /**
    * Performs a screen rotation to the provided orientation.
@@ -45,17 +50,14 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
    *
    * <p>Note, this method takes care of synchronization with the device and the app/activity under
    * test after rotating the screen. Specifically, <ul>
-   *
    * <li>if no activity is found in a RESUMED state, this method waits for the application's
-   * orientation to change to the requested orientation. </li>
-   *
+   *   orientation to change to the requested orientation. </li>
    * <li>if the activity handles device orientation change,this method waits for the application's
-   * orientation to change to the requested orientation, and relies on Espresso's {@code onView()}
-   * method to ensure it synchronizes properly with the updated activity. </li>
-   *
+   *   orientation to change to the requested orientation, and relies on Espresso's {@code onView()}
+   *   method to ensure it synchronizes properly with the updated activity. </li>
    * <li>if the activity doesn't handle device orientation change, it waits until the activity is
-   * PAUSED and relies on Espresso's {@code onView()} method to ensure it synchronizes properly with
-   * the recreated activity. </li>
+   *   PAUSED and relies on Espresso's {@code onView()} method to ensure it synchronizes properly
+   *   with the recreated activity. </li>
    *
    * </ul>
    *
@@ -78,6 +80,15 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
     if (isRobolectricTest()) {
       deviceController.setScreenOrientation(screenOrientation.orientation)
       return
+    }
+
+    var oldAccelRotationSetting = AccelerometerRotation.ENABLED
+    // Executing shell commands requires API 21+.
+    if (getDeviceApiLevel() >= 21) {
+      oldAccelRotationSetting = getAccelerometerRotationSetting()
+      if (oldAccelRotationSetting != AccelerometerRotation.ENABLED) {
+        setAccelerometerRotation(AccelerometerRotation.ENABLED, context.applicationContext)
+      }
     }
 
     val currentActivity = getResumedActivityOrNull()
@@ -121,7 +132,8 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
         .addLifecycleCallback(
           object : ActivityLifecycleCallback {
             override fun onActivityLifecycleChanged(activity: Activity, stage: Stage) {
-              if (activity.getLocalClassName() == currentActivityName &&
+              if (
+                activity.getLocalClassName() == currentActivityName &&
                   stage == Stage.RESUMED &&
                   activity.getResources().getConfiguration().orientation == requestedOrientation
               ) {
@@ -137,5 +149,64 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
     }
     deviceController.setScreenOrientation(screenOrientation.orientation)
     latch.await()
+    if (getDeviceApiLevel() >= 21 && oldAccelRotationSetting != getAccelerometerRotationSetting()) {
+      setAccelerometerRotation(oldAccelRotationSetting, context.applicationContext)
+    }
+  }
+
+  private fun getAccelerometerRotationSetting(): AccelerometerRotation =
+    if (executeShellCommand("settings get system accelerometer_rotation").trim().toInt() == 1) {
+      AccelerometerRotation.ENABLED
+    } else {
+      AccelerometerRotation.DISABLED
+    }
+
+  private fun setAccelerometerRotation(accelerometerRotation: AccelerometerRotation, context: Context) {
+    val settingsLatch: CountDownLatch = CountDownLatch(1)
+    val thread: HandlerThread = HandlerThread("Observer_Thread")
+    thread.start()
+    val runnableHandler: Handler = Handler(thread.getLooper())
+    val settingsObserver: SettingsObserver =
+      SettingsObserver(
+        runnableHandler,
+        context,
+        settingsLatch,
+        Settings.System.ACCELEROMETER_ROTATION
+      )
+    settingsObserver.observe()
+    executeShellCommand("settings put system accelerometer_rotation ${accelerometerRotation.value}")
+    settingsLatch.await()
+    settingsObserver.stopObserver()
+    thread.quitSafely()
+  }
+
+  private class SettingsObserver(
+    handler: Handler,
+    val context: Context,
+    val latch: CountDownLatch,
+    val settingToObserve: String
+  ) : ContentObserver(handler) {
+    fun observe() {
+      val resolver: ContentResolver = context.getContentResolver()
+      resolver.registerContentObserver(Settings.System.getUriFor(settingToObserve), false, this)
+    }
+
+    fun stopObserver() {
+      val resolver: ContentResolver = context.getContentResolver()
+      resolver.unregisterContentObserver(this)
+    }
+
+    override fun onChange(selfChange: Boolean) {
+      latch.countDown()
+    }
+  }
+
+  companion object {
+    private val TAG = ScreenOrientationAction::class.java.simpleName
+
+    private enum class AccelerometerRotation(val value: Int) {
+      DISABLED(0),
+      ENABLED(1)
+    }
   }
 }
