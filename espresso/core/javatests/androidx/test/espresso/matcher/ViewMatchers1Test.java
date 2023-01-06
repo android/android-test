@@ -287,6 +287,18 @@ public class ViewMatchers1Test {
   }
 
   @Test
+  public void withTextFromResourceId_withSpecialCharacters_description_withResourceName() {
+    TextView textView = new TextView(context);
+    textView.setText("text ");
+
+    Matcher<View> viewMatcher = withText(R.string.other_string);
+    assertThat(getMismatchDescription(viewMatcher, textView), is(
+        "view.getText() was \"text[NBSP]\""
+            + " (This string contains special characters - see SpecialCharVisualizer in Espresso)"
+    ));
+  }
+
+  @Test
   public void withContentDescriptionFromResourceId_mismatchDescription() {
     View view = new View(context);
     view.setContentDescription("test");
@@ -539,12 +551,38 @@ public class ViewMatchers1Test {
   }
 
   @Test
+  public void withTextString_withSpecialCharacters_describe() {
+    Matcher<String> isMatcher = is("test ");
+    assertThat(
+        getDescription(withText(isMatcher)),
+        is(
+            "an instance of android.widget.TextView and "
+                + "view.getText() with or without transformation to match: "
+                + "is \"test[NBSP]\" "
+                + "(This string contains special characters - see SpecialCharVisualizer in Espresso)"
+        )
+    );
+  }
+
+  @Test
   public void withTextString_describeMismatch() {
     TextView textView = new TextView(context);
     textView.setText("text");
     Matcher<View> viewMatcher = withText(is("blah"));
 
     assertThat(getMismatchDescription(viewMatcher, textView), is("view.getText() was \"text\""));
+  }
+
+  @Test
+  public void withTextString_withSpecialCharacters_describeMismatch() {
+    TextView textView = new TextView(context);
+    textView.setText("text ");
+    Matcher<View> viewMatcher = withText(is("blah"));
+
+    assertThat(getMismatchDescription(viewMatcher, textView), is(
+        "view.getText() was \"text[NBSP]\""
+            + " (This string contains special characters - see SpecialCharVisualizer in Espresso)"
+    ));
   }
 
   @Test
@@ -569,6 +607,36 @@ public class ViewMatchers1Test {
     assertThat(
         getMismatchDescription(withText(is("blah")), textView),
         is("view.getText() was \"text\" transformed text was \"text_transformed\""));
+  }
+
+  @Test
+  public void withTextString_withTransformation_withSpecialCharacters_describeMismatch() {
+    TextView textView = new TextView(context);
+    textView.setText("text ");
+    textView.setTransformationMethod(
+        new TransformationMethod() {
+          @Override
+          public CharSequence getTransformation(CharSequence source, View view) {
+            return source + "transformed";
+          }
+
+          @Override
+          public void onFocusChanged(
+              View view,
+              CharSequence sourceText,
+              boolean focused,
+              int direction,
+              Rect previouslyFocusedRect) {
+          }
+        });
+    assertThat(
+        getMismatchDescription(withText(is("blah")), textView),
+        is(
+            "view.getText() was \"text[NBSP]\""
+                + " (This string contains special characters - see SpecialCharVisualizer in Espresso)"
+                + " transformed text was \"text[NBSP]transformed\""
+                + " (This string contains special characters - see SpecialCharVisualizer in Espresso)"
+        ));
   }
 
   @Test

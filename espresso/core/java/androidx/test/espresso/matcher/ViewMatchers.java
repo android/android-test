@@ -48,6 +48,8 @@ import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import androidx.test.espresso.util.HumanReadables;
+import androidx.test.espresso.util.SpecialCharVisualizer;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import java.util.Iterator;
@@ -757,7 +759,9 @@ public final class ViewMatchers {
     @Override
     protected void describeMoreTo(Description description) {
       description.appendText("view.getText() with or without transformation to match: ");
-      stringMatcher.describeTo(description);
+      StringDescription buffer = new StringDescription();
+      stringMatcher.describeTo(buffer);
+      SpecialCharVisualizer.appendHighlightedValue(buffer.toString(), description, false);
     }
 
     @Override
@@ -769,11 +773,13 @@ public final class ViewMatchers {
       if (stringMatcher.matches(text)) {
         return true;
       }
-      mismatchDescription.appendText("view.getText() was ").appendValue(text);
+      mismatchDescription.appendText("view.getText() was ");
+      SpecialCharVisualizer.appendHighlightedValue(text, mismatchDescription, true);
       if (textView.getTransformationMethod() != null) {
         CharSequence transformedText =
             textView.getTransformationMethod().getTransformation(text, textView);
-        mismatchDescription.appendText(" transformed text was ").appendValue(transformedText);
+        mismatchDescription.appendText(" transformed text was ");
+        SpecialCharVisualizer.appendHighlightedValue(transformedText, mismatchDescription, true);
         if (transformedText != null) {
           return stringMatcher.matches(transformedText.toString());
         }
@@ -1381,7 +1387,8 @@ public final class ViewMatchers {
         description.appendText(" [").appendText(resourceName).appendText("]");
       }
       if (null != expectedText) {
-        description.appendText(" value: ").appendText(expectedText);
+        description.appendText(" value: ");
+        SpecialCharVisualizer.appendHighlightedValue(expectedText, description, true);
       }
     }
 
@@ -1408,7 +1415,7 @@ public final class ViewMatchers {
         default:
           throw new IllegalStateException("Unexpected TextView method: " + method);
       }
-      mismatchDescription.appendValue(actualText);
+      SpecialCharVisualizer.appendHighlightedValue(actualText, mismatchDescription, true);
       // FYI: actualText may not be string ... its just a char sequence convert to string.
       return null != expectedText && null != actualText && expectedText.contentEquals(actualText);
     }
@@ -2218,4 +2225,5 @@ public final class ViewMatchers {
   private static boolean isViewIdGenerated(int id) {
     return (id & 0xFF000000) == 0 && (id & 0x00FFFFFF) != 0;
   }
+
 }
