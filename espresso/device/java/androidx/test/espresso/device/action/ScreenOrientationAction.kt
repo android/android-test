@@ -25,7 +25,7 @@ import android.content.res.Configuration
 import android.database.ContentObserver
 import android.os.Handler
 import android.os.HandlerThread
-import android.provider.Settings
+import android.provider.Settings.System
 import android.util.Log
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.util.executeShellCommand
@@ -34,6 +34,7 @@ import androidx.test.espresso.device.util.getResumedActivityOrNull
 import androidx.test.espresso.device.util.isConfigurationChangeHandled
 import androidx.test.espresso.device.util.isRobolectricTest
 import androidx.test.platform.device.DeviceController
+import androidx.test.platform.device.UnsupportedDeviceOperationException
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
@@ -82,12 +83,16 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
       return
     }
 
-    var oldAccelRotationSetting = AccelerometerRotation.ENABLED
-    // Executing shell commands requires API 21+.
-    if (getDeviceApiLevel() >= 21) {
-      oldAccelRotationSetting = getAccelerometerRotationSetting()
-      if (oldAccelRotationSetting != AccelerometerRotation.ENABLED) {
+    var oldAccelRotationSetting = getAccelerometerRotationSetting(context.applicationContext)
+    if (oldAccelRotationSetting != AccelerometerRotation.ENABLED) {
+      // Executing shell commands requires API 21+.
+      if (getDeviceApiLevel() >= 21) {
+        Log.d(TAG, "Enabling auto-rotate.")
         setAccelerometerRotation(AccelerometerRotation.ENABLED, context.applicationContext)
+      } else {
+        throw UnsupportedDeviceOperationException(
+          "Screen orientation cannot be set on this device because auto-rotate is disabled. Please manually enable auto-rotate and try again."
+        )
       }
     }
 
@@ -149,30 +154,31 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
     }
     deviceController.setScreenOrientation(screenOrientation.orientation)
     latch.await()
-    if (getDeviceApiLevel() >= 21 && oldAccelRotationSetting != getAccelerometerRotationSetting()) {
+    if (
+      getDeviceApiLevel() >= 21 &&
+        oldAccelRotationSetting != getAccelerometerRotationSetting(context.applicationContext)
+    ) {
       setAccelerometerRotation(oldAccelRotationSetting, context.applicationContext)
     }
   }
 
-  private fun getAccelerometerRotationSetting(): AccelerometerRotation =
-    if (executeShellCommand("settings get system accelerometer_rotation").trim().toInt() == 1) {
+  private fun getAccelerometerRotationSetting(context: Context): AccelerometerRotation =
+    if (System.getInt(context.getContentResolver(), System.ACCELEROMETER_ROTATION, 0) == 1) {
       AccelerometerRotation.ENABLED
     } else {
       AccelerometerRotation.DISABLED
     }
 
-  private fun setAccelerometerRotation(accelerometerRotation: AccelerometerRotation, context: Context) {
+  private fun setAccelerometerRotation(
+    accelerometerRotation: AccelerometerRotation,
+    context: Context
+  ) {
     val settingsLatch: CountDownLatch = CountDownLatch(1)
     val thread: HandlerThread = HandlerThread("Observer_Thread")
     thread.start()
     val runnableHandler: Handler = Handler(thread.getLooper())
     val settingsObserver: SettingsObserver =
-      SettingsObserver(
-        runnableHandler,
-        context,
-        settingsLatch,
-        Settings.System.ACCELEROMETER_ROTATION
-      )
+      SettingsObserver(runnableHandler, context, settingsLatch, System.ACCELEROMETER_ROTATION)
     settingsObserver.observe()
     executeShellCommand("settings put system accelerometer_rotation ${accelerometerRotation.value}")
     settingsLatch.await()
@@ -188,7 +194,7 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
   ) : ContentObserver(handler) {
     fun observe() {
       val resolver: ContentResolver = context.getContentResolver()
-      resolver.registerContentObserver(Settings.System.getUriFor(settingToObserve), false, this)
+      resolver.registerContentObserver(System.getUriFor(settingToObserve), false, this)
     }
 
     fun stopObserver() {
