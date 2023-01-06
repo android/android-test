@@ -17,6 +17,7 @@
 package androidx.test.espresso.remote;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
+import static androidx.test.internal.util.LogUtil.lazyArg;
 import static androidx.test.internal.util.LogUtil.logDebug;
 
 import android.os.Parcelable;
@@ -173,7 +174,7 @@ final class RemoteMessageDeserializer implements EspressoRemoteMessage.From<Obje
           instance,
           remoteDescriptor.getInstanceType(),
           Joiner.on(",").join(constructorParams),
-          Arrays.toString(remoteDescriptor.getInstanceType().getConstructors()));
+          lazyArg(() -> Arrays.toString(remoteDescriptor.getInstanceType().getConstructors())));
     }
     return instance;
   }

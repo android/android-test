@@ -154,8 +154,13 @@ package androidx.test.internal.util {
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class LogUtil {
     ctor public LogUtil();
+    method public static androidx.test.internal.util.LogUtil.Supplier! lazyArg(androidx.test.internal.util.LogUtil.Supplier!);
     method public static void logDebug(String!, String!, java.lang.Object!...);
     method public static void logDebugWithProcess(String!, String!, java.lang.Object!...);
+  }
+
+  public static interface LogUtil.Supplier {
+    method public String! get();
   }
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ParcelableIBinder implements android.os.Parcelable {

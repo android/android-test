@@ -29,22 +29,33 @@ public final class LogUtil {
   private static volatile String myProcName = null;
 
   /**
-   * Calls {@link Log#d(String, String)} if {@link Log#isLoggable(String, int)} returns {@code true}
-   * for the given tag. Additionally, provides the ability to use a formatted message using the
-   * specified format string and arguments.
+   * Wrapper for {@link Log#d(String, String)} that supports lazy logging and string formatting.
+   *
+   * <p>Will call log iff {@link Log#isLoggable(String, int)} returns {@code true} for the given
+   * tag. Additionally, provides the ability to use a formatted message using the specified format
+   * string and arguments. Also provides ability to lazyily construct an argument.
    *
    * @param tag Used to identify the source of a log message. It usually identifies the class or
    *     activity where the log call occurs.
    * @param message The message you would like logged.
-   * @param args Arguments referenced by the format specifiers in the format string.
+   * @param args Arguments referenced by the format specifiers in the format string. {@link
+   *     #lazyArg(Supplier)} can be used to offload any expensive operations
    */
   public static void logDebug(String tag, String message, Object... args) {
     logDebug(tag, () -> message, args);
   }
 
-  private static void logDebug(String tag, Supplier<String> msgSupplier, Object... args) {
+  private static void logDebug(String tag, Supplier msgSupplier, Object... args) {
     if (isLoggable(tag, Log.DEBUG)) {
-      Log.d(tag, String.format(msgSupplier.get(), args));
+      Object[] convertedArgs = new Object[args.length];
+      for (int i = 0; i < args.length; i++) {
+        if (args[i] instanceof Supplier) {
+          convertedArgs[i] = ((Supplier) args[i]).get();
+        } else {
+          convertedArgs[i] = args[i];
+        }
+      }
+      Log.d(tag, String.format(msgSupplier.get(), convertedArgs));
     }
   }
 
@@ -89,7 +100,19 @@ public final class LogUtil {
     return Log.isLoggable(tag, level);
   }
 
-  interface Supplier<T> {
-    T get();
+  /**
+   * Helper method for providing a lazily constructed logging argument.
+   *
+   * <p>Useful for expensive calculations.
+   *
+   * <p>Usage: {@code logDebug("MyTag", "Big expensive array %s", lazyArg(() ->
+   * Arrays.toString(bigData));}
+   */
+  public static Supplier lazyArg(Supplier supplier) {
+    return supplier;
+  }
+
+  public interface Supplier {
+    String get();
   }
 }

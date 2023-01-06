@@ -650,6 +650,8 @@ public final class EspressoRemote implements RemoteInteraction {
         if (canExecute) {
           // Execute Espresso code to un-serialize and run view matchers, actions and assertions.
           status = RemoteInteractionStrategy.from(interactionRequest, data).execute();
+        } else {
+          remoteError = new RemoteError(REMOTE_PROTOCOL_ERROR_CODE, "Cannot execute interaction");
         }
 
       } catch (RemoteProtocolException rpe) {

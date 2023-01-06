@@ -18,6 +18,7 @@ package androidx.test.espresso.remote;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
+import static androidx.test.internal.util.LogUtil.lazyArg;
 import static androidx.test.internal.util.LogUtil.logDebug;
 
 import androidx.annotation.NonNull;
@@ -92,7 +93,7 @@ public final class ConstructorInvocation {
             TAG,
             "Cache miss for constructor: %s(%s). Loading into cache.",
             clazz.getSimpleName(),
-            Arrays.toString(constructorParams));
+            lazyArg(() -> Arrays.toString(constructorParams)));
         // Lookup constructor using annotation class
         if (annotationClass != null) {
           for (Constructor<?> candidate : clazz.getDeclaredConstructors()) {
@@ -118,7 +119,7 @@ public final class ConstructorInvocation {
             TAG,
             "Cache hit for constructor: %s(%s).",
             clazz.getSimpleName(),
-            Arrays.toString(constructorParams));
+            lazyArg(() -> Arrays.toString(constructorParams)));
       }
 
       constructor.setAccessible(true);
@@ -150,7 +151,8 @@ public final class ConstructorInvocation {
       throw new RemoteProtocolException(
           String.format(Locale.ROOT, "Constructor not accessible: %s", constructor.getName()), se);
     } finally {
-      logDebug(TAG, "%s(%s)", clazz.getSimpleName(), Arrays.toString(constructorParams));
+      logDebug(
+          TAG, "%s(%s)", clazz.getSimpleName(), lazyArg(() -> Arrays.toString(constructorParams)));
     }
     return returnValue;
   }
