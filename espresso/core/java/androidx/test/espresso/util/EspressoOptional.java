@@ -19,10 +19,9 @@ package androidx.test.espresso.util;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import androidx.annotation.Nullable;
-import com.google.common.annotations.Beta;
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.base.Supplier;
+import androidx.test.espresso.core.internal.deps.guava.base.Function;
+import androidx.test.espresso.core.internal.deps.guava.base.Optional;
+import androidx.test.espresso.core.internal.deps.guava.base.Supplier;
 import java.util.Set;
 import kotlin.collections.SetsKt;
 
@@ -67,12 +66,10 @@ public final class EspressoOptional<T> {
   }
 
   public Optional<T> or(Optional<? extends T> secondChoice) {
-    // TODO(b/262438695): remove the guava dependency here
     return isPresent() ? Optional.of(value) : (Optional<T>) secondChoice;
   }
 
   public T or(Supplier<? extends T> supplier) {
-    // TODO(b/262438695): remove the guava dependency here
     return isPresent() ? value : supplier.get();
   }
 
@@ -113,14 +110,11 @@ public final class EspressoOptional<T> {
   }
 
   public <V> Optional<V> transform(Function<? super T, V> function) {
-    // TODO(b/262438695): remove the guava dependency here
     return Optional.fromNullable(value).transform(function);
   }
 
-  @Beta
   public static <T> Iterable<T> presentInstances(
       final Iterable<? extends Optional<? extends T>> optionals) {
-    // TODO(b/262438695): remove the guava dependency here
     return Optional.presentInstances(optionals);
   }
 

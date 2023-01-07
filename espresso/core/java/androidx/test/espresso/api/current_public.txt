@@ -796,12 +796,12 @@ package androidx.test.espresso.util {
     method @Deprecated public T! get();
     method @Deprecated public boolean isPresent();
     method @Deprecated public static <T> androidx.test.espresso.util.EspressoOptional<T!>! of(T!);
-    method @Deprecated public com.google.common.base.Optional<T!>! or(com.google.common.base.Optional<? extends T>!);
-    method @Deprecated public T! or(com.google.common.base.Supplier<? extends T>!);
+    method @Deprecated public androidx.test.espresso.core.internal.deps.guava.base.Optional<T!>! or(androidx.test.espresso.core.internal.deps.guava.base.Optional<? extends T>!);
+    method @Deprecated public T! or(androidx.test.espresso.core.internal.deps.guava.base.Supplier<? extends T>!);
     method @Deprecated public T! or(T!);
     method @Deprecated public T! orNull();
-    method @Deprecated @com.google.common.annotations.Beta public static <T> Iterable<T!>! presentInstances(Iterable<? extends com.google.common.base.Optional<? extends T>>!);
-    method @Deprecated public <V> com.google.common.base.Optional<V!>! transform(com.google.common.base.Function<? super T,V!>!);
+    method @Deprecated public static <T> Iterable<T!>! presentInstances(Iterable<? extends androidx.test.espresso.core.internal.deps.guava.base.Optional<? extends T>>!);
+    method @Deprecated public <V> androidx.test.espresso.core.internal.deps.guava.base.Optional<V!>! transform(androidx.test.espresso.core.internal.deps.guava.base.Function<? super T,V!>!);
   }
 
   public final class HumanReadables {

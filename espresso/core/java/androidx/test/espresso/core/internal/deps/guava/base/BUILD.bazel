@@ -1,0 +1,18 @@
+# Description:
+#  Redefinition of repackaged guava classes that were mistakenly exposed in public EspressoOptional API
+
+licenses(["notice"])
+
+package(default_visibility = ["//visibility:public"])
+
+android_library(
+    name = "base",
+    srcs = glob([
+        "*.java",
+    ]),
+    deps = [
+        "//:androidx_annotation",
+        "//runner/monitor",
+        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
+    ],
+)
