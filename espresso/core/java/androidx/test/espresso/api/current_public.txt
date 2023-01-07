@@ -811,6 +811,12 @@ package androidx.test.espresso.util {
     method public static String! getViewHierarchyErrorMessage(android.view.View!, java.util.List<android.view.View!>!, String!, String!, int);
   }
 
+  public final class IterablesKt {
+  }
+
+  public final class StringJoinerKt {
+  }
+
   public final class TreeIterables {
     method public static Iterable<android.view.View!>! breadthFirstViewTraversal(android.view.View!);
     method public static Iterable<android.view.View!>! depthFirstViewTraversal(android.view.View!);

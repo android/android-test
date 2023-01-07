@@ -31,17 +31,12 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.Checkable;
 import android.widget.TextView;
-import androidx.test.espresso.util.TreeIterables.ViewAndDistance;
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
-import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import kotlin.collections.CollectionsKt;
+import kotlin.text.StringsKt;
 
 /** Text converters for various Android objects. */
 public final class HumanReadables {
@@ -78,6 +73,7 @@ public final class HumanReadables {
       final String problemViewSuffix) {
     return getViewHierarchyErrorMessage(
         rootView, problemViews, errorHeader, problemViewSuffix, Integer.MAX_VALUE);
+
   }
 
   /**
@@ -109,25 +105,21 @@ public final class HumanReadables {
     }
 
     String viewHierarchyDump =
-        Joiner.on("\n|\n")
-            .join(
-                Iterables.transform(
-                    depthFirstViewTraversalWithDistance(rootView),
-                    new Function<ViewAndDistance, String>() {
-                      @Override
-                      public String apply(ViewAndDistance viewAndDistance) {
-                        String formatString = "+%s%s ";
-                        if (problemViews != null
-                            && problemViews.contains(viewAndDistance.getView())) {
-                          formatString += problemViewSuffix;
-                        }
-                        return String.format(
-                            Locale.ROOT,
-                            formatString,
-                            Strings.padStart(">", viewAndDistance.getDistanceFromRoot() + 1, '-'),
-                            HumanReadables.describe(viewAndDistance.getView()));
-                      }
-                    }));
+        StringJoinerKt.joinToString(
+            CollectionsKt.map(
+                depthFirstViewTraversalWithDistance(rootView),
+                viewAndDistance -> {
+                  String formatString = "+%s%s ";
+                  if (problemViews != null && problemViews.contains(viewAndDistance.getView())) {
+                    formatString += problemViewSuffix;
+                  }
+                  return String.format(
+                      Locale.ROOT,
+                      formatString,
+                      StringsKt.padStart(">", viewAndDistance.getDistanceFromRoot() + 1, '-'),
+                      HumanReadables.describe(viewAndDistance.getView()));
+                }),
+            "\n|\n");
 
     errorMessage.append("\n\nView Hierarchy:\n").append(viewHierarchyDump);
 
@@ -202,7 +194,7 @@ public final class HumanReadables {
     if (null == v) {
       return "null";
     }
-    ToStringHelper helper = MoreObjects.toStringHelper(v).add("id", v.getId());
+    ToStringHelper helper = new ToStringHelper(v).add("id", v.getId());
     if (v.getId() != View.NO_ID
         && v.getId() != 0
         && v.getResources() != null

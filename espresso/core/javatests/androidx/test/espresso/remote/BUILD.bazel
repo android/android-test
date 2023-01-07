@@ -31,7 +31,6 @@ android_library(
         "//espresso/remote/java/androidx/test/espresso/remote:registry",
         "//espresso/web/java/androidx/test/espresso/web/model",
         "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_all",
     ],

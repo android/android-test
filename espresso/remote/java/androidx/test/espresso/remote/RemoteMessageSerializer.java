@@ -23,8 +23,6 @@ import static androidx.test.internal.util.LogUtil.logDebug;
 
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageLite;
@@ -35,6 +33,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import kotlin.collections.CollectionsKt;
 
 /**
  * Serializes an arbitrary object into its proto message representation.
@@ -103,14 +102,11 @@ final class RemoteMessageSerializer implements EspressoRemoteMessage.To<MessageL
       targetFields =
           getFilteredFieldList(
               instance.getClass(),
-              Lists.transform(
+              CollectionsKt.map(
                   fieldDescriptorList,
-                  new Function<FieldDescriptor, String>() {
-                    @Override
-                    public String apply(FieldDescriptor fieldDescriptor) {
-                      // Transform fieldDescriptorList into a new list which contains field names
-                      return fieldDescriptor.fieldName;
-                    }
+                  fieldDescriptor -> {
+                    // Transform fieldDescriptorList into a new list which contains field names
+                    return fieldDescriptor.fieldName;
                   }));
       return createProtoFromTargetFields(targetFields, instance);
     } catch (Exception e) {

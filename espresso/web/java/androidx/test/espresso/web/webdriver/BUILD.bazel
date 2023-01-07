@@ -16,6 +16,7 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/model",
         "//opensource/java_lib:WebDriverScripts",
         "//runner/monitor",
+        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@maven//:com_google_guava_guava",
     ],
 )

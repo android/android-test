@@ -55,7 +55,6 @@ import androidx.test.espresso.web.sugar.RemoteWebSugar;
 import androidx.test.espresso.web.webdriver.RemoteWebDriverAtoms;
 import androidx.test.internal.runner.InstrumentationConnection;
 import androidx.test.internal.util.ParcelableIBinder;
-import com.google.common.base.Throwables;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -67,6 +66,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
+import kotlin.ExceptionsKt;
 import org.hamcrest.Matcher;
 
 /**
@@ -651,18 +651,18 @@ public final class EspressoRemote implements RemoteInteraction {
           // Execute Espresso code to un-serialize and run view matchers, actions and assertions.
           status = RemoteInteractionStrategy.from(interactionRequest, data).execute();
         } else {
-          remoteError = new RemoteError(REMOTE_PROTOCOL_ERROR_CODE, "Cannot execute interaction");
+          remoteError = new RemoteError(REMOTE_ESPRESSO_ERROR_CODE, "Cannot execute interaction");
         }
 
       } catch (RemoteProtocolException rpe) {
         remoteError =
-            new RemoteError(REMOTE_PROTOCOL_ERROR_CODE, Throwables.getStackTraceAsString(rpe));
+            new RemoteError(REMOTE_PROTOCOL_ERROR_CODE, ExceptionsKt.stackTraceToString(rpe));
       } catch (RuntimeException re) {
         remoteError =
-            new RemoteError(REMOTE_ESPRESSO_ERROR_CODE, Throwables.getStackTraceAsString(re));
+            new RemoteError(REMOTE_ESPRESSO_ERROR_CODE, ExceptionsKt.stackTraceToString(re));
       } catch (Error error) {
         remoteError =
-            new RemoteError(REMOTE_ESPRESSO_ERROR_CODE, Throwables.getStackTraceAsString(error));
+            new RemoteError(REMOTE_ESPRESSO_ERROR_CODE, ExceptionsKt.stackTraceToString(error));
       }
 
       return new InteractionResponse.Builder()

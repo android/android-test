@@ -37,7 +37,7 @@
   <application
       android:icon="@drawable/ic_launcher"
       android:label="UI Test App"
-      android:name="android.support.multidex.MultiDexApplication"
+      android:name="androidx.multidex.MultiDexApplication"
       android:supportsRtl="true"
       android:usesCleartextTraffic="true" >
     <activity android:exported="true"

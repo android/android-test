@@ -16,6 +16,7 @@
  */
 package androidx.test.espresso.remote;
 
+import static kotlin.collections.CollectionsKt.listOf;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -23,7 +24,6 @@ import static org.junit.Assert.assertThat;
 import androidx.test.espresso.proto.TestProtos.GenericTestProto;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import com.google.common.collect.Lists;
 import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
 import org.junit.Test;
@@ -58,7 +58,7 @@ public class ProtoReflectorTest {
     Any any3 = buildAny(ANY_TYPE_URL_THREE, ANY_TYPE_VALUE_THREE);
 
     Any anyValue1 = any1;
-    Iterable anyList1 = Lists.newArrayList(any2, any3);
+    Iterable anyList1 = listOf(any2, any3);
     ByteString value1 = TypeProtoConverters.typeToByteString(STRING_VALUE_ONE);
 
     ProtoReflector protoReflector =

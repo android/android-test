@@ -16,15 +16,17 @@
 
 package androidx.test.espresso.web.model;
 
+import static kotlin.collections.CollectionsKt.listOf;
+import static kotlin.collections.CollectionsKt.mutableListOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
+import kotlin.collections.MapsKt;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,7 +71,7 @@ public class ModelCodecTest {
 
   @Test
   public void testEncodeDecodeEvaluation_withList() {
-    List<Object> results = Lists.newArrayList();
+    List<Object> results = mutableListOf();
     results.add(1);
     results.add(2);
     results.add(3);
@@ -92,7 +94,7 @@ public class ModelCodecTest {
 
   @Test
   public void testEncodeDecodeEvaluation_withMapValue() {
-    Map<String, Object> mapResult = Maps.newHashMap();
+    Map<String, Object> mapResult = MapsKt.mutableMapOf();
     mapResult.put("foo", "bar");
     mapResult.put("baz", true);
 
@@ -136,7 +138,7 @@ public class ModelCodecTest {
     adhoc.put("int_min", Integer.MIN_VALUE);
     adhoc.put("double_min", Double.MIN_VALUE);
     adhoc.put("double_max", Double.MAX_VALUE);
-    adhoc.put("sudz", Lists.newArrayList("goodbye"));
+    adhoc.put("sudz", listOf("goodbye"));
     assertEquals(adhoc, ModelCodec.decode(ModelCodec.encode(adhoc)));
   }
 
@@ -148,7 +150,7 @@ public class ModelCodecTest {
     array[2] = Double.MIN_VALUE;
     array[3] = "Hello World";
     array[4] = 2;
-    assertEquals(Lists.newArrayList(array), ModelCodec.decode(ModelCodec.encode(array)));
+    assertEquals(listOf(array), ModelCodec.decode(ModelCodec.encode(array)));
   }
 
   @Test
@@ -157,9 +159,9 @@ public class ModelCodecTest {
     Map<String, Object> adhoc = Maps.newHashMap();
     adhoc.put("foobar", 1234);
     adhoc.put("buzzz", Boolean.FALSE);
-    adhoc.put("sudz", Lists.newArrayList("goodbye"));
+    adhoc.put("sudz", listOf("goodbye"));
     List<Object> blah =
-        Lists.newArrayList(
+        listOf(
             (Object) new GoodJSONAble("something"),
             new GoodJSONAble(null),
             new ElementReference("haha"),
@@ -167,7 +169,7 @@ public class ModelCodecTest {
             Boolean.TRUE,
             42,
             null,
-            Lists.newArrayList((Object) "a nested list", 12345),
+            listOf((Object) "a nested list", 12345),
             adhoc,
             new GoodJSONAble("otherthing"));
     assertEquals(blah, ModelCodec.decode(ModelCodec.encode(blah)));

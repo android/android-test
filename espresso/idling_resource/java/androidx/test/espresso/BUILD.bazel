@@ -27,19 +27,14 @@ android_library(
     ],
 )
 
-android_library(
+alias(
     name = "idling_resource",
-    srcs = IDLING_INTERFACE,
-    visibility = ["//visibility:public"],
+    actual = "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
 )
 
-android_library(
+alias(
     name = "counting_idling_resource",
-    srcs = ["CountingIdlingResource.java"],
-    visibility = ["//visibility:public"],
-    deps = [
-        ":idling_resource",
-    ],
+    actual = "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
 )
 
 alias(

@@ -22,13 +22,14 @@ import android.os.Build;
 import android.util.Log;
 import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.espresso.UiController;
-import com.google.common.collect.ImmutableList;
+import java.util.List;
+import kotlin.collections.CollectionsKt;
 
 /** Helper methods to synchronize configuration changes with onView actions. */
 final class ConfigurationSynchronizationUtils {
   private static final String TAG = ConfigurationSynchronizationUtils.class.getSimpleName();
-  private static final ImmutableList<Integer> ORIENTATION_WAIT_TIMES =
-      ImmutableList.of(10, 50, 100, 250, 500, 2000 /* 2sec */);
+  private static final List<Integer> ORIENTATION_WAIT_TIMES =
+      CollectionsKt.listOf(10, 50, 100, 250, 500, 2000 /* 2sec */);
 
   private ConfigurationSynchronizationUtils() {}
 

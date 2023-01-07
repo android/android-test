@@ -24,10 +24,10 @@ import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.InjectEventSecurityException;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
-import com.google.common.annotations.VisibleForTesting;
 import java.util.Locale;
 
 /** Facilitates sending of motion events to a {@link UiController}. */

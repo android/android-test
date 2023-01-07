@@ -37,7 +37,6 @@ import androidx.test.espresso.remote.GenericRemoteMessage;
 import androidx.test.espresso.remote.RemoteDescriptorRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import com.google.common.base.Function;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,13 +63,6 @@ public class DisplayDataMatcherRemoteMsgTest {
     AdapterViewProtocol adapterViewProtocol = AdapterViewProtocols.standardProtocol();
     AdapterDataLoaderAction adapterDataLoaderAction =
         new AdapterDataLoaderAction(stringMatcher, (Integer) null, adapterViewProtocol);
-    Function<AdapterDataLoaderAction, ViewInteraction> noOpDataLoaderFunction =
-        new Function<AdapterDataLoaderAction, ViewInteraction>() {
-          @Override
-          public ViewInteraction apply(AdapterDataLoaderAction adapterDataLoaderAction) {
-            return null;
-          }
-        };
 
     DisplayDataMatcher displayDataMatcher =
         new DisplayDataMatcher(
@@ -78,7 +70,7 @@ public class DisplayDataMatcherRemoteMsgTest {
             stringMatcher,
             adapterViewProtocol,
             adapterDataLoaderAction,
-            noOpDataLoaderFunction);
+            adapterDataLoaderAction1 -> null);
     return (DisplayDataMatcherProto) new GenericRemoteMessage(displayDataMatcher).toProto();
   }
 

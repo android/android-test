@@ -20,11 +20,10 @@ import static androidx.test.internal.util.Checks.checkArgument;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.LogUtil.logDebug;
 
+import android.util.LruCache;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -33,8 +32,8 @@ import java.util.Locale;
 /** Reflectively invokes a method of a declared instance. */
 final class MethodInvocation {
   private static final String TAG = "MethodInvocation";
-  private static final Cache<MethodKey, Method> methodCache =
-      CacheBuilder.newBuilder().maximumSize(256 /* LRU eviction after max size exceeded */).build();
+  private static final LruCache<MethodKey, Method> methodCache =
+      new LruCache<>(256 /* LRU eviction after max size exceeded */);
 
   private final Class<?> clazz;
   @Nullable private final Object instance;
@@ -75,7 +74,7 @@ final class MethodInvocation {
 
   private static Method getMethodInternal(MethodKey methodKey, boolean declaredMethod)
       throws NoSuchMethodException {
-    Method method = methodCache.getIfPresent(methodKey);
+    Method method = methodCache.get(methodKey);
     if (null == method) {
       logDebug(
           TAG,
@@ -102,7 +101,7 @@ final class MethodInvocation {
 
   @VisibleForTesting
   public static void invalidateCache() {
-    methodCache.invalidateAll();
+    methodCache.evictAll();
   }
 
   /**

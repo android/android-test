@@ -18,10 +18,10 @@ package androidx.test.espresso;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
-import static com.google.common.base.MoreObjects.toStringHelper;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.remote.NoRemoteEspressoInstanceException;
-import com.google.common.annotations.VisibleForTesting;
+import androidx.test.espresso.util.ToStringHelper;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import java.util.List;
@@ -217,8 +217,7 @@ final class InteractionResultsHandler {
 
     @Override
     public String toString() {
-      return toStringHelper(this)
-          .omitNullValues()
+      return new ToStringHelper(this)
           .add("priority", priority)
           .add("success", success)
           .add("result", result)

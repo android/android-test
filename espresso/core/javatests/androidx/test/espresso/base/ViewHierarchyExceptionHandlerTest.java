@@ -32,10 +32,12 @@ import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.io.PlatformTestStorage;
-import com.google.common.collect.ImmutableMap;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import kotlin.Pair;
+import kotlin.collections.MapsKt;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -215,7 +217,7 @@ public class ViewHierarchyExceptionHandlerTest {
             .withOtherAmbiguousViews(child2)
             .build();
 
-    ImmutableMap<String, String> inputArgs = ImmutableMap.of("view_hierarchy_char_limit", "1772");
+    Map<String, String> inputArgs = MapsKt.mapOf(new Pair<>("view_hierarchy_char_limit", "1772"));
     when(testStorage.getInputArgs()).thenReturn(inputArgs);
     doAnswer(invocation -> inputArgs.get(invocation.getArgument(0)))
         .when(testStorage)

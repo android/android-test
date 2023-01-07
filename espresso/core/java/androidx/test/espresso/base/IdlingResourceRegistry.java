@@ -19,6 +19,9 @@ package androidx.test.espresso.base;
 import static androidx.test.internal.util.Checks.checkArgument;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
+import static kotlin.collections.CollectionsKt.listOf;
+import static kotlin.collections.CollectionsKt.mutableListOf;
+import static kotlin.collections.CollectionsKt.toMutableList;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -33,8 +36,6 @@ import androidx.test.espresso.util.TracingUtil;
 import androidx.test.platform.tracing.Tracer;
 import androidx.test.platform.tracing.Tracer.Span;
 import androidx.test.platform.tracing.Tracing;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +47,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import kotlin.collections.CollectionsKt;
 
 /**
  * Keeps track of user-registered {@link IdlingResource IdlingResources}. Consider using {@link
@@ -148,7 +150,7 @@ public final class IdlingResourceRegistry {
       }
 
       unregisterResources(resourcesToUnRegister);
-      registerResources(Lists.newArrayList(resourcesToRegister.values()));
+      registerResources(toMutableList(resourcesToRegister.values()));
     }
   }
 
@@ -244,15 +246,14 @@ public final class IdlingResourceRegistry {
     checkNotNull(looper);
     checkArgument(Looper.getMainLooper() != looper, "Not intended for use with main looper!");
 
-    registerResources(
-        Lists.newArrayList(LooperIdlingResourceInterrogationHandler.forLooper(looper)));
+    registerResources(listOf(LooperIdlingResourceInterrogationHandler.forLooper(looper)));
   }
 
   /**
    * Returns a list of all currently registered {@link IdlingResource}s. This method is safe to call
    * from any thread.
    *
-   * @return an ImmutableList of {@link IdlingResource}s.
+   * @return an immutable List of {@link IdlingResource}s.
    */
   public List<IdlingResource> getResources() {
     if (Looper.myLooper() != looper) {
@@ -264,11 +265,11 @@ public final class IdlingResourceRegistry {
             }
           });
     } else {
-      ImmutableList.Builder<IdlingResource> irs = ImmutableList.builder();
+      List<IdlingResource> irs = mutableListOf();
       for (IdlingState is : idlingStates) {
         irs.add(is.resource);
       }
-      return irs.build();
+      return CollectionsKt.toList(irs);
     }
   }
 
@@ -363,8 +364,8 @@ public final class IdlingResourceRegistry {
   }
 
   List<String> getBusyResources() {
-    List<String> busyResourceNames = Lists.newArrayList();
-    List<IdlingState> racyResources = Lists.newArrayList();
+    List<String> busyResourceNames = mutableListOf();
+    List<IdlingState> racyResources = mutableListOf();
 
     for (IdlingState state : idlingStates) {
       if (!state.idle) {

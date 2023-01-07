@@ -19,20 +19,20 @@ package androidx.test.espresso.remote;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.LogUtil.lazyArg;
 import static androidx.test.internal.util.LogUtil.logDebug;
+import static kotlin.collections.CollectionsKt.mutableListOf;
 
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import androidx.test.espresso.util.StringJoinerKt;
 import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageLite;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import kotlin.collections.CollectionsKt;
+import kotlin.jvm.functions.Function1;
 
 /**
  * Deserializes a proto message, into its object representation.
@@ -100,7 +100,7 @@ final class RemoteMessageDeserializer implements EspressoRemoteMessage.From<Obje
   private Object fromProtoInternal(MessageLite messageLite, RemoteDescriptor remoteDescriptor) {
     // List that will be used to store constructor parameters. These values will later be passed
     // along to the constructor of the target object
-    List<Object> constructorParams = Lists.newArrayList();
+    List<Object> constructorParams = mutableListOf();
     // Create a new proto reflector to interact with a proto msg
     ProtoReflector protoReflector =
         new ProtoReflector(remoteDescriptor.getProtoType(), messageLite);
@@ -114,18 +114,8 @@ final class RemoteMessageDeserializer implements EspressoRemoteMessage.From<Obje
       if (Iterable.class.isAssignableFrom(fieldDescriptor.fieldType)) {
         List<Any> iterable = protoReflector.getAnyList(fieldDescriptor.fieldName);
         constructorParam =
-            Iterables.transform(
-                iterable,
-                new Function<MessageLite, Object>() {
-                  @Override
-                  public Object apply(MessageLite messageLite) {
-                    if (messageLite instanceof Any) {
-                      return TypeProtoConverters.anyToType(
-                          (Any) messageLite, remoteDescriptorRegistry);
-                    }
-                    return fromProto(messageLite);
-                  }
-                });
+            CollectionsKt.map(
+                iterable, any -> TypeProtoConverters.anyToType(any, remoteDescriptorRegistry));
       } else if (Serializable.class.isAssignableFrom(fieldDescriptor.fieldType)
           || Object.class == fieldDescriptor.fieldType
           || fieldDescriptor.fieldType.isPrimitive()) {
@@ -150,15 +140,13 @@ final class RemoteMessageDeserializer implements EspressoRemoteMessage.From<Obje
     Object instance = null;
     try {
       Class<?>[] constructorTypes = new Class<?>[fieldDescriptorList.size()];
-      Lists.transform(
+      CollectionsKt.map(
               fieldDescriptorList,
-              new Function<FieldDescriptor, Class<?>>() {
-                @Override
-                public Class<?> apply(FieldDescriptor fieldDescriptor) {
-                  // Transform fieldDescriptorList into a new list which contains only field types
-                  return fieldDescriptor.fieldType;
-                }
-              })
+              (Function1<FieldDescriptor, Class<?>>)
+                  fieldDescriptor ->
+                      // Transform fieldDescriptorList into a new list which contains only field
+                      // types
+                      fieldDescriptor.fieldType)
           .toArray(constructorTypes);
 
       instance =
@@ -173,7 +161,7 @@ final class RemoteMessageDeserializer implements EspressoRemoteMessage.From<Obje
           messageLite.getClass().getSimpleName(),
           instance,
           remoteDescriptor.getInstanceType(),
-          Joiner.on(",").join(constructorParams),
+          StringJoinerKt.joinToString(constructorParams, ","),
           lazyArg(() -> Arrays.toString(remoteDescriptor.getInstanceType().getConstructors())));
     }
     return instance;

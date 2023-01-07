@@ -16,8 +16,8 @@
  */
 package androidx.test.espresso.remote;
 
-import com.google.common.collect.Lists;
 import java.lang.reflect.Field;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,7 +60,7 @@ public final class ProtoUtils {
    */
   public static List<Field> getFilteredFieldList(Class<?> clazz, List<String> targetFieldNames)
       throws NoSuchFieldException {
-    List<Field> targetFields = Lists.newLinkedList();
+    List<Field> targetFields = new LinkedList<>();
     for (String targetFieldName : targetFieldNames) {
       targetFields.add(getFieldRecursively(clazz, targetFieldName, null));
     }

@@ -21,8 +21,8 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
-import com.google.common.collect.Lists;
 import java.util.List;
+import kotlin.collections.CollectionsKt;
 
 /** Utility class wrapping simple and more commonly used atoms. */
 public final class Atoms {
@@ -53,7 +53,7 @@ public final class Atoms {
 
   /** Creates an atom that will execute the provided script and return an evaluation object. */
   public static Atom<Evaluation> script(String script) {
-    return new ScriptWithArgsSimpleAtom(script, Lists.newArrayList());
+    return new ScriptWithArgsSimpleAtom(script, CollectionsKt.listOf());
   }
 
   /** Returns the value of document.location.href. */

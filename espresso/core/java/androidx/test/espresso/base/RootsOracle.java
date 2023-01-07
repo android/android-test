@@ -17,6 +17,9 @@
 package androidx.test.espresso.base;
 
 import static androidx.test.internal.util.Checks.checkState;
+import static kotlin.collections.CollectionsKt.emptyList;
+import static kotlin.collections.CollectionsKt.mutableListOf;
+import static kotlin.collections.CollectionsKt.toList;
 
 import android.os.Build;
 import android.os.Looper;
@@ -24,7 +27,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import androidx.test.espresso.Root;
-import com.google.common.collect.Lists;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -78,16 +80,16 @@ final class RootsOracle implements ActiveRootLister {
 
     if (null == windowManagerObj) {
       Log.w(TAG, "No reflective access to windowmanager object.");
-      return Lists.newArrayList();
+      return emptyList();
     }
 
     if (null == viewsField) {
       Log.w(TAG, "No reflective access to mViews");
-      return Lists.newArrayList();
+      return emptyList();
     }
     if (null == paramsField) {
       Log.w(TAG, "No reflective access to mParams");
-      return Lists.newArrayList();
+      return emptyList();
     }
 
     List<View> views = null;
@@ -111,7 +113,7 @@ final class RootsOracle implements ActiveRootLister {
               paramsField,
               windowManagerObj),
           re);
-      return Lists.newArrayList();
+      return emptyList();
     } catch (IllegalAccessException iae) {
       Log.w(
           TAG,
@@ -122,10 +124,10 @@ final class RootsOracle implements ActiveRootLister {
               paramsField,
               windowManagerObj),
           iae);
-      return Lists.newArrayList();
+      return emptyList();
     }
 
-    List<Root> roots = Lists.newArrayList();
+    List<Root> roots = mutableListOf();
     for (int i = views.size() - 1; i > -1; i--) {
       roots.add(
           new Root.Builder()
@@ -134,7 +136,8 @@ final class RootsOracle implements ActiveRootLister {
               .build());
     }
 
-    return roots;
+    // return an immutable list
+    return toList(roots);
   }
 
   private void initialize() {

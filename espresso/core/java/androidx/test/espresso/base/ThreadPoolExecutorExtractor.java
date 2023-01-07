@@ -19,7 +19,7 @@ package androidx.test.espresso.base;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import com.google.common.base.Optional;
+import androidx.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -49,16 +49,17 @@ final class ThreadPoolExecutorExtractor {
     mainHandler = new Handler(looper);
   }
 
+  @Nullable
   public ThreadPoolExecutor getAsyncTaskThreadPool() {
-    FutureTask<Optional<ThreadPoolExecutor>> getTask = null;
+    FutureTask<ThreadPoolExecutor> getTask = null;
     if (Build.VERSION.SDK_INT < 11) {
-      getTask = new FutureTask<Optional<ThreadPoolExecutor>>(LEGACY_ASYNC_TASK_EXECUTOR);
+      getTask = new FutureTask<ThreadPoolExecutor>(LEGACY_ASYNC_TASK_EXECUTOR);
     } else {
-      getTask = new FutureTask<Optional<ThreadPoolExecutor>>(POST_HONEYCOMB_ASYNC_TASK_EXECUTOR);
+      getTask = new FutureTask<ThreadPoolExecutor>(POST_HONEYCOMB_ASYNC_TASK_EXECUTOR);
     }
 
     try {
-      return runOnMainThread(getTask).get().get();
+      return runOnMainThread(getTask).get();
     } catch (InterruptedException ie) {
       throw new RuntimeException("Interrupted while trying to get the async task executor!", ie);
     } catch (ExecutionException ee) {
@@ -66,11 +67,10 @@ final class ThreadPoolExecutorExtractor {
     }
   }
 
-  public Optional<ThreadPoolExecutor> getCompatAsyncTaskThreadPool() {
+  @Nullable
+  public ThreadPoolExecutor getCompatAsyncTaskThreadPool() {
     try {
-      return runOnMainThread(
-              new FutureTask<Optional<ThreadPoolExecutor>>(MODERN_ASYNC_TASK_EXTRACTOR))
-          .get();
+      return runOnMainThread(new FutureTask<>(MODERN_ASYNC_TASK_EXTRACTOR)).get();
     } catch (InterruptedException ie) {
       throw new RuntimeException("Interrupted while trying to get the compat async executor!", ie);
     } catch (ExecutionException ee) {
@@ -106,67 +106,52 @@ final class ThreadPoolExecutorExtractor {
     return futureToRun;
   }
 
-  private static final Callable<Optional<ThreadPoolExecutor>> MODERN_ASYNC_TASK_EXTRACTOR =
-      new Callable<Optional<ThreadPoolExecutor>>() {
-        @Override
-        public Optional<ThreadPoolExecutor> call() throws Exception {
-          try {
-            Class<?> modernClazz = Class.forName(MODERN_ASYNC_TASK_CLASS_NAME);
-            if (modernClazz == null) {
-              return Optional.<ThreadPoolExecutor>absent();
-            }
-            Field executorField = modernClazz.getDeclaredField(MODERN_ASYNC_TASK_FIELD_NAME);
-            if (executorField == null) {
-              return Optional.<ThreadPoolExecutor>absent();
-            }
-            executorField.setAccessible(true);
-            return Optional.of((ThreadPoolExecutor) executorField.get(null));
-          } catch (ClassNotFoundException cnfe) {
-            return Optional.<ThreadPoolExecutor>absent();
-          } catch (NoSuchFieldException nsfe) {
-            return Optional.<ThreadPoolExecutor>absent();
+  private static final Callable<ThreadPoolExecutor> MODERN_ASYNC_TASK_EXTRACTOR =
+      () -> {
+        try {
+          Class<?> modernClazz = Class.forName(MODERN_ASYNC_TASK_CLASS_NAME);
+          if (modernClazz == null) {
+            return null;
           }
+          Field executorField = modernClazz.getDeclaredField(MODERN_ASYNC_TASK_FIELD_NAME);
+          if (executorField == null) {
+            return null;
+          }
+          executorField.setAccessible(true);
+          return (ThreadPoolExecutor) executorField.get(null);
+        } catch (ClassNotFoundException cnfe) {
+          return null;
+        } catch (NoSuchFieldException nsfe) {
+          return null;
         }
       };
 
   private static final Callable<Class<?>> LOAD_ASYNC_TASK_CLASS =
-      new Callable<Class<?>>() {
-        @Override
-        public Class<?> call() throws Exception {
-          return Class.forName(ASYNC_TASK_CLASS_NAME);
+      () -> Class.forName(ASYNC_TASK_CLASS_NAME);
+
+  private static final Callable<ThreadPoolExecutor> LEGACY_ASYNC_TASK_EXECUTOR =
+      () -> {
+        try {
+          Field executorField =
+              LOAD_ASYNC_TASK_CLASS.call().getDeclaredField(LEGACY_ASYNC_TASK_FIELD_NAME);
+          executorField.setAccessible(true);
+          return (ThreadPoolExecutor) executorField.get(null);
+        } catch (ClassNotFoundException cnfe) {
+          return null;
+        } catch (NoSuchFieldException nsfe) {
+          return null;
         }
       };
 
-  private static final Callable<Optional<ThreadPoolExecutor>> LEGACY_ASYNC_TASK_EXECUTOR =
-      new Callable<Optional<ThreadPoolExecutor>>() {
-        @Override
-        public Optional<ThreadPoolExecutor> call() throws Exception {
-          try {
-            Field executorField =
-                LOAD_ASYNC_TASK_CLASS.call().getDeclaredField(LEGACY_ASYNC_TASK_FIELD_NAME);
-            executorField.setAccessible(true);
-            return Optional.of((ThreadPoolExecutor) executorField.get(null));
-          } catch (ClassNotFoundException cnfe) {
-            return Optional.<ThreadPoolExecutor>absent();
-          } catch (NoSuchFieldException nsfe) {
-            return Optional.<ThreadPoolExecutor>absent();
-          }
-        }
-      };
-
-  private static final Callable<Optional<ThreadPoolExecutor>> POST_HONEYCOMB_ASYNC_TASK_EXECUTOR =
-      new Callable<Optional<ThreadPoolExecutor>>() {
-        @Override
-        public Optional<ThreadPoolExecutor> call() throws Exception {
-          try {
-            Field executorField =
-                LOAD_ASYNC_TASK_CLASS.call().getField(MODERN_ASYNC_TASK_FIELD_NAME);
-            return Optional.of((ThreadPoolExecutor) executorField.get(null));
-          } catch (ClassNotFoundException cnfe) {
-            return Optional.<ThreadPoolExecutor>absent();
-          } catch (NoSuchFieldException nsfe) {
-            return Optional.<ThreadPoolExecutor>absent();
-          }
+  private static final Callable<ThreadPoolExecutor> POST_HONEYCOMB_ASYNC_TASK_EXECUTOR =
+      () -> {
+        try {
+          Field executorField = LOAD_ASYNC_TASK_CLASS.call().getField(MODERN_ASYNC_TASK_FIELD_NAME);
+          return (ThreadPoolExecutor) executorField.get(null);
+        } catch (ClassNotFoundException cnfe) {
+          return null;
+        } catch (NoSuchFieldException nsfe) {
+          return null;
         }
       };
 }

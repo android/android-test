@@ -16,8 +16,8 @@
 
 package androidx.test.espresso;
 
+import static androidx.test.espresso.util.Throwables.throwIfUnchecked;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static com.google.common.base.Throwables.throwIfUnchecked;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;

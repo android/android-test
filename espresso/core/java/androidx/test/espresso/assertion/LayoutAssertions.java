@@ -39,8 +39,7 @@ import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.matcher.ViewMatchers.Visibility;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import androidx.test.espresso.util.IterablesKt;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -109,24 +108,14 @@ public final class LayoutAssertions {
       this.selector = selector;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void check(View view, NoMatchingViewException noViewException) {
-
-      final Predicate<View> viewPredicate =
-          new Predicate<View>() {
-            @Override
-            public boolean apply(View input) {
-              return selector.matches(input);
-            }
-          };
-
       if (noViewException != null) {
         throw noViewException;
       }
 
       Iterator<View> selectedViewIterator =
-          Iterables.filter(breadthFirstViewTraversal(view), viewPredicate).iterator();
+          IterablesKt.filter(breadthFirstViewTraversal(view), selector).iterator();
 
       List<View> prevViews = new LinkedList<>();
       StringBuilder errorMessage = new StringBuilder();

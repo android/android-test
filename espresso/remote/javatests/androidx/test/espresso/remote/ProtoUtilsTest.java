@@ -18,12 +18,12 @@ package androidx.test.espresso.remote;
 
 import static androidx.test.espresso.remote.ProtoUtils.capitalizeFirstChar;
 import static androidx.test.espresso.remote.ProtoUtils.getFilteredFieldList;
+import static kotlin.collections.CollectionsKt.listOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import com.google.common.collect.Lists;
 import java.lang.reflect.Field;
 import java.util.List;
 import org.junit.Test;
@@ -40,7 +40,7 @@ public class ProtoUtilsTest {
     String field1 = "field1";
     String field2 = "field2";
     String field3 = "field3";
-    List<String> filters = Lists.newArrayList(field1, field2, field3);
+    List<String> filters = listOf(field1, field2, field3);
 
     List<Field> orderedFieldList = getFilteredFieldList(FieldsFromClass.class, filters);
     assertThat(orderedFieldList.size(), equalTo(3));
@@ -51,7 +51,7 @@ public class ProtoUtilsTest {
 
   @Test
   public void orderedFieldList_withEmptyFilters_ReturnsEmptyList() throws NoSuchFieldException {
-    List<String> filters = Lists.newArrayList();
+    List<String> filters = listOf();
 
     List<Field> orderedFieldList = getFilteredFieldList(FieldsFromClass.class, filters);
     assertThat(orderedFieldList.size(), equalTo(0));
@@ -60,7 +60,7 @@ public class ProtoUtilsTest {
   @Test
   public void orderedFieldList_getFieldFromParentClass() throws NoSuchFieldException {
     String superField1 = "superField1";
-    List<String> filters = Lists.newArrayList(superField1);
+    List<String> filters = listOf(superField1);
 
     List<Field> orderedFieldList = getFilteredFieldList(FieldsFromClass.class, filters);
     assertThat(orderedFieldList.size(), equalTo(1));
@@ -73,7 +73,7 @@ public class ProtoUtilsTest {
     String superField2 = "superField2";
     String field1 = "field1";
     String field2 = "field2";
-    List<String> filters = Lists.newArrayList(superField1, field1, superField2, field2);
+    List<String> filters = listOf(superField1, field1, superField2, field2);
 
     List<Field> orderedFieldList = getFilteredFieldList(FieldsFromClass.class, filters);
     assertThat(orderedFieldList.size(), equalTo(4));
@@ -85,7 +85,7 @@ public class ProtoUtilsTest {
 
   @Test
   public void orderedFieldList_nonExistingField_ThrowsNSFE() {
-    List<String> filters = Lists.newArrayList("iamNotAField");
+    List<String> filters = listOf("iamNotAField");
     try {
       getFilteredFieldList(FieldsFromClass.class, filters);
     } catch (NoSuchFieldException expected) {

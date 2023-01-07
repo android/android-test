@@ -21,7 +21,6 @@ android_app_instrumentation_tests(
         "//espresso/core/java/androidx/test/espresso/util",
         "//ext/junit",
         "//runner/android_junit_runner",
-        "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_all",

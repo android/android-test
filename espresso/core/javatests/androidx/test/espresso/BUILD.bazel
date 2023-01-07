@@ -23,7 +23,6 @@ android_library(
     deps = [
         "//:androidx_annotation",
         "//runner/monitor",
-        "@maven//:com_google_guava_guava",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
 )

@@ -1,16 +1,22 @@
 # Description:
 #  Utility classes
 
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+
 licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
 
-android_library(
+kt_android_library(
     name = "util",
-    srcs = glob(["*.java"]),
+    srcs = glob([
+        "*.java",
+        "*.kt",
+    ]),
     deps = [
+        "//:androidx_annotation",
         "//runner/android_junit_runner",
         "@maven//:com_google_guava_guava",
-        "//:androidx_annotation",
+        "@maven//:org_hamcrest_hamcrest_all",
     ],
 )

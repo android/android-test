@@ -16,14 +16,16 @@
  */
 package androidx.test.espresso.web.model;
 
+import static kotlin.collections.CollectionsKt.mutableListOf;
+
 import androidx.test.espresso.remote.EspressoRemoteMessage;
 import androidx.test.espresso.remote.TypeProtoConverters;
 import androidx.test.espresso.web.model.Atoms.ScriptWithArgsSimpleAtom;
 import androidx.test.espresso.web.proto.model.WebModelAtoms.ScriptWithArgsSimpleAtomProto;
 import androidx.test.espresso.web.proto.model.WebModelAtoms.ScriptWithArgsSimpleAtomProto.Builder;
-import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageLite;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,7 +46,7 @@ public class ScriptWithArgsSimpleAtomRemoteMessage
               (ScriptWithArgsSimpleAtomProto) message;
 
           String script = scriptWithArgsSimpleAtomProto.getScript();
-          List<Object> nonContextualArguments = Lists.newArrayList();
+          List<Object> nonContextualArguments = mutableListOf();
           List<ByteString> argsList = scriptWithArgsSimpleAtomProto.getArgsList();
           for (ByteString arg : argsList) {
             nonContextualArguments.add(TypeProtoConverters.byteStringToType(arg));
@@ -66,7 +68,7 @@ public class ScriptWithArgsSimpleAtomRemoteMessage
 
     List<Object> nonContextualArguments = scriptWithArgsSimpleAtom.getNonContextualArguments();
     if (!nonContextualArguments.isEmpty()) {
-      List<ByteString> argsList = Lists.newArrayListWithExpectedSize(nonContextualArguments.size());
+      List<ByteString> argsList = new ArrayList<>(nonContextualArguments.size());
       for (Object object : nonContextualArguments) {
         argsList.add(TypeProtoConverters.typeToByteString(object));
       }

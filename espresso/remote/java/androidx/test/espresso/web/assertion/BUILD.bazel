@@ -29,7 +29,7 @@ android_library(
         "//espresso/remote/java/androidx/test/espresso/web/proto/assertion:web_assertions_proto_android_pb3",
         "//espresso/web/java/androidx/test/espresso/web/assertion",
         "//runner/android_junit_runner/java/androidx/test:runner",
+        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:com_google_guava_guava",
     ],
 )

@@ -1,1 +1,27 @@
 // Signature format: 3.0
+package androidx.test.espresso.util {
+
+  public final class IterablesKt {
+    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static <T> Iterable<T> filter(Iterable<? extends T> iterable, org.hamcrest.Matcher<T> matcher);
+    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static <T> java.util.List<T> filterToList(Iterable<? extends T> iterable, org.hamcrest.Matcher<T> matcher);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class Iterators {
+    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static <T> T![]! toArray(java.util.Iterator<T!>!, Class<T!>!);
+  }
+
+  public final class StringJoinerKt {
+    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static String joinToString(Iterable<?> iterable, String delimiter);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class Throwables {
+    method public static void throwIfUnchecked(Throwable!);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class ToStringHelper {
+    ctor public ToStringHelper(Object obj);
+    method public androidx.test.espresso.util.ToStringHelper add(String name, Object? obj);
+  }
+
+}
+

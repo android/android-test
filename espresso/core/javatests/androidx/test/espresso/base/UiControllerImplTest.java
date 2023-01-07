@@ -17,6 +17,7 @@
 package androidx.test.espresso.base;
 
 import static junit.framework.Assert.assertTrue;
+import static kotlin.collections.CollectionsKt.listOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
@@ -31,7 +32,6 @@ import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallba
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.platform.tracing.Tracing;
-import com.google.common.collect.Lists;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -360,7 +360,7 @@ public class UiControllerImplTest {
   @Test
   public void loopMainThreadUntilIdle_oneIdlingResource() throws InterruptedException {
     OnDemandIdlingResource fakeResource = new OnDemandIdlingResource("FakeResource");
-    idlingResourceRegistry.registerResources(Lists.newArrayList(fakeResource));
+    idlingResourceRegistry.registerResources(listOf(fakeResource));
     final CountDownLatch latch = new CountDownLatch(1);
     assertTrue(
         testThread
@@ -386,7 +386,7 @@ public class UiControllerImplTest {
     OnDemandIdlingResource fakeResource2 = new OnDemandIdlingResource("FakeResource2");
     OnDemandIdlingResource fakeResource3 = new OnDemandIdlingResource("FakeResource3");
     // Register the first two right away and one later (once the wait for the first two begins).
-    idlingResourceRegistry.registerResources(Lists.newArrayList(fakeResource1, fakeResource2));
+    idlingResourceRegistry.registerResources(listOf(fakeResource1, fakeResource2));
     final CountDownLatch latch = new CountDownLatch(1);
     assertTrue(
         testThread
@@ -405,7 +405,7 @@ public class UiControllerImplTest {
     fakeResource1.forceIdleNow();
     assertFalse(
         "Should not have stopped looping the main thread yet!", latch.await(1, TimeUnit.SECONDS));
-    idlingResourceRegistry.registerResources(Lists.newArrayList(fakeResource3));
+    idlingResourceRegistry.registerResources(listOf(fakeResource3));
     assertFalse(
         "Should not have stopped looping the main thread yet!", latch.await(1, TimeUnit.SECONDS));
     fakeResource2.forceIdleNow();
@@ -421,7 +421,7 @@ public class UiControllerImplTest {
     OnDemandIdlingResource kindaCrappyResource = new OnDemandIdlingResource("KindaCrappyResource");
     OnDemandIdlingResource badResource = new OnDemandIdlingResource("VeryBadResource");
     idlingResourceRegistry.registerResources(
-        Lists.newArrayList(goodResource, kindaCrappyResource, badResource));
+        listOf(goodResource, kindaCrappyResource, badResource));
     final CountDownLatch latch = new CountDownLatch(1);
     assertTrue(
         testThread

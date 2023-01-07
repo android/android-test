@@ -19,13 +19,12 @@ package androidx.test.espresso.web.model;
 import static androidx.test.internal.util.Checks.checkArgument;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
+import static kotlin.collections.CollectionsKt.listOf;
+import static kotlin.collections.CollectionsKt.mutableListOf;
 
 import android.os.Build;
 import android.util.JsonReader;
 import android.util.Log;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigDecimal;
@@ -35,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import kotlin.collections.MapsKt;
+import kotlin.collections.SetsKt;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,11 +46,11 @@ import org.json.JSONTokener;
 public final class ModelCodec {
   private static final String TAG = "JS_CODEC";
 
-  private static final ImmutableSet<Class<?>> VALUEABLE_CLASSES =
-      ImmutableSet.of(Boolean.class, Number.class, String.class, JSONObject.class, JSONArray.class);
+  private static final Set<Class<?>> VALUEABLE_CLASSES =
+      SetsKt.setOf(Boolean.class, Number.class, String.class, JSONObject.class, JSONArray.class);
 
-  private static final ImmutableSet<Class<?>> TOP_LEVEL_CLASSES =
-      ImmutableSet.of(
+  private static final Set<Class<?>> TOP_LEVEL_CLASSES =
+      SetsKt.setOf(
           JSONObject.class,
           JSONArray.class,
           Iterable.class,
@@ -58,9 +59,8 @@ public final class ModelCodec {
           JSONAble.class);
 
   private static final CopyOnWriteArrayList<JSONAble.DeJSONFactory> DEJSONIZERS =
-      new CopyOnWriteArrayList<JSONAble.DeJSONFactory>(
-          Lists.newArrayList(
-              Evaluation.DEJSONIZER, WindowReference.DEJSONIZER, ElementReference.DEJSONIZER));
+      new CopyOnWriteArrayList<>(
+          listOf(Evaluation.DEJSONIZER, WindowReference.DEJSONIZER, ElementReference.DEJSONIZER));
 
   private ModelCodec() {}
 
@@ -144,7 +144,7 @@ public final class ModelCodec {
   }
 
   private static List<Object> decodeArray(JSONArray array) throws JSONException {
-    List<Object> data = Lists.newArrayList();
+    List<Object> data = mutableListOf();
     for (int i = 0; i < array.length(); i++) {
       if (array.isNull(i)) {
         data.add(null);
@@ -164,8 +164,8 @@ public final class ModelCodec {
   }
 
   private static Object decodeObject(JSONObject jsonObject) throws JSONException {
-    List<String> nullKeys = Lists.newArrayList();
-    Map<String, Object> obj = Maps.newHashMap();
+    List<String> nullKeys = mutableListOf();
+    Map<String, Object> obj = MapsKt.mutableMapOf();
     Iterator<String> keys = jsonObject.keys();
     while (keys.hasNext()) {
       String key = keys.next();
@@ -222,7 +222,7 @@ public final class ModelCodec {
   }
 
   private static List<Object> decodeArray(JsonReader reader) throws IOException {
-    List<Object> array = Lists.newArrayList();
+    List<Object> array = mutableListOf();
     reader.beginArray();
     while (reader.hasNext()) {
       switch (reader.peek()) {
@@ -275,8 +275,8 @@ public final class ModelCodec {
   }
 
   private static Object decodeObject(JsonReader reader) throws IOException {
-    Map<String, Object> obj = Maps.newHashMap();
-    List<String> nullKeys = Lists.newArrayList();
+    Map<String, Object> obj = MapsKt.mutableMapOf();
+    List<String> nullKeys = mutableListOf();
     reader.beginObject();
     while (reader.hasNext()) {
       String key = reader.nextName();

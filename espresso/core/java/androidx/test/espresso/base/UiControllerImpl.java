@@ -16,10 +16,11 @@
 
 package androidx.test.espresso.base;
 
+import static androidx.test.espresso.util.Throwables.throwIfUnchecked;
 import static androidx.test.internal.util.Checks.checkArgument;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
-import static com.google.common.base.Throwables.throwIfUnchecked;
+import static kotlin.collections.CollectionsKt.mutableListOf;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
@@ -32,15 +33,13 @@ import android.util.Log;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.IdlingPolicies;
 import androidx.test.espresso.IdlingPolicy;
 import androidx.test.espresso.InjectEventSecurityException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import androidx.test.espresso.util.StringJoinerKt;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.BitSet;
 import java.util.EnumSet;
@@ -56,6 +55,7 @@ import java.util.concurrent.FutureTask;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import kotlin.collections.CollectionsKt;
 
 /** Implementation of {@link UiController}. */
 @Singleton
@@ -257,10 +257,10 @@ final class UiControllerImpl
   public boolean injectMotionEventSequence(final Iterable<MotionEvent> events)
       throws InjectEventSecurityException {
     checkNotNull(events);
-    checkState(!Iterables.isEmpty(events), "Expecting non-empty events to inject");
+    checkState(events.iterator().hasNext(), "Expecting non-empty events to inject");
     checkState(Looper.myLooper() == mainLooper, "Expecting to be on main thread!");
     final Iterator<MotionEvent> mei = events.iterator();
-    final long downTime = Iterables.getFirst(events, null).getEventTime();
+    final long downTime = CollectionsKt.first(events).getEventTime();
     final long shift = SystemClock.uptimeMillis() - downTime;
     FutureTask<Boolean> injectTask =
         new SignalingTask<>(
@@ -528,7 +528,7 @@ final class UiControllerImpl
       }
 
       // timed out... what went wrong?
-      List<String> idleConditions = Lists.newArrayList();
+      List<String> idleConditions = mutableListOf();
       for (IdleCondition condition : conditions) {
         if (!condition.isSignaled(conditionSet)) {
           String conditionName = condition.name();
@@ -564,7 +564,7 @@ final class UiControllerImpl
                       Locale.ROOT,
                       "%s(busy resources=%s)",
                       conditionName,
-                      Joiner.on(",").join(busyResources));
+                      StringJoinerKt.joinToString(busyResources, ","));
               break;
             default:
               break;

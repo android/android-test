@@ -18,12 +18,12 @@ package androidx.test.espresso.web.assertion;
 
 import androidx.annotation.VisibleForTesting;
 import androidx.test.internal.util.LogUtil;
-import com.google.common.io.ByteStreams;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import kotlin.io.ByteStreamsKt;
 
 /** Compresses an input source. By default this class uses the GZIP format for compression. */
 final class CompressorDecompressor {
@@ -75,7 +75,7 @@ final class CompressorDecompressor {
       ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
       GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream);
       try {
-        ByteStreams.copy(new ByteArrayInputStream(bytes), gzipOutputStream);
+        ByteStreamsKt.copyTo(new ByteArrayInputStream(bytes), gzipOutputStream, bytes.length);
       } finally {
         if (gzipOutputStream != null) {
           gzipOutputStream.close();
@@ -92,7 +92,7 @@ final class CompressorDecompressor {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
       GZIPInputStream gzipInputStream = new GZIPInputStream(byteArrayInputStream);
       try {
-        return ByteStreams.toByteArray(gzipInputStream);
+        return ByteStreamsKt.readBytes(gzipInputStream);
       } finally {
         if (gzipInputStream != null) {
           gzipInputStream.close();

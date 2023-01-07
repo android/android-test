@@ -17,21 +17,18 @@
 package androidx.test.espresso.base;
 
 import static androidx.test.espresso.util.TreeIterables.breadthFirstViewTraversal;
+import static androidx.test.internal.util.Checks.checkMainThread;
 import static androidx.test.internal.util.Checks.checkNotNull;
-import static androidx.test.internal.util.Checks.checkState;
 
-import android.os.Looper;
 import android.view.View;
 import android.widget.AdapterView;
 import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewFinder;
 import androidx.test.espresso.matcher.ViewMatchers;
-import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
+import androidx.test.espresso.util.IterablesKt;
+import androidx.test.espresso.util.Iterators;
+import androidx.test.espresso.util.StringJoinerKt;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -56,13 +53,11 @@ public final class ViewFinderImpl implements ViewFinder {
   @Override
   public View getView() throws AmbiguousViewMatcherException, NoMatchingViewException {
     checkMainThread();
-    final Predicate<View> matcherPredicate =
-        new MatcherPredicateAdapter<View>(checkNotNull(viewMatcher));
+    checkNotNull(viewMatcher);
 
     View root = rootViewProvider.get();
     Iterator<View> matchedViewIterator =
-        Iterables.filter(breadthFirstViewTraversal(root), matcherPredicate).iterator();
-
+        IterablesKt.filter(breadthFirstViewTraversal(root), viewMatcher).iterator();
     View matchedView = null;
 
     while (matchedViewIterator.hasNext()) {
@@ -80,11 +75,10 @@ public final class ViewFinderImpl implements ViewFinder {
       }
     }
     if (null == matchedView) {
-      final Predicate<View> adapterViewPredicate =
-          new MatcherPredicateAdapter<View>(ViewMatchers.isAssignableFrom(AdapterView.class));
       List<View> adapterViews =
-          Lists.newArrayList(
-              Iterables.filter(breadthFirstViewTraversal(root), adapterViewPredicate).iterator());
+          IterablesKt.filterToList(
+              breadthFirstViewTraversal(root), ViewMatchers.isAssignableFrom(AdapterView.class));
+
       if (adapterViews.isEmpty()) {
         throw new NoMatchingViewException.Builder()
             .withViewMatcher(viewMatcher)
@@ -98,7 +92,7 @@ public final class ViewFinderImpl implements ViewFinder {
               "\n"
                   + "If the target view is not part of the view hierarchy, you may need to use"
                   + " Espresso.onData to load it from one of the following AdapterViews:%s",
-              Joiner.on("\n- ").join(adapterViews));
+              StringJoinerKt.joinToString(adapterViews, "\n- "));
       throw new NoMatchingViewException.Builder()
           .withViewMatcher(viewMatcher)
           .withRootView(root)
@@ -107,26 +101,6 @@ public final class ViewFinderImpl implements ViewFinder {
           .build();
     } else {
       return matchedView;
-    }
-  }
-
-  private void checkMainThread() {
-    checkState(
-        Thread.currentThread().equals(Looper.getMainLooper().getThread()),
-        "Executing a query on the view hierarchy outside of the main thread (on: %s)",
-        Thread.currentThread().getName());
-  }
-
-  private static class MatcherPredicateAdapter<T> implements Predicate<T> {
-    private final Matcher<? super T> matcher;
-
-    private MatcherPredicateAdapter(Matcher<? super T> matcher) {
-      this.matcher = checkNotNull(matcher);
-    }
-
-    @Override
-    public boolean apply(T input) {
-      return matcher.matches(input);
     }
   }
 }

@@ -41,8 +41,8 @@ import androidx.test.espresso.remote.ConstructorInvocation;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import androidx.test.espresso.util.EspressoOptional;
-import com.google.common.base.Function;
 import javax.annotation.CheckReturnValue;
+import kotlin.jvm.functions.Function1;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -209,12 +209,8 @@ public class DataInteraction {
           dataMatcher,
           adapterViewProtocol,
           adapterDataLoaderAction,
-          new Function<AdapterDataLoaderAction, ViewInteraction>() {
-            @Override
-            public ViewInteraction apply(AdapterDataLoaderAction adapterDataLoaderAction) {
-              return onView(adapterMatcher).inRoot(rootMatcher).perform(adapterDataLoaderAction);
-            }
-          });
+          adapterDataLoaderAction1 ->
+              onView(adapterMatcher).inRoot(rootMatcher).perform(adapterDataLoaderAction1));
     }
 
     @VisibleForTesting
@@ -223,14 +219,14 @@ public class DataInteraction {
         @NonNull Matcher<? extends Object> dataMatcher,
         @NonNull AdapterViewProtocol adapterViewProtocol,
         @NonNull AdapterDataLoaderAction adapterDataLoaderAction,
-        @NonNull Function<AdapterDataLoaderAction, ViewInteraction> loadDataFunction) {
+        @NonNull Function1<AdapterDataLoaderAction, ViewInteraction> loadDataFunction) {
       this.adapterMatcher = checkNotNull(adapterMatcher);
       this.dataMatcher = checkNotNull(dataMatcher);
       this.adapterViewProtocol = checkNotNull(adapterViewProtocol);
       this.adapterViewProtocolClass = adapterViewProtocol.getClass();
       this.adapterDataLoaderAction = checkNotNull(adapterDataLoaderAction);
       // TODO(b/223229374): This return value was unused, but likely should have been used.
-      Object unused = checkNotNull(loadDataFunction).apply(adapterDataLoaderAction);
+      Object unused = checkNotNull(loadDataFunction).invoke(adapterDataLoaderAction);
     }
 
     /**

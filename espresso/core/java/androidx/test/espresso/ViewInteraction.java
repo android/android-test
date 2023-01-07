@@ -20,6 +20,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.LogUtil.logDebugWithProcess;
+import static kotlin.collections.MapsKt.toMap;
 
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -41,8 +42,6 @@ import androidx.test.internal.platform.os.ControlledLooper;
 import androidx.test.internal.util.Checks;
 import androidx.test.platform.tracing.Tracer.Span;
 import androidx.test.platform.tracing.Tracing;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -153,11 +152,12 @@ public final class ViewInteraction {
           checkNotNull(bindable.getId(), "Bindable id cannot be null!"),
           checkNotNull(bindable.getIBinder(), "Bindable binder cannot be null!"));
     }
-    return ImmutableMap.copyOf(iBinders);
+
+    return toMap(iBinders);
   }
 
   private static List<Bindable> getBindables(Object... objects) {
-    List<Bindable> bindables = Lists.newArrayListWithCapacity(objects.length);
+    List<Bindable> bindables = new ArrayList<>(objects.length);
     for (Object object : objects) {
       if (object instanceof Bindable) {
         bindables.add((Bindable) object);
@@ -380,6 +380,7 @@ public final class ViewInteraction {
     try {
       controlledLooper.drainMainThreadUntilIdle();
       // Blocking call
+      // TODO(brettchabot): This method should only be accessed from tests or within private scope
       InteractionResultsHandler.gatherAnyResult(interactions);
     } catch (RuntimeException ee) {
       failureHandler.handle(ee, viewMatcher);

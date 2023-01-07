@@ -48,8 +48,7 @@ import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import androidx.test.espresso.util.HumanReadables;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import androidx.test.espresso.util.IterablesKt;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -1514,11 +1513,19 @@ public final class ViewMatchers {
         return false;
       }
 
-      final Predicate<View> matcherPredicate =
-          input -> input != view && descendantMatcher.matches(input);
+      final Matcher<View> matcherPredicate =
+          new TypeSafeDiagnosingMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {}
+
+            @Override
+            protected boolean matchesSafely(View input, Description description) {
+              return input != view && descendantMatcher.matches(input);
+            }
+          };
 
       Iterator<View> matchedViewIterator =
-          Iterables.filter(breadthFirstViewTraversal(view), matcherPredicate).iterator();
+          IterablesKt.filter(breadthFirstViewTraversal(view), matcherPredicate).iterator();
 
       if (!matchedViewIterator.hasNext()) {
         mismatchDescription

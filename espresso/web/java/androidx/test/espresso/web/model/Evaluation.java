@@ -22,9 +22,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.common.base.Objects;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
@@ -54,7 +54,7 @@ public final class Evaluation implements JSONAble, Parcelable {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(status, value, hasMessage, message);
+    return Objects.hash(status, value, hasMessage, message);
   }
 
   @Override

@@ -19,14 +19,14 @@ package androidx.test.espresso.remote;
 import static androidx.test.internal.util.Checks.checkArgument;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
+import static kotlin.collections.CollectionsKt.listOf;
+import static kotlin.collections.CollectionsKt.mutableListOf;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import androidx.test.espresso.util.StringJoinerKt;
 import com.google.protobuf.Parser;
 import java.util.List;
 import java.util.Locale;
@@ -162,7 +162,7 @@ public final class RemoteDescriptor {
         "androidx.test.espresso.remote.GenericRemoteMessage";
 
     private Class<?> instanceType;
-    private List<FieldDescriptor> instanceFieldDescriptorList = Lists.newArrayList();
+    private List<FieldDescriptor> instanceFieldDescriptorList = mutableListOf();
 
     private Class<?> remoteType;
     private List<Class<?>> remoteConstrTypes;
@@ -191,7 +191,7 @@ public final class RemoteDescriptor {
                   "RemoteMsgField field annotations found for type: %s. Ignoring"
                       + "field descriptors: %s, registered with RemoteDescriptorRegistry",
                   instanceType,
-                  Joiner.on(",").join(originalFieldDescriptors)));
+                  StringJoinerKt.joinToString(originalFieldDescriptors, ",")));
         }
         // return annotated field descriptors
         return annotatedFieldList;
@@ -228,7 +228,7 @@ public final class RemoteDescriptor {
      * @return fluent builder interface
      */
     public Builder setInstanceFieldDescriptors(@Nullable FieldDescriptor... fieldDescriptors) {
-      this.instanceFieldDescriptorList = ImmutableList.copyOf(fieldDescriptors);
+      this.instanceFieldDescriptorList = listOf(fieldDescriptors);
       return this;
     }
 
@@ -260,7 +260,7 @@ public final class RemoteDescriptor {
      * @return fluent builder interface
      */
     public Builder setRemoteConstrTypes(@Nullable Class<?>... remoteConstrTypes) {
-      this.remoteConstrTypes = ImmutableList.copyOf(remoteConstrTypes);
+      this.remoteConstrTypes = listOf(remoteConstrTypes);
       return this;
     }
 
@@ -320,13 +320,13 @@ public final class RemoteDescriptor {
 
       // Most remote message constructors will use the instance type as constructor param type
       if (null == remoteConstrTypes) {
-        remoteConstrTypes = ImmutableList.<Class<?>>of(instanceType);
+        remoteConstrTypes = listOf(instanceType);
       }
 
       // GenericRemoteMessage constructor param type is always Object.class
       try {
         if (remoteType.isAssignableFrom(Class.forName(GENERIC_REMOTE_MESSAGE_CLS))) {
-          remoteConstrTypes = ImmutableList.<Class<?>>of(Object.class);
+          remoteConstrTypes = listOf(Object.class);
         }
       } catch (ClassNotFoundException cnfe) {
         throw new IllegalStateException(

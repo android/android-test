@@ -23,11 +23,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.test.espresso.util.HumanReadables;
 import androidx.test.internal.platform.util.TestOutputEmitter;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
+import kotlin.collections.CollectionsKt;
 import org.hamcrest.Matcher;
 
 /**
@@ -69,12 +69,8 @@ public final class AmbiguousViewMatcherException extends RuntimeException
   private static String getErrorMessage(Builder builder) {
     String errorMessage = "";
     if (builder.includeViewHierarchy) {
-      ArrayList<View> ambiguousViews =
-          Lists.newArrayList(
-              ImmutableSet.<View>builder()
-                  .add(builder.view1, builder.view2)
-                  .add(builder.others)
-                  .build());
+      List<View> ambiguousViews = CollectionsKt.mutableListOf(builder.view1, builder.view2);
+      Collections.addAll(ambiguousViews, builder.others);
 
       StringBuilder viewsAsText = new StringBuilder();
       int numViews = ambiguousViews.size();

@@ -29,9 +29,8 @@ import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.util.HumanReadables;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
+import androidx.test.espresso.util.IterablesKt;
+import androidx.test.espresso.util.Iterators;
 import java.util.Iterator;
 import java.util.Locale;
 import org.hamcrest.Matcher;
@@ -298,15 +297,8 @@ public final class PositionAssertions {
   static View findView(final Matcher<View> toView, View root) {
     checkNotNull(toView);
     checkNotNull(root);
-    final Predicate<View> viewPredicate =
-        new Predicate<View>() {
-          @Override
-          public boolean apply(View input) {
-            return toView.matches(input);
-          }
-        };
     Iterator<View> matchedViewIterator =
-        Iterables.filter(breadthFirstViewTraversal(root), viewPredicate).iterator();
+        IterablesKt.filter(breadthFirstViewTraversal(root), toView).iterator();
     View matchedView = null;
     while (matchedViewIterator.hasNext()) {
       if (matchedView != null) {

@@ -16,15 +16,19 @@
 
 package androidx.test.espresso.util;
 
+import static androidx.test.internal.util.Checks.checkNotNull;
+
+import androidx.annotation.Nullable;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import java.util.Set;
+import kotlin.collections.SetsKt;
 
 /**
- * This class is a wrapper around {@link com.google.common.base.Optional} in order to avoid having
- * public references to Guava API.
+ * This class is a reimplementation of {@link com.google.common.base.Optional} to maintain API
+ * compatibility with older versions of espresso.
  *
  * @param <T> the type of instance that can be contained. {@code Optional} is naturally covariant on
  *     this type, so it is safe to cast an {@code Optional<T>} to {@code Optional<S>} for any
@@ -35,80 +39,91 @@ import java.util.Set;
 @Deprecated
 public final class EspressoOptional<T> {
 
-  private final Optional<T> delegate;
+  private static final EspressoOptional ABSENT = new EspressoOptional<>(null);
+  @Nullable private final T value;
 
   public static <T> EspressoOptional<T> of(T reference) {
-    return new EspressoOptional<>(Optional.of(reference));
+    return new EspressoOptional<>(checkNotNull(reference));
   }
 
   public static <T> EspressoOptional<T> absent() {
-    return new EspressoOptional<T>(Optional.absent());
+    return ABSENT;
   }
 
   public static <T> EspressoOptional<T> fromNullable(T nullableReference) {
-    return new EspressoOptional<>(Optional.fromNullable(nullableReference));
+    return new EspressoOptional<>(nullableReference);
   }
 
-  private EspressoOptional(Optional<T> op) {
-    delegate = op;
+  private EspressoOptional(@Nullable T value) {
+    this.value = value;
   }
 
   public boolean isPresent() {
-    return delegate.isPresent();
+    return value != null;
   }
 
   public T get() {
-    return delegate.get();
+    return checkNotNull(value);
   }
 
   public Optional<T> or(Optional<? extends T> secondChoice) {
-    return delegate.or(secondChoice);
+    // TODO(b/262438695): remove the guava dependency here
+    return isPresent() ? Optional.of(value) : (Optional<T>) secondChoice;
   }
 
   public T or(Supplier<? extends T> supplier) {
-    return delegate.or(supplier);
+    // TODO(b/262438695): remove the guava dependency here
+    return isPresent() ? value : supplier.get();
   }
 
   public T or(T defaultValue) {
-    return delegate.or(defaultValue);
+    return isPresent() ? value : defaultValue;
   }
 
   public T orNull() {
-    return delegate.orNull();
+    return isPresent() ? value : null;
   }
 
   public Set<T> asSet() {
-    return delegate.asSet();
+    return isPresent() ? SetsKt.setOf(value) : SetsKt.emptySet();
   }
 
   @Override
   public boolean equals(Object object) {
     if (object instanceof EspressoOptional) {
       EspressoOptional<?> other = (EspressoOptional<?>) object;
-      return other.delegate.equals(this.delegate);
+      if (isPresent()) {
+        return value.equals(other.get());
+      } else if (!other.isPresent()) {
+        return true;
+      }
     }
     return false;
   }
 
   @Override
   public int hashCode() {
-    return delegate.hashCode();
+    // copy the guava implementation
+    return isPresent() ? 0x598df91c + value.hashCode() : 0x79a31aac;
   }
 
   @Override
   public String toString() {
-    return delegate.toString();
+    return isPresent() ? value.toString() : "null";
   }
 
   public <V> Optional<V> transform(Function<? super T, V> function) {
-    return delegate.transform(function);
+    // TODO(b/262438695): remove the guava dependency here
+    return Optional.fromNullable(value).transform(function);
   }
 
   @Beta
   public static <T> Iterable<T> presentInstances(
       final Iterable<? extends Optional<? extends T>> optionals) {
+    // TODO(b/262438695): remove the guava dependency here
     return Optional.presentInstances(optionals);
   }
+
 
   private static final long serialVersionUID = 0;
 }

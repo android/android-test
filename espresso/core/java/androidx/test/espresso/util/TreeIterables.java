@@ -17,21 +17,20 @@
 package androidx.test.espresso.util;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
+import static kotlin.collections.CollectionsKt.mutableListOf;
 
 import android.view.View;
 import android.view.ViewGroup;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
-import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import androidx.annotation.VisibleForTesting;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import kotlin.collections.AbstractIterator;
+import kotlin.collections.CollectionsKt;
 
 /**
  * Utility methods for iterating over tree structured items.
@@ -61,14 +60,9 @@ public final class TreeIterables {
     final DistanceRecordingTreeViewer<View> distanceRecorder =
         new DistanceRecordingTreeViewer<View>(root, VIEW_TREE_VIEWER);
 
-    return Iterables.transform(
+    return CollectionsKt.map(
         depthFirstTraversal(root, distanceRecorder),
-        new Function<View, ViewAndDistance>() {
-          @Override
-          public ViewAndDistance apply(View view) {
-            return new ViewAndDistance(view, distanceRecorder.getDistance(view));
-          }
-        });
+        view -> new ViewAndDistance(view, distanceRecorder.getDistance(view)));
   }
 
   /**
@@ -104,7 +98,7 @@ public final class TreeIterables {
   static <T> Iterable<T> depthFirstTraversal(final T root, final TreeViewer<T> viewer) {
     checkNotNull(root);
     checkNotNull(viewer);
-    return new TreeTraversalIterable<T>(root, TraversalStrategy.DEPTH_FIRST, viewer);
+    return new TreeTraversalIterable<>(root, TraversalStrategy.DEPTH_FIRST, viewer);
   }
 
   /**
@@ -136,17 +130,17 @@ public final class TreeIterables {
 
     @Override
     public Iterator<T> iterator() {
-      final LinkedList<T> nodes = Lists.newLinkedList();
+      final LinkedList<T> nodes = new LinkedList<>();
       nodes.add(root);
       return new AbstractIterator<T>() {
         @Override
-        public T computeNext() {
+        protected void computeNext() {
           if (nodes.isEmpty()) {
-            return endOfData();
+            done();
           } else {
             T nextItem = checkNotNull(traversalStrategy.next(nodes), "Null items not allowed!");
             traversalStrategy.combineNewChildren(nodes, treeViewer.children(nextItem));
-            return nextItem;
+            setNext(nextItem);
           }
         }
       };
@@ -187,7 +181,7 @@ public final class TreeIterables {
       if (view instanceof ViewGroup) {
         ViewGroup group = (ViewGroup) view;
         int childCount = group.getChildCount();
-        List<View> children = Lists.newArrayList();
+        List<View> children = mutableListOf();
         for (int i = 0; i < childCount; i++) {
           children.add(group.getChildAt(i));
         }
@@ -211,7 +205,7 @@ public final class TreeIterables {
   @VisibleForTesting
   static class DistanceRecordingTreeViewer<T> implements TreeViewer<T> {
     private final T root;
-    private final Map<T, Integer> nodeToDistance = Maps.newHashMap();
+    private final Map<T, Integer> nodeToDistance = new HashMap<>();
     private final TreeViewer<T> delegateViewer;
 
     DistanceRecordingTreeViewer(T root, TreeViewer<T> delegateViewer) {

@@ -28,8 +28,7 @@ import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import androidx.test.espresso.util.HumanReadables;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import androidx.test.espresso.util.IterablesKt;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -133,21 +132,12 @@ public final class ViewAssertions {
       this.matcher = matcher;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void check(View view, NoMatchingViewException noViewException) {
       checkNotNull(view);
 
-      final Predicate<View> viewPredicate =
-          new Predicate<View>() {
-            @Override
-            public boolean apply(View input) {
-              return selector.matches(input);
-            }
-          };
-
       Iterator<View> selectedViewIterator =
-          Iterables.filter(breadthFirstViewTraversal(view), viewPredicate).iterator();
+          IterablesKt.filter(breadthFirstViewTraversal(view), selector).iterator();
 
       List<View> nonMatchingViews = new ArrayList<>();
       while (selectedViewIterator.hasNext()) {

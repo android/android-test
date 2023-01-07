@@ -18,9 +18,9 @@ package androidx.test.espresso;
 
 import androidx.annotation.NonNull;
 import androidx.test.platform.tracing.Tracer;
-import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
+import kotlin.text.StringsKt;
 
 /**
  * A test utility {@link Tracer} implementation used during tests to capture trace spans.
@@ -72,13 +72,13 @@ public class TestTracer implements Tracer {
     @Override
     public Span beginChildSpan(@NonNull String name) {
       name = rewriteSpanName(name);
-      spans.add(Strings.repeat("| ", level) + "+ childSpan: " + name);
+      spans.add(StringsKt.repeat("| ", level) + "+ childSpan: " + name);
       return new TestUtilTracerSpan(name, level + 1);
     }
 
     @Override
     public void close() {
-      spans.add(Strings.repeat("| ", level) + "+-endSpan: " + spanName);
+      spans.add(StringsKt.repeat("| ", level) + "+-endSpan: " + spanName);
     }
   }
 }

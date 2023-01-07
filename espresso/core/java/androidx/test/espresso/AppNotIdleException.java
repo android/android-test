@@ -19,8 +19,8 @@ package androidx.test.espresso;
 import static androidx.test.internal.util.Checks.checkState;
 
 import android.os.Looper;
+import androidx.test.espresso.util.StringJoinerKt;
 import androidx.test.internal.platform.util.TestOutputEmitter;
-import com.google.common.base.Joiner;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,7 +57,7 @@ public final class AppNotIdleException extends RuntimeException implements Espre
                 + "after trying for %s iterations. The following Idle Conditions failed %s",
             seconds,
             loopCount,
-            Joiner.on(",").join(idleConditions));
+            StringJoinerKt.joinToString(idleConditions, ","));
     return new AppNotIdleException(errorMessage);
   }
 
@@ -77,7 +77,7 @@ public final class AppNotIdleException extends RuntimeException implements Espre
             Locale.ROOT,
             "%s The following Idle Conditions failed %s.",
             message,
-            Joiner.on(",").join(idleConditions));
+            StringJoinerKt.joinToString(idleConditions, ","));
     return new AppNotIdleException(errorMessage);
   }
 }

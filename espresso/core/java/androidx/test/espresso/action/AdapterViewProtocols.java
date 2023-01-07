@@ -18,6 +18,7 @@ package androidx.test.espresso.action;
 
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static androidx.test.internal.util.Checks.checkArgument;
+import static kotlin.collections.CollectionsKt.mutableListOf;
 
 import android.database.Cursor;
 import android.os.Build;
@@ -30,8 +31,6 @@ import android.widget.AdapterViewAnimator;
 import android.widget.AdapterViewFlipper;
 import androidx.annotation.Nullable;
 import androidx.test.espresso.util.EspressoOptional;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Range;
 import java.util.List;
 
 /** Implementations of {@link AdapterViewProtocol} for standard SDK Widgets. */
@@ -85,7 +84,7 @@ public final class AdapterViewProtocols {
 
     @Override
     public Iterable<AdaptedData> getDataInAdapterView(AdapterView<? extends Adapter> adapterView) {
-      List<AdaptedData> datas = Lists.newArrayList();
+      List<AdaptedData> datas = mutableListOf();
       for (int i = 0; i < adapterView.getCount(); i++) {
         int position = i;
         Object dataAtPosition = adapterView.getItemAtPosition(position);
@@ -166,8 +165,8 @@ public final class AdapterViewProtocols {
       int dataPosition = ((Integer) adaptedData.opaqueToken).intValue();
       boolean inView = false;
 
-      if (Range.closed(adapterView.getFirstVisiblePosition(), adapterView.getLastVisiblePosition())
-          .contains(dataPosition)) {
+      if (dataPosition >= adapterView.getFirstVisiblePosition()
+          && dataPosition <= adapterView.getLastVisiblePosition()) {
         if (adapterView.getFirstVisiblePosition() == adapterView.getLastVisiblePosition()) {
           // thats a huge element.
           inView = true;

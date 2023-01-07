@@ -16,19 +16,20 @@
  */
 package androidx.test.espresso.remote;
 
+import static kotlin.collections.CollectionsKt.listOf;
+
 import android.net.Uri;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import androidx.test.espresso.web.model.Atom;
 import androidx.test.espresso.web.model.ElementReference;
 import androidx.test.espresso.web.model.Evaluation;
-import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Collection of test classes for testing proto serialization using {@link EspressoRemoteMessage}
@@ -48,7 +49,7 @@ public final class TestTypes {
   static final TestType A_TEST_TYPE3 = new TestType(TEST_TYPE_STRING3);
   static final TestType A_TEST_TYPE4 = new TestType(TEST_TYPE_STRING4);
   static final Iterable<TestType> ANY_TYPE_ITERABLE =
-      Lists.newArrayList(A_TEST_TYPE1, A_TEST_TYPE2, A_TEST_TYPE3, A_TEST_TYPE4);
+      listOf(A_TEST_TYPE1, A_TEST_TYPE2, A_TEST_TYPE3, A_TEST_TYPE4);
 
   private TestTypes() {
     // no instance
@@ -89,14 +90,14 @@ public final class TestTypes {
       return aByte == that.aByte
           && anInt == that.anInt
           && aLong == that.aLong
-          && Objects.equal(aString, that.aString)
-          && Objects.equal(anyRegisteredType, that.anyRegisteredType)
-          && Objects.equal(anyTypeIterable, that.anyTypeIterable);
+          && Objects.equals(aString, that.aString)
+          && Objects.equals(anyRegisteredType, that.anyRegisteredType)
+          && Objects.equals(anyTypeIterable, that.anyTypeIterable);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(aByte, anInt, aLong, aString, anyRegisteredType, anyTypeIterable);
+      return Objects.hash(aByte, anInt, aLong, aString, anyRegisteredType, anyTypeIterable);
     }
   }
 

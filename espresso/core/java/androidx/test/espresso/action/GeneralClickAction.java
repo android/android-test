@@ -23,12 +23,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.webkit.WebView;
+import androidx.annotation.Nullable;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.action.Tapper.Status;
 import androidx.test.espresso.util.HumanReadables;
-import com.google.common.base.Optional;
 import java.util.Locale;
 import org.hamcrest.Matcher;
 
@@ -39,10 +38,9 @@ public final class GeneralClickAction implements ViewAction {
   final CoordinatesProvider coordinatesProvider;
   final Tapper tapper;
   final PrecisionDescriber precisionDescriber;
-  private final Optional<ViewAction> rollbackAction;
+  @Nullable private final ViewAction rollbackAction;
   private final int inputDevice;
   private final int buttonState;
-  private Status status;
 
   /**
    * @deprecated Use {@link #GeneralClickAction(Tapper, CoordinatesProvider, PrecisionDescriber,
@@ -90,15 +88,14 @@ public final class GeneralClickAction implements ViewAction {
     this.precisionDescriber = precisionDescriber;
     this.inputDevice = inputDevice;
     this.buttonState = buttonState;
-    this.rollbackAction = Optional.fromNullable(rollbackAction);
+    this.rollbackAction = rollbackAction;
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Matcher<View> getConstraints() {
     Matcher<View> standardConstraint = isDisplayingAtLeast(90);
-    if (rollbackAction.isPresent()) {
-      return allOf(standardConstraint, rollbackAction.get().getConstraints());
+    if (rollbackAction != null) {
+      return allOf(standardConstraint, rollbackAction.getConstraints());
     } else {
       return standardConstraint;
     }
@@ -170,8 +167,8 @@ public final class GeneralClickAction implements ViewAction {
         uiController.loopMainThreadForAtLeast(duration);
       }
       if (status == Tapper.Status.WARNING) {
-        if (rollbackAction.isPresent()) {
-          rollbackAction.get().perform(uiController, view);
+        if (rollbackAction != null) {
+          rollbackAction.perform(uiController, view);
         } else {
           break;
         }
@@ -197,7 +194,7 @@ public final class GeneralClickAction implements ViewAction {
                       coordinatesProvider,
                       precisionDescriber,
                       loopCount,
-                      rollbackAction.isPresent())))
+                      rollbackAction != null)))
           .build();
     }
 
@@ -210,6 +207,7 @@ public final class GeneralClickAction implements ViewAction {
 
   @Override
   public String getDescription() {
+    // TODO(brettchabot): Implicitly using the default locale is a common source of bugs:
     return tapper.toString().toLowerCase() + " click";
   }
 }

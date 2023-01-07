@@ -15,7 +15,7 @@
  */
 package androidx.test.espresso.base;
 
-import static com.google.common.base.Throwables.throwIfUnchecked;
+import static androidx.test.espresso.util.Throwables.throwIfUnchecked;
 
 import android.view.View;
 import androidx.test.espresso.FailureHandler;

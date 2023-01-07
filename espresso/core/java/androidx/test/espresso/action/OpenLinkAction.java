@@ -21,6 +21,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
+import static kotlin.collections.CollectionsKt.mutableListOf;
 import static org.hamcrest.Matchers.allOf;
 
 import android.net.Uri;
@@ -32,7 +33,6 @@ import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.util.HumanReadables;
-import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -72,7 +72,7 @@ public final class OpenLinkAction implements ViewAction {
 
     // TODO: what if we get more than one hit? For now, take the first one...
     // In the future, we may want to support a way to disambiguate (e.g using text around the link).
-    List<String> allLinks = Lists.newArrayList();
+    List<String> allLinks = mutableListOf();
     for (URLSpan url : urls) {
       int start = spanned.getSpanStart(url);
       checkState(start != -1, "Unable to get start of text associated with url: " + url);

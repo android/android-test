@@ -16,12 +16,8 @@
 
 package androidx.test.espresso.util;
 
-import static com.google.common.base.Strings.nullToEmpty;
-
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
-import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +67,7 @@ public final class TracingUtil {
     }
     spanName += processedMethodName;
     if (!processedArguments.isEmpty()) {
-      spanName += "(" + Joiner.on(", ").join(processedArguments) + ")";
+      spanName += "(" + StringJoinerKt.joinToString(processedArguments, ", ") + ")";
     }
 
     // Check the length.
@@ -91,10 +87,10 @@ public final class TracingUtil {
     // Ideally we would use Class.getTypeName() but this is not supported in legacy
     // Android with compiler < 1.8.
     String name = element == null ? null : element.getClass().getSimpleName();
-    if (Strings.isNullOrEmpty(name)) {
+    if (name == null || name.length() == 0) {
       name = defaultName;
     }
-    return nullToEmpty(name);
+    return name == null ? "" : name;
   }
 
   /**
@@ -112,7 +108,7 @@ public final class TracingUtil {
     }
 
     String newName = name;
-    if (!Strings.isNullOrEmpty(exclude)) {
+    if (exclude != null && exclude.length() > 0) {
       newName = newName.replaceAll(exclude, "").trim();
     }
 
