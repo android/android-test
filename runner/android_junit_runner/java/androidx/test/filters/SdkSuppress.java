@@ -25,6 +25,9 @@ import java.lang.annotation.Target;
  *
  * <p>Test(s) will be skipped when executed on android platforms less/more than specified level
  * (inclusive).
+ *
+ * <p>If {@code @SdkSuppress} is applied at both the class and test method, the test method
+ * annotation takes precedence, and the class level {@code @SdkSuppress} is ignored.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})

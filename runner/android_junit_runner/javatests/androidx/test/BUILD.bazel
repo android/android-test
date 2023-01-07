@@ -34,8 +34,8 @@ android_library(
     srcs = UI_THREAD_STATEMENT_TEST_EXAMPLES,
     deps = [
         "//ext/junit",
-        "//runnner/android_junit_runner",
         "//runner/rules",
+        "//runnner/android_junit_runner",
         "@maven//:junit_junit",
     ],
 )
@@ -106,6 +106,7 @@ android_library_instrumentation_tests(
             # tested separately
             "internal/runner/ClassPathScannerTest.java",
             "internal/runner/TestRequestBuilderLocalTest.java",
+            "internal/runner/SdkSuppressTest.java",
             "runner/TraceRunListenerTest.java",
         ] + UI_THREAD_STATEMENT_TEST_EXAMPLES,
     ),
@@ -156,5 +157,15 @@ android_local_test(
         "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
+    ],
+)
+
+android_local_test(
+    name = "SdkSuppressTest",
+    srcs = ["internal/runner/SdkSuppressTest.java"],
+    test_class = "androidx.test.internal.runner.SdkSuppressTest",
+    deps = [
+        "//runner/android_junit_runner",
+        "@maven//:com_google_truth_truth",
     ],
 )

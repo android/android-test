@@ -35,7 +35,6 @@ import androidx.test.filters.FlakyTest;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.MediumTest;
 import androidx.test.filters.RequiresDevice;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
 import androidx.test.filters.Suppress;
 import androidx.test.internal.runner.TestRequestBuilder.DeviceBuild;
@@ -60,7 +59,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import junit.framework.Protectable;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
@@ -316,61 +314,6 @@ public class TestRequestBuilderTest {
 
     @Test
     public void runMe2() {}
-  }
-
-  public static class SampleSdkSuppress {
-    @SdkSuppress(minSdkVersion = 15)
-    @Test
-    public void min15() {
-      fail("min15");
-    }
-
-    @SdkSuppress(minSdkVersion = 16)
-    @Test
-    public void min16() {
-      fail("min16");
-    }
-
-    @SdkSuppress(minSdkVersion = 17)
-    @Test
-    public void min17() {
-      fail("min17");
-    }
-
-    @Test
-    public void noSdkSuppress() {
-      fail("noSdkSuppress");
-    }
-
-    @SdkSuppress(maxSdkVersion = 19)
-    @Test
-    public void max19() {
-      fail("max19");
-    }
-
-    @SdkSuppress(minSdkVersion = 17, maxSdkVersion = 19)
-    @Test
-    public void min17max19() {
-      fail("min17max19");
-    }
-
-    @SdkSuppress(minSdkVersion = 14, maxSdkVersion = 16)
-    @Test
-    public void min14max16() {
-      fail("min14max16");
-    }
-
-    @SdkSuppress(minSdkVersion = 29, codeName = "R")
-    @Test
-    public void min29CodeNameR() {
-      fail("min29CodeNameR");
-    }
-
-    @SdkSuppress(minSdkVersion = 20, codeName = "R")
-    @Test
-    public void min20CodeNameR() {
-      fail("min20CodeNameR");
-    }
   }
 
   public static class DollarMethod {
@@ -979,49 +922,6 @@ public class TestRequestBuilderTest {
     Assert.assertEquals(0, result.getRunCount());
   }
 
-  /** Test that {@link SdkSuppress} filters tests as appropriate */
-  @Test
-  public void testSdkSuppress() throws Exception {
-    MockitoAnnotations.initMocks(this);
-    TestRequestBuilder b = createBuilder(mockDeviceBuild);
-    when(mockDeviceBuild.getSdkVersionInt()).thenReturn(16);
-    when(mockDeviceBuild.getCodeName()).thenReturn("REL");
-    Request request = b.addTestClass(SampleSdkSuppress.class.getName()).build();
-    JUnitCore testRunner = new JUnitCore();
-    Result result = testRunner.run(request);
-
-    Set<String> expected =
-        new HashSet<>(Arrays.asList("min15", "min16", "noSdkSuppress", "max19", "min14max16"));
-    Assert.assertEquals(expected.size(), result.getRunCount());
-    for (Failure f : result.getFailures()) {
-      assertTrue(
-          "Fail! " + expected + " doesn't contain \"" + f.getMessage() + "\" ",
-          expected.contains(f.getMessage()));
-    }
-  }
-
-  /** Test that {@link SdkSuppress} filters tests as appropriate when codeName specified */
-  @Test
-  public void testSdkSuppress_codeName() throws Exception {
-    MockitoAnnotations.initMocks(this);
-    TestRequestBuilder b = createBuilder(mockDeviceBuild);
-    when(mockDeviceBuild.getSdkVersionInt()).thenReturn(29);
-    when(mockDeviceBuild.getCodeName()).thenReturn("R");
-    Request request = b.addTestClass(SampleSdkSuppress.class.getName()).build();
-    JUnitCore testRunner = new JUnitCore();
-    Result result = testRunner.run(request);
-
-    Set<String> expected =
-        new HashSet<>(
-            Arrays.asList(
-                "min29CodeNameR", "min20CodeNameR", "noSdkSuppress", "min15", "min16", "min17"));
-    Assert.assertEquals(expected.size(), result.getRunCount());
-    for (Failure f : result.getFailures()) {
-      assertTrue(
-          "Fail! " + expected + " doesn't contain \"" + f.getMessage() + "\" ",
-          expected.contains(f.getMessage()));
-    }
-  }
 
   /** Test that {@link RequiresDevice} filters tests as appropriate */
   @Test
