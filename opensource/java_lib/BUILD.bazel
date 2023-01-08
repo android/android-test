@@ -5,6 +5,10 @@ java_import(
     jars = [
         "libbridge.jar",
     ],
+    deps = [
+        # TODO(b/262711775): remove as part of build-from-src exercise
+        "@maven//:com_google_guava_guava",
+    ],
 )
 
 java_import(

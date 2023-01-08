@@ -17,10 +17,9 @@
 package androidx.test.espresso.web.action;
 
 import static androidx.test.espresso.matcher.ViewMatchers.isJavascriptEnabled;
+import static androidx.test.espresso.web.util.concurrent.Futures.transform;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
-import static com.google.common.util.concurrent.Futures.transform;
-import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +30,8 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import androidx.annotation.Nullable;
+import androidx.concurrent.futures.DirectExecutor;
+import androidx.concurrent.futures.ResolvableFuture;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
@@ -39,15 +40,13 @@ import androidx.test.espresso.web.model.Atom;
 import androidx.test.espresso.web.model.ElementReference;
 import androidx.test.espresso.web.model.Evaluation;
 import androidx.test.espresso.web.model.WindowReference;
-import com.google.common.base.Function;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.google.common.util.concurrent.SettableFuture;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import kotlin.jvm.functions.Function1;
 import org.hamcrest.Matcher;
 
 /**
@@ -67,7 +66,7 @@ public final class AtomAction<E> implements ViewAction, Bindable {
   private static final String TAG = "AtomAction";
   private static final String ID = TAG;
   private static final String EVALUATION_ERROR_KEY = "evaluation_error_key";
-  private final SettableFuture<Evaluation> futureEval = SettableFuture.create();
+  private final ResolvableFuture<Evaluation> futureEval = ResolvableFuture.create();
   final Atom<E> atom;
   @Nullable final WindowReference window;
   @Nullable final ElementReference element;
@@ -151,7 +150,7 @@ public final class AtomAction<E> implements ViewAction, Bindable {
             }
           }
         },
-        MoreExecutors.directExecutor());
+        DirectExecutor.INSTANCE);
   }
 
   private void reportException(Throwable throwable) {
@@ -172,13 +171,13 @@ public final class AtomAction<E> implements ViewAction, Bindable {
   public Future<E> getFuture() {
     return transform(
         futureEval,
-        new Function<Evaluation, E>() {
+        new Function1<Evaluation, E>() {
           @Override
-          public E apply(Evaluation e) {
+          public E invoke(Evaluation e) {
             return atom.transform(e);
           }
         },
-        directExecutor());
+        DirectExecutor.INSTANCE);
   }
 
   /** Blocks until the atom has completed execution. */

@@ -5,5 +5,5 @@ licenses(["notice"])  # Apache License 2.0
 android_library(
     name = "web",
     visibility = ["//visibility:public"],
-    exports = ["//espresso/web/java/androidx/test/espresso/web:web_release_lib"],
+    exports = ["//espresso/web/java/androidx/test/espresso/web:espresso_web_release_lib"],
 )

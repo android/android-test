@@ -16,11 +16,10 @@
 
 package androidx.test.espresso.web.action;
 
+import static androidx.test.espresso.web.util.concurrent.Futures.transform;
+import static androidx.test.espresso.web.util.concurrent.Futures.transformAsync;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
-import static com.google.common.util.concurrent.Futures.transform;
-import static com.google.common.util.concurrent.Futures.transformAsync;
-import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 
 import android.os.Build;
 import android.os.Handler;
@@ -30,21 +29,21 @@ import android.webkit.ValueCallback;
 import android.webkit.WebHistoryItem;
 import android.webkit.WebView;
 import androidx.annotation.Nullable;
+import androidx.concurrent.futures.DirectExecutor;
 import androidx.test.espresso.web.model.Evaluation;
 import androidx.test.espresso.web.model.ModelCodec;
 import androidx.test.espresso.web.model.WindowReference;
+import androidx.test.espresso.web.util.concurrent.AbstractFuture;
+import androidx.test.espresso.web.util.concurrent.AsyncFunction;
+import androidx.test.espresso.web.util.concurrent.Futures;
 import com.google.android.apps.common.testing.testrunner.web.Conduit;
 import com.google.android.apps.common.testing.testrunner.web.JavaScriptBridge;
-import com.google.common.base.Function;
-import com.google.common.util.concurrent.AbstractFuture;
-import com.google.common.util.concurrent.AsyncFunction;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
+import kotlin.jvm.functions.Function1;
 
 /**
  * Wraps scripts into WebDriver atoms, which are used to ensure consistent behaviour cross-browser.
@@ -54,10 +53,10 @@ final class JavascriptEvaluation {
 
   private static final ScriptPreparer SCRIPT_PREPARER;
   private static final AsyncFunction<PreparedScript, String> RAW_EVALUATOR;
-  private static final Function<String, Evaluation> DECODE_EVALUATION =
-      new Function<String, Evaluation>() {
+  private static final Function1<String, Evaluation> DECODE_EVALUATION =
+      new Function1<String, Evaluation>() {
         @Override
-        public Evaluation apply(String in) {
+        public Evaluation invoke(String in) {
           return ModelCodec.decodeEvaluation(in);
         }
       };
@@ -109,11 +108,11 @@ final class JavascriptEvaluation {
     SanitizerTask sanitizer = new SanitizerTask(unprepared);
     view.post(sanitizer);
     ListenableFuture<PreparedScript> preparedScript =
-        transform(sanitizer, SCRIPT_PREPARER, directExecutor());
+        transform(sanitizer, SCRIPT_PREPARER, DirectExecutor.INSTANCE);
     ListenableFuture<String> rawEvaluation =
-        transformAsync(preparedScript, RAW_EVALUATOR, directExecutor());
+        transformAsync(preparedScript, RAW_EVALUATOR, DirectExecutor.INSTANCE);
     ListenableFuture<Evaluation> parsedEvaluation =
-        transform(rawEvaluation, DECODE_EVALUATION, directExecutor());
+        transform(rawEvaluation, DECODE_EVALUATION, DirectExecutor.INSTANCE);
     return parsedEvaluation;
   }
 
@@ -166,7 +165,7 @@ final class JavascriptEvaluation {
 
       if (isWebViewSane()) {
         PreparedScript docCheckScript =
-            SCRIPT_PREPARER.apply(
+            SCRIPT_PREPARER.invoke(
                 new UnpreparedScript(
                     unprepared.view,
                     DOC_ELEMENT_PRESENT,
@@ -180,7 +179,7 @@ final class JavascriptEvaluation {
           return;
         }
         final ListenableFuture<Evaluation> futureParsed =
-            Futures.transform(futureRaw, DECODE_EVALUATION, directExecutor());
+            Futures.transform(futureRaw, DECODE_EVALUATION, DirectExecutor.INSTANCE);
 
         futureParsed.addListener(
             new Runnable() {
@@ -221,7 +220,7 @@ final class JavascriptEvaluation {
                 }
               }
             },
-            MoreExecutors.directExecutor());
+            DirectExecutor.INSTANCE);
 
       } else {
         unprepared.view.postDelayed(this, DELAY);
@@ -308,7 +307,7 @@ final class JavascriptEvaluation {
     }
   }
 
-  private static final class ScriptPreparer implements Function<UnpreparedScript, PreparedScript> {
+  private static final class ScriptPreparer implements Function1<UnpreparedScript, PreparedScript> {
     private final boolean conduitize;
 
     public ScriptPreparer(boolean conduitize) {
@@ -316,7 +315,7 @@ final class JavascriptEvaluation {
     }
 
     @Override
-    public PreparedScript apply(UnpreparedScript unprepared) {
+    public PreparedScript invoke(UnpreparedScript unprepared) {
       StringBuilder atomized = atomize(unprepared.script, unprepared.args, unprepared.window);
       Conduit conduit = null;
       if (conduitize) {

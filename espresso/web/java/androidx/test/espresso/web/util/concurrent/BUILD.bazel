@@ -1,0 +1,20 @@
+# Description:
+#  Utility concurrent classes
+
+licenses(["notice"])
+
+package(default_visibility = ["//visibility:public"])
+
+android_library(
+    name = "concurrent",
+    srcs = glob([
+        "*.java",
+    ]),
+    deps = [
+        "//:androidx_annotation",
+        "//runner/monitor",
+        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
+        "@maven//:androidx_concurrent_concurrent_futures",
+        "@maven_listenablefuture//:com_google_guava_listenablefuture",
+    ],
+)
