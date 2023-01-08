@@ -166,7 +166,7 @@ public final class AtomAction<E> implements ViewAction, Bindable {
 
   /**
    * Return a Future, which will be set and transformed from futureEval. Espresso's public API
-   * cannot have guava types in its method signatures, so return Future instead of ListenableFuture
+   * cannot have Guava types in its method signatures, so return Future instead of ListenableFuture
    * or SettableFuture.
    */
   public Future<E> getFuture() {

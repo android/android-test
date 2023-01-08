@@ -19,7 +19,7 @@ package androidx.test.espresso.core.internal.deps.guava.base;
  * Redefinition of Guava's Supplier, created to avoid compatibility breakages for users of
  * EspressoOptional.
  *
- * @deprecated implementation detail, use guava's Supplier instead
+ * @deprecated implementation detail, use Guava's Supplier instead
  */
 @Deprecated
 public interface Supplier<T> {

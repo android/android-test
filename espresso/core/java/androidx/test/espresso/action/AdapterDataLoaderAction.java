@@ -81,7 +81,7 @@ public final class AdapterDataLoaderAction implements ViewAction {
   public Matcher<View> getConstraints() {
     return allOf(isAssignableFrom(AdapterView.class), isDisplayed());
   }
-  
+
   @Override
   public void perform(UiController uiController, View view) {
     AdapterView<? extends Adapter> adapterView = (AdapterView<? extends Adapter>) view;

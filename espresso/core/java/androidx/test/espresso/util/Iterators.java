@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * A reimplementation of needed methods from guava, to avoid the direct guava dependency.
+ * A reimplementation of needed methods from Guava, to avoid the direct dependency.
  *
  * @hide
  */

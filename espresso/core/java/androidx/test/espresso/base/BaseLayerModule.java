@@ -26,6 +26,8 @@ import androidx.test.espresso.FailureHandler;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
 import androidx.test.espresso.internal.inject.TargetContext;
+import androidx.test.espresso.util.concurrent.ListeningExecutorService;
+import androidx.test.espresso.util.concurrent.ThreadFactoryBuilder;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.os.ControlledLooper;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -33,9 +35,6 @@ import androidx.test.platform.io.PlatformTestStorage;
 import androidx.test.platform.tracing.Tracing;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import dagger.Module;
 import dagger.Provides;
 import java.util.concurrent.Executor;
@@ -174,7 +173,7 @@ public class BaseLayerModule {
   @Provides
   @Singleton
   public ListeningExecutorService provideRemoteExecutor() {
-    return MoreExecutors.listeningDecorator(
+    return new ListeningExecutorService(
         new ThreadPoolExecutor(
             0 /*corePoolSize*/,
             5 /*maximumPoolSize*/,

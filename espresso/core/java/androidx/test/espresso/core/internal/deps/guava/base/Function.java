@@ -19,7 +19,7 @@ package androidx.test.espresso.core.internal.deps.guava.base;
  * Redefinition of Guava's Function, created to avoid compatibility breakages for users of
  * EspressoOptional.
  *
- * @deprecated implementation detail, use guava Function instead
+ * @deprecated implementation detail, use Guava Function instead
  */
 @Deprecated
 public interface Function<F, T> {

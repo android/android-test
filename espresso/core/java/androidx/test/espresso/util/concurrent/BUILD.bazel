@@ -1,0 +1,18 @@
+# Description:
+#  Utility classes
+
+licenses(["notice"])
+
+package(default_visibility = ["//visibility:public"])
+
+android_library(
+    name = "concurrent",
+    srcs = glob([
+        "*.java",
+    ]),
+    deps = [
+        "//:androidx_annotation",
+        "//runner/monitor",
+        "@maven_listenablefuture//:com_google_guava_listenablefuture",
+    ],
+)

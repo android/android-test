@@ -5,7 +5,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import androidx.annotation.RestrictTo;
 
 /**
- * Re-implementation of needed methods from guava's Throwables to avoid the direct guava dependency
+ * Re-implementation of needed methods from Guava's Throwables to avoid the direct dependency
  *
  * @hide
  */

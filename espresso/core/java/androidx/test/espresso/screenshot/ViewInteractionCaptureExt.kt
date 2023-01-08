@@ -21,6 +21,7 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.concurrent.futures.ResolvableFuture
 import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.core.view.captureToBitmap
 import androidx.test.espresso.EspressoException
@@ -28,7 +29,6 @@ import androidx.test.espresso.IdlingPolicies
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
-import com.google.common.util.concurrent.SettableFuture
 import java.util.Locale
 import java.util.concurrent.ExecutionException
 import org.hamcrest.Matcher
@@ -48,7 +48,7 @@ import org.hamcrest.Matchers.any
 @ExperimentalTestApi
 @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
 fun ViewInteraction.captureToBitmap(): Bitmap {
-  var bitmapFuture = SettableFuture.create<Bitmap>()
+  var bitmapFuture = ResolvableFuture.create<Bitmap>()
 
   perform(ImageCaptureViewAction(bitmapFuture))
   try {
@@ -68,7 +68,7 @@ private class CaptureImageException internal constructor(message: String?, e: Ex
   RuntimeException(message, e), EspressoException
 
 private class ImageCaptureViewAction
-internal constructor(private val bitmapFuture: SettableFuture<Bitmap>) : ViewAction {
+internal constructor(private val bitmapFuture: ResolvableFuture<Bitmap>) : ViewAction {
   override fun getConstraints(): Matcher<View> {
     return any(View::class.java)
   }

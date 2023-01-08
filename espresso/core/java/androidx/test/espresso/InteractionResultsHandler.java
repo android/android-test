@@ -20,10 +20,10 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
 
 import androidx.annotation.VisibleForTesting;
+import androidx.concurrent.futures.DirectExecutor;
 import androidx.test.espresso.remote.NoRemoteEspressoInstanceException;
 import androidx.test.espresso.util.ToStringHelper;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -49,7 +49,7 @@ final class InteractionResultsHandler {
 
   /** Awaits for the 1st meaningful result from the futures and returns it to the caller. */
   static <T> T gatherAnyResult(List<ListenableFuture<T>> tasks) {
-    return gatherAnyResult(tasks, MoreExecutors.directExecutor());
+    return gatherAnyResult(tasks, DirectExecutor.INSTANCE);
   }
 
   @VisibleForTesting

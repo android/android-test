@@ -21,8 +21,8 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
-import static com.google.common.base.Throwables.getStackTraceAsString;
 import static com.google.common.truth.Truth.assertThat;
+import static kotlin.ExceptionsKt.stackTraceToString;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
@@ -145,7 +145,7 @@ public class DefaultFailureHandlerTest {
     return new CustomTypeSafeMatcher<Throwable>("Stack Contains This Class") {
       @Override
       protected boolean matchesSafely(Throwable e) {
-        return getStackTraceAsString(e).contains(DefaultFailureHandlerTest.class.getSimpleName());
+        return stackTraceToString(e).contains(DefaultFailureHandlerTest.class.getSimpleName());
       }
     };
   }

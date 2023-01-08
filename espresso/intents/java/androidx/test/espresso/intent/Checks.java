@@ -16,7 +16,7 @@
 
 package androidx.test.espresso.intent;
 
-/** Substitute for Guava Preconditions to avoid guava as a dep. */
+/** Substitute for Guava Preconditions to avoid dependency. */
 public final class Checks {
 
   private Checks() {}

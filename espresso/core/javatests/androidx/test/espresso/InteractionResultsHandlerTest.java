@@ -23,12 +23,11 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import androidx.test.espresso.remote.NoRemoteEspressoInstanceException;
+import androidx.test.espresso.util.concurrent.ListeningExecutorService;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -47,11 +46,11 @@ import org.junit.runner.RunWith;
 @SmallTest
 public class InteractionResultsHandlerTest {
   private static final ListeningExecutorService TEST_EXECUTOR_1 =
-      MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
+      new ListeningExecutorService(Executors.newSingleThreadExecutor());
   private static final ListeningExecutorService TEST_EXECUTOR_2 =
-      MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
+      new ListeningExecutorService(Executors.newSingleThreadExecutor());
   private static final ListeningExecutorService TEST_EXECUTOR_3 =
-      MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
+      new ListeningExecutorService(Executors.newSingleThreadExecutor());
 
   List<ListenableFuture<Void>> interactionsList;
 

@@ -48,7 +48,7 @@ public class Optional<T> implements java.io.Serializable {
 
   @Override
   public int hashCode() {
-    // copy the guava implementation
+    // copy the Guava implementation
     return isPresent() ? 0x598df91c + value.hashCode() : 0x79a31aac;
   }
 

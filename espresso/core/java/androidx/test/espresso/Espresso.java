@@ -41,11 +41,11 @@ import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.base.IdlingResourceRegistry;
 import androidx.test.espresso.util.TracingUtil;
 import androidx.test.espresso.util.TreeIterables;
+import androidx.test.espresso.util.concurrent.ListenableFutureTask;
 import androidx.test.internal.util.Checks;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.platform.tracing.Tracer.Span;
 import androidx.test.platform.tracing.Tracing;
-import com.google.common.util.concurrent.ListenableFutureTask;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -338,13 +338,10 @@ public final class Espresso {
       Executor mainThreadExecutor = BASE.mainThreadExecutor();
       ListenableFutureTask<Void> idleFuture =
           ListenableFutureTask.create(
-              new Runnable() {
-                @Override
-                public void run() {
-                  BASE.uiController().loopMainThreadUntilIdle();
-                }
-              },
-              null);
+              () -> {
+                BASE.uiController().loopMainThreadUntilIdle();
+                return null;
+              });
       FutureTask<T> actionTask = new FutureTask<>(action);
       idleFuture.addListener(actionTask, mainThreadExecutor);
       mainThreadExecutor.execute(idleFuture);

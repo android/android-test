@@ -40,7 +40,7 @@ import androidx.test.espresso.InjectEventSecurityException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
 import androidx.test.espresso.util.StringJoinerKt;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import androidx.test.espresso.util.concurrent.ThreadFactoryBuilder;
 import java.util.BitSet;
 import java.util.EnumSet;
 import java.util.Iterator;

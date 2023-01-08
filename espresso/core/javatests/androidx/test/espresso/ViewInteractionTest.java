@@ -41,12 +41,15 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import android.os.IBinder;
 import android.view.View;
 import androidx.annotation.NonNull;
+import androidx.concurrent.futures.DirectExecutor;
 import androidx.test.espresso.base.InterruptableUiController;
 import androidx.test.espresso.internal.data.TestFlowVisualizer;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.espresso.remote.Bindable;
 import androidx.test.espresso.remote.NoRemoteEspressoInstanceException;
 import androidx.test.espresso.remote.RemoteInteraction;
+import androidx.test.espresso.util.concurrent.ListeningExecutorService;
+import androidx.test.espresso.util.concurrent.ThreadFactoryBuilder;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import androidx.test.internal.platform.os.ControlledLooper;
@@ -54,8 +57,6 @@ import androidx.test.platform.io.PlatformTestStorageRegistry;
 import androidx.test.platform.tracing.Tracing;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -86,7 +87,7 @@ public class ViewInteractionTest {
   @Mock private ControlledLooper mockControlledLooper;
 
   private FailureHandler failureHandler;
-  private Executor testExecutor = MoreExecutors.directExecutor();
+  private Executor testExecutor = DirectExecutor.INSTANCE;
   private ActivityLifecycleMonitor realLifecycleMonitor;
   private ViewInteraction testInteraction;
   private View rootView;
@@ -586,7 +587,7 @@ public class ViewInteractionTest {
             rootMatcherRef,
             needsActivity,
             mockRemoteInteraction,
-            MoreExecutors.listeningDecorator(
+            new ListeningExecutorService(
                 new ThreadPoolExecutor(
                     0 /*corePoolSize*/,
                     5 /*maximumPoolSize*/,
