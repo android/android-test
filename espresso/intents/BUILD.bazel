@@ -1,0 +1,9 @@
+# Alias for androidx.test.espresso.intents dependency
+
+licenses(["notice"])  # Apache License 2.0
+
+alias(
+    name = "intents",
+    actual = "//espresso/intents/java/androidx/test/espresso/intent:intents",
+    visibility = ["//visibility:public"],
+)

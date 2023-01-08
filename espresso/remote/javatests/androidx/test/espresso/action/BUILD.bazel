@@ -39,7 +39,6 @@ android_app_instrumentation_tests(
         "//services/storage/java/androidx/test/services/storage",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
         "@maven//:com_google_code_findbugs_jsr305",
-        "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
         "@maven//:com_linkedin_dexmaker_dexmaker",
         "@maven//:com_linkedin_dexmaker_dexmaker_mockito",

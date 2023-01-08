@@ -29,7 +29,6 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
         "//espresso/remote/java/androidx/test/espresso/remote:registry",
-        "@maven//:com_google_guava_guava",
     ],
 )
 

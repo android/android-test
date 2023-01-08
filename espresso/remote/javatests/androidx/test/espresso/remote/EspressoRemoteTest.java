@@ -42,14 +42,13 @@ import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.espresso.proto.UiInteraction.InteractionResultProto;
 import androidx.test.espresso.remote.EspressoRemote.RemoteInteractionStrategy;
+import androidx.test.espresso.util.concurrent.ListeningExecutorService;
+import androidx.test.espresso.util.concurrent.ThreadFactoryBuilder;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import androidx.test.internal.runner.InstrumentationConnection;
 import androidx.test.internal.util.ParcelableIBinder;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
@@ -79,7 +78,7 @@ public class EspressoRemoteTest {
   public void setup() {
     MockitoAnnotations.initMocks(this);
     remoteExecutor =
-        MoreExecutors.listeningDecorator(
+        new ListeningExecutorService(
             new ThreadPoolExecutor(
                 0 /*corePoolSize*/,
                 5 /*maximumPoolSize*/,

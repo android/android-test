@@ -33,7 +33,6 @@ android_library(
         "//runner/monitor",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:com_google_guava_guava",
     ],
 )
 
@@ -74,7 +73,6 @@ android_library(
         "//runner/android_junit_runner",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:com_google_guava_guava",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
@@ -113,7 +111,6 @@ android_library(
         "//runner/android_junit_runner",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:com_google_guava_guava",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
 )

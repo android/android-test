@@ -23,7 +23,6 @@ android_library(
         "//espresso/core/java/androidx/test/espresso",
         "//runner/android_junit_runner/java/androidx/test:runner",
         "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework",
-        "@maven//:com_google_guava_guava",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
