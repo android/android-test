@@ -35,7 +35,6 @@ android_app_instrumentation_tests(
         "//ext/junit",
         "//ext/truth",
         "//runner/android_junit_runner",
-        "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
     ],

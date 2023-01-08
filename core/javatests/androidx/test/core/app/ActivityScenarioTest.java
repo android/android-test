@@ -42,9 +42,9 @@ import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
-import com.google.common.util.concurrent.SettableFuture;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -439,10 +439,10 @@ public final class ActivityScenarioTest {
         ActivityScenario.launch(RecordingActivity.class)) {
 
       // windowFocus event is async, so wait a small amount of time for that
-      SettableFuture<String> windowFocusEvent = SettableFuture.create();
+      CountDownLatch windowFocusLatch = new CountDownLatch(1);
       activityScenario.onActivity(
-          activity -> activity.listenForEvent(windowFocusEvent, "onWindowFocusChanged true"));
-      windowFocusEvent.get(1, TimeUnit.SECONDS);
+          activity -> activity.listenForEvent(windowFocusLatch, "onWindowFocusChanged true"));
+      windowFocusLatch.await(1, TimeUnit.SECONDS);
 
       activityScenario.onActivity(
           activity ->
@@ -464,10 +464,10 @@ public final class ActivityScenarioTest {
     try (ActivityScenario<AsyncRecordingActivity> activityScenario =
         ActivityScenario.launch(AsyncRecordingActivity.class)) {
 
-      SettableFuture<String> windowFocusEvent = SettableFuture.create();
+      CountDownLatch windowFocusLatch = new CountDownLatch(1);
       activityScenario.onActivity(
-          activity -> activity.listenForEvent(windowFocusEvent, "onWindowFocusChanged true"));
-      windowFocusEvent.get(1, TimeUnit.SECONDS);
+          activity -> activity.listenForEvent(windowFocusLatch, "onWindowFocusChanged true"));
+      windowFocusLatch.await(1, TimeUnit.SECONDS);
 
       // wait for windowFocus post
       Espresso.onIdle();

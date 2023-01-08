@@ -38,17 +38,14 @@ kt_android_library(
     tags = ["alt_dep=//core"],
     visibility = ["//visibility:private"],
     deps = [
-        "//annotation",
-        "//runner/monitor",
         "//:androidx_annotation",
         "//:androidx_concurrent_futures",
         "//:androidx_lifecycle_common",
         "//:androidx_tracing",
+        "//annotation",
+        "//runner/monitor",
         "//services/storage",
-        # # TODO(b/201110333): this should be listenable future, but for some unknown reason build
-        # fails with error: cannot access 'com.google.common.util.concurrent.ListenableFuture'
-        # which is a supertype of 'androidx.concurrent.futures.ResolvableFuture'.
-        "@maven//:com_google_guava_guava",
+        "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
 )
 

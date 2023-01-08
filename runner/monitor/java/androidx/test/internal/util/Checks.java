@@ -17,9 +17,11 @@
 package androidx.test.internal.util;
 
 import android.os.Looper;
+import androidx.annotation.NonNull;
 import androidx.annotation.RestrictTo;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.ThreadChecker;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 /**
  * Utility methods for checking null references, method arguments, and thread state to simplify
@@ -32,6 +34,8 @@ public final class Checks {
 
   private Checks() {}
 
+  @CanIgnoreReturnValue
+  @NonNull
   public static <T> T checkNotNull(T reference) {
     if (reference == null) {
       throw new NullPointerException();
@@ -39,6 +43,8 @@ public final class Checks {
     return reference;
   }
 
+  @CanIgnoreReturnValue
+  @NonNull
   public static <T> T checkNotNull(T reference, Object errorMessage) {
     if (reference == null) {
       throw new NullPointerException(String.valueOf(errorMessage));
@@ -46,6 +52,8 @@ public final class Checks {
     return reference;
   }
 
+  @CanIgnoreReturnValue
+  @NonNull
   public static <T> T checkNotNull(
       T reference, String errorMessageTemplate, Object... errorMessageArgs) {
     if (reference == null) {

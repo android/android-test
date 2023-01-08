@@ -1,3 +1,7 @@
+load("//build_extensions:maven_repo.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ORCHESTRATOR_VERSION", "SERVICES_VERSION")
+load("//build_extensions:combine_jars.bzl", "combine_jars")
+
 licenses(["notice"])
 
 package(
@@ -14,14 +18,9 @@ android_binary(
     deps = [
         "//runner/android_junit_runner",
         "//runner/android_test_orchestrator",
-        "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
     ],
 )
-
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ORCHESTRATOR_VERSION", "SERVICES_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 combine_jars(
     name = "orchestrator_src_jars",

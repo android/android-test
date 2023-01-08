@@ -12,8 +12,8 @@ android_local_test(
     name = "ShellCommandClientTest",
     size = "small",
     srcs = ["ShellCommandClientTest.java"],
-    tags = ["robolectric"],
     manifest = "AndroidManifest_opensource.xml",
+    tags = ["robolectric"],
     deps = [
         "//runner/android_junit_runner",
         "//services/shellexecutor:exec_client",
@@ -34,14 +34,14 @@ android_library(
     testonly = 1,
     srcs = [
         "DummyActivity.java",
-        "ShellCommandTest.java",
         "ShellCommandExecutorTest.java",
+        "ShellCommandTest.java",
         "ShellExecutorTest.java",
     ],
     manifest = "AndroidManifest_opensource.xml",
     deps = [
-        "//runner/android_junit_runner",
         "//ext/junit",
+        "//runner/android_junit_runner",
         "//services/shellexecutor:exec_client",
         "//services/shellexecutor:exec_server",
         "@maven//:com_google_code_findbugs_jsr305",
@@ -80,6 +80,6 @@ API_LEVELS = [
         "--clear_package_data",
         "--install_test_services=True",
     ],
-    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
+    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % api_level,
     test_app = ":shell_executor_test_binary",
 ) for api_level in API_LEVELS]

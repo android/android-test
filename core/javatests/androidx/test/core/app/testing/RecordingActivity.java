@@ -23,17 +23,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import androidx.annotation.Nullable;
-import com.google.common.util.concurrent.SettableFuture;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 /** An Activity that records lifecycle states. */
 public class RecordingActivity extends Activity {
 
   protected final List<String> callbacks = new ArrayList<>();
-  private final Map<String, SettableFuture<String>> pendingFutures = new HashMap<>();
+  private final Map<String, CountDownLatch> pendingEvents = new HashMap<>();
 
   private class VisibilityRecordingView extends View {
 
@@ -49,20 +49,20 @@ public class RecordingActivity extends Activity {
     }
   }
 
-  public void listenForEvent(SettableFuture<String> future, String stateDescription) {
+  public void listenForEvent(CountDownLatch latch, String stateDescription) {
     if (callbacks.contains(stateDescription)) {
-      future.set(stateDescription);
+      latch.countDown();
     } else {
-      assertFalse(pendingFutures.containsKey(stateDescription));
-      pendingFutures.put(stateDescription, future);
+      assertFalse(pendingEvents.containsKey(stateDescription));
+      pendingEvents.put(stateDescription, latch);
     }
   }
 
   protected void onEvent(String newStateDescription) {
     callbacks.add(newStateDescription);
-    SettableFuture<String> future = pendingFutures.remove(newStateDescription);
-    if (future != null) {
-      future.set(newStateDescription);
+    CountDownLatch latch = pendingEvents.remove(newStateDescription);
+    if (latch != null) {
+      latch.countDown();
     }
   }
 

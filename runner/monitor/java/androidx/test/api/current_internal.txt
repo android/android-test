@@ -144,9 +144,9 @@ package androidx.test.internal.util {
     method public static void checkArgument(boolean, String!, java.lang.Object!...);
     method public static void checkMainThread();
     method public static void checkNotMainThread();
-    method public static <T> T! checkNotNull(T!);
-    method public static <T> T! checkNotNull(T!, Object!);
-    method public static <T> T! checkNotNull(T!, String!, java.lang.Object!...);
+    method public static <T> T checkNotNull(T!);
+    method public static <T> T checkNotNull(T!, Object!);
+    method public static <T> T checkNotNull(T!, String!, java.lang.Object!...);
     method public static void checkState(boolean);
     method public static void checkState(boolean, Object!);
     method public static void checkState(boolean, String!, java.lang.Object!...);

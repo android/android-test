@@ -28,7 +28,9 @@ http_archive(
 )
 
 load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
+
 rules_proto_dependencies()
+
 rules_proto_toolchains()
 
 # The 'com_google_protobuf_javalite' package is required for Bazel 2.x and below.
@@ -43,27 +45,28 @@ load("@rules_jvm_external//:defs.bzl", "maven_install")
 load("@rules_jvm_external//:specs.bzl", "maven")
 load(
     "//build_extensions:axt_versions.bzl",
-    "ANDROIDX_JUNIT_VERSION",
-    "ANDROIDX_LIFECYCLE_VERSION",
-    "ANDROIDX_MULTIDEX_VERSION",
-    "ANDROIDX_ANNOTATION_VERSION",
     "ANDROIDX_ANNOTATION_EXPERIMENTAL_VERSION",
+    "ANDROIDX_ANNOTATION_VERSION",
     "ANDROIDX_COMPAT_VERSION",
     "ANDROIDX_CONCURRENT_VERSION",
     "ANDROIDX_CORE_VERSION",
     "ANDROIDX_CURSOR_ADAPTER_VERSION",
     "ANDROIDX_DRAWER_LAYOUT_VERSION",
     "ANDROIDX_FRAGMENT_VERSION",
+    "ANDROIDX_JUNIT_VERSION",
     "ANDROIDX_LEGACY_SUPPORT_VERSION",
+    "ANDROIDX_LIFECYCLE_VERSION",
+    "ANDROIDX_MULTIDEX_VERSION",
     "ANDROIDX_RECYCLERVIEW_VERSION",
-    "ANDROIDX_VIEWPAGER_VERSION",
     "ANDROIDX_TRACING_VERSION",
+    "ANDROIDX_VIEWPAGER_VERSION",
     "CORE_VERSION",
     "GOOGLE_MATERIAL_VERSION",
-    "GUAVA_VERSION",
     "GUAVA_LISTENABLEFUTURE_VERSION",
+    "GUAVA_VERSION",
     "RUNNER_VERSION",
     "UIAUTOMATOR_VERSION",
+    "JUNIT_VERSION"
 )
 
 maven_install(
@@ -90,20 +93,19 @@ maven_install(
         "com.android.tools.lint:lint-api:30.1.0",
         "com.android.tools.lint:lint-checks:30.1.0",
         "com.beust:jcommander:1.72",
-                maven.artifact(
-            group = "com.google.android.apps.common.testing.accessibility.framework",
+        maven.artifact(
             artifact = "accessibility-test-framework",
-            version = "3.1",
             exclusions = [
-             # exclude the org.checkerframework dependency since that require
-             # java8 compatibility. See b/176926990
+                # exclude the org.checkerframework dependency since that require
+                # java8 compatibility. See b/176926990
                 maven.exclusion(
+                    artifact = "checker",
                     group = "org.checkerframework",
-                    artifact = "checker"
-                    ),
-                ]
-            ),
-
+                ),
+            ],
+            group = "com.google.android.apps.common.testing.accessibility.framework",
+            version = "3.1",
+        ),
         "com.google.android.material:material:" + GOOGLE_MATERIAL_VERSION,
         "com.google.auto.value:auto-value:1.5.1",
         "com.google.code.findbugs:jsr305:3.0.2",
@@ -118,7 +120,6 @@ maven_install(
         "com.google.flogger:google-extensions:0.4",
         "com.google.googlejavaformat:google-java-format:1.4",
         "com.google.guava:guava:" + GUAVA_VERSION,
-        "com.google.guava:guava-testlib:" + GUAVA_VERSION,
         "com.google.guava:listenablefuture:" + GUAVA_LISTENABLEFUTURE_VERSION,
         "com.google.inject.extensions:guice-multibindings:4.1.0",
         "com.google.inject:guice:4.1.0",
@@ -131,7 +132,7 @@ maven_install(
         "javax.annotation:javax.annotation-api:1.3.1",
         "javax.inject:javax.inject:1",
         "joda-time:joda-time:2.10.1",
-        "junit:junit:4.12",
+        "junit:junit:" + JUNIT_VERSION,
         "net.bytebuddy:byte-buddy-agent:1.9.10",
         "net.bytebuddy:byte-buddy:1.9.10",
         "net.sf.kxml:kxml2:jar:2.3.0",
@@ -141,19 +142,33 @@ maven_install(
         "org.mockito:mockito-core:2.28.1",
         "org.objenesis:objenesis:2.6",
         "org.pantsbuild:jarjar:1.7.2",
-	 maven.artifact(
-            group = "org.robolectric",
+        maven.artifact(
             artifact = "robolectric",
-            version = "4.9",
             exclusions = [
                 # exclude the com.google.guava dependency since that require
                 # java8 compatibility.
                 maven.exclusion(
+                    artifact = "guava",
                     group = "com.google.guava",
-                    artifact = "guava"
                 ),
-           ]
+            ],
+            group = "org.robolectric",
+            version = "4.9",
         ),
+    ],
+    repositories = [
+        "https://maven.google.com",
+        "https://repo1.maven.org/maven2",
+        "https://dl.bintray.com/linkedin/maven",
+    ],
+)
+
+# need to have a isolated version tree for listenablefuture, because otherwise
+# listenablefuture will get resolved to 9999.0-empty-to-avoid-conflict-with-guava
+maven_install(
+    name = "maven_listenablefuture",
+    artifacts = [
+        "com.google.guava:listenablefuture:" + GUAVA_LISTENABLEFUTURE_VERSION,
     ],
     repositories = [
         "https://maven.google.com",
@@ -169,19 +184,23 @@ android_sdk_repository(
 )
 
 load("//:repo.bzl", "android_test_repositories")
+
 android_test_repositories(with_dev_repositories = True)
 
 load("@robolectric//bazel:robolectric.bzl", "robolectric_repositories")
+
 robolectric_repositories()
 
 # Kotlin toolchains
 
 rules_kotlin_version = "1.5.0"
+
 rules_kotlin_sha = "12d22a3d9cbcf00f2e2d8f0683ba87d3823cb8c7f6837568dd7e48846e023307"
+
 http_archive(
     name = "io_bazel_rules_kotlin",
-    urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v%s/rules_kotlin_release.tgz" % rules_kotlin_version],
     sha256 = rules_kotlin_sha,
+    urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v%s/rules_kotlin_release.tgz" % rules_kotlin_version],
 )
 
 load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", "kotlinc_version")
@@ -197,12 +216,13 @@ kotlin_repositories(
 )
 
 load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
+
 kt_register_toolchains()
 
 # Android bazel rules
 http_archive(
     name = "build_bazel_rules_android",
-    urls = ["https://github.com/bazelbuild/rules_android/archive/v0.1.1.zip"],
     sha256 = "cd06d15dd8bb59926e4d65f9003bfc20f9da4b2519985c27e190cddc8b7a7806",
     strip_prefix = "rules_android-0.1.1",
+    urls = ["https://github.com/bazelbuild/rules_android/archive/v0.1.1.zip"],
 )
