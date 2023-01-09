@@ -12,7 +12,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
-        "//opensource/java_lib:webbridge",
+        "//espresso/web/java/androidx/test/espresso/web/internal/bridge",
         "//runner/monitor",
         "@maven//:org_hamcrest_hamcrest_all",
     ],

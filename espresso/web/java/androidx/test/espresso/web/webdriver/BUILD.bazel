@@ -14,7 +14,6 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/web/java/androidx/test/espresso/web/model",
-        "//opensource/java_lib:WebDriverScripts",
         "//runner/monitor",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib",
     ],
