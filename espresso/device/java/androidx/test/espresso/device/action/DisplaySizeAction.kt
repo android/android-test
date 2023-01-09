@@ -61,24 +61,22 @@ internal class DisplaySizeAction(
 
       val latch: CountDownLatch = CountDownLatch(1)
 
-      currentActivity.runOnUiThread {
-        val container: ViewGroup =
-          currentActivity.getWindow().findViewById(android.R.id.content) as ViewGroup
-
-        container.addView(
-          object : View(currentActivity) {
-            override fun onConfigurationChanged(newConfig: Configuration?) {
-              super.onConfigurationChanged(newConfig)
-              val currentDisplaySize = calculateCurrentDisplay(currentActivity)
-              if (
-                WidthSizeClass.compute(currentDisplaySize.first) == widthDisplaySize &&
-                  HeightSizeClass.compute(currentDisplaySize.second) == heightDisplaySize
-              ) {
-                latch.countDown()
-              }
-            }
+      val currentActivityView: View = object : View(currentActivity) {
+        override fun onConfigurationChanged(newConfig: Configuration?) {
+          super.onConfigurationChanged(newConfig)
+          val currentDisplaySize = calculateCurrentDisplay(currentActivity)
+          if (
+            WidthSizeClass.compute(currentDisplaySize.first) == widthDisplaySize &&
+              HeightSizeClass.compute(currentDisplaySize.second) == heightDisplaySize
+          ) {
+            latch.countDown()
           }
-        )
+        }
+      }
+      val container: ViewGroup =
+          currentActivity.getWindow().findViewById(android.R.id.content) as ViewGroup
+      currentActivity.runOnUiThread {
+        container.addView(currentActivityView)
       }
 
       val widthDp = WidthSizeClass.getWidthDpInSizeClass(widthDisplaySize)
@@ -87,6 +85,9 @@ internal class DisplaySizeAction(
       executeShellCommand("wm size ${widthDp}dpx${heightDp}dp")
 
       latch.await(5, TimeUnit.SECONDS)
+      currentActivity.runOnUiThread {
+        container.removeView(currentActivityView)
+      }
 
       val finalSize = calculateCurrentDisplay(currentActivity)
       if (
