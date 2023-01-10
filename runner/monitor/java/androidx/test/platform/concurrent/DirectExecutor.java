@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.core.app;
+package androidx.test.platform.concurrent;
 
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import java.util.concurrent.Executor;
 
 /**
  * An {@link Executor} that runs each task in the thread that invokes {@link Executor#execute
  * execute}.
  *
- * <p>This is a temporary fork of androidx.concurrent.futures.DirectExecutor. It will be removed
- * once the screenshot API implementation is converted to coroutines.
+ * <p>Fork of androidx.concurrent.futures.DirectExecutor.
+ *
+ * @hide
  */
-enum DirectExecutor implements Executor {
+@RestrictTo(Scope.LIBRARY_GROUP)
+public enum DirectExecutor implements Executor {
   INSTANCE;
 
   @Override

@@ -20,9 +20,9 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
 
 import androidx.annotation.VisibleForTesting;
-import androidx.concurrent.futures.DirectExecutor;
 import androidx.test.espresso.remote.NoRemoteEspressoInstanceException;
 import androidx.test.espresso.util.ToStringHelper;
+import androidx.test.platform.concurrent.DirectExecutor;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.List;
 import java.util.concurrent.ExecutionException;

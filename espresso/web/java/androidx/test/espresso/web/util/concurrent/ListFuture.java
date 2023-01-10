@@ -23,7 +23,7 @@ import static androidx.test.internal.util.Checks.checkState;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.concurrent.futures.CallbackToFutureAdapter;
-import androidx.concurrent.futures.DirectExecutor;
+import androidx.test.platform.concurrent.DirectExecutor;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.ArrayList;
 import java.util.Collection;
