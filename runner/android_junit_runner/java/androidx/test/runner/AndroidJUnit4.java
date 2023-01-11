@@ -38,7 +38,7 @@ import org.junit.runners.model.InitializationError;
  * Developers wanting to explicitly tag a class as an Android JUnit 4 class should use
  * {@code @RunWith(AndroidJUnit4.class)}
  *
- * @deprecated use androidx.test.ext.junit.runners.AndroidJUnit4 instead.
+ * @deprecated use {@link androidx.test.ext.junit.runners.AndroidJUnit4} instead.
  */
 @Deprecated
 public final class AndroidJUnit4 extends Runner implements Filterable, Sortable {
