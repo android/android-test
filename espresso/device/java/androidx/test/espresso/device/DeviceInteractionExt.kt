@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- @file:JvmName("DeviceInteractionExt")
+@file:JvmName("DeviceInteractionExt")
 
 package androidx.test.espresso.device
 
@@ -33,6 +33,7 @@ import androidx.test.espresso.device.sizeclass.WidthSizeClass
  *
  * This action is for foldable devices only. Currently only supported for tests run on Android
  * Emulators.
+ *
  * @throws UnsupportedDeviceOperationException if used on a real device.
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
@@ -48,6 +49,7 @@ fun DeviceInteraction.setTabletopMode(): DeviceInteraction {
  *
  * This action is for foldable devices only. Currently only supported for tests run on Android
  * Emulators.
+ *
  * @throws UnsupportedDeviceOperationException if used on a real device.
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
@@ -62,6 +64,7 @@ fun DeviceInteraction.setBookMode(): DeviceInteraction {
  *
  * This action is for foldable devices only. Currently only supported for tests run on Android
  * Emulators.
+ *
  * @throws UnsupportedDeviceOperationException if used on a real device.
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
@@ -72,6 +75,7 @@ fun DeviceInteraction.setFlatMode(): DeviceInteraction {
 
 /**
  * Set device's screen orientation.
+ *
  * @param orientation the orientation to set the device to (portait or landscape)
  */
 fun DeviceInteraction.setScreenOrientation(orientation: ScreenOrientation): DeviceInteraction {
@@ -81,6 +85,7 @@ fun DeviceInteraction.setScreenOrientation(orientation: ScreenOrientation): Devi
 
 /**
  * Set device's display size.
+ *
  * @param widthSizeClass the width to set the device display to
  * @param heightSizeClass the height to set the device display to
  */
