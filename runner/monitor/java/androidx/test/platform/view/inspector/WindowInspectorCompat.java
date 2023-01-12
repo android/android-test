@@ -109,13 +109,14 @@ public class WindowInspectorCompat {
 
   private static List<View> getViews(Object windowManagerGlobal) throws ReflectionException {
     if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
-      return windowViewsReflectiveField.get(windowManagerGlobal);
+      return new ArrayList<>(windowViewsReflectiveField.get(windowManagerGlobal));
     } else if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
       View[] views = windowViewsPreKitkatReflectiveField.get(windowManagerGlobal);
-      return views != null ? Arrays.asList(views) : new ArrayList<>();
+      // create a new list for consistency with other apis
+      return views != null ? new ArrayList<>(Arrays.asList(views)) : new ArrayList<>();
     } else {
       View[] views = windowViewsPreJBReflectiveField.get(windowManagerGlobal);
-      return views != null ? Arrays.asList(views) : new ArrayList<>();
+      return views != null ? new ArrayList<>(Arrays.asList(views)) : new ArrayList<>();
     }
   }
 }
