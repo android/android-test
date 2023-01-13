@@ -22,6 +22,8 @@ android_library(
         "//:androidx_annotation",
         "//core",
         "//runner/monitor",
+        "//services/shellexecutor:exec_client",
+        "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
     ],
 )
