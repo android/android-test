@@ -16,7 +16,7 @@ public final class SimpleTest {
   }
 
   @Test
-  public void singleTes1t() {
+  public void singleTest1() {
     assertThat(2 + 2).isEqualTo(4);
   }
 
