@@ -10,8 +10,8 @@ package(default_visibility = [
 
 kt_android_library(
     name = "emulator",
-    srcs = glob(["*.kt"]),
     testonly = 1,
+    srcs = glob(["*.kt"]),
     deps = [
         "//espresso/device/java/androidx/test/espresso/device/controller",
         "//espresso/device/java/androidx/test/espresso/device/action",
