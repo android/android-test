@@ -26,9 +26,17 @@ jobs:
             ${{ runner.os }}-bazel-build-
       - name: Build maven artifacts
         run: bazelisk build //:axt_m2repository
+      - name: 'Clean bazel cache'
+        # Don't cache the bazel/external directory, since it can be  > 2GB 
+        # and is expensive to restore and save
+        # According to the documentation, we should be able to exclude these via
+        # the actions/cache path, e.g. "!~/.cache/bazel/*/*/external/" but that
+        # doesn't seem to work.
+        run: |
+          rm -rf $(bazel info repository_cache)
+          rm -rf ~/.cache/bazel/*/*/external/     
   unit-test:
     runs-on: ubuntu-latest
-    needs: build 
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
@@ -37,5 +45,21 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '11'
+      - name: 'Cache Bazel files'
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/bazel
+          key: ${{ runner.os }}-bazel-test-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-bazel-test-
       - name: Run Robolectric tests
         run: bazelisk test --test_tag_filters=robolectric,-gcb_ignore --build_tag_filters=robolectric --test_output=all ...
+      - name: 'Clean bazel cache'
+        # Don't cache the bazel/external directory, since it can be  > 2GB 
+        # and is expensive to restore and save
+        # According to the documentation, we should be able to exclude these via
+        # the actions/cache path, e.g. "!~/.cache/bazel/*/*/external/" but that
+        # doesn't seem to work.
+        run: |
+          rm -rf $(bazel info repository_cache)
+          rm -rf ~/.cache/bazel/*/*/external/     
