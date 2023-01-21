@@ -34,7 +34,7 @@ jobs:
         # doesn't seem to work.
         run: |
           rm -rf $(bazel info repository_cache)
-          rm -rf ~/.cache/bazel/*/*/external/     
+          rm -rf ~/.cache/bazel/*/*/external/
   unit-test:
     runs-on: ubuntu-latest
     steps:
@@ -55,11 +55,11 @@ jobs:
       - name: Run Robolectric tests
         run: bazelisk test --test_tag_filters=robolectric,-gcb_ignore --build_tag_filters=robolectric --test_output=all ...
       - name: 'Clean bazel cache'
-        # Don't cache the bazel/external directory, since it can be  > 2GB 
+        # Don't cache the bazel/external directory, since it can be  > 2GB
         # and is expensive to restore and save
         # According to the documentation, we should be able to exclude these via
         # the actions/cache path, e.g. "!~/.cache/bazel/*/*/external/" but that
         # doesn't seem to work.
         run: |
           rm -rf $(bazel info repository_cache)
-          rm -rf ~/.cache/bazel/*/*/external/     
+          rm -rf ~/.cache/bazel/*/*/external/
