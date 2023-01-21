@@ -28,6 +28,7 @@ jobs:
         run: bazelisk build //:axt_m2repository
   unit-test:
     runs-on: ubuntu-latest
+    needs: build 
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
@@ -36,12 +37,5 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '11'
-      - name: 'Cache Bazel files'
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/bazel
-          key: ${{ runner.os }}-bazel-test-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-bazel-test-
       - name: Run Robolectric tests
         run: bazelisk test --test_tag_filters=robolectric,-gcb_ignore --build_tag_filters=robolectric --test_output=all ...
