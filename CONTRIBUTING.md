@@ -27,8 +27,8 @@ and run the Robolectric tests.
 *   [Fork](https://help.github.com/articles/fork-a-repo/) and
     [clone](https://help.github.com/articles/cloning-a-repository/) the
     [AndroidX Test repo](https://github.com/android/android-test)
-*   Install [Bazel](https://docs.bazel.build/versions/master/install.html).
-    Version 4.2.2 is recommended. For instrumentation testing on Linux make sure your environment
+*   Install [Bazelisk](https://github.com/bazelbuild/bazelisk/blob/master/README.md)
+    For instrumentation testing on Linux make sure your environment
     meets the following
     [prerequisites](https://docs.bazel.build/versions/master/android-instrumentation-test.html#prerequisites)
 *   Install [maven](http://maven.apache.org/install.html) and make it available
@@ -66,23 +66,23 @@ Check [Troubleshooting](#troubleshooting) for tips on resolving common build iss
 ### Building
 
 ```
-bazel build <target path>
+bazelisk build <target path>
 ```
 
 For example, to build the AndroidX Test maven repository:
 ```
-bazel build :axt_m2repository
+bazelisk build :axt_m2repository
 ```
 
 ### Testing
 
 ```
-bazel test <target path> --spawn_strategy=local
+bazelisk test <target path> --spawn_strategy=local
 ```
 
 eg to run the androidx-test-core tests
 ```
-bazel test //core/javatests/... --spawn_strategy=local --host_force_python=PY2
+bazelisk test //core/javatests/... --spawn_strategy=local --host_force_python=PY2
 ```
 
 To run all the robolectric local tests (and thus replicate the GitHub CI) `bazel test ... --test_tag_filters=robolectric
