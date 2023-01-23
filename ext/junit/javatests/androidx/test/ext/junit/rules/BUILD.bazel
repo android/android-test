@@ -1,0 +1,19 @@
+load("//build_extensions:axt_android_local_test.bzl", "axt_android_local_test")
+
+licenses(["notice"])
+
+axt_android_local_test(
+    name = "ActivityScenarioRuleTest",
+    srcs = ["ActivityScenarioRuleTest.java"],
+    deps = [
+        "//:androidx_lifecycle_common",
+        "//core/java/androidx/test/core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//core/javatests/androidx/test/core/app/testing:manifest",
+        "//ext/junit",
+        "//ext/truth",
+        "//runner/monitor/java/androidx/test:monitor",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+    ],
+)

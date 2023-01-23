@@ -511,7 +511,7 @@ public final class ActivityScenarioTest {
   @Test
   public void launch_intentWithPackageName() {
     Intent intent = new Intent("custom.actions.intent.EXAMPLE_INTENT");
-    intent.setPackage("androidx.test.core");
+    intent.setPackage("androidx.test.core.app");
 
     ActivityScenario<IntentActivity> activityScenario = ActivityScenario.launch(intent);
     assertThat(activityScenario).isNotNull();

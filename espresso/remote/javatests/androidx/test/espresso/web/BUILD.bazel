@@ -9,7 +9,7 @@ load(
     "devices",
 )
 
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 android_app_instrumentation_tests(
     name = "instrumentation_tests",

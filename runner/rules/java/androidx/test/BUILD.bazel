@@ -4,7 +4,7 @@ load("//build_extensions:axt_versions.bzl", "ANNOTATION_VERSION", "RULES_VERSION
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 # Description: Build rules for building androidx.test from source
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 package(
     default_visibility = [

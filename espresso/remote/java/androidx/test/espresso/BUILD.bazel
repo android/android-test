@@ -1,6 +1,6 @@
 # Description:
 #   Espresso - the new UI Test API for Android.
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 package(
     default_visibility = ["//visibility:public"],

@@ -1,9 +1,9 @@
 # Description:
 # JUnit4 Rules for Intents
 
-licenses(["notice"])  # Apache License 2.0
-
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+
+licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
 
@@ -11,10 +11,10 @@ kt_android_library(
     name = "rule",
     testonly = 1,
     srcs = glob(
-      [
-        "*.java",
-        "*.kt",
-      ],
+        [
+            "*.java",
+            "*.kt",
+        ],
     ),
     deps = [
         "//espresso/intents/java/androidx/test/espresso/intent:intents",

@@ -1,6 +1,6 @@
 # Protocol buffer definitions for remote web assertions
 
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 package(
     default_visibility = [

@@ -21,7 +21,7 @@ import static java.util.concurrent.atomic.AtomicReferenceFieldUpdater.newUpdater
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
-import androidx.concurrent.futures.DirectExecutor;
+import androidx.test.platform.concurrent.DirectExecutor;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.Locale;
 import java.util.concurrent.CancellationException;

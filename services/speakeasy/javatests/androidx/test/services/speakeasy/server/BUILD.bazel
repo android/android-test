@@ -1,7 +1,7 @@
 # Description:
 #   Tests for speak easy server
 
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 package(
     default_visibility = [
@@ -68,6 +68,6 @@ API_LEVELS = [
         "--clear_package_data",
         "--install_test_services=True",
     ],
-    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % (api_level),
+    target_device = "//tools/android/emulated_devices/generic_phone:android_%s_qemu2" % api_level,
     test_app = ":se_server_test_binary",
 ) for api_level in API_LEVELS]

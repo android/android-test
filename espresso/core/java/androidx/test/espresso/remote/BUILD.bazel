@@ -2,7 +2,7 @@
 
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 package(
     default_visibility = [

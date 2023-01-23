@@ -1,0 +1,3 @@
+# Description: Tests for androidx.test.core
+
+# instrumentation tests currently not supported in androidx.test bazel

@@ -3,7 +3,7 @@ load("//build_extensions:maven_repo.bzl", "maven_artifact")
 load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANDROIDX_TRACING_VERSION", "ANNOTATION_VERSION", "JUNIT_VERSION", "MONITOR_VERSION", "RUNNER_VERSION", "SERVICES_VERSION")
 
 # Description: Build rules for building androidx.test from source
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 package(
     default_visibility = [

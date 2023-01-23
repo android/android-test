@@ -22,9 +22,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 
+import android.os.Build;
 import android.os.Bundle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
@@ -281,13 +284,15 @@ public class RunnerArgsTest {
   }
 
   /** Test failure reading a testfile from storage */
-  @Test(expected = IllegalArgumentException.class)
-  @SuppressWarnings("TestExceptionChecker")
+  @Test
   public void testFromBundle_testFileStorageFailure() {
+    assumeFalse(Build.FINGERPRINT.contains("robolectric"));
     Bundle b = new Bundle();
     b.putString(RunnerArgs.ARGUMENT_USE_TEST_STORAGE_SERVICE, "true");
     b.putString(RunnerArgs.ARGUMENT_TEST_FILE, "idontexist");
-    new RunnerArgs.Builder().fromBundle(getInstrumentation(), b).build();
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> new RunnerArgs.Builder().fromBundle(getInstrumentation(), b).build());
   }
 
   @Test

@@ -1,8 +1,6 @@
 # Description:
 #   Tests for espresso idling resrouces
 
-licenses(["notice"])  # Apache License 2.0
-
 load(
     "//build_extensions:android_library_instrumentation_tests.bzl",
     "android_library_instrumentation_tests",
@@ -11,6 +9,8 @@ load(
     "//build_extensions:test_devices.bzl",
     "devices",
 )
+
+licenses(["notice"])
 
 android_library_instrumentation_tests(
     name = "instrumentation_tests",

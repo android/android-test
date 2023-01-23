@@ -10,7 +10,7 @@ package(
     default_visibility = ["//:__subpackages__"],
 )
 
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 android_library(
     name = "scheduled_thread_pool_idling_resource",

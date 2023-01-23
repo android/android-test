@@ -1,0 +1,12 @@
+package(
+    default_testonly = 1,
+)
+
+android_library(
+    name = "sample_junit_test",
+    srcs = glob(["*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "@maven//:junit_junit",
+    ],
+)

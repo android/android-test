@@ -4,7 +4,7 @@ load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANDROIDX_TRACING_VERSION", "ANNOTATION_VERSION", "MONITOR_VERSION")
 
 # Description: Build rules for building androidx.test from source
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 package(
     default_visibility = ["//visibility:public"],
@@ -48,7 +48,7 @@ android_library(
         "internal/runner/runtime/ExposedInstrumentationApi.java",
     ],
     deps = [
-      "//:androidx_annotation",
+        "//:androidx_annotation",
     ],
 )
 
@@ -58,10 +58,9 @@ android_library(
         "internal/runner/hidden/ExposedInstrumentationApi.java",
     ],
     neverlink = 1,
-        deps = [
-          "//:androidx_annotation",
-        ],
-
+    deps = [
+        "//:androidx_annotation",
+    ],
 )
 
 # group of targets to use to produce release binary + docs

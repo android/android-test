@@ -3,7 +3,7 @@ load("//build_extensions:maven_repo.bzl", "maven_artifact")
 load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANDROIDX_JUNIT_VERSION", "CORE_VERSION", "JUNIT_VERSION", "MONITOR_VERSION")
 load("//build_extensions:release.bzl", "axt_release_lib")
 
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 package(
     default_visibility = [

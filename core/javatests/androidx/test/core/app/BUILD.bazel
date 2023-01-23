@@ -1,0 +1,29 @@
+# Description: Tests for androidx.test.core
+
+load("//build_extensions:axt_android_local_test.bzl", "axt_android_local_test")
+
+package(
+    default_testonly = 1,
+)
+
+licenses(["notice"])
+
+axt_android_local_test(
+    name = "ApplicationProviderTest",
+    srcs = ["ApplicationProviderTest.java"],
+    manifest_values = {
+        "applicationId": "androidx.test.core",
+    },
+    deps = [
+        "//:androidx_lifecycle_common",
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//core/javatests/androidx/test/core/app/testing:manifest",
+        "//ext/junit",
+        "//ext/truth",
+        "//runner/monitor/java/androidx/test:monitor",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+    ],
+)

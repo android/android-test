@@ -38,7 +38,6 @@ import androidx.test.internal.events.client.TestEventClient;
 import androidx.test.internal.runner.RunnerArgs;
 import androidx.test.internal.runner.TestExecutor;
 import androidx.test.internal.runner.TestRequestBuilder;
-import androidx.test.internal.runner.listener.ActivityFinisherRunListener;
 import androidx.test.internal.runner.listener.CoverageListener;
 import androidx.test.internal.runner.listener.DelayInjector;
 import androidx.test.internal.runner.listener.InstrumentationResultPrinter;
@@ -202,9 +201,6 @@ public class AndroidJUnitRunnerTest {
     order
         .verify(executorBuilder)
         .addRunListener(ArgumentMatchers.isA(InstrumentationResultPrinter.class));
-    order
-        .verify(executorBuilder)
-        .addRunListener(ArgumentMatchers.isA(ActivityFinisherRunListener.class));
     order.verify(executorBuilder).addRunListener(ArgumentMatchers.isA(DelayInjector.class));
     order.verify(executorBuilder).addRunListener(ArgumentMatchers.isA(CoverageListener.class));
     // Two extra user added listeners
@@ -248,9 +244,6 @@ public class AndroidJUnitRunnerTest {
     order
         .verify(executorBuilder)
         .addRunListener(ArgumentMatchers.isA(InstrumentationResultPrinter.class));
-    order
-        .verify(executorBuilder)
-        .addRunListener(ArgumentMatchers.isA(ActivityFinisherRunListener.class));
   }
 
   /** Ensure classpathToScan paths are added to the runner. */

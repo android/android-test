@@ -1,0 +1,25 @@
+# Description: Monitor
+
+load(
+    "//build_extensions:axt_android_local_test.bzl",
+    "axt_android_local_test",
+)
+
+package(
+    default_testonly = 1,
+)
+
+licenses(["notice"])
+
+axt_android_local_test(
+    name = "PlatformTestStorageRegistryTest",
+    srcs = ["PlatformTestStorageRegistryTest.java"],
+    deps = [
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/monitor",
+        "//services/storage/java/androidx/test/services/storage",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+    ],
+)

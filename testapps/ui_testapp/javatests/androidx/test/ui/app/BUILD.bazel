@@ -1,7 +1,7 @@
 # Description:
 #   Ui testapp tests.
 
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 TESTAPP_TEST_SRCS = glob(
     ["**/*.java"],

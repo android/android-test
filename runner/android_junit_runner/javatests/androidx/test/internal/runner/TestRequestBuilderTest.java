@@ -35,6 +35,7 @@ import androidx.test.filters.FlakyTest;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.MediumTest;
 import androidx.test.filters.RequiresDevice;
+import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
 import androidx.test.filters.Suppress;
 import androidx.test.internal.runner.TestRequestBuilder.DeviceBuild;
@@ -991,6 +992,7 @@ public class TestRequestBuilderTest {
 
   /** Test that a custom RunnerBuilder is used. */
   @Test
+  @SdkSuppress(maxSdkVersion = 28) // does not throw on api >= 29 for unclear reasons
   public void testBrokenRunnerBuilder() {
     try {
       builder

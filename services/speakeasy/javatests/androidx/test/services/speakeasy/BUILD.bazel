@@ -1,6 +1,8 @@
 # Description: Build rules for speak easy tests
 
-licenses(["notice"])  # Apache License 2.0
+load("//build_extensions:axt_android_local_test.bzl", "axt_android_local_test")
+
+licenses(["notice"])
 
 package(
     default_visibility = [
@@ -8,29 +10,13 @@ package(
     ],
 )
 
-## Robolectric tests
-SE_DEPS = [
-    "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
-]
-
-EXTERNAL_DEPS = [
-    "@maven//:junit_junit",
-    "@maven//:com_google_truth_truth",
-    "@robolectric//bazel:android-all",
-    "@maven//:org_robolectric_robolectric",
-]
-
-java_library(
-    name = "test_deps",
-    testonly = 1,
-    visibility = ["//visibility:public"],
-    exports = EXTERNAL_DEPS + SE_DEPS,
-)
-
-android_local_test(
+axt_android_local_test(
     name = "SpeakEasyProtocolTest",
     size = "small",
     srcs = ["SpeakEasyProtocolTest.java"],
-    tags = ["robolectric"],
-    deps = [":test_deps"],
+    deps = [
+        "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+    ],
 )

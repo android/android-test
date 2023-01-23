@@ -25,10 +25,8 @@ import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
-import org.robolectric.annotation.Config;
 
 @RunWith(AndroidJUnit4.class)
-@Config(sdk = 19)
 public class StackTrimmerTest {
 
   @Test

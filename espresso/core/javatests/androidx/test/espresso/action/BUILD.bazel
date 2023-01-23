@@ -10,8 +10,8 @@ load(
     "devices",
 )
 load(
-    "//build_extensions:android_library_local_tests.bzl",
-    "android_library_local_tests",
+    "//build_extensions:axt_android_local_test.bzl",
+    "axt_android_local_test",
 )
 
 android_app_instrumentation_tests(
@@ -58,8 +58,8 @@ android_app_instrumentation_tests(
     ],
 )
 
-android_library_local_tests(
-    name = "localtests",
+axt_android_local_test(
+    name = "MotionEventsUnitTest",
     srcs = ["MotionEventsUnitTest.java"],
     deps = [
         "//espresso/core/java/androidx/test/espresso/action",

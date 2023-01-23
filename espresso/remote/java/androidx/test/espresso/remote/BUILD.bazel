@@ -5,7 +5,7 @@ load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ESPR
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 load("//build_extensions:release.bzl", "axt_release_lib")
 
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 package(
     default_visibility = [

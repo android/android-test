@@ -1,6 +1,8 @@
 # Description: Build rules for speak easy tests
 
-licenses(["notice"])  # Apache License 2.0
+load("//build_extensions:axt_android_local_test.bzl", "axt_android_local_test")
+
+licenses(["notice"])
 
 package(
     default_visibility = [
@@ -8,12 +10,10 @@ package(
     ],
 )
 
-android_local_test(
+axt_android_local_test(
     name = "ShellCommandClientTest",
     size = "small",
     srcs = ["ShellCommandClientTest.java"],
-    manifest = "AndroidManifest_opensource.xml",
-    tags = ["robolectric"],
     deps = [
         "//runner/android_junit_runner",
         "//services/shellexecutor:exec_client",
@@ -23,9 +23,7 @@ android_local_test(
         "@maven//:net_bytebuddy_byte_buddy_agent",
         "@maven//:org_mockito_mockito_core",
         "@maven//:org_objenesis_objenesis",
-        "@maven//:org_robolectric_robolectric",
         "@maven//:org_robolectric_shadowapi",
-        "@robolectric//bazel:android-all",
     ],
 )
 

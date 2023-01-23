@@ -16,7 +16,7 @@ load("//build_extensions:combine_jars.bzl", "combine_jars")
 # Description:
 #   Contributed / non-core functionality of Espresso. Tools which add on to
 #   Espresso belong here.
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 package(
     default_visibility = ["//:__subpackages__"],

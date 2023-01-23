@@ -1,6 +1,6 @@
 # Publicly visible androidx.test.core Kotlin extension library
 
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 android_library(
     name = "core",

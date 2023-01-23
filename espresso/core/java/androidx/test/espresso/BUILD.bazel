@@ -6,7 +6,7 @@ load("//build_extensions:remove_from_jar.bzl", "remove_from_jar")
 
 # Description:
 #   Espresso - the new UI Test API for Android.
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 # Add only espresso packages here.
 package_group(

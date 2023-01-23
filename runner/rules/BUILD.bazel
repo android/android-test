@@ -1,6 +1,6 @@
 # Publicly visible alias to the AXT rules target
 
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 android_library(
     name = "rules",

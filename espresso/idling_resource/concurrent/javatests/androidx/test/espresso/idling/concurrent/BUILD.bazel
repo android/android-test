@@ -1,19 +1,16 @@
 # Description:
 #   Tests for espresso concurrent idling resrouces
 
-licenses(["notice"])  # Apache License 2.0
+load("//build_extensions:axt_android_local_test.bzl", "axt_android_local_test")
+
+licenses(["notice"])
 
 ## Robolectric tests
 
-android_local_test(
+axt_android_local_test(
     name = "IdlingScheduledThreadPoolExecutorTest",
     size = "small",
     srcs = ["IdlingScheduledThreadPoolExecutorTest.java"],
-    manifest_values = {"minSdkVersion": "14"},
-    tags = [
-        "gcb_ignore",
-        "robolectric",
-    ],
     deps = [
         "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:scheduled_thread_pool_idling_resource",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
@@ -24,20 +21,13 @@ android_local_test(
         "@maven//:net_bytebuddy_byte_buddy_agent",
         "@maven//:org_mockito_mockito_core",
         "@maven//:org_objenesis_objenesis",
-        "@maven//:org_robolectric_robolectric",
-        "@robolectric//bazel:android-all",
     ],
 )
 
-android_local_test(
+axt_android_local_test(
     name = "IdlingThreadPoolExecutorTest",
     size = "small",
     srcs = ["IdlingThreadPoolExecutorTest.java"],
-    manifest_values = {"minSdkVersion": "14"},
-    tags = [
-        "gcb_ignore",
-        "robolectric",
-    ],
     deps = [
         "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:thread_pool_idling_resource",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
@@ -48,7 +38,5 @@ android_local_test(
         "@maven//:net_bytebuddy_byte_buddy_agent",
         "@maven//:org_mockito_mockito_core",
         "@maven//:org_objenesis_objenesis",
-        "@maven//:org_robolectric_robolectric",
-        "@robolectric//bazel:android-all",
     ],
 )

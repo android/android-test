@@ -15,7 +15,7 @@ load(
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 
 # Description: Build rules for building androidx.test.core from source
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 package(
     default_visibility = [

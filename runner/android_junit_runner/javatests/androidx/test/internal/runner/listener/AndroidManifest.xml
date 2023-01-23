@@ -15,20 +15,18 @@
 -->
 
 <manifest
-    package="androidx.test.rule.tests"
+    package="androidx.test.internal.runner.listener"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="28"/>
+   <application android:label="AndroidJUnitRunner" />
 
-    <application android:label="AndroidJUnitRunner" >
-
-        <uses-library android:name="android.test.runner" />
-        <activity android:name="android.app.Activity"/>
-        <service android:name="androidx.test.rule.ServiceTestRuleTest$TestService" />
-        <service android:name="androidx.test.rule.ServiceTestRuleTest$ServiceThatCantBeBoundTo" />
-        <service android:name="androidx.test.rule.ServiceTestRuleTest$TimeoutService" />
-
-    </application>
-
+    <instrumentation
+      android:name="androidx.test.runner.AndroidJUnitRunner"
+      android:targetPackage="androidx.test.internal.runner.listener" >
+       <meta-data
+          android:name="listener"
+          android:value="androidx.test.testing.fixtures.ManifestListener" />
+    </instrumentation>
 
 </manifest>
+

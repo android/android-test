@@ -6,7 +6,7 @@ load("//build_extensions:maven_repo.bzl", "maven_artifact")
 load("//build_extensions:axt_versions.bzl", "ANNOTATION_VERSION", "CORE_VERSION", "ESPRESSO_VERSION", "KOTLIN_VERSION", "RUNNER_VERSION")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 package(
     default_visibility = ["//:__subpackages__"],

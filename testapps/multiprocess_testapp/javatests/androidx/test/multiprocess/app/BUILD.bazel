@@ -1,6 +1,6 @@
 # Description:
 #   Sample multi-process tests.
 
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 # ignore - not supported in bazel

@@ -1,6 +1,6 @@
 # Protocol buffer definitions for any proto transformers. Only used in tests!
 
-licenses(["notice"])  # Apache License 2.0
+licenses(["notice"])
 
 package(
     default_visibility = ["//espresso/core/java/androidx/test/espresso:espresso_pkg"],
