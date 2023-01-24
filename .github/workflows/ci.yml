@@ -34,11 +34,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: local-snapshot
-          path: bazel-bin/axt_m2repository.zip
+          path: ~/download/axt_m2repository.zip
       - name: install to local maven repo
         run: |
           mkdir -p ~/.m2
-          unzip bazel-bin/axt_m2repository.zip -d ~/.m2/ 
+          unzip ~/download/axt_m2repository.zip -d ~/.m2/ 
           mv ~/.m2/m2repository ~/.m2/repository
       - name: Check SDK contents
         run: ls ~/Library/Android/sdk/system-images
