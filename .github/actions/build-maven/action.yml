@@ -25,6 +25,7 @@ runs:
       run: |
         mkdir -p ~/download
         cp bazel-bin/axt_m2repository.zip ~/download
+      shell: bash 
     - name: 'Upload local snapshot for tests'
       uses: actions/upload-artifact@v3
       with:
