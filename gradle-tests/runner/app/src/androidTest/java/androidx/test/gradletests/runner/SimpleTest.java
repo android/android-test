@@ -1,12 +1,10 @@
 package androidx.test.gradletests.runner;
 
-import android.content.Context;
-
-import androidx.test.platform.app.InstrumentationRegistry;
-
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import android.content.Context;
+import androidx.test.platform.app.InstrumentationRegistry;
+import org.junit.Test;
 
 /**
  * Simplest possible test
