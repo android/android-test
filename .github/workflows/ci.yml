@@ -35,6 +35,10 @@ jobs:
         with:
           name: local-snapshot
           path: ~/.m2/repository/androidx/test
+      - name: Check SDK contents
+        run: ls ~/~/Library/Android/sdk/system-images
+      - name: Check SDK android-30
+        run: ls ~/~/Library/Android/sdk/system-images/android-30
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
       - name: Clear managed devices
