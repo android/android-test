@@ -21,17 +21,16 @@ runs:
     - name: Build maven artifacts
       run: bazelisk build //:axt_m2repository
       shell: bash 
-    - name: install to local maven repo
+    - name: cp to local maven repo
       run: |
         mkdir -p ~/.m2
-        unzip bazel-bin/axt_m2repository.zip -d ~/.m2/ 
-        mv ~/.m2/m2repository ~/.m2/repository
+        cp bazel-bin/axt_m2repository.zip ~/.m2/ 
       shell: bash
     - name: 'Upload local snapshot for tests'
       uses: actions/upload-artifact@v3
       with:
         name: local-snapshot
-        path: ~/.m2/repository/androidx/test
+        path: ~/.m2/axt_m2repository.zip
     - name: 'Clean bazel cache'
       # Don't cache the bazel/external directory, since it can be  > 2GB
       # and is expensive to restore and save

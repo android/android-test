@@ -34,11 +34,15 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: local-snapshot
-          path: ~/.m2/repository/androidx/test
+          path: ~/.m2/axt_m2repository.zip
+      - name: Unzip artifacts
+        run: |
+          unzip ~/.m2/axt_m2repository.zip -d ~/.m2/
+          mv ~/.m2/m2repository ~/.m2/repository
       - name: Check SDK contents
-        run: ls ~/~/Library/Android/sdk/system-images
+        run: ls ~/Library/Android/sdk/system-images
       - name: Check SDK android-30
-        run: ls ~/~/Library/Android/sdk/system-images/android-30
+        run: ls ~/Library/Android/sdk/system-images/android-30
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
       - name: Clear managed devices
