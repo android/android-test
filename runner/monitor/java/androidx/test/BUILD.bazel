@@ -1,7 +1,7 @@
 load("//build_extensions:release.bzl", "axt_release_lib")
 load("//build_extensions:maven_repo.bzl", "maven_artifact")
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANDROIDX_TRACING_VERSION", "ANNOTATION_VERSION", "MONITOR_VERSION")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANDROIDX_TRACING_VERSION", "ANNOTATION_VERSION", "MONITOR_VERSION", "KOTLIN_VERSION")
 
 # Description: Build rules for building androidx.test from source
 licenses(["notice"])
@@ -105,6 +105,7 @@ maven_artifact(
         "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
         "androidx.test:annotation:%s" % ANNOTATION_VERSION,
         "androidx.tracing:tracing:%s" % ANDROIDX_TRACING_VERSION,
+        "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
     ],
     artifact_id = "monitor",
     group_id = "androidx.test",
