@@ -34,7 +34,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: local-snapshot
-          path: ~/download/axt_m2repository.zip
+          path: ~/download
       - name: install to local maven repo
         run: |
           mkdir -p ~/.m2
