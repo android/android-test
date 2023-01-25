@@ -47,6 +47,14 @@ jobs:
           cd ${{ github.workspace }}/gradle-tests/runner/app
           ../gradlew cleanManagedDevices --unused-only
         shell: bash
+      - name: GMD AVD cache
+        uses: actions/cache@v3
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/gradle-managed/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}-${{ env.cache-version }}    
       - name: Run gradle tests
         run: |
           cd ${{ github.workspace }}/gradle-tests/runner/app
