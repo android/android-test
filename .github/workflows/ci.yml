@@ -43,7 +43,7 @@ jobs:
           mkdir -p ~/.m2
           unzip ~/download/axt_m2repository.zip -d ~/.m2/ 
           mv ~/.m2/m2repository ~/.m2/repository
-      - name: Setup Android SDK
+      - name: 'Setup Android SDK'
         uses: android-actions/setup-android@v2
       - name: Clear managed devices
         run: |
@@ -58,7 +58,7 @@ jobs:
             ~/.android/avd/gradle-managed/*
             ~/.android/adb*
           key: avd-${{ env.cache-version }}
-      - name: Run gradle tests
+      - name: 'Run gradle tests'
         run: |
           cd ${{ github.workspace }}/gradle-tests/runner/app
           ../gradlew nexusOneApi30DebugAndroidTest -Dorg.gradle.workers.max=1 -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -Pandroid.experimental.testOptions.managedDevices.emulator.showKernelLogging=true --info
