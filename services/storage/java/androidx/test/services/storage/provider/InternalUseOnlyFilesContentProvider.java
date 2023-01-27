@@ -18,6 +18,7 @@ package androidx.test.services.storage.provider;
 import android.os.Environment;
 import android.util.Log;
 import androidx.test.services.storage.TestStorageConstants;
+import androidx.test.services.storage.file.HostedFile;
 import java.io.File;
 
 /** Hosts an SD Card directory for the test framework to read/write internal files to. */
@@ -28,14 +29,10 @@ public final class InternalUseOnlyFilesContentProvider extends AbstractFileConte
 
   public InternalUseOnlyFilesContentProvider() {
     super(
-        new File(
-            Environment.getExternalStorageDirectory(),
-            TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE),
+        new File(HostedFile.getRootDirectory(), TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE),
         AbstractFileContentProvider.Access.READ_WRITE);
     outputDirectory =
-        new File(
-            Environment.getExternalStorageDirectory(),
-            TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE);
+        new File(HostedFile.getRootDirectory(), TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE);
   }
 
   @Override

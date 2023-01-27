@@ -18,6 +18,7 @@ package androidx.test.services.storage.provider;
 import android.os.Environment;
 import android.util.Log;
 import androidx.test.services.storage.TestStorageConstants;
+import androidx.test.services.storage.file.HostedFile;
 import java.io.File;
 
 /** Provides access to files in the test data section. */
@@ -26,9 +27,7 @@ public final class TestDataContentProvider extends AbstractFileContentProvider {
 
   public TestDataContentProvider() {
     super(
-        new File(
-            Environment.getExternalStorageDirectory(),
-            TestStorageConstants.ON_DEVICE_TEST_RUNFILES),
+        new File(HostedFile.getRootDirectory(), TestStorageConstants.ON_DEVICE_TEST_RUNFILES),
         AbstractFileContentProvider.Access.READ_ONLY);
   }
 

@@ -16,9 +16,11 @@
 package androidx.test.services.storage.file;
 
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.OpenableColumns;
 import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.services.storage.TestStorageConstants;
+import java.io.File;
 
 /** Constants to access hosted file data and convenience methods for building Uris. */
 @ExperimentalTestApi
@@ -128,6 +130,10 @@ public final class HostedFile {
         .authority(host.getAuthority())
         .path(fileName)
         .build();
+  }
+
+  public static File getRootDirectory() {
+    return Environment.getExternalStorageDirectory();
   }
 
   private static <T> T checkNotNull(T reference) {

@@ -33,6 +33,7 @@ import androidx.test.services.storage.file.PropertyFile;
 import androidx.test.services.storage.file.PropertyFile.Authority;
 import androidx.test.services.storage.internal.TestStorageUtil;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -110,6 +111,22 @@ public final class TestStorage implements PlatformTestStorage {
   public static Uri getOutputFileUri(@NonNull String pathname) {
     checkNotNull(pathname);
     return HostedFile.buildUri(HostedFile.FileHost.OUTPUT, pathname);
+  }
+
+  /**
+   * Returns true if {@code pathname} corresponds to a file or directory that is in a directory
+   * where the storage service stores files.
+   *
+   * @param pathname path to a file or directory. Should not be null. This is an absolute path to a
+   *     file that may be a part of the storage service.
+   */
+  public static boolean isTestStorageFilePath(@NonNull String pathname) {
+    File onDevicePathRoot =
+        new File(HostedFile.getRootDirectory(), TestStorageConstants.ON_DEVICE_PATH_ROOT);
+    // Append a trailing slash because ON_DEVICE_PATH_ROOT has a trailing slash. If pathname already
+    // has a trailing slash or other suffix, this won't affect the startsWith() matching logic.
+    pathname = pathname + "/";
+    return pathname.startsWith(onDevicePathRoot.getAbsolutePath());
   }
 
   /**

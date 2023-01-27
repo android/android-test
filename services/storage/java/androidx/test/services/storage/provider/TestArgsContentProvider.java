@@ -22,11 +22,11 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
-import android.os.Environment;
 import android.util.Log;
 import androidx.test.services.storage.TestStorageConstants;
 import androidx.test.services.storage.TestStorageServiceProto.TestArgument;
 import androidx.test.services.storage.TestStorageServiceProto.TestArguments;
+import androidx.test.services.storage.file.HostedFile;
 import androidx.test.services.storage.file.PropertyFile;
 import androidx.test.services.storage.file.PropertyFile.Authority;
 import java.io.File;
@@ -171,7 +171,7 @@ public final class TestArgsContentProvider extends ContentProvider {
   private static TestArguments readProtoFromFile() {
     File testArgsFile =
         new File(
-            Environment.getExternalStorageDirectory(),
+            HostedFile.getRootDirectory(),
             TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE
                 + TestStorageConstants.TEST_ARGS_FILE_NAME);
     if (!testArgsFile.exists()) {
