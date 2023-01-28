@@ -19,6 +19,7 @@ package androidx.test.espresso.device
 
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.action.setBookMode as getSetBookModeDeviceAction
+import androidx.test.espresso.device.action.setClosedMode as getSetClosedModeDeviceAction
 import androidx.test.espresso.device.action.setDisplaySize as getSetDisplaySizeDeviceAction
 import androidx.test.espresso.device.action.setFlatMode as getSetFlatModeDeviceAction
 import androidx.test.espresso.device.action.setScreenOrientation as getSetScreenOrientationDeviceAction
@@ -70,6 +71,20 @@ fun DeviceInteraction.setBookMode(): DeviceInteraction {
  */
 fun DeviceInteraction.setFlatMode(): DeviceInteraction {
   perform(getSetFlatModeDeviceAction())
+  return this
+}
+
+/**
+ * Set device screen to be closed.
+ *
+ * This action is for foldable devices only. Currently only supported for tests run on Android
+ * Emulators.
+ *
+ * @throws UnsupportedDeviceOperationException if used on a real device.
+ * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
+ */
+fun DeviceInteraction.setClosedMode(): DeviceInteraction {
+  perform(getSetClosedModeDeviceAction())
   return this
 }
 

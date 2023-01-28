@@ -72,6 +72,19 @@ fun setFlatMode(): DeviceAction {
 }
 
 /**
+ * Set device screen to be closed.
+ *
+ * This action is for foldable devices only. Currently only supported for tests run on Android
+ * Emulators.
+ *
+ * @throws UnsupportedDeviceOperationException if used on a real device.
+ * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
+ */
+fun setClosedMode(): DeviceAction {
+  return ClosedModeAction(mainExecutor)
+}
+
+/**
  * Set device's screen orientation.
  *
  * @param orientation the orientation to set the device to (portait or landscape)

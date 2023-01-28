@@ -43,7 +43,8 @@ constructor(
     if (
       !(deviceMode == DeviceMode.FLAT.mode ||
         deviceMode == DeviceMode.TABLETOP.mode ||
-        deviceMode == DeviceMode.BOOK.mode)
+        deviceMode == DeviceMode.BOOK.mode ||
+        deviceMode == DeviceMode.CLOSED.mode)
     ) {
       throw UnsupportedDeviceOperationException(
         "The provided device mode is not supported on this device."
@@ -53,6 +54,8 @@ constructor(
     val postureValue: PostureValue =
       if (deviceMode == DeviceMode.FLAT.mode) {
         PostureValue.POSTURE_OPENED
+      } else if (deviceMode == DeviceMode.CLOSED.mode) {
+        PostureValue.POSTURE_CLOSED
       } else {
         PostureValue.POSTURE_HALF_OPENED
       }

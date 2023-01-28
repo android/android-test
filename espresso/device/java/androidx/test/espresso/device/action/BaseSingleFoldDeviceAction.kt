@@ -34,7 +34,7 @@ import java.util.concurrent.Executor
 /** Action to set the test device to the provided device mode. */
 internal open class BaseSingleFoldDeviceAction(
   private val deviceMode: DeviceMode,
-  private val foldingFeatureState: FoldingFeature.State,
+  private val foldingFeatureState: FoldingFeature.State?,
   private val mainExecutor: Executor
 ) : DeviceAction {
   protected var foldingFeatureOrientation: FoldingFeature.Orientation? = null
@@ -78,7 +78,14 @@ internal open class BaseSingleFoldDeviceAction(
   ) : Consumer<WindowLayoutInfo> {
     override fun accept(windowLayoutInfo: WindowLayoutInfo) {
       val foldingFeatures = windowLayoutInfo.displayFeatures.filterIsInstance<FoldingFeature>()
-      if (foldingFeatures.size != 1) {
+      if (deviceMode == DeviceMode.CLOSED && foldingFeatures.isEmpty()) {
+        // When a device is in closed mode, WindowLayoutInfo returns an empty list of folding
+        // features. If the device actually has no folding features and cannot be set to closed mode
+        // (ie a non-foldable emulator), deviceController.setDeviceMode(DeviceMode.CLOSED) will
+        // throw a DeviceControllerOperationException.
+        Log.d(TAG, "Device is in the closed state.")
+        latch.countDown()
+      } else if (foldingFeatures.size != 1) {
         // TODO(b/218872245) It is currently possible that some devices will emit an empty list
         // before emitting a list of FoldingFeatures. Throw a DeviceControllerOperationException
         // once this issue is fixed.
@@ -87,17 +94,17 @@ internal open class BaseSingleFoldDeviceAction(
           "This device mode is only supported on devices with a single folding feature. " +
             "${foldingFeatures.size} were found."
         )
-        return
-      }
-      val foldingFeature = foldingFeatures.single()
-      if (foldingFeatureState == foldingFeature.state) {
-        Log.d(
-          TAG,
-          "FoldingFeature is in $foldingFeatureState state. WindowLayoutInfo: $windowLayoutInfo."
-        )
-        foldingFeatureOrientation = foldingFeature.orientation
-        windowInfoTrackerCallbackAdapter.removeWindowLayoutInfoListener(this)
-        latch.countDown()
+      } else {
+        val foldingFeature = foldingFeatures.single()
+        if (foldingFeatureState == foldingFeature.state) {
+          Log.d(
+            TAG,
+            "FoldingFeature is in $foldingFeatureState state. WindowLayoutInfo: $windowLayoutInfo."
+          )
+          foldingFeatureOrientation = foldingFeature.orientation
+          windowInfoTrackerCallbackAdapter.removeWindowLayoutInfoListener(this)
+          latch.countDown()
+        }
       }
     }
   }

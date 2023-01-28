@@ -24,4 +24,6 @@ enum class DeviceMode(val mode: Int) {
   TABLETOP(1),
   // the device is folded with the hinge in a vertical position
   BOOK(2),
+  // the device screen is closed
+  CLOSED(3)
 }

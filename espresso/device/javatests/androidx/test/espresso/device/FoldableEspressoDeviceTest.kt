@@ -20,16 +20,17 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
 import androidx.test.espresso.device.action.setBookMode
+import androidx.test.espresso.device.action.setClosedMode
 import androidx.test.espresso.device.action.setFlatMode
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.foldable.app.FoldableActivity
 import androidx.test.foldable.app.R
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 
 @RunWith(JUnit4::class)
 class FoldableEspressoDeviceTest {
@@ -56,5 +57,12 @@ class FoldableEspressoDeviceTest {
     onDevice().setFlatMode()
 
     onView(withId(R.id.current_fold_mode)).check(matches(withText("flatmode")))
+  }
+
+  @Test
+  fun setClosedMode() {
+    onDevice().setClosedMode()
+
+    onView(withId(R.id.current_fold_mode)).check(matches(withText("no display features found")))
   }
 }
