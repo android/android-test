@@ -20,6 +20,7 @@ android_library(
     manifest = "AndroidManifest.xml",
     deps = [
         "//:androidx_annotation",
+        "//java/com/google/android/apps/common/testing/accessibility/framework/integrations/internal/passivescan",        
         "//core",
         "//runner/monitor",
         "@maven//:junit_junit",
