@@ -21,7 +21,7 @@ package androidx.test.espresso.web.action {
     method public void perform(androidx.test.espresso.UiController!, android.view.View!);
   }
 
-  public interface IAtomActionResultPropagator extends android.os.IInterface {
+  @javax.annotation.processing.Generated("//java/com/google/android/aidl") public interface IAtomActionResultPropagator extends android.os.IInterface {
     method public void setError(android.os.Bundle!) throws android.os.RemoteException;
     method public void setResult(androidx.test.espresso.web.model.Evaluation!) throws android.os.RemoteException;
   }
