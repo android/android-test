@@ -16,6 +16,7 @@
 
 package androidx.test.ext.junit.runners;
 
+import com.google.android.apps.common.testing.accessibility.framework.integrations.internal.passivescan.PassiveScanner;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -36,9 +37,9 @@ import org.junit.runners.model.InitializationError;
  *
  * <ul>
  *   <li>Supports running on Robolectric. This implementation will delegate to RobolectricTestRunner
- *       if test is running in Robolectric enviroment. A custom runner can be provided by specifying
- *       the full class name in a 'android.junit.runner' system property.
- *   <li>Supports a per-test timeout - specfied via a 'timeout_msec' {@link
+ *       if test is running in Robolectric environment. A custom runner can be provided by
+ *       specifying the full class name in a 'android.junit.runner' system property.
+ *   <li>Supports a per-test timeout - specified via a 'timeout_msec' {@link
  *       androidx.test.runner.AndroidJUnitRunner} argument.
  *   <li>Supports running tests on the application's UI Thread, for tests annotated with {@link
  *       androidx.test.annotation.UiThreadTest}.
@@ -51,6 +52,7 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
   private static final String TAG = "AndroidJUnit4";
 
   private final Runner delegate;
+  private final PassiveScanner passiveScanner = new PassiveScanner();
 
   public AndroidJUnit4(Class<?> klass) throws InitializationError {
     delegate = loadRunner(klass);
@@ -159,7 +161,14 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
 
   @Override
   public void run(RunNotifier runNotifier) {
+    passiveScanner.beforeJUnit4Test(delegate.getDescription().getTestClass().getName());
+
+    // Run the tests
     delegate.run(runNotifier);
+
+    passiveScanner.afterJUnit4Test(
+        delegate.getDescription().getTestClass().getSimpleName(),
+        delegate.getDescription().getMethodName());
   }
 
   @Override
