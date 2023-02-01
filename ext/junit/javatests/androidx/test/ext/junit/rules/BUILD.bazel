@@ -17,3 +17,14 @@ axt_android_local_test(
         "@maven//:junit_junit",
     ],
 )
+
+axt_android_local_test(
+    name = "DeleteFilesRuleTest",
+    srcs = ["DeleteFilesRuleTest.java"],
+    deps = [
+        "//core/java/androidx/test/core",
+        "//ext/junit",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+    ],
+)
