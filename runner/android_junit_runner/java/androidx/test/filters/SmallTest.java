@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * method or class level.
  *
  * <p>Test size qualifiers are a great way to structure test code and are used to assign a test to a
- * suite of test that have similar run times.
+ * suite of tests that have similar run times.
  *
  * <p>Execution time: &lt;200ms
  *
