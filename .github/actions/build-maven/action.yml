@@ -1,0 +1,44 @@
+name: 'Bazel build maven'
+description: 'Builds maven artifacts and creates the local snapshots.'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check out repository code
+      uses: actions/checkout@v3
+    - name: Install Java 11
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '11'
+    - name: 'Cache Bazel files'
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/bazel
+        key: ${{ runner.os }}-bazel-build-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-bazel-build-
+    - name: Build maven artifacts
+      run: bazelisk build //:axt_m2repository
+      shell: bash 
+    - name: install to local maven repo
+      run: |
+        mkdir -p ~/.m2
+        unzip bazel-bin/axt_m2repository.zip -d ~/.m2/ 
+        mv ~/.m2/m2repository ~/.m2/repository
+      shell: bash
+    - name: 'Upload local snapshot for tests'
+      uses: actions/upload-artifact@v3
+      with:
+        name: local-snapshot
+        path: ~/.m2/repository/androidx/test
+    - name: 'Clean bazel cache'
+      # Don't cache the bazel/external directory, since it can be  > 2GB
+      # and is expensive to restore and save
+      # According to the documentation, we should be able to exclude these via
+      # the actions/cache path, e.g. "!~/.cache/bazel/*/*/external/" but that
+      # doesn't seem to work.
+      run: |
+        rm -rf $(bazel info repository_cache)
+        rm -rf ~/.cache/bazel/*/*/external/
+      shell: bash

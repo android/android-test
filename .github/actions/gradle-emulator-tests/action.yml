@@ -1,0 +1,45 @@
+name: 'Gradle emulator tests'
+description: 'Runs gradle emulator tests'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check out repository code
+      uses: actions/checkout@v3
+    - name: Install Java 11
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '11'
+    - name: 'Cache Gradle files'
+      uses: gradle/gradle-build-action@v2
+    - name: 'Download local snapshot for tests'
+      uses: actions/download-artifact@v3
+      with:
+        name: local-snapshot
+        path: ~/download
+    - name: 'Install to local maven repo'
+        run: |
+          mkdir -p ~/.m2
+          unzip ~/download/axt_m2repository.zip -d ~/.m2/
+          mv ~/.m2/m2repository ~/.m2/repository
+        shell: bash  
+    - name: 'Setup Android SDK'
+      uses: android-actions/setup-android@v2
+    - name: 'Clear managed devices'
+        run: |
+          cd ${{ github.workspace }}/gradle-tests/runner/app
+          ../gradlew cleanManagedDevices --unused-only
+        shell: bash  
+    - name: 'Run gradle tests'
+      run: |
+        cd ${{ github.workspace }}/gradle-tests/runner/app
+        ../gradlew nexusOneApi30DebugAndroidTest -Dorg.gradle.workers.max=1 -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -Pandroid.experimental.testOptions.managedDevices.emulator.showKernelLogging=true --info
+      shell: bash
+    - name: 'Upload test reports'
+      if: success() || failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-reports
+        path: |
+          '**/*/build/reports/androidTests/'
