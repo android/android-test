@@ -1,21 +1,24 @@
-# Copyright (C) 2019 The Dagger Authors.
+# Copyright 2023 The Android Open Source Project. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 """Skylark rules to collect Maven artifacts information.
 """
 
 load("@io_bazel_rules_kotlin//kotlin/internal:defs.bzl", "KtJvmInfo")
 load("//build_extensions:axt_versions.bzl", "KOTLIN_VERSION")
+
+# logic here largely inspired from https://github.com/google/dagger/blob/master/tools/maven_info.bzl
 
 # provider for the built maven files to be published
 # TODO: is this necessary or can it be derived
@@ -82,9 +85,6 @@ def _collect_maven_info_impl(target, ctx):
             if artifact:
                 fail("%s: Each target must belong to one and only one maven artifact: Found multiple '%s' tags" % (target.label, _MAVEN_COORDINATES_PREFIX))
             artifact = tag[len(_MAVEN_COORDINATES_PREFIX):]
-
-    #    if not artifact and not is_shaded:
-    #        fail("%s: Each target must belong to one and only one maven artifact: Did not find maven info" % target.label)
 
     included_runtime_jars = target[JavaInfo].runtime_output_jars
     included_src_jars = target[JavaInfo].source_jars
