@@ -1,6 +1,8 @@
 # Description:
 #  Redefinition of repackaged guava classes that were mistakenly exposed in public EspressoOptional API
 
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_CORE_ARTIFACT")
+
 licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
@@ -10,9 +12,12 @@ android_library(
     srcs = glob([
         "*.java",
     ]),
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     deps = [
         "//:androidx_annotation",
         "//runner/monitor",
-        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

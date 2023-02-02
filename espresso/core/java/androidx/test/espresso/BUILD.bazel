@@ -1,6 +1,6 @@
-load("//build_extensions:release.bzl", "axt_release_lib")
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANNOTATION_VERSION", "CORE_VERSION", "ESPRESSO_VERSION", "HAMCREST_VERSION", "KOTLIN_VERSION", "RUNNER_VERSION")
+load("//build_extensions:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_CORE_ARTIFACT")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 load("//build_extensions:remove_from_jar.bzl", "remove_from_jar")
 
@@ -25,7 +25,6 @@ exports_files(["AndroidManifest.xml"])
 PUBLIC_FRAMEWORK_LAYER = [
     "ViewAction.java",
     "ViewAssertion.java",
-    "ViewFinder.java",
 ]
 
 BASE_LAYER_INTERFACES = [
@@ -58,6 +57,9 @@ android_library(
     name = "view-interaction",
     srcs = VIEW_INTERACTION,
     plugins = ["//opensource/dagger:dagger_plugin"],  # Add programmatically
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     visibility = [":espresso_pkg"],
     deps = [
         ":framework",
@@ -76,10 +78,11 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util/concurrent",
         "//opensource/dagger",
         "//runner/android_junit_runner/java/androidx/test:runner",
-        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:javax_inject_javax_inject",
         "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
 )
@@ -92,6 +95,9 @@ ESPRESSO_GRAPH = [
 android_library(
     name = "espresso-graph",
     srcs = ESPRESSO_GRAPH,
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     deps = [
         ":interface",
         ":view-interaction",
@@ -103,6 +109,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util/concurrent",
         "//opensource/dagger",
         "//runner/android_junit_runner",
+        "@maven//:javax_inject_javax_inject",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
@@ -113,6 +120,9 @@ android_library(
         ["*.java"],
         exclude = BASE_LAYER_INTERFACES + PUBLIC_FRAMEWORK_LAYER + ESPRESSO_GRAPH + VIEW_INTERACTION,
     ),
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     exports = [
         # Anything listed here is instantly available to targets that
         # depend on :espresso.
@@ -152,15 +162,18 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util/concurrent",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//runner/monitor",
-        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 
 android_library(
     name = "framework",
     srcs = PUBLIC_FRAMEWORK_LAYER,
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     deps = [
         ":interface",
         "//espresso/core/java/androidx/test/espresso/util",
@@ -172,92 +185,45 @@ android_library(
     name = "interface",
     srcs = BASE_LAYER_INTERFACES,
     manifest = "AndroidManifest.xml",
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     deps = [
         "//:androidx_annotation",
         "//annotation",
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//runner/monitor",
-        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@maven//:com_google_errorprone_error_prone_annotations",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 
-axt_release_lib(
-    name = "espresso_core_release",
+android_library(
+    name = "espresso_release_lib",
     custom_package = "androidx.test.espresso.core",
-    jarjar_rules = [
-        "release_jarjar_rules.txt",
+    manifest = "AndroidManifest.xml",
+    proguard_specs = [":proguard_library.cfg"],
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
     ],
-    # ensure to include kotlin_module since those define extension functions
-    keep_spec = "androidx/test/espresso|META-INF/.*espresso.*.kotlin_module",
-    overlapping_jars = [
-        "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_release_no_deps.jar",
-    ],
-    proguard_library = ":proguard_library.cfg",
-    proguard_specs = [
-        "//:proguard_binary.cfg",
-        "//espresso:proguard_binary.cfg",
-    ],
-    remove_spec = "androidx/test/espresso/core/R[$$\\.]",
-    deps = [
+    visibility = ["//visibility:private"],
+    exports = [
         ":espresso",
     ],
 )
 
-filegroup(
-    name = "espresso_src",
-    srcs = [
-        ":libespresso-src.jar",
-        ":libframework-src.jar",
-        ":libinterface-src.jar",
-        ":libview-interaction-src.jar",
-        "//espresso/core/java/androidx/test/espresso/action:libaction-src.jar",
-        "//espresso/core/java/androidx/test/espresso/action:libadapter_view_protocol-src.jar",
-        "//espresso/core/java/androidx/test/espresso/assertion:libassertion-src.jar",
-        "//espresso/core/java/androidx/test/espresso/base:espresso_base_src",
-        "//espresso/core/java/androidx/test/espresso/matcher:libmatcher-src.jar",
-        "//espresso/core/java/androidx/test/espresso/remote:espresso_remote_src",
-        "//espresso/core/java/androidx/test/espresso/util:libutil-src.jar",
-    ],
-)
-
-combine_jars(
-    name = "espresso_src_all_jars",
-    srcs = [
-        ":espresso_src",
-    ],
-)
-
-remove_from_jar(
-    name = "espresso_src_jars",
-    jar = ":espresso_src_all_jars.jar",
-    keep_spec = "androidx/test/espresso",
-    # Remove generated dagger classes from source jar
-    remove_spec = ".*_Provide.*|.*_Factory.*",
+axt_android_aar(
+    name = "espresso_core_release",
+    included_dep = ":espresso_release_lib",
+    jarjar_rule =
+        "release_jarjar_rules.txt",
 )
 
 maven_artifact(
     name = "espresso_core_maven_artifact",
-    src = ":espresso_core_release.aar",
-    artifact_deps = [
-        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
-        "androidx.test:core:%s" % CORE_VERSION,
-        "androidx.test:runner:%s" % RUNNER_VERSION,
-        "androidx.test.espresso:espresso-idling-resource:%s" % ESPRESSO_VERSION,
-        "com.squareup:javawriter:2.1.1",
-        "javax.inject:javax.inject:1",
-        "org.hamcrest:hamcrest-library:%s" % HAMCREST_VERSION,
-        "org.hamcrest:hamcrest-integration:%s" % HAMCREST_VERSION,
-        "com.google.code.findbugs:jsr305:2.0.2",
-        "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
-        "androidx.test:annotation:%s" % ANNOTATION_VERSION,
-    ],
-    artifact_id = "espresso-core",
-    group_id = "androidx.test.espresso",
     last_updated = "20170622000000",
-    src_jar = ":espresso_src_jars.jar",
-    version = "%s" % ESPRESSO_VERSION,
+    target = ":espresso_core_release",
 )

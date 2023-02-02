@@ -1,6 +1,6 @@
-load("//build_extensions:release.bzl", "axt_release_lib")
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANDROIDX_TRACING_VERSION", "ANNOTATION_VERSION", "JUNIT_VERSION", "MONITOR_VERSION", "RUNNER_VERSION", "SERVICES_VERSION")
+load("//build_extensions:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "RUNNER_ARTIFACT")
 
 # Description: Build rules for building androidx.test from source
 licenses(["notice"])
@@ -16,9 +16,14 @@ android_library(
     srcs = glob(
         ["**/*.java"],
     ),
+    custom_package = "androidx.test.runner",
     idl_srcs = glob(["**/*.aidl"]),
+    manifest = "AndroidManifest.xml",
     proguard_specs = [
         "proguard_library.cfg",
+    ],
+    tags = [
+        "maven_coordinates=%s" % RUNNER_ARTIFACT,
     ],
     visibility = ["//visibility:public"],
     exports = [
@@ -36,50 +41,14 @@ android_library(
     ],
 )
 
-# group of targets to use to produce release binary + docs
-android_library(
-    name = "runner_release_lib",
-    visibility = ["//visibility:public"],
-    exports = [
-        ":runner",
-    ],
-)
-
-# Generate rules for the release artifacts. This generates three targets
-# genrule output: runner_release_no_deps.jar and runner_release.aar
-# a java_library target librunner_release_no_deps
-axt_release_lib(
+# Generate rules for the release artifacts.
+axt_android_aar(
     name = "runner_release",
-    custom_package = "androidx.test.runner",
-    jarjar_rules = ["release_jarjar_rules.txt"],
-    keep_spec = "androidx/test",
-    overlapping_jars = [
-        "//annotation/java/androidx/test/annotation:annotation_release_no_deps.jar",
-        "//runner/monitor/java/androidx/test:monitor_release_no_deps.jar",
-        "//services/storage/java/androidx/test/services/storage:test_storage_release_no_deps.jar",
-    ],
-    proguard_library = ":proguard_library.cfg",
-    # remove the generated R class
-    remove_spec = "androidx/test/runner/R[$$\\.]",
-    deps = [
-        ":runner_release_lib",
-    ],
+    included_dep = ":runner",
 )
 
 maven_artifact(
     name = "runner_maven_artifact",
-    src = ":runner_release.aar",
-    artifact_deps = [
-        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
-        "androidx.test:annotation:%s" % ANNOTATION_VERSION,
-        "androidx.test:monitor:[%s]" % MONITOR_VERSION,
-        "androidx.test.services:storage:[%s]" % SERVICES_VERSION,
-        "androidx.tracing:tracing:%s" % ANDROIDX_TRACING_VERSION,
-        "junit:junit:%s" % JUNIT_VERSION,
-    ],
-    artifact_id = "runner",
-    group_id = "androidx.test",
     last_updated = "20170622000000",
-    src_jar = ":librunner-src.jar",
-    version = "%s" % RUNNER_VERSION,
+    target = ":runner_release",
 )

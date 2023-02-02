@@ -16,7 +16,7 @@
 
 /** @hide */
 @RestrictTo(Scope.LIBRARY)
-package androidx.test.espresso.web.internal.bridge;
+package androidx.test.espresso.web.bridge;
 
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;

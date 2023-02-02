@@ -1,10 +1,18 @@
 # Publicly visible truth extensions for Android
 
+load(
+    "//build_extensions:axt_versions.bzl",
+    "CORE_ARTIFACT",
+)
+
 licenses(["notice"])
 
 android_library(
     name = "core",
     testonly = 1,
+    tags = [
+        "maven_coordinates=%s" % CORE_ARTIFACT,
+    ],
     visibility = ["//visibility:public"],
     exports = ["//core/java/androidx/test/core"],
 )

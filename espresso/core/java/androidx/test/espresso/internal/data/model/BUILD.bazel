@@ -1,5 +1,6 @@
 # This package loads and stores test output artifact metadata for easier debugging of Espresso tests
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_CORE_ARTIFACT")
 
 licenses(["notice"])
 
@@ -14,6 +15,9 @@ kt_android_library(
         "TestFlow.kt",
         "ViewData.kt",
     ],
+                tags = [
+                    "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+                ],
     deps = [
         "//espresso/core/java/androidx/test/espresso:framework",
     ],

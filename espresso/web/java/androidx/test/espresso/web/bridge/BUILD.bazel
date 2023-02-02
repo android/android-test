@@ -1,5 +1,7 @@
 # Description:
 #   JavaScript to Java bridging
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_WEB_ARTIFACT")
+
 package_group(
     name = "internal",
     packages = [
@@ -14,6 +16,9 @@ android_library(
     ),
     exports_manifest = 1,
     manifest = "AndroidManifest.xml",
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_WEB_ARTIFACT,
+    ],
     visibility = [":internal"],
     deps = [
         "//runner/android_junit_runner",

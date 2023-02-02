@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.espresso.web.internal.bridge;
+package androidx.test.espresso.web.bridge;
 
 /**
  * A checked {@link Exception} indicating that JavaScriptBridge installation failed.

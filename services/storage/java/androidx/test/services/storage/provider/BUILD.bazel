@@ -17,6 +17,6 @@ android_library(
         "//services/storage/java/androidx/test/services/storage:storage_service_pb_java_proto_lite",
         "//services/storage/java/androidx/test/services/storage:test_storage_constants",
         "//services/storage/java/androidx/test/services/storage/file",
-        "@com_google_protobuf//:protobuf_javalite",
+        "//:protobuf_javalite",
     ],
 )

@@ -1,9 +1,9 @@
 # androidx.test.core Kotlin extensions
 
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_LIFECYCLE_VERSION", "CORE_VERSION", "KOTLIN_VERSION")
-load("//build_extensions:release.bzl", "axt_release_lib")
+load("//build_extensions:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "CORE_KTX_ARTIFACT")
+load("//build_extensions:axt_android_aar.bzl", "axt_android_aar")
 
 package(
     default_visibility = [
@@ -19,51 +19,43 @@ kt_android_library(
     srcs = glob(
         ["**/*.kt"],
     ),
+    custom_package = "androidx.test.core.ktx",
+    manifest = "AndroidManifest.xml",
+    tags = [
+        "maven_coordinates=%s" % CORE_KTX_ARTIFACT,
+    ],
     deps = [
         "//:androidx_lifecycle_common",
         "//core",
     ],
 )
 
-# Group of targets to use to produce release binary
+# Generate rules for the release artifacts.
+
+# kt_android)library doesn't produce an aar, so wrap inside a android_library
 android_library(
-    name = "core_release_lib",
+    name = "release_lib",
     testonly = 1,
+    custom_package = "androidx.test.core.ktx",
+    manifest = "AndroidManifest.xml",
+    tags = [
+        "maven_coordinates=%s" % CORE_KTX_ARTIFACT,
+    ],
+    visibility = ["//visibility:private"],
     exports = [
         ":core",
     ],
 )
 
-# Generate rules for the release artifacts. This generates three targets
-# genrule output: core_release_no_deps.jar and core_release.aar
-# a java_library target libcore_release_no_deps
-axt_release_lib(
+axt_android_aar(
     name = "core_release",
-    custom_package = "androidx.test.core.ktx",
-    keep_spec = "androidx/test/core|META-INF/ktx_core_java_androidx_test_core-core_kt.kotlin_module",
-    overlapping_jars = [
-        "//core/java/androidx/test/core:core_release_no_deps.jar",
-    ],
-    remove_spec = "androidx/test/core/ktx/R[$$\\.]|androidx/test/core/R[$$\\.]",
-    resource_files = glob(
-        ["res/**/*"],
-    ),
-    deps = [
-        ":core_release_lib",
-    ],
+    testonly = 1,
+    included_dep = ":release_lib",
 )
 
 maven_artifact(
     name = "core_maven_artifact",
-    src = ":core_release.aar",
-    artifact_deps = [
-        "androidx.test:core:%s" % CORE_VERSION,
-        "androidx.lifecycle:lifecycle-common:%s" % ANDROIDX_LIFECYCLE_VERSION,
-        "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
-    ],
-    artifact_id = "core-ktx",
-    group_id = "androidx.test",
+    testonly = 1,
     last_updated = "20181029000000",
-    src_jar = ":libcore-src.jar",
-    version = "%s" % CORE_VERSION,
+    target = ":core_release",
 )

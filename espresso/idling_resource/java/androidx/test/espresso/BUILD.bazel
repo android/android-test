@@ -2,9 +2,9 @@
 #   Light weight module represents a resources of an application under test which can cause
 #   asynchronous background work to happen during test execution.
 
-load("//build_extensions:release.bzl", "axt_release_lib")
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION")
+load("//build_extensions:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_IDLING_ARTIFACT")
 load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 package(
@@ -22,6 +22,11 @@ IDLING_INTERFACE = [
 android_library(
     name = "idling_resource_internal",
     srcs = IDLING_INTERFACE,
+    custom_package = "androidx.test.espresso.idling.resource",
+    manifest = "AndroidManifest.xml",
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_IDLING_ARTIFACT,
+    ],
     visibility = [
         "//visibility:public",
     ],
@@ -47,39 +52,15 @@ alias(
     actual = "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:thread_pool_idling_resource",
 )
 
-# rule for outputting externally released binary. Produces
-# espresso_idling_resource_release_no_deps.jar and espresso_idling_resource_release.aar
-axt_release_lib(
+# rule for outputting externally released binary.
+axt_android_aar(
     name = "espresso_idling_resource_release",
-    custom_package = "androidx.test.espresso.idling.resource",
-    keep_spec = "androidx/test/espresso",
-    remove_spec = "androidx/test/espresso/idling/resource/R[$$\\.]",
-    deps = [
-        ":idling_resource",
-    ],
-)
-
-filegroup(
-    name = "idling_resource_src",
-    srcs = [
-        #     ":libcounting_idling_resource-src.jar",
-        ":libidling_resource_internal-src.jar",
-    ],
-)
-
-combine_jars(
-    name = "idling_resource_src_jars",
-    srcs = [
-        ":idling_resource_src",
-    ],
+    included_dep =
+        ":idling_resource_internal",
 )
 
 maven_artifact(
     name = "espresso_idling_resource_maven_artifact",
-    src = ":espresso_idling_resource_release.aar",
-    artifact_id = "espresso-idling-resource",
-    group_id = "androidx.test.espresso",
     last_updated = "20170622000000",
-    src_jar = ":idling_resource_src_jars.jar",
-    version = "%s" % ESPRESSO_VERSION,
+    target = ":espresso_idling_resource_release",
 )

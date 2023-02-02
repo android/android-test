@@ -39,7 +39,7 @@ axt_android_local_test(
     deps = [
         "//ext/junit",
         "//runner/android_junit_runner",
-        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
     ],

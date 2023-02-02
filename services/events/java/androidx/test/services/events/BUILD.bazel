@@ -1,3 +1,6 @@
+load("//build_extensions:axt_versions.bzl", "RUNNER_ARTIFACT")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
+
 licenses(["notice"])
 
 android_library(
@@ -12,6 +15,9 @@ android_library(
         "discovery/ITestDiscoveryEvent.aidl",
         "run/ITestRunEvent.aidl",
         "platform/ITestPlatformEvent.aidl",
+    ],
+    tags = [
+        "maven_coordinates=%s" % RUNNER_ARTIFACT,
     ],
     visibility = ["//visibility:public"],
     deps = [

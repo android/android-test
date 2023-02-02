@@ -26,6 +26,8 @@ import android.view.View;
 import android.webkit.WebView;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.web.bridge.Conduit;
+import androidx.test.espresso.web.bridge.JavaScriptBridge;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.ui.app.SimpleWebViewActivity;

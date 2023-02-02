@@ -2,6 +2,7 @@
 # JUnit4 Rules for Intents
 
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_INTENTS_ARTIFACT")
 
 licenses(["notice"])
 
@@ -16,6 +17,9 @@ kt_android_library(
             "*.kt",
         ],
     ),
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_INTENTS_ARTIFACT,
+    ],
     deps = [
         "//espresso/intents/java/androidx/test/espresso/intent:intents",
         "//runner/rules",

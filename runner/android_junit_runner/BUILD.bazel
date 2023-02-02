@@ -1,10 +1,14 @@
 # Publicly visible alias to the runner target
+load("//build_extensions:axt_versions.bzl", "RUNNER_ARTIFACT")
 
 licenses(["notice"])
 
 # This needs to be a android_library so manifests are exported
 android_library(
     name = "android_junit_runner",
+    tags = [
+        "maven_coordinates=%s" % RUNNER_ARTIFACT,
+    ],
     visibility = ["//visibility:public"],
     exports = ["//runner/android_junit_runner/java/androidx/test:runner"],
 )

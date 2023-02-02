@@ -64,9 +64,9 @@ load(
     "GOOGLE_MATERIAL_VERSION",
     "GUAVA_LISTENABLEFUTURE_VERSION",
     "GUAVA_VERSION",
+    "JUNIT_VERSION",
     "RUNNER_VERSION",
     "UIAUTOMATOR_VERSION",
-    "JUNIT_VERSION"
 )
 
 maven_install(
@@ -142,6 +142,7 @@ maven_install(
         "org.mockito:mockito-core:2.28.1",
         "org.objenesis:objenesis:2.6",
         "org.pantsbuild:jarjar:1.7.2",
+        "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
         maven.artifact(
             artifact = "robolectric",
             exclusions = [

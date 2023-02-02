@@ -29,7 +29,7 @@ py_binary(
 
 # Used to generate a maven artifact.
 sh_binary(
-    name = "maven_artifact",
+    name = "maven_artifact_sh",
     srcs = ["maven_artifact.sh"],
 )
 
@@ -45,4 +45,16 @@ exports_files([
 bzl_library(
     name = "remove_from_jar_lib",
     srcs = ["remove_from_jar.bzl"],
+)
+
+java_binary(
+    name = "jarjar_bin",
+    main_class = "org.pantsbuild.jarjar.Main",
+    runtime_deps = ["@maven//:org_pantsbuild_jarjar"],
+)
+
+sh_binary(
+    name = "combine_jars_sh",
+    srcs = ["combine_jars.sh"],
+    visibility = ["//visibility:public"],
 )

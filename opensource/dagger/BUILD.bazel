@@ -5,9 +5,13 @@ package(default_visibility = ["//visibility:public"])
 java_library(
     name = "dagger",
     exported_plugins = [":dagger_plugin"],
+    tags = [
+        # cannot have external dependency on dagger, this must be a shaded aka included in
+        # resulting aar with jarjar rules to rename the classes
+        "maven:shaded",
+    ],
     exports = [
         "@maven//:com_google_dagger_dagger",
-        "@maven//:javax_inject_javax_inject",
     ],
 )
 

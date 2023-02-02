@@ -1,9 +1,13 @@
 # Publicly visible alias to the monitor target
+load("//build_extensions:axt_versions.bzl", "MONITOR_ARTIFACT")
 
 licenses(["notice"])
 
 android_library(
     name = "monitor",
+    tags = [
+        "maven_coordinates=%s" % MONITOR_ARTIFACT,
+    ],
     visibility = ["//visibility:public"],
     exports = ["//runner/monitor/java/androidx/test:monitor"],
 )

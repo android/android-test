@@ -1,5 +1,6 @@
 # Encoder/Decoders for WebView / JSON.
 # Atom interface for wrapping javascripts.
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_WEB_ARTIFACT")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -13,13 +14,15 @@ android_library(
     custom_package = "androidx.test.espresso.web.model",
     idl_import_root = "idls",
     idl_parcelables = glob(["idls/**"]),
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_WEB_ARTIFACT,
+    ],
     deps = [
         "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//runner/monitor",
-        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
-        "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

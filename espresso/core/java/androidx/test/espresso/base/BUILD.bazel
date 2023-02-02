@@ -1,6 +1,8 @@
 # Description:
 #  Base package for espresso.
 
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_CORE_ARTIFACT")
+
 licenses(["notice"])
 
 package(default_visibility = ["//espresso/core/java/androidx/test/espresso:espresso_pkg"])
@@ -15,13 +17,18 @@ android_library(
             "EspressoExceptionHandler.java",
             "PerformExceptionHandler.java",
             "ThrowableHandler.java",
+            "IdleNotifier.java",
             "IdlingUiController.java",
             "IdlingResourceRegistry.java",
+            "Interrogator.java",
             "LooperIdlingResourceInterrogationHandler.java",
             "ViewHierarchyExceptionHandler.java",
         ],
     ),
     plugins = ["//opensource/dagger:dagger_plugin"],
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     deps = [
         ":default_failure_handler",
         ":idling_resource_registry",
@@ -33,19 +40,22 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/core/java/androidx/test/espresso/util/concurrent",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource",
+        "//opensource/dagger",
         "//runner/android_junit_runner",
-        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
-        "@maven//:com_google_dagger_dagger",
-        "@maven//:com_google_guava_listenablefuture",
         "@maven//:javax_inject_javax_inject",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+        "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
 )
 
 android_library(
     name = "active_root_lister",
     srcs = ["ActiveRootLister.java"],
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     deps = [
         "//espresso/core/java/androidx/test/espresso:interface",
     ],
@@ -59,22 +69,28 @@ android_library(
         "Interrogator.java",
         "LooperIdlingResourceInterrogationHandler.java",
     ],
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     deps = [
         "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource",
+        "//opensource/dagger",
         "//runner/monitor",
-        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
-        "@maven//:com_google_dagger_dagger",
         "@maven//:javax_annotation_javax_annotation_api",
         "@maven//:javax_inject_javax_inject",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 
 android_library(
     name = "idling_uicontroller_interface",
     srcs = ["IdlingUiController.java"],
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     deps = [
         ":idling_resource_registry",
         "//espresso/core/java/androidx/test/espresso:interface",
@@ -91,6 +107,9 @@ android_library(
         "ThrowableHandler.java",
         "ViewHierarchyExceptionHandler.java",
     ],
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//:androidx_annotation",
@@ -98,22 +117,11 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/internal/inject",
         "//espresso/core/java/androidx/test/espresso/util",
+        "//opensource/dagger",
         "//runner/monitor",
-        "@maven//:com_google_dagger_dagger",
         "@maven//:javax_annotation_javax_annotation_api",
         "@maven//:javax_inject_javax_inject",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_all",
-    ],
-)
-
-filegroup(
-    name = "espresso_base_src",
-    srcs = [
-        ":libactive_root_lister-src.jar",
-        ":libbase-src.jar",
-        ":libdefault_failure_handler-src.jar",
-        ":libidling_resource_registry-src.jar",
-        ":libidling_uicontroller_interface-src.jar",
     ],
 )

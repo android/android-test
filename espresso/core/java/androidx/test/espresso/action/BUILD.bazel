@@ -1,4 +1,5 @@
 # View Actions for espresso.
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_CORE_ARTIFACT")
 
 licenses(["notice"])
 
@@ -12,13 +13,15 @@ ADAPTER_VIEW_PROTOCOL = [
 android_library(
     name = "adapter_view_protocol",
     srcs = ADAPTER_VIEW_PROTOCOL,
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     deps = [
         "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/core/java/androidx/test/espresso/util",
         "//runner/monitor",
-        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
-        "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 
@@ -28,6 +31,9 @@ android_library(
         ["*.java"],
         exclude = ADAPTER_VIEW_PROTOCOL,
     ),
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     deps = [
         ":adapter_view_protocol",
         "//:androidx_annotation",
@@ -39,10 +45,9 @@ android_library(
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//runner/android_junit_runner",
         "//runner/monitor",
-        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
-        "@com_google_protobuf//:protobuf_javalite",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_errorprone_error_prone_annotations",
         "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

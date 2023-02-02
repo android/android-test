@@ -1,3 +1,5 @@
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_WEB_ARTIFACT")
+
 package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
@@ -7,12 +9,15 @@ android_library(
     srcs = glob(
         ["*.java"],
     ),
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_WEB_ARTIFACT,
+    ],
     deps = [
         "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
-        "//espresso/web/java/androidx/test/espresso/web/internal/bridge",
+        "//espresso/web/java/androidx/test/espresso/web/bridge",
         "//runner/monitor",
         "@maven//:org_hamcrest_hamcrest_all",
     ],

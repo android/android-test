@@ -1,5 +1,6 @@
 # Description:
 #  Matchers for Intents and Intent-related objects
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_INTENTS_ARTIFACT")
 
 licenses(["notice"])
 
@@ -9,6 +10,9 @@ android_library(
     name = "matcher",
     testonly = 1,
     srcs = glob(["*.java"]),
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_INTENTS_ARTIFACT,
+    ],
     deps = [
         "//:androidx_annotation",
         "//core",

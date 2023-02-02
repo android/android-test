@@ -1,6 +1,5 @@
 # Remote package for espresso.
-
-load("//build_extensions:combine_jars.bzl", "combine_jars")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_CORE_ARTIFACT")
 
 licenses(["notice"])
 
@@ -26,6 +25,9 @@ REMOTE_REGISTRY = [
 android_library(
     name = "registry",
     srcs = REMOTE_REGISTRY,
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     visibility = ["//visibility:public"],
     deps = [
         ":exceptions",
@@ -33,13 +35,15 @@ android_library(
         "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
-        "@com_google_protobuf//:protobuf_javalite",
     ],
 )
 
 android_library(
     name = "interface",
     srcs = REMOTE_INTERFACES,
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     visibility = ["//visibility:public"],
     deps = [
         ":exceptions",
@@ -48,7 +52,6 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
-        "@com_google_protobuf//:protobuf_javalite",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
@@ -61,12 +64,14 @@ REFLECTION_UTILS = [
 android_library(
     name = "reflectionUtils",
     srcs = REFLECTION_UTILS,
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     visibility = ["//visibility:public"],
     deps = [
         ":exceptions",
         "//:androidx_annotation",
         "//runner/android_junit_runner/java/androidx/test:runner",
-        "@com_google_protobuf//:protobuf_javalite",
     ],
 )
 
@@ -75,8 +80,12 @@ android_library(
     custom_package = "androidx.test.espresso.remote",
     idl_import_root = "idls",
     idl_srcs = glob(["idls/**"]),
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     visibility = ["//visibility:public"],
-    deps = ["@com_google_protobuf//:protobuf_javalite"],
+    deps = [
+    ],
 )
 
 REMOTE_EXCEPTIONS = [
@@ -88,10 +97,12 @@ REMOTE_EXCEPTIONS = [
 android_library(
     name = "exceptions",
     srcs = REMOTE_EXCEPTIONS,
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//espresso/core/java/androidx/test/espresso:interface",
-        "@com_google_protobuf//:protobuf_javalite",
     ],
 )
 
@@ -102,22 +113,9 @@ BINDABLE = [
 android_library(
     name = "bindable",
     srcs = BINDABLE,
-    deps = ["@com_google_protobuf//:protobuf_javalite"],
-)
-
-filegroup(
-    name = "espresso_remote_src",
-    srcs = [
-        ":libbindable-src.jar",
-        ":libexceptions-src.jar",
-        ":libinterface-src.jar",
-        ":libreflectionUtils-src.jar",
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
     ],
-)
-
-combine_jars(
-    name = "espresso_remote_src_jars",
-    srcs = [
-        ":espresso_remote_src",
+    deps = [
     ],
 )

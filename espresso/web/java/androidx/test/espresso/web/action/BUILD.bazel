@@ -1,4 +1,5 @@
 # Espresso Web Actions
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_WEB_ARTIFACT")
 
 licenses(["notice"])
 
@@ -12,6 +13,9 @@ android_library(
     custom_package = "androidx.test.espresso.web.action",
     idl_import_root = "idls",
     idl_srcs = glob(["idls/**"]),
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_WEB_ARTIFACT,
+    ],
     deps = [
         "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso:framework",
@@ -22,15 +26,14 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/core/java/androidx/test/espresso/util/concurrent",
-        "//espresso/web/java/androidx/test/espresso/web/internal/bridge",
+        "//espresso/web/java/androidx/test/espresso/web/bridge",
         "//espresso/web/java/androidx/test/espresso/web/model",
         "//espresso/web/java/androidx/test/espresso/web/util/concurrent",
         "//runner/monitor",
-        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
-        "@com_google_protobuf//:protobuf_javalite",
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
 )

@@ -1,6 +1,6 @@
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:release.bzl", "axt_release_lib")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANNOTATION_VERSION", "MONITOR_VERSION", "SERVICES_VERSION")
+load("//build_extensions:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions:axt_versions.bzl", "SERVICES_STORAGE_ARTIFACT")
 
 package(
     default_visibility = [
@@ -20,6 +20,9 @@ android_library(
         "internal/package-info.java",
     ],
     manifest = "AndroidManifest.xml",
+    tags = [
+        "maven_coordinates=%s" % SERVICES_STORAGE_ARTIFACT,
+    ],
     deps = [
         "//:androidx_annotation",
         "//annotation",
@@ -33,6 +36,9 @@ android_library(
 java_library(
     name = "test_storage_constants",
     srcs = ["TestStorageConstants.java"],
+    tags = [
+        "maven_coordinates=%s" % SERVICES_STORAGE_ARTIFACT,
+    ],
     deps = [
         "//annotation",
     ],
@@ -54,27 +60,13 @@ java_proto_library(
 )
 
 # Generate release artifacts for the test storage.
-axt_release_lib(
+axt_android_aar(
     name = "test_storage_release",
-    keep_spec = "androidx/test/services/storage",
-    # remove the generated R class
-    remove_spec = "androidx/test/services/storage/R[$$\\.]",
-    deps = [
-        ":storage",
-    ],
+    included_dep = ":storage",
 )
 
 maven_artifact(
     name = "test_storage_maven_artifact",
-    src = ":test_storage_release.aar",
-    artifact_deps = [
-        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
-        "androidx.test:monitor:[%s]" % MONITOR_VERSION,
-        "androidx.test:annotation:%s" % ANNOTATION_VERSION,
-    ],
-    artifact_id = "storage",
-    group_id = "androidx.test.services",
     last_updated = "2020020700000",
-    src_jar = ":libstorage-src.jar",
-    version = "%s" % SERVICES_VERSION,
+    target = ":test_storage_release",
 )

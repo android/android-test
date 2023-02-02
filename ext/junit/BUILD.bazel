@@ -1,10 +1,14 @@
 # Publicly visible junit extensions for Android
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_JUNIT_ARTIFACT")
 
 licenses(["notice"])
 
 android_library(
     name = "junit",
     testonly = 1,
+    tags = [
+        "maven_coordinates=%s" % ANDROIDX_JUNIT_ARTIFACT,
+    ],
     visibility = ["//visibility:public"],
     exports = ["//ext/junit/java/androidx/test/ext/junit"],
 )

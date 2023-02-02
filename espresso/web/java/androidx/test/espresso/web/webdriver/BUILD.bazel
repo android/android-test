@@ -1,5 +1,8 @@
 # Description:
 #   Exposes webdriver automation js fragments as atoms.
+
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_WEB_ARTIFACT")
+
 licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
@@ -9,12 +12,15 @@ android_library(
     srcs = glob(
         ["*java"],
     ),
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_WEB_ARTIFACT,
+    ],
     deps = [
         "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/web/java/androidx/test/espresso/web/model",
         "//runner/monitor",
-        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

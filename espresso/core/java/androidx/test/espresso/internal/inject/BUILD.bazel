@@ -1,13 +1,17 @@
 # Description:
 #   Exposes test infrastructure as a dagger module.
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_CORE_ARTIFACT")
 
 package(default_visibility = ["//visibility:public"])
 
 android_library(
     name = "inject",
     srcs = glob(["*java"]),
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+    ],
     deps = [
         "//:androidx_annotation",
-        "@jsr330",
+        "@maven//:javax_inject_javax_inject",
     ],
 )

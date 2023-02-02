@@ -20,6 +20,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
 import androidx.concurrent.futures.ResolvableFuture;
+import androidx.test.espresso.web.bridge.Conduit;
+import androidx.test.espresso.web.bridge.JavaScriptBoundBridge;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import java.util.concurrent.ExecutionException;
 import org.junit.Before;

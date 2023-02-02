@@ -1,9 +1,9 @@
 # Description:
 #   Top level apk for services required for full orchestrated testing.
 
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "SERVICES_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
+load("//build_extensions:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "SERVICES_APK_ARTIFACT")
+load("//build_extensions:axt_maven_apk.bzl", "axt_maven_apk")
 
 licenses(["notice"])
 
@@ -21,37 +21,29 @@ android_binary(
     custom_package = "androidx.test.services",
     licenses = ["permissive"],
     manifest = "AndroidManifest.xml",
+    multidex = "legacy",
     proguard_specs = [
         "//:proguard_binary.cfg",
         "proguard_library.cfg",
     ],
-    multidex = "legacy",
     visibility = ["//visibility:public"],
     deps = [
+        "//:androidx_multidex",
         "//services/shellexecutor:exec_server",
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
         "//services/speakeasy/java/androidx/test/services/speakeasy/server",
         "//services/storage/java/androidx/test/services/storage/provider:storage_content_providers",
-        "//:androidx_multidex",
     ],
 )
 
-combine_jars(
-    name = "test_services_jars",
-    srcs = [
-        "//services/shellexecutor:shellexecuter_src",
-        "//services/speakeasy/java/androidx/test/services/speakeasy:libprotocol-src.jar",
-        "//services/speakeasy/java/androidx/test/services/speakeasy/server:libspeak_easy_service-src.jar",
-        "//services/storage/java/androidx/test/services/storage/provider:libstorage_content_providers-src.jar",
-    ],
+axt_maven_apk(
+    name = "test_services_release_apk",
+    artifact = SERVICES_APK_ARTIFACT,
+    included_dep = ":test_services",
 )
 
 maven_artifact(
     name = "test_services_maven_artifact",
-    src = ":test_services.apk",
-    artifact_id = "test-services",
-    group_id = "androidx.test.services",
     last_updated = "20191210000000",
-    src_jar = ":test_services_jars.jar",
-    version = "%s" % SERVICES_VERSION,
+    target = ":test_services_release_apk",
 )

@@ -1,4 +1,5 @@
 # Espresso Web Assertion
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_REMOTE_ARTIFACT")
 
 licenses(["notice"])
 
@@ -19,8 +20,12 @@ android_library(
     srcs = glob(
         REMOTE_WEB_ASSERTIONS,
     ),
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_REMOTE_ARTIFACT,
+    ],
     deps = [
         "//:androidx_annotation",
+        "//:protobuf_javalite",
         "//espresso/core/java/androidx/test/espresso/remote:exceptions",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
@@ -29,7 +34,6 @@ android_library(
         "//espresso/remote/java/androidx/test/espresso/web/proto/assertion:web_assertions_proto_android_pb3",
         "//espresso/web/java/androidx/test/espresso/web/assertion",
         "//runner/android_junit_runner/java/androidx/test:runner",
-        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
-        "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

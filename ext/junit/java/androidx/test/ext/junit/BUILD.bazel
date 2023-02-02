@@ -1,7 +1,7 @@
 # Description: Build rules for building androidx.test.truth from source
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANDROIDX_JUNIT_VERSION", "CORE_VERSION", "JUNIT_VERSION", "MONITOR_VERSION")
-load("//build_extensions:release.bzl", "axt_release_lib")
+load("//build_extensions:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions:axt_versions.bzl", "ANDROIDX_JUNIT_ARTIFACT")
+load("//build_extensions:axt_android_aar.bzl", "axt_android_aar")
 
 licenses(["notice"])
 
@@ -18,6 +18,10 @@ android_library(
         ["**/*.java"],
     ),
     manifest = "AndroidManifest.xml",
+    tags = [
+        "alt_dep=//ext/junit",
+        "maven_coordinates=%s" % ANDROIDX_JUNIT_ARTIFACT,
+    ],
     deps = [
         "//:androidx_annotation",
         "//core",
@@ -26,39 +30,17 @@ android_library(
     ],
 )
 
-# group of targets to use to produce release binary + docs
-android_library(
-    name = "junit_release_lib",
-    testonly = 1,
-    exports = [
-        ":junit",
-    ],
-)
-
-# Generate rules for the release artifacts. This generates three targets
-# genrule output: junit_release_no_deps.jar and junit_release.aar
-# a java_library target libjunit_release_no_deps
-axt_release_lib(
+# Generate rules for the release artifacts.
+axt_android_aar(
     name = "junit_release",
-    keep_spec = "androidx/test/ext/junit",
-    remove_spec = "androidx/test/ext/junit/R[$$\\.]",
-    deps = [
-        ":junit_release_lib",
-    ],
+    testonly = 1,
+    included_dep =
+        ":junit",
 )
 
 maven_artifact(
     name = "junit_maven_artifact",
-    src = ":junit_release.aar",
-    artifact_deps = [
-        "junit:junit:%s" % JUNIT_VERSION,
-        "androidx.test:core:%s" % CORE_VERSION,
-        "androidx.test:monitor:%s" % MONITOR_VERSION,
-        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
-    ],
-    artifact_id = "junit",
-    group_id = "androidx.test.ext",
+    testonly = 1,
     last_updated = "20180723000000",
-    src_jar = ":libjunit-src.jar",
-    version = "%s" % ANDROIDX_JUNIT_VERSION,
+    target = ":junit_release",
 )

@@ -1,17 +1,15 @@
 # # This package contains bitmap capturing extensions for espresso
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_CORE_ARTIFACT")
 
 package(default_visibility = ["//visibility:public"])
 
 kt_android_library(
     name = "screenshot",
     srcs = glob(["*.kt"]),
-    # generate the kotlin_module file that defines extensions in the right place
-    # kotlinopts not supported in bazel
-    #kotlincopts = [
-    #    "-module-name",
-    #    "androidx.test.espresso.screenshot",
-    #],
+                tags = [
+                    "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
+                ],
     deps = [
         "//:androidx_annotation",
         "//annotation",

@@ -1,5 +1,6 @@
 # Description:
 #  Utility concurrent classes
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_WEB_ARTIFACT")
 
 licenses(["notice"])
 
@@ -10,11 +11,14 @@ android_library(
     srcs = glob([
         "*.java",
     ]),
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_WEB_ARTIFACT,
+    ],
     deps = [
         "//:androidx_annotation",
         "//runner/monitor",
-        "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@maven//:androidx_concurrent_concurrent_futures",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
 )

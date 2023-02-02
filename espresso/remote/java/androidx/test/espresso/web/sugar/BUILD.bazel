@@ -1,3 +1,5 @@
+load("//build_extensions:axt_versions.bzl", "ESPRESSO_REMOTE_ARTIFACT")
+
 licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
@@ -11,6 +13,9 @@ android_library(
     srcs = glob(
         REMOTE_SUGAR,
     ),
+    tags = [
+        "maven_coordinates=%s" % ESPRESSO_REMOTE_ARTIFACT,
+    ],
     deps = [
         "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/remote:exceptions",

@@ -1,4 +1,4 @@
-package androidx.test.espresso.web.internal.bridge;
+package androidx.test.espresso.web.bridge;
 
 import android.app.Application;
 import androidx.test.runner.lifecycle.ApplicationLifecycleCallback;
