@@ -19,18 +19,18 @@ runs:
         name: local-snapshot
         path: ~/download
     - name: 'Install to local maven repo'
-        run: |
+      run: |
           mkdir -p ~/.m2
           unzip ~/download/axt_m2repository.zip -d ~/.m2/
           mv ~/.m2/m2repository ~/.m2/repository
-        shell: bash  
+      shell: bash
     - name: 'Setup Android SDK'
       uses: android-actions/setup-android@v2
     - name: 'Clear managed devices'
-        run: |
+      run: |
           cd ${{ github.workspace }}/gradle-tests/runner/app
           ../gradlew cleanManagedDevices --unused-only
-        shell: bash  
+      shell: bash
     - name: 'Run gradle tests'
       run: |
         cd ${{ github.workspace }}/gradle-tests/runner/app
