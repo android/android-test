@@ -1,8 +1,8 @@
 # Remote package for espresso.
 
-load("//build_extensions:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions:axt_versions.bzl", "ESPRESSO_REMOTE_ARTIFACT")
-load("//build_extensions:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 
 licenses(["notice"])
 
@@ -77,7 +77,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/core/java/androidx/test/espresso/util",
         "//runner/android_junit_runner",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
@@ -122,7 +122,7 @@ android_library(
         "//espresso/remote/java/androidx/test/espresso/web/sugar:remote_sugar",
         "//espresso/remote/java/androidx/test/espresso/web/webdriver:remote_webdriver_atoms",
         "//runner/android_junit_runner",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

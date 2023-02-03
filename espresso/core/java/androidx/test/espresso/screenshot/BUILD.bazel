@@ -18,6 +18,6 @@ kt_android_library(
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso:view-interaction",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )

@@ -1,8 +1,8 @@
 # Description:
 # Espresso Accessibility APIs
 
-load("//build_extensions:axt_android_aar.bzl", "axt_android_aar")
-load("//build_extensions:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions:axt_versions.bzl", "ESPRESSO_ACCESSIBILITY_ARTIFACT")
 
 licenses(["notice"])
@@ -26,7 +26,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso",
         "//runner/android_junit_runner",
         "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
 

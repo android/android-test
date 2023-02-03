@@ -1,5 +1,5 @@
-load("//build_extensions:axt_android_aar.bzl", "axt_android_aar")
-load("//build_extensions:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions:axt_versions.bzl", "RUNNER_ARTIFACT")
 
 # Description: Build rules for building androidx.test from source

@@ -30,7 +30,7 @@ android_library(
         "//runner/android_junit_runner",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
         "@maven//:junit_junit",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
 
@@ -77,7 +77,7 @@ android_app_instrumentation_tests(
         "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
         "@maven//:javax_inject_javax_inject",
         "@maven//:junit_junit",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_mockito_mockito_core",
         "@maven//:org_objenesis_objenesis",
     ],

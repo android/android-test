@@ -21,7 +21,7 @@ android_library_instrumentation_tests(
         "@maven//:com_linkedin_dexmaker_dexmaker",
         "@maven//:com_linkedin_dexmaker_dexmaker_mockito",
         "@maven//:junit_junit",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_mockito_mockito_core",
         "@maven//:org_objenesis_objenesis",
     ],

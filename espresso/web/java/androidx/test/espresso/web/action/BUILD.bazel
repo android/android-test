@@ -32,7 +32,7 @@ android_library(
         "//runner/monitor",
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:com_google_code_findbugs_jsr305",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],

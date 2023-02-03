@@ -23,7 +23,7 @@ maven_repository = rule(
     attrs = {
         "srcs": attr.label_list(allow_rules = ["maven_artifact"]),
         "_maven_repository": attr.label(
-            default = Label("//build_extensions:maven_repository"),
+            default = Label("//build_extensions/maven:maven_repository"),
             executable = True,
             allow_files = True,
             cfg = "host",

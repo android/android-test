@@ -1,10 +1,10 @@
 """Generate AXT android archive (aar)."""
 
-load("//build_extensions:add_or_update_file_in_zip.bzl", "add_or_update_file_in_zip")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
-load("//build_extensions:maven_info.bzl", "MavenFiles", "MavenInfo", "collect_maven_info")
-load("//build_extensions:jarjar.bzl", "jarjar")
-load("//build_extensions:copy_file.bzl", "copy_file")
+load("//build_extensions/maven:add_or_update_file_in_zip.bzl", "add_or_update_file_in_zip")
+load("//build_extensions/maven:combine_jars.bzl", "combine_jars")
+load("//build_extensions/maven:maven_info.bzl", "MavenFiles", "MavenInfo", "collect_maven_info")
+load("//build_extensions/maven:jarjar.bzl", "jarjar")
+load("//build_extensions/maven:copy_file.bzl", "copy_file")
 
 def _android_aar_impl(ctx):
     # current_aar will include almost everything needed: an AndroidManifest.xml, compiled resources,
@@ -85,7 +85,7 @@ axt_android_aar = rule(
             default = Label("//build_extensions/jar_combiner/java/androidx/test/tools/jarcombiner"),
         ),
         "_jarjar": attr.label(
-            default = Label("//build_extensions:jarjar_bin"),
+            default = Label("//build_extensions/maven:jarjar_bin"),
             executable = True,
             cfg = "exec",
         ),

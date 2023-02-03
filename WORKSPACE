@@ -102,6 +102,15 @@ maven_install(
                     artifact = "checker",
                     group = "org.checkerframework",
                 ),
+                # atf depends on hamcrest 2.2 which causes 'Using type org.hamcrest.Matcher from an indirect dependency' compile errors
+                maven.exclusion(
+                    artifact = "hamcrest-core",
+                    group = "org.hamcrest",
+                ),
+                maven.exclusion(
+                    artifact = "hamcrest-library",
+                    group = "org.hamcrest",
+                ),
             ],
             group = "com.google.android.apps.common.testing.accessibility.framework",
             version = "3.1",
@@ -136,9 +145,10 @@ maven_install(
         "net.bytebuddy:byte-buddy-agent:1.9.10",
         "net.bytebuddy:byte-buddy:1.9.10",
         "net.sf.kxml:kxml2:jar:2.3.0",
-        "org.ccil/cowan.tagsoup:tagsoup:1.2.1",
+        "org.ccil.cowan.tagsoup:tagsoup:1.2.1",
         "org.checkerframework:checker-compat-qual:2.5.5",
-        "org.hamcrest:hamcrest-all:1.3",
+        "org.hamcrest:hamcrest-core:1.3",
+        "org.hamcrest:hamcrest-library:1.3",
         "org.mockito:mockito-core:2.28.1",
         "org.objenesis:objenesis:2.6",
         "org.pantsbuild:jarjar:1.7.2",

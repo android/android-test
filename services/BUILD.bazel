@@ -1,9 +1,9 @@
 # Description:
 #   Top level apk for services required for full orchestrated testing.
 
-load("//build_extensions:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions:axt_versions.bzl", "SERVICES_APK_ARTIFACT")
-load("//build_extensions:axt_maven_apk.bzl", "axt_maven_apk")
+load("//build_extensions/maven:axt_maven_apk.bzl", "axt_maven_apk")
 
 licenses(["notice"])
 

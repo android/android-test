@@ -1,7 +1,7 @@
 """Skylark rule to create a maven repository from a single artifact."""
 
-load("//build_extensions:copy_file.bzl", "copy_file")
-load("//build_extensions:maven_info.bzl", "MavenFiles", "MavenInfo")
+load("//build_extensions/maven:copy_file.bzl", "copy_file")
+load("//build_extensions/maven:maven_info.bzl", "MavenFiles", "MavenInfo")
 
 _pom_tmpl = "\n".join([
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -184,7 +184,7 @@ maven_artifact = rule(
         # TODO: derive this?
         "last_updated": attr.string(mandatory = True),
         "_maven_artifact_sh": attr.label(
-            default = Label("//build_extensions:maven_artifact_sh"),
+            default = Label("//build_extensions/maven:maven_artifact_sh"),
             executable = True,
             allow_files = True,
             cfg = "host",

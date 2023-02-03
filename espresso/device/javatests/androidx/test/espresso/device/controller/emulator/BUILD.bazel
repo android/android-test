@@ -28,7 +28,7 @@ android_app_instrumentation_tests(
         "@maven//:com_nhaarman_mockitokotlin2_mockito_kotlin",
         "@maven//:io_grpc_grpc_core",
         "@maven//:junit_junit",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
         # TODO(b/215420259) fix gRPC dependency
         # "//grpc:okhttp_android",
     ],

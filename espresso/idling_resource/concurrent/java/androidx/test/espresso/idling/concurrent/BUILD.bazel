@@ -1,10 +1,9 @@
 # Description:
 #   Light weight module that contains IdlinResources around concurrent Java APIs
 
-load("//build_extensions:axt_android_aar.bzl", "axt_android_aar")
-load("//build_extensions:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions:axt_versions.bzl", "ESPRESSO_IDLING_CONCURRENT_ARTIFACT")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 package(
     default_visibility = ["//:__subpackages__"],

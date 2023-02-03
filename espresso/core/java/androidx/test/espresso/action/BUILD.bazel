@@ -47,7 +47,8 @@ android_library(
         "//runner/monitor",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_errorprone_error_prone_annotations",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

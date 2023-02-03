@@ -1,9 +1,9 @@
 # androidx.test.core Kotlin extensions
 
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
-load("//build_extensions:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions:axt_versions.bzl", "CORE_KTX_ARTIFACT")
-load("//build_extensions:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 
 package(
     default_visibility = [

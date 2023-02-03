@@ -21,6 +21,6 @@ kt_android_library(
         "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/core/internal/deps/guava/base",
         "//runner/android_junit_runner",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )

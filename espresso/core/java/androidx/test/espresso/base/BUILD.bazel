@@ -44,7 +44,7 @@ android_library(
         "//runner/android_junit_runner",
         "@maven//:javax_inject_javax_inject",
         "@maven//:junit_junit",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
@@ -122,6 +122,6 @@ android_library(
         "@maven//:javax_annotation_javax_annotation_api",
         "@maven//:javax_inject_javax_inject",
         "@maven//:junit_junit",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )

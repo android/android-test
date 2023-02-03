@@ -1,8 +1,6 @@
-load("//build_extensions:axt_android_aar.bzl", "axt_android_aar")
-load("//build_extensions:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions:axt_versions.bzl", "ESPRESSO_CORE_ARTIFACT")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
-load("//build_extensions:remove_from_jar.bzl", "remove_from_jar")
 
 # Description:
 #   Espresso - the new UI Test API for Android.
@@ -81,7 +79,8 @@ android_library(
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:javax_inject_javax_inject",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
@@ -110,7 +109,7 @@ android_library(
         "//opensource/dagger",
         "//runner/android_junit_runner",
         "@maven//:javax_inject_javax_inject",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
 
@@ -163,7 +162,8 @@ android_library(
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//runner/monitor",
         "@maven//:com_google_code_findbugs_jsr305",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
@@ -177,7 +177,7 @@ android_library(
     deps = [
         ":interface",
         "//espresso/core/java/androidx/test/espresso/util",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
 
@@ -196,7 +196,7 @@ android_library(
         "//runner/monitor",
         "@maven//:com_google_errorprone_error_prone_annotations",
         "@maven//:junit_junit",
-        "@maven//:org_hamcrest_hamcrest_all",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
