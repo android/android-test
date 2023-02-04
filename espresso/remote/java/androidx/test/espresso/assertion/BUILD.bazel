@@ -1,7 +1,5 @@
 # Description:
 #  View Assertions for New UI Test API.
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_REMOTE_ARTIFACT")
-
 licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
@@ -16,14 +14,11 @@ android_library(
     srcs = glob(
         REMOTE_VIEW_ASSERTIONS,
     ),
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_REMOTE_ARTIFACT,
-    ],
     deps = [
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso/assertion",
-        "//espresso/core/java/androidx/test/espresso/proto/assertion:ui_interaction_view_assertions_android_pb3",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/remote/java/androidx/test/espresso/proto/assertion:ui_interaction_view_assertions_android_pb3",
         "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
         "//espresso/remote/java/androidx/test/espresso/remote:registry",
     ],

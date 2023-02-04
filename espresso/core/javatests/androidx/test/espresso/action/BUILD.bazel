@@ -33,7 +33,7 @@ android_app_instrumentation_tests(
         "//espresso/core/java/androidx/test/espresso/assertion",
         "//espresso/core/java/androidx/test/espresso/internal/data",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "//espresso/core/java/androidx/test/espresso/proto/action:ui_interaction_view_actions_android_pb3",
+        "//espresso/remote/java/androidx/test/espresso/proto/action:ui_interaction_view_actions_android_pb3",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/intents/java/androidx/test/espresso/intent:intents",
         "//espresso/intents/java/androidx/test/espresso/intent/matcher",

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.espresso.web.internal.bridge;
+package androidx.test.espresso.web.bridge;
 
 import androidx.test.espresso.web.bridge.JavaScriptBridge;
 import androidx.test.ext.junit.runners.AndroidJUnit4;

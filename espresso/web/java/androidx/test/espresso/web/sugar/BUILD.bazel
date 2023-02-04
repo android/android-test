@@ -1,5 +1,3 @@
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_WEB_ARTIFACT")
-
 licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
@@ -9,9 +7,6 @@ android_library(
     srcs = glob(
         ["*.java"],
     ),
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_WEB_ARTIFACT,
-    ],
     deps = [
         "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso",

@@ -2,7 +2,6 @@
 
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANNOTATION_ARTIFACT")
 
 package(
     default_visibility = ["//:__subpackages__"],
@@ -12,13 +11,9 @@ android_library(
     name = "annotation",
     srcs = glob(
         ["**/*.java"],
-        exclude = ["Stub.java"],
     ),
     manifest = "AndroidManifest.xml",
-    tags = [
-        "alt_dep=//annotation",
-        "maven_coordinates=%s" % ANNOTATION_ARTIFACT,
-    ],
+    tags = ["alt_dep=//annotation"],
     deps = [
         "//:androidx_annotation",
         "//:androidx_annotation_experimental",

@@ -17,29 +17,9 @@ SERVICES_VERSION = "1.5.0-alpha02"  # stable 1.4.2
 ORCHESTRATOR_VERSION = "1.5.0-alpha02"  # stable 1.4.2
 ANNOTATION_VERSION = "1.1.0-alpha02"  # stable 1.0.1
 
-# Full maven artifact strings. These cannot change for already published artifacts
-RUNNER_ARTIFACT = "androidx.test:runner:%s" % RUNNER_VERSION
-RULES_ARTIFACT = "androidx.test:rules:%s" % RULES_VERSION
-MONITOR_ARTIFACT = "androidx.test:monitor:%s" % MONITOR_VERSION
-CORE_ARTIFACT = "androidx.test:core:%s" % CORE_VERSION
-CORE_KTX_ARTIFACT = "androidx.test:core-ktx:%s" % CORE_VERSION
-ESPRESSO_ACCESSIBILITY_ARTIFACT = "androidx.test.espresso:espresso-accessibility:%s" % ESPRESSO_VERSION
-ESPRESSO_CONTRIB_ARTIFACT = "androidx.test.espresso:espresso-contrib:%s" % ESPRESSO_VERSION
-ESPRESSO_CORE_ARTIFACT = "androidx.test.espresso:espresso-core:%s" % ESPRESSO_VERSION
-ESPRESSO_DEVICE_ARTIFACT = "androidx.test.espresso:espresso-device:%s" % ESPRESSO_DEVICE_VERSION
-ESPRESSO_IDLING_ARTIFACT = "androidx.test.espresso:espresso-idling-resource:%s" % ESPRESSO_VERSION
-ESPRESSO_IDLING_CONCURRENT_ARTIFACT = "androidx.test.espresso.idling:idling-concurrent:%s" % ESPRESSO_VERSION
-ESPRESSO_IDLING_NET_ARTIFACT = "androidx.test.espresso.idling:idling-net:%s" % ESPRESSO_VERSION
-ESPRESSO_INTENTS_ARTIFACT = "androidx.test.espresso:espresso-intents:%s" % ESPRESSO_VERSION
-ESPRESSO_REMOTE_ARTIFACT = "androidx.test.espresso:espresso-remote:%s" % ESPRESSO_VERSION
-ESPRESSO_WEB_ARTIFACT = "androidx.test.espresso:espresso-web:%s" % ESPRESSO_VERSION
-ANDROIDX_JUNIT_ARTIFACT = "androidx.test.ext:junit:%s" % ANDROIDX_JUNIT_VERSION
-ANDROIDX_JUNIT_KTX_ARTIFACT = "androidx.test.ext:junit-ktx:%s" % ANDROIDX_JUNIT_VERSION
-ANDROIDX_TRUTH_ARTIFACT = "androidx.test.ext:truth:%s" % ANDROIDX_TRUTH_VERSION
-SERVICES_STORAGE_ARTIFACT = "androidx.test.services:storage:%s" % SERVICES_VERSION
+# Full maven artifact strings for apks.
 SERVICES_APK_ARTIFACT = "androidx.test.services:test-services:%s" % SERVICES_VERSION
 ORCHESTRATOR_ARTIFACT = "androidx.test:orchestrator:%s" % ORCHESTRATOR_VERSION
-ANNOTATION_ARTIFACT = "androidx.test:annotation:%s" % ANNOTATION_VERSION
 
 # Maven dependency versions
 ANDROIDX_ANNOTATION_VERSION = "1.2.0"

@@ -1,13 +1,9 @@
 # Publicly visible alias to the AXT rules target
-load("//build_extensions:axt_versions.bzl", "RULES_ARTIFACT")
 
 licenses(["notice"])
 
-android_library(
+alias(
     name = "rules",
-    tags = [
-        "maven_coordinates=%s" % RULES_ARTIFACT,
-    ],
+    actual = "//runner/rules/java/androidx/test:rules",
     visibility = ["//visibility:public"],
-    exports = ["//runner/rules/java/androidx/test:rules"],
 )

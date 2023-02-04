@@ -52,7 +52,7 @@ android_app_instrumentation_tests(
         "//espresso/core/java/androidx/test/espresso/assertion",
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/core/java/androidx/test/espresso/matcher:remote_view_matchers",
-        "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
+        "//espresso/remote/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
         "//espresso/core/java/androidx/test/espresso/remote",
         "//espresso/core/java/androidx/test/espresso/remote:bindable",
         "//espresso/core/java/androidx/test/espresso/remote:exceptions",

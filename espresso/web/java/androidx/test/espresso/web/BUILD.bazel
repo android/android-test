@@ -1,6 +1,5 @@
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_WEB_ARTIFACT")
 
 licenses(["notice"])
 
@@ -15,9 +14,6 @@ android_library(
     manifest = "AndroidManifest.xml",
     proguard_specs = [
         ":proguard_library.cfg",
-    ],
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_WEB_ARTIFACT,
     ],
     exports = [
         "//espresso/web/java/androidx/test/espresso/web/action",

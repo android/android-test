@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package androidx.test.espresso.web.internal.bridge;
+package androidx.test.espresso.web.bridge;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

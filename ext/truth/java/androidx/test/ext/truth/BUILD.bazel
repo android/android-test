@@ -1,6 +1,5 @@
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_TRUTH_ARTIFACT")
 
 # Description: Build rules for building androidx.test.truth from source
 licenses(["notice"])
@@ -18,9 +17,6 @@ android_library(
         ["**/*.java"],
     ),
     manifest = "AndroidManifest.xml",
-    tags = [
-        "maven_coordinates=%s" % ANDROIDX_TRUTH_ARTIFACT,
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//:androidx_annotation",

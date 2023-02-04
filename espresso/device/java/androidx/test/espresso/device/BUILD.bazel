@@ -3,7 +3,6 @@
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_DEVICE_ARTIFACT")
 
 licenses(["notice"])
 
@@ -53,9 +52,6 @@ android_library(
     name = "device_release_lib",
     testonly = 1,
     manifest = "AndroidManifest.xml",
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_DEVICE_ARTIFACT,
-    ],
     exports = [
         "//espresso/device/java/androidx/test/espresso/device/filter:requires_display_filter",
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",

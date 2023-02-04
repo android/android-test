@@ -1,5 +1,4 @@
 # Remote package for espresso.
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_CORE_ARTIFACT")
 
 licenses(["notice"])
 
@@ -25,25 +24,19 @@ REMOTE_REGISTRY = [
 android_library(
     name = "registry",
     srcs = REMOTE_REGISTRY,
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
-    ],
     visibility = ["//visibility:public"],
     deps = [
         ":exceptions",
         ":reflectionUtils",
         "//:androidx_annotation",
-        "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//espresso/remote/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
     ],
 )
 
 android_library(
     name = "interface",
     srcs = REMOTE_INTERFACES,
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
-    ],
     visibility = ["//visibility:public"],
     deps = [
         ":exceptions",
@@ -64,9 +57,6 @@ REFLECTION_UTILS = [
 android_library(
     name = "reflectionUtils",
     srcs = REFLECTION_UTILS,
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
-    ],
     visibility = ["//visibility:public"],
     deps = [
         ":exceptions",
@@ -80,9 +70,6 @@ android_library(
     custom_package = "androidx.test.espresso.remote",
     idl_import_root = "idls",
     idl_srcs = glob(["idls/**"]),
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
-    ],
     visibility = ["//visibility:public"],
     deps = [
     ],
@@ -97,9 +84,6 @@ REMOTE_EXCEPTIONS = [
 android_library(
     name = "exceptions",
     srcs = REMOTE_EXCEPTIONS,
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//espresso/core/java/androidx/test/espresso:interface",
@@ -113,9 +97,6 @@ BINDABLE = [
 android_library(
     name = "bindable",
     srcs = BINDABLE,
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
-    ],
     deps = [
     ],
 )

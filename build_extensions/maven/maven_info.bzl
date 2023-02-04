@@ -17,11 +17,11 @@
 
 load("@io_bazel_rules_kotlin//kotlin/internal:defs.bzl", "KtJvmInfo")
 load("//build_extensions:axt_versions.bzl", "KOTLIN_VERSION")
+load("//build_extensions/maven:maven_registry.bzl", "get_artifact_from_label")
 
 # logic here largely inspired from https://github.com/google/dagger/blob/master/tools/maven_info.bzl
 
 # provider for the built maven files to be published
-# TODO: is this necessary or can it be derived
 MavenFiles = provider(
     fields = {
         "runtime": """
@@ -76,14 +76,15 @@ def _collect_maven_info_impl(target, ctx):
             transitive_maven_direct_deps = depset(),
         )
 
+    artifact = get_artifact_from_label(target.label)
+
     is_shaded = False
-    artifact = None
     for tag in tags:
         if tag in ("maven:shaded"):
             is_shaded = True
         if tag.startswith(_MAVEN_COORDINATES_PREFIX):
             if artifact:
-                fail("%s: Each target must belong to one and only one maven artifact: Found multiple '%s' tags" % (target.label, _MAVEN_COORDINATES_PREFIX))
+                fail("%s: Each target must belong to one and only one maven artifact: Is target listed in maven_registry and also has a '%s' tag?" % (target.label, _MAVEN_COORDINATES_PREFIX))
             artifact = tag[len(_MAVEN_COORDINATES_PREFIX):]
 
     included_runtime_jars = target[JavaInfo].runtime_output_jars

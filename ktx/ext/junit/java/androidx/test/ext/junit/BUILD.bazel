@@ -2,7 +2,6 @@
 
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_JUNIT_KTX_ARTIFACT")
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 
 licenses(["notice"])
@@ -19,9 +18,6 @@ kt_android_library(
     srcs = glob(
         ["**/*.kt"],
     ),
-    tags = [
-        "maven_coordinates=%s" % ANDROIDX_JUNIT_KTX_ARTIFACT,
-    ],
     deps = [
         "//:androidx_lifecycle_common",
         "//ext/junit",
@@ -34,9 +30,6 @@ android_library(
     testonly = 1,
     custom_package = "androidx.test.ext.junit.ktx",
     manifest = "AndroidManifest.xml",
-    tags = [
-        "maven_coordinates=%s" % ANDROIDX_JUNIT_KTX_ARTIFACT,
-    ],
     visibility = ["//visibility:private"],
     exports = [
         ":junit",

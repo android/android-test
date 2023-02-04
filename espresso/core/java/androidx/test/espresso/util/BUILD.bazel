@@ -2,7 +2,6 @@
 #  Utility classes
 
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_CORE_ARTIFACT")
 
 licenses(["notice"])
 
@@ -14,9 +13,6 @@ kt_android_library(
         "*.java",
         "*.kt",
     ]),
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
-    ],
     deps = [
         "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/core/internal/deps/guava/base",

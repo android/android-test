@@ -1,6 +1,5 @@
 # Description:
 #  Matchers for Espresso!
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_CORE_ARTIFACT")
 
 licenses(["notice"])
 
@@ -11,9 +10,6 @@ android_library(
     srcs = glob(
         ["*.java"],
     ),
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
-    ],
     deps = [
         "//:androidx_annotation",
         "//annotation",

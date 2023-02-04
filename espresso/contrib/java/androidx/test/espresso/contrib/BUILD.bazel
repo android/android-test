@@ -1,9 +1,5 @@
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
-load(
-    "//build_extensions:axt_versions.bzl",
-    "ESPRESSO_CONTRIB_ARTIFACT",
-)
 
 # Description:
 #   Contributed / non-core functionality of Espresso. Tools which add on to
@@ -18,9 +14,6 @@ android_library(
     name = "resources",
     manifest = "AndroidManifest.xml",
     resource_files = glob(["res/**"]),
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CONTRIB_ARTIFACT,
-    ],
 )
 
 android_library(
@@ -50,9 +43,6 @@ android_library(
 android_library(
     name = "picker_actions",
     srcs = ["PickerActions.java"],
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CONTRIB_ARTIFACT,
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//:androidx_annotation",
@@ -71,9 +61,6 @@ android_library(
 android_library(
     name = "recycler_view",
     srcs = ["RecyclerViewActions.java"],
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CONTRIB_ARTIFACT,
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//:androidx_annotation",
@@ -98,9 +85,6 @@ android_library(
         "DrawerActions.java",
         "DrawerMatchers.java",
     ],
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CONTRIB_ARTIFACT,
-    ],
     visibility = ["//visibility:public"],
     deps = [
         ":resources",
@@ -119,9 +103,6 @@ android_library(
     srcs = [
         "ActivityResultMatchers.java",
     ],
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CONTRIB_ARTIFACT,
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "@maven//:org_hamcrest_hamcrest_core",
@@ -133,9 +114,6 @@ android_library(
     testonly = 1,
     srcs = [
         "AccessibilityChecks.java",
-    ],
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CONTRIB_ARTIFACT,
     ],
     visibility = ["//visibility:public"],
     deps = [
@@ -150,9 +128,6 @@ android_library(
     name = "design_lib_actions",
     testonly = 1,
     srcs = ["NavigationViewActions.java"],
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CONTRIB_ARTIFACT,
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//:androidx_annotation",
@@ -175,9 +150,6 @@ android_library(
     name = "view_pager_actions",
     testonly = 1,
     srcs = ["ViewPagerActions.java"],
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CONTRIB_ARTIFACT,
-    ],
     visibility = ["//visibility:public"],
     deps = [
         "//:androidx_annotation",
@@ -196,9 +168,6 @@ android_library(
     testonly = 1,
     manifest = "AndroidManifest.xml",
     resource_files = glob(["res/**"]),
-    tags = [
-        "maven_coordinates=%s" % ESPRESSO_CONTRIB_ARTIFACT,
-    ],
     exports = [
         ":accessibility_checks",
         ":activity_result_matchers",

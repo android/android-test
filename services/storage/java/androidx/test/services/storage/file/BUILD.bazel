@@ -1,5 +1,4 @@
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
-load("//build_extensions:axt_versions.bzl", "SERVICES_STORAGE_ARTIFACT")
 
 package(
     default_visibility = ["//services/storage:__subpackages__"],
@@ -12,9 +11,6 @@ licenses(["notice"])
 android_library(
     name = "file",
     srcs = glob(["*.java"]),
-    tags = [
-        "maven_coordinates=%s" % SERVICES_STORAGE_ARTIFACT,
-    ],
     deps = [
         "//annotation",
         "//runner/monitor",

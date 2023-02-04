@@ -2,7 +2,6 @@
 
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "CORE_KTX_ARTIFACT")
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 
 package(
@@ -21,9 +20,6 @@ kt_android_library(
     ),
     custom_package = "androidx.test.core.ktx",
     manifest = "AndroidManifest.xml",
-    tags = [
-        "maven_coordinates=%s" % CORE_KTX_ARTIFACT,
-    ],
     deps = [
         "//:androidx_lifecycle_common",
         "//core",
@@ -38,9 +34,6 @@ android_library(
     testonly = 1,
     custom_package = "androidx.test.core.ktx",
     manifest = "AndroidManifest.xml",
-    tags = [
-        "maven_coordinates=%s" % CORE_KTX_ARTIFACT,
-    ],
     visibility = ["//visibility:private"],
     exports = [
         ":core",

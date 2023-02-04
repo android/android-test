@@ -1,6 +1,5 @@
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
-load("//build_extensions:axt_versions.bzl", "SERVICES_STORAGE_ARTIFACT")
 
 package(
     default_visibility = [
@@ -20,9 +19,6 @@ android_library(
         "internal/package-info.java",
     ],
     manifest = "AndroidManifest.xml",
-    tags = [
-        "maven_coordinates=%s" % SERVICES_STORAGE_ARTIFACT,
-    ],
     deps = [
         "//:androidx_annotation",
         "//annotation",
@@ -36,9 +32,6 @@ android_library(
 java_library(
     name = "test_storage_constants",
     srcs = ["TestStorageConstants.java"],
-    tags = [
-        "maven_coordinates=%s" % SERVICES_STORAGE_ARTIFACT,
-    ],
     deps = [
         "//annotation",
     ],

@@ -1,13 +1,9 @@
 # Publicly visible androidx.test.annotation alias
-load("//build_extensions:axt_versions.bzl", "ANNOTATION_ARTIFACT")
 
 licenses(["notice"])
 
-android_library(
+alias(
     name = "annotation",
-    tags = [
-        "maven_coordinates=%s" % ANNOTATION_ARTIFACT,
-    ],
+    actual = "//annotation/java/androidx/test/annotation",
     visibility = ["//visibility:public"],
-    exports = ["//annotation/java/androidx/test/annotation"],
 )

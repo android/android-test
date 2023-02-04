@@ -15,13 +15,12 @@ def _android_aar_impl(ctx):
         fail("included_dep %s does not produce an aar. Is it an android_library rule with an AndroidManifest.xml?" % ctx.attr.included_dep.label)
 
     if not ctx.attr.included_dep[MavenInfo].artifact:
-        fail("Could not find maven artifact for included_dep %s. Does it have a maven_coordinates tag?")
+        fail("Could not find maven artifact for included_dep %s. Is it listed in maven_registry?" % ctx.attr.included_dep.label)
 
     # build a combined classes jar from all dependencies that are part of this maven artifact
     included_runtime_jars = ctx.attr.included_dep[MavenInfo].transitive_included_runtime_jars.to_list()
     #print("%s" % included_runtime_jars)
 
-    #print("included_runtime_jars = %s" % included_runtime_jars)
     classes_jar = ctx.actions.declare_file(ctx.attr.name + "_combined_classes.jar")
     combine_jars(
         ctx = ctx,
@@ -48,15 +47,12 @@ def _android_aar_impl(ctx):
     # produce src jar
     included_src_jars = ctx.attr.included_dep[MavenInfo].transitive_included_src_jars.to_list()
 
-    #print("included_src_jars = %s" % included_src_jars)
     combine_jars(
         ctx = ctx,
         input_jars = included_src_jars,
         output = ctx.outputs.src_jar,
     )
 
-    #print("artifact = %s" % str(ctx.attr.included_dep[MavenInfo].artifact))
-    #print("maven_deps = %s" % str(ctx.attr.included_dep[MavenInfo].transitive_maven_direct_deps.to_list()))
     return [ctx.attr.included_dep[MavenInfo], MavenFiles(runtime = ctx.outputs.aar, src_jar = ctx.outputs.src_jar)]
 
 axt_android_aar = rule(

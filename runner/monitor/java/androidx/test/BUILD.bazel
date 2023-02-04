@@ -1,7 +1,6 @@
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
-load("//build_extensions:axt_versions.bzl", "MONITOR_ARTIFACT")
 
 # Description: Build rules for building androidx.test from source
 licenses(["notice"])
@@ -23,9 +22,6 @@ kt_android_library(
             "internal/platform/app/ActivityInvoker$$CC.java",
         ],
     ),
-    tags = [
-        "maven_coordinates=%s" % MONITOR_ARTIFACT,
-    ],
     deps = [
         ":compiletime_hidden_apis",
         ":errorprone_neverlink",
@@ -49,9 +45,6 @@ android_library(
     name = "runtime_hidden_apis",
     srcs = [
         "internal/runner/runtime/ExposedInstrumentationApi.java",
-    ],
-    tags = [
-        "maven_coordinates=%s" % MONITOR_ARTIFACT,
     ],
     deps = [
         "//:androidx_annotation",
@@ -79,9 +72,6 @@ android_library(
     custom_package = "androidx.test.monitor",
     manifest = "AndroidManifest.xml",
     proguard_specs = [":proguard_library.cfg"],
-    tags = [
-        "maven_coordinates=%s" % MONITOR_ARTIFACT,
-    ],
     deps = [
         ":monitor",
         "//:androidx_annotation",

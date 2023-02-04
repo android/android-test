@@ -29,10 +29,8 @@ flags.mark_flag_as_required('output')
 
 
 def main(_):
-  print("!!!!! in maven_repository.py")
   output_zip = zipfile.ZipFile(FLAGS.output, 'w', zipfile.ZIP_STORED)
   for source in FLAGS.sources:
-    print(source)
     source_zip = zipfile.ZipFile(source, 'r')
     for zip_info in source_zip.infolist():
       output_zip.writestr(zip_info, source_zip.read(zip_info))

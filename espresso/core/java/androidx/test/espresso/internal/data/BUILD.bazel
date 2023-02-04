@@ -1,5 +1,4 @@
 # This package loads and stores test output artifact metadata for easier debugging of Espresso tests
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_CORE_ARTIFACT")
 
 licenses(["notice"])
 
@@ -10,9 +9,6 @@ android_library(
     srcs = [
         "TestFlowVisualizer.java",
     ],
-                tags = [
-                    "maven_coordinates=%s" % ESPRESSO_CORE_ARTIFACT,
-                ],
     deps = [
         "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/action",
