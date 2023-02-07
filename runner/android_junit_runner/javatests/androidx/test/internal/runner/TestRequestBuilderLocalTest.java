@@ -52,6 +52,18 @@ public class TestRequestBuilderLocalTest {
     public void noMatch() {}
   }
 
+  public static class AnotherTestFixture {
+
+    @Test
+    public void anotherTestFixture() {}
+  }
+
+  public static class YetAnotherTestFixture {
+
+    @Test
+    public void yetAnotherTestFixture() {}
+  }
+
   @Mock private ClassPathScanner mockClassPathScanner;
 
   private TestRequestBuilder builder;
@@ -96,6 +108,19 @@ public class TestRequestBuilderLocalTest {
     List<String> results = runRequest(builder.build());
 
     assertThat(results).containsExactly(TestFixture.class.getName() + "#match");
+  }
+
+  @Test
+  public void classOrder() {
+    builder.addTestClass(YetAnotherTestFixture.class.getName());
+    builder.addTestClass(AnotherTestFixture.class.getName());
+
+    List<String> results = runRequest(builder.build());
+    assertThat(results)
+        .containsExactly(
+            YetAnotherTestFixture.class.getName() + "#yetAnotherTestFixture",
+            AnotherTestFixture.class.getName() + "#anotherTestFixture")
+        .inOrder();
   }
 
   private void setClassPathScanningResults(String... names) throws IOException {

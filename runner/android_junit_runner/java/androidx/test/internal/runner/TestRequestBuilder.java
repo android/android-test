@@ -42,6 +42,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -71,7 +72,7 @@ public class TestRequestBuilder {
   private final List<String> pathsToScan = new ArrayList<>();
   private Set<String> includedPackages = new HashSet<>();
   private Set<String> excludedPackages = new HashSet<>();
-  private Set<String> includedClasses = new HashSet<>();
+  private Set<String> includedClasses = new LinkedHashSet<>();
   private Set<String> excludedClasses = new HashSet<>();
   private ClassAndMethodFilter classMethodFilter = new ClassAndMethodFilter();
   private final TestsRegExFilter testsRegExFilter = new TestsRegExFilter();
