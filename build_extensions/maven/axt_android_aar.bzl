@@ -34,6 +34,17 @@ def _android_aar_impl(ctx):
         jarjar(ctx, rule = ctx.file.jarjar_rule, src = classes_jar, out = jarjar_classes_jar)
         classes_jar = jarjar_classes_jar
 
+    # TODO: tying validation to an output was the only way to get this to run, but
+    # according to docs it shouldn't be necessary
+    #validation_output = ctx.actions.declare_file(ctx.attr.name + ".validation")
+    validation_output = ctx.outputs.validation
+    ctx.actions.run(
+        inputs = [classes_jar],
+        outputs = [validation_output],
+        executable = ctx.executable._validate_jar_java,
+        arguments = [validation_output.path, classes_jar.path] + ctx.attr.expected_class_prefixes,
+    )
+
     # update the aar with the new classes.jar
     add_or_update_file_in_zip(
         ctx,
@@ -53,7 +64,11 @@ def _android_aar_impl(ctx):
         output = ctx.outputs.src_jar,
     )
 
-    return [ctx.attr.included_dep[MavenInfo], MavenFiles(runtime = ctx.outputs.aar, src_jar = ctx.outputs.src_jar)]
+    return [
+        ctx.attr.included_dep[MavenInfo],
+        MavenFiles(runtime = ctx.outputs.aar, src_jar = ctx.outputs.src_jar),
+        OutputGroupInfo(_validation = depset([validation_output])),
+    ]
 
 axt_android_aar = rule(
     implementation = _android_aar_impl,
@@ -64,6 +79,10 @@ axt_android_aar = rule(
             mandatory = True,
             providers = [JavaInfo, AndroidLibraryAarInfo],
             aspects = [collect_maven_info],
+        ),
+        "expected_class_prefixes": attr.string_list(
+            doc = "The list of class prefixes expected to be containing in resulting .aar. All classes in aar must match at least one of the given prefixes.",
+            mandatory = True,
         ),
         "jarjar_rule": attr.label(
             doc = "Optional file containing jarjar rules to be applied to the classes.",
@@ -80,6 +99,12 @@ axt_android_aar = rule(
             allow_files = True,
             default = Label("//build_extensions/jar_combiner/java/androidx/test/tools/jarcombiner"),
         ),
+        "_validate_jar_java": attr.label(
+            executable = True,
+            cfg = "exec",
+            allow_files = True,
+            default = Label("//build_extensions/jar_validator/java/androidx/test/tools/jarvalidator"),
+        ),
         "_jarjar": attr.label(
             default = Label("//build_extensions/maven:jarjar_bin"),
             executable = True,
@@ -89,5 +114,7 @@ axt_android_aar = rule(
     outputs = {
         "aar": "%{name}.aar",
         "src_jar": "%{name}-src.jar",
+        # TODO: remove, this shouldn't ne necessary
+        "validation": "%{name}.validation",
     },
 )

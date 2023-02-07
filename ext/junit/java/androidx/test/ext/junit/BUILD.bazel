@@ -32,8 +32,10 @@ android_library(
 axt_android_aar(
     name = "junit_release",
     testonly = 1,
-    included_dep =
-        ":junit",
+    expected_class_prefixes = [
+        "androidx.test.ext.junit",
+    ],
+    included_dep = ":junit",
 )
 
 maven_artifact(

@@ -40,6 +40,13 @@ android_library(
 # Generate rules for the release artifacts.
 axt_android_aar(
     name = "runner_release",
+    expected_class_prefixes = [
+        "androidx.test.services.events",
+        "androidx.test.runner",
+        "androidx.test.orchestrator",
+        "androidx.test.internal",
+        "androidx.test.filters",
+    ],
     included_dep = ":runner",
 )
 

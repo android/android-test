@@ -64,6 +64,9 @@ android_library(
 # Generate rules for the release artifacts.
 axt_android_aar(
     name = "core_release",
+    expected_class_prefixes = [
+        "androidx.test.core",
+    ],
     included_dep = ":core_release_lib",
 )
 

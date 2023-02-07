@@ -55,6 +55,9 @@ java_proto_library(
 # Generate release artifacts for the test storage.
 axt_android_aar(
     name = "test_storage_release",
+    expected_class_prefixes = [
+        "androidx.test.services.storage",
+    ],
     included_dep = ":storage",
 )
 

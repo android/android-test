@@ -40,6 +40,11 @@ android_library(
 axt_android_aar(
     name = "junit_release",
     testonly = 1,
+    # we'll be super explicit with the expected classes here since this is effectively a
+    # stale artifact. All future classes should just go into //ext/junit
+    expected_class_prefixes = [
+        "androidx.test.ext.junit.rules.ActivityScenarioRuleKt",
+    ],
     included_dep = ":release_lib",
 )
 

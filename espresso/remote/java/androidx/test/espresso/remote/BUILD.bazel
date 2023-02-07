@@ -119,6 +119,9 @@ android_library(
 
 axt_android_aar(
     name = "espresso_remote_release",
+    expected_class_prefixes = [
+        "androidx.test.espresso",
+    ],
     included_dep = ":remote",
     jarjar_rule = "release_jarjar_rules.txt",
 )

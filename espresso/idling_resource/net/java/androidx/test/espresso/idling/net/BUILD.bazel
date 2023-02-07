@@ -20,10 +20,12 @@ android_library(
     ],
 )
 
-# rule for outputting externally released binary. Produces
-# idling_net_release_no_deps.jar and idling_net_release.aar
+# rule for outputting externally released binary.
 axt_android_aar(
     name = "idling_net_release",
+    expected_class_prefixes = [
+        "androidx.test.espresso.idling.net",
+    ],
     included_dep = ":uri_idling_resource",
 )
 

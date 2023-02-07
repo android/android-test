@@ -30,6 +30,9 @@ MavenFiles = provider(
         "src_jar": """
         The jar of source files
         """,
+        "validation": """
+                The jar of source files
+                """,
     },
 )
 

@@ -43,6 +43,11 @@ android_library(
 axt_android_aar(
     name = "core_release",
     testonly = 1,
+    # we'll be super explicit with the expected classes here since this is effectively a
+    # stale artifact. All future classes should just go into //core
+    expected_class_prefixes = [
+        "androidx.test.core.app.ActivityScenarioKt",
+    ],
     included_dep = ":release_lib",
 )
 

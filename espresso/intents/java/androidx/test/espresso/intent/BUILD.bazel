@@ -64,6 +64,9 @@ android_library(
 axt_android_aar(
     name = "espresso_intents_release",
     testonly = 1,
+    expected_class_prefixes = [
+        "androidx.test.espresso.intent",
+    ],
     included_dep = ":espresso_intents_release_lib",
 )
 

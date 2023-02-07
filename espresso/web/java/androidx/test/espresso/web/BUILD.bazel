@@ -27,6 +27,9 @@ android_library(
 
 axt_android_aar(
     name = "espresso_web_release",
+    expected_class_prefixes = [
+        "androidx.test.espresso.web",
+    ],
     included_dep = ":espresso_web_release_lib",
 )
 

@@ -198,6 +198,9 @@ android_library(
 
 axt_android_aar(
     name = "espresso_core_release",
+    expected_class_prefixes = [
+        "androidx.test.espresso",
+    ],
     included_dep = ":espresso_release_lib",
     jarjar_rule =
         "release_jarjar_rules.txt",

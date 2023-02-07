@@ -81,6 +81,16 @@ android_library(
 # Generate rules for the release artifacts.
 axt_android_aar(
     name = "monitor_release",
+    # Unfortunately this legacy artifact doesn't follow standard class naming conventions.
+    # so we'll be more explicit in the expected packages list to catch new classes that don't follow
+    # expected package patterns
+    expected_class_prefixes = [
+        "androidx.test.InstrumentationRegistry",
+        "androidx.test.annotation.Beta",
+        "androidx.test.internal",
+        "androidx.test.platform",
+        "androidx.test.runner",
+    ],
     included_dep = ":monitor_release_lib",
 )
 

@@ -47,6 +47,9 @@ android_library(
 # rule for outputting externally released binary.
 axt_android_aar(
     name = "idling_concurrent_release",
+    expected_class_prefixes = [
+        "androidx.test.espresso.idling.concurrent",
+    ],
     included_dep = ":idling_concurrent",
 )
 

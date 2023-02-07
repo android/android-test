@@ -182,6 +182,9 @@ android_library(
 axt_android_aar(
     name = "espresso_contrib_release",
     testonly = 1,
+    expected_class_prefixes = [
+        "androidx.test.espresso.contrib",
+    ],
     included_dep = ":espresso_contrib_release_lib",
 )
 

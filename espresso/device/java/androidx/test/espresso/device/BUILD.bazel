@@ -62,6 +62,9 @@ android_library(
 axt_android_aar(
     name = "device_release",
     testonly = 1,
+    expected_class_prefixes = [
+        "androidx.test.espresso.device",
+    ],
     included_dep = ":device_release_lib",
 )
 

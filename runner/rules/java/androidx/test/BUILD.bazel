@@ -31,6 +31,11 @@ android_library(
 # Generate rules for the release artifacts. T
 axt_android_aar(
     name = "rules_release",
+    expected_class_prefixes = [
+        "androidx.test.annotation.UiThreadTest",
+        "androidx.test.internal.statement",
+        "androidx.test.rule",
+    ],
     included_dep = ":rules",
 )
 

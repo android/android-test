@@ -22,6 +22,9 @@ android_library(
 
 axt_android_aar(
     name = "annotation_release",
+    expected_class_prefixes = [
+        "androidx.test.annotation",
+    ],
     included_dep = ":annotation",
 )
 

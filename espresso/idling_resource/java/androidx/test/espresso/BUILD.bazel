@@ -50,8 +50,11 @@ alias(
 # rule for outputting externally released binary.
 axt_android_aar(
     name = "espresso_idling_resource_release",
-    included_dep =
-        ":idling_resource_internal",
+    expected_class_prefixes = [
+        "androidx.test.espresso.Idling",
+        "androidx.test.espresso.idling",
+    ],
+    included_dep = ":idling_resource_internal",
 )
 
 maven_artifact(

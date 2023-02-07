@@ -29,6 +29,9 @@ android_library(
 axt_android_aar(
     name = "accessibility_checks_release",
     testonly = 1,
+    expected_class_prefixes = [
+        "androidx.test.espresso.accessibility",
+    ],
     included_dep = ":accessibility_checks",
 )
 
