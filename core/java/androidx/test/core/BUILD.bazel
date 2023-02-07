@@ -62,6 +62,12 @@ android_library(
     exports = [":core_internal"],
 )
 
+android_library(
+    name = "core_test_only",
+    visibility = ["//visibility:public"],
+    exports = [":core_internal"],
+)
+
 # group of targets to use to produce release binary + docs
 android_library(
     name = "core_release_lib",
