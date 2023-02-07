@@ -15,13 +15,15 @@
  */
 package androidx.test.espresso.device.dagger
 
+import android.provider.Settings
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.context.InstrumentationTestActionContext
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
-import androidx.test.espresso.device.controller.emulator.EmulatorController
 import androidx.test.espresso.device.controller.PhysicalDeviceController
+import androidx.test.espresso.device.controller.emulator.EmulatorController
 import androidx.test.espresso.device.controller.emulator.EmulatorGrpcConn
 import androidx.test.espresso.device.controller.emulator.EmulatorGrpcConnImpl
+import androidx.test.espresso.device.util.getDeviceApiLevel
 import androidx.test.espresso.device.util.isTestDeviceAnEmulator
 import androidx.test.internal.platform.ServiceLoaderWrapper
 import androidx.test.platform.app.InstrumentationRegistry
@@ -63,13 +65,15 @@ internal class DeviceControllerModule {
   private fun getEmulatorConnection(): EmulatorGrpcConn {
     val args = InstrumentationRegistry.getArguments()
     var grpcPortString = args.getString(EmulatorGrpcConn.ARGS_GRPC_PORT)
-    var grpcPort = if (grpcPortString != null && grpcPortString.toInt() > 0) {
-      grpcPortString.toInt()
-    } else {
-      getEmulatorGRPCPort()
-    }
+    var grpcPort =
+      if (grpcPortString != null && grpcPortString.toInt() > 0) {
+        grpcPortString.toInt()
+      } else {
+        getEmulatorGRPCPort()
+      }
     var emulatorAddressArg = args.getString(EmulatorGrpcConn.ARGS_EMULATOR_ADDRESS)
-    var emulatorAddress = if (emulatorAddressArg != null) emulatorAddressArg else EmulatorGrpcConn.EMULATOR_ADDRESS
+    var emulatorAddress =
+      if (emulatorAddressArg != null) emulatorAddressArg else EmulatorGrpcConn.EMULATOR_ADDRESS
 
     return EmulatorGrpcConnImpl(
       emulatorAddress,
@@ -83,9 +87,17 @@ internal class DeviceControllerModule {
 
   /* Gets the emulator gRPC port for emulators that do not specify a port through instrumentation args */
   private fun getEmulatorGRPCPort(): Int {
-    val clazz = Class.forName("android.os.SystemProperties")
-    val getter: Method = clazz.getMethod("get", String::class.java)
-    var gRpcPort = getter.invoke(clazz, "mdevx.grpc_guest_port") as String
+    val gRpcPort =
+      if (getDeviceApiLevel() >= 17) {
+        Settings.Global.getString(
+          provideActionContext().applicationContext.getContentResolver(),
+          "mdevx.grpc_guest_port"
+        )
+      } else {
+        val clazz = Class.forName("android.os.SystemProperties")
+        val getter: Method = clazz.getMethod("get", String::class.java)
+        getter.invoke(clazz, "mdevx.grpc_guest_port") as String
+      }
     if (gRpcPort.isBlank()) {
       throw DeviceControllerOperationException(
         "Unable to connect to Emulator gRPC port. Please make sure the controller gRPC service is" +
