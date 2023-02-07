@@ -17,8 +17,11 @@
 package androidx.test.runner;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.Instrumentation;
+import android.content.Context;
 import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.StrictMode;
@@ -285,12 +288,23 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   private static final String LOG_TAG = "AndroidJUnitRunner";
 
   private Bundle arguments;
-  private final InstrumentationResultPrinter instrumentationResultPrinter =
-      new InstrumentationResultPrinter();
+  private InstrumentationResultPrinter instrumentationResultPrinter;
   private RunnerArgs runnerArgs;
   private TestEventClient testEventClient = TestEventClient.NO_OP_CLIENT;
   private final Set<Throwable> appExceptionsHandled =
       Collections.newSetFromMap(new WeakHashMap<>());
+
+  @Override
+  public Application newApplication(ClassLoader cl, String className, Context context)
+      throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    if (VERSION.SDK_INT >= 16) {
+      // InstrumentationResultPrinter use ConcurrentLinkedList, and as that is
+      // desugared (see b/246860430) it cannot be instantiated before multidex is loaded.
+      // See super class MonitoringInstrumentation for when multidex is loaded.
+      instrumentationResultPrinter = new InstrumentationResultPrinter();
+    }
+    return super.newApplication(cl, className, context);
+  }
 
   /** {@inheritDoc} */
   @Override
@@ -298,6 +312,12 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     Trace.beginSection("AndroidJUnitRunner#onCreate");
     try {
       super.onCreate(arguments);
+      if (VERSION.SDK_INT <= 15) {
+        // InstrumentationResultPrinter use ConcurrentLinkedList, and as that is
+        // desugared (see b/246860430) it cannot be instantiated before multidex is loaded.
+        // See super class MonitoringInstrumentation for when multidex is loaded.
+        instrumentationResultPrinter = new InstrumentationResultPrinter();
+      }
       this.arguments = arguments;
       parseRunnerArgs(this.arguments);
       Log.i(LOG_TAG, "onCreate " + arguments.toString());
