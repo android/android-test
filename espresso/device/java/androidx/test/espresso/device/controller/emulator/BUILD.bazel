@@ -15,13 +15,13 @@ kt_android_library(
     deps = [
         "//espresso/device/java/androidx/test/espresso/device/controller",
         "//espresso/device/java/androidx/test/espresso/device/action",
-        "//:androidx_annotation",
+        "@maven//:androidx_annotation_annotation",
         "@maven//:io_grpc_grpc_stub",
         "@maven//:io_grpc_grpc_core",
         # TODO(b/215420259) fix gRPC dependency
         # "//android/emulator:emulator_controller_java_grpc",
         # "//android/emulator:emulator_controller_kt_proto",
         # "//grpc:okhttp_android",
-        "//runner/monitor"
+        "//runner/monitor",
     ],
 )

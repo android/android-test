@@ -27,7 +27,6 @@ kt_android_library(
     testonly = 1,
     srcs = ["ActivityScenarioKotlinTest.kt"],
     deps = [
-        "//:androidx_lifecycle_common",
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
         "//ext/junit",
@@ -35,6 +34,7 @@ kt_android_library(
         "//ktx/core",
         "//runner/android_junit_runner",
         "//runner/monitor",
+        "@maven//:androidx_lifecycle_lifecycle_common",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
     ],
@@ -46,7 +46,6 @@ android_binary(
     manifest = "AndroidManifest_test.xml",
     deps = [
         ":ActivityScenarioKotlinTest_lib",
-        "//:androidx_lifecycle_common",
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
         "//ext/junit",
@@ -54,6 +53,7 @@ android_binary(
         "//ktx/core",
         "//runner/android_junit_runner",
         "//runner/monitor",
+        "@maven//:androidx_lifecycle_lifecycle_common",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
     ],

@@ -20,10 +20,10 @@ android_library(
         "proguard.cfg",
     ],
     deps = [
-        "//:androidx_annotation",
         "//annotation",
         "//runner/android_junit_runner",
         "@androidsdk//:legacy_test-30",
+        "@maven//:androidx_annotation_annotation",
         "@maven//:junit_junit",
     ],
 )

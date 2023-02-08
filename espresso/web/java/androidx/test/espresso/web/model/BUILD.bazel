@@ -14,12 +14,12 @@ android_library(
     idl_import_root = "idls",
     idl_parcelables = glob(["idls/**"]),
     deps = [
-        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//runner/monitor",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:androidx_annotation_annotation",
         "@maven//:com_google_code_findbugs_jsr305",
     ],
 )

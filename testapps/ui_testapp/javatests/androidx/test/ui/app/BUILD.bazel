@@ -36,7 +36,7 @@ TESTAPP_DEPS = [
 
 EXTERNAL_DEPS = [
     "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework",
-    "//:androidx_annotation",
+    "@maven//:androidx_annotation_annotation",
     "@maven//:javax_inject_javax_inject",
     "@maven//:org_hamcrest_hamcrest_all",
     "@maven//:com_google_code_findbugs_jsr305",

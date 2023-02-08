@@ -7,7 +7,7 @@ android_library(
     name = "inject",
     srcs = glob(["*java"]),
     deps = [
-        "//:androidx_annotation",
         "@jsr330",
+        "@maven//:androidx_annotation_annotation",
     ],
 )

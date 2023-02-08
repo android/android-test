@@ -16,8 +16,8 @@ android_library(
     srcs = ["UriIdlingResource.java"],
     visibility = ["//visibility:public"],
     deps = [
-        "//:androidx_annotation",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
+        "@maven//:androidx_annotation_annotation",
     ],
 )
 

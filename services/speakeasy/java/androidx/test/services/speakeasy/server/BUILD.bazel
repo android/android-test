@@ -30,8 +30,8 @@ android_library(
     ],
     deps = [
         ":speak_easy_core",
-        "//:androidx_core",
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
+        "@maven//:androidx_core_core",
         "@maven//:com_google_guava_guava",
     ],
 )

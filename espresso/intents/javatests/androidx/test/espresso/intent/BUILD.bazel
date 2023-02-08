@@ -16,7 +16,6 @@ android_app_instrumentation_tests(
     binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
     target_devices = devices(),
     deps = [
-        "//:androidx_annotation",
         "//core",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/action",
@@ -30,6 +29,7 @@ android_app_instrumentation_tests(
         "//runner/android_junit_runner",
         "//runner/rules",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "@maven//:androidx_annotation_annotation",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_all",

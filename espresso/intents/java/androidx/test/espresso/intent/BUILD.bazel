@@ -26,7 +26,6 @@ android_library(
     visibility = ["//visibility:public"],
     deps = [
         ":resolved_intent_interface",
-        "//:androidx_annotation",
         "//annotation",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
@@ -34,6 +33,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/intents/java/androidx/test/espresso/intent/matcher",
         "//runner/android_junit_runner",
+        "@maven//:androidx_annotation_annotation",
         "@maven//:com_google_errorprone_error_prone_annotations",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_all",
