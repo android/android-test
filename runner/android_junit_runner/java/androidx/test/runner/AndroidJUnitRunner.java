@@ -319,6 +319,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
         instrumentationResultPrinter = new InstrumentationResultPrinter();
       }
       this.arguments = arguments;
+      registerTestStorage(this.arguments);
       parseRunnerArgs(this.arguments);
       Log.i(LOG_TAG, "onCreate " + arguments.toString());
 
@@ -457,8 +458,6 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
         Log.i(LOG_TAG, "Runner is idle...");
         return;
       }
-
-      registerTestStorage(runnerArgs);
 
       try {
         TestExecutor.Builder executorBuilder = new TestExecutor.Builder(this);
@@ -675,8 +674,8 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     return new TestRequestBuilder(instr, arguments);
   }
 
-  private void registerTestStorage(RunnerArgs runnerArgs) {
-    if (runnerArgs.useTestStorageService) {
+  private void registerTestStorage(Bundle bundleArgs) {
+    if (Boolean.parseBoolean(bundleArgs.getString(RunnerArgs.ARGUMENT_USE_TEST_STORAGE_SERVICE))) {
       Log.d(LOG_TAG, "Use the test storage service for managing file I/O.");
       PlatformTestStorageRegistry.registerInstance(new TestStorage());
     } else {

@@ -92,7 +92,7 @@ public class RunnerArgs {
   static final String ARGUMENT_TEST_PLATFORM_MIGRATION = "temporary_testPlatformMigration";
   // Specifies whether the `androidx.test.services` service is installed on the device.
   // Supposed to be used by the test infrastructure only.
-  static final String ARGUMENT_USE_TEST_STORAGE_SERVICE = "useTestStorageService";
+  public static final String ARGUMENT_USE_TEST_STORAGE_SERVICE = "useTestStorageService";
   static final String ARGUMENT_SHELL_EXEC_BINDER_KEY = "shellExecBinderKey";
   static final String ARGUMENT_RUN_LISTENER_NEW_ORDER = "newRunListenerMode";
   static final String ARGUMENT_TESTS_REGEX = "tests_regex";
