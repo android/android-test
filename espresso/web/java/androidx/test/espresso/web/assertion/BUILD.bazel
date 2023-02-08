@@ -10,7 +10,6 @@ android_library(
         ["*.java"],
     ),
     deps = [
-        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
@@ -19,6 +18,7 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/model",
         "//runner/monitor",
         "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:androidx_annotation_annotation",
         "@maven//:org_ccil_cowan_tagsoup_tagsoup",
         "@maven//:org_hamcrest_hamcrest_all",
     ],

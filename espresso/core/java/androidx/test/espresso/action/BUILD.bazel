@@ -13,12 +13,12 @@ android_library(
     name = "adapter_view_protocol",
     srcs = ADAPTER_VIEW_PROTOCOL,
     deps = [
-        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/core/java/androidx/test/espresso/util",
         "//runner/monitor",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:androidx_annotation_annotation",
     ],
 )
 
@@ -30,7 +30,6 @@ android_library(
     ),
     deps = [
         ":adapter_view_protocol",
-        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
@@ -41,6 +40,7 @@ android_library(
         "//runner/monitor",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:androidx_annotation_annotation",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_errorprone_error_prone_annotations",
         "@maven//:org_hamcrest_hamcrest_all",

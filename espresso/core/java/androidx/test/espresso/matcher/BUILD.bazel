@@ -11,7 +11,6 @@ android_library(
         ["*.java"],
     ),
     deps = [
-        "//:androidx_annotation",
         "//annotation",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
@@ -19,6 +18,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//runner/android_junit_runner",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib",
+        "@maven//:androidx_annotation_annotation",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_all",
     ],

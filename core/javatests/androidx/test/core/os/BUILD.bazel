@@ -13,13 +13,13 @@ axt_android_local_test(
     srcs =
         ["ParcelablesTest.java"],
     deps = [
-        "//:androidx_lifecycle_common",
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
         "//core/javatests/androidx/test/core/app/testing:manifest",
         "//ext/junit",
         "//ext/truth",
         "//runner/monitor/java/androidx/test:monitor",
+        "@maven//:androidx_lifecycle_lifecycle_common",
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",

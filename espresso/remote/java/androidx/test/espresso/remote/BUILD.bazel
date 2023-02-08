@@ -24,7 +24,6 @@ android_library(
     srcs = REMOTE_REGISTRY,
     visibility = ["//visibility:public"],
     deps = [
-        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
         "//espresso/core/java/androidx/test/espresso/remote:exceptions",
         "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
@@ -33,6 +32,7 @@ android_library(
         "//runner/monitor",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:androidx_annotation_annotation",
     ],
 )
 
@@ -60,7 +60,6 @@ android_library(
     visibility = ["//visibility:public"],
     deps = [
         ":registry",
-        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
@@ -73,6 +72,7 @@ android_library(
         "//runner/android_junit_runner",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:androidx_annotation_annotation",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
@@ -85,7 +85,6 @@ android_library(
     ),
     deps = [
         ":protoUtils",
-        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
@@ -111,6 +110,7 @@ android_library(
         "//runner/android_junit_runner",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:androidx_annotation_annotation",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
 )

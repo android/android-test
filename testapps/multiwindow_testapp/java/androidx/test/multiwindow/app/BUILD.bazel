@@ -16,8 +16,8 @@ android_library(
     manifest = "AndroidManifest_opensource.xml",
     resource_files = glob(["res/**"]),
     deps = [
-        "//:androidx_annotation",
-        "//:androidx_appcompat",
+        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_appcompat_appcompat",
     ],
 )
 
@@ -31,6 +31,6 @@ android_binary(
     resource_files = glob(["res/**"]),
     deps = [
         ":lib",
-        "//:androidx_multidex",
+        "@maven//:androidx_multidex_multidex",
     ],
 )

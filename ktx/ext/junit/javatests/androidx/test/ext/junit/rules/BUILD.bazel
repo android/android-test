@@ -14,7 +14,6 @@ axt_android_local_test(
         "ActivityScenarioRuleKotlinTest.kt",
     ],
     deps = [
-        "//:androidx_lifecycle_common",
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
         "//core/javatests/androidx/test/core/app/testing:manifest",
@@ -22,6 +21,7 @@ axt_android_local_test(
         "//ktx/core",
         "//ktx/ext/junit",
         "//runner/monitor",
+        "@maven//:androidx_lifecycle_lifecycle_common",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
     ],

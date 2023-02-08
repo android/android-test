@@ -13,7 +13,6 @@ android_library(
     idl_import_root = "idls",
     idl_srcs = glob(["idls/**"]),
     deps = [
-        "//:androidx_annotation",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
@@ -28,6 +27,7 @@ android_library(
         "//runner/monitor",
         "@com_github_jetbrains_kotlin//:kotlin-stdlib",
         "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:androidx_annotation_annotation",
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:org_hamcrest_hamcrest_all",

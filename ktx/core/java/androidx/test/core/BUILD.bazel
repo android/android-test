@@ -20,8 +20,8 @@ kt_android_library(
         ["**/*.kt"],
     ),
     deps = [
-        "//:androidx_lifecycle_common",
         "//core",
+        "@maven//:androidx_lifecycle_lifecycle_common",
     ],
 )
 

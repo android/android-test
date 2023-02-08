@@ -11,8 +11,8 @@ android_library(
         "*.java",
     ]),
     deps = [
-        "//:androidx_annotation",
         "//runner/monitor",
+        "@maven//:androidx_annotation_annotation",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
 )

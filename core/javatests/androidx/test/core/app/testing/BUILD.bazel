@@ -13,7 +13,7 @@ android_library(
     resource_files = glob(["res/**"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//:androidx_annotation",
+        "@maven//:androidx_annotation_annotation",
         "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
     ],

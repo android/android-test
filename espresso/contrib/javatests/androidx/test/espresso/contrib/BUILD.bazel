@@ -19,7 +19,6 @@ android_library(
     testonly = 1,
     srcs = UTIL_SRC,
     deps = [
-        "//:androidx_recyclerview",
         "//core",
         "//espresso/contrib/java/androidx/test/espresso/contrib:recycler_view",
         "//espresso/core/java/androidx/test/espresso",
@@ -29,6 +28,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//runner/android_junit_runner",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "@maven//:androidx_recyclerview_recyclerview",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
@@ -52,8 +52,6 @@ android_app_instrumentation_tests(
     target_devices = devices(),
     deps = [
         ":util",
-        "//:androidx_core",
-        "//:androidx_recyclerview",
         "//core",
         "//espresso/contrib/java/androidx/test/espresso/contrib:accessibility_checks",
         "//espresso/contrib/java/androidx/test/espresso/contrib:activity_result_matchers",
@@ -70,6 +68,8 @@ android_app_instrumentation_tests(
         "//runner/android_junit_runner",
         "//runner/rules",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "@maven//:androidx_core_core",
+        "@maven//:androidx_recyclerview_recyclerview",
         "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_truth_truth",

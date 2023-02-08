@@ -21,8 +21,8 @@ android_library(
     ],
     visibility = ["//visibility:private"],
     deps = [
-        "//:androidx_annotation",
         "//runner/monitor",
+        "@maven//:androidx_annotation_annotation",
         "@maven//:org_hamcrest_hamcrest_all",
     ],
 )
@@ -34,7 +34,6 @@ android_app_instrumentation_tests(
     target_devices = devices(),
     deps = [
         ":utils",
-        "//:androidx_annotation",
         "//core",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:data-interaction-remote",
@@ -53,6 +52,7 @@ android_app_instrumentation_tests(
         "//runner/android_junit_runner",
         "//runner/rules",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "@maven//:androidx_annotation_annotation",
         "@maven//:com_google_truth_truth",
         "@maven//:com_linkedin_dexmaker_dexmaker",
         "@maven//:com_linkedin_dexmaker_dexmaker_mockito",

@@ -38,13 +38,13 @@ kt_android_library(
     tags = ["alt_dep=//core"],
     visibility = ["//visibility:private"],
     deps = [
-        "//:androidx_annotation",
-        "//:androidx_concurrent_futures",
-        "//:androidx_lifecycle_common",
-        "//:androidx_tracing",
         "//annotation",
         "//runner/monitor",
         "//services/storage",
+        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_concurrent_concurrent_futures",
+        "@maven//:androidx_lifecycle_lifecycle_common",
+        "@maven//:androidx_tracing_tracing",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
 )

@@ -26,7 +26,7 @@ android_library(
         ":MultiDexTestClassC",
         ":MultiDexTestClassD",
     ],
-    deps = ["//:androidx_multidex"],
+    deps = ["@maven//:androidx_multidex_multidex"],
 )
 
 android_binary(

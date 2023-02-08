@@ -19,7 +19,7 @@ runs:
         restore-keys: |
           ${{ runner.os }}-bazel-test-
     - name: Run Robolectric tests
-      run: bazelisk test --test_tag_filters=robolectric,-gcb_ignore --build_tag_filters=robolectric --test_output=all ...
+      run: bazelisk test --test_tag_filters=robolectric --build_tag_filters=robolectric --test_output=all ...
       shell: bash
     - name: 'Clean bazel cache'
       # Don't cache the bazel/external directory, since it can be  > 2GB

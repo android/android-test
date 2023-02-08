@@ -29,8 +29,8 @@ axt_android_local_test(
         "targetSdkVersion": "28",
     },
     deps = [
-        "//:androidx_tracing",
         "//runner/android_junit_runner",
+        "@maven//:androidx_tracing_tracing",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
         "@maven//:org_robolectric_shadows_framework",
