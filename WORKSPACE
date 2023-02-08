@@ -7,7 +7,7 @@ RULES_JVM_EXTERNAL_TAG = "4.4.2"
 
 RULES_JVM_EXTERNAL_SHA = "735602f50813eb2ea93ca3f5e43b1959bd80b213b836a07a62a29d757670b77b"
 
-# This needs to be consistent with the KOTLIN_VERSION specified in //third_party/android/androidx_test/build_extensions/axt_versions.bzl.
+# This needs to be consistent with the KOTLIN_VERSION specified in build_extensions/axt_versions.bzl.
 KOTLIN_VERSION = "1.6.21"
 
 http_archive(

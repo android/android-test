@@ -39,7 +39,7 @@ package androidx.test.filters {
 
 package androidx.test.orchestrator.callback {
 
-  @javax.annotation.processing.Generated("//java/com/google/android/aidl") public interface OrchestratorCallback extends android.os.IInterface {
+  @javax.annotation.processing.Generated("tmp_aidl_gen_path") public interface OrchestratorCallback extends android.os.IInterface {
     method public void addTest(String!) throws android.os.RemoteException;
     method public void sendTestNotification(android.os.Bundle!) throws android.os.RemoteException;
   }
