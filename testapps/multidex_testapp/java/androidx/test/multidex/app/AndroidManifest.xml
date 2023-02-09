@@ -29,7 +29,8 @@
 
         <activity
             android:label="@string/activity_name"
-            android:name=".MultiDexActivity" >
+            android:name=".MultiDexActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
