@@ -96,6 +96,7 @@ android_library(
         "ThrowableHandler.java",
         "ViewHierarchyExceptionHandler.java",
     ],
+    manifest = "AndroidManifest.xml",
     visibility = ["//visibility:public"],
     deps = [
         "//core/java/androidx/test/core:core_not_test_only",
