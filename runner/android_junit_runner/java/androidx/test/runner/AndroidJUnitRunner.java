@@ -298,9 +298,11 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   public Application newApplication(ClassLoader cl, String className, Context context)
       throws InstantiationException, IllegalAccessException, ClassNotFoundException {
     if (VERSION.SDK_INT >= 16) {
-      // InstrumentationResultPrinter use ConcurrentLinkedList, and as that is
-      // desugared (see b/246860430) it cannot be instantiated before multidex is loaded.
-      // See super class MonitoringInstrumentation for when multidex is loaded.
+      // Create instrumentationResultPrinter as early as possible to assist with
+      // exception handling. InstrumentationResultPrinter use ConcurrentLinkedList,
+      // and as that is desugared (see b/246860430) it cannot be instantiated before
+      // multidex is loaded.
+      installMultidex();
       instrumentationResultPrinter = new InstrumentationResultPrinter();
     }
     return super.newApplication(cl, className, context);
@@ -313,9 +315,12 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     try {
       super.onCreate(arguments);
       if (VERSION.SDK_INT <= 15) {
-        // InstrumentationResultPrinter use ConcurrentLinkedList, and as that is
-        // desugared (see b/246860430) it cannot be instantiated before multidex is loaded.
-        // See super class MonitoringInstrumentation for when multidex is loaded.
+        // Create instrumentationResultPrinter as early as possible to assist with
+        // exception handling. InstrumentationResultPrinter use ConcurrentLinkedList,
+        // and as that is desugared (see b/246860430) it cannot be instantiated before
+        // multidex is loaded.
+        // On API level <= 15, #onCreate is called earlier than #newApplication. See
+        // MonitoringInstrumentation#onCreate.
         instrumentationResultPrinter = new InstrumentationResultPrinter();
       }
       this.arguments = arguments;
