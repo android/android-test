@@ -297,6 +297,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   @Override
   public Application newApplication(ClassLoader cl, String className, Context context)
       throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    Log.i(LOG_TAG, "newApplication " + className);
     if (VERSION.SDK_INT >= 16) {
       // Create instrumentationResultPrinter as early as possible to assist with
       // exception handling. InstrumentationResultPrinter use ConcurrentLinkedList,
@@ -311,6 +312,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   /** {@inheritDoc} */
   @Override
   public void onCreate(Bundle arguments) {
+    Log.i(LOG_TAG, "onCreate " + arguments.toString());
     Trace.beginSection("AndroidJUnitRunner#onCreate");
     try {
       super.onCreate(arguments);
@@ -326,7 +328,6 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
       this.arguments = arguments;
       registerTestStorage(this.arguments);
       parseRunnerArgs(this.arguments);
-      Log.i(LOG_TAG, "onCreate " + arguments.toString());
 
       if (waitForDebugger(runnerArgs)) {
         Log.i(LOG_TAG, "Waiting for debugger to connect...");

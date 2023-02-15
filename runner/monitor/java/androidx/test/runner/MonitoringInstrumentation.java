@@ -146,7 +146,6 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   @Override
   public Application newApplication(ClassLoader cl, String className, Context context)
       throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-    Log.i(TAG, "newApplication called!");
     if (VERSION.SDK_INT >= 16) {
       // On API <= 15, initialization should have been called in #onCreate().
       installMultidexAndExceptionHandler();
