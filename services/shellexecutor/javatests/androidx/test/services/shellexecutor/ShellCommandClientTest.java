@@ -16,26 +16,24 @@
 
 package androidx.test.services.shellexecutor;
 
-import static androidx.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static junit.framework.Assert.fail;
 
 import android.os.RemoteException;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.annotation.internal.DoNotInstrument;
 
 /** Unit tests for {@link ShellCommandClient}. */
 @RunWith(AndroidJUnit4.class)
-@DoNotInstrument
 public class ShellCommandClientTest {
 
   @Test
   public void testBlankCommand()
       throws ClientNotConnected, IOException, RemoteException, InterruptedException {
     try {
-      ShellCommandClient.execOnServer(getTargetContext(), "secret", "", null, null, false, 0L);
+      ShellCommandClient.execOnServer(getApplicationContext(), "secret", "", null, null, false, 0L);
       fail("Passing blank command should throw IllegalArgumentException");
     } catch (IllegalArgumentException expected) {
       // Pass
@@ -46,7 +44,8 @@ public class ShellCommandClientTest {
   public void testNullCommand()
       throws ClientNotConnected, IOException, RemoteException, InterruptedException {
     try {
-      ShellCommandClient.execOnServer(getTargetContext(), "secret", null, null, null, false, 0L);
+      ShellCommandClient.execOnServer(
+          getApplicationContext(), "secret", null, null, null, false, 0L);
       fail("Passing null command should throw IllegalArgumentException");
     } catch (IllegalArgumentException expected) {
       // Pass
@@ -58,7 +57,7 @@ public class ShellCommandClientTest {
       throws ClientNotConnected, IOException, RemoteException, InterruptedException {
     try {
       ShellCommandClient.execOnServer(
-          getTargetContext(), "secret", "command", null, null, false, 0L);
+          getApplicationContext(), "secret", "command", null, null, false, 0L);
       fail("Calling execServer on main thread should throw exception");
     } catch (IllegalStateException expected) {
       // Pass

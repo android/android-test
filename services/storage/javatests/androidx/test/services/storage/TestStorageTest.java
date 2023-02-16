@@ -15,17 +15,14 @@
  */
 package androidx.test.services.storage;
 
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 
 import android.net.Uri;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.services.storage.file.HostedFile;
 import androidx.test.services.storage.internal.TestStorageUtil;
-import androidx.test.services.storage.testapp.DummyActivity;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,7 +35,6 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -50,11 +46,6 @@ public final class TestStorageTest {
   private static final String OUTPUT_PATH = "parent_dir/output_file";
 
   private final TestStorage testStorage = new TestStorage();
-
-  @Before
-  public void setUp() {
-    ActivityScenario.launch(DummyActivity.class);
-  }
 
   @Test
   public void readNonExistentInputFile() {
@@ -92,8 +83,7 @@ public final class TestStorageTest {
 
     Uri dataUri = HostedFile.buildUri(HostedFile.FileHost.EXPORT_PROPERTIES, "properties.dat");
     InputStream rawStream =
-        TestStorageUtil.getInputStream(
-            dataUri, getInstrumentation().getTargetContext().getContentResolver());
+        TestStorageUtil.getInputStream(dataUri, getApplicationContext().getContentResolver());
 
     ObjectInputStream in = null;
     try {
@@ -133,8 +123,7 @@ public final class TestStorageTest {
     Uri outputFileUri = TestStorage.getOutputFileUri("path/to/file");
     try (InputStream input =
         TestStorageUtil.getInputStream(
-            outputFileUri,
-            InstrumentationRegistry.getInstrumentation().getTargetContext().getContentResolver())) {
+            outputFileUri, getApplicationContext().getContentResolver())) {
       input.read(data);
     }
 

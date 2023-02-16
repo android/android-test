@@ -15,6 +15,8 @@ axt_android_local_test(
     size = "small",
     srcs = ["ShellCommandClientTest.java"],
     deps = [
+        "//core",
+        "//ext/junit",
         "//runner/android_junit_runner",
         "//services/shellexecutor:exec_client",
         "//services/shellexecutor:exec_server",
