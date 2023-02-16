@@ -1,4 +1,0 @@
-# Description:
-#   Tests for Espresso device rules
-
-licenses(["notice"])

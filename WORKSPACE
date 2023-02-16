@@ -102,6 +102,15 @@ maven_install(
                     artifact = "checker",
                     group = "org.checkerframework",
                 ),
+                # accessibility-test-framework depends on hamcrest 2.2 which causes 'Using type org.hamcrest.Matcher from an indirect dependency' compile errors
+                maven.exclusion(
+                    artifact = "hamcrest-core",
+                    group = "org.hamcrest",
+                ),
+                maven.exclusion(
+                    artifact = "hamcrest-library",
+                    group = "org.hamcrest",
+                ),
             ],
             group = "com.google.android.apps.common.testing.accessibility.framework",
             version = "3.1",
@@ -138,7 +147,8 @@ maven_install(
         "net.sf.kxml:kxml2:jar:2.3.0",
         "org.ccil/cowan.tagsoup:tagsoup:1.2.1",
         "org.checkerframework:checker-compat-qual:2.5.5",
-        "org.hamcrest:hamcrest-all:1.3",
+        "org.hamcrest:hamcrest-core:1.3",
+        "org.hamcrest:hamcrest-library:1.3",
         "org.mockito:mockito-core:2.28.1",
         "org.objenesis:objenesis:2.6",
         "org.pantsbuild:jarjar:1.7.2",
@@ -225,4 +235,13 @@ http_archive(
     sha256 = "cd06d15dd8bb59926e4d65f9003bfc20f9da4b2519985c27e190cddc8b7a7806",
     strip_prefix = "rules_android-0.1.1",
     urls = ["https://github.com/bazelbuild/rules_android/archive/v0.1.1.zip"],
+)
+
+# Updated 2023-02-01
+http_archive(
+    name = "rules_license",
+    urls = [
+        "https://github.com/bazelbuild/rules_license/releases/download/0.0.4/rules_license-0.0.4.tar.gz",
+    ],
+    sha256 = "6157e1e68378532d0241ecd15d3c45f6e5cfd98fc10846045509fb2a7cc9e381",
 )

@@ -1,0 +1,24 @@
+# Protocol buffer definitions for remote web matchers
+
+licenses(["notice"])
+
+package(
+    default_applicable_licenses = ["//espresso:license"],
+    default_visibility = [
+        "//espresso/core/java/androidx/test/espresso:espresso_pkg",
+        "//espresso/web/java/androidx/test/espresso/web/matcher:__pkg__",
+    ],
+)
+
+proto_library(
+    name = "remote_web_matchers_proto",
+    srcs = ["remote_web_matchers.proto"],
+    deps = [
+        "@com_google_protobuf//:any_proto",
+    ],
+)
+
+java_lite_proto_library(
+    name = "remote_web_matchers_proto_android_pb3",
+    deps = [":remote_web_matchers_proto"],
+)

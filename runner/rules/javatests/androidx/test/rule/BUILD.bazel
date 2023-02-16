@@ -1,3 +1,0 @@
-# Description: Tests for Rules.
-
-# instrumentation tests currently not supported in androidx.test bazel

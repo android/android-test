@@ -1,6 +1,0 @@
-# Description:
-#   Sample multi-process tests.
-
-licenses(["notice"])
-
-# ignore - not supported in bazel

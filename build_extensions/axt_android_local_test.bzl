@@ -4,7 +4,7 @@ load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 
 _CONFIG_JAR_COMMAND = """
 set -e
-JAR="$(location @local_jdk//:jar)"
+JAR="$(location @bazel_tools//tools/jdk:jar)"
 SRC="$<"
 [[ "$$(basename "$${SRC}")" = 'robolectric.properties' ]] || {
   echo 'Must be named: robolectric.properties';
@@ -32,11 +32,17 @@ def axt_android_local_test(name, srcs = [], deps = [], manifest = "//build_exten
         name = "%s_config" % name,
         src = "//build_extensions:robolectric.properties",
     )
-    deps = deps + [
+    deps = depset(deps + [
         "%s_config" % name,
+        # the blaze-robolectric target exports these by default, so export them here too for consistency
         "@robolectric//bazel:android-all",
         "@maven//:org_robolectric_robolectric",
-    ]
+        "@maven//:org_robolectric_shadows_framework",
+        "@maven//:org_robolectric_shadowapi",
+        "@maven//:org_robolectric_annotations",
+        "//ext/junit",
+        "//core",
+    ]).to_list()
 
     if _is_kotlin(srcs):
         kt_android_library(
@@ -73,7 +79,7 @@ def _robolectric_config(name, src):
         message = "Generating Robolectric config...",
         cmd = _CONFIG_JAR_COMMAND,
         tools = [
-            "@local_jdk//:jar",
+            "@bazel_tools//tools/jdk:jar",
         ],
         visibility = ["//visibility:private"],
     )

@@ -1,5 +1,6 @@
 """A rule wrapper for an instrumentation test for an android library."""
 
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 load(
     "//build_extensions:generate_instrumentation_tests.bzl",
     "generate_instrumentation_tests",
@@ -8,12 +9,22 @@ load(
     "//build_extensions:infer_java_package_name.bzl",
     "infer_java_package_name",
 )
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("//build_extensions:register_extension_info.bzl", "register_extension_info")
 
-def android_library_instrumentation_tests(name, srcs, deps, target_devices,
-                                          test_java_package = None, library_args = {},
-                                          binary_args = {}, **kwargs):
-    """A macro for an instrumentation test whose target under test is an android_library.
+def android_library_instrumentation_tests(
+        name,
+        srcs,
+        deps,
+        target_devices = [],
+        device_list = [],
+        test_java_package = None,
+        library_args = {},
+        binary_args = {},
+        **kwargs):
+    """DEPRECATED: use axt_android_library_test instead
+
+
+    A macro for an instrumentation test whose target under test is an android_library.
 
     Will generate a 'self-instrumentating' test binary and other associated rules
 
@@ -21,11 +32,10 @@ def android_library_instrumentation_tests(name, srcs, deps, target_devices,
     for simple cases, while still supporting build_cleaner for automatic dependency management.
 
     This will generate:
-      - an unused stub android_binary under test, to placate bazel
       - a test_lib android_library, containing all sources and dependencies
       - a test_binary android_binary (soon to be android_application)
       - the manifest to use for the test library.
-      - for each device combination:
+      - for each src + device combination:
          - an android_instrumentation_test rule)
 
     Args:
@@ -33,7 +43,8 @@ def android_library_instrumentation_tests(name, srcs, deps, target_devices,
         manage dependencies
       srcs: the test sources to generate rules for
       deps: the build dependencies to use for the generated test binary
-      target_devices: array of device targets to execute on
+      device_list: list of device structs to execute on,  generated from phone_devices.bzl:devices()
+           By default this method returns a device for each available API level
       test_java_package: Optional. A custom root package name to use for the tests. If unset
           will be derived based on current path to a java source root
       library_args: additional arguments to pass to generated android_library
@@ -42,14 +53,6 @@ def android_library_instrumentation_tests(name, srcs, deps, target_devices,
     """
     library_name = "%s_library" % name
     test_java_package_name = test_java_package if test_java_package else infer_java_package_name()
-
-    native.android_binary(
-        name = "target_stub_binary",
-        manifest = "//build_extensions:AndroidManifest_target_stub.xml",
-        # use the same package name as the test package, so it gets overridden
-        manifest_values = {"applicationId": test_java_package_name},
-        testonly = 1,
-    )
 
     kt_android_library(
         name = library_name,
@@ -63,11 +66,17 @@ def android_library_instrumentation_tests(name, srcs, deps, target_devices,
         name = name,
         srcs = srcs,
         deps = [library_name],
-        target_devices = target_devices,
+        device_list = device_list,
         test_java_package_name = test_java_package_name,
         test_android_package_name = test_java_package_name,
         instrumentation_target_package = test_java_package_name,
-        instruments = ":target_stub_binary",
+        instruments = None,
         binary_args = binary_args,
         **kwargs
     )
+
+# registers the wrapper with build_cleaner so it can manage dependencies automatically
+register_extension_info(
+    extension = android_library_instrumentation_tests,
+    label_regex_for_dep = "{extension_name}_library",
+)

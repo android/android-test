@@ -1,5 +1,0 @@
-java_import(
-    name = "entry_point_import",
-    jars = ["entry_point_deploy.jar"],
-    visibility = ["//visibility:public"],
-)

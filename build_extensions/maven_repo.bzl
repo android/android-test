@@ -113,7 +113,7 @@ def _rename_artifact(ctx, tpl_string, src_file, packaging_type):
 def _maven_artifact_impl(ctx):
     """Generates maven repository for a single artifact."""
     pom = ctx.actions.declare_file(
-        "%s-%s.pom" % (ctx.attr.artifact_id, ctx.attr.version)
+        "%s-%s.pom" % (ctx.attr.artifact_id, ctx.attr.version),
     )
     ctx.actions.write(output = pom, content = _create_pom_string(ctx))
 

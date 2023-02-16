@@ -1,5 +1,0 @@
-# Description:
-#   Tests for Espresso device package
-
-licenses(["notice"])
-

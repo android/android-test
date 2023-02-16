@@ -1,9 +1,0 @@
-# Alias for androidx.test.espresso.core dependency
-
-licenses(["notice"])
-
-android_library(
-    name = "core",
-    visibility = ["//visibility:public"],
-    exports = ["//espresso/core/java/androidx/test/espresso"],
-)

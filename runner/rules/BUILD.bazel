@@ -1,9 +1,0 @@
-# Publicly visible alias to the AXT rules target
-
-licenses(["notice"])
-
-android_library(
-    name = "rules",
-    visibility = ["//visibility:public"],
-    exports = ["//runner/rules/java/androidx/test:rules"],
-)

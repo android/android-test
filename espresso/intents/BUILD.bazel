@@ -1,9 +1,0 @@
-# Alias for androidx.test.espresso.intents dependency
-
-licenses(["notice"])
-
-alias(
-    name = "intents",
-    actual = "//espresso/intents/java/androidx/test/espresso/intent:intents",
-    visibility = ["//visibility:public"],
-)

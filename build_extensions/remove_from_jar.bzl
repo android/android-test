@@ -128,7 +128,6 @@ def remove_from_jar(
         outs = ["%s.jar" % name],
         tools = [
             "@local_jdk//:jar",
-
         ],
         message = message,
         visibility = visibility,

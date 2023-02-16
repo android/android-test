@@ -1,9 +1,0 @@
-# Alias for androidx.test.espresso.remote dependency
-
-licenses(["notice"])
-
-android_library(
-    name = "remote",
-    visibility = ["//visibility:public"],
-    exports = ["//espresso/remote/java/androidx/test/espresso/remote"],
-)

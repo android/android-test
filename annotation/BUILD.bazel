@@ -1,9 +1,0 @@
-# Publicly visible androidx.test.annotation alias
-
-licenses(["notice"])
-
-android_library(
-    name = "annotation",
-    visibility = ["//visibility:public"],
-    exports = ["//annotation/java/androidx/test/annotation"],
-)

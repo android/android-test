@@ -1,5 +1,6 @@
 """A rule wrapper for an instrumentation test for an android binary."""
 
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 load(
     "//build_extensions:generate_instrumentation_tests.bzl",
     "generate_instrumentation_tests",
@@ -9,11 +10,19 @@ load(
     "infer_java_package_name",
     "infer_java_package_name_from_label",
 )
+load("//build_extensions:register_extension_info.bzl", "register_extension_info")
 
-
-def android_app_instrumentation_tests(name, binary_target, srcs, deps, target_devices,
-                                      test_java_package = None, binary_target_package = None,
-                                      library_args = {}, binary_args = {}, **kwargs):
+def android_app_instrumentation_tests(
+        name,
+        binary_target,
+        srcs,
+        deps,
+        device_list = [],
+        test_java_package = None,
+        binary_target_package = None,
+        library_args = {},
+        binary_args = {},
+        **kwargs):
     """A macro for an instrumentation test whose target under test is an android_binary.
 
     The intent of this wrapper is to simplify the build API for creating instrumentation test rules
@@ -23,7 +32,7 @@ def android_app_instrumentation_tests(name, binary_target, srcs, deps, target_de
       - a test_lib android_library, containing all sources and dependencies
       - a test_binary android_binary (soon to be android_application)
       - the manifest to use for the test library.
-      - for each device:
+      - for each src + device combination:
          - a android_instrumentation_test rule
 
     Args:
@@ -32,8 +41,9 @@ def android_app_instrumentation_tests(name, binary_target, srcs, deps, target_de
       binary_target: the android_binary under test
       srcs: the test sources to generate rules for
       deps: the build dependencies to use for the generated test library
-      target_devices: array of device targets to execute on
-      test_java_package_name: Optional. A custom root package name to use for the tests. If unset
+      device_list: list of device structs to execute on, generated from phone_devices.bzl:devices().
+          By default this method returns a device for each available API level
+      test_java_package: Optional. A custom root package name to use for the tests. If unset
           will be derived based on current path to a java source root
       binary_target_package: Optional: the android package name of binary_target. If unset, will be
           derived from binary target's path to a java source root
@@ -45,7 +55,7 @@ def android_app_instrumentation_tests(name, binary_target, srcs, deps, target_de
     test_java_package_name = test_java_package if test_java_package else infer_java_package_name()
     instrumentation_target_package = binary_target_package if binary_target_package else infer_java_package_name_from_label(binary_target)
 
-    native.android_library(
+    kt_android_library(
         name = library_name,
         srcs = srcs,
         testonly = 1,
@@ -57,7 +67,7 @@ def android_app_instrumentation_tests(name, binary_target, srcs, deps, target_de
         name = name,
         srcs = srcs,
         deps = [library_name],
-        target_devices = target_devices,
+        device_list = device_list,
         test_java_package_name = test_java_package_name,
         # always append .tests at the end to avoid potential conflict with instrumentation_target_package
         test_android_package_name = instrumentation_target_package + ".tests",
@@ -66,3 +76,9 @@ def android_app_instrumentation_tests(name, binary_target, srcs, deps, target_de
         binary_args = binary_args,
         **kwargs
     )
+
+# registers the wrapper with build_cleaner so it can manage dependencies automatically
+register_extension_info(
+    extension = android_app_instrumentation_tests,
+    label_regex_for_dep = "{extension_name}_library",
+)

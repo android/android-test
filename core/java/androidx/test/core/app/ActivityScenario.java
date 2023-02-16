@@ -60,7 +60,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * framework.
  *
  * <p>The ActivityScenario API uses {@link State} extensively. If you are unfamiliar with {@link
- * android.arch.lifecycle} components, please read <a
+ * androidx.lifecycle} components, please read <a
  * href="https://developer.android.com/topic/libraries/architecture/lifecycle#lc">lifecycle</a>
  * before starting. It is crucial to understand the difference between {@link State} and {@link
  * Event}.

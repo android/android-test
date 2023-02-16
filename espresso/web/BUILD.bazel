@@ -1,9 +1,0 @@
-# Alias for androidx.test.espresso.web dependency
-
-licenses(["notice"])
-
-android_library(
-    name = "web",
-    visibility = ["//visibility:public"],
-    exports = ["//espresso/web/java/androidx/test/espresso/web:espresso_web_release_lib"],
-)
