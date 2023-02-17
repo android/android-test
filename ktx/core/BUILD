@@ -4,11 +4,9 @@ package(default_applicable_licenses = ["//:license"])
 
 licenses(["notice"])
 
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")
-
-android_library(
+alias(
     name = "core",
     testonly = 1,
+    actual = "//ktx/core/java/androidx/test/core",
     visibility = ["//visibility:public"],
-    exports = ["//ktx/core/java/androidx/test/core"],
 )

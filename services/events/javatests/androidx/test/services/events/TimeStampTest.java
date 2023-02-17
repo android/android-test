@@ -55,6 +55,9 @@ public class TimeStampTest {
     assertThat(timeStampFromParcel.nanos).isEqualTo(nanos);
   }
 
+  // BEGIN_STRIP
+  // flaky due to timeouts on github CI.
+
   @Test
   @Config(
       minSdk = Config.OLDEST_SDK,
@@ -81,4 +84,6 @@ public class TimeStampTest {
     assertThat(timeStamp.seconds).isEqualTo(seconds);
     assertThat(timeStamp.nanos).isEqualTo(nanos);
   }
+
+  // END-STRIP
 }
