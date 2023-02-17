@@ -115,36 +115,6 @@ public class TestArgsContentProviderTest extends ProviderTestCase2<TestArgsConte
     cursor.close();
   }
 
-  public void testServerSpecOverride_behavesWellWhenNotSet() throws IOException {
-    String localhost = "fake.machine.company.com";
-    FakeSystemProperties.props.put("qemu.host.hostname", "");
-    createTestArgsFile(makeSomeServerSpecArgs(localhost));
-
-    Uri uri = PropertyFile.buildUri(PropertyFile.Authority.TEST_ARGS);
-    Cursor cursor = getMockContentResolver().query(uri, null, null, null, null);
-    Map<String, String> argMap = getProperties(cursor);
-
-    assertEquals(localhost + ":12345", argMap.get("local_server_address"));
-    assertEquals(localhost + ":984", argMap.get("local_2_server_address"));
-    assertEquals("www.google.com:80", argMap.get("non_local_server_address"));
-    assertEquals("fake.machine.company.com:100", argMap.get("val_is_a_spec_but_not_key"));
-  }
-
-  public void testServerSpecOverride() throws IOException {
-    String localhost = "fake.machine.company.com";
-    FakeSystemProperties.props.put("qemu.host.hostname", localhost);
-    createTestArgsFile(makeSomeServerSpecArgs(localhost));
-
-    Uri uri = PropertyFile.buildUri(PropertyFile.Authority.TEST_ARGS);
-    Cursor cursor = getMockContentResolver().query(uri, null, null, null, null);
-    Map<String, String> argMap = getProperties(cursor);
-
-    assertEquals("10.0.2.2:12345", argMap.get("local_server_address"));
-    assertEquals("10.0.2.2:984", argMap.get("local_2_server_address"));
-    assertEquals("www.google.com:80", argMap.get("non_local_server_address"));
-    assertEquals("fake.machine.company.com:100", argMap.get("val_is_a_spec_but_not_key"));
-  }
-
   static class FakeSystemProperties {
     private static final Map<String, String> props =
         Collections.synchronizedMap(new HashMap<String, String>());
@@ -175,11 +145,6 @@ public class TestArgsContentProviderTest extends ProviderTestCase2<TestArgsConte
             TestArgument.newBuilder()
                 .setName("val_is_a_spec_but_not_key")
                 .setValue(localhost + ":100")
-                .build())
-        .addArg(
-            TestArgument.newBuilder()
-                .setName(TestStorageConstants.USE_QEMU_IPS_IF_POSSIBLE_ARG_TAG)
-                .setValue(String.valueOf(true))
                 .build())
         .build();
   }

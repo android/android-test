@@ -63,8 +63,5 @@ public final class TestStorageConstants {
   /** The name of the file where test arguments are stored. */
   public static final String TEST_ARGS_FILE_NAME = "test_args.dat";
 
-  /** The name of the test argument that indicates whether qemu ips should be used. */
-  public static final String USE_QEMU_IPS_IF_POSSIBLE_ARG_TAG = "infra_use_qemu_ips";
-
   private TestStorageConstants() {}
 }

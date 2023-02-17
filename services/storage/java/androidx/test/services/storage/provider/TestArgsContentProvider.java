@@ -22,7 +22,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
-import android.util.Log;
 import androidx.test.services.storage.TestStorageConstants;
 import androidx.test.services.storage.TestStorageServiceProto.TestArgument;
 import androidx.test.services.storage.TestStorageServiceProto.TestArguments;
@@ -32,7 +31,6 @@ import androidx.test.services.storage.file.PropertyFile.Authority;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,38 +56,6 @@ public final class TestArgsContentProvider extends ContentProvider {
 
   void setSystemPropertyClassNameForTest(String className) {
     this.systemPropertyClassName = className;
-  }
-
-  private String getQemuHost() {
-    try {
-      if (null == getString) {
-        if (null == systemPropertyClassName) {
-          systemPropertyClassName = SYSTEM_PROPERTY_CLAZZ;
-        }
-
-        Class<?> clazz = Class.forName(systemPropertyClassName);
-        getString = clazz.getMethod(GET_METHOD, String.class, String.class);
-      }
-      return (String) getString.invoke(null, "qemu.host.hostname", "");
-    } catch (ClassNotFoundException cnfe) {
-      Log.w(TAG, "Couldn't access SysProps for qemu hostname.", cnfe);
-      return "";
-    } catch (SecurityException se) {
-      Log.w(TAG, "Couldn't access SysProps for qemu hostname.", se);
-      return "";
-    } catch (NoSuchMethodException nsme) {
-      Log.w(TAG, "Couldn't access SysProps for qemu hostname.", nsme);
-      return "";
-    } catch (InvocationTargetException ite) {
-      Log.w(TAG, "Couldn't access SysProps for qemu hostname.", ite);
-      return "";
-    } catch (IllegalAccessException iae) {
-      Log.w(TAG, "Couldn't access SysProps for qemu hostname.", iae);
-      return "";
-    } catch (IllegalArgumentException iae) {
-      Log.w(TAG, "Couldn't access SysProps for qemu hostname.", iae);
-      return "";
-    }
   }
 
   @Override
@@ -140,32 +106,14 @@ public final class TestArgsContentProvider extends ContentProvider {
   }
 
   private Map<String, String> buildArgMapFromFile() {
-    Map<String, String> cleanArgMap = new HashMap<>();
-    Map<String, String> qemuArgMap = new HashMap<>();
-    String qemuHost = getQemuHost();
+    Map<String, String> argMap = new HashMap<>();
 
     for (TestArgument testArg : readProtoFromFile().getArgList()) {
       String key = testArg.getName();
       String val = testArg.getValue();
-      cleanArgMap.put(key, val);
-
-      if (!"".equals(qemuHost) && key.endsWith(ANDROID_TEST_SERVER_SPEC_FORMAT)) {
-        String serverHost = val.split(":")[0];
-        if (serverHost.startsWith(qemuHost)) {
-          // TODO: remove startswith check once the emulator launcher passes in FQDN.
-          // val.replace(qemuHost, "10.0.2.2");
-          // b/c the system property should be a FQDN (just like the test args are FQDN)
-          val = val.replace(serverHost, "10.0.2.2");
-        }
-      }
-      qemuArgMap.put(key, val);
+      argMap.put(key, val);
     }
-    if ("true"
-        .equalsIgnoreCase(cleanArgMap.get(TestStorageConstants.USE_QEMU_IPS_IF_POSSIBLE_ARG_TAG))) {
-      return qemuArgMap;
-    } else {
-      return cleanArgMap;
-    }
+    return argMap;
   }
 
   private static TestArguments readProtoFromFile() {
