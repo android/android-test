@@ -1,5 +1,7 @@
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
+package(default_applicable_licenses = ["//:license"])
+
 # Description:
 #   JavaScript to Java bridging
 package_group(

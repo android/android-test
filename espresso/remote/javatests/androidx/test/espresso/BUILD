@@ -3,6 +3,8 @@ load(
     "axt_android_library_test",
 )
 
+package(default_applicable_licenses = ["//:license"])
+
 axt_android_library_test(
     name = "DisplayDataMatcherRemoteMsgTest",
     srcs = ["DisplayDataMatcherRemoteMsgTest.java"],

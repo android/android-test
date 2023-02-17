@@ -7,6 +7,7 @@ load("//build_extensions:android_library_test.bzl", "axt_android_library_test")
 load("//build_extensions:phone_devices.bzl", "apis", "devices")
 
 package(
+    default_applicable_licenses = ["//:license"],
     default_testonly = 1,
 )
 
