@@ -19,6 +19,7 @@ import java.io.File
 import java.lang.System
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
+import java.util.stream.Stream
 
 /** Validates the classes contained in a given jar file. */
 fun validateJar(args: Array<String>): Boolean {
@@ -29,8 +30,8 @@ fun validateJar(args: Array<String>): Boolean {
   val outputFile = File(args[0])
   val expectedPrefixes = args.asList().drop(2)
   val nonMatchingEntries = mutableListOf<String>()
-  val jarFile = JarFile(args[1])
-  val classes = jarFile.stream().filter { it.name.endsWith(".class") }.map { classNameFromPath(it) }
+  val jarFilePath = args[1]
+  val classes = getClassesInJar(jarFilePath)
   for (className in classes) {
     if (!matchesExpectedPrefixes(expectedPrefixes, className)) {
       nonMatchingEntries.add(className)
@@ -39,7 +40,7 @@ fun validateJar(args: Array<String>): Boolean {
   return if (nonMatchingEntries.size > 0) {
     nonMatchingEntries.sort()
     val error =
-      "Error: The following classes in ${jarFile.name} did not match one of the expected prefixes $expectedPrefixes \n" +
+      "Error: The following classes in $jarFilePath did not match one of the expected prefixes $expectedPrefixes \n" +
         nonMatchingEntries.joinToString("\n")
     System.err.println(error)
     outputFile.writeText(error)
@@ -48,6 +49,13 @@ fun validateJar(args: Array<String>): Boolean {
     outputFile.writeText("Success!")
     true
   }
+}
+
+fun getClassesInJar(filePath: String): Stream<String> {
+  return JarFile(filePath)
+    .stream()
+    .filter { it.name.endsWith(".class") }
+    .map { classNameFromPath(it) }
 }
 
 private fun matchesExpectedPrefixes(expectedPrefixes: List<String>, className: String): Boolean {
