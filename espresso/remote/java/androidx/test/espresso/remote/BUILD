@@ -91,6 +91,10 @@ android_library(
         exclude = PROTO_UTILS,
     ),
     javacopts = COMMON_JAVACOPTS,
+    manifest = "AndroidManifest.xml",
+    proguard_specs = [
+        ":proguard_library.cfg",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         ":protoUtils",

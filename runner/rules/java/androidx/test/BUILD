@@ -19,6 +19,8 @@ package(
 android_library(
     name = "rules",
     srcs = glob(["**/*.java"]),
+    custom_package = "androidx.test.rules",
+    manifest = "AndroidManifest.xml",
     proguard_specs = [
         "proguard.cfg",
     ],

@@ -21,11 +21,11 @@ android_library(
     srcs = [
         "AccessibilityChecks.java",
     ],
+    manifest = "AndroidManifest.xml",
     visibility = ["//visibility:public"],
     deps = [
         "//espresso/core/java/androidx/test/espresso",
-        "//opensource:hamcrest",
-        "//runner/android_junit_runner/java/androidx/test:runner",
+        "//opensource:hamcrest",  # unuseddeps: keep
         "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework",
     ],
 )

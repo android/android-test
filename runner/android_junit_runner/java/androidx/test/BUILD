@@ -29,7 +29,9 @@ android_library(
     srcs = glob(
         ["**/*.java"],
     ),
+    custom_package = "androidx.test.runner",
     idl_srcs = glob(["**/*.aidl"]),
+    manifest = "AndroidManifest.xml",
     proguard_specs = [
         "proguard_library.cfg",
     ],

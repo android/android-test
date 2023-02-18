@@ -473,6 +473,7 @@ public class ActivityTestRule<T extends Activity> implements TestRule {
     return activityResult;
   }
 
+  @SuppressWarnings("DiscouragedPrivateApi")
   private void setActivityResultForActivity(final T activity) {
     checkState(Looper.myLooper() == Looper.getMainLooper(), "Must be called on the main thread!");
     checkNotNull(activity, "Activity wasn't created yet or already destroyed!");

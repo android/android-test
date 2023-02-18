@@ -21,7 +21,7 @@
     package="androidx.test.services.speakeasy.server.testapp">
     <uses-sdk
       android:minSdkVersion="14"
-      android:targetSdkVersion="28" />
+      android:targetSdkVersion="33" />
 
     <application>
         <service

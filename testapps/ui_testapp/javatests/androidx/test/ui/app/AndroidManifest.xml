@@ -20,7 +20,7 @@
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="28" />
+        android:targetSdkVersion="33" />
 
     <application>
         <uses-library android:name="android.test.runner" />

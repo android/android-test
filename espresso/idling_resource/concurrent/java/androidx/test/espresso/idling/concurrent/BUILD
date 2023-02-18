@@ -44,6 +44,7 @@ android_library(
         "IdlingScheduledThreadPoolExecutor.java",
         "IdlingThreadPoolExecutor.java",
     ],
+    manifest = "AndroidManifest.xml",
     deps = [
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
     ],

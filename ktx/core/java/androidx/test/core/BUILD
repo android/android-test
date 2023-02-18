@@ -19,6 +19,8 @@ kt_android_library(
     name = "core",
     testonly = 1,
     srcs = glob(["**/*.kt"]),
+    custom_package = "androidx.test.core.ktx",
+    manifest = "AndroidManifest.xml",
     deps = [
         "//core",
         "@maven//:androidx_lifecycle_lifecycle_common",

@@ -18,6 +18,7 @@ package(
 android_library(
     name = "uri_idling_resource",
     srcs = ["UriIdlingResource.java"],
+    manifest = "AndroidManifest.xml",
     visibility = ["//visibility:public"],
     deps = [
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",

@@ -84,6 +84,9 @@ android_library(
         # only needed for external release backwards compatibility
         "internal/platform/app/ActivityInvoker$$CC.java",
     ],
+    custom_package = "androidx.test.monitor",
+    manifest = "AndroidManifest.xml",
+    proguard_specs = [":proguard_library.cfg"],
     visibility = ["//visibility:private"],
     exports = [
         ":monitor",
