@@ -36,7 +36,6 @@ exports_files(["AndroidManifest.xml"])
 PUBLIC_FRAMEWORK_LAYER = [
     "ViewAction.java",
     "ViewAssertion.java",
-    "ViewFinder.java",
 ]
 
 BASE_LAYER_INTERFACES = [

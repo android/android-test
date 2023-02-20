@@ -16,19 +16,19 @@ package(
     default_visibility = ["//:__subpackages__"],
 )
 
-INTERFACE_FILES = [
-    "ResolvedIntent.java",
-]
-
 android_library(
     name = "intents",
     testonly = 1,
     srcs = glob(
         ["*.java"],
-        exclude = INTERFACE_FILES,
+        exclude = [
+            "ResolvedIntent.java",
+            "Checks.java",
+        ],
     ),
     visibility = ["//visibility:public"],
     deps = [
+        ":precondition_checks",
         ":resolved_intent_interface",
         "//annotation",
         "//espresso/core/java/androidx/test/espresso",
@@ -54,7 +54,7 @@ android_library(
 
 android_library(
     name = "resolved_intent_interface",
-    srcs = INTERFACE_FILES,
+    srcs = ["ResolvedIntent.java"],
 )
 
 # ** Generate the release artifacts **
@@ -82,6 +82,7 @@ filegroup(
     name = "intents_src",
     srcs = [
         ":libintents-src.jar",
+        ":libprecondition_checks-src.jar",
         ":libresolved_intent_interface-src.jar",
         "//espresso/intents/java/androidx/test/espresso/intent/matcher:libmatcher-src.jar",
         "//espresso/intents/java/androidx/test/espresso/intent/rule:librule-src.jar",

@@ -10,13 +10,11 @@ package(
     default_visibility = ["//visibility:public"],
 )
 
-REMOTE = [
-    "DataInteractionRemote.java",
-]
-
 android_library(
     name = "data-interaction-remote",
-    srcs = REMOTE,
+    srcs = [
+        "DataInteractionRemote.java",
+    ],
     deps = [
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/proto:ui_interaction_android_pb3",

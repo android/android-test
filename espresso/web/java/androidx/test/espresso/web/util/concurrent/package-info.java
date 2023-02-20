@@ -16,6 +16,6 @@
 
 /** @hide */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-package androidx.camera.core.impl.utils.futures;
+package androidx.test.espresso.web.util.concurrent;
 
 import androidx.annotation.RestrictTo;
