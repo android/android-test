@@ -16,13 +16,14 @@
 
 package androidx.test.espresso.accessibility;
 
-
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.accessibility.AccessibilityChecks.accessibilityAssertion;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import android.os.Build;
@@ -30,14 +31,17 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.view.View;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.ViewAssertion;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.filters.SdkSuppress;
 import androidx.test.ui.app.LargeViewActivity;
 import androidx.test.ui.app.R;
 import com.google.android.apps.common.testing.accessibility.framework.integrations.AccessibilityViewCheckException;
@@ -130,5 +134,25 @@ public class AccessibilityChecksIntegrationTest {
       fail("Should have thrown a NoMatchingViewException");
     } catch (NoMatchingViewException expected) {
     }
+  }
+
+  @Test
+  @SdkSuppress(minSdkVersion = Build.VERSION_CODES.UPSIDE_DOWN_CAKE, codeName = "UpsideDownCake")
+  public void canGetAniChildrenOnAndroidU() {
+    onView(isRoot()).check(numberOfChildrenIs(2));
+  }
+
+  private ViewAssertion numberOfChildrenIs(final int expected) {
+    return new ViewAssertion() {
+      @Override
+      public void check(View view, NoMatchingViewException noViewFoundException) {
+        AccessibilityNodeInfo ani = view.createAccessibilityNodeInfo();
+        ani.setQueryFromAppProcessEnabled(view, /* enabled= */ true);
+        assertEquals(expected, ani.getChildCount());
+        for (int i = 0; i < ani.getChildCount(); ++i) {
+          assertNotNull(ani.getChild(i));
+        }
+      }
+    };
   }
 }
