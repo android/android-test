@@ -90,7 +90,7 @@ axt_release_lib(
 
 dackka_test(
     name = "test_storage_doc",
-    jar = ":test_storage_release_all_deploy.jar",
+    runtime_dep = ":storage",
     src_jar = ":storage_src_all_jars.jar",
 )
 
@@ -111,6 +111,6 @@ maven_artifact(
 
 api_checks(
     name = "storage_api",
-    deploy_jar = ":test_storage_release_all_deploy.jar",
+    runtime_dep = ":storage",
     src_jar = ":storage_src_all_jars.jar",
 )

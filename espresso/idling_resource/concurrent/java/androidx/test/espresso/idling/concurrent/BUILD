@@ -77,7 +77,7 @@ combine_jars(
 
 dackka_test(
     name = "idling_concurrent_doc",
-    jar = ":idling_concurrent_release_all_deploy.jar",
+    runtime_dep = ":idling_concurrent",
     src_jar = ":idling_concurrent_src_jars.jar",
 )
 
@@ -96,6 +96,6 @@ maven_artifact(
 
 api_checks(
     name = "idling_concurrent_api",
-    deploy_jar = ":idling_concurrent_release_all_deploy.jar",
+    runtime_dep = ":idling_concurrent",
     src_jar = ":idling_concurrent_src_jars.jar",
 )

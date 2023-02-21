@@ -53,7 +53,7 @@ combine_jars(
 
 dackka_test(
     name = "idling_net_doc",
-    jar = ":idling_net_release_all_deploy.jar",
+    runtime_dep = ":uri_idling_resource",
     src_jar = ":idling_net_src_jars.jar",
 )
 
@@ -73,6 +73,6 @@ maven_artifact(
 
 api_checks(
     name = "idling_net_api",
-    deploy_jar = ":idling_net_release_all_deploy.jar",
+    runtime_dep = ":uri_idling_resource",
     src_jar = ":idling_net_src_jars.jar",
 )

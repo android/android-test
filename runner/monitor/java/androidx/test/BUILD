@@ -118,7 +118,7 @@ axt_release_lib(
 
 dackka_test(
     name = "monitor_doc",
-    jar = ":monitor_release_all_deploy.jar",
+    runtime_dep = ":monitor_release_lib",
     src_jar = ":libmonitor-src.jar",
 )
 
@@ -140,6 +140,6 @@ maven_artifact(
 
 api_checks(
     name = "monitor_api",
-    deploy_jar = ":monitor_release_all_deploy.jar",
+    runtime_dep = ":monitor_release_lib",
     src_jar = ":libmonitor-src.jar",
 )

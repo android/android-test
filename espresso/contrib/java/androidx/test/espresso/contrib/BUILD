@@ -211,7 +211,7 @@ combine_jars(
 
 dackka_test(
     name = "espresso_contrib_doc",
-    jar = ":espresso_contrib_release_all_deploy.jar",
+    runtime_dep = ":espresso_contrib_release_lib",
     src_jar = ":contrib_src_jars.jar",
 )
 
@@ -238,6 +238,6 @@ maven_artifact(
 
 api_checks(
     name = "espresso_contrib_api",
-    deploy_jar = ":espresso_contrib_release_all_deploy.jar",
+    runtime_dep = ":espresso_contrib_release_lib",
     src_jar = ":contrib_src_jars.jar",
 )

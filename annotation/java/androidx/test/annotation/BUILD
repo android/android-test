@@ -64,6 +64,6 @@ maven_artifact(
 
 api_checks(
     name = "annotation_api",
-    deploy_jar = ":annotation_release_all_deploy.jar",
+    runtime_dep = ":annotation",
     src_jar = ":libannotation-src.jar",
 )

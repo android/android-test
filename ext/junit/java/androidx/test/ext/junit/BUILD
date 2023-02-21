@@ -57,7 +57,7 @@ axt_release_lib(
 
 dackka_test(
     name = "junit_doc",
-    jar = ":junit_release_all_deploy.jar",
+    runtime_dep = ":junit_release_lib",
     src_jar = ":libjunit-src.jar",
 )
 
@@ -79,6 +79,6 @@ maven_artifact(
 
 api_checks(
     name = "junit_api",
-    deploy_jar = ":junit_release_all_deploy.jar",
+    runtime_dep = ":junit_release_lib",
     src_jar = ":libjunit-src.jar",
 )

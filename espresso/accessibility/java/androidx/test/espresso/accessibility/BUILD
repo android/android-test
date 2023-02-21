@@ -56,7 +56,7 @@ combine_jars(
 
 dackka_test(
     name = "accessibility_checks_doc",
-    jar = ":accessibility_checks_release_all_deploy.jar",
+    runtime_dep = ":accessibility_checks",
     src_jar =
         ":accessibility_checks_src_jars.jar",
 )
@@ -77,6 +77,6 @@ maven_artifact(
 
 api_checks(
     name = "accessibility_api",
-    deploy_jar = ":accessibility_checks_release_all_deploy.jar",
+    runtime_dep = ":accessibility_checks",
     src_jar = ":accessibility_checks_src_jars.jar",
 )

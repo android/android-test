@@ -259,7 +259,7 @@ remove_from_jar(
 
 dackka_test(
     name = "espresso_core_doc",
-    jar = ":espresso_core_release_all_deploy.jar",
+    runtime_dep = ":espresso",
     src_jar = ":espresso_src_jars.jar",
 )
 
@@ -288,6 +288,6 @@ maven_artifact(
 
 api_checks(
     name = "espresso_core_api",
-    deploy_jar = ":espresso_core_release_all_deploy.jar",
+    runtime_dep = ":espresso",
     src_jar = ":espresso_src_jars.jar",
 )

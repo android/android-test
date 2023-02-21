@@ -55,7 +55,7 @@ axt_release_lib(
 
 dackka_test(
     name = "rules_doc",
-    jar = ":rules_release_all_deploy.jar",
+    runtime_dep = ":rules",
     src_jar = ":librules-src.jar",
 )
 
@@ -75,6 +75,6 @@ maven_artifact(
 
 api_checks(
     name = "rules_api",
-    deploy_jar = ":rules_release_all_deploy.jar",
+    runtime_dep = ":rules",
     src_jar = ":librules-src.jar",
 )

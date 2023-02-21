@@ -166,7 +166,7 @@ axt_release_lib(
 
 dackka_test(
     name = "espresso_remote_doc",
-    jar = ":espresso_remote_release_all_deploy.jar",
+    runtime_dep = ":remote",
     src_jar = ":espresso_remote_src_jars.jar",
 )
 
@@ -188,6 +188,6 @@ maven_artifact(
 
 api_checks(
     name = "espresso_remote_api",
-    deploy_jar = ":espresso_remote_release_all_deploy.jar",
+    runtime_dep = ":remote",
     src_jar = ":espresso_remote_src_jars.jar",
 )

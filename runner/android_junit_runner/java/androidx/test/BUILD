@@ -82,7 +82,7 @@ axt_release_lib(
 
 dackka_test(
     name = "runner_doc",
-    jar = ":runner_release_all_deploy.jar",
+    runtime_dep = ":runner_release_lib",
     src_jar = ":librunner-src.jar",
 )
 
@@ -107,6 +107,6 @@ maven_artifact(
 
 api_checks(
     name = "runner_api",
-    deploy_jar = ":runner_release_all_deploy.jar",
+    runtime_dep = ":runner_release_lib",
     src_jar = ":librunner-src.jar",
 )

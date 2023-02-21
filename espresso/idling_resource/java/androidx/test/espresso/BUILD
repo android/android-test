@@ -81,7 +81,7 @@ combine_jars(
 
 dackka_test(
     name = "espresso_idling_resource_doc",
-    jar = ":espresso_idling_resource_release_all_deploy.jar",
+    runtime_dep = ":idling_resource",
     src_jar = ":idling_resource_src_jars.jar",
 )
 
@@ -97,6 +97,6 @@ maven_artifact(
 
 api_checks(
     name = "espresso_idling_resource_api",
-    deploy_jar = ":espresso_idling_resource_release_all_deploy.jar",
+    runtime_dep = ":idling_resource",
     src_jar = ":idling_resource_src_jars.jar",
 )

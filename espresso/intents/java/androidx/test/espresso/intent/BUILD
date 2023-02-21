@@ -98,7 +98,7 @@ combine_jars(
 
 dackka_test(
     name = "espresso_intents_doc",
-    jar = ":espresso_intents_release_all_deploy.jar",
+    runtime_dep = ":espresso_intents_release_lib",
     src_jar = ":intents_src_jars.jar",
 )
 
@@ -121,6 +121,6 @@ maven_artifact(
 
 api_checks(
     name = "espresso_intents_api",
-    deploy_jar = ":espresso_intents_release_all_deploy.jar",
+    runtime_dep = ":espresso_intents_release_lib",
     src_jar = ":intents_src_jars.jar",
 )

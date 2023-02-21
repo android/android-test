@@ -58,7 +58,7 @@ axt_release_lib(
 
 dackka_test(
     name = "core_doc",
-    jar = ":core_release_all_deploy.jar",
+    runtime_dep = ":core_release_lib",
     src_jar = ":libcore-src.jar",
 )
 
@@ -79,6 +79,6 @@ maven_artifact(
 
 api_checks(
     name = "core_api",
-    deploy_jar = ":core_release_all_deploy.jar",
+    runtime_dep = ":core_release_lib",
     src_jar = ":libcore-src.jar",
 )

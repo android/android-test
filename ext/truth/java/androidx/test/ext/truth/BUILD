@@ -57,7 +57,7 @@ axt_release_lib(
 
 dackka_test(
     name = "truth_doc",
-    jar = ":truth_release_all_deploy.jar",
+    runtime_dep = ":truth_release_lib",
     src_jar = ":libtruth-src.jar",
 )
 
@@ -80,6 +80,6 @@ maven_artifact(
 
 api_checks(
     name = "truth_api",
-    deploy_jar = ":truth_release_all_deploy.jar",
+    runtime_dep = ":truth_release_lib",
     src_jar = ":libtruth-src.jar",
 )
