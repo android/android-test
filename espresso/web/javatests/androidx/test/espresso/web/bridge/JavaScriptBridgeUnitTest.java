@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package androidx.test.espresso.web.internal.bridge;
+package androidx.test.espresso.web.bridge;
 
-/**
- * A checked {@link Exception} indicating that JavaScriptBridge installation failed.
- */
-final class JavaScriptBridgeInstallException extends Exception {
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-  JavaScriptBridgeInstallException(String message) {
-    super(message);
-  }
+/** JSB unit test. */
+@RunWith(AndroidJUnit4.class)
+public class JavaScriptBridgeUnitTest {
 
-  JavaScriptBridgeInstallException(Throwable cause) {
-    super(cause);
-  }
+  @Test
+  public void testMakeConduit() {
+    // this will throw an exception if the instrumentation cannot install the bridge.
+    // so in essence we're testing all our hacky setup code in installbridge here.
 
-  JavaScriptBridgeInstallException(String message, Throwable cause) {
-    super(message, cause);
+    JavaScriptBridge.makeConduit();
   }
 }
-

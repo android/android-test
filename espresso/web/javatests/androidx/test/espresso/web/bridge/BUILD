@@ -25,7 +25,7 @@ android_app_instrumentation_tests(
     device_list = devices(apis(max_api = 18)),
     deps = [
         "//espresso/core",
-        "//espresso/web/java/androidx/test/espresso/web/internal/bridge",
+        "//espresso/web/java/androidx/test/espresso/web/bridge",
         "//ext/junit",
         "//opensource:hamcrest",
         "//runner/android_junit_runner",

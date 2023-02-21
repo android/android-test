@@ -30,7 +30,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/core/java/androidx/test/espresso/util",
-        "//espresso/web/java/androidx/test/espresso/web/internal/bridge",
+        "//espresso/web/java/androidx/test/espresso/web/bridge",
         "//espresso/web/java/androidx/test/espresso/web/model",
         "//espresso/web/java/androidx/test/espresso/web/util/concurrent",
         "//opensource:hamcrest",

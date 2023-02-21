@@ -46,7 +46,7 @@ filegroup(
     srcs = [
         "//espresso/web/java/androidx/test/espresso/web/action:libaction-src.jar",
         "//espresso/web/java/androidx/test/espresso/web/assertion:libassertion-src.jar",
-        "//espresso/web/java/androidx/test/espresso/web/internal/bridge:libbridge-src.jar",
+        "//espresso/web/java/androidx/test/espresso/web/bridge:libbridge-src.jar",
         "//espresso/web/java/androidx/test/espresso/web/matcher:libmatcher-src.jar",
         "//espresso/web/java/androidx/test/espresso/web/model:libmodel-src.jar",
         "//espresso/web/java/androidx/test/espresso/web/sugar:libsugar-src.jar",

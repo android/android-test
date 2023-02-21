@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright 2021 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,9 @@
  * limitations under the License.
  */
 
-package androidx.test.espresso.web.internal.bridge;
+/** @hide */
+@RestrictTo(Scope.LIBRARY)
+package androidx.test.espresso.web.bridge;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-/** JSB unit test. */
-@RunWith(AndroidJUnit4.class)
-public class JavaScriptBridgeUnitTest {
-
-  @Test
-  public void testMakeConduit() {
-    // this will throw an exception if the instrumentation cannot install the bridge.
-    // so in essence we're testing all our hacky setup code in installbridge here.
-
-    JavaScriptBridge.makeConduit();
-  }
-}
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,23 @@
  * limitations under the License.
  */
 
-/** @hide */
-@RestrictTo(Scope.LIBRARY)
-package androidx.test.espresso.web.internal.bridge;
+package androidx.test.espresso.web.bridge;
 
-import androidx.annotation.RestrictTo;
-import androidx.annotation.RestrictTo.Scope;
+/**
+ * A checked {@link Exception} indicating that JavaScriptBridge installation failed.
+ */
+final class JavaScriptBridgeInstallException extends Exception {
+
+  JavaScriptBridgeInstallException(String message) {
+    super(message);
+  }
+
+  JavaScriptBridgeInstallException(Throwable cause) {
+    super(cause);
+  }
+
+  JavaScriptBridgeInstallException(String message, Throwable cause) {
+    super(message, cause);
+  }
+}
+
