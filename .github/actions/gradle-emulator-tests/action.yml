@@ -42,4 +42,4 @@ runs:
       with:
         name: test-reports
         path: |
-          '**/*/build/reports/androidTests/'
+          '**/build/reports/androidTests/'
