@@ -27,7 +27,9 @@ public final class TestDataContentProvider extends AbstractFileContentProvider {
 
   public TestDataContentProvider() {
     super(
-        new File(HostedFile.getRootDirectory(), TestStorageConstants.ON_DEVICE_TEST_RUNFILES),
+        context ->
+            new File(
+                HostedFile.getRootDirectory(context), TestStorageConstants.ON_DEVICE_TEST_RUNFILES),
         AbstractFileContentProvider.Access.READ_ONLY);
   }
 

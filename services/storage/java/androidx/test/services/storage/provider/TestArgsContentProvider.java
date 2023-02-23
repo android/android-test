@@ -19,6 +19,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
@@ -53,9 +54,19 @@ public final class TestArgsContentProvider extends ContentProvider {
 
   private String systemPropertyClassName;
   private Method getString;
+  private Context storageContext;
 
   void setSystemPropertyClassNameForTest(String className) {
     this.systemPropertyClassName = className;
+  }
+
+  /**
+   * Sets a real Context for this provider, to use when accessing getExternalFilesDir() on API 29+.
+   * The ContentProvider.getContext() points to a MockContext that does not implement this specific
+   * method on purpose to keep the test otherwise hermetic.
+   */
+  public void setStorageContext(Context context) {
+    storageContext = context;
   }
 
   @Override
@@ -108,7 +119,7 @@ public final class TestArgsContentProvider extends ContentProvider {
   private Map<String, String> buildArgMapFromFile() {
     Map<String, String> argMap = new HashMap<>();
 
-    for (TestArgument testArg : readProtoFromFile().getArgList()) {
+    for (TestArgument testArg : readProtoFromFile(storageContext).getArgList()) {
       String key = testArg.getName();
       String val = testArg.getValue();
       argMap.put(key, val);
@@ -116,10 +127,10 @@ public final class TestArgsContentProvider extends ContentProvider {
     return argMap;
   }
 
-  private static TestArguments readProtoFromFile() {
+  private static TestArguments readProtoFromFile(Context context) {
     File testArgsFile =
         new File(
-            HostedFile.getRootDirectory(),
+            HostedFile.getRootDirectory(context),
             TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE
                 + TestStorageConstants.TEST_ARGS_FILE_NAME);
     if (!testArgsFile.exists()) {

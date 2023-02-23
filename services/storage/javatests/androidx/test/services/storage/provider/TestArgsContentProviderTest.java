@@ -15,10 +15,14 @@
  */
 package androidx.test.services.storage.provider;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build.VERSION;
 import android.os.Environment;
 import android.test.ProviderTestCase2;
+import android.test.mock.MockContext;
 import androidx.test.services.storage.TestStorageConstants;
 import androidx.test.services.storage.TestStorageServiceProto.TestArgument;
 import androidx.test.services.storage.TestStorageServiceProto.TestArguments;
@@ -37,7 +41,6 @@ import java.util.Map;
  * TODO(b/145236542): Converts the tests to JUnit4.
  */
 public class TestArgsContentProviderTest extends ProviderTestCase2<TestArgsContentProvider> {
-
   private static final String[] ARGS = {"arg1", "arg2", "arg3", "someth_server_address"};
   private static final String[] VALUES = {"value1", "value2", "value3", "foo:124"};
 
@@ -51,10 +54,17 @@ public class TestArgsContentProviderTest extends ProviderTestCase2<TestArgsConte
   public void setUp() throws Exception {
     super.setUp();
     getProvider().setSystemPropertyClassNameForTest(FakeSystemProperties.class.getName());
+
+    // ProviderTestCase2 provides an isolated MockContext that does not give us access to the
+    // storage API. getContext() is a real context that can be used for that purpose.
+    assertThat(getContext()).isNotInstanceOf(MockContext.class);
+    getProvider().setStorageContext(getContext());
   }
 
   @Override
   public void tearDown() throws Exception {
+    getProvider().setStorageContext(null);
+
     if (testArgsFile != null) {
       testArgsFile.delete();
     }
@@ -149,7 +159,7 @@ public class TestArgsContentProviderTest extends ProviderTestCase2<TestArgsConte
         .build();
   }
 
-  private static void createTestArgsFileWithMultipleArgs() throws IOException {
+  private void createTestArgsFileWithMultipleArgs() throws IOException {
     TestArguments.Builder builder = TestArguments.newBuilder();
     for (int i = 0; i < ARGS.length; i++) {
       builder.addArg(TestArgument.newBuilder().setName(ARGS[i]).setValue(VALUES[i]).build());
@@ -157,13 +167,22 @@ public class TestArgsContentProviderTest extends ProviderTestCase2<TestArgsConte
     createTestArgsFile(builder.build());
   }
 
-  private static void createTestArgsFile(TestArguments proto) throws IOException {
-    File args =
-        new File(
-            Environment.getExternalStorageDirectory(),
-            TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE
-                + TestStorageConstants.TEST_ARGS_FILE_NAME);
+  private void createTestArgsFile(TestArguments proto) throws IOException {
+    File args = new File(getStorageDir(), TestStorageConstants.TEST_ARGS_FILE_NAME);
+
     Files.write(proto.toByteArray(), args);
+  }
+
+  private File getStorageDir() {
+    File dir;
+    if (VERSION.SDK_INT >= 29) {
+      dir = getContext().getExternalFilesDir(/* type= */ null);
+    } else {
+      dir = Environment.getExternalStorageDirectory();
+    }
+    dir = new File(dir, TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE);
+    dir.mkdirs();
+    return dir;
   }
 
   private Map<String, String> getProperties(Cursor cursor) {

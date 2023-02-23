@@ -19,12 +19,14 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
+import androidx.annotation.NonNull;
 import androidx.test.services.storage.file.HostedFile;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -57,14 +59,23 @@ abstract class AbstractFileContentProvider extends ContentProvider {
    */
   protected abstract boolean onCreateHook();
 
-  AbstractFileContentProvider(File hostedDirectory, Access access) {
+  public interface FileProvider {
+    @NonNull
+    File get(@NonNull Context context);
+  }
+
+  AbstractFileContentProvider(@NonNull FileProvider hostedDirectory, Access access) {
     super();
     try {
-      this.hostedDirectory = checkNotNull(hostedDirectory).getCanonicalFile();
+      this.hostedDirectory = checkNotNull(hostedDirectory.get(getContext())).getCanonicalFile();
     } catch (IOException ioe) {
       throw new RuntimeException(ioe);
     }
     this.access = access;
+  }
+
+  protected File getHostedDirectory() {
+    return hostedDirectory;
   }
 
   @Override

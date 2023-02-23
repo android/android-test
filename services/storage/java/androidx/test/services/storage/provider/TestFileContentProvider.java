@@ -15,8 +15,10 @@
  */
 package androidx.test.services.storage.provider;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.test.services.storage.file.HostedFile;
 import java.io.File;
 
@@ -29,8 +31,13 @@ abstract class TestFileContentProvider extends AbstractFileContentProvider {
   private final File outputDirectory;
 
   public TestFileContentProvider(String filePath, AbstractFileContentProvider.Access access) {
-    super(new File(HostedFile.getRootDirectory(), filePath), access);
-    outputDirectory = new File(HostedFile.getRootDirectory(), filePath);
+    super(context -> getOutputDirectory(context, filePath), access);
+    outputDirectory = getHostedDirectory();
+  }
+
+  @NonNull
+  private static File getOutputDirectory(@NonNull Context context, @NonNull String filePath) {
+    return new File(HostedFile.getRootDirectory(context), filePath);
   }
 
   @Override

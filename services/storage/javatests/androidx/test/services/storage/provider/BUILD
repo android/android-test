@@ -29,6 +29,7 @@ axt_android_library_test(
         "//services/storage/java/androidx/test/services/storage/provider:storage_content_providers",
         "@androidsdk//:legacy_test-30",
         "@maven//:com_google_guava_guava",
+        "@maven//:com_google_truth_truth",
     ],
 )
 

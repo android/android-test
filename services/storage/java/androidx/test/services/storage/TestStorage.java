@@ -18,6 +18,7 @@ package androidx.test.services.storage;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
@@ -117,12 +118,13 @@ public final class TestStorage implements PlatformTestStorage {
    * Returns true if {@code pathname} corresponds to a file or directory that is in a directory
    * where the storage service stores files.
    *
+   * @param context Android context for getExternalFilesDir().
    * @param pathname path to a file or directory. Should not be null. This is an absolute path to a
    *     file that may be a part of the storage service.
    */
-  public static boolean isTestStorageFilePath(@NonNull String pathname) {
+  public static boolean isTestStorageFilePath(@NonNull Context context, @NonNull String pathname) {
     File onDevicePathRoot =
-        new File(HostedFile.getRootDirectory(), TestStorageConstants.ON_DEVICE_PATH_ROOT);
+        new File(HostedFile.getRootDirectory(context), TestStorageConstants.ON_DEVICE_PATH_ROOT);
     // Append a trailing slash because ON_DEVICE_PATH_ROOT has a trailing slash. If pathname already
     // has a trailing slash or other suffix, this won't affect the startsWith() matching logic.
     pathname = pathname + "/";

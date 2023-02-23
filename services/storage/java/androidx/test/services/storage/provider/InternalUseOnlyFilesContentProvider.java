@@ -15,24 +15,29 @@
  */
 package androidx.test.services.storage.provider;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.test.services.storage.TestStorageConstants;
 import androidx.test.services.storage.file.HostedFile;
 import java.io.File;
 
 /** Hosts an SD Card directory for the test framework to read/write internal files to. */
 public final class InternalUseOnlyFilesContentProvider extends AbstractFileContentProvider {
-  private static final String TAG = "InternalUseOnlyFilesContentProvider";
+  private static final String TAG = "InternalUseOnlyFilesCP"; // TAG has a 23-char limit.
 
   private final File outputDirectory;
 
   public InternalUseOnlyFilesContentProvider() {
-    super(
-        new File(HostedFile.getRootDirectory(), TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE),
-        AbstractFileContentProvider.Access.READ_WRITE);
-    outputDirectory =
-        new File(HostedFile.getRootDirectory(), TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE);
+    super(context -> getOutputDirectory(context), AbstractFileContentProvider.Access.READ_WRITE);
+    outputDirectory = getHostedDirectory();
+  }
+
+  @NonNull
+  private static File getOutputDirectory(@NonNull Context context) {
+    return new File(
+        HostedFile.getRootDirectory(context), TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE);
   }
 
   @Override

@@ -378,7 +378,7 @@ public class TestFileContentProviderTest
     private final Predicate<Void> onCreateHookResult;
 
     public TestFileContentProvider() {
-      super(resolverHostedDirectory, resolverAccess);
+      super(context -> resolverHostedDirectory, resolverAccess);
       this.onCreateHookResult = resolverOnCreateHookResult;
     }
 

@@ -15,9 +15,12 @@
  */
 package androidx.test.services.storage.file;
 
+import android.content.Context;
 import android.net.Uri;
+import android.os.Build.VERSION;
 import android.os.Environment;
 import android.provider.OpenableColumns;
+import androidx.annotation.NonNull;
 import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.services.storage.TestStorageConstants;
 import java.io.File;
@@ -132,8 +135,13 @@ public final class HostedFile {
         .build();
   }
 
-  public static File getRootDirectory() {
-    return Environment.getExternalStorageDirectory();
+  @NonNull
+  public static File getRootDirectory(@NonNull Context context) {
+    if (VERSION.SDK_INT >= 29) {
+      return context.getExternalFilesDir(/* type= */ null);
+    } else {
+      return Environment.getExternalStorageDirectory();
+    }
   }
 
   private static <T> T checkNotNull(T reference) {

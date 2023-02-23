@@ -17,5 +17,6 @@ android_library(
         "//annotation",
         "//runner/monitor",
         "//services/storage/java/androidx/test/services/storage:test_storage_constants",
+        "@maven//:androidx_annotation_annotation",
     ],
 )

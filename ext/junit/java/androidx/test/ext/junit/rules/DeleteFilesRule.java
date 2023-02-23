@@ -103,11 +103,12 @@ public final class DeleteFilesRule implements TestRule {
   }
 
   private static void deleteFilesRecursively(Set<File> existingFiles, File directory) {
+    Context context = ApplicationProvider.getApplicationContext();
     File[] files = directory.listFiles();
     if (files != null) {
       for (File file : files) {
         if (file.isDirectory()) {
-          if (TestStorage.isTestStorageFilePath(file.getPath())) {
+          if (TestStorage.isTestStorageFilePath(context, file.getPath())) {
             continue;
           }
           deleteFilesRecursively(existingFiles, file);

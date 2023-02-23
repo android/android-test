@@ -17,5 +17,6 @@ android_library(
         "//services/storage/java/androidx/test/services/storage:storage_service_pb_java_proto_lite",
         "//services/storage/java/androidx/test/services/storage:test_storage_constants",
         "//services/storage/java/androidx/test/services/storage/file",
+        "@maven//:androidx_annotation_annotation",
     ],
 )
