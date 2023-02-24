@@ -29,6 +29,9 @@ public final class PackageInfoBuilderTest {
 
   private static final String TEST_PACKAGE_NAME = "test.package.name";
   private static final String SECOND_TEST_PACKAGE_NAME = "second.test.package.name";
+  private static final String[] TEST_REQUESTED_PERMISSIONS = {
+    "android.permission.test.one", "android.permission.test.two"
+  };
 
   @Test
   public void buildAllFields() {
@@ -37,10 +40,12 @@ public final class PackageInfoBuilderTest {
             .setPackageName(TEST_PACKAGE_NAME)
             .setApplicationInfo(
                 ApplicationInfoBuilder.newBuilder().setPackageName(TEST_PACKAGE_NAME).build())
+            .setRequestedPermissions(TEST_REQUESTED_PERMISSIONS)
             .build();
 
     assertThat(packageInfo.packageName).isEqualTo(TEST_PACKAGE_NAME);
     assertThat(packageInfo.applicationInfo).isNotNull();
+    assertThat(packageInfo.requestedPermissions).isEqualTo(TEST_REQUESTED_PERMISSIONS);
   }
 
   @Test

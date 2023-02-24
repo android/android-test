@@ -20,12 +20,19 @@ import static androidx.test.internal.util.Checks.checkState;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.os.Build;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 /** Builder for {@link PackageInfo}. */
 public final class PackageInfoBuilder {
   @Nullable private String packageName;
   @Nullable private ApplicationInfo applicationInfo;
+  @Nullable private String[] requestedPermissions;
+
+  @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
+  @Nullable
+  private int[] requestedPermissionsFlags;
 
   private PackageInfoBuilder() {}
 
@@ -47,6 +54,31 @@ public final class PackageInfoBuilder {
    */
   public PackageInfoBuilder setPackageName(String packageName) {
     this.packageName = packageName;
+    return this;
+  }
+
+  /**
+   * Sets the requested permissions by the app.
+   *
+   * <p>Default is {@code null}.
+   *
+   * @see PackageInfo#requestedPermissions
+   */
+  public PackageInfoBuilder setRequestedPermissions(String[] requestedPermissions) {
+    this.requestedPermissions = requestedPermissions;
+    return this;
+  }
+
+  /**
+   * Sets the flags for the requested permissions by the app.
+   *
+   * <p>Default is {@code null}.
+   *
+   * @see PackageInfo#requestedPermissionsFlags
+   */
+  @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
+  public PackageInfoBuilder setRequestedPermissionsFlags(int[] requestedPermissionsFlags) {
+    this.requestedPermissionsFlags = requestedPermissionsFlags;
     return this;
   }
 
@@ -74,6 +106,16 @@ public final class PackageInfoBuilder {
       applicationInfo = ApplicationInfoBuilder.newBuilder().setPackageName(packageName).build();
     }
     packageInfo.applicationInfo = applicationInfo;
+    packageInfo.requestedPermissions = requestedPermissions;
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+      packageInfo.requestedPermissionsFlags = requestedPermissionsFlags;
+      if (requestedPermissions != null && requestedPermissionsFlags != null) {
+        checkState(
+            requestedPermissions.length == requestedPermissionsFlags.length,
+            "Field 'requestedPermissions' must match size of 'requestedPermissionsFlags'");
+      }
+    }
 
     checkState(
         packageInfo.packageName.equals(packageInfo.applicationInfo.packageName),
