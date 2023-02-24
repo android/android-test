@@ -45,6 +45,10 @@ package androidx.test.core.content.pm {
     method public static androidx.test.core.content.pm.PackageInfoBuilder! newBuilder();
     method public androidx.test.core.content.pm.PackageInfoBuilder! setApplicationInfo(android.content.pm.ApplicationInfo!);
     method public androidx.test.core.content.pm.PackageInfoBuilder! setPackageName(String!);
+    method public androidx.test.core.content.pm.PackageInfoBuilder! setRequestedPermissions(String![]!);
+    method @RequiresApi(android.os.Build.VERSION_CODES.JELLY_BEAN) public androidx.test.core.content.pm.PackageInfoBuilder! setRequestedPermissionsFlags(int[]!);
+    method public androidx.test.core.content.pm.PackageInfoBuilder! setVersionCode(int);
+    method public androidx.test.core.content.pm.PackageInfoBuilder! setVersionName(String!);
   }
 
 }
