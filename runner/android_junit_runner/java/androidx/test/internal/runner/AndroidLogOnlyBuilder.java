@@ -100,6 +100,9 @@ class AndroidLogOnlyBuilder extends RunnerBuilder {
         // even while in logOnly mode, by simply returning the runner rather than
         // wrapping it.
         return runner;
+      } else if (runner instanceof org.junit.internal.builders.IgnoredClassRunner) {
+        // preserve behavior if class has @Ignore
+        return runner;
       } else if (runnerCount > oldRunnerCount) {
         // If constructing the testClass caused us to reenter here to build Runner
         // instances, e.g. for Suite or Enclosed, then this must not wrap runner in a

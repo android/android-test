@@ -27,6 +27,7 @@ import androidx.test.testing.fixtures.JUnit4Failing;
 import androidx.test.testing.fixtures.JUnit4ParameterizedTest;
 import java.util.Collections;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.JUnitCore;
@@ -65,6 +66,14 @@ public class AndroidLogOnlyBuilderTest {
   public static class JUnit4TestSuite {}
 
   public static class NotATest {}
+
+  @Ignore
+  public static class IgnoredTest {
+    @Test
+    public void testFoo() {
+      fail("broken");
+    }
+  }
 
   @Before
   public void initBuilder() {
@@ -128,6 +137,15 @@ public class AndroidLogOnlyBuilderTest {
     Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(JUnit4EnclosedTest.class);
     assertThat(selectedRunner).isNotNull();
     runWithRunner(selectedRunner, 1, 0);
+  }
+
+  @Test
+  public void builderHandlesJunit4IgnoredTest() throws Throwable {
+    Runner selectedRunner = androidLogOnlyBuilder.runnerForClass(IgnoredTest.class);
+    assertThat(selectedRunner).isNotNull();
+    JUnitCore testRunner = new JUnitCore();
+    Result result = testRunner.run(selectedRunner);
+    assertThat(result.getIgnoreCount()).isEqualTo(1);
   }
 
   private static void runWithRunner(Runner runner, int runCount, int failureCount) {
