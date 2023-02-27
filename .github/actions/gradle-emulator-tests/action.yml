@@ -41,5 +41,4 @@ runs:
       uses: actions/upload-artifact@v3
       with:
         name: test-reports
-        path: |
-          '**/build/reports/androidTests/'
+        path: gradle-tests/runner/app/build/reports/androidTests/
