@@ -1,6 +1,7 @@
 """Skylark rules to setup the WORKSPACE in the opensource bazel world."""
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
 # These dependencies are required for *developing* this project.
 def _development_repositories():
@@ -16,7 +17,8 @@ def _development_repositories():
         actual = "@maven//:com_google_code_gson_gson",
     )
 
-    http_archive(
+    maybe(
+        http_archive,
         name = "robolectric",
         strip_prefix = "robolectric-bazel-4.9",
         urls = ["https://github.com/robolectric/robolectric-bazel/archive/4.9.tar.gz"],
@@ -28,7 +30,8 @@ def _development_repositories():
     #     path = "~/github/robolectric-bazel/",
     # )
 
-    http_archive(
+    maybe(
+        http_archive,
         name = "jsr330",
         build_file_content = """
 package(default_visibility = ["//visibility:public"])
@@ -87,7 +90,8 @@ def android_test_repositories(with_dev_repositories = False):
     # the python path containing b/ is a.runfiles/b_archive which contains all of
     # __init__.py, b/ and b/c.py so the import will succeed.
 
-    http_archive(
+    maybe(
+        http_archive,
         name = "google_apputils",
         build_file = str(Label("//opensource:google-apputils.BUILD")),
         sha256 = "47959d0651c32102c10ad919b8a0ffe0ae85f44b8457ddcf2bdc0358fb03dc29",
@@ -95,7 +99,8 @@ def android_test_repositories(with_dev_repositories = False):
         url = "https://pypi.python.org/packages/69/66/a511c428fef8591c5adfa432a257a333e0d14184b6c5d03f1450827f7fe7/google-apputils-0.4.2.tar.gz",
     )
 
-    http_archive(
+    maybe(
+        http_archive,
         name = "gflags_archive",
         build_file = str(Label("//opensource:gflags.BUILD")),
         sha256 = "3377d9dbeedb99c0325beb1f535f8fa9fa131d1d8b50db7481006f0a4c6919b4",
@@ -103,7 +108,8 @@ def android_test_repositories(with_dev_repositories = False):
         url = "https://github.com/google/python-gflags/releases/download/3.1.0/python-gflags-3.1.0.tar.gz",
     )
 
-    http_archive(
+    maybe(
+        http_archive,
         name = "portpicker_archive",
         build_file = str(Label("//opensource:portpicker.BUILD")),
         sha256 = "2f88edf7c6406034d7577846f224aff6e53c5f4250e3294b1904d8db250f27ec",
@@ -111,7 +117,8 @@ def android_test_repositories(with_dev_repositories = False):
         url = "https://pypi.python.org/packages/96/48/0e1f20fdc0b85cc8722284da3c5b80222ae4036ad73210a97d5362beaa6d/portpicker-1.1.1.tar.gz",
     )
 
-    http_archive(
+    maybe(
+        http_archive,
         name = "mox_archive",
         build_file = str(Label("//opensource:mox.BUILD")),
         sha256 = "424ee725ee12652802b4e86571f816059b0d392401ceae70bf6487d65602cba9",
@@ -120,7 +127,8 @@ def android_test_repositories(with_dev_repositories = False):
     )
 
     # Six provides simple utilities for wrapping over differences between Python 2 and Python 3.
-    http_archive(
+    maybe(
+        http_archive,
         name = "six_archive",
         build_file = str(Label("//opensource:six.BUILD")),
         sha256 = "105f8d68616f8248e24bf0e9372ef04d3cc10104f1980f54d57b2ce73a5ad56a",
@@ -132,7 +140,8 @@ def android_test_repositories(with_dev_repositories = False):
     native.bind(name = "six", actual = "@six_archive//:six")
 
     # Protobuf
-    http_archive(
+    maybe(
+        http_archive,
         name = "com_google_protobuf",
         sha256 = "d82eb0141ad18e98de47ed7ed415daabead6d5d1bef1b8cccb6aa4d108a9008f",
         strip_prefix = "protobuf-b4f193788c9f0f05d7e0879ea96cd738630e5d51",
@@ -144,7 +153,8 @@ def android_test_repositories(with_dev_repositories = False):
 
     # Inlined protobuf's deps so we don't need users to add protobuf_deps() to their local WORKSPACE.
     # From load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps").
-    http_archive(
+    maybe(
+        http_archive,
         name = "zlib",
         build_file = "@com_google_protobuf//:third_party/zlib.BUILD",
         sha256 = "91844808532e5ce316b3c010929493c0244f3d37593afd6de04f71821d5136d9",
@@ -152,14 +162,16 @@ def android_test_repositories(with_dev_repositories = False):
         urls = ["https://zlib.net/zlib-1.2.12.tar.gz"],
     )
 
-    http_archive(
+    maybe(
+        http_archive,
         name = "bazel_skylib",
         url = "https://github.com/bazelbuild/bazel-skylib/releases/download/0.8.0/bazel-skylib.0.8.0.tar.gz",
         sha256 = "2ef429f5d7ce7111263289644d233707dba35e39696377ebab8b0bc701f7818e",
     )
 
     # Open source version of the google python flags library.
-    http_archive(
+    maybe(
+        http_archive,
         name = "absl_py",
         sha256 = "980ce58c34dfa75a9d20d45c355658191c166557f1de41ab52f208bd00604c2b",
         strip_prefix = "abseil-py-b347ba6022370f895d3133241ed96965b95ecb40",
