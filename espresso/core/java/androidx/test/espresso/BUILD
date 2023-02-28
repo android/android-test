@@ -87,6 +87,7 @@ android_library(
         "@maven//:androidx_annotation_annotation",
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
@@ -111,9 +112,9 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/base:idling_resource_registry",
         "//espresso/core/java/androidx/test/espresso/internal/data",
         "//espresso/core/java/androidx/test/espresso/util/concurrent",
-        "//opensource:hamcrest",
         "//opensource/dagger",
         "//runner/android_junit_runner",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
 
@@ -158,10 +159,11 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/core/java/androidx/test/espresso/util/concurrent",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
-        "//opensource:hamcrest",
         "//runner/monitor",
         "@maven//:androidx_annotation_annotation",
         "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
@@ -172,7 +174,7 @@ android_library(
     deps = [
         ":interface",
         "//espresso/core/java/androidx/test/espresso/util",
-        "//opensource:hamcrest",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
 
@@ -183,10 +185,10 @@ android_library(
     deps = [
         "//annotation",
         "//espresso/core/java/androidx/test/espresso/util",
-        "//opensource:hamcrest",
         "//runner/monitor",
         "@maven//:androidx_annotation_annotation",
         "@maven//:com_google_errorprone_error_prone_annotations",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

@@ -12,11 +12,11 @@ axt_android_local_test(
         "OrchestrationListenerManagerTest.java",
     ],
     deps = [
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "//runner/android_junit_runner/javatests/androidx/test/orchestrator:sample_junit_test",
         "//services/events/java/androidx/test/services/events",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_mockito_mockito_core",
     ],
 )

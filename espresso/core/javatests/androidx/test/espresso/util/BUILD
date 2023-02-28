@@ -18,10 +18,11 @@ android_app_instrumentation_tests(
     deps = [
         "//espresso/core/java/androidx/test/espresso/util",
         "//ext/junit",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

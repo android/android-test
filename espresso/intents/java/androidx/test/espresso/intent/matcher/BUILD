@@ -18,8 +18,9 @@ android_library(
         "//core",
         "//espresso/intents/java/androidx/test/espresso/intent:precondition_checks",
         "//espresso/intents/java/androidx/test/espresso/intent:resolved_intent_interface",
-        "//opensource:hamcrest",
         "@maven//:androidx_annotation_annotation",
         "@maven//:com_google_errorprone_error_prone_annotations",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
     ],
 )

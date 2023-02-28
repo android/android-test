@@ -52,9 +52,10 @@ android_library(
     srcs = ["LongListMatchers.java"],
     deps = [
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "//opensource:hamcrest",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
         "@maven//:com_google_guava_guava",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
     ],
 )
 
@@ -177,6 +178,7 @@ android_app_instrumentation_tests(
         "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework",
         "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_library",
     ],
 )
 
@@ -263,6 +265,7 @@ android_app_instrumentation_tests(
         "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework",
         "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_library",
     ],
 )
 

@@ -27,11 +27,11 @@ android_app_instrumentation_tests(
         "//espresso/core",
         "//espresso/web/java/androidx/test/espresso/web/bridge",
         "//ext/junit",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )

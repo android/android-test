@@ -31,8 +31,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/core/javatests/androidx/test/espresso/proto:test_protos_android_pb3",
         "//espresso/web/java/androidx/test/espresso/web/model",
-        "//opensource:hamcrest",
         "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
@@ -60,10 +60,10 @@ android_app_instrumentation_tests(
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/core/javatests/androidx/test/espresso/proto:test_protos_android_pb3",
         "//ext/junit",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner/java/androidx/test:runner",
         "@com_google_protobuf//:protobuf_javalite",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_mockito_mockito_core",
     ],
 )

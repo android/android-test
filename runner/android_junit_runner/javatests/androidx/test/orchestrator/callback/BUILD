@@ -12,10 +12,11 @@ axt_android_local_test(
         "BundleConverterTest.java",
     ],
     deps = [
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "//services/events/java/androidx/test/services/events",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_mockito_mockito_core",
     ],
 )
@@ -27,10 +28,11 @@ axt_android_local_test(
         "OrchestratorV1ConnectionTest.java",
     ],
     deps = [
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "//services/events/java/androidx/test/services/events",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_mockito_mockito_core",
     ],
 )

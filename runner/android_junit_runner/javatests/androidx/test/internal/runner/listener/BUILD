@@ -20,7 +20,6 @@ axt_android_library_test(
     deps = [
         "//core",
         "//ext/junit",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
         "//runner/rules",
@@ -30,6 +29,7 @@ axt_android_library_test(
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_mockito_mockito_core",
     ],
 )
@@ -42,7 +42,6 @@ axt_android_library_test(
     deps = [
         "//core",
         "//ext/junit",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
         "//runner/rules",
@@ -52,6 +51,7 @@ axt_android_library_test(
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_mockito_mockito_core",
     ],
 )
@@ -65,7 +65,6 @@ axt_android_library_test(
     deps = [
         "//core",
         "//ext/junit",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
         "//runner/rules",
@@ -75,6 +74,7 @@ axt_android_library_test(
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_mockito_mockito_core",
     ],
 )
@@ -87,7 +87,6 @@ axt_android_library_test(
     deps = [
         "//core",
         "//ext/junit",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
         "//runner/rules",
@@ -97,6 +96,7 @@ axt_android_library_test(
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_mockito_mockito_core",
     ],
 )

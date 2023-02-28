@@ -47,7 +47,6 @@ android_app_instrumentation_tests(
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/core/javatests/androidx/test/espresso:utils",
         "//ext/junit",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner/java/androidx/test:runner",
         "//runner/rules",
         "//services/storage",
@@ -57,6 +56,8 @@ android_app_instrumentation_tests(
         "@maven//:androidx_annotation_annotation",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_mockito_mockito_core",
     ],
 )

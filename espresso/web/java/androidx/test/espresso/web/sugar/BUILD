@@ -19,9 +19,10 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/action",
         "//espresso/web/java/androidx/test/espresso/web/assertion",
         "//espresso/web/java/androidx/test/espresso/web/model",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "@maven//:androidx_annotation_annotation",
         "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
     ],
 )

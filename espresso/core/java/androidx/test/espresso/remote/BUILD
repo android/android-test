@@ -32,8 +32,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
-        "//opensource:hamcrest",
         "@maven//:androidx_annotation_annotation",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
 

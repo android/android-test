@@ -38,11 +38,11 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/core/java/androidx/test/espresso/util/concurrent",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource",
-        "//opensource:hamcrest",
         "//opensource/dagger",
         "//runner/android_junit_runner",
         "@jsr330",
         "@maven//:androidx_annotation_annotation",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
@@ -102,13 +102,13 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/internal/inject",
         "//espresso/core/java/androidx/test/espresso/util",
-        "//opensource:hamcrest",
         "//opensource/dagger",
         "//runner/monitor",
         "//services/storage/java/androidx/test/services/storage",
         "@jsr330",
         "@maven//:androidx_annotation_annotation",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
 

@@ -19,9 +19,10 @@ axt_android_library_test(
     deps = [
         "//core",
         "//ext/junit",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "//runner/monitor/javatests/androidx/test/platform/view/inspector/fixtures",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
     ],
 )

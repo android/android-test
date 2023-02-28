@@ -19,6 +19,6 @@ kt_android_library(
     ],
     deps = [
         "//espresso/core/java/androidx/test/espresso:framework",
-        "//opensource:hamcrest",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )

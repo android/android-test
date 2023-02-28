@@ -16,8 +16,9 @@ axt_android_local_test(
         "TestEventServiceConnectionBaseTest.java",
     ],
     deps = [
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
     ],
 )
 
@@ -35,10 +36,10 @@ axt_android_local_test(
     ],
     deps = [
         ":sampletest",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "//services/events/java/androidx/test/services/events",
         "@maven//:com_google_truth_truth",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_mockito_mockito_core",
     ],
 )
@@ -51,10 +52,11 @@ axt_android_local_test(
     ],
     deps = [
         "//ext/junit",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "//services/events/java/androidx/test/services/events",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_mockito_mockito_core",
     ],
 )
@@ -66,9 +68,10 @@ axt_android_local_test(
         "TestEventClientArgsTest.java",
     ],
     deps = [
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_mockito_mockito_core",
     ],
 )
@@ -80,11 +83,12 @@ axt_android_local_test(
         "TestEventClientTest.java",
     ],
     deps = [
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "//services/events/java/androidx/test/services/events",
         "@maven//:androidx_annotation_annotation",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_mockito_mockito_core",
     ],
 )

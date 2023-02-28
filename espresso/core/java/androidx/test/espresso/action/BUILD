@@ -46,10 +46,11 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "@maven//:androidx_annotation_annotation",
         "@maven//:com_google_errorprone_error_prone_annotations",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

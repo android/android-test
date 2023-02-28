@@ -69,7 +69,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "//opensource:hamcrest",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
     ],
 )
 
@@ -85,9 +86,10 @@ android_library(
     deps = [
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "//opensource:hamcrest",
         "//runner/monitor",
         "@maven//:androidx_recyclerview_recyclerview",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
     ],
 )
 
@@ -103,9 +105,9 @@ android_library(
         ":resources",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "//opensource:hamcrest",
         "@maven//:androidx_core_core",
         "@maven//:androidx_drawerlayout_drawerlayout",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
 
@@ -116,7 +118,7 @@ android_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//opensource:hamcrest",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
 
@@ -129,8 +131,8 @@ android_library(
     visibility = ["//visibility:public"],
     deps = [
         "//espresso/core/java/androidx/test/espresso",
-        "//opensource:hamcrest",
         "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
 
@@ -142,10 +144,11 @@ android_library(
     deps = [
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "//opensource:hamcrest",
         "@maven//:androidx_appcompat_appcompat",
         "@maven//:androidx_drawerlayout_drawerlayout",
         "@maven//:com_google_android_material_material",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
     ],
 )
 
@@ -158,8 +161,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/action",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "//opensource:hamcrest",
         "@maven//:androidx_viewpager_viewpager",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
 

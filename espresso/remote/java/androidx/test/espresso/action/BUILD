@@ -37,9 +37,9 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
         "//espresso/remote/java/androidx/test/espresso/remote:registry",
-        "//opensource:hamcrest",
         "//runner/monitor",
         "@com_google_protobuf//:protobuf_javalite",
         "@maven//:androidx_annotation_annotation",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )

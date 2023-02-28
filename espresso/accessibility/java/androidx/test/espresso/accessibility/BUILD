@@ -25,8 +25,9 @@ android_library(
     visibility = ["//visibility:public"],
     deps = [
         "//espresso/core/java/androidx/test/espresso",
-        "//opensource:hamcrest",  # unuseddeps: keep
         "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework",
+        "@maven//:org_hamcrest_hamcrest_core",  # unuseddeps: keep
+        "@maven//:org_hamcrest_hamcrest_library",  # unuseddeps: keep
     ],
 )
 

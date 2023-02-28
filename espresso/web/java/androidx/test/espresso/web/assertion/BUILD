@@ -22,9 +22,9 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/web/java/androidx/test/espresso/web/action",
         "//espresso/web/java/androidx/test/espresso/web/model",
-        "//opensource:hamcrest",
         "//runner/monitor",
         "@maven//:androidx_annotation_annotation",
         "@maven//:org_ccil_cowan_tagsoup_tagsoup",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )

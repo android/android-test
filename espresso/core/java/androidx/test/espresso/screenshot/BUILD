@@ -21,5 +21,6 @@ kt_android_library(
         "@maven//:androidx_annotation_annotation",
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
     ],
 )

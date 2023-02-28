@@ -26,12 +26,13 @@ jetify_android_library(
         "//espresso/core/java/androidx/test/espresso/action",
         "//espresso/core/java/androidx/test/espresso/assertion",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib",
         "//testapps/ui_testapp/javatests/androidx/test/ui/app:test_resources",
         "@maven//:androidx_recyclerview_recyclerview",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
     ],
 )
 
@@ -60,7 +61,6 @@ android_app_instrumentation_tests(
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/idling_resource/net/java/androidx/test/espresso/idling/net:uri_idling_resource",
         "//ext/junit",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "//runner/rules",
         "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
@@ -69,6 +69,8 @@ android_app_instrumentation_tests(
         "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_mockito_mockito_core",
     ],
 )

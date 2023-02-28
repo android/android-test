@@ -17,9 +17,10 @@ axt_android_library_test(
     srcs = ["GrantPermissionCallableTest.java"],
     deps = [
         "//ext/junit",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_mockito_mockito_core",
     ],
 )
@@ -29,9 +30,10 @@ axt_android_library_test(
     srcs = ["PermissionRequesterTest.java"],
     deps = [
         "//ext/junit",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_mockito_mockito_core",
     ],
 )
@@ -41,8 +43,9 @@ axt_android_library_test(
     srcs = ["UiAutomationShellCommandTest.java"],
     deps = [
         "//ext/junit",
-        "//opensource:hamcrest",
         "//runner/android_junit_runner",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
     ],
 )
