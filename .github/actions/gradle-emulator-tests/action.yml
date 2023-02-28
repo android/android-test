@@ -22,7 +22,6 @@ runs:
       run: |
           mkdir -p ~/.m2
           unzip ~/download/axt_m2repository.zip -d ~/.m2/
-          mv ~/.m2/m2repository ~/.m2/repository
       shell: bash
     - name: 'Setup Android SDK'
       uses: android-actions/setup-android@v2
