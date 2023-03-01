@@ -17,19 +17,22 @@
 package androidx.test.espresso.device.action
 
 import android.util.Log
-import androidx.core.util.Consumer
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.controller.DeviceMode
 import androidx.test.espresso.device.util.getResumedActivityOrNull
 import androidx.test.espresso.device.util.isRobolectricTest
 import androidx.test.platform.device.DeviceController
-import androidx.window.java.layout.WindowInfoTrackerCallbackAdapter
 import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
 import androidx.window.layout.WindowLayoutInfo
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 
 /** Action to set the test device to the provided device mode. */
 internal open class BaseSingleFoldDeviceAction(
@@ -43,6 +46,7 @@ internal open class BaseSingleFoldDeviceAction(
     private val TAG = BaseSingleFoldDeviceAction::class.java.simpleName
   }
 
+  @OptIn(androidx.window.core.ExperimentalWindowApi::class)
   override fun perform(context: ActionContext, deviceController: DeviceController) {
     if (isRobolectricTest()) {
       deviceController.setDeviceMode(deviceMode.mode)
@@ -54,58 +58,43 @@ internal open class BaseSingleFoldDeviceAction(
           "Unable to set device mode because there are no activities in the resumed stage."
         )
     val latch: CountDownLatch = CountDownLatch(1)
-    val windowInfoTrackerCallbackAdapter =
-      WindowInfoTrackerCallbackAdapter(WindowInfoTracker.getOrCreate(activity))
-    val windowLayoutInfoConsumer: Consumer<WindowLayoutInfo> =
-      WindowLayoutInfoConsumer(
-        latch,
-        windowInfoTrackerCallbackAdapter,
-      )
+    val windowInfoTracker = WindowInfoTracker.getOrCreate(activity)
 
-    windowInfoTrackerCallbackAdapter.addWindowLayoutInfoListener(
-      activity,
-      mainExecutor,
-      windowLayoutInfoConsumer
-    )
-
-    deviceController.setDeviceMode(deviceMode.mode)
-    latch.await()
-  }
-
-  private inner class WindowLayoutInfoConsumer(
-    private val latch: CountDownLatch,
-    private val windowInfoTrackerCallbackAdapter: WindowInfoTrackerCallbackAdapter
-  ) : Consumer<WindowLayoutInfo> {
-    override fun accept(windowLayoutInfo: WindowLayoutInfo) {
-      val foldingFeatures = windowLayoutInfo.displayFeatures.filterIsInstance<FoldingFeature>()
-      if (deviceMode == DeviceMode.CLOSED && foldingFeatures.isEmpty()) {
-        // When a device is in closed mode, WindowLayoutInfo returns an empty list of folding
-        // features. If the device actually has no folding features and cannot be set to closed mode
-        // (ie a non-foldable emulator), deviceController.setDeviceMode(DeviceMode.CLOSED) will
-        // throw a DeviceControllerOperationException.
-        Log.d(TAG, "Device is in the closed state.")
-        latch.countDown()
-      } else if (foldingFeatures.size != 1) {
-        // TODO(b/218872245) It is currently possible that some devices will emit an empty list
-        // before emitting a list of FoldingFeatures. Throw a DeviceControllerOperationException
-        // once this issue is fixed.
-        Log.w(
-          TAG,
-          "This device mode is only supported on devices with a single folding feature. " +
-            "${foldingFeatures.size} were found."
-        )
-      } else {
-        val foldingFeature = foldingFeatures.single()
-        if (foldingFeatureState == foldingFeature.state) {
-          Log.d(
-            TAG,
-            "FoldingFeature is in $foldingFeatureState state. WindowLayoutInfo: $windowLayoutInfo."
-          )
-          foldingFeatureOrientation = foldingFeature.orientation
-          windowInfoTrackerCallbackAdapter.removeWindowLayoutInfoListener(this)
+    CoroutineScope(mainExecutor.asCoroutineDispatcher()).launch {
+      windowInfoTracker.windowLayoutInfo(activity).distinctUntilChanged().collect {
+        windowLayoutInfo: WindowLayoutInfo ->
+        val foldingFeatures = windowLayoutInfo.displayFeatures.filterIsInstance<FoldingFeature>()
+        if (deviceMode == DeviceMode.CLOSED && foldingFeatures.isEmpty()) {
+          // When a device is in closed mode, WindowLayoutInfo returns an empty list of folding
+          // features. If the device actually has no folding features and cannot be set to closed
+          // mode (ie a non-foldable emulator), deviceController.setDeviceMode(DeviceMode.CLOSED)
+          // will throw a DeviceControllerOperationException.
+          Log.d(TAG, "Device is in the closed state.")
           latch.countDown()
+        } else if (foldingFeatures.size != 1) {
+          // TODO(b/218872245) It is currently possible that some devices will emit an empty list
+          // before emitting a list of FoldingFeatures. Throw a DeviceControllerOperationException
+          // once this issue is fixed.
+          Log.w(
+            TAG,
+            "This device mode is only supported on devices with a single folding feature. " +
+              "${foldingFeatures.size} were found."
+          )
+        } else {
+          val foldingFeature = foldingFeatures.single()
+          if (foldingFeatureState == foldingFeature.state) {
+            Log.d(
+              TAG,
+              "FoldingFeature is in $foldingFeatureState state. WindowLayoutInfo: $windowLayoutInfo."
+            )
+            foldingFeatureOrientation = foldingFeature.orientation
+            latch.countDown()
+          }
         }
       }
     }
+
+    deviceController.setDeviceMode(deviceMode.mode)
+    latch.await()
   }
 }
