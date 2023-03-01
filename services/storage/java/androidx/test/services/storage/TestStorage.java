@@ -35,6 +35,7 @@ import androidx.test.services.storage.internal.TestStorageUtil;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -216,7 +217,7 @@ public final class TestStorage implements PlatformTestStorage {
    * @return an OutputStream to the given output file.
    */
   @Override
-  public OutputStream openOutputFile(@NonNull String pathname) throws FileNotFoundException {
+  public FileOutputStream openOutputFile(@NonNull String pathname) throws FileNotFoundException {
     return openOutputFile(pathname, false);
   }
 
@@ -233,7 +234,7 @@ public final class TestStorage implements PlatformTestStorage {
    * @return an OutputStream to the given output file.
    */
   @Override
-  public OutputStream openOutputFile(@NonNull String pathname, boolean append)
+  public FileOutputStream openOutputFile(@NonNull String pathname, boolean append)
       throws FileNotFoundException {
     checkNotNull(pathname);
     Uri outputUri = getOutputFileUri(pathname);

@@ -69,7 +69,7 @@ public final class FileTestStorage implements PlatformTestStorage {
    *     writable output dir based on API level.
    */
   @Override
-  public OutputStream openOutputFile(String pathname) throws IOException {
+  public FileOutputStream openOutputFile(String pathname) throws IOException {
     File outputFile = new File(pathname);
     if (!outputFile.isAbsolute()) {
       outputFile = new File(outputDirCalculator.getOutputDir(), pathname);
@@ -79,7 +79,7 @@ public final class FileTestStorage implements PlatformTestStorage {
   }
 
   @Override
-  public OutputStream openOutputFile(String pathname, boolean append) throws IOException {
+  public FileOutputStream openOutputFile(String pathname, boolean append) throws IOException {
     File outputFile = new File(pathname);
     if (!outputFile.isAbsolute()) {
       outputFile = new File(outputDirCalculator.getOutputDir(), pathname);

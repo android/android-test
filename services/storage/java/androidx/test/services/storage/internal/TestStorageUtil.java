@@ -27,6 +27,7 @@ import androidx.annotation.RestrictTo.Scope;
 import androidx.test.services.storage.TestStorageException;
 import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -86,7 +87,7 @@ public final class TestStorageUtil {
    * @param append if true, then the lines will be added to the end of the file rather than
    *     overwriting.
    */
-  public static OutputStream getOutputStream(
+  public static FileOutputStream getOutputStream(
       Uri uri, ContentResolver contentResolver, boolean append) throws FileNotFoundException {
     checkNotNull(uri);
 
