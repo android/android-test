@@ -68,8 +68,12 @@ fun View.captureToBitmap(): ListenableFuture<Bitmap> {
   }
 
   mainExecutor.execute {
-    val forceRedrawFuture = forceRedraw()
-    forceRedrawFuture.addListener({ generateBitmap(bitmapFuture) }, mainExecutor)
+    if (Build.FINGERPRINT.contains("robolectric")) {
+      generateBitmap(bitmapFuture)
+    } else {
+      val forceRedrawFuture = forceRedraw()
+      forceRedrawFuture.addListener({ generateBitmap(bitmapFuture) }, mainExecutor)
+    }
   }
 
   return bitmapFuture
