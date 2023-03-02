@@ -12,10 +12,10 @@ android_library(
     exports = ["//services/shellexecutor/java/androidx/test/services/shellexecutor:exec_server"],
 )
 
-android_library(
+alias(
     name = "exec_client",
+    actual = "//services/shellexecutor/java/androidx/test/services/shellexecutor:exec_client",
     visibility = ["//visibility:public"],
-    exports = ["//services/shellexecutor/java/androidx/test/services/shellexecutor:exec_client"],
 )
 
 # List any packages allowed to access to server exec server.

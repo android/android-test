@@ -1,9 +1,8 @@
 # Description: Build rules for building androidx.test.truth from source
 
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
-load("//build_extensions:release.bzl", "axt_release_lib")
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANDROIDX_TRUTH_VERSION", "ANNOTATION_VERSION", "CORE_VERSION", "GUAVA_VERSION", "TRUTH_VERSION")
+load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions:api_checks.bzl", "api_checks")
 
@@ -24,6 +23,7 @@ android_library(
     srcs = glob(
         ["**/*.java"],
     ),
+    manifest = "AndroidManifest.xml",
     deps = [
         "//annotation",
         "//core",
@@ -33,53 +33,31 @@ android_library(
     ],
 )
 
-# group of targets to use to produce release binary + docs
-android_library(
-    name = "truth_release_lib",
+# Generate rules for the release artifacts.
+axt_android_aar(
+    name = "truth_aar",
     testonly = 1,
-    visibility = ["//visibility:private"],
-    exports = [
-        ":truth",
+    expected_class_prefixes = [
+        "androidx.test.ext.truth",
     ],
-)
-
-# Generate rules for the release artifacts. This generates three targets
-# genrule output: truth_release_no_deps.jar and truth_release.aar
-# a java_library target libtruth_release_no_deps
-axt_release_lib(
-    name = "truth_release",
-    keep_spec = "androidx/test/ext/truth",
-    remove_spec = "androidx/test/ext/truth/R[$$\\.]",
-    deps = [
-        ":truth_release_lib",
-    ],
-)
-
-dackka_test(
-    name = "truth_doc",
-    runtime_dep = ":truth_release_lib",
-    src_jar = ":libtruth-src.jar",
+    included_dep = ":truth",
 )
 
 maven_artifact(
     name = "truth_maven_artifact",
-    src = ":truth_release.aar",
-    artifact_deps = [
-        "androidx.test:core:%s" % CORE_VERSION,
-        "com.google.guava:guava:%s" % GUAVA_VERSION,
-        "com.google.truth:truth:%s" % TRUTH_VERSION,
-        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
-        "androidx.test:annotation:%s" % ANNOTATION_VERSION,
-    ],
-    artifact_id = "truth",
-    group_id = "androidx.test.ext",
+    testonly = 1,
     last_updated = "20180321000000",
-    src_jar = ":libtruth-src.jar",
-    version = "%s" % ANDROIDX_TRUTH_VERSION,
+    target = ":truth_aar",
+)
+
+dackka_test(
+    name = "truth_doc",
+    runtime_dep = ":truth",
+    src_jar = ":truth_aar-src.jar",
 )
 
 api_checks(
     name = "truth_api",
-    runtime_dep = ":truth_release_lib",
-    src_jar = ":libtruth-src.jar",
+    runtime_dep = ":truth",
+    src_jar = ":truth_aar-src.jar",
 )

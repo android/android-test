@@ -16,12 +16,19 @@
 
 package androidx.test.espresso;
 
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.test.espresso.base.RootViewPickerScope;
 import dagger.Subcomponent;
 
-/** Dagger component for view interaction classes. */
+/**
+ * Dagger component for view interaction classes.
+ *
+ * @hide
+ */
 @RootViewPickerScope
 @Subcomponent(modules = ViewInteractionModule.class)
+@RestrictTo(Scope.LIBRARY)
 public interface ViewInteractionComponent {
   ViewInteraction viewInteraction();
 }

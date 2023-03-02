@@ -2,7 +2,6 @@
 #  The client side for communicating with espresso-remote
 
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
 
 licenses(["notice"])
 
@@ -83,21 +82,4 @@ BINDABLE = [
 android_library(
     name = "bindable",
     srcs = BINDABLE,
-)
-
-filegroup(
-    name = "espresso_remote_src",
-    srcs = [
-        ":libbindable-src.jar",
-        ":libexceptions-src.jar",
-        ":libinterface-src.jar",
-        ":libreflectionUtils-src.jar",
-    ],
-)
-
-combine_jars(
-    name = "espresso_remote_src_jars",
-    srcs = [
-        ":espresso_remote_src",
-    ],
 )

@@ -2,12 +2,11 @@
 #   Light weight module represents a resources of an application under test which can cause
 #   asynchronous background work to happen during test execution.
 
-load("//build_extensions:release.bzl", "axt_release_lib")
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
+load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions:api_checks.bzl", "api_checks")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 package(
     default_applicable_licenses = ["//espresso:license"],
@@ -52,51 +51,37 @@ alias(
     actual = "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:thread_pool_idling_resource",
 )
 
-# rule for outputting externally released binary. Produces
-# espresso_idling_resource_release_no_deps.jar and espresso_idling_resource_release.aar
-axt_release_lib(
-    name = "espresso_idling_resource_release",
+android_library(
+    name = "idling_resource_aar_lib",
     custom_package = "androidx.test.espresso.idling.resource",
-    keep_spec = "androidx/test/espresso",
-    remove_spec = "androidx/test/espresso/idling/resource/R[$$\\.]",
-    deps = [
-        ":idling_resource",
-    ],
+    manifest = "AndroidManifest.xml",
+    exports = [":idling_resource_internal"],
 )
 
-filegroup(
-    name = "idling_resource_src",
-    srcs = [
-        #     ":libcounting_idling_resource-src.jar",
-        ":libidling_resource_internal-src.jar",
+# rule for outputting externally released binary.
+axt_android_aar(
+    name = "idling_resource_aar",
+    expected_class_prefixes = [
+        "androidx.test.espresso.Idling",
+        "androidx.test.espresso.idling",
     ],
-)
-
-combine_jars(
-    name = "idling_resource_src_jars",
-    srcs = [
-        ":idling_resource_src",
-    ],
-)
-
-dackka_test(
-    name = "espresso_idling_resource_doc",
-    runtime_dep = ":idling_resource",
-    src_jar = ":idling_resource_src_jars.jar",
+    included_dep = ":idling_resource_aar_lib",
 )
 
 maven_artifact(
     name = "espresso_idling_resource_maven_artifact",
-    src = ":espresso_idling_resource_release.aar",
-    artifact_id = "espresso-idling-resource",
-    group_id = "androidx.test.espresso",
     last_updated = "20170622000000",
-    src_jar = ":idling_resource_src_jars.jar",
-    version = "%s" % ESPRESSO_VERSION,
+    target = ":idling_resource_aar",
+)
+
+dackka_test(
+    name = "espresso_idling_resource_doc",
+    runtime_dep = ":idling_resource_aar_lib",
+    src_jar = ":idling_resource_aar-src.jar",
 )
 
 api_checks(
     name = "espresso_idling_resource_api",
-    runtime_dep = ":idling_resource",
-    src_jar = ":idling_resource_src_jars.jar",
+    runtime_dep = ":idling_resource_aar_lib",
+    src_jar = ":idling_resource_aar-src.jar",
 )

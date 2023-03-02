@@ -1,9 +1,8 @@
 # Description: Build rules for building androidx.test.junit from source
 
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
-load("//build_extensions:release.bzl", "axt_release_lib")
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANDROIDX_JUNIT_VERSION", "CORE_VERSION", "JUNIT_VERSION", "MONITOR_VERSION")
+load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions:api_checks.bzl", "api_checks")
 
@@ -33,52 +32,31 @@ android_library(
     ],
 )
 
-# group of targets to use to produce release binary + docs
-android_library(
-    name = "junit_release_lib",
+# Generate rules for the release artifacts.
+axt_android_aar(
+    name = "junit_aar",
     testonly = 1,
-    visibility = ["//:__subpackages__"],
-    exports = [
-        ":junit",
+    expected_class_prefixes = [
+        "androidx.test.ext.junit",
     ],
-)
-
-# Generate rules for the release artifacts. This generates three targets
-# genrule output: junit_release_no_deps.jar and junit_release.aar
-# a java_library target libjunit_release_no_deps
-axt_release_lib(
-    name = "junit_release",
-    keep_spec = "androidx/test/ext/junit",
-    remove_spec = "androidx/test/ext/junit/R[$$\\.]",
-    deps = [
-        ":junit_release_lib",
-    ],
-)
-
-dackka_test(
-    name = "junit_doc",
-    runtime_dep = ":junit_release_lib",
-    src_jar = ":libjunit-src.jar",
+    included_dep = ":junit",
 )
 
 maven_artifact(
     name = "junit_maven_artifact",
-    src = ":junit_release.aar",
-    artifact_deps = [
-        "junit:junit:%s" % JUNIT_VERSION,
-        "androidx.test:core:%s" % CORE_VERSION,
-        "androidx.test:monitor:%s" % MONITOR_VERSION,
-        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
-    ],
-    artifact_id = "junit",
-    group_id = "androidx.test.ext",
+    testonly = 1,
     last_updated = "20180723000000",
-    src_jar = ":libjunit-src.jar",
-    version = "%s" % ANDROIDX_JUNIT_VERSION,
+    target = ":junit_aar",
+)
+
+dackka_test(
+    name = "junit_doc",
+    runtime_dep = ":junit",
+    src_jar = ":junit_aar-src.jar",
 )
 
 api_checks(
     name = "junit_api",
-    runtime_dep = ":junit_release_lib",
-    src_jar = ":libjunit-src.jar",
+    runtime_dep = ":junit",
+    src_jar = ":junit_aar-src.jar",
 )

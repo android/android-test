@@ -1,2 +1,0 @@
-rule com.google.thirdparty.publicsuffix.** androidx.test.espresso.web.internal.deps.publicsuffix.@1
-rule com.google.android.aidl.** androidx.test.espresso.web.internal.deps.aidl.@1

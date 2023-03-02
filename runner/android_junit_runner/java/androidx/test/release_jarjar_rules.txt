@@ -1,2 +1,0 @@
-rule com.google.android.aidl.** androidx.test.runner.internal.deps.aidl.@1
-rule com.google.devtools.build.android.desugar.runtime.** androidx.test.runner.internal.deps.desugar.@1

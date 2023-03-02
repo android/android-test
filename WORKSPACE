@@ -8,7 +8,9 @@ RULES_JVM_EXTERNAL_TAG = "4.4.2"
 RULES_JVM_EXTERNAL_SHA = "735602f50813eb2ea93ca3f5e43b1959bd80b213b836a07a62a29d757670b77b"
 
 # This needs to be consistent with the KOTLIN_VERSION specified in build_extensions/axt_versions.bzl.
-KOTLIN_VERSION = "1.6.21"
+KOTLIN_VERSION = "1.7.22"
+# Get from https://github.com/JetBrains/kotlin/releases/
+KOTLINC_RELEASE_SHA = "9db4b467743c1aea8a21c08e1c286bc2aeb93f14c7ba2037dbd8f48adc357d83"
 
 http_archive(
     name = "rules_jvm_external",
@@ -145,13 +147,14 @@ maven_install(
         "net.bytebuddy:byte-buddy-agent:1.9.10",
         "net.bytebuddy:byte-buddy:1.9.10",
         "net.sf.kxml:kxml2:jar:2.3.0",
-        "org.ccil/cowan.tagsoup:tagsoup:1.2.1",
+        "org.ccil.cowan.tagsoup:tagsoup:1.2.1",
         "org.checkerframework:checker-compat-qual:2.5.5",
         "org.hamcrest:hamcrest-core:1.3",
         "org.hamcrest:hamcrest-library:1.3",
         "org.mockito:mockito-core:2.28.1",
         "org.objenesis:objenesis:2.6",
         "org.pantsbuild:jarjar:1.7.2",
+        "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
         maven.artifact(
             artifact = "robolectric",
             exclusions = [
@@ -203,9 +206,8 @@ robolectric_repositories()
 
 # Kotlin toolchains
 
-rules_kotlin_version = "1.5.0"
-
-rules_kotlin_sha = "12d22a3d9cbcf00f2e2d8f0683ba87d3823cb8c7f6837568dd7e48846e023307"
+rules_kotlin_version = "1.7.1"
+rules_kotlin_sha = "fd92a98bd8a8f0e1cdcb490b93f5acef1f1727ed992571232d33de42395ca9b3"
 
 http_archive(
     name = "io_bazel_rules_kotlin",
@@ -214,9 +216,6 @@ http_archive(
 )
 
 load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", "kotlinc_version")
-
-# Get from https://github.com/JetBrains/kotlin/releases/
-KOTLINC_RELEASE_SHA = "632166fed89f3f430482f5aa07f2e20b923b72ef688c8f5a7df3aa1502c6d8ba"
 
 kotlin_repositories(
     compiler_release = kotlinc_version(

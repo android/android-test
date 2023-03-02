@@ -40,8 +40,8 @@ android_library(
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource",
         "//opensource/dagger",
         "//runner/android_junit_runner",
-        "@jsr330",
         "@maven//:androidx_annotation_annotation",
+        "@maven//:javax_inject_javax_inject",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
@@ -71,8 +71,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//runner/monitor",
-        "@jsr330",
         "@maven//:androidx_annotation_annotation",
+        "@maven//:javax_inject_javax_inject",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
@@ -105,20 +105,9 @@ android_library(
         "//opensource/dagger",
         "//runner/monitor",
         "//services/storage/java/androidx/test/services/storage",
-        "@jsr330",
         "@maven//:androidx_annotation_annotation",
+        "@maven//:javax_inject_javax_inject",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
-    ],
-)
-
-filegroup(
-    name = "espresso_base_src",
-    srcs = [
-        ":libactive_root_lister-src.jar",
-        ":libbase-src.jar",
-        ":libdefault_failure_handler-src.jar",
-        ":libidling_resource_registry-src.jar",
-        ":libidling_uicontroller_interface-src.jar",
     ],
 )

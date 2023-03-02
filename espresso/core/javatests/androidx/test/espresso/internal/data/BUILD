@@ -18,7 +18,6 @@ android_app_instrumentation_tests(
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/internal/data",
         "//espresso/core/java/androidx/test/espresso/internal/data/model",
-        "//espresso/remote/java/androidx/test/espresso/matcher:remote_view_matchers",
         "//ext/junit",
         "//runner/android_junit_runner",
         "//runner/monitor",

@@ -2,19 +2,15 @@ load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 package(
     default_applicable_licenses = ["//espresso:license"],
-    default_visibility = ["//visibility:public"],
+    default_visibility = ["//espresso/remote:__subpackages__"],
 )
 
 licenses(["notice"])
 
-REMOTE_WEB_MATCHERS = [
-    "RemoteWebMatchers.java",
-]
-
 android_library(
     name = "remote_web_matchers",
     srcs = glob(
-        REMOTE_WEB_MATCHERS,
+        ["*.java"],
     ),
     deps = [
         "//espresso/core/java/androidx/test/espresso/remote:exceptions",
@@ -24,5 +20,6 @@ android_library(
         "//espresso/remote/java/androidx/test/espresso/remote:registry",
         "//espresso/remote/java/androidx/test/espresso/web/proto/matcher:remote_web_matchers_proto_android_pb3",
         "//espresso/web/java/androidx/test/espresso/web/matcher",
+        "@maven//:androidx_annotation_annotation",
     ],
 )

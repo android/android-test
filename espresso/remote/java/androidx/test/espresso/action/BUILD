@@ -7,34 +7,23 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
-    default_visibility = ["//visibility:public"],
+    default_visibility = ["//espresso/remote:__subpackages__"],
 )
-
-COMMON_JAVACOPTS = [
-    "-Xep:ObjectToString:OFF",  # See http://go/objecttostring-lsc
-]
-
-REMOTE_VIEW_ACTIONS = [
-    "RemoteViewActions.java",
-    # TODO(b/33047831): rename all RemoteMessages to *RemoteMsg
-    "*RemoteMessage.java",
-    "*RemoteMsg.java",
-]
 
 android_library(
     name = "remote_view_actions",
     srcs = glob(
-        REMOTE_VIEW_ACTIONS,
+        ["*.java"],
     ),
     deps = [
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso/action",
         "//espresso/core/java/androidx/test/espresso/action:adapter_view_protocol",
-        "//espresso/core/java/androidx/test/espresso/proto/action:ui_interaction_view_actions_android_pb3",
         "//espresso/core/java/androidx/test/espresso/remote:exceptions",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
         "//espresso/core/java/androidx/test/espresso/util",
+        "//espresso/remote/java/androidx/test/espresso/proto/action:ui_interaction_view_actions_android_pb3",
         "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
         "//espresso/remote/java/androidx/test/espresso/remote:registry",
         "//runner/monitor",

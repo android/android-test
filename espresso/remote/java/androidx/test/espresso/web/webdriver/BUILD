@@ -7,18 +7,13 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
-    default_visibility = ["//visibility:public"],
+    default_visibility = ["//espresso/remote:__subpackages__"],
 )
-
-REMOTE_WEB_DRIVER_ATOMS = [
-    "RemoteWebDriverAtoms.java",
-    "*RemoteMessage.java",
-]
 
 android_library(
     name = "remote_webdriver_atoms",
     srcs = glob(
-        REMOTE_WEB_DRIVER_ATOMS,
+        ["*.java"],
     ),
     deps = [
         "//espresso/core/java/androidx/test/espresso/remote:exceptions",

@@ -18,13 +18,7 @@ package androidx.test.espresso.internal.data.model
 
 import androidx.test.espresso.ViewAction
 
-/**
- * [ActionData] stores metadata of [androidx.test.espresso.ViewAction].
- *
- * @param source the [ScreenData] node this ActionData object belongs to.
- * @param dest the [ScreenData] node this ActionData object points to.
- * @param viewActionData Data pertaining to a ViewAction.
- */
+/** [ActionData] stores metadata of [androidx.test.espresso.ViewAction]. */
 data class ActionData(
   val index: Int?,
   val name: String?,

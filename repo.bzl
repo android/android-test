@@ -19,6 +19,7 @@ def _development_repositories():
     http_archive(
         name = "robolectric",
         strip_prefix = "robolectric-bazel-4.9",
+        sha256 = "7655c49633ec85a18b5a94b1ec36e250671808e45494194959b1d1d7f3e73a23",
         urls = ["https://github.com/robolectric/robolectric-bazel/archive/4.9.tar.gz"],
     )
     # uncomment to test with new robolectric version. Change path to point to local filesystem
@@ -27,17 +28,6 @@ def _development_repositories():
     #     name = "robolectric",
     #     path = "~/github/robolectric-bazel/",
     # )
-
-    http_archive(
-        name = "jsr330",
-        build_file_content = """
-package(default_visibility = ["//visibility:public"])
-java_import(
-    name = "jsr330",
-    jars = ["javax.inject.jar"],
-)""",
-        url = "https://github.com/javax-inject/javax-inject/releases/download/1/javax.inject.zip",
-    )
 
 # These dependencies are for *users* of the Android Test repo,
 # i.e. specifying this repository as @androidx_test in their

@@ -1,7 +1,7 @@
 load("@build_bazel_rules_android//android:rules.bzl", "android_binary")
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ORCHESTRATOR_VERSION", "SERVICES_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions/maven:axt_maven_apk.bzl", "axt_maven_apk")
+load("//build_extensions:axt_versions.bzl", "ORCHESTRATOR_ARTIFACT", "SERVICES_APK_ARTIFACT")
 
 licenses(["notice"])
 
@@ -31,22 +31,17 @@ android_binary(
     ],
 )
 
-combine_jars(
-    name = "orchestrator_src_jars",
-    srcs = [
-        "//runner/android_test_orchestrator/java/androidx/test/orchestrator:orchestrator_src",
+axt_maven_apk(
+    name = "orchestrator_release_apk",
+    artifact = ORCHESTRATOR_ARTIFACT,
+    included_dep = ":stubapp",
+    maven_deps = [
+        SERVICES_APK_ARTIFACT,
     ],
 )
 
 maven_artifact(
     name = "orchestrator_release_maven_artifact",
-    src = ":stubapp.apk",
-    artifact_deps = [
-        "androidx.test.services:test-services:%s" % SERVICES_VERSION,
-    ],
-    artifact_id = "orchestrator",
-    group_id = "androidx.test",
     last_updated = "20170622000000",
-    src_jar = ":orchestrator_src_jars.jar",
-    version = "%s" % ORCHESTRATOR_VERSION,
+    target = ":orchestrator_release_apk",
 )

@@ -2,10 +2,11 @@
 #   EspressoDevice - the new Synchronized Device State Change API for Android.
 
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
-load("//build_extensions:release.bzl", "axt_release_lib")
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANNOTATION_VERSION", "ESPRESSO_DEVICE_VERSION", "KOTLIN_VERSION", "MONITOR_VERSION", "RUNNER_VERSION")
+load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions:dackka_test.bzl", "dackka_test")
+load("//build_extensions:api_checks.bzl", "api_checks")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 licenses(["notice"])
 
@@ -48,50 +49,49 @@ kt_android_library(
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
         "//opensource/dagger",
         "//runner/monitor",
-        "@jsr330",
+        "@maven//:javax_inject_javax_inject",
     ],
 )
 
-combine_jars(
-    name = "device_src_jars",
-    srcs = [
-        "//espresso/device/java/androidx/test/espresso/device/filter:libfilter-src.jar",
-        "//espresso/device/java/androidx/test/espresso/device/sizeclass:libsizeclass-src.jar",
-    ],
-)
-
-# Currently, only the @RequiresDisplay test filter and size classes are included in external release.
-axt_release_lib(
-    name = "device_release",
-    custom_package = "androidx.test.espresso.device",
-    keep_spec = "androidx/test/espresso/device/.*|META-INF/androidx.test.espresso.device.*.kotlin_module",
-    proguard_specs = [
-        "//:proguard_binary.cfg",
-        "//espresso:proguard_binary.cfg",
-    ],
-    remove_spec = "androidx/test/espresso/device/R[$$\\.]",
-    deps = [
+android_library(
+    name = "device_aar_lib",
+    testonly = 1,
+    manifest = "AndroidManifest.xml",
+    exports = [
         "//espresso/device/java/androidx/test/espresso/device/filter:requires_display_filter",
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
     ],
 )
 
-maven_artifact(
-    name = "device_maven_artifact",
-    src = "device_release.aar",
-    artifact_deps = [
-        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
-        "androidx.test:monitor:[%s]" % MONITOR_VERSION,
-        "androidx.test:runner:%s" % RUNNER_VERSION,
-        "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
-        "androidx.test:annotation:%s" % ANNOTATION_VERSION,
+# Currently, only the @RequiresDisplay test filter and size classes are included in external release.
+axt_android_aar(
+    name = "device_aar",
+    testonly = 1,
+    expected_class_prefixes = [
+        "androidx.test.espresso.device",
     ],
-    artifact_id = "espresso-device",
-    group_id = "androidx.test.espresso",
-    last_updated = "20220825000000",
-    src_jar = ":device_src_jars.jar",
-    version = "%s" % ESPRESSO_DEVICE_VERSION,
+    included_dep = ":device_aar_lib",
     visibility = [
         "//:__pkg__",
     ],
+)
+
+maven_artifact(
+    name = "device_maven_artifact",
+    testonly = 1,
+    last_updated = "20220825000000",
+    target = ":device_aar",
+    visibility = ["//visibility:public"],
+)
+
+dackka_test(
+    name = "device_doc",
+    runtime_dep = ":device_aar_lib",
+    src_jar = ":device_aar-src.jar",
+)
+
+api_checks(
+    name = "device_api_check",
+    runtime_dep = ":device_aar_lib",
+    src_jar = ":device_aar-src.jar",
 )

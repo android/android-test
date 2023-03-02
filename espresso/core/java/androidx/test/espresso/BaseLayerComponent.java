@@ -16,6 +16,8 @@
 
 package androidx.test.espresso;
 
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.test.espresso.base.ActiveRootLister;
 import androidx.test.espresso.base.BaseLayerModule;
 import androidx.test.espresso.base.IdlingResourceRegistry;
@@ -28,9 +30,14 @@ import dagger.Component;
 import java.util.concurrent.Executor;
 import javax.inject.Singleton;
 
-/** Dagger component for base classes. */
+/**
+ * Dagger component for base classes.
+ *
+ * @hide
+ */
 @Component(modules = {BaseLayerModule.class, UiControllerModule.class})
 @Singleton
+@RestrictTo(Scope.LIBRARY)
 public interface BaseLayerComponent {
   BaseLayerModule.FailureHandlerHolder failureHolder();
 

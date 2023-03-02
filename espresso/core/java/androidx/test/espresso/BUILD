@@ -2,11 +2,8 @@
 #   Espresso - the new UI Test API for Android.
 
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
-load("//build_extensions:release.bzl", "axt_release_lib")
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ANNOTATION_VERSION", "CORE_VERSION", "ESPRESSO_VERSION", "HAMCREST_VERSION", "KOTLIN_VERSION", "RUNNER_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
-load("//build_extensions:remove_from_jar.bzl", "remove_from_jar")
+load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions:api_checks.bzl", "api_checks")
 
@@ -86,6 +83,7 @@ android_library(
         "//runner/android_junit_runner",
         "@maven//:androidx_annotation_annotation",
         "@maven//:androidx_concurrent_concurrent_futures",
+        "@maven//:javax_inject_javax_inject",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
@@ -114,6 +112,8 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util/concurrent",
         "//opensource/dagger",
         "//runner/android_junit_runner",
+        "@maven//:androidx_annotation_annotation",
+        "@maven//:javax_inject_javax_inject",
         "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
@@ -203,93 +203,42 @@ android_library(
     exports = [":espresso"],
 )
 
-axt_release_lib(
-    name = "espresso_core_release",
+android_library(
+    name = "espresso_aar_lib",
     custom_package = "androidx.test.espresso.core",
-    jarjar_rules = [
-        "release_jarjar_rules.txt",
-    ],
-    # ensure to include kotlin_module since those define extension functions
-    keep_spec = "androidx/test/espresso|META-INF/androidx.test.espresso.*.kotlin_module",
-    overlapping_jars = [
-        "//espresso/idling_resource/java/androidx/test/espresso:espresso_idling_resource_release_no_deps.jar",
-    ],
-    proguard_library = ":proguard_library.cfg",
-    proguard_specs = [
-        "//:proguard_binary.cfg",
-        "//espresso:proguard_binary.cfg",
-    ],
-    remove_spec = "androidx/test/espresso/core/R[$$\\.]",
-    deps = [
+    manifest = "AndroidManifest.xml",
+    proguard_specs = [":proguard_library.cfg"],
+    visibility = ["//visibility:private"],
+    exports = [
         ":espresso",
+        "//espresso/core/java/androidx/test/espresso/core/internal/deps/dagger",
     ],
 )
 
-filegroup(
-    name = "espresso_src",
-    srcs = [
-        ":libespresso-src.jar",
-        ":libframework-src.jar",
-        ":libinterface-src.jar",
-        ":libview-interaction-src.jar",
-        "//espresso/core/java/androidx/test/espresso/action:libaction-src.jar",
-        "//espresso/core/java/androidx/test/espresso/action:libadapter_view_protocol-src.jar",
-        "//espresso/core/java/androidx/test/espresso/assertion:libassertion-src.jar",
-        "//espresso/core/java/androidx/test/espresso/base:espresso_base_src",
-        "//espresso/core/java/androidx/test/espresso/matcher:libmatcher-src.jar",
-        "//espresso/core/java/androidx/test/espresso/remote:espresso_remote_src",
-        "//espresso/core/java/androidx/test/espresso/screenshot:libscreenshot-src.jar",
-        "//espresso/core/java/androidx/test/espresso/util:libutil-src.jar",
-        "//espresso/core/java/androidx/test/espresso/util/concurrent:libconcurrent-src.jar",
+axt_android_aar(
+    name = "espresso_core_aar",
+    expected_class_prefixes = [
+        "androidx.test.espresso",
     ],
-)
-
-combine_jars(
-    name = "espresso_src_all_jars",
-    srcs = [
-        ":espresso_src",
-    ],
-)
-
-remove_from_jar(
-    name = "espresso_src_jars",
-    jar = ":espresso_src_all_jars.jar",
-    keep_spec = "androidx/test/espresso",
-    # Remove generated dagger classes from source jar
-    remove_spec = ".*_Provide.*|.*_Factory.*",
-)
-
-dackka_test(
-    name = "espresso_core_doc",
-    runtime_dep = ":espresso",
-    src_jar = ":espresso_src_jars.jar",
+    included_dep = ":espresso_aar_lib",
+    jarjar_rule =
+        "release_jarjar_rules.txt",
 )
 
 maven_artifact(
     name = "espresso_core_maven_artifact",
-    src = ":espresso_core_release.aar",
-    artifact_deps = [
-        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
-        "androidx.test:core:%s" % CORE_VERSION,
-        "androidx.test:runner:%s" % RUNNER_VERSION,
-        "androidx.test.espresso:espresso-idling-resource:%s" % ESPRESSO_VERSION,
-        "com.squareup:javawriter:2.1.1",
-        "javax.inject:javax.inject:1",
-        "org.hamcrest:hamcrest-library:%s" % HAMCREST_VERSION,
-        "org.hamcrest:hamcrest-integration:%s" % HAMCREST_VERSION,
-        "com.google.code.findbugs:jsr305:2.0.2",
-        "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
-        "androidx.test:annotation:%s" % ANNOTATION_VERSION,
-    ],
-    artifact_id = "espresso-core",
-    group_id = "androidx.test.espresso",
     last_updated = "20170622000000",
-    src_jar = ":espresso_src_jars.jar",
-    version = "%s" % ESPRESSO_VERSION,
+    target = ":espresso_core_aar",
+)
+
+dackka_test(
+    name = "espresso_core_doc",
+    runtime_dep = ":espresso_aar_lib",
+    src_jar = ":espresso_core_aar-src.jar",
 )
 
 api_checks(
     name = "espresso_core_api",
-    runtime_dep = ":espresso",
-    src_jar = ":espresso_src_jars.jar",
+    runtime_dep = ":espresso_aar_lib",
+    src_jar = ":espresso_core_aar-src.jar",
 )

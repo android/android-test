@@ -1,0 +1,5 @@
+# Include debug info in the compiled jars
+build --javacopt=-g
+build --host_javacopt=-g
+
+build --experimental_google_legacy_api

@@ -19,7 +19,6 @@ android_app_instrumentation_tests(
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/action",
         "//espresso/core/java/androidx/test/espresso/assertion",
-        "//espresso/core/java/androidx/test/espresso/proto/assertion:ui_interaction_view_assertions_android_pb3",
         "//ext/junit",
         "//runner/android_junit_runner",
         "//runner/rules",

@@ -1,8 +1,6 @@
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
-load("//build_extensions:release.bzl", "axt_release_lib")
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ANDROIDX_ANNOTATION_VERSION", "ESPRESSO_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
+load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions:api_checks.bzl", "api_checks")
 
@@ -26,53 +24,29 @@ android_library(
     ],
 )
 
-# rule for outputting externally released binary. Produces
-# idling_net_release_no_deps.jar and idling_net_release.aar
-axt_release_lib(
-    name = "idling_net_release",
-    keep_spec = "androidx/test/espresso/idling/net",
-    remove_spec = "androidx/test/espresso/idling/net/R[$$\\.]",
-    deps = [
-        ":uri_idling_resource",
+# rule for outputting externally released binary.
+axt_android_aar(
+    name = "idling_net_aar",
+    expected_class_prefixes = [
+        "androidx.test.espresso.idling.net",
     ],
+    included_dep = ":uri_idling_resource",
 )
 
-filegroup(
-    name = "idling_net_src",
-    srcs = [
-        ":liburi_idling_resource-src.jar",
-    ],
-)
-
-combine_jars(
-    name = "idling_net_src_jars",
-    srcs = [
-        ":idling_net_src",
-    ],
+maven_artifact(
+    name = "idling_net_maven_artifact",
+    last_updated = "20170622000000",
+    target = ":idling_net_aar",
 )
 
 dackka_test(
     name = "idling_net_doc",
     runtime_dep = ":uri_idling_resource",
-    src_jar = ":idling_net_src_jars.jar",
-)
-
-maven_artifact(
-    name = "idling_net_maven_artifact",
-    src = ":idling_net_release.aar",
-    artifact_deps = [
-        "androidx.annotation:annotation:%s" % ANDROIDX_ANNOTATION_VERSION,
-        "androidx.test.espresso:espresso-idling-resource:%s" % ESPRESSO_VERSION,
-    ],
-    artifact_id = "idling-net",
-    group_id = "androidx.test.espresso.idling",
-    last_updated = "20170622000000",
-    src_jar = ":idling_net_src_jars.jar",
-    version = "%s" % ESPRESSO_VERSION,
+    src_jar = ":idling_net_aar-src.jar",
 )
 
 api_checks(
     name = "idling_net_api",
     runtime_dep = ":uri_idling_resource",
-    src_jar = ":idling_net_src_jars.jar",
+    src_jar = ":idling_net_aar-src.jar",
 )
