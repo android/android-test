@@ -25,19 +25,14 @@ runs:
       shell: bash
     - name: 'Setup Android SDK'
       uses: android-actions/setup-android@v2
-    - name: 'Clear managed devices'
-      run: |
-          cd ${{ github.workspace }}/gradle-tests/runner/app
-          ../gradlew cleanManagedDevices --unused-only
-      shell: bash
     - name: 'Run gradle tests'
       run: |
-        cd ${{ github.workspace }}/gradle-tests/runner/app
-        ../gradlew nexusOneApi30DebugAndroidTest -Dorg.gradle.workers.max=1 -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -Pandroid.experimental.testOptions.managedDevices.emulator.showKernelLogging=true --info
+        cd ${{ github.workspace }}/gradle-tests
+        ./gradlew nexusOneApi30DebugAndroidTest -Dorg.gradle.workers.max=1 -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -Pandroid.experimental.testOptions.managedDevices.emulator.showKernelLogging=true --info
       shell: bash
     - name: 'Upload test reports'
       if: success() || failure()
       uses: actions/upload-artifact@v3
       with:
         name: test-reports
-        path: gradle-tests/runner/app/build/reports/androidTests/
+        path: gradle-tests/**/build/reports/androidTests/

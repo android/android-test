@@ -1,20 +1,22 @@
 plugins {
     id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
-    namespace 'androidx.test.gradletests.runner'
+    namespace 'androidx.test.gradletests.espresso'
     compileSdk 33
 
     defaultConfig {
         minSdk 14
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildTypes {
+
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -37,6 +39,9 @@ android {
 }
 
 dependencies {
-    androidTestImplementation libs.runner
-}
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.ext.truth
+    androidTestImplementation libs.espresso.core
+    androidTestImplementation libs.espresso.intents
 
+}

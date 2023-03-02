@@ -1,0 +1,32 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        mavenLocal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        mavenLocal()
+    }
+    versionCatalogs {
+        libs {
+            library('runner', 'androidx.test:runner:1.6.0-alpha01')
+            library('ext.junit', 'androidx.test.ext:junit:1.2.0-alpha01')
+            library('ext.truth', 'androidx.test.ext:truth:1.6.0-alpha01')
+            library('espresso.core', 'androidx.test.espresso:espresso-core:3.6.0-alpha01')
+            library('espresso.intents', 'androidx.test.espresso:espresso-intents:3.6.0-alpha01')
+            library('orchestrator', 'androidx.test:orchestrator:1.5.0-alpha01')
+
+        }
+    }
+}
+
+rootProject.name = "Gradle Tests"
+include ':runner'
+include ':espresso'
+include ':orchestrator'
