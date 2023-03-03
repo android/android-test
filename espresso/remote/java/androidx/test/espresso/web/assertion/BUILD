@@ -7,23 +7,13 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
-    default_visibility = ["//visibility:public"],
+    default_visibility = ["//espresso/remote:__subpackages__"],
 )
-
-REMOTE_WEB_ASSERTIONS = [
-    "RemoteWebViewAssertions.java",
-    "CheckResultWebAssertionRemoteMessage.java",
-    "DocumentProtoConverters.java",
-    "DocumentToByteStringConverter.java",
-    "ByteStringToDocumentConverter.java",
-    "DocumentToByteStringConverter.java",
-    "CompressorDecompressor.java",
-]
 
 android_library(
     name = "remote_web_assertions",
     srcs = glob(
-        REMOTE_WEB_ASSERTIONS,
+        ["*.java"],
     ),
     deps = [
         "//espresso/core/java/androidx/test/espresso/remote:exceptions",
@@ -36,5 +26,13 @@ android_library(
         "@com_google_protobuf//:protobuf_javalite",
         "@maven//:androidx_annotation_annotation",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+    ],
+)
+
+java_library(
+    name = "package-info",
+    srcs = ["package-info.java"],
+    deps = [
+        "@maven//:androidx_annotation_annotation",
     ],
 )

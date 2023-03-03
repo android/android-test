@@ -7,18 +7,13 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
-    default_visibility = ["//visibility:public"],
+    default_visibility = ["//espresso/remote:__subpackages__"],
 )
-
-REMOTE_WEB_ACTIONS = [
-    "RemoteWebActions.java",
-    "*RemoteMessage.java",
-]
 
 android_library(
     name = "remote_web_actions",
     srcs = glob(
-        REMOTE_WEB_ACTIONS,
+        ["*.java"],
     ),
     deps = [
         "//espresso/core/java/androidx/test/espresso/remote:exceptions",
@@ -30,5 +25,14 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/action",
         "//espresso/web/java/androidx/test/espresso/web/model",
         "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:androidx_annotation_annotation",
+    ],
+)
+
+java_library(
+    name = "package-info",
+    srcs = ["package-info.java"],
+    deps = [
+        "@maven//:androidx_annotation_annotation",
     ],
 )

@@ -17,6 +17,8 @@
 package androidx.test.espresso;
 
 import android.util.Log;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.test.espresso.DataInteraction.DisplayDataMatcher;
 import androidx.test.espresso.proto.matcher.ViewMatchers.DisplayDataMatcherProto;
 import androidx.test.espresso.remote.RemoteDescriptor;
@@ -25,7 +27,10 @@ import java.util.Arrays;
 
 /**
  * Registers all supported DataInteraction remote features with the {@link RemoteDescriptorRegistry}
+ *
+ * @hide
  */
+@RestrictTo(Scope.LIBRARY)
 public final class DataInteractionRemote {
   private static final String TAG = "DIRemote";
 

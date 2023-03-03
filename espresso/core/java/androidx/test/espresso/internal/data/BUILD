@@ -10,9 +10,9 @@ package(
 
 android_library(
     name = "data",
-    srcs = [
-        "TestFlowVisualizer.java",
-    ],
+    srcs = glob([
+        "*.java",
+    ]),
     deps = [
         "//espresso/core/java/androidx/test/espresso/action",
         "//espresso/core/java/androidx/test/espresso/internal/data/model",

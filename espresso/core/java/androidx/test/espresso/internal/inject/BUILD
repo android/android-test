@@ -15,7 +15,7 @@ android_library(
         "//:__subpackages__",
     ],
     deps = [
-        "@jsr330",
         "@maven//:androidx_annotation_annotation",
+        "@maven//:javax_inject_javax_inject",
     ],
 )

@@ -18,6 +18,10 @@ ORCHESTRATOR_VERSION = "1.5.0-alpha01"  # stable 1.4.2
 SERVICES_VERSION = "1.5.0-alpha01"  # stable 1.4.2
 # LINT.ThenChange(//depot/google3/third_party/android/androidx_test/services/AndroidManifest.xml)
 
+# Full maven artifact strings for apks.
+SERVICES_APK_ARTIFACT = "androidx.test.services:test-services:%s" % SERVICES_VERSION
+ORCHESTRATOR_ARTIFACT = "androidx.test:orchestrator:%s" % ORCHESTRATOR_VERSION
+
 # Maven dependency versions
 ANDROIDX_ANNOTATION_VERSION = "1.2.0"
 ANDROIDX_ANNOTATION_EXPERIMENTAL_VERSION = "1.1.0"
@@ -38,7 +42,8 @@ UIAUTOMATOR_VERSION = "2.2.0"
 JANK_VERSION = "1.0.1"
 
 # this should match the kotlin toolchain version eg bazel_rules/rules_kotlin/toolchains/kotlin_jvm/kt_jvm_toolchains.bzl KT_VERSION
-KOTLIN_VERSION = "1.7.10"
+# and WORKSPACE:KOTLIN_VERSION
+KOTLIN_VERSION = "1.7.22"
 
 # accessibilitytestframework
 ATF_VERSION = "3.1.2"

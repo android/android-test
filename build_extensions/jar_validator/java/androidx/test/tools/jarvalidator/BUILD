@@ -6,7 +6,7 @@ kt_jvm_library(
         "*.kt",
     ]),
     visibility = [
-        "//build_extensions:__subpackages__",
+        "//:__subpackages__",
     ],
 )
 
@@ -15,7 +15,7 @@ java_binary(
     srcs = ["Main.java"],
     main_class = "androidx.test.tools.jarvalidator.Main",
     visibility = [
-        "//build_extensions:__subpackages__",
+        "//:__subpackages__",
     ],
     deps = [
         ":jarvalidator_lib",

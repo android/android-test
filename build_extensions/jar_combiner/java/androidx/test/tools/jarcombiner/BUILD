@@ -2,7 +2,7 @@ load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 
 package(
     default_visibility = [
-        "//build_extensions:__subpackages__",
+        "//:__subpackages__",
     ],
 )
 

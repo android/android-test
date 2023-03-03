@@ -7,7 +7,6 @@ java_library(
     exported_plugins = [":dagger_plugin"],
     exports = [
         "@maven//:com_google_dagger_dagger",
-        "@maven//:javax_inject_javax_inject",
     ],
 )
 

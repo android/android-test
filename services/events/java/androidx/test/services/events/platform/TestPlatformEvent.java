@@ -25,7 +25,7 @@ public abstract class TestPlatformEvent implements Parcelable {
   TestPlatformEvent() {}
 
   /** Each derived class will return its corresponding EventType in {@link #instanceType()}. */
-  enum EventType {
+  public enum EventType {
     TEST_RUN_STARTED,
     TEST_RUN_ERROR,
     TEST_RUN_FINISHED,

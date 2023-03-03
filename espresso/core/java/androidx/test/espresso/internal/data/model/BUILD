@@ -10,15 +10,13 @@ package(
 
 kt_android_library(
     name = "model",
-    srcs = [
-        "ActionData.kt",
-        "ScreenData.kt",
-        "TestArtifact.kt",
-        "TestFlow.kt",
-        "ViewData.kt",
-    ],
+    srcs = glob([
+        "*.kt",
+        "*.java",
+    ]),
     deps = [
         "//espresso/core/java/androidx/test/espresso:framework",
+        "@maven//:androidx_annotation_annotation",
         "@maven//:org_hamcrest_hamcrest_core",
     ],
 )

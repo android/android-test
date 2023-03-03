@@ -65,6 +65,8 @@ private fun shouldAddEntry(entry: ZipEntry, addedDirectories: MutableSet<String>
   } else if (entry.name.matches(Regex(".*/R[\\.|\\$].*class$"))) {
     // strip generated R.class from resulting jar
     return false
+  } else if (entry.name.equals("protobuf.meta")) {
+    return false
   }
   return true
 }

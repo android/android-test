@@ -4,10 +4,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
-    default_visibility = [
-        "//espresso/core/java/androidx/test/espresso:espresso_pkg",
-        "//espresso/web/java/androidx/test/espresso/web/model:__pkg__",
-    ],
+    default_visibility = ["//espresso/remote:__subpackages__"],
 )
 
 proto_library(
@@ -21,4 +18,12 @@ proto_library(
 java_lite_proto_library(
     name = "remote_web_model_atoms_proto_android_pb3",
     deps = [":remote_web_model_atoms_proto"],
+)
+
+java_library(
+    name = "package-info",
+    srcs = ["package-info.java"],
+    deps = [
+        "@maven//:androidx_annotation_annotation",
+    ],
 )

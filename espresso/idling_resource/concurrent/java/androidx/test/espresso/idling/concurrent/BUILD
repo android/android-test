@@ -2,10 +2,8 @@
 #   Light weight module that contains IdlinResources around concurrent Java APIs
 
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
-load("//build_extensions:maven_repo.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "ESPRESSO_VERSION")
-load("//build_extensions:combine_jars.bzl", "combine_jars")
-load("//build_extensions:release.bzl", "axt_release_lib")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions:api_checks.bzl", "api_checks")
 
@@ -50,52 +48,29 @@ android_library(
     ],
 )
 
-# rule for outputting externally released binary. Produces
-# idling_concurrent_release_no_deps.jar and idling_concurrent_release.aar
-axt_release_lib(
-    name = "idling_concurrent_release",
-    keep_spec = "androidx/test/espresso/idling/concurrent",
-    remove_spec = "androidx/test/espresso/idling/concurrent/R[$$\\.]",
-    deps = [
-        ":idling_concurrent",
+# rule for outputting externally released binary.
+axt_android_aar(
+    name = "idling_concurrent_aar",
+    expected_class_prefixes = [
+        "androidx.test.espresso.idling.concurrent",
     ],
+    included_dep = ":idling_concurrent",
 )
 
-filegroup(
-    name = "idling_concurrent_src",
-    srcs = [
-        ":libidling_concurrent-src.jar",
-    ],
-)
-
-combine_jars(
-    name = "idling_concurrent_src_jars",
-    srcs = [
-        ":idling_concurrent_src",
-    ],
+maven_artifact(
+    name = "idling_concurrent_maven_artifact",
+    last_updated = "20170622000000",
+    target = ":idling_concurrent_aar",
 )
 
 dackka_test(
     name = "idling_concurrent_doc",
     runtime_dep = ":idling_concurrent",
-    src_jar = ":idling_concurrent_src_jars.jar",
-)
-
-maven_artifact(
-    name = "idling_concurrent_maven_artifact",
-    src = ":idling_concurrent_release.aar",
-    artifact_deps = [
-        "androidx.test.espresso:espresso-idling-resource:%s" % ESPRESSO_VERSION,
-    ],
-    artifact_id = "idling-concurrent",
-    group_id = "androidx.test.espresso.idling",
-    last_updated = "20170622000000",
-    src_jar = ":idling_concurrent_src_jars.jar",
-    version = "%s" % ESPRESSO_VERSION,
+    src_jar = ":idling_concurrent_aar-src.jar",
 )
 
 api_checks(
     name = "idling_concurrent_api",
     runtime_dep = ":idling_concurrent",
-    src_jar = ":idling_concurrent_src_jars.jar",
+    src_jar = ":idling_concurrent_aar-src.jar",
 )

@@ -1,4 +1,4 @@
-load("//build_extensions:maven_repo.bzl", "maven_repository")
+load("//build_extensions/maven:maven_repo.bzl", "maven_repository")
 load("@rules_jvm_external//:defs.bzl", "artifact")
 load("@rules_license//rules:license.bzl", "license")
 
@@ -13,12 +13,12 @@ exports_files([
 # Creates maven release repository
 maven_repository(
     name = "axt_m2repository",
+    testonly = 1,
     srcs = [
         "//annotation/java/androidx/test/annotation:annotation_maven_artifact",
         "//core/java/androidx/test/core:core_maven_artifact",
-        # Currently fails in desugaring. temporarily omit until new release pipeline in place
-        #"//espresso/accessibility/java/androidx/test/espresso/accessibility:accessibility_checks_maven_artifact",
-        # "//espresso/contrib/java/androidx/test/espresso/contrib:espresso_contrib_maven_artifact",
+        "//espresso/accessibility/java/androidx/test/espresso/accessibility:accessibility_checks_maven_artifact",
+        "//espresso/contrib/java/androidx/test/espresso/contrib:espresso_contrib_maven_artifact",
         "//espresso/core/java/androidx/test/espresso:espresso_core_maven_artifact",
         "//espresso/device/java/androidx/test/espresso/device:device_maven_artifact",
         "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:idling_concurrent_maven_artifact",

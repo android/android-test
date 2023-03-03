@@ -66,6 +66,10 @@ package androidx.test.espresso {
     method public void handle(Throwable!, org.hamcrest.Matcher<android.view.View!>!);
   }
 
+  public final class GraphHolder {
+    method public static androidx.test.espresso.base.ActiveRootLister! activeRootLister();
+  }
+
   public final class IdlingPolicies {
     method public static androidx.test.espresso.IdlingPolicy! getDynamicIdlingResourceErrorPolicy();
     method public static androidx.test.espresso.IdlingPolicy! getDynamicIdlingResourceWarningPolicy();
@@ -183,10 +187,6 @@ package androidx.test.espresso {
     method public androidx.test.espresso.ViewInteraction! noActivity();
     method public androidx.test.espresso.ViewInteraction! perform(androidx.test.espresso.ViewAction!...);
     method public androidx.test.espresso.ViewInteraction! withFailureHandler(androidx.test.espresso.FailureHandler!);
-  }
-
-  @androidx.test.espresso.base.RootViewPickerScope @dagger.Subcomponent(modules=ViewInteractionModule.class) public interface ViewInteractionComponent {
-    method public androidx.test.espresso.ViewInteraction! viewInteraction();
   }
 
 }
@@ -499,8 +499,8 @@ package androidx.test.espresso.base {
   }
 
   public final class DefaultFailureHandler implements androidx.test.espresso.FailureHandler {
-    ctor public DefaultFailureHandler(@androidx.test.espresso.internal.inject.TargetContext android.content.Context!);
-    ctor public DefaultFailureHandler(@androidx.test.espresso.internal.inject.TargetContext android.content.Context!, boolean);
+    ctor public DefaultFailureHandler(android.content.Context!);
+    ctor public DefaultFailureHandler(android.content.Context!, boolean);
     method public void handle(Throwable!, org.hamcrest.Matcher<android.view.View!>!);
   }
 
@@ -537,6 +537,32 @@ package androidx.test.espresso.base {
 
   public final class ViewFinderImpl implements androidx.test.espresso.ViewFinder {
     method public android.view.View! getView() throws androidx.test.espresso.AmbiguousViewMatcherException, androidx.test.espresso.NoMatchingViewException;
+  }
+
+}
+
+package androidx.test.espresso.core.internal.deps.guava.base {
+
+  @Deprecated public interface Function<F, T> {
+    method @Deprecated public T! apply(F!);
+  }
+
+  @Deprecated public class Optional<T> implements java.io.Serializable {
+    method @Deprecated public java.util.Set<T!>! asSet();
+    method @Deprecated public static <T> androidx.test.espresso.core.internal.deps.guava.base.Optional<T!>! fromNullable(T?);
+    method @Deprecated public T! get();
+    method @Deprecated public boolean isPresent();
+    method @Deprecated public static <T> androidx.test.espresso.core.internal.deps.guava.base.Optional<T!>! of(T!);
+    method @Deprecated public androidx.test.espresso.core.internal.deps.guava.base.Optional<T!>! or(androidx.test.espresso.core.internal.deps.guava.base.Optional<T!>!);
+    method @Deprecated public T! or(androidx.test.espresso.core.internal.deps.guava.base.Supplier<T!>!);
+    method @Deprecated public T! or(T!);
+    method @Deprecated public T! orNull();
+    method @Deprecated public static <T> Iterable<T!>! presentInstances(Iterable<? extends androidx.test.espresso.core.internal.deps.guava.base.Optional<? extends T>>!);
+    method @Deprecated public <V> androidx.test.espresso.core.internal.deps.guava.base.Optional<V!>! transform(androidx.test.espresso.core.internal.deps.guava.base.Function<? super T,V!>!);
+  }
+
+  @Deprecated public interface Supplier<T> {
+    method @Deprecated public T! get();
   }
 
 }
@@ -739,6 +765,19 @@ package androidx.test.espresso.remote {
     method public M! toProto();
   }
 
+  @javax.annotation.processing.Generated("tmp_aidl_gen_path") public interface IInteractionExecutionStatus extends android.os.IInterface {
+    method public boolean canExecute() throws android.os.RemoteException;
+  }
+
+  public abstract static class IInteractionExecutionStatus.Stub extends com.google.android.aidl.BaseStub implements androidx.test.espresso.remote.IInteractionExecutionStatus {
+    ctor public IInteractionExecutionStatus.Stub();
+    method public static androidx.test.espresso.remote.IInteractionExecutionStatus! asInterface(android.os.IBinder!);
+  }
+
+  public static class IInteractionExecutionStatus.Stub.Proxy extends com.google.android.aidl.BaseProxy implements androidx.test.espresso.remote.IInteractionExecutionStatus {
+    method public boolean canExecute() throws android.os.RemoteException;
+  }
+
   public final class NoRemoteEspressoInstanceException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
     ctor public NoRemoteEspressoInstanceException(String!);
   }
@@ -770,6 +809,17 @@ package androidx.test.espresso.remote {
   public class RemoteProtocolException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
     ctor public RemoteProtocolException(String!);
     ctor public RemoteProtocolException(String!, Throwable!);
+  }
+
+}
+
+package androidx.test.espresso.remote.annotation {
+
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.CONSTRUCTOR}) public @interface RemoteMsgConstructor {
+  }
+
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.FIELD}) public @interface RemoteMsgField {
+    method public abstract int order();
   }
 
 }
