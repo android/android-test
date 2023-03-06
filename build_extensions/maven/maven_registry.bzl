@@ -76,4 +76,7 @@ def is_shaded_from_label(label):
     A shaded target is one whose classes should be embedded in resulting aar and
     renamed via jarjar.
     """
-    return str(label) in _SHADED_TARGETS
+
+    # bazel 6.0.0 mysteriously prefixes a ;@; onto //opensource/dagger, so just remove it
+    string_label = str(label).replace("@//", "//")
+    return string_label in _SHADED_TARGETS
