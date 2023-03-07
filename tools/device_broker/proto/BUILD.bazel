@@ -29,6 +29,5 @@ proto_library(
 
 java_proto_library(
     name = "test_info_pb_java_proto",
-    strict_deps = 0,
     deps = [":test_info_pb"],
 )
