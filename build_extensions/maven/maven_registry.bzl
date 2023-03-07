@@ -77,6 +77,6 @@ def is_shaded_from_label(label):
     renamed via jarjar.
     """
 
-    # bazel 6.0.0 mysteriously prefixes a ;@; onto //opensource/dagger, so just remove it
+    # bazel 6.0.0 mysteriously prefixes a '@' onto //opensource/dagger, so just remove it
     string_label = str(label).replace("@//", "//")
     return string_label in _SHADED_TARGETS
