@@ -9,6 +9,7 @@ RULES_JVM_EXTERNAL_SHA = "735602f50813eb2ea93ca3f5e43b1959bd80b213b836a07a62a29d
 
 # This needs to be consistent with the KOTLIN_VERSION specified in build_extensions/axt_versions.bzl.
 KOTLIN_VERSION = "1.7.22"
+
 # Get from https://github.com/JetBrains/kotlin/releases/
 KOTLINC_RELEASE_SHA = "9db4b467743c1aea8a21c08e1c286bc2aeb93f14c7ba2037dbd8f48adc357d83"
 
@@ -66,9 +67,9 @@ load(
     "GOOGLE_MATERIAL_VERSION",
     "GUAVA_LISTENABLEFUTURE_VERSION",
     "GUAVA_VERSION",
+    "JUNIT_VERSION",
     "RUNNER_VERSION",
     "UIAUTOMATOR_VERSION",
-    "JUNIT_VERSION"
 )
 
 maven_install(
@@ -207,6 +208,7 @@ robolectric_repositories()
 # Kotlin toolchains
 
 rules_kotlin_version = "1.7.1"
+
 rules_kotlin_sha = "fd92a98bd8a8f0e1cdcb490b93f5acef1f1727ed992571232d33de42395ca9b3"
 
 http_archive(
@@ -228,19 +230,36 @@ load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
 
 kt_register_toolchains()
 
-# Android bazel rules
+# Android bazel rules from Dec 22 2022. This is the last commit that supports bazel 6.0.0
+RULES_ANDROID_COMMIT = "ce37817d8589cac4a7cc20cb4d51fe8ad459dea1"
+
+RULES_ANDROID_SHA = "402b1ed3756028dca11835dad3225689a4040c3b377de798709f9a39b5c6af17"
+
 http_archive(
-    name = "build_bazel_rules_android",
-    sha256 = "cd06d15dd8bb59926e4d65f9003bfc20f9da4b2519985c27e190cddc8b7a7806",
-    strip_prefix = "rules_android-0.1.1",
-    urls = ["https://github.com/bazelbuild/rules_android/archive/v0.1.1.zip"],
+    name = "rules_android",
+    sha256 = RULES_ANDROID_SHA,
+    strip_prefix = "rules_android-%s" % RULES_ANDROID_COMMIT,
+    url = "https://github.com/bazelbuild/rules_android/archive/%s.zip" % RULES_ANDROID_COMMIT,
+)
+
+load("@rules_android//:prereqs.bzl", "rules_android_prereqs")
+
+rules_android_prereqs()
+
+load("@rules_android//:defs.bzl", "rules_android_workspace")
+
+rules_android_workspace()
+
+register_toolchains(
+    "@rules_android//toolchains/android:android_default_toolchain",
+    "@rules_android//toolchains/android_sdk:android_sdk_tools",
 )
 
 # Updated 2023-02-01
 http_archive(
     name = "rules_license",
+    sha256 = "6157e1e68378532d0241ecd15d3c45f6e5cfd98fc10846045509fb2a7cc9e381",
     urls = [
         "https://github.com/bazelbuild/rules_license/releases/download/0.0.4/rules_license-0.0.4.tar.gz",
     ],
-    sha256 = "6157e1e68378532d0241ecd15d3c45f6e5cfd98fc10846045509fb2a7cc9e381",
 )
