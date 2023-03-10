@@ -20,6 +20,7 @@ import android.util.Log;
 import androidx.test.internal.runner.EmptyTestRunner;
 import androidx.test.internal.util.AndroidRunnerParams;
 import java.lang.reflect.Method;
+import org.junit.Test;
 import org.junit.internal.builders.JUnit4Builder;
 import org.junit.runner.Runner;
 import org.junit.runners.model.RunnerBuilder;
@@ -43,6 +44,28 @@ public class AndroidJUnit4Builder extends JUnit4Builder {
   public Runner runnerForClass(Class<?> testClass) throws Throwable {
     try {
       if (!hasTestMethods(testClass)) {
+        // if we can't find any test methods, see if it's due to something with a custom classloader
+        if (testClass.getClassLoader() != Test.class.getClassLoader()) {
+          // ClassLoader#findClass(module, name) not available in Android
+          Class<?> clazz;
+          try {
+            clazz = Class.forName("org.junit.Test", false, testClass.getClassLoader());
+          } catch (Throwable e) {
+            clazz = Test.class;
+          }
+
+          if (!clazz.equals(Test.class)) {
+            return new EmptyTestRunner(
+                testClass,
+                new IllegalStateException(
+                    "org.junit.Test in custom classloader "
+                        + testClass.getClassLoader()
+                        + " differs from org.junit.Test in the JUnit"
+                        + " runner's classloader. This causes JUnit to not be able to find the"
+                        + " tests to run."));
+          }
+        }
+
         // return a special error runner if there are no @Test methods. This error runner will be
         // ignored when classpath scanning
         return new EmptyTestRunner(testClass);

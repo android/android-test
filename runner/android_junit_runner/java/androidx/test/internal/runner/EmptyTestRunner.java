@@ -30,4 +30,8 @@ public class EmptyTestRunner extends ErrorReportingRunner {
         new RuntimeException(
             String.format("Invalid test class '%s': No test methods found", clazz.getName())));
   }
+
+  public EmptyTestRunner(Class<?> clazz, Throwable t) {
+    super(clazz.getName(), t);
+  }
 }
