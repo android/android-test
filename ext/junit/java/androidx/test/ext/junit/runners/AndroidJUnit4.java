@@ -16,6 +16,7 @@
 
 package androidx.test.ext.junit.runners;
 
+import com.google.android.apps.common.testing.accessibility.framework.integrations.internal.passivescan.PassiveScannerNotifier;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -159,7 +160,7 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
 
   @Override
   public void run(RunNotifier runNotifier) {
-    delegate.run(runNotifier);
+    delegate.run(new PassiveScannerNotifier(runNotifier));
   }
 
   @Override
