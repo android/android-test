@@ -11,11 +11,11 @@ ESPRESSO_DEVICE_VERSION = "1.0.0-alpha04"
 ANDROIDX_JUNIT_VERSION = "1.2.0-alpha01"  # stable 1.1.4
 ANDROIDX_TRUTH_VERSION = "1.6.0-alpha01"  # stable 1.5.0
 ANNOTATION_VERSION = "1.1.0-alpha01"  # stable 1.0.1
-ORCHESTRATOR_VERSION = "1.5.0-alpha01"  # stable 1.4.2
+ORCHESTRATOR_VERSION = "1.4.2"  # stable 1.4.2
 # LINT.ThenChange(//depot/google3/third_party/android/androidx_test/gradle-tests/settings.gradle)
 
 # LINT.IfChange(SERVICES_VERSION)
-SERVICES_VERSION = "1.5.0-alpha01"  # stable 1.4.2
+SERVICES_VERSION = "1.4.2"  # stable 1.4.2
 # LINT.ThenChange(//depot/google3/third_party/android/androidx_test/services/AndroidManifest.xml)
 
 # Full maven artifact strings for apks.
