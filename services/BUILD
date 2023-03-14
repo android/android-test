@@ -33,6 +33,7 @@ android_binary(
     visibility = [
         "//visibility:public",
     ],
+    main_dex_proguard_specs = ["//build_extensions:mainDexClasses.rules"],
     deps = [
         "//services/shellexecutor:exec_server",
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
