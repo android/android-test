@@ -41,10 +41,13 @@ package androidx.test.core.content.pm {
   }
 
   public final class PackageInfoBuilder {
+    method public androidx.test.core.content.pm.PackageInfoBuilder! addRequestedPermission(String!, int);
     method public android.content.pm.PackageInfo! build();
     method public static androidx.test.core.content.pm.PackageInfoBuilder! newBuilder();
     method public androidx.test.core.content.pm.PackageInfoBuilder! setApplicationInfo(android.content.pm.ApplicationInfo!);
     method public androidx.test.core.content.pm.PackageInfoBuilder! setPackageName(String!);
+    method public androidx.test.core.content.pm.PackageInfoBuilder! setVersionCode(long);
+    method public androidx.test.core.content.pm.PackageInfoBuilder! setVersionName(String!);
   }
 
 }
