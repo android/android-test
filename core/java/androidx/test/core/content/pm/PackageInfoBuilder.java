@@ -31,7 +31,7 @@ public final class PackageInfoBuilder {
   @Nullable private String packageName;
   @Nullable private ApplicationInfo applicationInfo;
   private long longVersionCode = 0L;
-  private String versionName = "";
+  @Nullable private String versionName;
   /** Map of a requested permission to its requested permission flag. */
   private final Map<String, Integer> requestedPermissionsMap = new HashMap<>();
 
@@ -79,7 +79,7 @@ public final class PackageInfoBuilder {
   /**
    * Sets the version name.
    *
-   * <p>Default is an empty string.
+   * <p>Default is {@code null}.
    *
    * @see PackageInfo#versionName
    */
