@@ -11,4 +11,5 @@ exports_files([
     "AndroidManifest_instrumentation_test_template.xml",
     "AndroidManifest_robolectric.xml",
     "robolectric.properties",
+    "mainDexClasses.rules",
 ])
