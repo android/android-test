@@ -18,9 +18,9 @@ kt_android_library(
     ]),
     deps = [
         "//espresso/core/java/androidx/test/espresso/core/internal/deps/guava/base",
-        "//runner/android_junit_runner",
+        #"//runner/android_junit_runner",
+        #"@maven_listenablefuture//:com_google_guava_listenablefuture",
         "@maven//:androidx_annotation_annotation",
         "@maven//:org_hamcrest_hamcrest_core",
-        "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
 )
