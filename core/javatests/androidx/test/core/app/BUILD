@@ -73,6 +73,27 @@ axt_android_application_test(
 )
 
 axt_android_local_test(
+    name = "ActivityScenarioTest",
+    srcs = ["ActivityScenarioTest.java"],
+    manifest_values = {
+        "applicationId": "androidx.test.core.app",
+    },
+    deps = [
+        "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//core/javatests/androidx/test/core/app/testing:manifest",
+        "//espresso/core/java/androidx/test/espresso",
+        "//ext/junit",
+        "//ext/truth",
+        "//runner/android_junit_runner",
+        "//runner/monitor/java/androidx/test:monitor",
+        "@maven//:androidx_lifecycle_lifecycle_common",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+    ],
+)
+
+axt_android_local_test(
     name = "ApplicationProviderTest",
     srcs = ["ApplicationProviderTest.java"],
     manifest_values = {
