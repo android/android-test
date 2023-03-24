@@ -681,6 +681,7 @@ package androidx.test.espresso.matcher {
     method public static org.hamcrest.Matcher<android.view.View!>! hasMinimumChildCount(int);
     method public static org.hamcrest.Matcher<android.view.View!>! hasSibling(org.hamcrest.Matcher<android.view.View!>!);
     method public static org.hamcrest.Matcher<android.view.View!>! hasTextColor(int);
+    method public static org.hamcrest.Matcher<android.view.View!>! isActivated();
     method public static org.hamcrest.Matcher<android.view.View!>! isAssignableFrom(Class<? extends android.view.View>!);
     method public static org.hamcrest.Matcher<android.view.View!>! isChecked();
     method public static org.hamcrest.Matcher<android.view.View!>! isClickable();
@@ -692,6 +693,7 @@ package androidx.test.espresso.matcher {
     method public static org.hamcrest.Matcher<android.view.View!>! isFocusable();
     method public static org.hamcrest.Matcher<android.view.View!>! isFocused();
     method public static org.hamcrest.Matcher<android.view.View!>! isJavascriptEnabled();
+    method public static org.hamcrest.Matcher<android.view.View!>! isNotActivated();
     method public static org.hamcrest.Matcher<android.view.View!>! isNotChecked();
     method public static org.hamcrest.Matcher<android.view.View!>! isNotClickable();
     method public static org.hamcrest.Matcher<android.view.View!>! isNotEnabled();

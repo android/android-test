@@ -168,6 +168,16 @@ public final class ViewMatchers {
     return new IsSelectedMatcher(false);
   }
 
+  /** Returns a matcher that matches {@link View Views} that are activated. */
+  public static Matcher<View> isActivated() {
+    return new IsActivatedMatcher(/* isActivated= */ true);
+  }
+
+  /** Returns a matcher that matches {@link View Views} that are not activated. */
+  public static Matcher<View> isNotActivated() {
+    return new IsActivatedMatcher(/* isActivated= */ false);
+  }
+
   /**
    * Returns an <a href="http://hamcrest.org/JavaHamcrest/javadoc/1.3/org/hamcrest/Matcher.html">
    * <code>Matcher</code></a> that matches {@link View Views} based on their siblings.
@@ -1152,6 +1162,31 @@ public final class ViewMatchers {
       final boolean isSelected = view.isSelected();
       if (isSelected != this.isSelected) {
         mismatchDescription.appendText("view.isSelected() was ").appendValue(isSelected);
+        return false;
+      }
+      return true;
+    }
+  }
+
+  static final class IsActivatedMatcher extends TypeSafeDiagnosingMatcher<View> {
+    @RemoteMsgField(order = 0)
+    private final boolean isActivated;
+
+    @RemoteMsgConstructor
+    private IsActivatedMatcher(boolean isActivated) {
+      this.isActivated = isActivated;
+    }
+
+    @Override
+    public void describeTo(Description description) {
+      description.appendText("view.isActivated() is ").appendValue(this.isActivated);
+    }
+
+    @Override
+    protected boolean matchesSafely(View view, Description mismatchDescription) {
+      final boolean isActivated = view.isActivated();
+      if (isActivated != this.isActivated) {
+        mismatchDescription.appendText("view.isActivated() was ").appendValue(isActivated);
         return false;
       }
       return true;
