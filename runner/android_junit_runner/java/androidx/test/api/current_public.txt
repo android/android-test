@@ -25,6 +25,7 @@ package androidx.test.filters {
 
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.TYPE, java.lang.annotation.ElementType.METHOD}) public @interface SdkSuppress {
     method public abstract String codeName() default "unset";
+    method public abstract int[] excludedSdks() default {};
     method public abstract int maxSdkVersion() default java.lang.Integer.MAX_VALUE;
     method public abstract int minSdkVersion() default 1;
   }

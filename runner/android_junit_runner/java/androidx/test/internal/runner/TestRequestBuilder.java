@@ -287,7 +287,8 @@ public class TestRequestBuilder {
       final SdkSuppress sdkSuppress = getAnnotationForTest(description);
       if (sdkSuppress != null) {
         if ((getDeviceSdkInt() >= sdkSuppress.minSdkVersion()
-                && getDeviceSdkInt() <= sdkSuppress.maxSdkVersion())
+                && getDeviceSdkInt() <= sdkSuppress.maxSdkVersion()
+                && !isInExcludedSdks(sdkSuppress.excludedSdks()))
             || getDeviceCodeName().equals(sdkSuppress.codeName())) {
           return true; // run the test
         }
@@ -930,5 +931,14 @@ public class TestRequestBuilder {
 
   private String getDeviceCodeName() {
     return deviceBuild.getCodeName();
+  }
+
+  private boolean isInExcludedSdks(int[] excludedSdks) {
+    for (int sdk : excludedSdks) {
+      if (sdk == getDeviceSdkInt()) {
+        return true;
+      }
+    }
+    return false;
   }
 }

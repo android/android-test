@@ -64,6 +64,33 @@ public class SdkSuppressTest {
       fail("max19");
     }
 
+    @SdkSuppress(excludedSdks = {16, 17})
+    @Test
+    public void excludedSdks1617() {
+      fail("excludedSdks1617");
+    }
+
+    @SdkSuppress(excludedSdks = {19})
+    @Test
+    public void excludedSdks19() {
+      fail("excludedSdks19");
+    }
+
+    @SdkSuppress(excludedSdks = {19, 20, 21})
+    @Test
+    public void excludedSdks192021() {
+      fail("excludedSdks192021");
+    }
+
+    @SdkSuppress(
+        minSdkVersion = 14,
+        maxSdkVersion = 20,
+        excludedSdks = {16, 17})
+    @Test
+    public void min14max20excludedSdks1617() {
+      fail("min14max20excludedSdks1617");
+    }
+
     @SdkSuppress(minSdkVersion = 17, maxSdkVersion = 19)
     @Test
     public void min17max19() {
@@ -167,7 +194,14 @@ public class SdkSuppressTest {
             result.getFailures(), failure -> failure.getDescription().getMethodName());
 
     assertThat(failingMethods)
-        .containsExactly("min15", "min16", "noSdkSuppress", "max19", "min14max16");
+        .containsExactly(
+            "min15",
+            "min16",
+            "noSdkSuppress",
+            "max19",
+            "min14max16",
+            "excludedSdks19",
+            "excludedSdks192021");
   }
 
   /** Test that {@link SdkSuppress} filters tests as appropriate when codeName specified */
@@ -183,7 +217,15 @@ public class SdkSuppressTest {
 
     assertThat(failingMethods)
         .containsExactly(
-            "min29CodeNameR", "min20CodeNameR", "noSdkSuppress", "min15", "min16", "min17");
+            "min29CodeNameR",
+            "min20CodeNameR",
+            "noSdkSuppress",
+            "min15",
+            "min16",
+            "min17",
+            "excludedSdks1617",
+            "excludedSdks19",
+            "excludedSdks192021");
   }
 
   @Test
