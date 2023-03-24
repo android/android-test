@@ -32,7 +32,7 @@ import java.util.concurrent.CountDownLatch;
 /** An Activity that records lifecycle states. */
 public class RecordingActivity extends Activity {
 
-  protected final List<String> callbacks = new ArrayList<>();
+  protected static final List<String> callbacks = new ArrayList<>();
   private final Map<String, CountDownLatch> pendingEvents = new HashMap<>();
 
   private class VisibilityRecordingView extends View {
@@ -101,13 +101,13 @@ public class RecordingActivity extends Activity {
   @Override
   public void onPause() {
     super.onPause();
-    onEvent("onPause");
+    onEvent("onPause " + isChangingConfigurations());
   }
 
   @Override
   public void onStop() {
     super.onStop();
-    onEvent("onStop");
+    onEvent("onStop " + isChangingConfigurations());
   }
 
   @Override
@@ -119,7 +119,7 @@ public class RecordingActivity extends Activity {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    onEvent("onDestroy");
+    onEvent("onDestroy " + isChangingConfigurations());
   }
 
   @Override
@@ -130,5 +130,9 @@ public class RecordingActivity extends Activity {
 
   public List<String> getCallbacks() {
     return callbacks;
+  }
+
+  public static void clearCallbacks() {
+    callbacks.clear();
   }
 }

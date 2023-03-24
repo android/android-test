@@ -48,6 +48,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -57,6 +59,12 @@ import org.junit.runner.RunWith;
  */
 @RunWith(AndroidJUnit4.class)
 public final class ActivityScenarioTest {
+
+  @Before
+  public void setUp() {
+    RecordingActivity.clearCallbacks();
+  }
+
   @Test
   public void launchedActivityShouldBeResumed() throws Exception {
     try (ActivityScenario<RecreationRecordingActivity> scenario =
@@ -319,6 +327,21 @@ public final class ActivityScenarioTest {
             assertThat(lastLifeCycleTransition(activity)).isEqualTo(Stage.RESUMED);
             assertThat(activity.getNumberOfRecreations()).isEqualTo(1);
           });
+    }
+  }
+
+  @Ignore // TODO(hoisie): re-enable once github uses new robolectric
+  @Test
+  public void recreateIsChangingConfigurations() {
+    try (ActivityScenario<RecordingActivity> activityScenario =
+        ActivityScenario.launch(RecordingActivity.class)) {
+      activityScenario.recreate();
+
+      activityScenario.onActivity(
+          activity ->
+              assertThat(activity.getCallbacks())
+                  .containsAtLeast("onPause true", "onStop true", "onDestroy true")
+                  .inOrder());
     }
   }
 
