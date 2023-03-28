@@ -19,7 +19,9 @@ android_library(
     name = "util",
     testonly = 1,
     srcs = UTIL_SRCS,
-    visibility = ["//espresso/web/javatests/androidx/test/espresso/web:__subpackages__"],
+    visibility = [
+        "//visibility:private",  # Only private by automation, not intent. Owner may accept CLs adding visibility. See go/scheuklappen#explicit-private.
+    ],
     deps = [
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
