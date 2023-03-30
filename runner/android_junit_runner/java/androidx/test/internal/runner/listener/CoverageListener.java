@@ -25,10 +25,7 @@ import androidx.test.platform.io.PlatformTestStorageRegistry;
 import java.io.PrintStream;
 import org.junit.runner.Result;
 
-/**
- * A test <a href="http://junit.org/javadoc/latest/org/junit/runner/notification/RunListener.html">
- * <code>RunListener</code></a> that generates EMMA code coverage.
- */
+/** A test {@link org.junit.runner.notification.RunListener} that generates EMMA code coverage. */
 public class CoverageListener extends InstrumentationRunListener {
   private final String coverageFilePath;
   private PlatformTestStorage runnerIO;

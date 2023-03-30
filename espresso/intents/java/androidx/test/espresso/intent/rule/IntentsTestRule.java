@@ -23,9 +23,9 @@ import androidx.test.rule.ActivityTestRule;
 /**
  * This rule makes it easy to use Espresso-Intents APIs in functional UI tests. This class is an
  * extension of {@link ActivityTestRule}, which initializes Espresso-Intents before each test
- * annotated with <a href="http://junit.org/javadoc/latest/org/junit/Test.html"><code>Test</code>
- * </a> and releases Espresso-Intents after each test run. The Activity will be terminated after
- * each test and this rule can be used in the same way as {@link ActivityTestRule}.
+ * annotated with {@link org.junit.Test} and releases Espresso-Intents after each test run. The
+ * Activity will be terminated after each test and this rule can be used in the same way as {@link
+ * ActivityTestRule}.
  *
  * <p>Espresso-Intents APIs can be used in two ways:
  *

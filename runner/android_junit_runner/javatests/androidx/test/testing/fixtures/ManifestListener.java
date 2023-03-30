@@ -19,9 +19,8 @@ import org.junit.runner.Description;
 import org.junit.runner.notification.RunListener;
 
 /**
- * A <a href="http://junit.org/javadoc/latest/org/junit/runner/notification/RunListener.html"><code>
- * RunListener</code></a> fixture used to ensure listener classes specified via meta-data tags in
- * AndroidManifest are loaded and used properly.
+ * A {@link org.junit.runner.notification.RunListener} fixture used to ensure listener classes
+ * specified via meta-data tags in AndroidManifest are loaded and used properly.
  */
 public class ManifestListener extends RunListener {
 

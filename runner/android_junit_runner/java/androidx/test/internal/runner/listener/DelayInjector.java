@@ -19,10 +19,7 @@ import android.util.Log;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunListener;
 
-/**
- * A <a href="http://junit.org/javadoc/latest/org/junit/runner/notification/RunListener.html"><code>
- * RunListener</code></a> that injects a given delay between tests.
- */
+/** A {@link org.junit.runner.notification.RunListener} that injects a given delay between tests. */
 public class DelayInjector extends RunListener {
 
   private final int delayMsec;

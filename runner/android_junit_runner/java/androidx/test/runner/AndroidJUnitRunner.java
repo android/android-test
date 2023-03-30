@@ -77,9 +77,8 @@ import org.junit.runners.model.RunnerBuilder;
  *
  * <h3>Typical Usage</h3>
  *
- * <p>Write JUnit3 style {@link junit.framework.TestCase}s and/or JUnit4 style <a
- * href="http://junit.org/javadoc/latest/org/junit/Test.html"><code>Test</code></a>s that perform
- * tests against the classes in your package. Make use of the {@link
+ * <p>Write JUnit3 style {@link junit.framework.TestCase}s and/or JUnit4 style {@link
+ * org.junit.Test}s that perform tests against the classes in your package. Make use of the {@link
  * androidx.test.InstrumentationRegistry} if needed.
  *
  * <p>In an appropriate AndroidManifest.xml, define an instrumentation with android:name set to
@@ -212,25 +211,21 @@ import org.junit.runners.model.RunnerBuilder;
  * <p><b> To specify EMMA or JaCoCo code coverage results file path:</b> -e coverage true -e
  * coverageFile /sdcard/myFile.ec
  *
- * <p><b> To specify one or more <a
- * href="http://junit.org/javadoc/latest/org/junit/runner/notification/RunListener.html"><code>
- * RunListener</code></a>s to observe the test run:</b> -e listener
- * com.foo.Listener,com.foo.Listener2
+ * <p><b> To specify one or more {@link org.junit.runner.notification.RunListener}s to observe the
+ * test run:</b> -e listener com.foo.Listener,com.foo.Listener2
  *
- * <p><b> To use the new order of <a
- * href="http://junit.org/javadoc/latest/org/junit/runner/notification/RunListener.html"><code>
- * RunListener</code></a>s during a test run: </b> -e newRunListenerMode true
+ * <p><b> To use the new order of {@link org.junit.runner.notification.RunListener}s during a test
+ * run: </b> -e newRunListenerMode true
  *
- * <p>New order of listeners guarantee that user defined <a
- * href="http://junit.org/javadoc/latest/org/junit/runner/notification/RunListener.html"><code>
- * RunListener</code></a>s will be running before any of the default listeners defined in this
- * runner. Legacy order had those user defined listeners running after the default ones.
+ * <p>New order of listeners guarantee that user defined {@link
+ * org.junit.runner.notification.RunListener}s will be running before any of the default listeners
+ * defined in this runner. Legacy order had those user defined listeners running after the default
+ * ones.
  *
  * <p></b>Note:</b>The new order will become the default in the future.
  *
- * <p><a href="http://junit.org/javadoc/latest/org/junit/runner/notification/RunListener.html">
- * <code>
- * RunListener</code></a> can also be specified via java.util.ServiceLoader metadata.
+ * <p>{@link org.junit.runner.notification.RunListener} can also be specified via {@link
+ * java.util.ServiceLoader} metadata.
  *
  * <p><b> To specify a custom {@link java.lang.ClassLoader} to load the test class: </b> -e
  * classLoader com.foo.CustomClassLoader
@@ -242,13 +237,9 @@ import org.junit.runners.model.RunnerBuilder;
  *
  * <p>Supported for both JUnit3 and JUnit4 style tests. For JUnit3 tests, this flag is the only way
  * to specify timeouts. For JUnit4 tests, this flag is only supported when using the the {@link
- * androidx.test.ext.junit.runners.AndroidJUnit4} runner. It overrides timeouts specified via <a
- * href="http://junit.org/javadoc/latest/org/junit/rules/Timeout.html"><code>org.junit.rules.Timeout
- * </code></a>. Please note that in JUnit4 <a
- * href="http://junit.org/javadoc/latest/org/junit/Test.html#timeout()"><code>
- * org.junit.Test#timeout()</code></a> annotation will take precedence over both, this flag and <a
- * href="http://junit.org/javadoc/latest/org/junit/rules/Timeout.html"><code>org.junit.rules.Timeout
- * </code></a> rule.
+ * androidx.test.ext.junit.runners.AndroidJUnit4} runner. It overrides timeouts specified via {@link
+ * org.junit.rules.Timeout}. Please note that in JUnit4 {@link org.junit.Test#timeout()} annotation
+ * will take precedence over both, this flag and {@link org.junit.rules.Timeout} rule.
  *
  * <p><b>(Beta)To specify a custom {@link androidx.test.runner.screenshot.ScreenCaptureProcessor} to
  * use when processing a {@link androidx.test.runner.screenshot.ScreenCapture} produced by {@link

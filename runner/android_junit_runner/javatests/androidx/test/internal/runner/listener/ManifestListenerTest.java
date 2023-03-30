@@ -24,9 +24,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * Simple test to check that specifying a <a
- * href="http://junit.org/javadoc/latest/org/junit/runner/notification/RunListener.html"><code>
- * RunListener</code></a> via a meta-data tag in manifest works.
+ * Simple test to check that specifying a {@link org.junit.runner.notification.RunListener} via a
+ * meta-data tag in manifest works.
  */
 @RunWith(AndroidJUnit4.class)
 @SmallTest
