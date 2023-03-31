@@ -30,6 +30,10 @@ java_service_map(
 axt_android_library_test(
     name = "ServiceLoaderWrapperTest",
     srcs = ["ServiceLoaderWrapperTest.java"],
+    tags = [
+        # "blaze coverage" fails with StrictMode violations.
+        "nozapfhahn",
+    ],
     deps = [
         ":fixture_map",  # buildcleaner: keep
         ":fixtures",  # buildcleaner: keep
