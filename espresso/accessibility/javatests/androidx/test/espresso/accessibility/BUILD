@@ -5,6 +5,11 @@ load(
     "//build_extensions:android_app_instrumentation_tests.bzl",
     "android_app_instrumentation_tests",
 )
+load(
+    "//build_extensions:phone_devices.bzl",
+    "apis",
+    "devices",
+)
 
 package(default_applicable_licenses = ["//espresso:license"])
 
@@ -15,6 +20,9 @@ android_app_instrumentation_tests(
     srcs = glob(["*.java"]),
     binary_args = {"multidex": "legacy"},
     binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+    device_list = devices(
+        apis(min_api = 21),
+    ),
     deps = [
         "//core",
         "//espresso/accessibility/java/androidx/test/espresso/accessibility:accessibility_checks",
