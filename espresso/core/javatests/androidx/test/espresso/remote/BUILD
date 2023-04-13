@@ -21,10 +21,7 @@ android_library(
     name = "util",
     testonly = 1,
     srcs = UTIL_SRCS,
-    visibility = [
-        "//espresso/remote/javatests/androidx/test/espresso:__subpackages__",
-        "//espresso/web/javatests/androidx/test/espresso/web:__subpackages__",
-    ],
+    visibility = ["//espresso/remote/javatests/androidx/test/espresso:__subpackages__"],
     deps = [
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
