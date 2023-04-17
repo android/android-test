@@ -21,8 +21,7 @@ kt_android_library(
         "//espresso/device/java/androidx/test/espresso/device/controller:controller_impl",
         "//espresso/device/java/androidx/test/espresso/device/controller/emulator",
         "//espresso/device/java/androidx/test/espresso/device/util",
-        "//runner/monitor",
-        # TODO(b/215420259) fix gRPC dependency
         "//opensource/dagger",
+        "//runner/monitor",
     ],
 )
