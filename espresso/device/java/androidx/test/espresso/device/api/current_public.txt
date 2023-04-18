@@ -19,7 +19,7 @@ package androidx.test.espresso.device.sizeclass {
 
   public enum HeightSizeClass.Companion.HeightSizeClassEnum {
     method public final String! getDescription();
-    method public static androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum valueOf(String name) throws java.lang.IllegalArgumentException;
+    method public static androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum valueOf(String value) throws java.lang.IllegalArgumentException;
     method public static androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum[] values();
     property public final String! description;
     enum_constant public static final androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum COMPACT;
@@ -45,7 +45,7 @@ package androidx.test.espresso.device.sizeclass {
 
   public enum WidthSizeClass.Companion.WidthSizeClassEnum {
     method public final String! getDescription();
-    method public static androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum valueOf(String name) throws java.lang.IllegalArgumentException;
+    method public static androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum valueOf(String value) throws java.lang.IllegalArgumentException;
     method public static androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum[] values();
     property public final String! description;
     enum_constant public static final androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum COMPACT;
