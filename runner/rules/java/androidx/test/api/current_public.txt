@@ -81,7 +81,7 @@ package androidx.test.rule.provider {
   }
 
   @Deprecated public static class ProviderTestRule.Builder {
-    ctor @Deprecated public ProviderTestRule.Builder(Class<T!>, String);
+    ctor @Deprecated public <T extends android.content.ContentProvider> ProviderTestRule.Builder(Class<T!>, String);
     method @Deprecated public <T extends android.content.ContentProvider> androidx.test.rule.provider.ProviderTestRule.Builder! addProvider(Class<T!>, String);
     method @Deprecated public androidx.test.rule.provider.ProviderTestRule! build();
     method @Deprecated public androidx.test.rule.provider.ProviderTestRule.Builder! setDatabaseCommands(String, java.lang.String!...);

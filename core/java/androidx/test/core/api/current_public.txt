@@ -26,9 +26,6 @@ package androidx.test.core.app {
     method public static <T extends android.content.Context> T! getApplicationContext();
   }
 
-  public final class DeviceCapture {
-  }
-
 }
 
 package androidx.test.core.content.pm {
@@ -48,13 +45,6 @@ package androidx.test.core.content.pm {
     method public androidx.test.core.content.pm.PackageInfoBuilder! setPackageName(String!);
     method public androidx.test.core.content.pm.PackageInfoBuilder! setVersionCode(long);
     method public androidx.test.core.content.pm.PackageInfoBuilder! setVersionName(String!);
-  }
-
-}
-
-package androidx.test.core.graphics {
-
-  public final class BitmapStorage {
   }
 
 }
@@ -104,12 +94,6 @@ package androidx.test.core.view {
     method public static androidx.test.core.view.PointerPropertiesBuilder! newBuilder();
     method public androidx.test.core.view.PointerPropertiesBuilder! setId(int);
     method public androidx.test.core.view.PointerPropertiesBuilder! setToolType(int);
-  }
-
-  public final class ViewCapture {
-  }
-
-  public final class WindowCapture {
   }
 
 }

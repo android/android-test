@@ -2,7 +2,7 @@
 package androidx.test.ext.junit.rules {
 
   public final class ActivityScenarioRuleKt {
-    method public static inline <reified A extends android.app.Activity> androidx.test.ext.junit.rules.ActivityScenarioRule<A>! activityScenarioRule(android.content.Intent? intent = null, android.os.Bundle? activityOptions = null);
+    method public static inline <reified A extends android.app.Activity> androidx.test.ext.junit.rules.ActivityScenarioRule<A> activityScenarioRule(android.content.Intent? intent = null, android.os.Bundle? activityOptions = null);
   }
 
 }

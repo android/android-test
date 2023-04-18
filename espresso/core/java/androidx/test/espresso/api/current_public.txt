@@ -826,13 +826,6 @@ package androidx.test.espresso.remote.annotation {
 
 }
 
-package androidx.test.espresso.screenshot {
-
-  public final class ViewInteractionCapture {
-  }
-
-}
-
 package androidx.test.espresso.util {
 
   public final class ActivityLifecycles {
