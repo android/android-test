@@ -105,7 +105,7 @@ package androidx.test.ext.truth.os {
 
   public final class BundleSubject extends com.google.common.truth.Subject {
     method public static androidx.test.ext.truth.os.BundleSubject! assertThat(android.os.Bundle!);
-    method public com.google.common.truth.BooleanSubject! bool(String!);
+    method @RequiresApi(android.os.Build.VERSION_CODES.LOLLIPOP_MR1) public com.google.common.truth.BooleanSubject! bool(String!);
     method public static com.google.common.truth.Subject.Factory<androidx.test.ext.truth.os.BundleSubject!,android.os.Bundle!>! bundles();
     method public void containsKey(String!);
     method public void doesNotContainKey(String!);
@@ -129,6 +129,23 @@ package androidx.test.ext.truth.os {
     method public void marshallsEquallyTo(android.os.Parcelable!);
     method public static <T extends android.os.Parcelable> com.google.common.truth.Subject.Factory<androidx.test.ext.truth.os.ParcelableSubject<T!>!,T!>! parcelables();
     method public void recreatesEqual(android.os.Parcelable.Creator<T!>!);
+  }
+
+  public final class PersistableBundleSubject extends com.google.common.truth.Subject {
+    method public static androidx.test.ext.truth.os.PersistableBundleSubject! assertThat(android.os.PersistableBundle!);
+    method @RequiresApi(android.os.Build.VERSION_CODES.LOLLIPOP_MR1) public com.google.common.truth.BooleanSubject! bool(String!);
+    method public void containsKey(String!);
+    method public void doesNotContainKey(String!);
+    method public com.google.common.truth.DoubleSubject doubleFloat(String);
+    method public void hasSize(int);
+    method public com.google.common.truth.IntegerSubject! integer(String!);
+    method public void isEmpty();
+    method public void isNotEmpty();
+    method public com.google.common.truth.LongSubject! longInt(String!);
+    method public androidx.test.ext.truth.os.PersistableBundleSubject! persistableBundle(String!);
+    method public static com.google.common.truth.Subject.Factory<androidx.test.ext.truth.os.PersistableBundleSubject!,android.os.PersistableBundle!>! persistableBundles();
+    method public com.google.common.truth.StringSubject! string(String!);
+    method public com.google.common.truth.ObjectArraySubject<java.lang.String!> stringArray(String);
   }
 
 }

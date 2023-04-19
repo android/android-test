@@ -15,26 +15,22 @@
  */
 package androidx.test.ext.truth.os;
 
-import static androidx.test.ext.truth.os.BundleSubject.assertThat;
+import static androidx.test.ext.truth.os.PersistableBundleSubject.assertThat;
 import static org.junit.Assume.assumeTrue;
 
-import android.accounts.Account;
-import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
+import android.os.PersistableBundle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.ext.truth.content.IntentSubject;
-import com.google.common.collect.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/** Test for {@link BundleSubject}. */
+/** Test for {@link PersistableBundleSubject}. */
 @RunWith(AndroidJUnit4.class)
-public class BundleSubjectTest {
+public class PersistableBundleSubjectTest {
 
   @Test
   public void isEmpty() {
-    Bundle bundle = new Bundle();
+    PersistableBundle bundle = new PersistableBundle();
     assertThat(bundle).isEmpty();
     bundle.putString("foo", "bar");
 
@@ -43,7 +39,7 @@ public class BundleSubjectTest {
 
   @Test
   public void hasSize() {
-    Bundle bundle = new Bundle();
+    PersistableBundle bundle = new PersistableBundle();
     bundle.putString("foo", "bar");
 
     assertThat(bundle).hasSize(1);
@@ -51,7 +47,7 @@ public class BundleSubjectTest {
 
   @Test
   public void containsKey() {
-    Bundle bundle = new Bundle();
+    PersistableBundle bundle = new PersistableBundle();
     assertThat(bundle).doesNotContainKey("foo");
     bundle.putString("foo", "bar");
 
@@ -60,7 +56,7 @@ public class BundleSubjectTest {
 
   @Test
   public void string() {
-    Bundle bundle = new Bundle();
+    PersistableBundle bundle = new PersistableBundle();
     bundle.putString("foo", "bar");
 
     assertThat(bundle).string("foo").isEqualTo("bar");
@@ -68,7 +64,7 @@ public class BundleSubjectTest {
 
   @Test
   public void integer() {
-    Bundle bundle = new Bundle();
+    PersistableBundle bundle = new PersistableBundle();
     bundle.putInt("foo", 1);
 
     assertThat(bundle).integer("foo").isEqualTo(1);
@@ -76,7 +72,7 @@ public class BundleSubjectTest {
 
   @Test
   public void longInt() {
-    Bundle bundle = new Bundle();
+    PersistableBundle bundle = new PersistableBundle();
     bundle.putLong("foo", 100_0000_000_000L);
 
     assertThat(bundle).longInt("foo").isEqualTo(100_0000_000_000L);
@@ -84,7 +80,7 @@ public class BundleSubjectTest {
 
   @Test
   public void doubleFloat() {
-    Bundle bundle = new Bundle();
+    PersistableBundle bundle = new PersistableBundle();
     bundle.putDouble("foo", 100.0);
 
     assertThat(bundle).doubleFloat("foo").isEqualTo(100.0);
@@ -94,68 +90,30 @@ public class BundleSubjectTest {
   public void bool() {
     assumeTrue(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1);
 
-    Bundle bundle = new Bundle();
+    PersistableBundle bundle = new PersistableBundle();
     bundle.putBoolean("foo", true);
 
     assertThat(bundle).bool("foo").isTrue();
   }
 
   @Test
-  public void parcelable() {
-    Bundle bundle = new Bundle();
-    Account account = new Account("bar", "type");
-    bundle.putParcelable("foo", account);
-
-    assertThat(bundle).<Account>parcelable("foo").isEqualTo(account);
-  }
-
-  @Test
-  public void parcelableAsType() {
-    Bundle bundle = new Bundle();
-    Intent intent = new Intent("bar");
-    bundle.putParcelable("foo", intent);
-
-    assertThat(bundle).parcelableAsType("foo", IntentSubject.intents()).hasAction("bar");
-  }
-
-  @Test
   public void stringArray() {
-    Bundle bundle = new Bundle();
+    PersistableBundle bundle = new PersistableBundle();
     bundle.putStringArray("foo", new String[] {"bar", "baz"});
 
     assertThat(bundle).stringArray("foo").asList().containsExactly("bar", "baz").inOrder();
   }
 
   @Test
-  public void stringArrayList() {
-    Bundle bundle = new Bundle();
-    bundle.putStringArrayList("foo", Lists.newArrayList("bar", "baz"));
+  public void persistableBundle() {
+    PersistableBundle bundle = new PersistableBundle();
+    PersistableBundle innerBundle = new PersistableBundle();
+    innerBundle.putString("foo", "bar");
+    bundle.putPersistableBundle("nested", innerBundle);
 
-    assertThat(bundle).stringArrayList("foo").containsExactly("bar", "baz").inOrder();
-  }
-
-  @Test
-  public void parcelableArrayList() {
-    Bundle bundle = new Bundle();
-    Intent intent1 = new Intent("bar");
-    Intent intent2 = new Intent("baz");
-    bundle.putParcelableArrayList("foo", Lists.newArrayList(intent1, intent2));
-
-    assertThat(bundle).parcelableArrayList("foo").containsExactly(intent1, intent2).inOrder();
-  }
-
-  @Test
-  public void serializable() {
-    Bundle bundle = new Bundle();
-    bundle.putSerializable("color", Color.GREEN);
-
-    assertThat(bundle).serializable("color").isEqualTo(Color.GREEN);
-  }
-
-  // An enum is a simple example of a Serializable object.
-  enum Color {
-    RED,
-    GREEN,
-    BLUE
+    assertThat(bundle).persistableBundle("invalid").isNull();
+    assertThat(bundle).persistableBundle("nested").isNotNull();
+    assertThat(bundle).persistableBundle("nested").hasSize(1);
+    assertThat(bundle).persistableBundle("nested").containsKey("foo");
   }
 }
