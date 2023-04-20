@@ -28,7 +28,7 @@ jetify_android_library(
         "@maven//:androidx_annotation_annotation",
         "@maven//:androidx_appcompat_appcompat",
         "@maven//:androidx_window_window",
-        "@maven//:androidx_window_window/java",
+        "@maven//:androidx_window_window_java",
     ],
 )
 

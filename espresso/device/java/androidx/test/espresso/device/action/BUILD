@@ -23,6 +23,6 @@ kt_android_library(
         "//espresso/device/java/androidx/test/espresso/device/util",
         "//runner/monitor",
         "@maven//:androidx_window_window",
-        "@maven//:androidx_window_window/java",
+        "@maven//:androidx_window_window_java",
     ],
 )

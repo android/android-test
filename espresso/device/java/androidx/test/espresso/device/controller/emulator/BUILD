@@ -22,5 +22,7 @@ kt_android_library(
         "//runner/monitor",
         "@maven//:androidx_annotation_annotation",
         # TODO(b/215420259) fix gRPC dependency
+        "@maven//:io_grpc_grpc_okhttp",
+        "@maven//:io_grpc_grpc_stub",
     ],
 )
