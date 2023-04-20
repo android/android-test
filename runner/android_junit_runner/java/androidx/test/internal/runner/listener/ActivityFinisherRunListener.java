@@ -21,8 +21,10 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import android.app.Instrumentation;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import androidx.test.internal.runner.InstrumentationConnection;
-import androidx.test.runner.MonitoringInstrumentation;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunListener;
 
@@ -32,28 +34,64 @@ import org.junit.runner.notification.RunListener;
  */
 public class ActivityFinisherRunListener extends RunListener {
   private final Instrumentation instrumentation;
-  private final MonitoringInstrumentation.ActivityFinisher activityFinisher;
-  private final Runnable waitForActivitiesToFinishRunnable;
+  private final NotifyingRunnable activityFinisher;
+  private final Runnable waitForActivitiesToStopRunnable;
+  private final Handler handler;
 
   public ActivityFinisherRunListener(
       Instrumentation instrumentation,
-      MonitoringInstrumentation.ActivityFinisher finisher,
-      Runnable waitForActivitiesToFinishRunnable) {
+      Runnable finisher,
+      Runnable waitForActivitiesToStopRunnable) {
     this.instrumentation = checkNotNull(instrumentation);
-    activityFinisher = checkNotNull(finisher);
-    this.waitForActivitiesToFinishRunnable = checkNotNull(waitForActivitiesToFinishRunnable);
+    this.activityFinisher = new NotifyingRunnable(checkNotNull(finisher));
+    this.waitForActivitiesToStopRunnable = checkNotNull(waitForActivitiesToStopRunnable);
+    this.handler = new Handler(Looper.getMainLooper());
   }
 
   @Override
   public void testStarted(Description description) throws Exception {
-    new Handler(Looper.getMainLooper()).post(activityFinisher);
-    waitForActivitiesToFinishRunnable.run();
+    runActivityFinisher();
+    waitForActivitiesToStopRunnable.run();
+  }
+
+  private void runActivityFinisher() throws InterruptedException {
+    handler.post(activityFinisher);
+    // wait for the finisher to run, but don't wait forever since this will deadlock and timeout
+    // the test if main thread is blocked
+    if (!activityFinisher.await(2, TimeUnit.SECONDS)) {
+      Log.w(
+          "AFRunListener",
+          "activity finisher did not run within 2 seconds. Is main thread blocked?");
+      // remove the finisher to prevent potential test pollution where activities will be finished
+      // mid-test
+      handler.removeCallbacks(activityFinisher);
+    }
   }
 
   @Override
   public void testFinished(Description description) throws Exception {
     InstrumentationConnection.getInstance().requestRemoteInstancesActivityCleanup();
-    new Handler(Looper.getMainLooper()).post(activityFinisher);
-    waitForActivitiesToFinishRunnable.run();
+    runActivityFinisher();
+    waitForActivitiesToStopRunnable.run();
+  }
+
+  private static class NotifyingRunnable implements Runnable {
+
+    private final Runnable wrappedRunnable;
+    private final CountDownLatch latch = new CountDownLatch(1);
+
+    NotifyingRunnable(Runnable wrappedRunnable) {
+      this.wrappedRunnable = wrappedRunnable;
+    }
+
+    @Override
+    public void run() {
+      wrappedRunnable.run();
+      latch.countDown();
+    }
+
+    public boolean await(long time, TimeUnit unit) throws InterruptedException {
+      return latch.await(time, unit);
+    }
   }
 }
