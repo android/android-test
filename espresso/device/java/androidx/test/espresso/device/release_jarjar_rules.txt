@@ -1,0 +1,2 @@
+rule dagger.** androidx.test.espresso.device.internal.deps.dagger.@1
+rule com.google.protobuf.** androidx.test.espresso.device.internal.deps.protobuf.@1
