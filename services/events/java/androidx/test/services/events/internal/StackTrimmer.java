@@ -57,4 +57,16 @@ public final class StackTrimmer {
     }
     return message;
   }
+
+  /** Truncates the given text to ensure it doesn't exceed Binder transaction limit */
+  public static String getTrimmedSummary(String summary) {
+    if (summary != null && summary.length() > MAX_TRACE_SIZE) {
+      // Since AJUR needs to report failures back to AM via a binder IPC, we need to make sure that
+      // we don't exceed the Binder transaction limit - which is 1MB per process.
+      Log.w(
+          TAG, String.format("Content too long, trimmed to first %s characters.", MAX_TRACE_SIZE));
+      summary = summary.substring(0, MAX_TRACE_SIZE) + "\n";
+    }
+    return summary;
+  }
 }

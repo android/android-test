@@ -19,6 +19,7 @@ import android.app.Instrumentation;
 import android.os.Bundle;
 import androidx.test.internal.runner.listener.InstrumentationRunListener;
 import androidx.test.internal.util.Checks;
+import androidx.test.services.events.internal.StackTrimmer;
 import androidx.tracing.Trace;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -69,9 +70,9 @@ public final class TestExecutor {
     try (PrintStream summaryWriter = new PrintStream(summaryStream)) {
       reportRunEnded(listeners, summaryWriter, resultBundle, junitResults);
     }
+    String summaryOutput = StackTrimmer.getTrimmedSummary(summaryStream.toString("UTF_8"));
     resultBundle.putString(
-        Instrumentation.REPORT_KEY_STREAMRESULT,
-        String.format("\n%s", summaryStream.toString("UTF_8")));
+        Instrumentation.REPORT_KEY_STREAMRESULT, String.format("\n%s", summaryOutput));
     return resultBundle;
   }
 
