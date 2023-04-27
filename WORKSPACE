@@ -36,12 +36,11 @@ rules_proto_dependencies()
 
 rules_proto_toolchains()
 
-# The 'com_google_protobuf_javalite' package is required for Bazel 2.x and below.
 http_archive(
     name = "com_google_protobuf_javalite",
-    sha256 = "832c476bb442ca98a59c2291b8a504648d1c139b74acc15ef667a0e8f5e984e7",
-    strip_prefix = "protobuf-3.11.3",
-    urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.11.3.zip"],
+    sha256 = "5d0f05587aa3ad56079b4c4481dcb462267e5f1075d905c321f8ed6339e74ab0",
+    strip_prefix = "protobuf-22.3",
+    urls = ["https://github.com/protocolbuffers/protobuf/releases/download/v22.3/protobuf-22.3.zip"],
 )
 
 load("@rules_jvm_external//:defs.bzl", "maven_install")
