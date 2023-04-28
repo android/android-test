@@ -54,7 +54,7 @@ import androidx.test.orchestrator.listeners.OrchestrationResultPrinter;
 import androidx.test.services.shellexecutor.ClientNotConnected;
 import androidx.test.services.shellexecutor.ShellExecSharedConstants;
 import androidx.test.services.shellexecutor.ShellExecutor;
-import androidx.test.services.shellexecutor.ShellExecutorImpl;
+import androidx.test.services.shellexecutor.ShellExecutorFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -497,7 +497,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     Throwable exception = null;
     //noinspection TryWithIdenticalCatches (not supported be below API lvl 19)
     try {
-      ShellExecutor shellExecutor = new ShellExecutorImpl(context, secret);
+      ShellExecutor shellExecutor = new ShellExecutorFactory(context, secret).create();
       cmdResult = shellExecutor.executeShellCommandSync(cmd, params, new HashMap<>(), false);
     } catch (ClientNotConnected clientNotConnected) {
       exception = clientNotConnected;

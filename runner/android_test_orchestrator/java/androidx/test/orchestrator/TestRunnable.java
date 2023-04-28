@@ -26,7 +26,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.services.shellexecutor.ClientNotConnected;
-import androidx.test.services.shellexecutor.ShellExecutorImpl;
+import androidx.test.services.shellexecutor.ShellExecutorFactory;
 import com.google.common.io.ByteStreams;
 import java.io.IOException;
 import java.io.InputStream;
@@ -202,6 +202,8 @@ public class TestRunnable implements Runnable {
 
   InputStream runShellCommand(List<String> params)
       throws IOException, ClientNotConnected, InterruptedException, RemoteException {
-    return new ShellExecutorImpl(context, secret).executeShellCommand("am", params, null, false);
+    return new ShellExecutorFactory(context, secret)
+        .create()
+        .executeShellCommand("am", params, null, false);
   }
 }
