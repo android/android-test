@@ -18,9 +18,9 @@ def _development_repositories():
 
     http_archive(
         name = "robolectric",
-        strip_prefix = "robolectric-bazel-4.9",
-        sha256 = "7655c49633ec85a18b5a94b1ec36e250671808e45494194959b1d1d7f3e73a23",
-        urls = ["https://github.com/robolectric/robolectric-bazel/archive/4.9.tar.gz"],
+        strip_prefix = "robolectric-bazel-4.10",
+        sha256 = "2929e39c81502e03628f1469d0f7fb411dd82d8c6d75244752bc2f6b537c5baa",
+        urls = ["https://github.com/robolectric/robolectric-bazel/archive/refs/tags/4.10.tar.gz"],
     )
     # uncomment to test with new robolectric version. Change path to point to local filesystem
     # clone of https://github.com/robolectric/robolectric-bazel

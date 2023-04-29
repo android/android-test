@@ -172,7 +172,7 @@ maven_install(
                 ),
             ],
             group = "org.robolectric",
-            version = "4.9",
+            version = "4.10",
         ),
     ],
     repositories = [
