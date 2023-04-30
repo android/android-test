@@ -28,19 +28,12 @@ package_group(
 kt_android_library(
     name = "device",
     testonly = 1,
+    srcs = glob(["*.kt"]),
     exports = [
-        ":device_api",
         "//espresso/device/java/androidx/test/espresso/device/action",
         "//espresso/device/java/androidx/test/espresso/device/filter",
-        "//espresso/device/java/androidx/test/espresso/device/rules",
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
     ],
-)
-
-kt_android_library(
-    name = "device_api",
-    testonly = 1,
-    srcs = glob(["*.kt"]),
     deps = [
         "//annotation/java/androidx/test/annotation",
         "//espresso/device/java/androidx/test/espresso/device/action",
@@ -56,21 +49,29 @@ kt_android_library(
 android_library(
     name = "device_aar_lib",
     testonly = 1,
+    custom_package = "androidx.test.espresso.device",
     manifest = "AndroidManifest.xml",
     exports = [
-        "//espresso/device/java/androidx/test/espresso/device/filter:requires_display_filter",
+        "//espresso/device/java/androidx/test/espresso/device",
+        "//espresso/device/java/androidx/test/espresso/device/action",
+        "//espresso/device/java/androidx/test/espresso/device/filter",
+        "//espresso/device/java/androidx/test/espresso/device/rules",
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
     ],
 )
 
-# Currently, only the @RequiresDisplay test filter and size classes are included in external release.
 axt_android_aar(
     name = "device_aar",
     testonly = 1,
     expected_class_prefixes = [
         "androidx.test.espresso.device",
+        "com.android.emulator.control",
+        "javax.annotation",
+        "com.google.protobuf",
     ],
     included_dep = ":device_aar_lib",
+    jarjar_rule =
+        "release_jarjar_rules.txt",
     visibility = [
         "//:__pkg__",
     ],
