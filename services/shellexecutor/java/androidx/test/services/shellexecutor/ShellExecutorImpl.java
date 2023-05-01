@@ -31,6 +31,10 @@ public final class ShellExecutorImpl implements ShellExecutor {
   private final Context context;
   private final String binderKey;
 
+  /**
+   * @deprecated Please use the ShellExecutorFactory to create this.
+   */
+  @Deprecated
   public ShellExecutorImpl(Context context, String binderKey) {
     if (null == context) {
       throw new NullPointerException("context, cannot be null!");

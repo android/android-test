@@ -35,6 +35,7 @@ android_library(
         "ShellCommandClient.java",
         "ShellExecSharedConstants.java",
         "ShellExecutor.java",
+        "ShellExecutorFactory.java",
         "ShellExecutorImpl.java",
     ],
     idl_srcs = ["Command.aidl"],
