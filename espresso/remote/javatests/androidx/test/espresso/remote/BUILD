@@ -20,7 +20,7 @@ android_library(
     testonly = 1,
     srcs = UTIL_SRCS,
     visibility = [
-        "//visibility:private",  # Only private by automation, not intent. Owner may accept CLs adding visibility. See go/scheuklappen#explicit-private.
+        "//visibility:private",
     ],
     deps = [
         "//espresso/core/java/androidx/test/espresso",
