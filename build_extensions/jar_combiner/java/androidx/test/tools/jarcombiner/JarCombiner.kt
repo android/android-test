@@ -28,40 +28,76 @@ fun combineJars(args: Array<String>) {
   val jarOutputStream = JarOutputStream(FileOutputStream(outputFile, false))
   jarOutputStream.use {
     // JarOutputStream will throw an error if any duplicate entry is added, which is undesirable for
-    // directories.
+    // directories and certain classes.
     // Keep track of the list of directories already added to prevent this
-    val addedDirectories: MutableSet<String> = HashSet()
+    val alreadyAddedAllowedDuplicates: MutableSet<String> = HashSet()
+
+    val entryToJar: MutableMap<String, String> = HashMap()
 
     for (i in 1 until args.size) {
       val inputFile = args[i]
       val jarInputStream = JarInputStream(FileInputStream(inputFile))
-      jarInputStream.use { addToJar(addedDirectories, jarOutputStream, jarInputStream) }
+      jarInputStream.use {
+        addToJar(
+          alreadyAddedAllowedDuplicates,
+          entryToJar,
+          jarOutputStream,
+          jarInputStream,
+          args[i]
+        )
+      }
     }
   }
 }
 
 private fun addToJar(
-  addedDirectories: MutableSet<String>,
+  alreadyAddedAllowedDuplicates: MutableSet<String>,
+  entryToJar: MutableMap<String, String>,
   jarOutputStream: JarOutputStream,
-  inputJarStream: JarInputStream
+  inputJarStream: JarInputStream,
+  inputJarName: String,
 ) {
 
   var entry = inputJarStream.nextEntry
   while (entry != null) {
-    if (shouldAddEntry(entry, addedDirectories)) {
+    if (shouldAddEntry(entry, alreadyAddedAllowedDuplicates)) {
+      checkIfAlreadyExists(entry.name, entryToJar, inputJarName)
       jarOutputStream.putNextEntry(entry)
       inputJarStream.transferTo(jarOutputStream)
+      entryToJar.put(entry.name, inputJarName)
     }
     entry = inputJarStream.nextEntry
   }
 }
 
-private fun shouldAddEntry(entry: ZipEntry, addedDirectories: MutableSet<String>): Boolean {
+fun checkIfAlreadyExists(
+  name: String,
+  entryToJar: MutableMap<String, String>,
+  inputJarName: String
+) {
+  if (entryToJar.containsKey(name)) {
+    throw RuntimeException(
+      "Duplicate entry: $name is present in both ${entryToJar.get(name)} and $inputJarName"
+    )
+  }
+}
+
+private fun shouldAddEntry(
+  entry: ZipEntry,
+  alreadyAddedAllowedDuplicates: MutableSet<String>
+): Boolean {
   if (entry.isDirectory) {
-    if (addedDirectories.contains(entry.name)) {
+    if (alreadyAddedAllowedDuplicates.contains(entry.name)) {
       return false
     }
-    addedDirectories.add(entry.name)
+    alreadyAddedAllowedDuplicates.add(entry.name)
+  } else if (entry.name.startsWith("com/google/protobuf/Any")) {
+    // bazel's rules_proto adds two jars to runtime classpath, both of which contain
+    // com.google.protobuf.Any classes
+    if (alreadyAddedAllowedDuplicates.contains(entry.name)) {
+      return false
+    }
+    alreadyAddedAllowedDuplicates.add(entry.name)
   } else if (entry.name.matches(Regex(".*/R[\\.|\\$].*class$"))) {
     // strip generated R.class from resulting jar
     return false

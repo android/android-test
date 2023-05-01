@@ -52,6 +52,7 @@ _SHADED_TARGETS = [
     "//opensource/proto:any_java_proto_lite",
     "@com_google_protobuf//:any_proto",
     "//opensource/dagger:dagger",
+    "@com_google_protobuf_protobuf_javalite//:com_google_protobuf_protobuf_javalite",
 ]
 
 # maven apk definitions

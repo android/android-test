@@ -1,9 +1,7 @@
 # Common proto build rules for AXT in Bazel
 
-java_lite_proto_library(
+alias(
     name = "any_java_proto_lite",
-    visibility = ["//:__subpackages__"],
-    deps = [
-        "@com_google_protobuf//:any_proto",
-    ],
+    actual = "@com_google_protobuf//:protobuf_javalite",
+    visibility = ["//visibility:public"],
 )
