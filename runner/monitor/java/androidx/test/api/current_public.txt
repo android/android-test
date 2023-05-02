@@ -53,6 +53,26 @@ package androidx.test.platform.graphics {
 
 }
 
+package androidx.test.platform.tracing {
+
+  public interface Tracer {
+    method public androidx.test.platform.tracing.Tracer.Span beginSpan(String);
+  }
+
+  public static interface Tracer.Span extends java.io.Closeable {
+    method public androidx.test.platform.tracing.Tracer.Span beginChildSpan(String);
+    method public void close();
+  }
+
+  public final class Tracing {
+    method public androidx.test.platform.tracing.Tracer.Span beginSpan(String);
+    method public static androidx.test.platform.tracing.Tracing getInstance();
+    method public void registerTracer(androidx.test.platform.tracing.Tracer);
+    method public void unregisterTracer(androidx.test.platform.tracing.Tracer!);
+  }
+
+}
+
 package androidx.test.platform.ui {
 
   public class InjectEventSecurityException extends java.lang.Exception implements androidx.test.platform.TestFrameworkException {

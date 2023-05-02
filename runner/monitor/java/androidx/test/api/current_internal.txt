@@ -198,19 +198,6 @@ package androidx.test.platform.concurrent {
 
 }
 
-package androidx.test.platform.tracing {
-
-  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @androidx.test.annotation.ExperimentalTestApi public interface Tracer {
-    method public androidx.test.platform.tracing.Tracer.Span beginSpan(String);
-  }
-
-  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @androidx.test.annotation.ExperimentalTestApi public static interface Tracer.Span extends java.io.Closeable {
-    method public androidx.test.platform.tracing.Tracer.Span beginChildSpan(String);
-    method public void close();
-  }
-
-}
-
 package androidx.test.platform.view.inspector {
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class WindowInspectorCompat {

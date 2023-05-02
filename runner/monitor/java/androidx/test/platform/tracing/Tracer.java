@@ -17,8 +17,6 @@
 package androidx.test.platform.tracing;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RestrictTo;
-import androidx.test.annotation.ExperimentalTestApi;
 import com.google.errorprone.annotations.MustBeClosed;
 import java.io.Closeable;
 
@@ -47,8 +45,6 @@ import java.io.Closeable;
  *   }
  * </pre>
  */
-@ExperimentalTestApi
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by core and espresso
 public interface Tracer {
 
   /**
@@ -71,8 +67,6 @@ public interface Tracer {
    * <p>The Span interface implements {@link Closeable} to encourage its use in a try-resource block
    * and ensure that the {@link #close()} method is always properly called.
    */
-  @ExperimentalTestApi
-  @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by core and espresso
   interface Span extends Closeable {
     /**
      * Starts a new time span nested in a parent span, to track progression of some inner action.
