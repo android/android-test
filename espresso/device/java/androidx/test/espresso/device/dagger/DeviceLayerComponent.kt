@@ -16,12 +16,18 @@
 
 package androidx.test.espresso.device.dagger
 
+import androidx.annotation.RestrictTo
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.platform.device.DeviceController
 import dagger.Component
 import javax.inject.Singleton
 
-/** Dagger component for device classes. */
+/**
+ * Dagger component for device classes.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 @Singleton
 @Component(modules = [DeviceControllerModule::class])
 interface DeviceLayerComponent {

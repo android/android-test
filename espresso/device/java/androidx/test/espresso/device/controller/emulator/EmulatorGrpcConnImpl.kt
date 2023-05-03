@@ -39,22 +39,23 @@ import java.io.File
  * If a certificate chain is present, a tls channel will be used.
  *
  * @param address The address where this emulator can be reached. Use 10.0.2.2 for the loopback
- * device where the emulator is running.
+ *   device where the emulator is running.
  * @param port The port of the gRPC endpoint.
  * @param token JWT token used for authentication. If the token is present and not empty it will be
- * used to set the x-grpc-authorization header.
+ *   used to set the x-grpc-authorization header.
  * @param clientCertChainFilePath A PEM-encoded certificate chain.
  * @param clientPrivateKeyFilePath An unencrypted PKCS#8 key (file headers have "BEGIN CERTIFICATE"
- * and "BEGIN PRIVATE KEY").
+ *   and "BEGIN PRIVATE KEY").
  * @param trustCertCollectionFilePath When present Use the provided root certificates to verify the
- * server's identity instead of the system's default. Generally they should be PEM-encoded with all
- * the certificates concatenated together (file header has "BEGIN CERTIFICATE", and would occur once
- * per certificate).
+ *   server's identity instead of the system's default. Generally they should be PEM-encoded with
+ *   all the certificates concatenated together (file header has "BEGIN CERTIFICATE", and would
+ *   occur once per certificate).
+ * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 class EmulatorGrpcConnImpl
 constructor(
-  private val address: String, 
+  private val address: String,
   private val port: Int,
   private val token: String,
   private val clientCertChainFilePath: String,

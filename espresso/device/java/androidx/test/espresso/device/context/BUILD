@@ -15,6 +15,9 @@ package(
 kt_android_library(
     name = "context",
     srcs = ["ActionContext.kt"],
+    deps = [
+        "@maven//:androidx_annotation_annotation",
+    ],
 )
 
 kt_android_library(
@@ -23,5 +26,6 @@ kt_android_library(
     deps = [
         ":context",
         "//runner/monitor",
+        "@maven//:androidx_annotation_annotation",
     ],
 )

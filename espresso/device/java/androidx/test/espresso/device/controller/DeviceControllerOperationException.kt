@@ -16,9 +16,15 @@
 
 package androidx.test.espresso.device.controller
 
+import androidx.annotation.RestrictTo
 import androidx.test.espresso.EspressoException
 
-/** An exception which indicates that an error occured during a device controller operation. */
+/**
+ * An exception which indicates that an error occured during a device controller operation.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 class DeviceControllerOperationException : RuntimeException, EspressoException {
   constructor(description: String) : super(description)
 

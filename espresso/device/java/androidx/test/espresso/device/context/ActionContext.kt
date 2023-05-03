@@ -17,8 +17,15 @@
 package androidx.test.espresso.device.context
 
 import android.content.Context
+import androidx.annotation.RestrictTo
+import androidx.annotation.RestrictTo.Scope
 
-/** Interface to provide context to device actions. */
+/**
+ * Interface to provide context to device actions.
+ *
+ * @hide
+ */
+@RestrictTo(Scope.LIBRARY)
 interface ActionContext {
   /** Get the application context. */
   val applicationContext: Context

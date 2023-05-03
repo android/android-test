@@ -16,9 +16,15 @@
 
 package androidx.test.espresso.device.context
 
+import androidx.annotation.RestrictTo
 import androidx.test.platform.app.InstrumentationRegistry
 
-/** ActionContext for instrumentation tests. */
+/**
+ * ActionContext for instrumentation tests.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 class InstrumentationTestActionContext() : ActionContext {
   override val applicationContext = InstrumentationRegistry.getInstrumentation().getTargetContext()
 

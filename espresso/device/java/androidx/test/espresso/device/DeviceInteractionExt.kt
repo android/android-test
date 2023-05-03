@@ -17,6 +17,7 @@
 
 package androidx.test.espresso.device
 
+import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.action.setBookMode as getSetBookModeDeviceAction
 import androidx.test.espresso.device.action.setClosedMode as getSetClosedModeDeviceAction
@@ -38,6 +39,7 @@ import androidx.test.espresso.device.sizeclass.WidthSizeClass
  * @throws UnsupportedDeviceOperationException if used on a real device.
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
+@ExperimentalTestApi
 fun DeviceInteraction.setTabletopMode(): DeviceInteraction {
   perform(getSetTabletopModeDeviceAction())
   return this
@@ -54,6 +56,7 @@ fun DeviceInteraction.setTabletopMode(): DeviceInteraction {
  * @throws UnsupportedDeviceOperationException if used on a real device.
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
+@ExperimentalTestApi
 fun DeviceInteraction.setBookMode(): DeviceInteraction {
   perform(getSetBookModeDeviceAction())
   return this
@@ -69,6 +72,7 @@ fun DeviceInteraction.setBookMode(): DeviceInteraction {
  * @throws UnsupportedDeviceOperationException if used on a real device.
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
+@ExperimentalTestApi
 fun DeviceInteraction.setFlatMode(): DeviceInteraction {
   perform(getSetFlatModeDeviceAction())
   return this
@@ -83,6 +87,7 @@ fun DeviceInteraction.setFlatMode(): DeviceInteraction {
  * @throws UnsupportedDeviceOperationException if used on a real device.
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
+@ExperimentalTestApi
 fun DeviceInteraction.setClosedMode(): DeviceInteraction {
   perform(getSetClosedModeDeviceAction())
   return this
@@ -93,6 +98,7 @@ fun DeviceInteraction.setClosedMode(): DeviceInteraction {
  *
  * @param orientation the orientation to set the device to (portait or landscape)
  */
+@ExperimentalTestApi
 fun DeviceInteraction.setScreenOrientation(orientation: ScreenOrientation): DeviceInteraction {
   perform(getSetScreenOrientationDeviceAction(orientation))
   return this
@@ -104,6 +110,7 @@ fun DeviceInteraction.setScreenOrientation(orientation: ScreenOrientation): Devi
  * @param widthSizeClass the width to set the device display to
  * @param heightSizeClass the height to set the device display to
  */
+@ExperimentalTestApi
 fun DeviceInteraction.setDisplaySize(
   widthSizeClass: WidthSizeClass,
   heightSizeClass: HeightSizeClass

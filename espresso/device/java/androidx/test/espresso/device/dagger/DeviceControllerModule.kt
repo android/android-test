@@ -16,6 +16,7 @@
 package androidx.test.espresso.device.dagger
 
 import android.provider.Settings
+import androidx.annotation.RestrictTo
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.context.InstrumentationTestActionContext
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
@@ -33,7 +34,12 @@ import dagger.Provides
 import java.lang.reflect.Method
 import javax.inject.Singleton
 
-/** Dagger module for DeviceController. */
+/**
+ * Dagger module for DeviceController.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 @Module
 internal class DeviceControllerModule {
 

@@ -15,6 +15,8 @@
  */
 package androidx.test.espresso.device.controller.emulator
 
+import androidx.annotation.RestrictTo
+import androidx.annotation.RestrictTo.Scope
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.controller.DeviceMode
@@ -28,7 +30,12 @@ import com.android.emulator.control.Posture
 import com.android.emulator.control.Posture.PostureValue
 import io.grpc.StatusRuntimeException
 
-/** Implementation of {@link DeviceController} for tests run on an Emulator. */
+/**
+ * Implementation of {@link DeviceController} for tests run on an Emulator.
+ *
+ * @hide
+ */
+@RestrictTo(Scope.LIBRARY)
 class EmulatorController
 constructor(
   private val emulatorControllerStub: EmulatorControllerGrpc.EmulatorControllerBlockingStub

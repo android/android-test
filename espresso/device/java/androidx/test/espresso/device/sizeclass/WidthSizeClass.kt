@@ -16,7 +16,10 @@
 
 package androidx.test.espresso.device.sizeclass
 
+import androidx.test.annotation.ExperimentalTestApi
+
 /** A class to create buckets for the width of a window. */
+@ExperimentalTestApi
 public class WidthSizeClass
 private constructor(
   private val lowerBound: Int,
@@ -26,6 +29,7 @@ private constructor(
   override fun toString(): String {
     return description
   }
+
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
@@ -35,12 +39,14 @@ private constructor(
     if (description != other.description) return false
     return true
   }
+
   override fun hashCode(): Int {
     var result = lowerBound
     result = 31 * result + upperBound
     result = 31 * result + description.hashCode()
     return result
   }
+
   public companion object {
     /** A bucket to represent a compact width window. One use-case is a phone in portrait. */
     @JvmField public val COMPACT: WidthSizeClass = WidthSizeClass(0, 600, "COMPACT")
@@ -51,8 +57,10 @@ private constructor(
     @JvmField public val MEDIUM: WidthSizeClass = WidthSizeClass(600, 840, "MEDIUM")
     /** A bucket to represent an expanded width window. One use-case is a desktop app. */
     @JvmField public val EXPANDED: WidthSizeClass = WidthSizeClass(840, Int.MAX_VALUE, "EXPANDED")
+
     /**
      * Returns a recommended [WidthSizeClass] for the width of a window given the width in DP.
+     *
      * @param dpWidth the width of the window in DP
      * @return A recommended size class for the width
      * @throws IllegalArgumentException if the width is negative
@@ -68,8 +76,10 @@ private constructor(
         else -> EXPANDED
       }
     }
+
     /**
      * Returns a recommended width of a window in DP given the [WidthSizeClass].
+     *
      * @param sizeClass the size class
      * @return A recommended width in DP in this size class
      */
@@ -81,8 +91,10 @@ private constructor(
         else -> 1000 // WidthSizeClass.EXPANDED
       }
     }
+
     /**
      * Returns a [WidthSizeClassEnum] given the [WidthSizeClass].
+     *
      * @param sizeClass the size class
      * @return the relevant WidthSizeClassEnum
      */

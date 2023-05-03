@@ -20,6 +20,8 @@ package androidx.test.espresso.device.util
 
 import android.app.Activity
 import android.util.Log
+import androidx.annotation.RestrictTo
+import androidx.annotation.RestrictTo.Scope
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
@@ -34,9 +36,11 @@ private val TAG = "ActivityUtil"
  * Detects if configuration changes are handled by the activity.
  *
  * @param configBit, bit in ActivityInfo#configChanges that indicates whether the activity can
- * handle this type of configuration change.
+ *   handle this type of configuration change.
  * @return whether the activity handles the given configuration change.
+ * @hide
  */
+@RestrictTo(Scope.LIBRARY)
 fun Activity.isConfigurationChangeHandled(configBit: Int): Boolean {
   val activityInfo = this.getPackageManager().getActivityInfo(this.getComponentName(), 0)
   return (activityInfo.configChanges and configBit) != 0
@@ -45,7 +49,10 @@ fun Activity.isConfigurationChangeHandled(configBit: Int): Boolean {
 /**
  * Returns the first activity found in the RESUMED stage, or null if none are found after waiting up
  * to two seconds for one.
+ *
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 fun getResumedActivityOrNull(): Activity? {
   var activity: Activity? = null
   InstrumentationRegistry.getInstrumentation().runOnMainSync {

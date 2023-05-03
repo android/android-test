@@ -19,7 +19,9 @@ kt_android_library(
         "DeviceMode.kt",
     ],
     deps = [
+        "//annotation/java/androidx/test/annotation",
         "//espresso/core/java/androidx/test/espresso:interface",
+        "@maven//:androidx_annotation_annotation",
     ],
 )
 
@@ -31,5 +33,6 @@ kt_android_library(
     ],
     deps = [
         "//runner/monitor",
+        "@maven//:androidx_annotation_annotation",
     ],
 )

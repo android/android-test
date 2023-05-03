@@ -15,6 +15,7 @@
  */
 package androidx.test.espresso.device.rules
 
+import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.platform.device.UnsupportedDeviceOperationException
 import org.junit.Assume.assumeNoException
 import org.junit.rules.TestRule
@@ -29,7 +30,6 @@ import org.junit.runners.model.Statement
  * Without this rule, tests will fail when a device action is performed on an unsupported device.
  *
  * Example usage:
- *
  * ```
  * class SampleTest {
  *   @get:Rule
@@ -42,6 +42,7 @@ import org.junit.runners.model.Statement
  * }
  * ```
  */
+@ExperimentalTestApi
 class SkipUnsupportedDeviceActionsRule() : TestRule {
   override fun apply(statement: Statement, description: Description): Statement {
     return object : Statement() {

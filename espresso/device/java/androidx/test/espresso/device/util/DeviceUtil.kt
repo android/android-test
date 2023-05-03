@@ -19,13 +19,17 @@
 package androidx.test.espresso.device.util
 
 import android.os.Build
+import androidx.annotation.RestrictTo
 
 /** Collection of utility methods for getting information about the test device. */
 
 /**
  * Detects if the test is running on an emulator or a real device using some heuristics based on the
  * device properties.
+ *
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 fun isTestDeviceAnEmulator(): Boolean {
   val qemu: String? = System.getProperty("ro.kernel.qemu", "?")
   return qemu.equals("1") ||
@@ -36,12 +40,20 @@ fun isTestDeviceAnEmulator(): Boolean {
 /**
  * Detects if the test is running on Robolectric using some heuristics based on the device
  * properties.
+ *
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 fun isRobolectricTest(): Boolean {
   return Build.FINGERPRINT.equals("robolectric")
 }
 
-/** Returns the API level of the current test device. */
+/**
+ * Returns the API level of the current test device.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 fun getDeviceApiLevel(): Int {
   return Build.VERSION.SDK_INT
 }

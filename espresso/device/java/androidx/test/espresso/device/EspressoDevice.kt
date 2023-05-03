@@ -21,13 +21,16 @@ import androidx.test.espresso.device.dagger.DeviceLayerComponent
 import androidx.test.internal.util.Checks.checkNotMainThread
 
 /** Entry point for device centric operations */
+@ExperimentalTestApi
 class EspressoDevice private constructor() {
+  @ExperimentalTestApi
   companion object {
     private val BASE: DeviceLayerComponent = DeviceHolder.deviceLayer()
 
     /**
      * Starts a {@link DeviceInteraction} fluent API call. This method is used to invoke operations
      * that are device-centric in scope. This method should not be called on the main thread.
+     *
      * @throws IllegalStateException when being invoked on the main thread.
      *
      * <p>This API is experimental and subject to change or removal.

@@ -29,6 +29,8 @@ import io.grpc.stub.AbstractFutureStub
  *
  * This provides all the proper channels and credentials to create RPC stubs that interact with the
  * emulator.
+ *
+ * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 interface EmulatorGrpcConn {
@@ -43,7 +45,6 @@ interface EmulatorGrpcConn {
   /**
    * Carries credential data that will be propagated to the emulator via request metadata for each
    * RPC. The credentials are provided by the gradle test runner and can be used as follows:
-   *
    * <pre><code> EmulatorConnection connection val stub =
    * EmulatorControllerGrpc.EmulatorControllerBlockingStub.newStub(connection.channel()) response =
    * stub.withCallCredentials(connection.credentials()).bar(request) </code></pre>
@@ -60,7 +61,6 @@ interface EmulatorGrpcConn {
    * Gets a fully configured gRPC connection to a service hosted by the emulator. The credentials
    * and channel configuration will be provided by the gradle test runner. You commonly want to use
    * it like:
-   *
    * ```
    * EmulatorConnection connection val stub =
    * connection.emulatorBlockingStub(EmulatorControllerGrpc::newBlockingStub) response =
@@ -68,7 +68,7 @@ interface EmulatorGrpcConn {
    * ```
    *
    * @param builder A function that provides the actual stub given a channel. This is usually a call
-   * to `newBlockingStub` for the desired generate service
+   *   to `newBlockingStub` for the desired generate service
    */
   fun <T : AbstractBlockingStub<T>?> emulatorBlockingStub(builder: (Channel) -> T): T
 
@@ -76,14 +76,13 @@ interface EmulatorGrpcConn {
    * Gets a fully configured asynchronous gRPC connection to a service hosted by the emulator. The
    * credentials and channel configuration will be provided by the gradle test runner. You commonly
    * want to use it like:
-   *
    * ```
    * EmulatorConnection connection val stub = connection.emulatorFutureStub(EmulatorControllerGrpc::newFutureStub)
    * response = stub.bar(request)
    * ```
    *
    * @param builder A function that provides the actual stub given a channel. This is usually a call
-   * to `newFutureStub` for the desired generate service
+   *   to `newFutureStub` for the desired generate service
    */
   fun <T : AbstractFutureStub<T>?> emulatorFutureStub(builder: (Channel) -> T): T
 

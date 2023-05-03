@@ -15,7 +15,10 @@ package(
 kt_android_library(
     name = "util",
     testonly = 1,
-    srcs = glob(["*.kt"]),
+    srcs = glob([
+        "*.kt",
+        "*.java",
+    ]),
     deps = [
         "//runner/monitor",
         "@maven//:androidx_annotation_annotation",

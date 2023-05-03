@@ -16,7 +16,10 @@
 
 package androidx.test.espresso.device.sizeclass
 
+import androidx.test.annotation.ExperimentalTestApi
+
 /** A class to create buckets for the height of a window. */
+@ExperimentalTestApi
 public class HeightSizeClass
 private constructor(
   private val lowerBound: Int,
@@ -26,6 +29,7 @@ private constructor(
   override fun toString(): String {
     return description
   }
+
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
@@ -35,12 +39,14 @@ private constructor(
     if (description != other.description) return false
     return true
   }
+
   override fun hashCode(): Int {
     var result = lowerBound
     result = 31 * result + upperBound
     result = 31 * result + description.hashCode()
     return result
   }
+
   public companion object {
     /** A bucket to represent a compact height. One use-case is a phone that is in landscape. */
     @JvmField public val COMPACT: HeightSizeClass = HeightSizeClass(0, 480, "COMPACT")
@@ -50,8 +56,10 @@ private constructor(
      * A bucket to represent an expanded height window. One use-case is a tablet or a desktop app.
      */
     @JvmField public val EXPANDED: HeightSizeClass = HeightSizeClass(900, Int.MAX_VALUE, "EXPANDED")
+
     /**
      * Returns a recommended [HeightSizeClass] for the height of a window given the height in DP.
+     *
      * @param dpHeight the height of the window in DP
      * @return A recommended size class for the height
      * @throws IllegalArgumentException if the height is negative
@@ -67,8 +75,10 @@ private constructor(
         else -> EXPANDED
       }
     }
+
     /**
      * Returns a recommended height of a window in DP given the [HeightSizeClass].
+     *
      * @param sizeClass the size class
      * @return A recommended height in DP in this size class
      */
@@ -80,8 +90,10 @@ private constructor(
         else -> 1000 // HeightSizeClass.EXPANDED
       }
     }
+
     /**
      * Returns a [HeightSizeClassEnum] given the [HeightSizeClass].
+     *
      * @param sizeClass the size class
      * @return the relevant HeightSizeClassEnum
      */

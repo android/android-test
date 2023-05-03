@@ -16,10 +16,16 @@
 
 package androidx.test.espresso.device.controller
 
+import androidx.annotation.RestrictTo
 import androidx.test.platform.device.DeviceController
 import androidx.test.platform.device.UnsupportedDeviceOperationException
 
-/** Implementation of {@link DeviceController} for tests run on a physical device. */
+/**
+ * Implementation of {@link DeviceController} for tests run on a physical device.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 class PhysicalDeviceController : DeviceController {
   override fun setDeviceMode(deviceMode: Int) {
     throw UnsupportedDeviceOperationException(
