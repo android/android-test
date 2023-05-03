@@ -45,6 +45,9 @@ _TARGET_TO_MAVEN_ARTIFACT = {
 
     # services/events/java gets built into both androidx.test.runner as well as orchestrator v2
     "//services/events/java/": "androidx.test:runner:%s" % RUNNER_VERSION,
+
+    # emulator controller proto for bazel gets embedded inside espresso-device
+    "//opensource/emulator/proto": "androidx.test.espresso:espresso-device:%s" % ESPRESSO_DEVICE_VERSION,
 }
 
 _SHADED_TARGETS = [

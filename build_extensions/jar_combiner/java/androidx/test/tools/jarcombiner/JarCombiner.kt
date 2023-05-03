@@ -91,17 +91,29 @@ private fun shouldAddEntry(
       return false
     }
     alreadyAddedAllowedDuplicates.add(entry.name)
-  } else if (entry.name.startsWith("com/google/protobuf/Any")) {
-    // bazel's rules_proto adds two jars to runtime classpath, both of which contain
-    // com.google.protobuf.Any classes
+    return true
+  } else if (entry.name.startsWith("com/google/protobuf")) {
+    // bazel's new version of rules_proto creates java wrapper libraries around any proto_library
+    // dependencies, which contain classes already present in the main protobuf-javalite-3.21.7.jar
     if (alreadyAddedAllowedDuplicates.contains(entry.name)) {
       return false
     }
     alreadyAddedAllowedDuplicates.add(entry.name)
+    return true
   } else if (entry.name.matches(Regex(".*/R[\\.|\\$].*class$"))) {
     // strip generated R.class from resulting jar
     return false
   } else if (entry.name.equals("protobuf.meta")) {
+    return false
+  } else if (entry.name.startsWith("META-INF/maven")) {
+    // strip out files added to META-INF/maven since this can lead to duplicate file errors
+    return false
+  } else if (entry.name.startsWith("google/protobuf")) {
+    // strip out all the google/protobuf/*.proto files since this can lead to duplicate file errors
+    return false
+  } else if (entry.name.startsWith("META-INF/com.google.dagger_dagger.version")) {
+    // strip out META-INF/com.google.dagger_dagger.version since this can lead to duplicate file
+    // errors
     return false
   }
   return true

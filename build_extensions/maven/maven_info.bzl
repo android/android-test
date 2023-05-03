@@ -89,15 +89,23 @@ def _collect_maven_info_impl(target, ctx):
                     fail("%s: Each target must belong to one and only one maven artifact: Does target have multiple '%s' tags?" % (target.label, _MAVEN_COORDINATES_PREFIX))
                 artifact = tag[len(_MAVEN_COORDINATES_PREFIX):]
 
-    included_runtime_jars = target[JavaInfo].runtime_output_jars
+    included_runtime_jars = []
+    included_runtime_jars += target[JavaInfo].runtime_output_jars
     included_src_jars = target[JavaInfo].source_jars
     transitive_included_runtime_jars = []
     transitive_included_src_jars = []
     maven_direct_deps = []
     transitive_maven_direct_deps = []
 
+    # add implicit runtime dependencies needed by certain rules
     if is_kotlin(target):
         maven_direct_deps.append("org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION)
+
+    grpc_protobuf_jar = _findGrpcJavaProtoJar(target)
+    if grpc_protobuf_jar:
+        # java_grpc_library rule's generated code implicitly depends on this artifact
+        # which needs to be shaded
+        included_runtime_jars.append(grpc_protobuf_jar)
 
     # this is a bit of a hack, but java_lite_proto_library have empty runtime_output_jars!
     # So add in all transitive_runtime_jars instead, because we know for protos all dependencies must
@@ -136,6 +144,12 @@ def _isJavaProtoTarget(all_deps):
         if ProtoInfo in dep:
             return True
     return False
+
+def _findGrpcJavaProtoJar(target):
+    for jar in target[JavaInfo].transitive_runtime_jars.to_list():
+        if "io_grpc_grpc_java/protobuf-lite" in jar.path:
+            return jar
+    return None
 
 collect_maven_info = aspect(
     attr_aspects = [

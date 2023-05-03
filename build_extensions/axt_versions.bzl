@@ -7,7 +7,7 @@ RULES_VERSION = "1.6.0-alpha01"  # stable 1.5.0
 MONITOR_VERSION = "1.7.0-alpha01"  # stable 1.6.0
 ESPRESSO_VERSION = "3.6.0-alpha01"  # stable 3.5.0
 CORE_VERSION = "1.6.0-alpha01"  # stable 1.5.0
-ESPRESSO_DEVICE_VERSION = "1.0.0-alpha04"
+ESPRESSO_DEVICE_VERSION = "1.0.0-alpha05"
 ANDROIDX_JUNIT_VERSION = "1.2.0-alpha01"  # stable 1.1.4
 ANDROIDX_TRUTH_VERSION = "1.6.0-alpha01"  # stable 1.5.0
 ANNOTATION_VERSION = "1.1.0-alpha01"  # stable 1.0.1
@@ -45,9 +45,9 @@ JANK_VERSION = "1.0.1"
 # this should match the kotlin toolchain version eg bazel_rules/rules_kotlin/toolchains/kotlin_jvm/kt_jvm_toolchains.bzl KT_VERSION
 # and WORKSPACE:KOTLIN_VERSION
 KOTLIN_VERSION = "1.7.22"
+GRPC_VERSION = "1.54.1"  # needs to match WORKSPACE:GRPC_VERSION
 
-# accessibilitytestframework
-ATF_VERSION = "3.1.2"
+ATF_VERSION = "3.1.2"  # accessibilitytestframework
 JUNIT_VERSION = "4.13.2"
 HAMCREST_VERSION = "1.3"
 TRUTH_VERSION = "1.1.3"

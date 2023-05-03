@@ -18,7 +18,7 @@ kt_android_library(
     srcs = glob(["*.kt"]),
     deps = [
         "//annotation/java/androidx/test/annotation",
-        "//espresso/device/java/androidx/test/espresso/device:device_api",
+        "//espresso/device/java/androidx/test/espresso/device",
         "//espresso/device/java/androidx/test/espresso/device/action",
         "//espresso/device/java/androidx/test/espresso/device/controller",
         "//espresso/device/java/androidx/test/espresso/device/util",

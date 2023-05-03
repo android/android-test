@@ -7,8 +7,9 @@ RULES_JVM_EXTERNAL_TAG = "4.5"
 
 RULES_JVM_EXTERNAL_SHA = "b17d7388feb9bfa7f2fa09031b32707df529f26c91ab9e5d909eb1676badd9a6"
 
-# This needs to be consistent with the KOTLIN_VERSION specified in build_extensions/axt_versions.bzl.
+# These need needs to be consistent with their counterparts in build_extensions/axt_versions.bzl.
 KOTLIN_VERSION = "1.7.22"
+GRPC_VERSION = "1.54.1"
 
 # Get from https://github.com/JetBrains/kotlin/releases/
 KOTLINC_RELEASE_SHA = "9db4b467743c1aea8a21c08e1c286bc2aeb93f14c7ba2037dbd8f48adc357d83"
@@ -61,6 +62,18 @@ load(
     "RUNNER_VERSION",
     "UIAUTOMATOR_VERSION",
 )
+
+# gRPC
+http_archive(
+    name = "io_grpc_grpc_java",
+    sha256 = "98c32df8a878cbca5a6799922d28e9df93a4d5607316e0e3f8269a5886d9e429",
+    strip_prefix = "grpc-java-%s" % GRPC_VERSION,
+    url = "https://github.com/grpc/grpc-java/archive/v%s.tar.gz" % GRPC_VERSION,
+)
+
+load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
+
+grpc_java_repositories()
 
 maven_install(
     name = "maven",
@@ -151,6 +164,7 @@ maven_install(
         "org.objenesis:objenesis:2.6",
         "org.pantsbuild:jarjar:1.7.2",
         "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
+        "com.google.code.findbugs:jsr305:3.0.2",
         maven.artifact(
             artifact = "robolectric",
             exclusions = [
@@ -165,6 +179,8 @@ maven_install(
             version = "4.9",
         ),
     ],
+    fetch_sources = True,
+    generate_compat_repositories = True,
     repositories = [
         "https://maven.google.com",
         "https://repo1.maven.org/maven2",
@@ -258,3 +274,7 @@ http_archive(
         "https://github.com/bazelbuild/rules_license/releases/download/0.0.4/rules_license-0.0.4.tar.gz",
     ],
 )
+
+load("@maven//:compat.bzl", "compat_repositories")
+
+compat_repositories()
