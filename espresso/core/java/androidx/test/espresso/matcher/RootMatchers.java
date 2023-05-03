@@ -235,7 +235,11 @@ public final class RootMatchers {
 
     @Override
     public void describeTo(Description description) {
-      description.appendText("with decor view of type PopupWindow$PopupViewContainer");
+      String popupClassName = "PopupWindow$PopupViewContainer";
+      if (Build.VERSION.SDK_INT >= 23) {
+        popupClassName = "PopupWindow$PopupDecorView";
+      }
+      description.appendText("with decor view of type " + popupClassName);
     }
   }
 
