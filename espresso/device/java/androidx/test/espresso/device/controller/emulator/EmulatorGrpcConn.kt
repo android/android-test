@@ -87,7 +87,7 @@ interface EmulatorGrpcConn {
   fun <T : AbstractFutureStub<T>?> emulatorFutureStub(builder: (Channel) -> T): T
 
   companion object {
-    val EMULATOR_ADDRESS = "localhost"
+    val EMULATOR_ADDRESS = "10.0.2.2"
     val ARGS_EMULATOR_ADDRESS = "grpc.host"
     val ARGS_GRPC_PORT = "grpc.port"
     val ARGS_GRPC_TOKEN = "grpc.token"

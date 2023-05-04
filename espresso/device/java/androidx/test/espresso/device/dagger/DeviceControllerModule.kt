@@ -70,16 +70,18 @@ internal class DeviceControllerModule {
 
   private fun getEmulatorConnection(): EmulatorGrpcConn {
     val args = InstrumentationRegistry.getArguments()
+    var defaultEmulatorAddress = EmulatorGrpcConn.EMULATOR_ADDRESS
     var grpcPortString = args.getString(EmulatorGrpcConn.ARGS_GRPC_PORT)
-    var grpcPort =
-      if (grpcPortString != null && grpcPortString.toInt() > 0) {
-        grpcPortString.toInt()
-      } else {
-        getEmulatorGRPCPort()
-      }
+    var grpcPort: Int
+    if (grpcPortString != null && grpcPortString.toInt() > 0) {
+      grpcPort = grpcPortString.toInt()
+    } else {
+      grpcPort = getEmulatorGRPCPortFromSystem()
+      defaultEmulatorAddress = "localhost"
+    }
     var emulatorAddressArg = args.getString(EmulatorGrpcConn.ARGS_EMULATOR_ADDRESS)
     var emulatorAddress =
-      if (emulatorAddressArg != null) emulatorAddressArg else EmulatorGrpcConn.EMULATOR_ADDRESS
+      if (emulatorAddressArg != null) emulatorAddressArg else defaultEmulatorAddress
 
     return EmulatorGrpcConnImpl(
       emulatorAddress,
@@ -91,8 +93,12 @@ internal class DeviceControllerModule {
     )
   }
 
-  /* Gets the emulator gRPC port for emulators that do not specify a port through instrumentation args */
-  private fun getEmulatorGRPCPort(): Int {
+  /**
+   * Gets the default emulator gRPC port set directly in system properties, for emulators whose port
+   * is configured dynamically at launch. If set, this port always implies a default emulator
+   * address of 'localhost'
+   */
+  private fun getEmulatorGRPCPortFromSystem(): Int {
     val gRpcPort =
       if (getDeviceApiLevel() >= 17) {
         Settings.Global.getString(
