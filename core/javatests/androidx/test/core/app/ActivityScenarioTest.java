@@ -456,6 +456,20 @@ public final class ActivityScenarioTest {
   }
 
   @Test
+  public void onActivity_throwsException_exceptionIsReraisedOnTestThread() {
+    try (ActivityScenario<RecreationRecordingActivity> scenario =
+        ActivityScenario.launch(RecreationRecordingActivity.class)) {
+      assertThrows(
+          Throwable.class,
+          () ->
+              scenario.onActivity(
+                  activity -> {
+                    throw new RuntimeException("Foo");
+                  }));
+    }
+  }
+
+  @Test
   public void launch_callbackSequence()
       throws ExecutionException, InterruptedException, TimeoutException {
     try (ActivityScenario<RecordingActivity> activityScenario =

@@ -51,6 +51,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -776,23 +777,33 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * @throws IllegalStateException if Activity is destroyed, finished or finishing
    */
   public ActivityScenario<A> onActivity(final ActivityAction<A> action) {
+    boolean isMainLooper = Looper.myLooper() == Looper.getMainLooper();
+    AtomicReference<Throwable> exception = new AtomicReference<>();
     // A runnable to perform given ActivityAction. This runnable should be invoked from the
     // application main thread.
     Runnable runnableAction =
         () -> {
-          checkMainThread();
-
-          lock.lock();
           try {
-            checkNotNull(
-                currentActivity, "Cannot run onActivity since Activity has been destroyed already");
-            action.perform(currentActivity);
-          } finally {
-            lock.unlock();
+            checkMainThread();
+
+            lock.lock();
+            try {
+              checkNotNull(
+                  currentActivity,
+                  "Cannot run onActivity since Activity has been destroyed already");
+              action.perform(currentActivity);
+            } finally {
+              lock.unlock();
+            }
+          } catch (Throwable e) {
+            exception.set(e);
+            if (isMainLooper) {
+              throw e;
+            }
           }
         };
 
-    if (Looper.myLooper() == Looper.getMainLooper()) {
+    if (isMainLooper) {
       // execute any queued work on main looper, to make behavior consistent between running
       // on Robolectric with paused main looper and instrumentation
       controlledLooper.drainMainThreadUntilIdle();
@@ -800,6 +811,9 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
     } else {
       getInstrumentation().waitForIdleSync();
       getInstrumentation().runOnMainSync(runnableAction);
+      if (exception.get() != null) {
+        throw new RuntimeException("Exception while running onActivity.", exception.get());
+      }
     }
 
     return this;
