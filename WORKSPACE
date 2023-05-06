@@ -144,7 +144,7 @@ maven_install(
         "com.googlecode.jarjar:jarjar:1.3",
         "com.linkedin.dexmaker:dexmaker-mockito:jar:2.28.1",
         "com.linkedin.dexmaker:dexmaker:2.28.1",
-        "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0",
+        "org.mockito.kotlin:mockito-kotlin:4.1.0",
         "com.squareup:javapoet:1.9.0",
         "io.grpc:grpc-okhttp:1.54.1",
         "io.grpc:grpc-stub:1.54.1",
