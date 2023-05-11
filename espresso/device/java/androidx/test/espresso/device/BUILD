@@ -55,6 +55,7 @@ android_library(
         ":device",
         "//espresso/device/java/androidx/test/espresso/device/action",
         "//espresso/device/java/androidx/test/espresso/device/filter",
+        "//espresso/device/java/androidx/test/espresso/device/internal/deps/emulator",
         "//espresso/device/java/androidx/test/espresso/device/rules",
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
     ],

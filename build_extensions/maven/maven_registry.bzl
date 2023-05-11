@@ -45,9 +45,6 @@ _TARGET_TO_MAVEN_ARTIFACT = {
 
     # services/events/java gets built into both androidx.test.runner as well as orchestrator v2
     "//services/events/java/": "androidx.test:runner:%s" % RUNNER_VERSION,
-
-    # emulator controller proto for bazel gets embedded inside espresso-device
-    "//opensource/emulator/proto": "androidx.test.espresso:espresso-device:%s" % ESPRESSO_DEVICE_VERSION,
 }
 
 _SHADED_TARGETS = [
@@ -56,6 +53,9 @@ _SHADED_TARGETS = [
     "@com_google_protobuf//:any_proto",
     "//opensource/dagger:dagger",
     "@com_google_protobuf_protobuf_javalite//:com_google_protobuf_protobuf_javalite",
+    # emulator controller proto for bazel gets embedded inside espresso-device
+    "//opensource/emulator/proto:emulator_controller_java_grpc",
+    "//opensource/emulator/proto:emulator_controller_java_proto_lite",
 ]
 
 # maven apk definitions

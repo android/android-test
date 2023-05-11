@@ -91,7 +91,9 @@ def _collect_maven_info_impl(target, ctx):
 
     included_runtime_jars = []
     included_runtime_jars += target[JavaInfo].runtime_output_jars
-    included_src_jars = target[JavaInfo].source_jars
+
+    # shaded source won't be correct, so just exclude it
+    included_src_jars = [] if is_shaded else target[JavaInfo].source_jars
     transitive_included_runtime_jars = []
     transitive_included_src_jars = []
     maven_direct_deps = []
