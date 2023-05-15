@@ -1,7 +1,6 @@
 # androidx.test.core Kotlin extensions
 
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions:api_checks.bzl", "api_checks")
@@ -14,7 +13,7 @@ package(
     default_visibility = ["//:__subpackages__"],
 )
 
-kt_android_library(
+android_library(
     name = "core",
     testonly = 1,
     srcs = glob(["**/*.kt"]),

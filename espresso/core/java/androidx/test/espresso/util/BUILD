@@ -1,7 +1,7 @@
 # Description:
 #  Utility classes
 
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 licenses(["notice"])
 
@@ -10,7 +10,7 @@ package(
     default_visibility = ["//visibility:public"],
 )
 
-kt_android_library(
+android_library(
     name = "util",
     srcs = glob([
         "*.java",

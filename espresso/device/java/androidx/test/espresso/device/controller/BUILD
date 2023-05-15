@@ -1,7 +1,7 @@
 # Description:
 #  Device controller
 
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 licenses(["notice"])
 
@@ -12,7 +12,7 @@ package(
     ],
 )
 
-kt_android_library(
+android_library(
     name = "controller",
     srcs = [
         "DeviceControllerOperationException.kt",
@@ -25,7 +25,7 @@ kt_android_library(
     ],
 )
 
-kt_android_library(
+android_library(
     name = "controller_impl",
     testonly = 1,
     srcs = [

@@ -1,7 +1,7 @@
 # Description:
 #   Rules that can be used to interact with the device.
 
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 licenses(["notice"])
 
@@ -12,7 +12,7 @@ package(
     ],
 )
 
-kt_android_library(
+android_library(
     name = "rules",
     testonly = 1,
     srcs = glob(["*.kt"]),

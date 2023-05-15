@@ -1,7 +1,7 @@
 # Description:
 #  Dagger components for device.
 
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 licenses(["notice"])
 
@@ -10,7 +10,7 @@ package(
     default_visibility = ["//espresso/device/java/androidx/test/espresso/device:__subpackages__"],
 )
 
-kt_android_library(
+android_library(
     name = "dagger",
     testonly = 1,
     srcs = glob(["*.kt"]),

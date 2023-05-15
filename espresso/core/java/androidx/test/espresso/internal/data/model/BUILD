@@ -1,5 +1,6 @@
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
+
 # This package loads and stores test output artifact metadata for easier debugging of Espresso tests
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 
 licenses(["notice"])
 
@@ -8,7 +9,7 @@ package(
     default_visibility = ["//espresso/core/java/androidx/test/espresso:espresso_pkg"],
 )
 
-kt_android_library(
+android_library(
     name = "model",
     srcs = glob([
         "*.kt",

@@ -1,7 +1,7 @@
 # Description:
 #  Provides context for device operations.
 
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 licenses(["notice"])
 
@@ -12,7 +12,7 @@ package(
     ],
 )
 
-kt_android_library(
+android_library(
     name = "context",
     srcs = ["ActionContext.kt"],
     deps = [
@@ -20,7 +20,7 @@ kt_android_library(
     ],
 )
 
-kt_android_library(
+android_library(
     name = "context_impl",
     srcs = ["InstrumentationTestActionContext.kt"],
     deps = [

@@ -1,7 +1,6 @@
 # Description:
 #   EspressoDevice - the new Synchronized Device State Change API for Android.
 
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions:dackka_test.bzl", "dackka_test")
@@ -25,7 +24,7 @@ package_group(
     packages = ["//espresso/device/..."],
 )
 
-kt_android_library(
+android_library(
     name = "device",
     testonly = 1,
     srcs = glob(["*.kt"]),
