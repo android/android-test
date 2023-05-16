@@ -18,16 +18,15 @@ package androidx.test.espresso.device.action
 
 import android.app.Activity
 import android.content.ComponentCallbacks
-import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.ActivityInfo.CONFIG_ORIENTATION
 import android.content.res.Configuration
-import android.database.ContentObserver
 import android.os.Handler
 import android.os.HandlerThread
 import android.provider.Settings.System
 import android.util.Log
 import androidx.test.espresso.device.context.ActionContext
+import androidx.test.espresso.device.util.SettingsObserver
 import androidx.test.espresso.device.util.executeShellCommand
 import androidx.test.espresso.device.util.getDeviceApiLevel
 import androidx.test.espresso.device.util.getResumedActivityOrNull
@@ -124,6 +123,7 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
               latch.countDown()
             }
           }
+
           override fun onLowMemory() {}
         }
       )
@@ -184,27 +184,6 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
     settingsLatch.await()
     settingsObserver.stopObserver()
     thread.quitSafely()
-  }
-
-  private class SettingsObserver(
-    handler: Handler,
-    val context: Context,
-    val latch: CountDownLatch,
-    val settingToObserve: String
-  ) : ContentObserver(handler) {
-    fun observe() {
-      val resolver: ContentResolver = context.getContentResolver()
-      resolver.registerContentObserver(System.getUriFor(settingToObserve), false, this)
-    }
-
-    fun stopObserver() {
-      val resolver: ContentResolver = context.getContentResolver()
-      resolver.unregisterContentObserver(this)
-    }
-
-    override fun onChange(selfChange: Boolean) {
-      latch.countDown()
-    }
   }
 
   companion object {
