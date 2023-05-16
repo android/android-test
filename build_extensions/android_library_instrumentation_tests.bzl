@@ -1,6 +1,6 @@
 """A rule wrapper for an instrumentation test for an android library."""
 
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 load(
     "//build_extensions:generate_instrumentation_tests.bzl",
     "generate_instrumentation_tests",
@@ -54,7 +54,7 @@ def android_library_instrumentation_tests(
     library_name = "%s_library" % name
     test_java_package_name = test_java_package if test_java_package else infer_java_package_name()
 
-    kt_android_library(
+    android_library(
         name = library_name,
         srcs = srcs,
         testonly = 1,
