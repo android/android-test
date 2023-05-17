@@ -1,5 +1,5 @@
 # This package loads and stores test output artifact metadata for easier debugging of Espresso tests
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("//build_extensions:kt_android_library.bzl", "kt_android_library")
 
 licenses(["notice"])
 

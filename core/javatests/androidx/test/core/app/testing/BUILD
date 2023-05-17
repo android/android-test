@@ -1,7 +1,7 @@
 # Description: Stub classes for testing androidx.test.core.app
 
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("//build_extensions:kt_android_library.bzl", "kt_android_library")
 
 package(
     default_applicable_licenses = ["//:license"],

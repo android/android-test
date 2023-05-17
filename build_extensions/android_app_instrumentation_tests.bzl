@@ -1,6 +1,6 @@
 """A rule wrapper for an instrumentation test for an android binary."""
 
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("//build_extensions:kt_android_library.bzl", "kt_android_library")
 load(
     "//build_extensions:generate_instrumentation_tests.bzl",
     "generate_instrumentation_tests",
