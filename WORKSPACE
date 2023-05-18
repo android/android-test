@@ -9,6 +9,7 @@ RULES_JVM_EXTERNAL_SHA = "b17d7388feb9bfa7f2fa09031b32707df529f26c91ab9e5d909eb1
 
 # These need needs to be consistent with their counterparts in build_extensions/axt_versions.bzl.
 KOTLIN_VERSION = "1.7.22"
+KOTLINX_COROUTINES_VERSION = "1.6.4" # -> 1.7.1 when KOTLIN_VERSION -> 1.8.20
 GRPC_VERSION = "1.54.1"
 
 # Get from https://github.com/JetBrains/kotlin/releases/
@@ -164,6 +165,7 @@ maven_install(
         "org.objenesis:objenesis:2.6",
         "org.pantsbuild:jarjar:1.7.2",
         "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
+        "org.jetbrains.kotlinx:kotlinx-coroutines-core:%s" % KOTLINX_COROUTINES_VERSION,
         "com.google.code.findbugs:jsr305:3.0.2",
         maven.artifact(
             artifact = "robolectric",
