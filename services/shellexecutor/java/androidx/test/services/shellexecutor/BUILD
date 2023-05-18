@@ -1,10 +1,22 @@
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 
 # A shell command execution server to allow shell commands to be run at elevated permissions
 
 package(default_applicable_licenses = ["//services:license"])
 
 licenses(["notice"])
+
+kt_android_library(
+    name = "coroutine_file_observer",
+    srcs = [
+        "CoroutineFileObserver.kt",
+    ],
+    visibility = ["//visibility:private"],
+    deps = [
+        "@maven//:org_jetbrains_kotlinx_kotlinx_coroutines_core",
+    ],
+)
 
 android_library(
     name = "exec_server",
