@@ -72,6 +72,7 @@ internal class RequiresDeviceModeFilter() : AbstractFilter() {
         supportedModes.add(DeviceMode.TABLETOP)
         supportedModes.add(DeviceMode.BOOK)
         supportedModes.add(DeviceMode.FLAT)
+        supportedModes.add(DeviceMode.CLOSED)
       }
     } else { // API 32+
       // Example output on a foldable device:
@@ -87,6 +88,9 @@ internal class RequiresDeviceModeFilter() : AbstractFilter() {
       }
       if (modes.contains("OPENED")) {
         supportedModes.add(DeviceMode.FLAT)
+      }
+      if (modes.contains("CLOSED")) {
+        supportedModes.add(DeviceMode.CLOSED)
       }
     }
     return supportedModes
