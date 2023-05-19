@@ -1,4 +1,4 @@
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")
+load("//build_extensions:kt_android_library.bzl", "kt_android_library")
 
 # A shell command execution server to allow shell commands to be run at elevated permissions
 
@@ -6,7 +6,7 @@ package(default_applicable_licenses = ["//services:license"])
 
 licenses(["notice"])
 
-android_library(
+kt_android_library(
     name = "coroutine_file_observer",
     srcs = [
         "CoroutineFileObserver.kt",
@@ -17,7 +17,18 @@ android_library(
     ],
 )
 
-android_library(
+kt_android_library(
+    name = "file_observer_protocol",
+    srcs = [
+        "FileObserverProtocol.kt",
+        "Messages.kt",
+    ],
+    visibility = [
+        "//services/shellexecutor/javatests/androidx/test/services/shellexecutor:__pkg__",
+    ],
+)
+
+kt_android_library(
     name = "exec_server",
     srcs = [
         "BlockingPublish.java",
@@ -37,7 +48,7 @@ android_library(
     ],
 )
 
-android_library(
+kt_android_library(
     name = "exec_client",
     srcs = [
         "BlockingFind.java",
