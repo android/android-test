@@ -27,7 +27,6 @@ axt_android_local_test(
         "@maven//:androidx_annotation_annotation",
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_mockito_mockito_core",
     ],

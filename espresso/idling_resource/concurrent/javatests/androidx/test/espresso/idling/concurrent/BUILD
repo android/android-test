@@ -18,7 +18,6 @@ axt_android_local_test(
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//ext/junit",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
         "@maven//:org_mockito_mockito_core",
     ],
 )
@@ -34,7 +33,6 @@ axt_android_local_test(
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
         "//ext/junit",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
         "@maven//:org_mockito_mockito_core",
     ],
 )

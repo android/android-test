@@ -234,7 +234,6 @@ axt_android_local_test(
         "//runner/android_junit_runner",
         "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )
 

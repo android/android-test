@@ -34,6 +34,5 @@ axt_android_local_test(
         "//espresso/core/java/androidx/test/espresso/util",
         "//runner/android_junit_runner",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )

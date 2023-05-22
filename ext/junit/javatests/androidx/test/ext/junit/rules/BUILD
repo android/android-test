@@ -17,7 +17,6 @@ axt_android_local_test(
         "//runner/monitor",
         "@maven//:androidx_lifecycle_lifecycle_common",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )
 
@@ -59,7 +58,6 @@ axt_android_local_test(
         "//core",
         "//ext/junit",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )
 

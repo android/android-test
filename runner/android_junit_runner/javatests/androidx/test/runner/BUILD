@@ -35,7 +35,6 @@ axt_android_local_test(
     deps = [
         "//runner/android_junit_runner",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )
 
@@ -50,6 +49,5 @@ axt_android_local_test(
         "//runner/android_junit_runner",
         "@maven//:androidx_tracing_tracing",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )

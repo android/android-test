@@ -24,7 +24,6 @@ axt_android_local_test(
         "@maven//:androidx_lifecycle_lifecycle_common",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )
 

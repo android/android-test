@@ -18,6 +18,5 @@ axt_android_local_test(
     deps = [
         "//runner/monitor",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )

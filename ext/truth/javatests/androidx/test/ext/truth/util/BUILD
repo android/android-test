@@ -17,7 +17,6 @@ axt_android_local_test(
         "//runner/rules",
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )
 

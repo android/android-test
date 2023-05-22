@@ -54,7 +54,6 @@ axt_android_local_test(
         "//ext/junit",
         "//runner/android_junit_runner",
         "//services/events/java/androidx/test/services/events",
-        "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_mockito_mockito_core",
@@ -69,7 +68,6 @@ axt_android_local_test(
     ],
     deps = [
         "//runner/android_junit_runner",
-        "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_mockito_mockito_core",
@@ -86,7 +84,6 @@ axt_android_local_test(
         "//runner/android_junit_runner",
         "//services/events/java/androidx/test/services/events",
         "@maven//:androidx_annotation_annotation",
-        "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_mockito_mockito_core",
@@ -115,6 +112,5 @@ axt_android_local_test(
         "//ext/junit",
         "//runner/android_junit_runner",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )

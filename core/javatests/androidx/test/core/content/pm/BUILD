@@ -18,7 +18,6 @@ axt_android_local_test(
         "//core",
         "//ext/junit",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )
 
@@ -42,7 +41,6 @@ axt_android_local_test(
         "//core",
         "//ext/junit",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )
 
