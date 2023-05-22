@@ -8,12 +8,12 @@ RULES_JVM_EXTERNAL_TAG = "4.5"
 RULES_JVM_EXTERNAL_SHA = "b17d7388feb9bfa7f2fa09031b32707df529f26c91ab9e5d909eb1676badd9a6"
 
 # These need needs to be consistent with their counterparts in build_extensions/axt_versions.bzl.
-KOTLIN_VERSION = "1.7.22"
-KOTLINX_COROUTINES_VERSION = "1.6.4" # -> 1.7.1 when KOTLIN_VERSION -> 1.8.20
+KOTLIN_VERSION = "1.8.20"
+KOTLINX_COROUTINES_VERSION = "1.7.1" 
 GRPC_VERSION = "1.54.1"
 
 # Get from https://github.com/JetBrains/kotlin/releases/
-KOTLINC_RELEASE_SHA = "9db4b467743c1aea8a21c08e1c286bc2aeb93f14c7ba2037dbd8f48adc357d83"
+KOTLINC_RELEASE_SHA = "10df74c3c6e2eafd4c7a5572352d37cbe41774996e42de627023cb4c82b50ae4"
 
 http_archive(
     name = "rules_jvm_external",
@@ -220,9 +220,8 @@ robolectric_repositories()
 
 # Kotlin toolchains
 
-rules_kotlin_version = "1.7.1"
-
-rules_kotlin_sha = "fd92a98bd8a8f0e1cdcb490b93f5acef1f1727ed992571232d33de42395ca9b3"
+rules_kotlin_version = "1.8-RC-12"
+rules_kotlin_sha = "8e5c8ab087e0fa3fbb58e1f6b99d8fe40f75bac44994c3d208eba723284465d6"
 
 http_archive(
     name = "io_bazel_rules_kotlin",
