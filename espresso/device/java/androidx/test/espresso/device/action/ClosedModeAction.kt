@@ -16,8 +16,11 @@
 
 package androidx.test.espresso.device.action
 
+import android.util.Log
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceMode
+import androidx.test.espresso.device.util.executeShellCommand
+import androidx.test.espresso.device.util.getMapOfDeviceStateNamesToIdentifiers
 import androidx.test.platform.device.DeviceController
 import java.util.concurrent.Executor
 
@@ -25,7 +28,18 @@ import java.util.concurrent.Executor
 internal class ClosedModeAction(private val mainExecutor: Executor) :
   BaseSingleFoldDeviceAction(DeviceMode.CLOSED, null, mainExecutor) {
   override fun perform(context: ActionContext, deviceController: DeviceController) {
-    // TODO(b/203801760): Check current device mode and return if already in closed mode.
+    val currentDeviceStateIdentifier = executeShellCommand("cmd device_state print-state").trim()
+    if (currentDeviceStateIdentifier == getMapOfDeviceStateNamesToIdentifiers().get("CLOSED")) {
+      if (Log.isLoggable(TAG, Log.DEBUG)) {
+        Log.d(TAG, "Device is already in closed mode.")
+      }
+      return
+    }
+
     super.perform(context, deviceController)
+  }
+
+  companion object {
+    private val TAG = ClosedModeAction::class.java.simpleName
   }
 }
