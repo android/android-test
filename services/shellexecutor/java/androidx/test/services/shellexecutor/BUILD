@@ -55,6 +55,7 @@ kt_android_library(
         "ClientNotConnected.java",
         "ShellCommand.java",
         "ShellCommandClient.java",
+        "ShellCommandFileObserverClient.kt",
         "ShellExecSharedConstants.java",
         "ShellExecutor.java",
         "ShellExecutorFactory.java",
@@ -63,9 +64,12 @@ kt_android_library(
     idl_srcs = ["Command.aidl"],
     visibility = [":export"],
     deps = [
+        ":coroutine_file_observer",
+        ":file_observer_protocol",
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
         "//services/speakeasy/java/androidx/test/services/speakeasy/client",
         "//services/speakeasy/java/androidx/test/services/speakeasy/client:tool_connection",
+        "@maven//:org_jetbrains_kotlinx_kotlinx_coroutines_core",
     ],
 )
 
