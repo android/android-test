@@ -5,9 +5,12 @@ load("//build_extensions/maven:maven_info.bzl", "MavenFilesInfo", "MavenInfo")
 
 def _axt_maven_apk_impl(ctx):
     # produce src jar
+    # hack - exclude source jars from external maven artifacts
+    # TODO(b/283992063): use an aspect to gather this info
+    axt_jars = [jar for jar in ctx.attr.included_dep[JavaInfo].transitive_source_jars.to_list() if "maven.org" not in jar.path]
     combine_jars(
         ctx = ctx,
-        input_jars_deps = ctx.attr.included_dep[JavaInfo].transitive_source_jars,
+        input_jars_deps = axt_jars,
         output = ctx.outputs.src_jar,
     )
 
