@@ -114,7 +114,7 @@ object FileObserverProtocol {
  * Writes an exception stack trace to a ByteArray as UTF-8, to make them easy to pass through
  * Messages.CommandResult.
  */
-internal fun Exception.toByteArray(): ByteArray {
+public fun Exception.toByteArray(): ByteArray {
   val bos = ByteArrayOutputStream()
   val pw = PrintWriter(OutputStreamWriter(bos, Charsets.UTF_8))
   printStackTrace(pw)

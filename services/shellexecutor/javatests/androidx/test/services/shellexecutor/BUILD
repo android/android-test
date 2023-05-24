@@ -82,6 +82,20 @@ axt_android_library_test(
 )
 
 axt_android_library_test(
+    name = "ShellCommandFileObserverExecutorServerTest",
+    srcs = [
+        "ShellCommandFileObserverExecutorServerTest.kt",
+    ],
+    deps = [
+        "//runner/monitor",
+        "//services/shellexecutor:exec_server",
+        "//services/shellexecutor/java/androidx/test/services/shellexecutor:file_observer_protocol",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+    ],
+)
+
+axt_android_library_test(
     name = "ShellExecutorTest",
     srcs = [
         "ShellExecutorTest.java",
