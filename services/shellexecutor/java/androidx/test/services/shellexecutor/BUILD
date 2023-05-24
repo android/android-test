@@ -63,6 +63,7 @@ kt_android_library(
         "ShellExecSharedConstants.java",
         "ShellExecutor.java",
         "ShellExecutorFactory.java",
+        "ShellExecutorFileObserverImpl.kt",
         "ShellExecutorImpl.java",
     ],
     idl_srcs = ["Command.aidl"],

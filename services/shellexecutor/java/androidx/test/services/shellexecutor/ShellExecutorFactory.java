@@ -29,8 +29,13 @@ public final class ShellExecutorFactory {
     this.binderKey = binderKey;
   }
 
-  @SuppressWarnings("deprecation") // Temporary until we make the constructor package-private
   public ShellExecutor create() {
-    return new ShellExecutorImpl(context, binderKey);
+    // Binder keys for SpeakEasy are a string of hex digits. Binder keys for the FileObserver
+    // protocol are the absolute path of the directory that the server is watching.
+    if (binderKey.startsWith("/")) {
+      return new ShellExecutorFileObserverImpl(binderKey);
+    } else {
+      return new ShellExecutorImpl(context, binderKey);
+    }
   }
 }
