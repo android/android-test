@@ -24,7 +24,7 @@ kt_android_library(
         "Messages.kt",
     ],
     visibility = [
-        "//services/shellexecutor/javatests/androidx/test/services/shellexecutor:__pkg__",
+        "//services/shellexecutor/javatests/androidx/test/services/shellexecutor:__subpackages__",
     ],
 )
 
@@ -32,6 +32,7 @@ kt_android_library(
     name = "exec_server",
     srcs = [
         "BlockingPublish.java",
+        "FileObserverShellMain.kt",
         "ShellCommand.java",
         "ShellCommandExecutor.java",
         "ShellCommandExecutorServer.java",
