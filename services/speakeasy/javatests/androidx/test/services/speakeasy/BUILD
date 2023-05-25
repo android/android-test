@@ -11,6 +11,5 @@ axt_android_local_test(
     deps = [
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )

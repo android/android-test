@@ -14,7 +14,6 @@ axt_android_local_test(
         "//runner/android_junit_runner",
         "//services/shellexecutor:exec_client",
         "//services/shellexecutor:exec_server",
-        "@maven//:junit_junit",
         "@maven//:org_mockito_mockito_core",
     ],
 )

@@ -28,7 +28,6 @@ axt_android_local_test(
         "//ext/junit",
         "//services/events/java/androidx/test/services/events",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )
 
@@ -42,7 +41,6 @@ axt_android_local_test(
         "//ext/junit",
         "//services/events/java/androidx/test/services/events",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )
 
@@ -56,7 +54,6 @@ axt_android_local_test(
         "//ext/junit",
         "//services/events/java/androidx/test/services/events",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )
 
@@ -70,7 +67,6 @@ axt_android_local_test(
         "//ext/junit",
         "//services/events/java/androidx/test/services/events",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )
 
@@ -84,7 +80,6 @@ axt_android_local_test(
         "//ext/junit",
         "//services/events/java/androidx/test/services/events",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )
 
@@ -98,6 +93,5 @@ axt_android_local_test(
         "//ext/junit",
         "//services/events/java/androidx/test/services/events",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )
