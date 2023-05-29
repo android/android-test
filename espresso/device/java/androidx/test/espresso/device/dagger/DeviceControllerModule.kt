@@ -61,7 +61,7 @@ internal class DeviceControllerModule {
         val connection = getEmulatorConnection()
         return EmulatorController(connection.emulatorController())
       } else {
-        return PhysicalDeviceController()
+        return PhysicalDeviceController(InstrumentationTestActionContext().applicationContext)
       }
     } else {
       return EspressoDeviceControllerAdpater(platformDeviceController)
