@@ -32,6 +32,8 @@ kt_android_library(
         "PhysicalDeviceController.kt",
     ],
     deps = [
+        "//espresso/device/java/androidx/test/espresso/device/controller",
+        "//espresso/device/java/androidx/test/espresso/device/util",
         "//runner/monitor",
         "@maven//:androidx_annotation_annotation",
     ],
