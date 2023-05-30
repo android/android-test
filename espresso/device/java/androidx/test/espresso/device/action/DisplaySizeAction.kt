@@ -25,6 +25,7 @@ import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.sizeclass.HeightSizeClass
 import androidx.test.espresso.device.sizeclass.WidthSizeClass
+import androidx.test.espresso.device.util.calculateCurrentDisplayWidthAndHeightPx
 import androidx.test.espresso.device.util.executeShellCommand
 import androidx.test.espresso.device.util.getDeviceApiLevel
 import androidx.test.espresso.device.util.getResumedActivityOrNull
@@ -48,7 +49,7 @@ internal class DisplaySizeAction(
 
     val currentActivity = getResumedActivityOrNull()
     if (currentActivity != null) {
-      val displaySize = calculateCurrentDisplay(currentActivity)
+      val displaySize = calculateCurrentDisplayWidthAndHeightDp(currentActivity)
       val startingWidth = displaySize.first
       val startingHeight = displaySize.second
       if (
@@ -61,23 +62,22 @@ internal class DisplaySizeAction(
 
       val latch: CountDownLatch = CountDownLatch(1)
 
-      val currentActivityView: View = object : View(currentActivity) {
-        override fun onConfigurationChanged(newConfig: Configuration?) {
-          super.onConfigurationChanged(newConfig)
-          val currentDisplaySize = calculateCurrentDisplay(currentActivity)
-          if (
-            WidthSizeClass.compute(currentDisplaySize.first) == widthDisplaySize &&
-              HeightSizeClass.compute(currentDisplaySize.second) == heightDisplaySize
-          ) {
-            latch.countDown()
+      val currentActivityView: View =
+        object : View(currentActivity) {
+          override fun onConfigurationChanged(newConfig: Configuration?) {
+            super.onConfigurationChanged(newConfig)
+            val currentDisplaySize = calculateCurrentDisplayWidthAndHeightDp(currentActivity)
+            if (
+              WidthSizeClass.compute(currentDisplaySize.first) == widthDisplaySize &&
+                HeightSizeClass.compute(currentDisplaySize.second) == heightDisplaySize
+            ) {
+              latch.countDown()
+            }
           }
         }
-      }
       val container: ViewGroup =
-          currentActivity.getWindow().findViewById(android.R.id.content) as ViewGroup
-      currentActivity.runOnUiThread {
-        container.addView(currentActivityView)
-      }
+        currentActivity.getWindow().findViewById(android.R.id.content) as ViewGroup
+      currentActivity.runOnUiThread { container.addView(currentActivityView) }
 
       val widthDp = WidthSizeClass.getWidthDpInSizeClass(widthDisplaySize)
       val heightDp = HeightSizeClass.getHeightDpInSizeClass(heightDisplaySize)
@@ -85,11 +85,9 @@ internal class DisplaySizeAction(
       executeShellCommand("wm size ${widthDp}dpx${heightDp}dp")
 
       latch.await(5, TimeUnit.SECONDS)
-      currentActivity.runOnUiThread {
-        container.removeView(currentActivityView)
-      }
+      currentActivity.runOnUiThread { container.removeView(currentActivityView) }
 
-      val finalSize = calculateCurrentDisplay(currentActivity)
+      val finalSize = calculateCurrentDisplayWidthAndHeightDp(currentActivity)
       if (
         WidthSizeClass.compute(finalSize.first) != widthDisplaySize ||
           HeightSizeClass.compute(finalSize.second) != heightDisplaySize
@@ -108,20 +106,10 @@ internal class DisplaySizeAction(
     }
   }
 
-  private fun calculateCurrentDisplay(activity: Activity): Pair<Int, Int> {
-    // "wm size" will output a string with the format
-    // "Physical size: WxH
-    //  Override size: WxH"
-    val output = executeShellCommand("wm size")
-
-    val subStringToFind = "Override size: "
-    val displaySizes =
-      output.substring(output.indexOf(subStringToFind) + subStringToFind.length).trim().split("x")
-    val widthPx = displaySizes.get(0).toInt()
-    val heightPx = displaySizes.get(1).toInt()
-
-    val widthDp = (widthPx / activity.getResources().displayMetrics.density).roundToInt()
-    val heightDp = (heightPx / activity.getResources().displayMetrics.density).roundToInt()
+  private fun calculateCurrentDisplayWidthAndHeightDp(activity: Activity): Pair<Int, Int> {
+    val displayPx = calculateCurrentDisplayWidthAndHeightPx()
+    val widthDp = (displayPx.first / activity.getResources().displayMetrics.density).roundToInt()
+    val heightDp = (displayPx.second / activity.getResources().displayMetrics.density).roundToInt()
     return Pair(widthDp, heightDp)
   }
 

@@ -19,6 +19,7 @@
 package androidx.test.espresso.device.util
 
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.RestrictTo
 import java.util.regex.Pattern
 
@@ -110,4 +111,36 @@ fun getMapOfDeviceStateNamesToIdentifiers(): MutableMap<String, String> {
     }
   }
   return deviceStateNameToIdentifier
+}
+
+/**
+ * Returns a Pair containing the current width and height of the test device in pixels
+ *
+ * @hide
+ */
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+@RestrictTo(RestrictTo.Scope.LIBRARY)
+fun calculateCurrentDisplayWidthAndHeightPx(): Pair<Int, Int> {
+  // "wm size" will output a string with the format
+  // "Physical size: WxH
+  //  Override size: WxH"
+  val output = executeShellCommand("wm size")
+
+  var subStringToFind = "Override size: "
+  if (output.contains(subStringToFind)) {
+    val displaySizes =
+      output.substring(output.indexOf(subStringToFind) + subStringToFind.length).trim().split("x")
+    val widthPx = displaySizes.get(0).toInt()
+    val heightPx = displaySizes.get(1).toInt()
+    return Pair(widthPx, heightPx)
+  } else {
+    // If the display size has not been overriden, the "wm size" output will only contain physical
+    // size
+    subStringToFind = "Physical size: "
+    val displaySizes =
+      output.substring(output.indexOf(subStringToFind) + subStringToFind.length).trim().split("x")
+    val widthPx = displaySizes.get(0).toInt()
+    val heightPx = displaySizes.get(1).split("\n").get(0).toInt()
+    return Pair(widthPx, heightPx)
+  }
 }

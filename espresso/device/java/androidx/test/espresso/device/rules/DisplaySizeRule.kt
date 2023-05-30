@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
+import androidx.test.espresso.device.util.calculateCurrentDisplayWidthAndHeightPx
 import androidx.test.espresso.device.util.executeShellCommand
 import androidx.test.espresso.device.util.getDeviceApiLevel
 import androidx.test.espresso.device.util.getResumedActivityOrNull
@@ -46,10 +47,10 @@ class DisplaySizeRule : TestRule {
           )
         }
 
-        val startingDisplaySize = calculateCurrentDisplay()
+        val startingDisplaySize = calculateCurrentDisplayWidthAndHeightPx()
         statement.evaluate()
 
-        if (startingDisplaySize != calculateCurrentDisplay()) {
+        if (startingDisplaySize != calculateCurrentDisplayWidthAndHeightPx()) {
           val activity = getResumedActivityOrNull()
           if (activity != null) {
             val latch = CountDownLatch(1)
@@ -59,7 +60,7 @@ class DisplaySizeRule : TestRule {
               object : View(activity) {
                 override fun onConfigurationChanged(newConfig: Configuration?) {
                   super.onConfigurationChanged(newConfig)
-                  if (startingDisplaySize == calculateCurrentDisplay()) {
+                  if (startingDisplaySize == calculateCurrentDisplayWidthAndHeightPx()) {
                     if (Log.isLoggable(TAG, Log.DEBUG)) {
                       Log.d(
                         TAG,
@@ -77,7 +78,7 @@ class DisplaySizeRule : TestRule {
                   if (
                     activity.getLocalClassName() == activity.getLocalClassName() &&
                       stage == Stage.PAUSED &&
-                      startingDisplaySize == calculateCurrentDisplay()
+                      startingDisplaySize == calculateCurrentDisplayWidthAndHeightPx()
                   ) {
                     if (Log.isLoggable(TAG, Log.DEBUG)) {
                       Log.d(TAG, "Activity restarted. Display size restored to starting size.")
@@ -105,31 +106,6 @@ class DisplaySizeRule : TestRule {
           }
         }
       }
-    }
-  }
-
-  private fun calculateCurrentDisplay(): Pair<Int, Int> {
-    // "wm size" will output a string with the format
-    // "Physical size: WxH
-    //  Override size: WxH"
-    val output = executeShellCommand("wm size")
-
-    var subStringToFind = "Override size: "
-    if (output.contains(subStringToFind)) {
-      val displaySizes =
-        output.substring(output.indexOf(subStringToFind) + subStringToFind.length).trim().split("x")
-      val widthPx = displaySizes.get(0).toInt()
-      val heightPx = displaySizes.get(1).toInt()
-      return Pair(widthPx, heightPx)
-    } else {
-      // If the display size has not been overriden, the "wm size" output will only contain physical
-      // size
-      subStringToFind = "Physical size: "
-      val displaySizes =
-        output.substring(output.indexOf(subStringToFind) + subStringToFind.length).trim().split("x")
-      val widthPx = displaySizes.get(0).toInt()
-      val heightPx = displaySizes.get(1).split("\n").get(0).toInt()
-      return Pair(widthPx, heightPx)
     }
   }
 
