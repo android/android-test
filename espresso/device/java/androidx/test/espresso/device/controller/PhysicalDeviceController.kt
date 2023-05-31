@@ -22,8 +22,8 @@ import android.os.HandlerThread
 import android.provider.Settings.System
 import android.view.Surface
 import androidx.annotation.RestrictTo
-import androidx.test.espresso.device.util.SettingsObserver
-import androidx.test.espresso.device.util.executeShellCommand
+import androidx.test.espresso.device.common.SettingsObserver
+import androidx.test.espresso.device.common.executeShellCommand
 import androidx.test.platform.device.DeviceController
 import androidx.test.platform.device.UnsupportedDeviceOperationException
 import java.util.concurrent.CountDownLatch

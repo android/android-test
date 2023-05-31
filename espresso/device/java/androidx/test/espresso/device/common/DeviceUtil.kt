@@ -16,7 +16,7 @@
 
 @file:JvmName("DeviceUtil")
 
-package androidx.test.espresso.device.util
+package androidx.test.espresso.device.common
 
 import android.os.Build
 import androidx.annotation.RequiresApi

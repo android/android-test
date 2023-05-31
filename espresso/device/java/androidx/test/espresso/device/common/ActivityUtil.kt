@@ -16,7 +16,7 @@
 
 @file:JvmName("ActivityUtil")
 
-package androidx.test.espresso.device.util
+package androidx.test.espresso.device.common
 
 import android.app.Activity
 import android.util.Log

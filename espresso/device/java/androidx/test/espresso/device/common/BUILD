@@ -1,5 +1,5 @@
 # Description:
-#  Utility classes
+#  Espresso Device shared utils
 
 load("//build_extensions:kt_android_library.bzl", "kt_android_library")
 
@@ -13,7 +13,7 @@ package(
 )
 
 kt_android_library(
-    name = "util",
+    name = "common",
     testonly = 1,
     srcs = glob([
         "*.kt",

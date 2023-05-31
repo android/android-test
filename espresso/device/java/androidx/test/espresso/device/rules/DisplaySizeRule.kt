@@ -21,11 +21,11 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.test.annotation.ExperimentalTestApi
+import androidx.test.espresso.device.common.calculateCurrentDisplayWidthAndHeightPx
+import androidx.test.espresso.device.common.executeShellCommand
+import androidx.test.espresso.device.common.getDeviceApiLevel
+import androidx.test.espresso.device.common.getResumedActivityOrNull
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
-import androidx.test.espresso.device.util.calculateCurrentDisplayWidthAndHeightPx
-import androidx.test.espresso.device.util.executeShellCommand
-import androidx.test.espresso.device.util.getDeviceApiLevel
-import androidx.test.espresso.device.util.getResumedActivityOrNull
 import androidx.test.platform.device.UnsupportedDeviceOperationException
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry

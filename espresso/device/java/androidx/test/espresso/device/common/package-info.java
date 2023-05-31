@@ -16,7 +16,7 @@
 
 /** @hide */
 @RestrictTo(Scope.LIBRARY)
-package androidx.test.espresso.device.util;
+package androidx.test.espresso.device.common;
 
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;

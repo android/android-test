@@ -17,6 +17,8 @@ package androidx.test.espresso.device.dagger
 
 import android.provider.Settings
 import androidx.annotation.RestrictTo
+import androidx.test.espresso.device.common.getDeviceApiLevel
+import androidx.test.espresso.device.common.isTestDeviceAnEmulator
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.context.InstrumentationTestActionContext
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
@@ -24,8 +26,6 @@ import androidx.test.espresso.device.controller.PhysicalDeviceController
 import androidx.test.espresso.device.controller.emulator.EmulatorController
 import androidx.test.espresso.device.controller.emulator.EmulatorGrpcConn
 import androidx.test.espresso.device.controller.emulator.EmulatorGrpcConnImpl
-import androidx.test.espresso.device.util.getDeviceApiLevel
-import androidx.test.espresso.device.util.isTestDeviceAnEmulator
 import androidx.test.internal.platform.ServiceLoaderWrapper
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.device.DeviceController

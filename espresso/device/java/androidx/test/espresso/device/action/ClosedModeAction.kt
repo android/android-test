@@ -17,10 +17,10 @@
 package androidx.test.espresso.device.action
 
 import android.util.Log
+import androidx.test.espresso.device.common.executeShellCommand
+import androidx.test.espresso.device.common.getMapOfDeviceStateNamesToIdentifiers
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceMode
-import androidx.test.espresso.device.util.executeShellCommand
-import androidx.test.espresso.device.util.getMapOfDeviceStateNamesToIdentifiers
 import androidx.test.platform.device.DeviceController
 import java.util.concurrent.Executor
 

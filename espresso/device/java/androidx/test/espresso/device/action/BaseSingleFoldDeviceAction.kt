@@ -17,11 +17,11 @@
 package androidx.test.espresso.device.action
 
 import android.util.Log
+import androidx.test.espresso.device.common.getResumedActivityOrNull
+import androidx.test.espresso.device.common.isRobolectricTest
 import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.controller.DeviceMode
-import androidx.test.espresso.device.util.getResumedActivityOrNull
-import androidx.test.espresso.device.util.isRobolectricTest
 import androidx.test.platform.device.DeviceController
 import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker

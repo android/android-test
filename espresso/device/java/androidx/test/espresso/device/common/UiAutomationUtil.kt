@@ -16,7 +16,7 @@
 
 @file:JvmName("UiAutomationUtil")
 
-package androidx.test.espresso.device.util
+package androidx.test.espresso.device.common
 
 import android.os.Build
 import android.os.ParcelFileDescriptor.AutoCloseInputStream

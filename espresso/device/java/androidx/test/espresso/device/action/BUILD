@@ -18,10 +18,10 @@ kt_android_library(
     srcs = glob(["*.kt"]),
     deps = [
         "//annotation/java/androidx/test/annotation",
+        "//espresso/device/java/androidx/test/espresso/device/common",
         "//espresso/device/java/androidx/test/espresso/device/context",
         "//espresso/device/java/androidx/test/espresso/device/controller",
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
-        "//espresso/device/java/androidx/test/espresso/device/util",
         "//runner/monitor",
         "@maven//:androidx_window_window",
         "@maven//:androidx_window_window_java",

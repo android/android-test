@@ -17,8 +17,8 @@ package androidx.test.espresso.device.filter
 
 import android.os.Build
 import android.util.Log
+import androidx.test.espresso.device.common.executeShellCommand
 import androidx.test.espresso.device.controller.DeviceMode
-import androidx.test.espresso.device.util.executeShellCommand
 import androidx.test.filters.AbstractFilter
 import org.junit.runner.Description
 
