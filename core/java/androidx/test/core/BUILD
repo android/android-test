@@ -85,7 +85,9 @@ android_library(
 alias(
     name = "core-src",
     actual = ":core_aar-src.jar",
-    visibility = ["//:__pkg__"],
+    visibility = [
+        "//visibility:private",  # Only private by automation, not intent. Owner may accept CLs adding visibility. See go/scheuklappen#explicit-private.
+    ],
 )
 
 # Generate rules for the release artifacts.
