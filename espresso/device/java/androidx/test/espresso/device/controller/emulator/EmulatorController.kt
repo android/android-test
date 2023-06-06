@@ -42,8 +42,8 @@ constructor(
 ) : DeviceController {
   companion object {
     private val TAG = EmulatorController::class.java.simpleName
-    private val DEGREES_TO_ROTATE_LANDSCAPE_TO_PORTRAIT = -45F
-    private val DEGREES_TO_ROTATE_PORTRAIT_TO_LANDSCAPE = 90F
+    private const val DEGREES_TO_ROTATE_LANDSCAPE_TO_PORTRAIT = -90F
+    private const val DEGREES_TO_ROTATE_PORTRAIT_TO_LANDSCAPE = 90F
   }
 
   override fun setDeviceMode(deviceMode: Int) {
@@ -78,15 +78,23 @@ constructor(
   }
 
   override fun setScreenOrientation(orientation: Int) {
-    val degreesToRotate =
-      if (orientation == ScreenOrientation.LANDSCAPE.orientation) {
-        DEGREES_TO_ROTATE_PORTRAIT_TO_LANDSCAPE
-      } else {
-        DEGREES_TO_ROTATE_LANDSCAPE_TO_PORTRAIT
-      }
-    val parameters =
-      ParameterValue.newBuilder().addData(0F).addData(0F).addData(degreesToRotate).build()
     try {
+      val physicalModelValue: PhysicalModelValue =
+        emulatorControllerStub.getPhysicalModel(
+          PhysicalModelValue.newBuilder()
+            .setTarget(PhysicalModelValue.PhysicalType.ROTATION)
+            .build()
+        )
+      val rotation: ParameterValue = physicalModelValue.getValue()
+      val startingRotationDegrees = rotation.getDataList()[2].toFloat()
+      var degreesToRotate =
+        if (orientation == ScreenOrientation.PORTRAIT.orientation) {
+          DEGREES_TO_ROTATE_LANDSCAPE_TO_PORTRAIT + startingRotationDegrees
+        } else {
+          DEGREES_TO_ROTATE_PORTRAIT_TO_LANDSCAPE - startingRotationDegrees
+        }
+      val parameters =
+        ParameterValue.newBuilder().addData(0F).addData(0F).addData(degreesToRotate).build()
       emulatorControllerStub.setPhysicalModel(
         PhysicalModelValue.newBuilder()
           .setTarget(PhysicalModelValue.PhysicalType.ROTATION)
