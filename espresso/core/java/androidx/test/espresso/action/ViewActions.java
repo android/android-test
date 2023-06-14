@@ -386,6 +386,34 @@ public final class ViewActions {
   }
 
   /**
+   * Returns an action that performs a double click with retry on the view.
+   *
+   * <p>A double click is simulated by injecting two consecutive pairs of down and up events.
+   *
+   * <p>If the 2nd click can't be injected within the double tap duration, the provided rollback
+   * action is invoked on the view and a double click is attempted again.
+   *
+   * <p>This is only necessary if the view being clicked on has some different behaviour for a
+   * normal tap versus a double click.
+   *
+   * <ul>
+   *   <li>must be displayed on screen
+   *   <li>any constraints of the rollbackAction
+   * </ul>
+   */
+  public static ViewAction doubleClick(ViewAction rollbackAction) {
+    checkNotNull(rollbackAction);
+    return actionWithAssertions(
+        new GeneralClickAction(
+            Tap.DOUBLE,
+            GeneralLocation.CENTER,
+            Press.FINGER,
+            InputDevice.SOURCE_UNKNOWN,
+            MotionEvent.BUTTON_PRIMARY,
+            rollbackAction));
+  }
+
+  /**
    * Returns an action that long clicks the view.<br>
    * <br>
    * View preconditions:
