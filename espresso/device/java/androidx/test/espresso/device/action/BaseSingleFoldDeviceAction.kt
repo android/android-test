@@ -17,6 +17,8 @@
 package androidx.test.espresso.device.action
 
 import android.util.Log
+import androidx.test.espresso.device.common.executeShellCommand
+import androidx.test.espresso.device.common.getMapOfDeviceStateNamesToIdentifiers
 import androidx.test.espresso.device.common.getResumedActivityOrNull
 import androidx.test.espresso.device.common.isRobolectricTest
 import androidx.test.espresso.device.context.ActionContext
@@ -28,6 +30,7 @@ import androidx.window.layout.WindowInfoTracker
 import androidx.window.layout.WindowLayoutInfo
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executor
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.collect
@@ -95,6 +98,30 @@ internal open class BaseSingleFoldDeviceAction(
     }
 
     deviceController.setDeviceMode(deviceMode.mode)
-    latch.await()
+    latch.await(5, TimeUnit.SECONDS)
+
+    if (latch.getCount() != 0L) {
+      // If WindowLayoutInfo is not updated to the requested state within five seconds, check device
+      // state and throw DeviceControllerOperationException if the device is not in the requested
+      // state.
+      val finalDeviceStateIdentifier = executeShellCommand("cmd device_state print-state").trim()
+      val mapOfDeviceStateNamesToIdentifiers = getMapOfDeviceStateNamesToIdentifiers()
+      val expectedDeviceState =
+        when (foldingFeatureState) {
+          FoldingFeature.State.FLAT -> "OPENED"
+          FoldingFeature.State.HALF_OPENED -> "HALF_OPENED"
+          else -> "CLOSED"
+        }
+      val currentDeviceState =
+        mapOfDeviceStateNamesToIdentifiers
+          .filterValues { finalDeviceStateIdentifier.trim().toString() == it }
+          .keys
+          .first()
+      if (expectedDeviceState != currentDeviceState) {
+        throw DeviceControllerOperationException(
+          "Device could not be set to ${deviceMode} mode. Expected device state is ${expectedDeviceState}, actual state is ${currentDeviceState}."
+        )
+      }
+    }
   }
 }
