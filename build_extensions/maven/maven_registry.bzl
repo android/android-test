@@ -45,6 +45,8 @@ _TARGET_TO_MAVEN_ARTIFACT = {
 
     # services/events/java gets built into both androidx.test.runner as well as orchestrator v2
     "//services/events/java/": "androidx.test:runner:%s" % RUNNER_VERSION,
+    "//services:test_services": "androidx.test.services:test-services:%s" % SERVICES_VERSION,
+    "//runner/android_test_orchestrator/stubapp:stubapp": "androidx.test:orchestrator:%s" % ORCHESTRATOR_VERSION,
 }
 
 _SHADED_TARGETS = [
@@ -73,6 +75,34 @@ def get_artifact_from_label(label):
             result = artifact
 
     return result
+
+def is_axt_label(label):
+    """Determine if given target label is from androidx_test.
+
+    Args:
+      label: the target label
+
+    Returns:
+      True if the label is in a recognized androidx_test maven artifact
+    """
+    label_string = str(label)
+    for path in _TARGET_TO_MAVEN_ARTIFACT.keys():
+        if path in label_string:
+            return True
+
+    # special case the apk source dirs
+    if "//services" in label_string:
+        return True
+    if "//runner/android_test_orchestrator" in label_string:
+        return True
+    return False
+
+def get_maven_apk_deps(artifact):
+    # TODO: don't hardcode this, instead try to obtain from build rule
+    if artifact == ORCHESTRATOR_ARTIFACT:
+        return [SERVICES_APK_ARTIFACT]
+    else:
+        return []
 
 def is_shaded_from_label(label):
     """Returns true if given target should be shaded.

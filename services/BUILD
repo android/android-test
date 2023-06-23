@@ -1,7 +1,6 @@
 load("@rules_license//rules:license.bzl", "license")
 load("@build_bazel_rules_android//android:rules.bzl", "android_binary")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
-load("//build_extensions:axt_versions.bzl", "SERVICES_APK_ARTIFACT")
 load("//build_extensions/maven:axt_maven_apk.bzl", "axt_maven_apk")
 
 # Description:
@@ -45,7 +44,6 @@ android_binary(
 
 axt_maven_apk(
     name = "test_services_release_apk",
-    artifact = SERVICES_APK_ARTIFACT,
     included_dep = ":test_services",
 )
 

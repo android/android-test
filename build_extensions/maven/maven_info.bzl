@@ -17,7 +17,7 @@
 
 load("//build_extensions/maven:kotlin_info.bzl", "is_kotlin")
 load("//build_extensions:axt_versions.bzl", "KOTLIN_VERSION")
-load("//build_extensions/maven:maven_registry.bzl", "get_artifact_from_label", "is_shaded_from_label")
+load("//build_extensions/maven:maven_registry.bzl", "get_artifact_from_label", "get_maven_apk_deps", "is_axt_label", "is_shaded_from_label")
 
 # logic here largely inspired from https://github.com/google/dagger/blob/master/tools/maven_info.bzl
 
@@ -162,4 +162,48 @@ collect_maven_info = aspect(
     Collects the Maven information for targets, their dependencies, and their transitive exports.
     """,
     implementation = _collect_maven_info_impl,
+)
+
+def _collect_maven_apk_info_impl(target, ctx):
+    neverlink = getattr(ctx.rule.attr, "neverlink", False)
+    deps = getattr(ctx.rule.attr, "deps", [])
+    exports = getattr(ctx.rule.attr, "exports", [])
+
+    # ignore non-runtime or non-java dependencies eg proto_library or non-axt-labels
+    if neverlink or JavaInfo not in target or not is_axt_label(target.label):
+        return MavenInfo(
+            artifact = None,
+            is_compileOnly = True,
+            is_shaded = False,
+            transitive_included_runtime_jars = depset(),
+            transitive_included_src_jars = depset(),
+            transitive_maven_direct_deps = depset(),
+        )
+
+    artifact = get_artifact_from_label(target.label)
+    included_src_jars = target[JavaInfo].source_jars
+    transitive_included_src_jars = []
+
+    for dep in (deps + exports):
+        transitive_included_src_jars.append(dep[MavenInfo].transitive_included_src_jars)
+
+    maven_deps = get_maven_apk_deps(artifact)
+    return [MavenInfo(
+        artifact = artifact,
+        is_compileOnly = False,
+        is_shaded = False,
+        transitive_included_runtime_jars = depset(),
+        transitive_included_src_jars = depset(included_src_jars, transitive = transitive_included_src_jars),
+        transitive_maven_direct_deps = depset(maven_deps),
+    )]
+
+collect_maven_apk_info = aspect(
+    attr_aspects = [
+        "deps",
+        "exports",
+    ],
+    doc = """
+    Collects the Maven apk information for targets, their dependencies, and their transitive exports.
+    """,
+    implementation = _collect_maven_apk_info_impl,
 )

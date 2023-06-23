@@ -1,7 +1,6 @@
 load("@build_bazel_rules_android//android:rules.bzl", "android_binary")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions/maven:axt_maven_apk.bzl", "axt_maven_apk")
-load("//build_extensions:axt_versions.bzl", "ORCHESTRATOR_ARTIFACT", "SERVICES_APK_ARTIFACT")
 
 licenses(["notice"])
 
@@ -33,11 +32,7 @@ android_binary(
 
 axt_maven_apk(
     name = "orchestrator_release_apk",
-    artifact = ORCHESTRATOR_ARTIFACT,
     included_dep = ":stubapp",
-    maven_deps = [
-        SERVICES_APK_ARTIFACT,
-    ],
 )
 
 maven_artifact(
