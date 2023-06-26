@@ -155,34 +155,3 @@ axt_android_library_test(
         "@maven//:junit_junit",
     ],
 )
-
-# TODO(b/282027426): comparison for video recording on. Remove when complete.
-axt_android_library_test(
-    name = "SimpleTest_videorecord",
-    srcs = [
-        "SimpleTest.java",
-    ],
-    args = ["--record_test_video=ALWAYS"],
-    deps = [
-        "//ext/junit",
-        "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
-    ],
-)
-
-# TODO(b/282027426): comparison for video recording on + force hardware rendering drawing. Remove when complete.
-axt_android_library_test(
-    name = "SimpleTest_videorecord_hwdraw",
-    srcs = [
-        "SimpleTest.java",
-    ],
-    args = [
-        "--record_test_video=ALWAYS",
-        "--experimental_enable_hardware_renderer_drawing=true",
-    ],
-    deps = [
-        "//ext/junit",
-        "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
-    ],
-)
