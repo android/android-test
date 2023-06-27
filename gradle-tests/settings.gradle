@@ -15,7 +15,7 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         libs {
-            library('runner', 'androidx.test:runner:1.6.0-alpha02')
+            library('runner', 'androidx.test:runner:1.6.0-alpha03')
             library('ext.junit', 'androidx.test.ext:junit:1.2.0-alpha01')
             library('ext.truth', 'androidx.test.ext:truth:1.6.0-alpha01')
             library('espresso.core', 'androidx.test.espresso:espresso-core:3.6.0-alpha01')

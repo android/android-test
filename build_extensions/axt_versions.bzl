@@ -2,7 +2,7 @@
 
 # AXT versions
 # LINT.IfChange
-RUNNER_VERSION = "1.6.0-alpha02"  # stable 1.5.1
+RUNNER_VERSION = "1.6.0-alpha03"  # stable 1.5.1
 RULES_VERSION = "1.6.0-alpha01"  # stable 1.5.0
 MONITOR_VERSION = "1.7.0-alpha01"  # stable 1.6.0
 ESPRESSO_VERSION = "3.6.0-alpha01"  # stable 3.5.0
