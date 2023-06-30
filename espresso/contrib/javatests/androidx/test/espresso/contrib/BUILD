@@ -63,6 +63,7 @@ android_app_instrumentation_tests(
         "//ext/junit",
         "//runner/android_junit_runner",
         "//runner/rules",
+        "//testapps/ui_testapp/java/androidx/test/ui/app:lib",
         "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
         "@maven//:androidx_core_core",
         "@maven//:androidx_recyclerview_recyclerview",
