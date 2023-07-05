@@ -1,10 +1,10 @@
 name: Build
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -50,7 +50,7 @@ jobs:
         shell: bash
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
