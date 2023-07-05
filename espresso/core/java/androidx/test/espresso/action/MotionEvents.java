@@ -283,7 +283,7 @@ public final class MotionEvents {
   @Deprecated
   public static MotionEvent obtainMovement(long downTime, long eventTime, float[] coordinates) {
     return MotionEvent.obtain(
-        downTime, eventTime, MotionEvent.ACTION_MOVE, coordinates[1], coordinates[1], 0);
+        downTime, eventTime, MotionEvent.ACTION_MOVE, coordinates[0], coordinates[1], 0);
   }
 
   public static boolean sendMovement(

@@ -21,6 +21,7 @@ import static android.view.MotionEvent.ACTION_MOVE;
 import static android.view.MotionEvent.ACTION_UP;
 import static com.google.common.truth.Truth.assertWithMessage;
 
+import android.os.Build;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -148,5 +149,27 @@ public class MotionEventsUnitTest {
         InputDevice.SOURCE_UNKNOWN,
         BUTTON_STATE,
         MotionEvent.TOOL_TYPE_FINGER);
+  }
+
+  /** Regression test for #1840 */
+  @Test
+  @SuppressWarnings("deprecation") // Intentionally testing a deprecated but supported method.
+  public void testObtainMovement_deprecated() {
+    final MotionEvent move = MotionEvents.obtainMovement(100L, 100L, COORDINATES);
+    var expectedSource =
+        (Build.VERSION.SDK_INT < Build.VERSION_CODES.S_V2)
+            ? InputDevice.SOURCE_CLASS_NONE
+            : InputDevice.SOURCE_CLASS_POINTER;
+    verifyEvent(
+        move,
+        ACTION_MOVE,
+        100L, // Arbitrary value we set when calling obtainMovement.
+        COORDINATES,
+        new float[] {
+          1f, 1f
+        }, // Since we are evaluating obtainMovement we have the default precision.
+        expectedSource, // obtainMovement defaults to this.
+        MotionEvent.CLASSIFICATION_NONE, // The buttonState defaults to this.
+        MotionEvent.CLASSIFICATION_NONE); // The toolType defaults to this.
   }
 }
