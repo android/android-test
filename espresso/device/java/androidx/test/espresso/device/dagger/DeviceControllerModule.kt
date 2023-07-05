@@ -110,10 +110,11 @@ internal class DeviceControllerModule {
         val getter: Method = clazz.getMethod("get", String::class.java)
         getter.invoke(clazz, "mdevx.grpc_guest_port") as String
       }
-    if (gRpcPort.isBlank()) {
+    if (gRpcPort == null || gRpcPort.isBlank()) {
       throw DeviceControllerOperationException(
-        "Unable to connect to Emulator gRPC port. Please make sure the controller gRPC service is" +
-          " enabled on the emulator."
+        "Unable to connect to Emulator gRPC port. Please make sure the Android Emulator version" +
+          " is updated to 33.1.11+ and the controller gRPC service is enabled on the emulator." +
+          " See https://developer.android.com/studio/preview/features#set_up_your_project_for_the_espresso_device_api for set up instructions."
       )
     }
     return gRpcPort.toInt()
