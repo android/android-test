@@ -18,7 +18,7 @@ axt_android_library_test(
     args = [
         "--install_test_services=True",
     ],
-    device_list = devices(apis(min_api = 16)),
+    device_list = devices(apis(min_api = 19)),
     manifest = "AndroidManifest.xml",
     deps = [
         "//ext/junit",
@@ -38,7 +38,7 @@ axt_android_library_test(
     args = [
         "--install_test_services=True",
     ],
-    device_list = devices(apis(min_api = 16)),
+    device_list = devices(apis(min_api = 19)),
     manifest = "AndroidManifest.xml",
     deps = [
         "//ext/junit",

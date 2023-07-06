@@ -28,7 +28,7 @@ axt_android_library_test(
             24,
             25,
         ],
-        min_api = 16,
+        min_api = 19,
     )),
     deps = [
         # include the large number of methods that will force classes off main dex
