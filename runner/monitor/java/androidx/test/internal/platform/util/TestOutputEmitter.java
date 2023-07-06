@@ -25,7 +25,7 @@ import java.util.Map;
  *
  * @hide
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by espresso
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by espresso and robolectric
 public class TestOutputEmitter {
 
   // create a handler for TestOutputEmitter calls. By default calls are no-ops
