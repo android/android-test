@@ -35,4 +35,6 @@
           android:authorities="testapp.androidx_test_services.speak_easy"
           android:grantUriPermissions="true" />
     </application>
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 </manifest>
