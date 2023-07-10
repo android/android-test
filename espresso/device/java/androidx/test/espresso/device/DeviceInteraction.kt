@@ -43,7 +43,7 @@ constructor(private val context: ActionContext, private val deviceController: De
 
   /**
    * Performs the given action on the test device. This method should not be called on the main
-   * thread.
+   * thread. The calling thread is blocked until the requested device action is completed.
    *
    * @param action the DeviceAction to execute.
    * @return this interaction for further perform/verification calls.
