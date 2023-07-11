@@ -76,7 +76,7 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
     }
 
     if (isRobolectricTest()) {
-      deviceController.setScreenOrientation(screenOrientation.orientation)
+      deviceController.setScreenOrientation(screenOrientation.getOrientation())
       return
     }
 
@@ -165,7 +165,7 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
           }
         )
     }
-    deviceController.setScreenOrientation(screenOrientation.orientation)
+    deviceController.setScreenOrientation(screenOrientation.getOrientation())
     latch.await(5, TimeUnit.SECONDS)
     if (
       getDeviceApiLevel() >= 21 &&

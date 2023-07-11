@@ -88,7 +88,7 @@ constructor(
       val rotation: ParameterValue = physicalModelValue.getValue()
       val startingRotationDegrees = rotation.getDataList()[2].toFloat()
       var degreesToRotate =
-        if (orientation == ScreenOrientation.PORTRAIT.orientation) {
+        if (orientation == ScreenOrientation.PORTRAIT.getOrientation()) {
           DEGREES_TO_ROTATE_LANDSCAPE_TO_PORTRAIT + startingRotationDegrees
         } else {
           DEGREES_TO_ROTATE_PORTRAIT_TO_LANDSCAPE - startingRotationDegrees

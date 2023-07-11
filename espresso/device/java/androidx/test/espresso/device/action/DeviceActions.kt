@@ -20,6 +20,8 @@ package androidx.test.espresso.device.action
 
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.RestrictTo
+import androidx.annotation.RestrictTo.Scope
 import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.espresso.device.sizeclass.HeightSizeClass
 import androidx.test.espresso.device.sizeclass.WidthSizeClass
@@ -112,7 +114,14 @@ fun setDisplaySize(widthSizeClass: WidthSizeClass, heightSizeClass: HeightSizeCl
 
 /** Enum for screen orientations a device can be set to. */
 @ExperimentalTestApi
-enum class ScreenOrientation(val orientation: Int) {
+enum class ScreenOrientation(private val orientation: Int) {
   PORTRAIT(0),
-  LANDSCAPE(1)
+  LANDSCAPE(1);
+
+  /**
+   * Returns the orientation.
+   *
+   * @hide
+   */
+  @RestrictTo(Scope.LIBRARY) fun getOrientation(): Int = orientation
 }
