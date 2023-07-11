@@ -48,10 +48,10 @@ constructor(
 
   override fun setDeviceMode(deviceMode: Int) {
     if (
-      !(deviceMode == DeviceMode.FLAT.mode ||
-        deviceMode == DeviceMode.TABLETOP.mode ||
-        deviceMode == DeviceMode.BOOK.mode ||
-        deviceMode == DeviceMode.CLOSED.mode)
+      !(deviceMode == DeviceMode.FLAT.getMode() ||
+        deviceMode == DeviceMode.TABLETOP.getMode() ||
+        deviceMode == DeviceMode.BOOK.getMode() ||
+        deviceMode == DeviceMode.CLOSED.getMode())
     ) {
       throw UnsupportedDeviceOperationException(
         "The provided device mode is not supported on this device."
@@ -59,9 +59,9 @@ constructor(
     }
 
     val postureValue: PostureValue =
-      if (deviceMode == DeviceMode.FLAT.mode) {
+      if (deviceMode == DeviceMode.FLAT.getMode()) {
         PostureValue.POSTURE_OPENED
-      } else if (deviceMode == DeviceMode.CLOSED.mode) {
+      } else if (deviceMode == DeviceMode.CLOSED.getMode()) {
         PostureValue.POSTURE_CLOSED
       } else {
         PostureValue.POSTURE_HALF_OPENED

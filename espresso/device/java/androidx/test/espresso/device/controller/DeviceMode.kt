@@ -16,6 +16,8 @@
 
 package androidx.test.espresso.device.controller
 
+import androidx.annotation.RestrictTo
+import androidx.annotation.RestrictTo.Scope
 import androidx.test.annotation.ExperimentalTestApi
 
 /**
@@ -25,7 +27,7 @@ import androidx.test.annotation.ExperimentalTestApi
  * https://developer.android.com/guide/topics/large-screens/learn-about-foldables
  */
 @ExperimentalTestApi
-enum class DeviceMode(val mode: Int) {
+enum class DeviceMode(private val mode: Int) {
   // the device screen is completely flat, like a tablet
   FLAT(0),
   // the device is folded with the hinge in a horizontal position
@@ -33,5 +35,12 @@ enum class DeviceMode(val mode: Int) {
   // the device is folded with the hinge in a vertical position
   BOOK(2),
   // the device screen is closed
-  CLOSED(3)
+  CLOSED(3);
+
+  /**
+   * Returns the mode.
+   *
+   * @hide
+   */
+  @RestrictTo(Scope.LIBRARY) fun getMode(): Int = mode
 }

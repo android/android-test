@@ -52,7 +52,7 @@ internal open class BaseSingleFoldDeviceAction(
   @OptIn(androidx.window.core.ExperimentalWindowApi::class)
   override fun perform(context: ActionContext, deviceController: DeviceController) {
     if (isRobolectricTest()) {
-      deviceController.setDeviceMode(deviceMode.mode)
+      deviceController.setDeviceMode(deviceMode.getMode())
       return
     }
     val activity =
@@ -97,7 +97,7 @@ internal open class BaseSingleFoldDeviceAction(
       }
     }
 
-    deviceController.setDeviceMode(deviceMode.mode)
+    deviceController.setDeviceMode(deviceMode.getMode())
     latch.await(5, TimeUnit.SECONDS)
 
     if (latch.getCount() != 0L) {
