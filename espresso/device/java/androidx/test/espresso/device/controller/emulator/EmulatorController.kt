@@ -71,7 +71,9 @@ constructor(
       emulatorControllerStub.setPosture(posture)
     } catch (e: StatusRuntimeException) {
       throw DeviceControllerOperationException(
-        "Failed to set device mode. Please make sure the connected Emulator is foldable.",
+        "Failed to set device mode. Please make sure the connected Emulator is foldable, the Android Emulator version" +
+          " is updated to 33.1.11+, and the controller gRPC service is enabled on the emulator." +
+          " See https://developer.android.com/studio/preview/features#set_up_your_project_for_the_espresso_device_api for set up instructions.",
         e
       )
     }
@@ -103,7 +105,9 @@ constructor(
       )
     } catch (e: StatusRuntimeException) {
       throw DeviceControllerOperationException(
-        "Failed to set screen orientation. Status: ${e.getStatus()}.",
+        "Failed to set screen orientation. Please make sure the Android Emulator version" +
+          " is updated to 33.1.11+ and the controller gRPC service is enabled on the emulator." +
+          " See https://developer.android.com/studio/preview/features#set_up_your_project_for_the_espresso_device_api for set up instructions.",
         e
       )
     }
