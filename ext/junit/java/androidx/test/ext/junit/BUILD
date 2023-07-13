@@ -28,6 +28,7 @@ android_library(
         "//runner/monitor",
         "//services/storage",
         "@maven//:androidx_annotation_annotation",
+        "@maven//:com_google_android_apps_common_testing_accessibility_framework_accessibility_test_framework/internal/passivescan",
         "@maven//:junit_junit",
     ],
 )
