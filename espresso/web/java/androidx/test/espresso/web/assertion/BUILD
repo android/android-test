@@ -23,7 +23,7 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/action",
         "//espresso/web/java/androidx/test/espresso/web/model",
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:org_ccil_cowan_tagsoup_tagsoup",
         "@maven//:org_hamcrest_hamcrest_core",
     ],

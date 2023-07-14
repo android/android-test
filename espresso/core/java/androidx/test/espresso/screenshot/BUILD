@@ -18,7 +18,7 @@ kt_android_library(
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso:view-interaction",
         "//espresso/core/java/androidx/test/espresso/matcher",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",

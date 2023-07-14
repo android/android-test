@@ -30,7 +30,7 @@ android_library(
         "//annotation",
         "//runner/monitor",
         "//services/storage/java/androidx/test/services/storage/file",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
     ],
 )
 

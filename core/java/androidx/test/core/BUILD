@@ -49,7 +49,7 @@ kt_android_library(
         "//annotation",
         "//runner/monitor",
         "//services/storage",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:androidx_lifecycle_lifecycle_common",
         "@maven//:androidx_tracing_tracing",

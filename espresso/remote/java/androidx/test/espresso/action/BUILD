@@ -28,7 +28,7 @@ android_library(
         "//espresso/remote/java/androidx/test/espresso/remote:registry",
         "//runner/monitor",
         "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:org_hamcrest_hamcrest_core",
     ],
 )

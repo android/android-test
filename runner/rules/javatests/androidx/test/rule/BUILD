@@ -88,7 +88,7 @@ axt_android_library_test(
         "//ext/junit",
         "//runner/android_junit_runner",
         "//runner/rules",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
     ],

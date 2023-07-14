@@ -12,6 +12,6 @@ java_library(
     name = "dagger",
     srcs = glob(["*java"]),
     deps = [
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
     ],
 )

@@ -34,7 +34,7 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/model",
         "//espresso/web/java/androidx/test/espresso/web/util/concurrent",
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",

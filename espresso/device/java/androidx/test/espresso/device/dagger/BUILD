@@ -23,6 +23,6 @@ kt_android_library(
         "//espresso/device/java/androidx/test/espresso/device/controller/emulator",
         "//opensource/dagger",
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
     ],
 )

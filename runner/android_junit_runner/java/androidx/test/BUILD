@@ -43,7 +43,7 @@ android_library(
         "//services/events/java/androidx/test/services/events",
         "//services/storage",
         "@androidsdk//:legacy_test-30",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:androidx_tracing_tracing",
         "@maven//:junit_junit",
     ],

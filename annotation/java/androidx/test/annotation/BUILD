@@ -21,8 +21,8 @@ android_library(
     manifest = "AndroidManifest.xml",
     tags = ["alt_dep=//annotation"],
     deps = [
-        "@maven//:androidx_annotation_annotation",
         "@maven//:androidx_annotation_annotation_experimental",
+        "@maven//:androidx_annotation_annotation_jvm",
     ],
 )
 

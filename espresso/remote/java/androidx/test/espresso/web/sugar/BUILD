@@ -20,6 +20,6 @@ android_library(
         "//espresso/remote/java/androidx/test/espresso/remote:registry",
         "//espresso/remote/java/androidx/test/espresso/web/proto/sugar:web_sugar_proto_android_pb3",
         "//espresso/web/java/androidx/test/espresso/web/sugar",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
     ],
 )

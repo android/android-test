@@ -21,7 +21,7 @@ android_library(
     visibility = [":internal"],
     deps = [
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:com_google_errorprone_error_prone_annotations",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",

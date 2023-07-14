@@ -20,7 +20,7 @@ android_library(
     deps = [
         "//runner/android_junit_runner",
         "//services/shellexecutor:exec_client",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:androidx_core_core",
         "@maven//:com_google_guava_guava",
     ],

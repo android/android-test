@@ -36,7 +36,7 @@ android_app_instrumentation_tests(
         "//runner/rules",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
         "@androidsdk//:legacy_test-30",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_mockito_mockito_core",

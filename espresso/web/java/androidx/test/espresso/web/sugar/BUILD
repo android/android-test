@@ -20,7 +20,7 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/assertion",
         "//espresso/web/java/androidx/test/espresso/web/model",
         "//runner/android_junit_runner",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",

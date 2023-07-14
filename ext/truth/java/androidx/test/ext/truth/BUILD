@@ -27,7 +27,7 @@ android_library(
     deps = [
         "//annotation",
         "//core",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
     ],

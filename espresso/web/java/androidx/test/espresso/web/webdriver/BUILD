@@ -23,7 +23,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/web/java/androidx/test/espresso/web/model",
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

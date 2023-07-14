@@ -22,7 +22,7 @@ android_library(
     ],
     deps = [
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
@@ -51,7 +51,7 @@ android_app_instrumentation_tests(
         "//runner/android_junit_runner",
         "//runner/rules",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",

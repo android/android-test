@@ -21,7 +21,7 @@ kt_android_library(
     resource_files = glob(["res/**"]),
     visibility = ["//visibility:public"],
     deps = [
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
     ],

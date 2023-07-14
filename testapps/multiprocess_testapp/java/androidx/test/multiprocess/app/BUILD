@@ -34,7 +34,7 @@ jetify_android_library(
     resource_files = [":resource_files"],
     deps = [
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
     ],
 )
 

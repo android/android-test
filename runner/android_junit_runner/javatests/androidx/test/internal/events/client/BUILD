@@ -83,7 +83,7 @@ axt_android_local_test(
     deps = [
         "//runner/android_junit_runner",
         "//services/events/java/androidx/test/services/events",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_mockito_mockito_core",

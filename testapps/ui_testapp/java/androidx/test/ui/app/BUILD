@@ -26,7 +26,7 @@ jetify_android_library(
     manifest = "AndroidManifest.xml",
     resource_files = glob(["res/**"]),
     deps = [
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:androidx_appcompat_appcompat",
         "@maven//:androidx_recyclerview_recyclerview",
         "@maven//:com_google_android_material_material",

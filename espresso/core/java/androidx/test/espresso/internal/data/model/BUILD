@@ -16,7 +16,7 @@ kt_android_library(
     ]),
     deps = [
         "//espresso/core/java/androidx/test/espresso:framework",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:org_hamcrest_hamcrest_core",
     ],
 )

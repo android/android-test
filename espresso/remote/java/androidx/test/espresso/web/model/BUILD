@@ -23,7 +23,7 @@ android_library(
         "//espresso/remote/java/androidx/test/espresso/web/proto/model:remote_web_model_atoms_proto_android_pb3",
         "//espresso/web/java/androidx/test/espresso/web/model",
         "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

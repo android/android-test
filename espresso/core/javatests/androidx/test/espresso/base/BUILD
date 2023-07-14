@@ -52,7 +52,7 @@ android_app_instrumentation_tests(
         "//services/storage",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
         "//testapps/ui_testapp/javatests/androidx/test/ui/app:test_resources",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:com_google_truth_truth",
         "@maven//:javax_inject_javax_inject",
         "@maven//:junit_junit",

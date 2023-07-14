@@ -27,7 +27,7 @@ axt_android_library_test(
         "//runner/monitor/javatests/androidx/test/platform/view/inspector/fixtures",
         "//runner/rules",
         "//services/storage",
-        "@maven//:androidx_annotation_annotation",
+        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
