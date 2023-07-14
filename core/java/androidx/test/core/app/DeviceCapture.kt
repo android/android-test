@@ -35,10 +35,9 @@ import androidx.test.platform.graphics.HardwareRendererCompat
 import androidx.test.platform.view.inspector.WindowInspectorCompat
 import com.google.common.util.concurrent.ListenableFuture
 import java.lang.RuntimeException
-import java.util.concurrent.ExecutionException
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
 
 /**
  * Returns false if calling [takeScreenshot] will fail.
@@ -50,9 +49,9 @@ import java.util.concurrent.TimeoutException
  */
 @ExperimentalTestApi
 fun canTakeScreenshot(): Boolean =
-  Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
-    && getInstrumentation().uiAutomation != null
-    && Looper.myLooper() != Looper.getMainLooper()
+  Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 &&
+    getInstrumentation().uiAutomation != null &&
+    Looper.myLooper() != Looper.getMainLooper()
 
 /**
  * Captures an image of the device's screen into a [Bitmap].
@@ -73,7 +72,7 @@ fun canTakeScreenshot(): Boolean =
  *
  * @return a [Bitmap] that contains the image
  * @throws [IllegalStateException] if called on the main thread. This is a limitation of connecting
- * to UiAutomation, [RuntimeException] if UiAutomation fails to take the screenshot
+ *   to UiAutomation, [RuntimeException] if UiAutomation fails to take the screenshot
  */
 @ExperimentalTestApi
 @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -92,8 +91,7 @@ fun takeScreenshot(): Bitmap {
  *
  * @return a [Bitmap]
  * @throws [IllegalStateException] if called on the main thread. This is a limitation of connecting
- * to UiAutomation, [RuntimeException] if UiAutomation fails to take the screenshot
- *
+ *   to UiAutomation, [RuntimeException] if UiAutomation fails to take the screenshot
  * @hide
  */
 @ExperimentalTestApi
@@ -104,61 +102,48 @@ fun takeScreenshot(): Bitmap {
 fun takeScreenshotNoSync(): Bitmap {
   Checks.checkState(canTakeScreenshot())
 
-  val bitmapFuture: ResolvableFuture<Bitmap> = ResolvableFuture.create()
   val mainExecutor = HandlerExecutor(Handler(Looper.getMainLooper()))
   val uiAutomation = getInstrumentation().uiAutomation
   if (uiAutomation == null) {
     throw RuntimeException("uiautomation is null")
   }
 
-  if (!HardwareRendererCompat.isDrawingEnabled()) {
-    HardwareRendererCompat.setDrawingEnabled(true)
-    bitmapFuture.addListener({ HardwareRendererCompat.setDrawingEnabled(false) }, mainExecutor)
-  }
-
+  val origIsDrawingEnabled = HardwareRendererCompat.isDrawingEnabled()
   try {
-    forceRedrawGlobalWindowViews(mainExecutor).get(5, TimeUnit.SECONDS)
-  } catch (e: Exception) {
-    Log.w("takeScreenshot", "force redraw failed. Proceeding with screenshot", e)
-  }
-
-  // take the screenshot on the next frame to increase probability the draw from previous step is
-  // committed
-  mainExecutor.execute {
-    Choreographer.getInstance().postFrameCallback {
-      // do multiple retries of uiAutomation.takeScreenshot because it is known to return null
-      // on API 31+ b/257274080
-      var bitmap: Bitmap? = null
-      var i = 0
-      while (i < 3 && bitmap == null) {
-        bitmap = uiAutomation.takeScreenshot()
-        i++
-      }  
-      if (bitmap == null) {
-        bitmapFuture.setException(RuntimeException("uiAutomation.takeScreenshot returned null"))
-      } else {
-        bitmapFuture.set(bitmap)
-      }
+    if (!origIsDrawingEnabled) {
+      HardwareRendererCompat.setDrawingEnabled(true)
     }
-  }
 
-  // remap future exceptions as RuntimeExceptions
-  try {
-    return bitmapFuture.get(5, TimeUnit.SECONDS)
-  } catch (e: ExecutionException) {
-    if (e.cause is RuntimeException) {
-      throw e.cause as RuntimeException
-    } else {
-      throw RuntimeException(
-        "UiAutomation.takeScreenshot failed with unrecognized exception",
-        e.cause
+    try {
+      forceRedrawGlobalWindowViews(mainExecutor).get(5, TimeUnit.SECONDS)
+    } catch (e: Exception) {
+      Log.w("takeScreenshot", "force redraw failed. Proceeding with screenshot", e)
+    }
+
+    // wait on the next frame to increase probability the draw from previous step is
+    // committed
+    // TODO(b/289244795): use a transaction callback instead
+    val latch = CountDownLatch(1)
+    mainExecutor.execute { Choreographer.getInstance().postFrameCallback { latch.countDown() } }
+
+    if (!latch.await(1, TimeUnit.SECONDS)) {
+      Log.w(
+        "takeScreenshot",
+        "frame callback did not occur in 1 seconds. Proceeding with screenshot",
       )
     }
-  } catch (e: TimeoutException) {
-    throw RuntimeException("Uiautomation.takeScreenshot failed to complete in 5 seconds", e)
-  } catch (e: InterruptedException) {
-    Thread.currentThread().interrupt()
-    throw RuntimeException("Uiautomation.takeScreenshot was interrupted")
+
+    // do multiple retries of uiAutomation.takeScreenshot because it is known to return null
+    // on API 31+ b/257274080
+    for (i in 1..3) {
+      val bitmap = uiAutomation.takeScreenshot()
+      if (bitmap != null) {
+        return bitmap
+      }
+    }
+    throw RuntimeException("uiAutomation.takeScreenshot failed to return a bitmap")
+  } finally {
+    HardwareRendererCompat.setDrawingEnabled(origIsDrawingEnabled)
   }
 }
 
