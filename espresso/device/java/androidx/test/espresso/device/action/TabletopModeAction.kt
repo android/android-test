@@ -18,9 +18,9 @@ package androidx.test.espresso.device.action
 
 import android.content.res.Configuration
 import android.util.Log
-import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.controller.DeviceMode
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.device.DeviceController
 import androidx.window.layout.FoldingFeature
 import java.util.concurrent.Executor
@@ -32,9 +32,9 @@ internal class TabletopModeAction(private val mainExecutor: Executor) :
     private val TAG = TabletopModeAction::class.java.simpleName
   }
 
-  override fun perform(context: ActionContext, deviceController: DeviceController) {
+  override fun perform(deviceController: DeviceController) {
     // TODO(b/203801760): Check current device mode and return if already in tabletop mode.
-    super.perform(context, deviceController)
+    super.perform(deviceController)
 
     if (super.foldingFeatureOrientation == null) {
       throw DeviceControllerOperationException(
@@ -43,14 +43,18 @@ internal class TabletopModeAction(private val mainExecutor: Executor) :
     } else if (super.foldingFeatureOrientation != FoldingFeature.Orientation.HORIZONTAL) {
       Log.d(TAG, "FoldingFeature orientation needs to be rotated.")
       val orientationToRotateTo =
-        if (context.applicationContext.getResources().getConfiguration().orientation ==
-            Configuration.ORIENTATION_PORTRAIT
+        if (
+          InstrumentationRegistry.getInstrumentation()
+            .getTargetContext()
+            .getResources()
+            .getConfiguration()
+            .orientation == Configuration.ORIENTATION_PORTRAIT
         ) {
           ScreenOrientation.LANDSCAPE
         } else {
           ScreenOrientation.PORTRAIT
         }
-      ScreenOrientationAction(orientationToRotateTo).perform(context, deviceController)
+      ScreenOrientationAction(orientationToRotateTo).perform(deviceController)
     }
   }
 }

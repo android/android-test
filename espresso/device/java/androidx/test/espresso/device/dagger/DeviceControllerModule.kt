@@ -19,8 +19,6 @@ import android.provider.Settings
 import androidx.annotation.RestrictTo
 import androidx.test.espresso.device.common.getDeviceApiLevel
 import androidx.test.espresso.device.common.isTestDeviceAnEmulator
-import androidx.test.espresso.device.context.ActionContext
-import androidx.test.espresso.device.context.InstrumentationTestActionContext
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.controller.PhysicalDeviceController
 import androidx.test.espresso.device.controller.emulator.EmulatorController
@@ -45,12 +43,6 @@ internal class DeviceControllerModule {
 
   @Provides
   @Singleton
-  fun provideActionContext(): ActionContext {
-    return InstrumentationTestActionContext()
-  }
-
-  @Provides
-  @Singleton
   fun provideDeviceController(): DeviceController {
     val platformDeviceController: androidx.test.platform.device.DeviceController? =
       ServiceLoaderWrapper.loadSingleServiceOrNull(
@@ -61,7 +53,7 @@ internal class DeviceControllerModule {
         val connection = getEmulatorConnection()
         return EmulatorController(connection.emulatorController())
       } else {
-        return PhysicalDeviceController(InstrumentationTestActionContext().applicationContext)
+        return PhysicalDeviceController()
       }
     } else {
       return EspressoDeviceControllerAdpater(platformDeviceController)
@@ -102,7 +94,7 @@ internal class DeviceControllerModule {
     val gRpcPort =
       if (getDeviceApiLevel() >= 17) {
         Settings.Global.getString(
-          provideActionContext().applicationContext.getContentResolver(),
+          InstrumentationRegistry.getInstrumentation().getTargetContext().getContentResolver(),
           "mdevx.grpc_guest_port"
         )
       } else {

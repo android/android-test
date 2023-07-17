@@ -37,7 +37,6 @@ kt_android_library(
     deps = [
         "//annotation/java/androidx/test/annotation",
         "//espresso/device/java/androidx/test/espresso/device/action",
-        "//espresso/device/java/androidx/test/espresso/device/context",
         "//espresso/device/java/androidx/test/espresso/device/dagger",
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
         "//opensource/dagger",

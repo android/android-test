@@ -21,7 +21,6 @@ import androidx.test.espresso.device.common.executeShellCommand
 import androidx.test.espresso.device.common.getMapOfDeviceStateNamesToIdentifiers
 import androidx.test.espresso.device.common.getResumedActivityOrNull
 import androidx.test.espresso.device.common.isRobolectricTest
-import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.controller.DeviceMode
 import androidx.test.platform.device.DeviceController
@@ -50,7 +49,7 @@ internal open class BaseSingleFoldDeviceAction(
   }
 
   @OptIn(androidx.window.core.ExperimentalWindowApi::class)
-  override fun perform(context: ActionContext, deviceController: DeviceController) {
+  override fun perform(deviceController: DeviceController) {
     if (isRobolectricTest()) {
       deviceController.setDeviceMode(deviceMode.getMode())
       return

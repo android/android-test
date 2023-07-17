@@ -16,8 +16,6 @@ kt_android_library(
     srcs = glob(["*.kt"]),
     deps = [
         "//espresso/device/java/androidx/test/espresso/device/common",
-        "//espresso/device/java/androidx/test/espresso/device/context",
-        "//espresso/device/java/androidx/test/espresso/device/context:context_impl",
         "//espresso/device/java/androidx/test/espresso/device/controller",
         "//espresso/device/java/androidx/test/espresso/device/controller:controller_impl",
         "//espresso/device/java/androidx/test/espresso/device/controller/emulator",

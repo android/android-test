@@ -25,7 +25,6 @@ import androidx.test.espresso.device.common.calculateCurrentDisplayWidthAndHeigh
 import androidx.test.espresso.device.common.executeShellCommand
 import androidx.test.espresso.device.common.getDeviceApiLevel
 import androidx.test.espresso.device.common.getResumedActivityOrNull
-import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.sizeclass.HeightSizeClass
 import androidx.test.espresso.device.sizeclass.WidthSizeClass
@@ -40,7 +39,7 @@ internal class DisplaySizeAction(
   val widthDisplaySize: WidthSizeClass,
   val heightDisplaySize: HeightSizeClass
 ) : DeviceAction {
-  override fun perform(context: ActionContext, deviceController: DeviceController) {
+  override fun perform(deviceController: DeviceController) {
     if (getDeviceApiLevel() < 24) {
       throw UnsupportedDeviceOperationException(
         "Setting display size is not supported on devices with APIs below 24."

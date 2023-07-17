@@ -24,7 +24,6 @@ import androidx.test.espresso.device.action.setDisplaySize as getSetDisplaySizeD
 import androidx.test.espresso.device.action.setFlatMode as getSetFlatModeDeviceAction
 import androidx.test.espresso.device.action.setScreenOrientation as getSetScreenOrientationDeviceAction
 import androidx.test.espresso.device.action.setTabletopMode as getSetTabletopModeDeviceAction
-import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.sizeclass.HeightSizeClass
 import androidx.test.espresso.device.sizeclass.WidthSizeClass
 import androidx.test.internal.util.Checks.checkNotMainThread
@@ -37,9 +36,7 @@ import javax.inject.Inject
  * <p>This API is experimental and subject to change.
  */
 @ExperimentalTestApi
-class DeviceInteraction
-@Inject
-constructor(private val context: ActionContext, private val deviceController: DeviceController) {
+class DeviceInteraction @Inject constructor(private val deviceController: DeviceController) {
 
   /**
    * Performs the given action on the test device. This method should not be called on the main
@@ -51,7 +48,7 @@ constructor(private val context: ActionContext, private val deviceController: De
    */
   fun perform(action: DeviceAction): DeviceInteraction {
     checkNotMainThread()
-    action.perform(context, deviceController)
+    action.perform(deviceController)
     return this
   }
 

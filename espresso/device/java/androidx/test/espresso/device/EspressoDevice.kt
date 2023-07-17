@@ -39,7 +39,7 @@ class EspressoDevice private constructor() {
     @JvmStatic
     fun onDevice(): DeviceInteraction {
       checkNotMainThread()
-      return DeviceInteraction(BASE.actionContext(), BASE.deviceController())
+      return DeviceInteraction(BASE.deviceController())
     }
   }
 }

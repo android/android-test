@@ -32,8 +32,8 @@ import androidx.test.espresso.device.common.getResumedActivityOrNull
 import androidx.test.espresso.device.common.isConfigurationChangeHandled
 import androidx.test.espresso.device.common.isRobolectricTest
 import androidx.test.espresso.device.common.isTestDeviceAnEmulator
-import androidx.test.espresso.device.context.ActionContext
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.device.DeviceController
 import androidx.test.platform.device.UnsupportedDeviceOperationException
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback
@@ -64,10 +64,10 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
    *
    * </ul>
    *
-   * @param context the ActionContext containing the context for this application and test app.
    * @param deviceController the controller to use to interact with the device.
    */
-  override fun perform(context: ActionContext, deviceController: DeviceController) {
+  override fun perform(deviceController: DeviceController) {
+    val context = InstrumentationRegistry.getInstrumentation().getTargetContext()
     if (screenOrientation == getCurrentScreenOrientation(context)) {
       if (Log.isLoggable(TAG, Log.DEBUG)) {
         Log.d(TAG, "Device screen is already in the requested orientation, no need to rotate.")
@@ -80,13 +80,13 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
       return
     }
 
-    var oldAccelRotationSetting = getAccelerometerRotationSetting(context.applicationContext)
+    var oldAccelRotationSetting = getAccelerometerRotationSetting(context)
     // For emulators, auto-rotate must be enabled. For physical devices, it must be disabled.
     if (isTestDeviceAnEmulator() && oldAccelRotationSetting != AccelerometerRotation.ENABLED) {
       // Executing shell commands requires API 21+.
       if (getDeviceApiLevel() >= 21) {
         Log.d(TAG, "Enabling auto-rotate.")
-        setAccelerometerRotation(AccelerometerRotation.ENABLED, context.applicationContext)
+        setAccelerometerRotation(AccelerometerRotation.ENABLED, context)
       } else {
         throw UnsupportedDeviceOperationException(
           "Screen orientation cannot be set on this device because auto-rotate is disabled. Please manually enable auto-rotate and try again."
@@ -97,7 +97,7 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
     ) {
       if (getDeviceApiLevel() >= 21) {
         Log.d(TAG, "Disabling auto-rotate.")
-        setAccelerometerRotation(AccelerometerRotation.DISABLED, context.applicationContext)
+        setAccelerometerRotation(AccelerometerRotation.DISABLED, context)
       } else {
         throw UnsupportedDeviceOperationException(
           "Screen orientation cannot be set on this device because auto-rotate is enabled. Please manually disable auto-rotate and try again."
@@ -125,14 +125,14 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
       } else if (configChangesHandled) {
         Log.d(TAG, "The current activity handles configuration changes.")
       }
-      context.applicationContext.registerComponentCallbacks(
+      context.registerComponentCallbacks(
         object : ComponentCallbacks {
           override fun onConfigurationChanged(newConfig: Configuration) {
             if (newConfig.orientation == requestedOrientation) {
               if (Log.isLoggable(TAG, Log.DEBUG)) {
                 Log.d(TAG, "Application's orientation was set to the requested orientation.")
               }
-              context.applicationContext.unregisterComponentCallbacks(this)
+              context.unregisterComponentCallbacks(this)
               latch.countDown()
             }
           }
@@ -169,9 +169,9 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
     latch.await(5, TimeUnit.SECONDS)
     if (
       getDeviceApiLevel() >= 21 &&
-        oldAccelRotationSetting != getAccelerometerRotationSetting(context.applicationContext)
+        oldAccelRotationSetting != getAccelerometerRotationSetting(context)
     ) {
-      setAccelerometerRotation(oldAccelRotationSetting, context.applicationContext)
+      setAccelerometerRotation(oldAccelRotationSetting, context)
     }
     if (getCurrentScreenOrientation(context) != screenOrientation) {
       throw DeviceControllerOperationException(
@@ -213,9 +213,8 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
     }
   }
 
-  private fun getCurrentScreenOrientation(context: ActionContext): ScreenOrientation {
-    var currentOrientation =
-      context.applicationContext.getResources().getConfiguration().orientation
+  private fun getCurrentScreenOrientation(context: Context): ScreenOrientation {
+    var currentOrientation = context.getResources().getConfiguration().orientation
     return if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE)
       ScreenOrientation.LANDSCAPE
     else ScreenOrientation.PORTRAIT

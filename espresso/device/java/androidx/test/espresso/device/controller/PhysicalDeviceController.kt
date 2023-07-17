@@ -16,7 +16,6 @@
 
 package androidx.test.espresso.device.controller
 
-import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
 import android.provider.Settings.System
@@ -24,6 +23,7 @@ import android.view.Surface
 import androidx.annotation.RestrictTo
 import androidx.test.espresso.device.common.SettingsObserver
 import androidx.test.espresso.device.common.executeShellCommand
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.device.DeviceController
 import androidx.test.platform.device.UnsupportedDeviceOperationException
 import java.util.concurrent.CountDownLatch
@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit
  * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
-class PhysicalDeviceController(private val context: Context) : DeviceController {
+class PhysicalDeviceController() : DeviceController {
   override fun setDeviceMode(deviceMode: Int) {
     throw UnsupportedDeviceOperationException(
       "Setting a device mode is not supported on physical devices."
@@ -62,6 +62,7 @@ class PhysicalDeviceController(private val context: Context) : DeviceController 
     val thread: HandlerThread = HandlerThread("Observer_Thread")
     thread.start()
     val runnableHandler: Handler = Handler(thread.getLooper())
+    val context = InstrumentationRegistry.getInstrumentation().getTargetContext()
     val settingsObserver: SettingsObserver =
       SettingsObserver(runnableHandler, context, settingsLatch, System.USER_ROTATION)
     settingsObserver.observe()
