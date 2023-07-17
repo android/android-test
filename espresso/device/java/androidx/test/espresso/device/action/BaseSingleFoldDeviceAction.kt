@@ -30,8 +30,7 @@ import androidx.window.layout.WindowLayoutInfo
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -62,7 +61,7 @@ internal open class BaseSingleFoldDeviceAction(
     val latch: CountDownLatch = CountDownLatch(1)
     val windowInfoTracker = WindowInfoTracker.getOrCreate(activity)
 
-    CoroutineScope(mainExecutor.asCoroutineDispatcher()).launch {
+    MainScope().launch {
       windowInfoTracker.windowLayoutInfo(activity).distinctUntilChanged().collect {
         windowLayoutInfo: WindowLayoutInfo ->
         val foldingFeatures = windowLayoutInfo.displayFeatures.filterIsInstance<FoldingFeature>()
