@@ -24,5 +24,6 @@ kt_android_library(
         "//runner/monitor",
         "@maven//:androidx_window_window",
         "@maven//:androidx_window_window_java",
+        "@maven//:org_jetbrains_kotlinx_kotlinx_coroutines_android",
     ],
 )
