@@ -16,11 +16,9 @@
 
 package androidx.test.espresso.device.action
 
-import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.platform.device.DeviceController
 
 /** Responsible for performing an interaction on the given device. */
-@ExperimentalTestApi
 interface DeviceAction {
   /**
    * Performs this action on the given device.

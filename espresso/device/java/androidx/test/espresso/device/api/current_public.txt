@@ -1,1 +1,161 @@
 // Signature format: 3.0
+package androidx.test.espresso.device {
+
+  public final class DeviceInteraction {
+    ctor @javax.inject.Inject public DeviceInteraction(androidx.test.platform.device.DeviceController deviceController);
+    method public androidx.test.espresso.device.DeviceInteraction perform(androidx.test.espresso.device.action.DeviceAction action);
+    field public static final androidx.test.espresso.device.DeviceInteraction.Companion Companion;
+  }
+
+  public static final class DeviceInteraction.Companion {
+    method public androidx.test.espresso.device.DeviceInteraction setBookMode(androidx.test.espresso.device.DeviceInteraction);
+    method public androidx.test.espresso.device.DeviceInteraction setClosedMode(androidx.test.espresso.device.DeviceInteraction);
+    method public androidx.test.espresso.device.DeviceInteraction setDisplaySize(androidx.test.espresso.device.DeviceInteraction, androidx.test.espresso.device.sizeclass.WidthSizeClass widthSizeClass, androidx.test.espresso.device.sizeclass.HeightSizeClass heightSizeClass);
+    method public androidx.test.espresso.device.DeviceInteraction setFlatMode(androidx.test.espresso.device.DeviceInteraction);
+    method public androidx.test.espresso.device.DeviceInteraction setScreenOrientation(androidx.test.espresso.device.DeviceInteraction, androidx.test.espresso.device.action.ScreenOrientation orientation);
+    method public androidx.test.espresso.device.DeviceInteraction setTabletopMode(androidx.test.espresso.device.DeviceInteraction);
+  }
+
+  public final class EspressoDevice {
+    method public static androidx.test.espresso.device.DeviceInteraction onDevice();
+    field public static final androidx.test.espresso.device.EspressoDevice.Companion Companion;
+  }
+
+  public static final class EspressoDevice.Companion {
+    method public androidx.test.espresso.device.DeviceInteraction onDevice();
+  }
+
+}
+
+package androidx.test.espresso.device.action {
+
+  public interface DeviceAction {
+    method public void perform(androidx.test.platform.device.DeviceController deviceController);
+  }
+
+  public final class DeviceActions {
+    method public static androidx.test.espresso.device.action.DeviceAction setBookMode();
+    method public static androidx.test.espresso.device.action.DeviceAction setClosedMode();
+    method public static androidx.test.espresso.device.action.DeviceAction setDisplaySize(androidx.test.espresso.device.sizeclass.WidthSizeClass widthSizeClass, androidx.test.espresso.device.sizeclass.HeightSizeClass heightSizeClass);
+    method public static androidx.test.espresso.device.action.DeviceAction setFlatMode();
+    method public static androidx.test.espresso.device.action.DeviceAction setScreenOrientation(androidx.test.espresso.device.action.ScreenOrientation orientation);
+    method public static androidx.test.espresso.device.action.DeviceAction setTabletopMode();
+  }
+
+  public enum ScreenOrientation {
+    method public static androidx.test.espresso.device.action.ScreenOrientation valueOf(String value) throws java.lang.IllegalArgumentException;
+    method public static androidx.test.espresso.device.action.ScreenOrientation[] values();
+    enum_constant public static final androidx.test.espresso.device.action.ScreenOrientation LANDSCAPE;
+    enum_constant public static final androidx.test.espresso.device.action.ScreenOrientation PORTRAIT;
+  }
+
+}
+
+package androidx.test.espresso.device.controller {
+
+  public enum DeviceMode {
+    method public static androidx.test.espresso.device.controller.DeviceMode valueOf(String value) throws java.lang.IllegalArgumentException;
+    method public static androidx.test.espresso.device.controller.DeviceMode[] values();
+    enum_constant public static final androidx.test.espresso.device.controller.DeviceMode BOOK;
+    enum_constant public static final androidx.test.espresso.device.controller.DeviceMode CLOSED;
+    enum_constant public static final androidx.test.espresso.device.controller.DeviceMode FLAT;
+    enum_constant public static final androidx.test.espresso.device.controller.DeviceMode TABLETOP;
+  }
+
+}
+
+package androidx.test.espresso.device.filter {
+
+  @java.lang.annotation.Repeatable(RequiresDeviceModes::class) @kotlin.annotation.Retention(kotlin.annotation.AnnotationRetention.RUNTIME) @kotlin.annotation.Target(allowedTargets={kotlin.annotation.AnnotationTarget.CLASS, kotlin.annotation.AnnotationTarget.FUNCTION}) public @interface RequiresDeviceMode {
+    method public abstract androidx.test.espresso.device.controller.DeviceMode mode();
+    property public abstract androidx.test.espresso.device.controller.DeviceMode mode;
+  }
+
+  @kotlin.annotation.Retention(kotlin.annotation.AnnotationRetention.RUNTIME) @kotlin.annotation.Target(allowedTargets={kotlin.annotation.AnnotationTarget.CLASS, kotlin.annotation.AnnotationTarget.FUNCTION}) public @interface RequiresDisplay {
+    method public abstract androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum heightSizeClass();
+    method public abstract androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum widthSizeClass();
+    property public abstract androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum heightSizeClass;
+    property public abstract androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum widthSizeClass;
+  }
+
+}
+
+package androidx.test.espresso.device.rules {
+
+  public final class DisplaySizeRule implements org.junit.rules.TestRule {
+    ctor public DisplaySizeRule();
+    method public org.junit.runners.model.Statement apply(org.junit.runners.model.Statement statement, org.junit.runner.Description description);
+    field public static final androidx.test.espresso.device.rules.DisplaySizeRule.Companion Companion;
+  }
+
+  public static final class DisplaySizeRule.Companion {
+  }
+
+  public final class ScreenOrientationRule implements org.junit.rules.TestRule {
+    ctor public ScreenOrientationRule(androidx.test.espresso.device.action.ScreenOrientation? defaultOrientation);
+    method public org.junit.runners.model.Statement apply(org.junit.runners.model.Statement statement, org.junit.runner.Description description);
+  }
+
+  public final class SkipUnsupportedDeviceActionsRule implements org.junit.rules.TestRule {
+    ctor public SkipUnsupportedDeviceActionsRule();
+    method public org.junit.runners.model.Statement apply(org.junit.runners.model.Statement statement, org.junit.runner.Description description);
+  }
+
+}
+
+package androidx.test.espresso.device.sizeclass {
+
+  public final class HeightSizeClass {
+    method public static androidx.test.espresso.device.sizeclass.HeightSizeClass compute(int dpHeight);
+    method public static androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum getEnum(androidx.test.espresso.device.sizeclass.HeightSizeClass sizeClass);
+    method public static int getHeightDpInSizeClass(androidx.test.espresso.device.sizeclass.HeightSizeClass sizeClass);
+    field public static final androidx.test.espresso.device.sizeclass.HeightSizeClass COMPACT;
+    field public static final androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion Companion;
+    field public static final androidx.test.espresso.device.sizeclass.HeightSizeClass EXPANDED;
+    field public static final androidx.test.espresso.device.sizeclass.HeightSizeClass MEDIUM;
+  }
+
+  public static final class HeightSizeClass.Companion {
+    method public androidx.test.espresso.device.sizeclass.HeightSizeClass compute(int dpHeight);
+    method public androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum getEnum(androidx.test.espresso.device.sizeclass.HeightSizeClass sizeClass);
+    method public int getHeightDpInSizeClass(androidx.test.espresso.device.sizeclass.HeightSizeClass sizeClass);
+  }
+
+  public enum HeightSizeClass.Companion.HeightSizeClassEnum {
+    method public final String! getDescription();
+    method public static androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum valueOf(String value) throws java.lang.IllegalArgumentException;
+    method public static androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum[] values();
+    property public final String! description;
+    enum_constant public static final androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum COMPACT;
+    enum_constant public static final androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum EXPANDED;
+    enum_constant public static final androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum MEDIUM;
+  }
+
+  public final class WidthSizeClass {
+    method public static androidx.test.espresso.device.sizeclass.WidthSizeClass compute(int dpWidth);
+    method public static androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum getEnum(androidx.test.espresso.device.sizeclass.WidthSizeClass sizeClass);
+    method public static int getWidthDpInSizeClass(androidx.test.espresso.device.sizeclass.WidthSizeClass sizeClass);
+    field public static final androidx.test.espresso.device.sizeclass.WidthSizeClass COMPACT;
+    field public static final androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion Companion;
+    field public static final androidx.test.espresso.device.sizeclass.WidthSizeClass EXPANDED;
+    field public static final androidx.test.espresso.device.sizeclass.WidthSizeClass MEDIUM;
+  }
+
+  public static final class WidthSizeClass.Companion {
+    method public androidx.test.espresso.device.sizeclass.WidthSizeClass compute(int dpWidth);
+    method public androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum getEnum(androidx.test.espresso.device.sizeclass.WidthSizeClass sizeClass);
+    method public int getWidthDpInSizeClass(androidx.test.espresso.device.sizeclass.WidthSizeClass sizeClass);
+  }
+
+  public enum WidthSizeClass.Companion.WidthSizeClassEnum {
+    method public final String! getDescription();
+    method public static androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum valueOf(String value) throws java.lang.IllegalArgumentException;
+    method public static androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum[] values();
+    property public final String! description;
+    enum_constant public static final androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum COMPACT;
+    enum_constant public static final androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum EXPANDED;
+    enum_constant public static final androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum MEDIUM;
+  }
+
+}
+

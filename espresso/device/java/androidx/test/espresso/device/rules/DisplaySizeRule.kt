@@ -20,7 +20,6 @@ import android.content.res.Configuration
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.espresso.device.common.calculateCurrentDisplayWidthAndHeightPx
 import androidx.test.espresso.device.common.executeShellCommand
 import androidx.test.espresso.device.common.getDeviceApiLevel
@@ -36,7 +35,6 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 
 /** Test rule for restoring device to its starting display size when a test case finishes */
-@ExperimentalTestApi
 class DisplaySizeRule : TestRule {
   override fun apply(statement: Statement, description: Description): Statement {
     return object : Statement() {

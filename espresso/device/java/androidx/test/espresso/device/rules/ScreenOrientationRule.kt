@@ -16,7 +16,6 @@
 package androidx.test.espresso.device.rules
 
 import android.content.res.Configuration
-import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.espresso.device.EspressoDevice.Companion.onDevice
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.action.setScreenOrientation
@@ -31,7 +30,6 @@ import org.junit.runners.model.Statement
  * @param defaultOrientation: the screen orientation will be set to the specified value, or the one
  *   that the test starts with if none is given.
  */
-@ExperimentalTestApi
 class ScreenOrientationRule(private val defaultOrientation: ScreenOrientation?) : TestRule {
   override fun apply(statement: Statement, description: Description): Statement {
     return object : Statement() {

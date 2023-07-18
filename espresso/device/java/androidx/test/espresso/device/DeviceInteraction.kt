@@ -15,7 +15,6 @@
  */
 package androidx.test.espresso.device
 
-import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.espresso.device.action.DeviceAction
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.action.setBookMode as getSetBookModeDeviceAction
@@ -32,10 +31,7 @@ import javax.inject.Inject
 
 /**
  * API surface for performing device-centric operations.
- *
- * <p>This API is experimental and subject to change.
  */
-@ExperimentalTestApi
 class DeviceInteraction @Inject constructor(private val deviceController: DeviceController) {
 
   /**
@@ -64,7 +60,6 @@ class DeviceInteraction @Inject constructor(private val deviceController: Device
      * @throws UnsupportedDeviceOperationException if used on a real device.
      * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
      */
-    @ExperimentalTestApi
     fun DeviceInteraction.setTabletopMode(): DeviceInteraction {
       perform(getSetTabletopModeDeviceAction())
       return this
@@ -81,7 +76,6 @@ class DeviceInteraction @Inject constructor(private val deviceController: Device
      * @throws UnsupportedDeviceOperationException if used on a real device.
      * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
      */
-    @ExperimentalTestApi
     fun DeviceInteraction.setBookMode(): DeviceInteraction {
       perform(getSetBookModeDeviceAction())
       return this
@@ -97,7 +91,6 @@ class DeviceInteraction @Inject constructor(private val deviceController: Device
      * @throws UnsupportedDeviceOperationException if used on a real device.
      * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
      */
-    @ExperimentalTestApi
     fun DeviceInteraction.setFlatMode(): DeviceInteraction {
       perform(getSetFlatModeDeviceAction())
       return this
@@ -112,7 +105,6 @@ class DeviceInteraction @Inject constructor(private val deviceController: Device
      * @throws UnsupportedDeviceOperationException if used on a real device.
      * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
      */
-    @ExperimentalTestApi
     fun DeviceInteraction.setClosedMode(): DeviceInteraction {
       perform(getSetClosedModeDeviceAction())
       return this
@@ -123,7 +115,6 @@ class DeviceInteraction @Inject constructor(private val deviceController: Device
      *
      * @param orientation the orientation to set the device to (portait or landscape)
      */
-    @ExperimentalTestApi
     fun DeviceInteraction.setScreenOrientation(orientation: ScreenOrientation): DeviceInteraction {
       perform(getSetScreenOrientationDeviceAction(orientation))
       return this
@@ -135,7 +126,6 @@ class DeviceInteraction @Inject constructor(private val deviceController: Device
      * @param widthSizeClass the width to set the device display to
      * @param heightSizeClass the height to set the device display to
      */
-    @ExperimentalTestApi
     fun DeviceInteraction.setDisplaySize(
       widthSizeClass: WidthSizeClass,
       heightSizeClass: HeightSizeClass

@@ -18,7 +18,6 @@ package androidx.test.espresso.device.controller
 
 import androidx.annotation.RestrictTo
 import androidx.annotation.RestrictTo.Scope
-import androidx.test.annotation.ExperimentalTestApi
 
 /**
  * Enum for modes a foldable device can be set to.
@@ -26,7 +25,6 @@ import androidx.test.annotation.ExperimentalTestApi
  * For more information on foldable device postures, see
  * https://developer.android.com/guide/topics/large-screens/learn-about-foldables
  */
-@ExperimentalTestApi
 enum class DeviceMode(private val mode: Int) {
   // the device screen is completely flat, like a tablet
   FLAT(0),

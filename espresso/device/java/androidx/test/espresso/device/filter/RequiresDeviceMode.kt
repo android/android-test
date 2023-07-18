@@ -15,7 +15,6 @@
  */
 package androidx.test.espresso.device.filter
 
-import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.espresso.device.controller.DeviceMode
 import androidx.test.filters.CustomFilter
 import java.lang.annotation.Repeatable
@@ -26,17 +25,13 @@ import java.lang.annotation.Repeatable
  *
  * <p> This annotation is repeatable. It will be executed only if the test is running on a foldable
  * device that can be set to the all of the provided device modes.
- *
- * <p>This API is experimental and subject to change or removal.
  */
-@ExperimentalTestApi
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 @Repeatable(RequiresDeviceModes::class)
 @CustomFilter(filterClass = RequiresDeviceModeFilter::class)
 annotation class RequiresDeviceMode(val mode: DeviceMode)
 
-@ExperimentalTestApi
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 @CustomFilter(filterClass = RequiresDeviceModeFilter::class)

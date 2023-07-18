@@ -22,7 +22,6 @@ import android.os.Handler
 import android.os.Looper
 import androidx.annotation.RestrictTo
 import androidx.annotation.RestrictTo.Scope
-import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.espresso.device.sizeclass.HeightSizeClass
 import androidx.test.espresso.device.sizeclass.WidthSizeClass
 import java.util.concurrent.Executor
@@ -41,7 +40,6 @@ private val mainExecutor = Executor { command -> Handler(Looper.getMainLooper())
  * @throws UnsupportedDeviceOperationException if used on a real device.
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
-@ExperimentalTestApi
 fun setTabletopMode(): DeviceAction {
   return TabletopModeAction(mainExecutor)
 }
@@ -57,7 +55,6 @@ fun setTabletopMode(): DeviceAction {
  * @throws UnsupportedDeviceOperationException if used on a real device.
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
-@ExperimentalTestApi
 fun setBookMode(): DeviceAction {
   return BookModeAction(mainExecutor)
 }
@@ -72,7 +69,6 @@ fun setBookMode(): DeviceAction {
  * @throws UnsupportedDeviceOperationException if used on a real device.
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
-@ExperimentalTestApi
 fun setFlatMode(): DeviceAction {
   return FlatModeAction(mainExecutor)
 }
@@ -86,7 +82,6 @@ fun setFlatMode(): DeviceAction {
  * @throws UnsupportedDeviceOperationException if used on a real device.
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
-@ExperimentalTestApi
 fun setClosedMode(): DeviceAction {
   return ClosedModeAction(mainExecutor)
 }
@@ -96,7 +91,6 @@ fun setClosedMode(): DeviceAction {
  *
  * @param orientation the orientation to set the device to (portait or landscape)
  */
-@ExperimentalTestApi
 fun setScreenOrientation(orientation: ScreenOrientation): DeviceAction {
   return ScreenOrientationAction(orientation)
 }
@@ -107,13 +101,11 @@ fun setScreenOrientation(orientation: ScreenOrientation): DeviceAction {
  * @param widthSizeClass the window width to set the device to
  * @param heightSizeClass the window height to set the device to
  */
-@ExperimentalTestApi
 fun setDisplaySize(widthSizeClass: WidthSizeClass, heightSizeClass: HeightSizeClass): DeviceAction {
   return DisplaySizeAction(widthDisplaySize = widthSizeClass, heightDisplaySize = heightSizeClass)
 }
 
 /** Enum for screen orientations a device can be set to. */
-@ExperimentalTestApi
 enum class ScreenOrientation(private val orientation: Int) {
   PORTRAIT(0),
   LANDSCAPE(1);

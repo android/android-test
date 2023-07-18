@@ -16,15 +16,12 @@
 
 package androidx.test.espresso.device.sizeclass
 
-import androidx.test.annotation.ExperimentalTestApi
-
 /**
  * A class to create buckets for the width of a window.
  *
  * For details on window size classes, see
  * https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes.
  */
-@ExperimentalTestApi
 public class WidthSizeClass
 private constructor(
   private val lowerBound: Int,

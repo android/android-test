@@ -15,7 +15,6 @@
  */
 package androidx.test.espresso.device.rules
 
-import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.platform.device.UnsupportedDeviceOperationException
 import org.junit.Assume.assumeNoException
 import org.junit.rules.TestRule
@@ -42,7 +41,6 @@ import org.junit.runners.model.Statement
  * }
  * ```
  */
-@ExperimentalTestApi
 class SkipUnsupportedDeviceActionsRule() : TestRule {
   override fun apply(statement: Statement, description: Description): Statement {
     return object : Statement() {
