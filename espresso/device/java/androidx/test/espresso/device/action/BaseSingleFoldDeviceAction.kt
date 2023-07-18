@@ -28,7 +28,6 @@ import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
 import androidx.window.layout.WindowLayoutInfo
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collect
@@ -38,8 +37,7 @@ import kotlinx.coroutines.launch
 /** Action to set the test device to the provided device mode. */
 internal open class BaseSingleFoldDeviceAction(
   private val deviceMode: DeviceMode,
-  private val foldingFeatureState: FoldingFeature.State?,
-  private val mainExecutor: Executor
+  private val foldingFeatureState: FoldingFeature.State?
 ) : DeviceAction {
   protected var foldingFeatureOrientation: FoldingFeature.Orientation? = null
 

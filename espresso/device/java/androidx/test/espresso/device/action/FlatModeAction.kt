@@ -22,11 +22,10 @@ import androidx.test.espresso.device.common.getMapOfDeviceStateNamesToIdentifier
 import androidx.test.espresso.device.controller.DeviceMode
 import androidx.test.platform.device.DeviceController
 import androidx.window.layout.FoldingFeature
-import java.util.concurrent.Executor
 
 /** Action to set the test device to be completely flat, like a tablet. */
-internal class FlatModeAction(private val mainExecutor: Executor) :
-  BaseSingleFoldDeviceAction(DeviceMode.FLAT, FoldingFeature.State.FLAT, mainExecutor) {
+internal class FlatModeAction() :
+  BaseSingleFoldDeviceAction(DeviceMode.FLAT, FoldingFeature.State.FLAT) {
   override fun perform(deviceController: DeviceController) {
     val currentDeviceStateIdentifier = executeShellCommand("cmd device_state print-state").trim()
     if (currentDeviceStateIdentifier == getMapOfDeviceStateNamesToIdentifiers().get("OPENED")) {

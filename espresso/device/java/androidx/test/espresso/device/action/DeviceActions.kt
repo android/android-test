@@ -18,16 +18,12 @@
 
 package androidx.test.espresso.device.action
 
-import android.os.Handler
-import android.os.Looper
 import androidx.annotation.RestrictTo
 import androidx.annotation.RestrictTo.Scope
 import androidx.test.espresso.device.sizeclass.HeightSizeClass
 import androidx.test.espresso.device.sizeclass.WidthSizeClass
-import java.util.concurrent.Executor
 
 /** Entry point for device action operations. */
-private val mainExecutor = Executor { command -> Handler(Looper.getMainLooper()).post(command) }
 
 /**
  * Set device screen to be folded with the hinge in the horizontal position. For details on foldable
@@ -41,7 +37,7 @@ private val mainExecutor = Executor { command -> Handler(Looper.getMainLooper())
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
 fun setTabletopMode(): DeviceAction {
-  return TabletopModeAction(mainExecutor)
+  return TabletopModeAction()
 }
 
 /**
@@ -56,7 +52,7 @@ fun setTabletopMode(): DeviceAction {
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
 fun setBookMode(): DeviceAction {
-  return BookModeAction(mainExecutor)
+  return BookModeAction()
 }
 
 /**
@@ -70,7 +66,7 @@ fun setBookMode(): DeviceAction {
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
 fun setFlatMode(): DeviceAction {
-  return FlatModeAction(mainExecutor)
+  return FlatModeAction()
 }
 
 /**
@@ -83,7 +79,7 @@ fun setFlatMode(): DeviceAction {
  * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
  */
 fun setClosedMode(): DeviceAction {
-  return ClosedModeAction(mainExecutor)
+  return ClosedModeAction()
 }
 
 /**

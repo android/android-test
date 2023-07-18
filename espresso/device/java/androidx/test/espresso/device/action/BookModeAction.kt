@@ -23,11 +23,10 @@ import androidx.test.espresso.device.controller.DeviceMode
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.device.DeviceController
 import androidx.window.layout.FoldingFeature
-import java.util.concurrent.Executor
 
 /** Action to set the test device to be folded with the hinge in the vertical position. */
-internal class BookModeAction(private val mainExecutor: Executor) :
-  BaseSingleFoldDeviceAction(DeviceMode.BOOK, FoldingFeature.State.HALF_OPENED, mainExecutor) {
+internal class BookModeAction() :
+  BaseSingleFoldDeviceAction(DeviceMode.BOOK, FoldingFeature.State.HALF_OPENED) {
   companion object {
     private val TAG = BookModeAction::class.java.simpleName
   }

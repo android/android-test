@@ -21,11 +21,9 @@ import androidx.test.espresso.device.common.executeShellCommand
 import androidx.test.espresso.device.common.getMapOfDeviceStateNamesToIdentifiers
 import androidx.test.espresso.device.controller.DeviceMode
 import androidx.test.platform.device.DeviceController
-import java.util.concurrent.Executor
 
 /** Action to set the test device to be closed. */
-internal class ClosedModeAction(private val mainExecutor: Executor) :
-  BaseSingleFoldDeviceAction(DeviceMode.CLOSED, null, mainExecutor) {
+internal class ClosedModeAction() : BaseSingleFoldDeviceAction(DeviceMode.CLOSED, null) {
   override fun perform(deviceController: DeviceController) {
     val currentDeviceStateIdentifier = executeShellCommand("cmd device_state print-state").trim()
     if (currentDeviceStateIdentifier == getMapOfDeviceStateNamesToIdentifiers().get("CLOSED")) {

@@ -23,11 +23,10 @@ import androidx.test.espresso.device.controller.DeviceMode
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.device.DeviceController
 import androidx.window.layout.FoldingFeature
-import java.util.concurrent.Executor
 
 /** Action to set the test device to be folded with the hinge in a horizontal position. */
-internal class TabletopModeAction(private val mainExecutor: Executor) :
-  BaseSingleFoldDeviceAction(DeviceMode.TABLETOP, FoldingFeature.State.HALF_OPENED, mainExecutor) {
+internal class TabletopModeAction() :
+  BaseSingleFoldDeviceAction(DeviceMode.TABLETOP, FoldingFeature.State.HALF_OPENED) {
   companion object {
     private val TAG = TabletopModeAction::class.java.simpleName
   }
