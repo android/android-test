@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
+
 package androidx.test.services.shellexecutor
 
 import android.os.Build
