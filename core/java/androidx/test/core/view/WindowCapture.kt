@@ -57,8 +57,12 @@ fun Window.captureRegionToBitmap(boundsInWindow: Rect? = null): ListenableFuture
   }
 
   mainExecutor.execute {
-    val forceRedrawFuture = decorView.forceRedraw()
-    forceRedrawFuture.addListener({ generateBitmap(boundsInWindow, bitmapFuture) }, mainExecutor)
+    if (Build.FINGERPRINT.contains("robolectric")) {
+      generateBitmap(boundsInWindow, bitmapFuture)
+    } else {
+      val forceRedrawFuture = decorView.forceRedraw()
+      forceRedrawFuture.addListener({ generateBitmap(boundsInWindow, bitmapFuture) }, mainExecutor)
+    }
   }
 
   return bitmapFuture
