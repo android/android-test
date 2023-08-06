@@ -24,9 +24,8 @@ import android.util.Log
 import java.io.File
 import java.util.concurrent.LinkedBlockingQueue
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ClosedSendChannelException
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.runBlocking
 
 /**
  * A FileObserver that is friendly with Kotlin coroutines.
@@ -149,14 +148,7 @@ open class CoroutineFileObserver(public val watch: File) :
       private val channel: Channel<Event> = Channel(Channel.UNLIMITED)
 
       override fun send(event: Event) {
-        if (channel.isClosedForSend) return
-        runBlocking {
-          try {
-            channel.send(event)
-          } catch (x: ClosedSendChannelException) {
-            // Just in case the channel was closed after the previous call
-          }
-        }
+        val unused = channel.trySendBlocking(event)
       }
 
       override suspend fun receive(handler: suspend (Event) -> Unit) {
