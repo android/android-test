@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-@file:OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
-
 package androidx.test.services.shellexecutor
 
 import android.os.Build
@@ -24,7 +22,9 @@ import android.util.Log
 import java.io.File
 import java.util.concurrent.LinkedBlockingQueue
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ClosedSendChannelException
+import kotlinx.coroutines.channels.onClosed
+import kotlinx.coroutines.channels.onFailure
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.runBlocking
 
@@ -149,12 +149,18 @@ open class CoroutineFileObserver(public val watch: File) :
       private val channel: Channel<Event> = Channel(Channel.UNLIMITED)
 
       override fun send(event: Event) {
-        if (channel.isClosedForSend) return
         runBlocking {
           try {
-            channel.send(event)
-          } catch (x: ClosedSendChannelException) {
-            // Just in case the channel was closed after the previous call
+            channel
+              .trySendBlocking(event)
+              .onFailure { t: Throwable? ->
+                Log.w("CoroutineFileObserver", "Error while sending $event", t)
+              }
+              .onClosed { t: Throwable? ->
+                Log.v("CoroutineFileObserver", "Event channel closed to $event", t)
+              }
+          } catch (x: InterruptedException) {
+            Log.w("CoroutineFileObserver", "Interrupted while sending $event", x)
           }
         }
       }
