@@ -179,7 +179,6 @@ maven_install(
         "org.pantsbuild:jarjar:1.7.2",
         "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
         "org.jetbrains.kotlinx:kotlinx-coroutines-core:%s" % KOTLINX_COROUTINES_VERSION,
-        "com.google.code.findbugs:jsr305:3.0.2",
         maven.artifact(
             artifact = "robolectric",
             exclusions = [
