@@ -23,6 +23,6 @@ android_library(
         "//espresso/remote/java/androidx/test/espresso/remote:registry",
         "//espresso/remote/java/androidx/test/espresso/web/proto/webdriver:web_driver_atoms_proto_android_pb3",
         "//espresso/web/java/androidx/test/espresso/web/webdriver",
-        "@maven//:androidx_annotation_annotation_jvm",
+        "//opensource/androidx:annotation",
     ],
 )

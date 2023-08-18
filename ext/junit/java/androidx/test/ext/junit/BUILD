@@ -25,9 +25,9 @@ android_library(
     tags = ["alt_dep=//ext/junit"],
     deps = [
         "//core",
+        "//opensource/androidx:annotation",
         "//runner/monitor",
         "//services/storage",
-        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:junit_junit",
     ],
 )

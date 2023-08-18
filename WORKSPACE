@@ -92,7 +92,7 @@ grpc_java_repositories()
 maven_install(
     name = "maven",
     artifacts = [
-        "androidx.annotation:annotation-jvm:" + ANDROIDX_ANNOTATION_VERSION,
+        "androidx.annotation:annotation:" + ANDROIDX_ANNOTATION_VERSION,
         "androidx.annotation:annotation-experimental:jar:" + ANDROIDX_ANNOTATION_EXPERIMENTAL_VERSION,
         "androidx.appcompat:appcompat:" + ANDROIDX_COMPAT_VERSION,
         "androidx.concurrent:concurrent-futures:" + ANDROIDX_CONCURRENT_VERSION,

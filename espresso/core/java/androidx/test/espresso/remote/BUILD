@@ -31,7 +31,7 @@ android_library(
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
-        "@maven//:androidx_annotation_annotation_jvm",
+        "//opensource/androidx:annotation",
         "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
@@ -47,8 +47,8 @@ android_library(
     visibility = ["//visibility:public"],
     deps = [
         ":exceptions",
+        "//opensource/androidx:annotation",
         "//runner/android_junit_runner",
-        "@maven//:androidx_annotation_annotation_jvm",
     ],
 )
 

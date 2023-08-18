@@ -21,8 +21,8 @@ android_library(
         "//espresso/core/javatests/androidx/test/espresso:__subpackages__",
     ],
     deps = [
+        "//opensource/androidx:annotation",
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
@@ -48,10 +48,10 @@ android_app_instrumentation_tests(
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/util/concurrent",
         "//ext/junit",
+        "//opensource/androidx:annotation",
         "//runner/android_junit_runner",
         "//runner/rules",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
-        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",

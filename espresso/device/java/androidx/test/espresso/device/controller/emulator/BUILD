@@ -19,10 +19,10 @@ kt_android_library(
     deps = [
         "//espresso/device/java/androidx/test/espresso/device/action",
         "//espresso/device/java/androidx/test/espresso/device/controller",
+        "//opensource/androidx:annotation",
         "//opensource/emulator/proto:emulator_controller_java_grpc",
         "//opensource/emulator/proto:emulator_controller_java_proto_lite",
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:io_grpc_grpc_okhttp",
         "@maven//:io_grpc_grpc_stub",
         "@maven//:org_apache_tomcat_annotations_api",

@@ -17,8 +17,8 @@ android_library(
         "*.kt",
     ]),
     deps = [
+        "//opensource/androidx:annotation",
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation_jvm",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
 )

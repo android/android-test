@@ -24,8 +24,8 @@ android_library(
         "//espresso/remote/java/androidx/test/espresso/web/proto/action:web_actions_proto_android_pb3",
         "//espresso/web/java/androidx/test/espresso/web/action",
         "//espresso/web/java/androidx/test/espresso/web/model",
+        "//opensource/androidx:annotation",
         "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:androidx_annotation_annotation_jvm",
     ],
 )
 
@@ -33,6 +33,6 @@ java_library(
     name = "package-info",
     srcs = ["package-info.java"],
     deps = [
-        "@maven//:androidx_annotation_annotation_jvm",
+        "//opensource/androidx:annotation",
     ],
 )

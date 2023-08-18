@@ -20,7 +20,7 @@ kt_android_library(
         "*.java",
     ]),
     deps = [
+        "//opensource/androidx:annotation",
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation_jvm",
     ],
 )

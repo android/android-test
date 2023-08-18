@@ -16,5 +16,5 @@ android_library(
     name = "emulator",
     testonly = 1,
     srcs = glob(["*.java"]),
-    deps = ["@maven//:androidx_annotation_annotation_jvm"],
+    deps = ["//opensource/androidx:annotation"],
 )

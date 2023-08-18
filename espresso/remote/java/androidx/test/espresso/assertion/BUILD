@@ -22,6 +22,6 @@ android_library(
         "//espresso/remote/java/androidx/test/espresso/proto/assertion:ui_interaction_view_assertions_android_pb3",
         "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
         "//espresso/remote/java/androidx/test/espresso/remote:registry",
-        "@maven//:androidx_annotation_annotation_jvm",
+        "//opensource/androidx:annotation",
     ],
 )

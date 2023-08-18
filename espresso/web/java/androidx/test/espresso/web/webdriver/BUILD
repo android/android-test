@@ -22,8 +22,8 @@ android_library(
     deps = [
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//espresso/web/java/androidx/test/espresso/web/model",
+        "//opensource/androidx:annotation",
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
