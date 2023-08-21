@@ -8,7 +8,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on:
+      group: Large Runners
     timeout-minutes: 20
     steps:
       - name: Check out repository code
@@ -49,7 +50,8 @@ jobs:
           rm -rf ~/.cache/bazel/*/*/external/
         shell: bash
   test:
-    runs-on: ubuntu-latest
+    runs-on:
+      group: Large Runners
     timeout-minutes: 20
     steps:
       - name: Check out repository code
