@@ -39,6 +39,13 @@ public class ReflectiveFieldTest {
   }
 
   @Test
+  public void get_withClass() throws ReflectionException {
+    Fixture f = new Fixture();
+    int value = new ReflectiveField<Integer>(f.getClass(), "someField").get(f);
+    assertThat(value).isEqualTo(42);
+  }
+
+  @Test
   public void get_nonExistent() {
     assertThrows(
         ReflectionException.class,

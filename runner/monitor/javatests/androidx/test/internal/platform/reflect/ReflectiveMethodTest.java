@@ -53,6 +53,13 @@ public class ReflectiveMethodTest {
   }
 
   @Test
+  public void invoke_withClass() throws ReflectionException {
+    Fixture f = new Fixture();
+    int value = new ReflectiveMethod<Integer>(f.getClass(), "someMethod").invoke(f);
+    assertThat(value).isEqualTo(42);
+  }
+
+  @Test
   public void invokeStatic() throws ReflectionException {
     int value =
         new ReflectiveMethod<Integer>(Fixture.class.getName(), "someStaticMethod").invokeStatic();

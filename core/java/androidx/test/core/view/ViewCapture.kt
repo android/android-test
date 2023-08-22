@@ -17,27 +17,29 @@
 
 package androidx.test.core.view
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.PixelCopy
+import android.view.Surface
 import android.view.SurfaceView
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.view.Window
+import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.concurrent.futures.ResolvableFuture
 import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.core.internal.os.HandlerExecutor
+import androidx.test.internal.platform.reflect.ReflectiveField
+import androidx.test.internal.platform.reflect.ReflectiveMethod
 import androidx.test.platform.graphics.HardwareRendererCompat
 import com.google.common.util.concurrent.ListenableFuture
+import java.util.function.Consumer
 
 /**
  * Asynchronously captures an image of the underlying view into a [Bitmap].
@@ -49,9 +51,6 @@ import com.google.common.util.concurrent.ListenableFuture
  *
  * This API is primarily intended for use in lower layer libraries or frameworks. For test authors,
  * its recommended to use espresso or compose's captureToImage.
- *
- * This API currently does not work for View's hosted in Dialogs on APIs >= 26, as there is no way
- * to find a Dialog's Window. (see b/195673633).
  *
  * This API is currently experimental and subject to change or removal.
  */
@@ -99,6 +98,7 @@ fun View.forceRedraw(): ListenableFuture<Void> {
     viewTreeObserver.addOnDrawListener(
       object : ViewTreeObserver.OnDrawListener {
         var handled = false
+
         override fun onDraw() {
           if (!handled) {
             handled = true
@@ -121,19 +121,13 @@ private fun View.generateBitmap(bitmapFuture: ResolvableFuture<Bitmap>) {
   val destBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
   when {
     Build.VERSION.SDK_INT < 26 -> generateBitmapFromDraw(destBitmap, bitmapFuture)
+    Build.VERSION.SDK_INT >= 34 -> generateBitmapFromPixelCopy(destBitmap, bitmapFuture)
     this is SurfaceView -> generateBitmapFromSurfaceViewPixelCopy(destBitmap, bitmapFuture)
-    else -> {
-      val window = getActivity()?.window
-      if (window != null) {
-        generateBitmapFromPixelCopy(window, destBitmap, bitmapFuture)
-      } else {
-        bitmapFuture.setException(IllegalStateException("Could not find window for view."))
-      }
-    }
+    else -> generateBitmapFromPixelCopy(this.getSurface(), destBitmap, bitmapFuture)
   }
 }
 
-@SuppressWarnings("NewApi")
+@RequiresApi(Build.VERSION_CODES.O)
 private fun SurfaceView.generateBitmapFromSurfaceViewPixelCopy(
   destBitmap: Bitmap,
   bitmapFuture: ResolvableFuture<Bitmap>
@@ -161,38 +155,107 @@ internal fun View.generateBitmapFromDraw(
   bitmapFuture.set(destBitmap)
 }
 
-private fun View.getActivity(): Activity? {
-  fun Context.getActivity(): Activity? {
-    return when (this) {
-      is Activity -> this
-      is ContextWrapper -> this.baseContext.getActivity()
-      else -> null
-    }
-  }
-
-  val activity = context.getActivity()
-  if (activity != null) {
-    return activity
-  } else if (this is ViewGroup && this.childCount > 0) {
-    // getActivity is known to fail if View is a DecorView such as specified via espresso's
-    // isRoot().
-    // Make another attempt to find the activity from its first child view
-    return getChildAt(0).getActivity()
-  } else {
-    return null
-  }
-}
-
+/**
+ * Generates a bitmap from the given surface using [PixelCopy].
+ *
+ * This method is effectively the backwards compatibility version of android U's
+ * [PixelCopy.ofWindow(View)], and will be called when running on Android API levels O to T.
+ */
+@RequiresApi(Build.VERSION_CODES.O)
 private fun View.generateBitmapFromPixelCopy(
-  window: Window,
+  surface: Surface,
   destBitmap: Bitmap,
   bitmapFuture: ResolvableFuture<Bitmap>
 ) {
+  val onCopyFinished =
+    PixelCopy.OnPixelCopyFinishedListener { result ->
+      if (result == PixelCopy.SUCCESS) {
+        bitmapFuture.set(destBitmap)
+      } else {
+        bitmapFuture.setException(RuntimeException("PixelCopy failed: $result"))
+      }
+    }
+  val bounds = getBoundsInSurface()
+  Log.d("ViewCapture", "locationInSurface $bounds")
+  PixelCopy.request(surface, bounds, destBitmap, onCopyFinished, Handler(Looper.getMainLooper()))
+}
+
+/** Returns the Rect indicating the View's coordinates within its containing window. */
+private fun View.getBoundsInWindow(): Rect {
   val locationInWindow = intArrayOf(0, 0)
   getLocationInWindow(locationInWindow)
   val x = locationInWindow[0]
   val y = locationInWindow[1]
-  val boundsInWindow = Rect(x, y, x + width, y + height)
+  return Rect(x, y, x + width, y + height)
+}
 
-  return window.generateBitmapFromPixelCopy(boundsInWindow, destBitmap, bitmapFuture)
+/** Returns the Rect indicating the View's coordinates within its containing surface. */
+private fun View.getBoundsInSurface(): Rect {
+  val locationInSurface = intArrayOf(0, 0)
+  if (Build.VERSION.SDK_INT < 29) {
+    reflectivelyGetLocationInSurface(locationInSurface)
+  } else {
+    getLocationInSurface(locationInSurface)
+  }
+  val x = locationInSurface[0]
+  val y = locationInSurface[1]
+  return Rect(x, y, x + width, y + height)
+}
+
+private fun View.getSurface(): Surface {
+  // copy the implementation of API 34's PixelCopy.ofWindow to get the surface from view
+  val viewRootImpl = ReflectiveMethod<Any>(View::class.java, "getViewRootImpl").invoke(this)
+  return ReflectiveField<Surface>("android.view.ViewRootImpl", "mSurface").get(viewRootImpl)
+}
+
+/**
+ * The backwards compatible version of API 29's [View.getLocationInSurface].
+ *
+ * It makes a best effort attempt to replicate the API 29 logic.
+ */
+@SuppressLint("NewApi")
+private fun View.reflectivelyGetLocationInSurface(locationInSurface: IntArray) {
+  // copy the implementation of API 29+ getLocationInSurface
+  getLocationInWindow(locationInSurface)
+  if (Build.VERSION.SDK_INT < 28) {
+    val viewRootImpl = ReflectiveMethod<Any>(View::class.java, "getViewRootImpl").invoke(this)
+    val windowAttributes =
+      ReflectiveField<WindowManager.LayoutParams>("android.view.ViewRootImpl", "mWindowAttributes")
+        .get(viewRootImpl)
+    val surfaceInsets =
+      ReflectiveField<Rect>(WindowManager.LayoutParams::class.java, "surfaceInsets")
+        .get(windowAttributes)
+    locationInSurface[0] += surfaceInsets.left
+    locationInSurface[1] += surfaceInsets.top
+  } else {
+    // ART restrictions introduced in API 29 disallow reflective access to mWindowAttributes
+    Log.w(
+      "ViewCapture",
+      "Could not calculate offset of view in surface on API 28, resulting image may have incorrect positioning"
+    )
+  }
+}
+
+/** Generates a bitmap given the current view using android U's [PixelCopy.ofWindow(View)]. */
+@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+private fun View.generateBitmapFromPixelCopy(
+  destBitmap: Bitmap,
+  bitmapFuture: ResolvableFuture<Bitmap>
+) {
+  val request =
+    PixelCopy.Request.Builder.ofWindow(this)
+      .setSourceRect(getBoundsInWindow())
+      .setDestinationBitmap(destBitmap)
+      .build()
+  val mainExecutor = HandlerExecutor(Handler(Looper.getMainLooper()))
+
+  val onCopyFinished =
+    Consumer<PixelCopy.Result> { result ->
+      if (result.status == PixelCopy.SUCCESS) {
+        bitmapFuture.set(result.bitmap)
+      } else {
+        bitmapFuture.setException(RuntimeException("PixelCopy failed: $(result.status)"))
+      }
+    }
+  PixelCopy.request(request, mainExecutor, onCopyFinished)
 }
