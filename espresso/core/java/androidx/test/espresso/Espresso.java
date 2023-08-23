@@ -42,7 +42,6 @@ import androidx.test.espresso.base.IdlingResourceRegistry;
 import androidx.test.espresso.util.TracingUtil;
 import androidx.test.espresso.util.TreeIterables;
 import androidx.test.espresso.util.concurrent.ListenableFutureTask;
-import androidx.test.internal.util.Checks;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.platform.tracing.Tracer.Span;
 import androidx.test.platform.tracing.Tracing;
@@ -324,25 +323,31 @@ public final class Espresso {
    * Loops the main thread until the app goes idle.
    *
    * <p>Same as {@link Espresso#onIdle()}, but takes an additional {@link Callable} as parameter,
-   * which is executed after the app goes idle.
+   * which is executed after the app goes idle. This works on any thread, including the main thread.
    *
    * @param action callable executed when the app goes idle.
    * @return the computed result of the action callable.
    * @throws AppNotIdleException when app does not go Idle within the master policies timeout.
-   * @throws RuntimeException when being invoked on the main thread.
    */
   public static <T> T onIdle(Callable<T> action) {
     try (Span ignored = tracer.beginSpan("Espresso.onIdle")) {
-      Checks.checkNotMainThread();
-
-      Executor mainThreadExecutor = BASE.mainThreadExecutor();
+      if (Thread.currentThread().equals(Looper.getMainLooper().getThread())) {
+        BASE.controlledLooper().drainMainThreadUntilIdle();
+        BASE.uiController().loopMainThreadUntilIdle();
+        try {
+          return action.call();
+        } catch (Exception e) {
+          throw new RuntimeException("Callable action in onIdle reported an exception.", e);
+        }
+      }
+      FutureTask<T> actionTask = new FutureTask<>(action);
       ListenableFutureTask<Void> idleFuture =
           ListenableFutureTask.create(
               () -> {
                 BASE.uiController().loopMainThreadUntilIdle();
                 return null;
               });
-      FutureTask<T> actionTask = new FutureTask<>(action);
+      Executor mainThreadExecutor = BASE.mainThreadExecutor();
       idleFuture.addListener(actionTask, mainThreadExecutor);
       mainThreadExecutor.execute(idleFuture);
       BASE.controlledLooper().drainMainThreadUntilIdle();

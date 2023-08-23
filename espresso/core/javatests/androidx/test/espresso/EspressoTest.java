@@ -43,6 +43,8 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import androidx.annotation.NonNull;
@@ -58,6 +60,7 @@ import androidx.test.ui.app.MainActivity;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SendActivity;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.hamcrest.Matcher;
 import org.junit.After;
@@ -444,17 +447,25 @@ public class EspressoTest {
   }
 
   @Test
-  public void onIdle_throwsFromScenarioOnActivity() {
-    rule.getScenario()
-        .onActivity(
-            activity -> {
-              IllegalStateException thrown =
-                  assertThrows(IllegalStateException.class, () -> onIdle());
+  public void onIdle_worksFromScenarioOnActivity() {
+    rule.getScenario().onActivity(activity -> onIdle());
 
-              assertThat(
-                  thrown.getMessage(),
-                  containsString("Method cannot be called on the main application thread"));
-            });
+    assertThat(
+        tracer.getSpans(), contains("beginSpan: Espresso.onIdle", "+-endSpan: Espresso.onIdle"));
+  }
+
+  @Test
+  public void onIdle_worksFromMainThread() throws Exception {
+    CountDownLatch latch = new CountDownLatch(1);
+
+    Handler handler = new Handler(Looper.getMainLooper());
+    handler.postAtFrontOfQueue(
+        () -> {
+          onIdle();
+          latch.countDown();
+        });
+
+    latch.await();
 
     assertThat(
         tracer.getSpans(), contains("beginSpan: Espresso.onIdle", "+-endSpan: Espresso.onIdle"));
