@@ -181,7 +181,7 @@ def _maven_artifact_impl(ctx):
     pom_content = _create_pom_string(ctx, group_id, artifact_id, version, packaging_type, maven_deps)
     ctx.actions.write(output = pom, content = pom_content)
 
-    metadata = ctx.actions.declare_file("maven-metadata.xml")
+    metadata = ctx.actions.declare_file("%s_maven-metadata.xml" % (ctx.label.name))
     ctx.actions.write(output = metadata, content = _create_metadata_string(ctx, group_id, artifact_id, version))
 
     # Rename binary artifact to artifact_id-version.packaging_type
