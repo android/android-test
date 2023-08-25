@@ -15,9 +15,14 @@
  */
 package androidx.test.espresso.device.controller.emulator
 
+import android.util.Log
 import androidx.annotation.RestrictTo
 import androidx.annotation.RestrictTo.Scope
 import androidx.test.espresso.device.action.ScreenOrientation
+import androidx.test.espresso.device.common.AccelerometerRotation
+import androidx.test.espresso.device.common.getAccelerometerRotationSetting
+import androidx.test.espresso.device.common.getDeviceApiLevel
+import androidx.test.espresso.device.common.setAccelerometerRotationSetting
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.controller.DeviceMode
 import androidx.test.platform.device.DeviceController
@@ -80,6 +85,19 @@ constructor(
   }
 
   override fun setScreenOrientation(orientation: Int) {
+    // Enable auto-rotate if it is disabled
+    if (getAccelerometerRotationSetting() != AccelerometerRotation.ENABLED) {
+      // Executing shell commands requires API 21+.
+      if (getDeviceApiLevel() >= 21) {
+        Log.d(TAG, "Enabling auto-rotate.")
+        setAccelerometerRotationSetting(AccelerometerRotation.ENABLED)
+      } else {
+        throw UnsupportedDeviceOperationException(
+          "Screen orientation cannot be set on this device because auto-rotate is disabled. Please manually enable auto-rotate and try again."
+        )
+      }
+    }
+
     try {
       val physicalModelValue: PhysicalModelValue =
         emulatorControllerStub.getPhysicalModel(

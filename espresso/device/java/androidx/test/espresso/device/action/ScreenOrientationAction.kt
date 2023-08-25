@@ -21,21 +21,16 @@ import android.content.ComponentCallbacks
 import android.content.Context
 import android.content.pm.ActivityInfo.CONFIG_ORIENTATION
 import android.content.res.Configuration
-import android.os.Handler
-import android.os.HandlerThread
-import android.provider.Settings.System
 import android.util.Log
-import androidx.test.espresso.device.common.SettingsObserver
-import androidx.test.espresso.device.common.executeShellCommand
+import androidx.test.espresso.device.common.getAccelerometerRotationSetting
 import androidx.test.espresso.device.common.getDeviceApiLevel
 import androidx.test.espresso.device.common.getResumedActivityOrNull
 import androidx.test.espresso.device.common.isConfigurationChangeHandled
 import androidx.test.espresso.device.common.isRobolectricTest
-import androidx.test.espresso.device.common.isTestDeviceAnEmulator
+import androidx.test.espresso.device.common.setAccelerometerRotationSetting
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.device.DeviceController
-import androidx.test.platform.device.UnsupportedDeviceOperationException
 import androidx.test.runner.lifecycle.ActivityLifecycleCallback
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
@@ -80,31 +75,7 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
       return
     }
 
-    var oldAccelRotationSetting = getAccelerometerRotationSetting(context)
-    // For emulators, auto-rotate must be enabled. For physical devices, it must be disabled.
-    if (isTestDeviceAnEmulator() && oldAccelRotationSetting != AccelerometerRotation.ENABLED) {
-      // Executing shell commands requires API 21+.
-      if (getDeviceApiLevel() >= 21) {
-        Log.d(TAG, "Enabling auto-rotate.")
-        setAccelerometerRotation(AccelerometerRotation.ENABLED, context)
-      } else {
-        throw UnsupportedDeviceOperationException(
-          "Screen orientation cannot be set on this device because auto-rotate is disabled. Please manually enable auto-rotate and try again."
-        )
-      }
-    } else if (
-      !isTestDeviceAnEmulator() && oldAccelRotationSetting != AccelerometerRotation.DISABLED
-    ) {
-      if (getDeviceApiLevel() >= 21) {
-        Log.d(TAG, "Disabling auto-rotate.")
-        setAccelerometerRotation(AccelerometerRotation.DISABLED, context)
-      } else {
-        throw UnsupportedDeviceOperationException(
-          "Screen orientation cannot be set on this device because auto-rotate is enabled. Please manually disable auto-rotate and try again."
-        )
-      }
-    }
-
+    var startingAccelRotationSetting = getAccelerometerRotationSetting()
     val currentActivity = getResumedActivityOrNull()
     val currentActivityName: String? = currentActivity?.getLocalClassName()
     val configChangesHandled =
@@ -167,46 +138,15 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
     }
     deviceController.setScreenOrientation(screenOrientation.getOrientation())
     latch.await(5, TimeUnit.SECONDS)
+
+    // Restore accelerometer rotation setting if it was changed
     if (
-      getDeviceApiLevel() >= 21 &&
-        oldAccelRotationSetting != getAccelerometerRotationSetting(context)
+      getDeviceApiLevel() >= 21 && startingAccelRotationSetting != getAccelerometerRotationSetting()
     ) {
-      setAccelerometerRotation(oldAccelRotationSetting, context)
+      setAccelerometerRotationSetting(startingAccelRotationSetting)
     }
+
     if (getCurrentScreenOrientation(context) != screenOrientation) {
-      throw DeviceControllerOperationException(
-        "Device could not be set to the requested screen orientation."
-      )
-    }
-  }
-
-  private fun getAccelerometerRotationSetting(context: Context): AccelerometerRotation =
-    if (System.getInt(context.getContentResolver(), System.ACCELEROMETER_ROTATION, 0) == 1) {
-      AccelerometerRotation.ENABLED
-    } else {
-      AccelerometerRotation.DISABLED
-    }
-
-  private fun setAccelerometerRotation(
-    accelerometerRotation: AccelerometerRotation,
-    context: Context
-  ) {
-    val settingsLatch: CountDownLatch = CountDownLatch(1)
-    val thread: HandlerThread = HandlerThread("Observer_Thread")
-    thread.start()
-    val runnableHandler: Handler = Handler(thread.getLooper())
-    val settingsObserver: SettingsObserver =
-      SettingsObserver(runnableHandler, context, settingsLatch, System.ACCELEROMETER_ROTATION)
-    settingsObserver.observe()
-    executeShellCommand("settings put system accelerometer_rotation ${accelerometerRotation.value}")
-    settingsLatch.await(5, TimeUnit.SECONDS)
-    settingsObserver.stopObserver()
-    thread.quitSafely()
-
-    if (
-      executeShellCommand("settings get system accelerometer_rotation").trim().toInt() !=
-        accelerometerRotation.value
-    ) {
       throw DeviceControllerOperationException(
         "Device could not be set to the requested screen orientation."
       )
@@ -222,10 +162,5 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
 
   companion object {
     private val TAG = ScreenOrientationAction::class.java.simpleName
-
-    private enum class AccelerometerRotation(val value: Int) {
-      DISABLED(0),
-      ENABLED(1)
-    }
   }
 }
