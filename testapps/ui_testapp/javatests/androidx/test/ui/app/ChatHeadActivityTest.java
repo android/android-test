@@ -92,7 +92,6 @@ public class ChatHeadActivityTest {
         .inRoot(withDecorView(not(is(activity.getWindow().getDecorView()))))
         .check(matches(withTagValue((Matchers.is((Object) "blue")))));
 
-
     // Preform a click on the chat head button
     Log.d(TAG, "click on chat chat head...");
     clickOnChatHead();
@@ -147,5 +146,4 @@ public class ChatHeadActivityTest {
         )
         .perform(click());
   }
-
 }

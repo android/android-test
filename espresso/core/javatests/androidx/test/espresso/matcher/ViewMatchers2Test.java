@@ -889,7 +889,6 @@ public class ViewMatchers2Test {
     assertTrue(hasBackground(R.drawable.drawable_1).matches(viewWithBackground));
   }
 
-
   @Test
   @UiThreadTest
   public void withInputType_ReturnsTrueIf_CorrectInput() {

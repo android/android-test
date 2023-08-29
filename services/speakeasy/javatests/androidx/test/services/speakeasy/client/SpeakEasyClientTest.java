@@ -80,7 +80,6 @@ public class SpeakEasyClientTest {
     assertWithMessage("Did we find the message?").that(found).isTrue();
   }
 
-
   private SpeakEasyProtocol.FindResult find(String key) {
     final CountDownLatch latch = new CountDownLatch(1);
     final AtomicReference<SpeakEasyProtocol.FindResult> fr = new AtomicReference<>(null);

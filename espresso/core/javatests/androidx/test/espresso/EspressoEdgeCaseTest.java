@@ -251,7 +251,6 @@ public class EspressoEdgeCaseTest {
     onView(withId(R.id.enter_data_edit_text)).check(matches(withText("Har Har")));
   }
 
-
   private abstract static class TestAction implements ViewAction {
     @Override
     public String getDescription() {
