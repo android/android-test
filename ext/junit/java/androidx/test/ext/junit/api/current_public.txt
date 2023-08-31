@@ -9,6 +9,11 @@ package androidx.test.ext.junit.rules {
     method public androidx.test.core.app.ActivityScenario<A!>! getScenario();
   }
 
+  public final class AppComponentFactoryRule extends org.junit.rules.ExternalResource {
+    ctor public AppComponentFactoryRule(android.app.AppComponentFactory factory);
+    method protected void before();
+  }
+
   public final class DeleteFilesRule implements org.junit.rules.TestRule {
     ctor public DeleteFilesRule();
     method public org.junit.runners.model.Statement! apply(org.junit.runners.model.Statement!, org.junit.runner.Description!);

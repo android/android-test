@@ -155,9 +155,9 @@ package androidx.test.runner.intent {
 
 package androidx.test.runner.intercepting {
 
-  public interface InterceptingActivityFactory {
-    method public android.app.Activity! create(ClassLoader!, String!, android.content.Intent!);
-    method public boolean shouldIntercept(ClassLoader!, String!, android.content.Intent!);
+  @Deprecated public interface InterceptingActivityFactory {
+    method @Deprecated public android.app.Activity! create(ClassLoader!, String!, android.content.Intent!);
+    method @Deprecated public boolean shouldIntercept(ClassLoader!, String!, android.content.Intent!);
   }
 
 }

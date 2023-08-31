@@ -191,6 +191,18 @@ package androidx.test.internal.util {
 
 }
 
+package androidx.test.platform.app {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class AppComponentFactoryRegistry {
+    method public static android.app.AppComponentFactory? getAppComponentFactory();
+    method public static android.app.Activity? instantiateActivity(ClassLoader cl, String className, android.content.Intent? intent = null);
+    method public static android.app.Application? instantiateApplication(ClassLoader cl, String className);
+    method public static void setAppComponentFactory(android.app.AppComponentFactory?);
+    property public static final android.app.AppComponentFactory? appComponentFactory;
+  }
+
+}
+
 package androidx.test.platform.concurrent {
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public enum DirectExecutor implements java.util.concurrent.Executor {
