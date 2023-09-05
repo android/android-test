@@ -39,7 +39,7 @@ ANDROIDX_TRACING_VERSION = "1.1.0"
 ANDROIDX_VIEWPAGER_VERSION = "1.0.0"
 ANDROIDX_WINDOW_VERSION = "1.1.0"
 GOOGLE_MATERIAL_VERSION = "1.4.0"
-UIAUTOMATOR_VERSION = "2.2.0"
+UIAUTOMATOR_VERSION = "2.3.0-alpha04"
 JANK_VERSION = "1.0.1"
 
 # this should match the kotlin toolchain version eg bazel_rules/rules_kotlin/toolchains/kotlin_jvm/kt_jvm_toolchains.bzl KT_VERSION
