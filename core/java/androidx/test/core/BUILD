@@ -1,11 +1,11 @@
 # Description: Build rules for building androidx.test.truth from source
 
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")
+load("//build_extensions:api_checks.bzl", "api_checks")
+load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions:kt_android_library.bzl", "kt_android_library")
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
-load("//build_extensions:dackka_test.bzl", "dackka_test")
-load("//build_extensions:api_checks.bzl", "api_checks")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 # all users should reference the equivalent targets in //core
 package(
@@ -74,7 +74,7 @@ android_library(
 android_library(
     name = "core_aar_lib",
     testonly = 1,
-    manifest = "AndroidManifest.xml",
+    manifest = "AndroidManifest_release.xml",
     resource_files = glob(["res/**"]),
     visibility = ["//visibility:private"],
     exports = [

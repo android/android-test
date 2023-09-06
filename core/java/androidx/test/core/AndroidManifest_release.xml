@@ -1,0 +1,38 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="androidx.test.core" >
+
+  <!-- TODO(299123220): delete this file once AndroidManifest.xml has been updated to minSdk 19 -->
+  <uses-sdk
+      android:minSdkVersion="19"
+      android:targetSdkVersion="33" />
+
+  <uses-permission android:name="android.permission.REORDER_TASKS" />
+
+  <application>
+    <activity
+        android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity"
+        android:exported="true"
+        android:theme="@style/WhiteBackgroundTheme">
+      <intent-filter android:priority="-100">
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+    <activity
+        android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity"
+        android:exported="true"
+        android:theme="@style/WhiteBackgroundTheme">
+      <intent-filter android:priority="-100">
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+    <activity
+        android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyFloatingActivity"
+        android:exported="true"
+        android:theme="@style/WhiteBackgroundDialogTheme">
+      <intent-filter android:priority="-100">
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+  </application>
+
+</manifest>
