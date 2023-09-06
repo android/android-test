@@ -17,6 +17,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="androidx.test.core" >
 
+    <!-- TODO(299123220): bump to minSdk 19 once dependent tests have been fixed -->
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="28" />

@@ -22,7 +22,7 @@
   android:versionName="1.5.0-alpha01">
 
   <uses-sdk
-    android:minSdkVersion="14"
+    android:minSdkVersion="19"
     tools:overrideLibrary="android.support.graphics.drawable, androidx.vectordrawable.graphics.drawable.animated, androidx.test.services.speakeasy.server, androidx.test.services.storage.provider"
     android:targetSdkVersion="30" />
 

@@ -20,6 +20,8 @@
 
    <application android:label="AndroidJUnitRunner" />
 
+  <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="34" />
+
     <instrumentation
       android:name="androidx.test.runner.AndroidJUnitRunner"
       android:targetPackage="androidx.test.internal.runner.listener" >

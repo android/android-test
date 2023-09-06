@@ -18,7 +18,7 @@
     package="androidx.test.rules" >
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="19"
         android:targetSdkVersion="33" />
 
 </manifest>
