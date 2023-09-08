@@ -87,6 +87,9 @@ private fun shouldAddEntry(entry: ZipEntry): Boolean {
   } else if (entry.name.startsWith("META-INF/maven")) {
     // strip out files added to META-INF/maven since this can lead to duplicate file errors
     return false
+  } else if (entry.name.startsWith("META-INF/MANIFEST.MF")) {
+    // strip out files added to META-INF/MANIFEST.MF since this can lead to duplicate file errors
+    return false
   } else if (entry.name.startsWith("google/protobuf")) {
     // strip out all the google/protobuf/*.proto files since this can lead to duplicate file errors
     return false

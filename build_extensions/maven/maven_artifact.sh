@@ -74,8 +74,10 @@ cp "$FLAGS_metadata" "$repo/$FLAGS_group_path/$FLAGS_artifact_id/"
 cp "$FLAGS_pom" "$repo/$FLAGS_group_path/$FLAGS_artifact_id/$FLAGS_version/"
 cp "$FLAGS_artifact" \
     "$repo/$FLAGS_group_path/$FLAGS_artifact_id/$FLAGS_version/"
-cp "$FLAGS_source" \
-    "$repo/$FLAGS_group_path/$FLAGS_artifact_id/$FLAGS_version/"
+if [ ! -z "$FLAGS_source" ]; then
+  cp "$FLAGS_source" \
+      "$repo/$FLAGS_group_path/$FLAGS_artifact_id/$FLAGS_version/"
+fi
 
 for file in $(find "$repo" -type f); do
   echo -n "$(sha1sum "$file" | cut -f 1 -d ' ')" > "$file.sha1"
