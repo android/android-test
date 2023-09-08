@@ -10,6 +10,9 @@ on:
       - main
       - 'axt_**_release_branch'
 
+env:
+  cache-version: v1
+
 jobs:
   build:
     runs-on:
@@ -27,9 +30,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/bazel
-          key: ${{ runner.os }}-bazel-build-${{ github.sha }}
+          key: ${{ runner.os }}-${{ env.cache-version }}-bazel-build-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-bazel-build-
+            ${{ runner.os }}-${{ env.cache-version }}-bazel-build-
       - name: Build maven artifacts
         run: bazelisk build //:axt_m2repository
         shell: bash
@@ -69,9 +72,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/bazel
-          key: ${{ runner.os }}-bazel-test-${{ github.sha }}
+          key: ${{ runner.os }}-${{ env.cache-version }}-bazel-test-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-bazel-test-
+            ${{ runner.os }}-${{ env.cache-version }}-bazel-test-
       - name: Run Robolectric tests
         run: bazelisk test --test_tag_filters=robolectric --build_tag_filters=robolectric --test_output=all ...
         shell: bash
