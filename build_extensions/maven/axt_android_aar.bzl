@@ -2,8 +2,8 @@
 
 load("//build_extensions/maven:add_or_update_file_in_zip.bzl", "add_or_update_file_in_zip")
 load("//build_extensions/maven:combine_jars.bzl", "combine_jars")
+load("//build_extensions/maven:jarjar.bzl", "jarjar_rule")
 load("//build_extensions/maven:maven_info.bzl", "MavenFilesInfo", "MavenInfo", "collect_maven_info")
-load("//build_extensions/maven:jarjar.bzl", "jarjar")
 
 def _android_aar_impl(ctx):
     # current_aar will include almost everything needed: an AndroidManifest.xml, compiled resources,
@@ -27,7 +27,7 @@ def _android_aar_impl(ctx):
     # optionally use jarjar to rename shaded dependencies
     if (ctx.attr.jarjar_rule):
         jarjar_classes_jar = ctx.actions.declare_file(ctx.attr.name + "_jarjar_classes.jar")
-        jarjar(ctx, rule = ctx.file.jarjar_rule, src = classes_jar, out = jarjar_classes_jar)
+        jarjar_rule(ctx, rule = ctx.file.jarjar_rule, src = classes_jar, out = jarjar_classes_jar)
         classes_jar = jarjar_classes_jar
 
     # TODO: tying validation to an output was the only way to get this to run, but
