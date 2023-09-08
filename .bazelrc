@@ -3,3 +3,7 @@ build --javacopt=-g
 build --host_javacopt=-g
 
 build --experimental_google_legacy_api
+build --enable_platform_specific_config
+build:linux --sandbox_tmpfs_path=/tmp
+test --enable_platform_specific_config
+test:linux --sandbox_tmpfs_path=/tmp
