@@ -1,7 +1,9 @@
 """Runs jarjar over a jar file."""
 
-def jarjar(ctx, rule, src, out):
-    """Runs jarjar See https://github.com/pantsbuild/jarjar.
+def jarjar_rule(ctx, rule, src, out):
+    """API to run jarjar from a rule.
+
+    See https://github.com/pantsbuild/jarjar.
 
     Args:
       ctx: the context
@@ -22,3 +24,32 @@ def jarjar(ctx, rule, src, out):
         outputs = [out],
         arguments = [args],
     )
+
+def _jarjar_impl(ctx):
+    jarjar_rule(ctx, ctx.file.rule, ctx.file.src, ctx.outputs.jar)
+
+jarjar = rule(
+    implementation = _jarjar_impl,
+    attrs = {
+        "src": attr.label(
+            doc = "Jar file to transform",
+            allow_single_file = [".jar"],
+        ),
+        "rule": attr.label(
+            doc = "File containing jarjar rules to be applied to the classes.",
+            allow_single_file = [".txt"],
+        ),
+        "_jdk": attr.label(
+            default = Label("@bazel_tools//tools/jdk"),
+            providers = [java_common.JavaRuntimeInfo],
+        ),
+        "_jarjar": attr.label(
+            default = Label("//build_extensions/maven:jarjar_bin"),
+            executable = True,
+            cfg = "exec",
+        ),
+    },
+    outputs = {
+        "jar": "%{name}.jar",
+    },
+)
