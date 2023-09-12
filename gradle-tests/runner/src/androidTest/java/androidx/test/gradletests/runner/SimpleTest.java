@@ -12,6 +12,6 @@ public class SimpleTest {
   public void useAppContext() {
     // Context of the app under test.
     Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-    assertEquals("androidx.test.gradletests.runner", appContext.getPackageName());
+    assertEquals("androidx.test.gradletests.runner.test", appContext.getPackageName());
   }
 }
