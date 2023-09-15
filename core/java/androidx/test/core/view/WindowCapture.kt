@@ -77,7 +77,7 @@ internal fun Window.generateBitmap(
   when {
     Build.VERSION.SDK_INT < 26 ->
       // TODO: handle boundsInWindow
-      decorView.generateBitmapFromDraw(destBitmap, bitmapFuture)
+      decorView.generateBitmapFromDraw(destBitmap, bitmapFuture, null)
     else -> generateBitmapFromPixelCopy(boundsInWindow, destBitmap, bitmapFuture)
   }
 }

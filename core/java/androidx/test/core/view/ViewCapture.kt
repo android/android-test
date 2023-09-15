@@ -52,11 +52,16 @@ import java.util.function.Consumer
  * This API is primarily intended for use in lower layer libraries or frameworks. For test authors,
  * its recommended to use espresso or compose's captureToImage.
  *
+ * If a rect is supplied, this will further crop locally from the bounds of the given view. For
+ * example, if the given view is at (10, 10 - 30, 30) and the rect is (5, 5 - 10, 10), the final
+ * bitmap will be a 5x5 bitmap that spans (15, 15 - 20, 20). This is particularly useful for
+ * Compose, which only has a singular view that contains a hierarchy of nodes.
+ *
  * This API is currently experimental and subject to change or removal.
  */
 @ExperimentalTestApi
 @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
-fun View.captureToBitmap(): ListenableFuture<Bitmap> {
+fun View.captureToBitmap(rect: Rect? = null): ListenableFuture<Bitmap> {
   val bitmapFuture: ResolvableFuture<Bitmap> = ResolvableFuture.create()
   val mainExecutor = HandlerExecutor(Handler(Looper.getMainLooper()))
 
@@ -68,10 +73,10 @@ fun View.captureToBitmap(): ListenableFuture<Bitmap> {
 
   mainExecutor.execute {
     if (Build.FINGERPRINT.contains("robolectric")) {
-      generateBitmap(bitmapFuture)
+      generateBitmap(bitmapFuture, rect)
     } else {
       val forceRedrawFuture = forceRedraw()
-      forceRedrawFuture.addListener({ generateBitmap(bitmapFuture) }, mainExecutor)
+      forceRedrawFuture.addListener({ generateBitmap(bitmapFuture, rect) }, mainExecutor)
     }
   }
 
@@ -114,23 +119,26 @@ fun View.forceRedraw(): ListenableFuture<Void> {
   return future
 }
 
-private fun View.generateBitmap(bitmapFuture: ResolvableFuture<Bitmap>) {
+private fun View.generateBitmap(bitmapFuture: ResolvableFuture<Bitmap>, rect: Rect? = null) {
   if (bitmapFuture.isCancelled) {
     return
   }
-  val destBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+  val rectWidth = rect?.width() ?: width
+  val rectHeight = rect?.height() ?: height
+  val destBitmap = Bitmap.createBitmap(rectWidth, rectHeight, Bitmap.Config.ARGB_8888)
   when {
-    Build.VERSION.SDK_INT < 26 -> generateBitmapFromDraw(destBitmap, bitmapFuture)
-    Build.VERSION.SDK_INT >= 34 -> generateBitmapFromPixelCopy(destBitmap, bitmapFuture)
-    this is SurfaceView -> generateBitmapFromSurfaceViewPixelCopy(destBitmap, bitmapFuture)
-    else -> generateBitmapFromPixelCopy(this.getSurface(), destBitmap, bitmapFuture)
+    Build.VERSION.SDK_INT < 26 -> generateBitmapFromDraw(destBitmap, bitmapFuture, rect)
+    Build.VERSION.SDK_INT >= 34 -> generateBitmapFromPixelCopy(destBitmap, bitmapFuture, rect)
+    this is SurfaceView -> generateBitmapFromSurfaceViewPixelCopy(destBitmap, bitmapFuture, rect)
+    else -> generateBitmapFromPixelCopy(this.getSurface(), destBitmap, bitmapFuture, rect)
   }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 private fun SurfaceView.generateBitmapFromSurfaceViewPixelCopy(
   destBitmap: Bitmap,
-  bitmapFuture: ResolvableFuture<Bitmap>
+  bitmapFuture: ResolvableFuture<Bitmap>,
+  rect: Rect?,
 ) {
   val onCopyFinished =
     PixelCopy.OnPixelCopyFinishedListener { result ->
@@ -140,17 +148,22 @@ private fun SurfaceView.generateBitmapFromSurfaceViewPixelCopy(
         bitmapFuture.setException(RuntimeException(String.format("PixelCopy failed: %d", result)))
       }
     }
-  PixelCopy.request(this, null, destBitmap, onCopyFinished, handler)
+  PixelCopy.request(this, rect, destBitmap, onCopyFinished, handler)
 }
 
 internal fun View.generateBitmapFromDraw(
   destBitmap: Bitmap,
-  bitmapFuture: ResolvableFuture<Bitmap>
+  bitmapFuture: ResolvableFuture<Bitmap>,
+  rect: Rect?,
 ) {
   destBitmap.density = resources.displayMetrics.densityDpi
   computeScroll()
   val canvas = Canvas(destBitmap)
   canvas.translate((-scrollX).toFloat(), (-scrollY).toFloat())
+  if (rect != null) {
+    canvas.translate((-rect.left).toFloat(), (-rect.top).toFloat())
+  }
+
   draw(canvas)
   bitmapFuture.set(destBitmap)
 }
@@ -165,7 +178,8 @@ internal fun View.generateBitmapFromDraw(
 private fun View.generateBitmapFromPixelCopy(
   surface: Surface,
   destBitmap: Bitmap,
-  bitmapFuture: ResolvableFuture<Bitmap>
+  bitmapFuture: ResolvableFuture<Bitmap>,
+  rect: Rect?,
 ) {
   val onCopyFinished =
     PixelCopy.OnPixelCopyFinishedListener { result ->
@@ -175,8 +189,17 @@ private fun View.generateBitmapFromPixelCopy(
         bitmapFuture.setException(RuntimeException("PixelCopy failed: $result"))
       }
     }
-  val bounds = getBoundsInSurface()
-  Log.d("ViewCapture", "locationInSurface $bounds")
+
+  var bounds = getBoundsInSurface()
+  if (rect != null) {
+    bounds =
+      Rect(
+        bounds.left + rect.left,
+        bounds.top + rect.top,
+        bounds.left + rect.right,
+        bounds.top + rect.bottom
+      )
+  }
   PixelCopy.request(surface, bounds, destBitmap, onCopyFinished, Handler(Looper.getMainLooper()))
 }
 
@@ -199,7 +222,11 @@ private fun View.getBoundsInSurface(): Rect {
   }
   val x = locationInSurface[0]
   val y = locationInSurface[1]
-  return Rect(x, y, x + width, y + height)
+  val bounds = Rect(x, y, x + width, y + height)
+
+  Log.d("ViewCapture", "getBoundsInSurface $bounds")
+
+  return bounds
 }
 
 private fun View.getSurface(): Surface {
@@ -240,11 +267,12 @@ private fun View.reflectivelyGetLocationInSurface(locationInSurface: IntArray) {
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 private fun View.generateBitmapFromPixelCopy(
   destBitmap: Bitmap,
-  bitmapFuture: ResolvableFuture<Bitmap>
+  bitmapFuture: ResolvableFuture<Bitmap>,
+  rect: Rect?,
 ) {
   val request =
     PixelCopy.Request.Builder.ofWindow(this)
-      .setSourceRect(getBoundsInWindow())
+      .setSourceRect(rect ?: getBoundsInWindow())
       .setDestinationBitmap(destBitmap)
       .build()
   val mainExecutor = HandlerExecutor(Handler(Looper.getMainLooper()))
