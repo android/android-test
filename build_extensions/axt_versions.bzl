@@ -4,10 +4,10 @@
 # LINT.IfChange
 RUNNER_VERSION = "1.6.0-alpha05"  # 1.6.0-alpha04, 1.5.1
 RULES_VERSION = "1.6.0-alpha02"  # 1.6.0-alpha01, 1.5.0
-MONITOR_VERSION = "1.7.0-alpha02"  # 1.7.0-alpha01, 1.6.0
+MONITOR_VERSION = "1.7.0-alpha03"  # 1.7.0-alpha02, 1.6.0
 ESPRESSO_VERSION = "3.6.0-alpha02"  # 3.6.0-alpha01, 3.5.0
-CORE_VERSION = "1.6.0-alpha02"  # 1.6.0-alpha01, 1.5.0
-ESPRESSO_DEVICE_VERSION = "1.0.0-alpha06"  # 1.0.0-alpha05
+CORE_VERSION = "1.6.0-alpha03"  # 1.6.0-alpha02, 1.5.0
+ESPRESSO_DEVICE_VERSION = "1.0.0-alpha07"  # 1.0.0-alpha06
 ANDROIDX_JUNIT_VERSION = "1.2.0-alpha02"  # 1.2.0-alpha01, 1.1.4
 ANDROIDX_TRUTH_VERSION = "1.6.0-alpha02"  # 1.6.0-alpha01, 1.5.0
 ANNOTATION_VERSION = "1.1.0-alpha02"  # 1.1.0-alpha01, 1.0.1
