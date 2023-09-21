@@ -11,8 +11,8 @@ package(default_applicable_licenses = ["//espresso:license"])
 licenses(["notice"])
 
 axt_android_library_test(
-    name = "IdlingRegistryTest",
-    srcs = ["IdlingRegistryTest.java"],
+    name = "CountingIdlingResourceTest",
+    srcs = ["CountingIdlingResourceTest.java"],
     deps = [
         "//core",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
