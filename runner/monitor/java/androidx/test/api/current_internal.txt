@@ -27,10 +27,10 @@ package androidx.test.internal.platform.app {
     method public void pauseActivity(android.app.Activity!);
     method public void recreateActivity(android.app.Activity!);
     method public void resumeActivity(android.app.Activity!);
-    method public void startActivity(android.content.Intent!, android.os.Bundle?);
     method public void startActivity(android.content.Intent!);
-    method public void startActivityForResult(android.content.Intent!, android.os.Bundle?);
+    method public void startActivity(android.content.Intent!, android.os.Bundle?);
     method public void startActivityForResult(android.content.Intent!);
+    method public void startActivityForResult(android.content.Intent!, android.os.Bundle?);
     method public void stopActivity(android.app.Activity!);
   }
 
@@ -66,14 +66,14 @@ package androidx.test.internal.platform.reflect {
   }
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ReflectiveField<T> {
-    ctor public ReflectiveField(String!, String!);
     ctor public ReflectiveField(Class<?>!, String!);
+    ctor public ReflectiveField(String!, String!);
     method public T! get(Object!) throws androidx.test.internal.platform.reflect.ReflectionException;
   }
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ReflectiveMethod<T> {
-    ctor public ReflectiveMethod(String!, String!, Class<?>!...);
     ctor public ReflectiveMethod(Class<?>!, String!, Class<?>!...);
+    ctor public ReflectiveMethod(String!, String!, Class<?>!...);
     method public T! invoke(Object!, java.lang.Object!...) throws androidx.test.internal.platform.reflect.ReflectionException;
     method public T! invokeStatic(java.lang.Object!...) throws androidx.test.internal.platform.reflect.ReflectionException;
   }
@@ -176,8 +176,8 @@ package androidx.test.internal.util {
 
   @Deprecated @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ReflectionUtil {
     ctor @Deprecated public ReflectionUtil();
-    method @Deprecated public static Object! callStaticMethod(String!, String!, androidx.test.internal.util.ReflectionUtil.ReflectionParams!...) throws androidx.test.internal.util.ReflectionUtil.ReflectionException;
     method @Deprecated public static Object! callStaticMethod(Class<?>!, String!, androidx.test.internal.util.ReflectionUtil.ReflectionParams!...) throws androidx.test.internal.util.ReflectionUtil.ReflectionException;
+    method @Deprecated public static Object! callStaticMethod(String!, String!, androidx.test.internal.util.ReflectionUtil.ReflectionParams!...) throws androidx.test.internal.util.ReflectionUtil.ReflectionException;
   }
 
   @Deprecated @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static class ReflectionUtil.ReflectionException extends java.lang.Exception {
