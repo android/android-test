@@ -45,6 +45,7 @@ internal class BookModeAction() :
       // TODO(b/296910911) On physical devices, changing screen orientation requires the device to
       // be in FLAT mode. Open the fold, update orientation, and then restore the half-folded state.
       if (!isTestDeviceAnEmulator()) {
+        Log.d(TAG, "Temporarily setting device to flat mode so that device can be rotated.")
         BaseSingleFoldDeviceAction(DeviceMode.FLAT, FoldingFeature.State.FLAT)
           .perform(deviceController)
       }
