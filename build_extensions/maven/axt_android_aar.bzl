@@ -40,6 +40,7 @@ def _android_aar_impl(ctx):
         executable = ctx.executable._validate_jar_java,
         arguments = [validation_output.path, classes_jar.path] + ctx.attr.expected_class_prefixes,
     )
+    _validate_maven_deps(sorted(ctx.attr.included_dep[MavenInfo].transitive_maven_direct_deps.to_list()), ctx.attr.banned_maven_deps)
 
     # update the aar with the new classes.jar
     add_or_update_file_in_zip(
@@ -64,6 +65,12 @@ def _android_aar_impl(ctx):
         OutputGroupInfo(_validation = depset([validation_output])),
     ]
 
+def _validate_maven_deps(maven_deps, banned_dep_patterns):
+    for banned_dep_pattern in banned_dep_patterns:
+        for dep in maven_deps:
+            if banned_dep_pattern in dep:
+                fail("%s is not an allowed dependency" % dep)
+
 axt_android_aar = rule(
     implementation = _android_aar_impl,
     attrs = {
@@ -82,6 +89,11 @@ axt_android_aar = rule(
             doc = "Optional file containing jarjar rules to be applied to the classes.",
             mandatory = False,
             allow_single_file = [".txt"],
+        ),
+        "banned_maven_deps": attr.string_list(
+            doc = ("List of strings that specify the set of disallowed maven dependencies. The " +
+                   "rule will fail if any maven dependency contains one or more of these strings."),
+            default = ["com.google.guava:guava", "com.google.dagger"],
         ),
         "_jdk": attr.label(
             default = Label("@bazel_tools//tools/jdk"),

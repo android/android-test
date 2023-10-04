@@ -133,13 +133,6 @@ def _rename_artifact(ctx, tpl_string, src_file, packaging_type, artifact_id, ver
     )
     return artifact
 
-def _validate_deps(artifact_id, maven_deps):
-    for dep in maven_deps:
-        if "com.google.guava:guava" in dep and artifact_id != "truth":
-            fail("Guava is not an allowed dependency")
-        if "com.google.dagger" in dep:
-            fail("com.google.dagger should be a shaded dependency. Depend on //opensource/dagger instead of @maven//:com_google_dagger_dagger")
-
 def _override_license_file(ctx, src_file):
     """Append a LICENSE file into the src if exists"""
     artifact_with_license = ctx.actions.declare_file("%s-with-LICENSE.%s" % (src_file.basename, src_file.extension))
@@ -175,7 +168,6 @@ def _maven_artifact_impl(ctx):
     )
 
     maven_deps = sorted(ctx.attr.target[MavenInfo].transitive_maven_direct_deps.to_list())
-    _validate_deps(artifact_id, maven_deps)
 
     packaging_type = _packaging_type(ctx.attr.target[MavenFilesInfo].runtime)
     pom_content = _create_pom_string(ctx, group_id, artifact_id, version, packaging_type, maven_deps)
