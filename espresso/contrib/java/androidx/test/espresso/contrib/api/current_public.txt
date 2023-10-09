@@ -23,10 +23,10 @@ package androidx.test.espresso.contrib {
   }
 
   public final class DrawerMatchers {
-    method public static org.hamcrest.Matcher<android.view.View!>! isClosed(int);
     method public static org.hamcrest.Matcher<android.view.View!>! isClosed();
-    method public static org.hamcrest.Matcher<android.view.View!>! isOpen(int);
+    method public static org.hamcrest.Matcher<android.view.View!>! isClosed(int);
     method public static org.hamcrest.Matcher<android.view.View!>! isOpen();
+    method public static org.hamcrest.Matcher<android.view.View!>! isOpen(int);
   }
 
   public final class NavigationViewActions {

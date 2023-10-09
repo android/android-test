@@ -39,8 +39,8 @@ package androidx.test.ext.truth.content {
     method public androidx.test.ext.truth.os.BundleSubject! extras();
     method public void filtersEquallyTo(android.content.Intent!);
     method public void hasAction(String!);
-    method public void hasComponent(String!, String!);
     method public void hasComponent(android.content.ComponentName!);
+    method public void hasComponent(String!, String!);
     method public void hasComponentClass(Class<?>!);
     method public void hasComponentClass(String!);
     method public void hasComponentPackage(String!);
@@ -68,10 +68,10 @@ package androidx.test.ext.truth.location {
     method public static androidx.test.ext.truth.location.LocationSubject! assertThat(android.location.Location!);
     method public com.google.common.truth.FloatSubject! bearing();
     method public com.google.common.truth.FloatSubject! bearingAccuracy();
-    method public com.google.common.truth.FloatSubject! bearingTo(double, double);
     method public com.google.common.truth.FloatSubject! bearingTo(android.location.Location!);
-    method public com.google.common.truth.FloatSubject! distanceTo(double, double);
+    method public com.google.common.truth.FloatSubject! bearingTo(double, double);
     method public com.google.common.truth.FloatSubject! distanceTo(android.location.Location!);
+    method public com.google.common.truth.FloatSubject! distanceTo(double, double);
     method public void doesNotHaveProvider(String!);
     method public com.google.common.truth.LongSubject! elapsedRealtimeMillis();
     method public com.google.common.truth.LongSubject! elapsedRealtimeNanos();
