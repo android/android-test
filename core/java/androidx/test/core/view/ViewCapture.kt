@@ -18,9 +18,14 @@
 package androidx.test.core.view
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.HardwareRenderer
+import android.graphics.PixelFormat
 import android.graphics.Rect
+import android.graphics.RenderNode
+import android.media.ImageReader
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -34,11 +39,13 @@ import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.concurrent.futures.ResolvableFuture
 import androidx.test.annotation.ExperimentalTestApi
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.core.internal.os.HandlerExecutor
 import androidx.test.internal.platform.reflect.ReflectiveField
 import androidx.test.internal.platform.reflect.ReflectiveMethod
 import androidx.test.platform.graphics.HardwareRendererCompat
 import com.google.common.util.concurrent.ListenableFuture
+import java.nio.ByteOrder
 import java.util.function.Consumer
 
 /**
@@ -123,12 +130,15 @@ private fun View.generateBitmap(bitmapFuture: ResolvableFuture<Bitmap>, rect: Re
   if (bitmapFuture.isCancelled) {
     return
   }
+
   val rectWidth = rect?.width() ?: width
   val rectHeight = rect?.height() ?: height
   val destBitmap = Bitmap.createBitmap(rectWidth, rectHeight, Bitmap.Config.ARGB_8888)
   when {
     Build.VERSION.SDK_INT < 26 -> generateBitmapFromDraw(destBitmap, bitmapFuture, rect)
     Build.VERSION.SDK_INT >= 34 -> generateBitmapFromPixelCopy(destBitmap, bitmapFuture, rect)
+    Build.VERSION.SDK_INT >= 31 && useHardwareRendererNative() ->
+      generateBitmapFromHardwareRenderNative(destBitmap, bitmapFuture, rect)
     this is SurfaceView -> generateBitmapFromSurfaceViewPixelCopy(destBitmap, bitmapFuture, rect)
     else -> generateBitmapFromPixelCopy(this.getSurface(), destBitmap, bitmapFuture, rect)
   }
@@ -286,4 +296,111 @@ private fun View.generateBitmapFromPixelCopy(
       }
     }
   PixelCopy.request(request, mainExecutor, onCopyFinished)
+}
+
+@RequiresApi(Build.VERSION_CODES.R)
+private fun View.getRenderNode(): RenderNode {
+  return ReflectiveMethod<RenderNode>(View::class.java, "updateDisplayListIfDirty").invoke(this)
+}
+
+const val USE_HARDWARE_RENDERER_NATIVE_ENV = "robolectric.screenshot.hwrdr.native"
+
+private fun useHardwareRendererNative() =
+  System.getProperty(USE_HARDWARE_RENDERER_NATIVE_ENV) == "true"
+
+/**
+ * Generates a bitmap given the current view using HardwareRenderer with native graphics calls.
+ * Requires API 31+ (S).
+ */
+@RequiresApi(Build.VERSION_CODES.S)
+private fun View.generateBitmapFromHardwareRenderNative(
+  destBitmap: Bitmap,
+  bitmapFuture: ResolvableFuture<Bitmap>,
+  rect: Rect?,
+) {
+  val bounds = rect ?: getBoundsInWindow()
+  val rw = bounds.right
+  val rh = bounds.bottom
+  val sx = bounds.left
+  val sy = bounds.top
+  val dw = rw - sx
+  val dh = rh - sy
+
+  val imageReader = ImageReader.newInstance(rw, rh, PixelFormat.RGBA_8888, 1)
+  val renderer = HardwareRenderer()
+  renderer.setSurface(imageReader.surface)
+  val nativeImage = imageReader.acquireNextImage()
+
+  setupRendererShadowProperties(renderer)
+
+  val node: RenderNode = this.getRenderNode()
+  renderer.setContentRoot(node)
+
+  renderer.createRenderRequest().syncAndDraw()
+
+  val renderPixels = IntArray(rw * rh)
+
+  val planes = nativeImage.planes
+  val srcBuff = planes[0].buffer.order(ByteOrder.LITTLE_ENDIAN).asIntBuffer()
+  val len = srcBuff.remaining()
+  srcBuff.get(renderPixels, 0, len)
+
+  // Reading the buffer gives us ABGR data. Transform to ARGB.
+  for (i in renderPixels.indices) {
+    val s = renderPixels[i]
+    val r = s and 0xFF
+    val b = s shr 16 and 0xFF
+    renderPixels[i] = (s and -0xff0100) + (r shl 16) + b
+  }
+
+  destBitmap.setPixels(
+    renderPixels,
+    /*offset=*/ sx + sy * rw,
+    /*stride=*/ rw,
+    /*x=*/ 0,
+    /*y=*/ 0,
+    dw,
+    dh
+  )
+  bitmapFuture.set(destBitmap)
+}
+
+@RequiresApi(Build.VERSION_CODES.S)
+private fun setupRendererShadowProperties(renderer: HardwareRenderer) {
+  val context = ApplicationProvider.getApplicationContext<Context>()
+  val resources = context.resources
+  val displayMetrics = resources.displayMetrics
+
+  // Get the LightSourceGeometry and LightSourceAlpha from resources.
+  // The default values are the ones recommended by the getLightSourceGeometry() and
+  // getLightSourceAlpha() documentation.
+  // This matches LayoutLib's RenderSessionImpl#renderAndBuildResult() implementation.
+
+  val styleable: Class<*> = Class.forName("com.android.internal.R\$styleable")
+  val lighting = getField<IntArray>(styleable, "Lighting")
+  val lightingLightY = getField<Int>(styleable, "Lighting_lightY")
+  val lightingLightZ = getField<Int>(styleable, "Lighting_lightZ")
+  val lightingLightRadius = getField<Int>(styleable, "Lighting_lightRadius")
+  val lightingAmbientShadowAlpha = getField<Int>(styleable, "Lighting_ambientShadowAlpha")
+  val lightingSpotShadowAlpha = getField<Int>(styleable, "Lighting_spotShadowAlpha")
+
+  val a = context.obtainStyledAttributes(null, lighting, 0, 0)
+  val lightX = displayMetrics.widthPixels / 2f
+  val lightY = a.getDimension(lightingLightY, 0f)
+  val lightZ = a.getDimension(lightingLightZ, 600f * displayMetrics.density)
+  val lightRadius = a.getDimension(lightingLightRadius, 800f * displayMetrics.density)
+  val ambientShadowAlpha = a.getFloat(lightingAmbientShadowAlpha, 0.039f)
+  val spotShadowAlpha = a.getFloat(lightingSpotShadowAlpha, 0.19f)
+  a.recycle()
+
+  renderer.setLightSourceGeometry(lightX, lightY, lightZ, lightRadius)
+  renderer.setLightSourceAlpha(ambientShadowAlpha, spotShadowAlpha)
+}
+
+@SuppressWarnings("unchecked")
+@RequiresApi(Build.VERSION_CODES.S)
+private fun <T> getField(clazz: Class<*>, fieldName: String): T {
+  val field = clazz.getDeclaredField(fieldName)
+  field.isAccessible = true
+  return field.get(clazz) as T
 }
