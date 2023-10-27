@@ -74,7 +74,7 @@ android_library(
 android_library(
     name = "core_aar_lib",
     testonly = 1,
-    manifest = "AndroidManifest_release.xml",
+    manifest = "AndroidManifest.xml",
     resource_files = glob(["res/**"]),
     visibility = ["//visibility:private"],
     exports = [

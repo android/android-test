@@ -42,7 +42,7 @@ android_library(
     testonly = 1,
     custom_package = "androidx.test.ext.junit",
     exports_manifest = 1,
-    manifest = "AndroidManifest_release.xml",
+    manifest = "AndroidManifest.xml",
     visibility = ["//visibility:private"],
     exports = [":junit"],
     deps = [":junit"],
