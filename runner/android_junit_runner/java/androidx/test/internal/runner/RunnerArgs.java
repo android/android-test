@@ -140,6 +140,10 @@ public class RunnerArgs {
   public final String testsRegEx;
   public final boolean testPlatformMigration;
 
+  public static long parseTestTimeout(Bundle args) {
+    return Builder.parseUnsignedLong(args.getString(ARGUMENT_TIMEOUT), ARGUMENT_TIMEOUT);
+  }
+
   /** Encapsulates a test class and optional method. */
   public static class TestArg {
     public final String testClassName;
@@ -288,7 +292,7 @@ public class RunnerArgs {
       this.testSize = bundle.getString(ARGUMENT_TEST_SIZE);
       this.annotations.addAll(parseStrings(bundle.getString(ARGUMENT_ANNOTATION)));
       this.notAnnotations.addAll(parseStrings(bundle.getString(ARGUMENT_NOT_ANNOTATION)));
-      this.testTimeout = parseUnsignedLong(bundle.getString(ARGUMENT_TIMEOUT), ARGUMENT_TIMEOUT);
+      this.testTimeout = parseTestTimeout(bundle);
       this.numShards = parseUnsignedInt(bundle.get(ARGUMENT_NUM_SHARDS), ARGUMENT_NUM_SHARDS);
       this.shardIndex = parseUnsignedInt(bundle.get(ARGUMENT_SHARD_INDEX), ARGUMENT_SHARD_INDEX);
       this.logOnly = parseBoolean(bundle.getString(ARGUMENT_LOG_ONLY));

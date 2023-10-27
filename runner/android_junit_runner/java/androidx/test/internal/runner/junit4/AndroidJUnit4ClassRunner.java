@@ -16,7 +16,6 @@
 package androidx.test.internal.runner.junit4;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getArguments;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 import androidx.test.internal.runner.RunnerArgs;
 import androidx.test.internal.runner.junit4.statement.RunAfters;
@@ -36,23 +35,24 @@ import org.junit.runners.model.Statement;
 /** A specialized {@link BlockJUnit4ClassRunner} that can handle timeouts */
 public class AndroidJUnit4ClassRunner extends BlockJUnit4ClassRunner {
 
-  private final AndroidRunnerParams androidRunnerParams;
+  private final long perTestTimeout;
 
+  /**
+   * @deprecated use {@link AndroidJUnit4ClassRunner(Class)} instead.
+   */
+  @Deprecated
   public AndroidJUnit4ClassRunner(Class<?> klass, AndroidRunnerParams runnerParams)
       throws InitializationError {
+    this(klass, runnerParams.getPerTestTimeout());
+  }
+
+  public AndroidJUnit4ClassRunner(Class<?> klass, long perTestTimeout) throws InitializationError {
     super(klass);
-    androidRunnerParams = runnerParams;
+    this.perTestTimeout = perTestTimeout;
   }
 
   public AndroidJUnit4ClassRunner(Class<?> klass) throws InitializationError {
-    this(klass, createRunnerParams());
-  }
-
-  private static AndroidRunnerParams createRunnerParams() {
-    RunnerArgs runnerArgs =
-        new RunnerArgs.Builder().fromBundle(getInstrumentation(), getArguments()).build();
-    return new AndroidRunnerParams(
-        getInstrumentation(), getArguments(), runnerArgs.testTimeout, false);
+    this(klass, RunnerArgs.parseTestTimeout(getArguments()));
   }
 
   /** Returns a {@link Statement} that invokes {@code method} on {@code test} */
@@ -86,8 +86,8 @@ public class AndroidJUnit4ClassRunner extends BlockJUnit4ClassRunner {
     long timeout = getTimeout(method.getAnnotation(Test.class));
 
     // use runner arg timeout if test level timeout is not present
-    if (timeout <= 0 && androidRunnerParams.getPerTestTimeout() > 0) {
-      timeout = androidRunnerParams.getPerTestTimeout();
+    if (timeout <= 0 && perTestTimeout > 0) {
+      timeout = perTestTimeout;
     }
 
     if (timeout <= 0) {

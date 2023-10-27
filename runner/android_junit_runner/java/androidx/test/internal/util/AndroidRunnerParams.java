@@ -19,7 +19,12 @@ package androidx.test.internal.util;
 import android.app.Instrumentation;
 import android.os.Bundle;
 
-/** Helper class to store frequently passed test parameters between the different classes */
+/**
+ * Helper class to store frequently passed test parameters between the different classes.
+ *
+ * @deprecated use {@link androidx.test.platform.app.InstrumentationRegistry} instead
+ */
+@Deprecated
 public class AndroidRunnerParams {
   private final Instrumentation instrumentation;
   private final Bundle bundle;

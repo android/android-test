@@ -19,7 +19,6 @@ import androidx.test.internal.runner.junit3.AndroidJUnit3Builder;
 import androidx.test.internal.runner.junit3.AndroidSuiteBuilder;
 import androidx.test.internal.runner.junit4.AndroidAnnotatedBuilder;
 import androidx.test.internal.runner.junit4.AndroidJUnit4Builder;
-import androidx.test.internal.util.AndroidRunnerParams;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,19 +44,23 @@ class AndroidRunnerBuilder extends AllDefaultPossibilitiesBuilder {
 
   private final List<RunnerBuilder> customRunnerBuilders;
 
-  /** @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters */
-  public AndroidRunnerBuilder(AndroidRunnerParams runnerParams) {
-    this(null, runnerParams, Collections.<Class<? extends RunnerBuilder>>emptyList());
+  /**
+   * @param ignoreSuiteMethods whether or not JUnit3 suite() methods should be executed.
+   */
+  public AndroidRunnerBuilder(boolean ignoreSuiteMethods) {
+    this(null, ignoreSuiteMethods, 0, Collections.<Class<? extends RunnerBuilder>>emptyList());
   }
 
   /**
-   * @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters
+   * @param ignoreSuiteMethods whether or not JUnit3 suite() methods should be executed.
+   * @param perTestTimeout milliseconds timeout value applied to each test where 0 means no timeout
    * @param customRunnerBuilderClasses custom {@link RunnerBuilder} classes
    */
   AndroidRunnerBuilder(
-      AndroidRunnerParams runnerParams,
+      boolean ignoreSuiteMethods,
+      long perTestTimeout,
       List<Class<? extends RunnerBuilder>> customRunnerBuilderClasses) {
-    this(null, runnerParams, customRunnerBuilderClasses);
+    this(null, ignoreSuiteMethods, perTestTimeout, customRunnerBuilderClasses);
   }
 
   /**
@@ -67,23 +70,23 @@ class AndroidRunnerBuilder extends AllDefaultPossibilitiesBuilder {
    * and must have a public no-argument constructor.
    *
    * @param suiteBuilder the top level {@link RunnerBuilder} to use to build nested classes.
-   * @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters
-   * @param scanningPath true if being used to build {@link Runner} from classes found while
-   *     scanning the path; requires extra checks to avoid unnecessary errors.
+   * @param ignoreSuiteMethods whether or not JUnit3 suite() methods should be executed.
+   * @param perTestTimeout milliseconds timeout value applied to each test where 0 means no timeout
    * @param customRunnerBuilderClasses custom {@link RunnerBuilder} classes
    * @throws IllegalStateException if any of the custom {@link RunnerBuilder} classes cannot be
    *     instantiated.
    */
   AndroidRunnerBuilder(
       RunnerBuilder suiteBuilder,
-      AndroidRunnerParams runnerParams,
+      boolean ignoreSuiteMethods,
+      long perTestTimeout,
       List<Class<? extends RunnerBuilder>> customRunnerBuilderClasses) {
     super(true);
-    androidJUnit3Builder = new AndroidJUnit3Builder(runnerParams);
-    androidJUnit4Builder = new AndroidJUnit4Builder(runnerParams);
-    androidSuiteBuilder = new AndroidSuiteBuilder(runnerParams);
+    androidJUnit3Builder = new AndroidJUnit3Builder(perTestTimeout);
+    androidJUnit4Builder = new AndroidJUnit4Builder(perTestTimeout);
+    androidSuiteBuilder = new AndroidSuiteBuilder(ignoreSuiteMethods, perTestTimeout);
     androidAnnotatedBuilder =
-        new AndroidAnnotatedBuilder(suiteBuilder == null ? this : suiteBuilder, runnerParams);
+        new AndroidAnnotatedBuilder(suiteBuilder == null ? this : suiteBuilder, perTestTimeout);
     ignoredBuilder = new IgnoredBuilder();
 
     customRunnerBuilders = instantiateRunnerBuilders(customRunnerBuilderClasses);

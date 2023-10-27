@@ -32,17 +32,26 @@ import org.junit.runners.model.RunnerBuilder;
 public class AndroidSuiteBuilder extends SuiteMethodBuilder {
 
   private static final String LOG_TAG = "AndroidSuiteBuilder";
+  private final boolean ignoreSuiteMethods;
+  private final long perTestTimeout;
 
-  private final AndroidRunnerParams androidRunnerParams;
-
-  /** @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters */
+  /**
+   * @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters
+   * @deprecated use {@link AndroidSuiteBuilder()}
+   */
+  @Deprecated
   public AndroidSuiteBuilder(AndroidRunnerParams runnerParams) {
-    androidRunnerParams = runnerParams;
+    this(runnerParams.isIgnoreSuiteMethods(), runnerParams.getPerTestTimeout());
+  }
+
+  public AndroidSuiteBuilder(boolean ignoreSuiteMethods, long perTestTimeout) {
+    this.ignoreSuiteMethods = ignoreSuiteMethods;
+    this.perTestTimeout = perTestTimeout;
   }
 
   @Override
   public Runner runnerForClass(Class<?> testClass) throws Throwable {
-    if (androidRunnerParams.isIgnoreSuiteMethods()) {
+    if (ignoreSuiteMethods) {
       return null;
     }
     try {
@@ -53,7 +62,7 @@ public class AndroidSuiteBuilder extends SuiteMethodBuilder {
           throw new IllegalArgumentException(
               testClass.getName() + "#suite() did not return a TestSuite");
         }
-        return new JUnit38ClassRunner(new AndroidTestSuite((TestSuite) t, androidRunnerParams));
+        return new JUnit38ClassRunner(new AndroidTestSuite((TestSuite) t, perTestTimeout));
       }
     } catch (Throwable e) {
       // log error message including stack trace before throwing to help with debugging.

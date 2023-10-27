@@ -34,13 +34,22 @@ import org.junit.runners.model.RunnerBuilder;
 public class AndroidJUnit3Builder extends JUnit3Builder {
 
   private static final String TAG = "AndroidJUnit3Builder";
+  private final long perTestTimeout;
 
-
-  private final AndroidRunnerParams androidRunnerParams;
-
-  /** @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters */
+  /**
+   * @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters
+   * @deprecated use {@link AndroidJUnit3Builder(long)} instead
+   */
+  @Deprecated
   public AndroidJUnit3Builder(AndroidRunnerParams runnerParams) {
-    androidRunnerParams = runnerParams;
+    this(runnerParams.getPerTestTimeout());
+  }
+
+  /**
+   * @param perTestTimeout milliseconds timeout value applied to each test where 0 means no timeout
+   */
+  public AndroidJUnit3Builder(long perTestTimeout) {
+    this.perTestTimeout = perTestTimeout;
   }
 
   @Override
@@ -52,7 +61,7 @@ public class AndroidJUnit3Builder extends JUnit3Builder {
           // reasons there was special handling when classpath scanning for this case
           return new EmptyTestRunner(testClass);
         }
-        return new JUnit38ClassRunner(new AndroidTestSuite(testClass, androidRunnerParams));
+        return new JUnit38ClassRunner(new AndroidTestSuite(testClass, perTestTimeout));
       }
     } catch (Throwable e) {
       // log error message including stack trace before throwing to help with debugging.

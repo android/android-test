@@ -17,7 +17,7 @@ package androidx.test.internal.runner.junit3;
 
 import android.os.Looper;
 import android.util.Log;
-import androidx.test.internal.util.AndroidRunnerParams;
+import androidx.test.platform.app.InstrumentationRegistry;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,16 +39,15 @@ import org.junit.Ignore;
 @Ignore
 class AndroidTestSuite extends DelegatingFilterableTestSuite {
   private static final String TAG = "AndroidTestSuite";
+  private final long perTestTimeout;
 
-  private final AndroidRunnerParams androidRunnerParams;
-
-  public AndroidTestSuite(Class<?> testClass, AndroidRunnerParams runnerParams) {
-    this(new NonLeakyTestSuite(testClass), runnerParams);
+  public AndroidTestSuite(Class<?> testClass, long perTestTimeout) {
+    this(new NonLeakyTestSuite(testClass), perTestTimeout);
   }
 
-  public AndroidTestSuite(TestSuite s, AndroidRunnerParams runnerParams) {
+  public AndroidTestSuite(TestSuite s, long perTestTimeout) {
     super(s);
-    androidRunnerParams = runnerParams;
+    this.perTestTimeout = perTestTimeout;
   }
 
   @Override
@@ -56,11 +55,12 @@ class AndroidTestSuite extends DelegatingFilterableTestSuite {
     // wrap the result in a new AndroidTestResult to do the bundle and instrumentation injection
     AndroidTestResult androidTestResult =
         new AndroidTestResult(
-            androidRunnerParams.getBundle(), androidRunnerParams.getInstrumentation(), result);
+            InstrumentationRegistry.getArguments(),
+            InstrumentationRegistry.getInstrumentation(),
+            result);
 
-    long timeout = androidRunnerParams.getPerTestTimeout();
-    if (timeout > 0) {
-      runTestsWithTimeout(timeout, androidTestResult);
+    if (perTestTimeout > 0) {
+      runTestsWithTimeout(perTestTimeout, androidTestResult);
     } else {
       super.run(androidTestResult);
     }

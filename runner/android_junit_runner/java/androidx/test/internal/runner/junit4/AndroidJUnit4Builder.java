@@ -32,12 +32,19 @@ import org.junit.runners.model.RunnerBuilder;
 public class AndroidJUnit4Builder extends JUnit4Builder {
 
   private static final String TAG = "AndroidJUnit4Builder";
+  private final long perTestTimeout;
 
-  private final AndroidRunnerParams androidRunnerParams;
-
-  /** @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters */
+  /**
+   * @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters
+   * @deprecated use {@link AndroidJUnit4Builder()} instead
+   */
+  @Deprecated
   public AndroidJUnit4Builder(AndroidRunnerParams runnerParams) {
-    androidRunnerParams = runnerParams;
+    this(runnerParams.getPerTestTimeout());
+  }
+
+  public AndroidJUnit4Builder(long perTestTimeout) {
+    this.perTestTimeout = perTestTimeout;
   }
 
   @Override
@@ -71,7 +78,7 @@ public class AndroidJUnit4Builder extends JUnit4Builder {
         return new EmptyTestRunner(testClass);
       }
 
-      return new AndroidJUnit4ClassRunner(testClass, androidRunnerParams);
+      return new AndroidJUnit4ClassRunner(testClass, perTestTimeout);
     } catch (Throwable e) {
       // log error message including stack trace before throwing to help with debugging.
       Log.e(TAG, "Error constructing runner", e);

@@ -20,10 +20,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import androidx.test.filters.Suppress;
-import androidx.test.internal.util.AndroidRunnerParams;
-import androidx.test.runner.AndroidJUnit4;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,8 +42,6 @@ import org.mockito.MockitoAnnotations;
 public class AndroidAnnotatedBuilderTest {
 
   @Mock RunnerBuilder mockRunnerBuilder;
-
-  @Mock AndroidRunnerParams mockAndroidRunnerParams;
 
   @RunWith(AndroidJUnit4.class)
   public static class RunWithAndroidJUnit4Class {
@@ -88,7 +85,7 @@ public class AndroidAnnotatedBuilderTest {
   public void successfullyCreateAndroidRunner() throws Exception {
     final Runner mockedRunner = mock(Runner.class);
     AndroidAnnotatedBuilder ab =
-        new AndroidAnnotatedBuilder(mockRunnerBuilder, mockAndroidRunnerParams) {
+        new AndroidAnnotatedBuilder(mockRunnerBuilder, 0) {
           @Override
           public Runner buildAndroidRunner(Class<? extends Runner> runnerClass, Class<?> testClass)
               throws Exception {
@@ -99,14 +96,14 @@ public class AndroidAnnotatedBuilderTest {
         };
     // attempt to create a runner for a class annotated with @RunWith(AndroidJUnit4.class)
     Runner runner = ab.runnerForClass(RunWithAndroidJUnit4Class.class);
-    assertEquals(0, runner.testCount());
+    assertEquals(1, runner.testCount());
   }
 
   @Test
   public void nonAndroidJUnit4RunWithAnnotation_DefaultsToDefaultAnnotatedBuilder()
       throws Exception {
     AndroidAnnotatedBuilder ab =
-        new AndroidAnnotatedBuilder(mockRunnerBuilder, mockAndroidRunnerParams) {
+        new AndroidAnnotatedBuilder(mockRunnerBuilder, 0) {
           @Override
           public Runner buildAndroidRunner(Class<? extends Runner> runnerClass, Class<?> testClass)
               throws Exception {
@@ -124,7 +121,7 @@ public class AndroidAnnotatedBuilderTest {
   @Test
   public void testNoRunWith() throws Exception {
     AndroidAnnotatedBuilder ab =
-        new AndroidAnnotatedBuilder(mockRunnerBuilder, mockAndroidRunnerParams) {
+        new AndroidAnnotatedBuilder(mockRunnerBuilder, 0) {
           @Override
           public Runner buildAndroidRunner(Class<? extends Runner> runnerClass, Class<?> testClass)
               throws Exception {
