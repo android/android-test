@@ -7,7 +7,7 @@ set -e
 mkdir -p "${KOKORO_ARTIFACTS_DIR}/artifacts"
 cd "${KOKORO_ARTIFACTS_DIR}/github/android-test-releases"
 
-source kokoro/gcp_ubuntu_docker/common.sh
+source kokoro/common.sh
 install_bazelisk
 # runner has @androidsdk//:legacy_test-30 as a dependency
 /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/opt/android-sdk "platforms;android-30" "build-tools;30.0.0"
