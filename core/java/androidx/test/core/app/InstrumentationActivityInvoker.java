@@ -16,12 +16,14 @@
 
 package androidx.test.core.app;
 
+import static android.app.ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED;
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.Instrumentation.ActivityResult;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -31,6 +33,8 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.annotation.Nullable;
@@ -166,7 +170,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
             checkNotNull(getIntent().getParcelableExtra(TARGET_ACTIVITY_INTENT_KEY));
         Bundle options = getIntent().getBundleExtra(TARGET_ACTIVITY_OPTIONS_BUNDLE_KEY);
         try {
-          if (options == null || Build.VERSION.SDK_INT < 16) {
+          if (options == null) {
             // Override and disable FLAG_ACTIVITY_NEW_TASK flag by flagsMask and flagsValue.
             // PendingIntentRecord#sendInner() will mask the original intent flag with the flagsMask
             // then override those bits with the new flagsValue specified here. This override is
@@ -424,7 +428,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
 
   /** Starts an Activity using the given intent. */
   @Override
-  public void startActivityForResult(Intent intent, @Nullable Bundle activityOptions) {
+  public void startActivityForResult(Intent intent, @Nullable Bundle activityOptionsBundle) {
     // make sure the intent can resolve an activity
     ActivityInfo ai = intent.resolveActivityInfo(getApplicationContext().getPackageManager(), 0);
     if (ai == null) {
@@ -437,6 +441,16 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
 
     activityResultWaiter = new ActivityResultWaiter(getApplicationContext());
 
+    if (VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
+      ActivityOptions activityOptions =
+          ActivityOptions.makeBasic()
+              .setPendingIntentBackgroundActivityStartMode(MODE_BACKGROUND_ACTIVITY_START_ALLOWED);
+      if (activityOptionsBundle == null) {
+        activityOptionsBundle = new Bundle();
+      }
+      activityOptionsBundle.putAll(activityOptions.toBundle());
+    }
+
     // Note: Instrumentation.startActivitySync(Intent) cannot be used here because BootstrapActivity
     // may start in different process. Also, we use PendingIntent because the target activity may
     // set "exported" attribute to false so that it prohibits starting the activity outside of their
@@ -448,17 +462,12 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
                 TARGET_ACTIVITY_INTENT_KEY,
                 PendingIntent.getActivity(
                     getApplicationContext(),
-                    /*requestCode=*/ 0,
+                    /* requestCode= */ 0,
                     intent,
-                    /*flags=*/ PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE))
-            .putExtra(TARGET_ACTIVITY_OPTIONS_BUNDLE_KEY, activityOptions);
+                    /* flags= */ PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE))
+            .putExtra(TARGET_ACTIVITY_OPTIONS_BUNDLE_KEY, activityOptionsBundle);
 
-    if (Build.VERSION.SDK_INT < 16) {
-      // activityOptions not supported
-      getApplicationContext().startActivity(bootstrapIntent);
-    } else {
-      getApplicationContext().startActivity(bootstrapIntent, activityOptions);
-    }
+    getApplicationContext().startActivity(bootstrapIntent, activityOptionsBundle);
   }
 
   @Override
