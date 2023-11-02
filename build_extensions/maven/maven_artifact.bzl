@@ -37,7 +37,22 @@ _dependency_tmpl = "\n".join([
     "      <artifactId>{artifact_id}</artifactId>",
     "      <version>{version}</version>",
     "      <scope>compile</scope>",
+    "{exclusions}",
     "    </dependency>",
+])
+
+_exclusions_tmpl = "\n".join([
+    "      <exclusions>",
+    "{exclusion}",
+    "      </exclusions>",
+])
+
+_exclusion_tmpl = "\n".join([
+    "          <exclusion>",
+    "              <groupId>{groupId}</groupId>",
+    "              <artifactId>{artifactId}</artifactId>",
+    "          </exclusion>",
+    "",
 ])
 
 _metadata_tmpl = "\n".join([
@@ -75,15 +90,24 @@ def _packaging_type(f):
         return "jar"
     fail("Artifact has unknown packaging type: %s" % f.short_path)
 
-def _create_pom_string(ctx, group_id, artifact_id, version, packaging_type, maven_dependencies):
+def _create_pom_string(
+        ctx,
+        group_id,
+        artifact_id,
+        version,
+        packaging_type,
+        maven_dependencies,
+        maven_dependencies_exclusions = {}):
     """Returns the contents of the pom file as a string."""
     dependencies = []
     for dep in maven_dependencies:
         dep_group_id, dep_artifact_id, dep_version = _parse_artifact_versioning(dep)
+        exclusions_string = _create_exclusions_string(dep_group_id, dep_artifact_id, maven_dependencies_exclusions)
         dependencies.append(_dependency_tmpl.format(
             group_id = dep_group_id,
             artifact_id = dep_artifact_id,
             version = dep_version,
+            exclusions = exclusions_string,
         ))
 
     licenses = []
@@ -116,10 +140,32 @@ def _create_metadata_string(ctx, group_id, artifact_id, version):
         last_updated = ctx.attr.last_updated,
     )
 
+def _create_exclusions_string(group_id, artifact_id, excluded_dependencies_map):
+    """Returns the string contents of excluded dependencies for the dependency."""
+    excluded_dependencies_csv = excluded_dependencies_map.get("%s:%s" % (group_id, artifact_id))
+    if not excluded_dependencies_csv:
+        return ""
+    excluded_dependencies = excluded_dependencies_csv.split(",")
+    excluded_dependencies_string = ""
+    for excluded_dependency in excluded_dependencies:
+        excluded_group, excluded_artifact = _parse_group_artifact(excluded_dependency)
+        excluded_dependencies_string += _exclusion_tmpl.format(
+            groupId = excluded_group,
+            artifactId = excluded_artifact,
+        )
+    return _exclusions_tmpl.format(exclusion = excluded_dependencies_string)
+
 def _parse_artifact_versioning(artifact_coordinates):
     """Parse out artifact_id, version and group info from a full coordinate string"""
     if artifact_coordinates.count(":") != 2:
         fail("artifact_deps values must be of form: groupId:artifactId:version. Found %s" % artifact_coordinates)
+
+    return artifact_coordinates.split(":")
+
+def _parse_group_artifact(artifact_coordinates):
+    """Parse out artifact_id, and group info from a  coordinate string"""
+    if artifact_coordinates.count(":") != 1:
+        fail("artifact_deps values must be of form: groupId:artifactId. Found %s" % artifact_coordinates)
 
     return artifact_coordinates.split(":")
 
@@ -170,7 +216,7 @@ def _maven_artifact_impl(ctx):
     maven_deps = sorted(ctx.attr.target[MavenInfo].transitive_maven_direct_deps.to_list())
 
     packaging_type = _packaging_type(ctx.attr.target[MavenFilesInfo].runtime)
-    pom_content = _create_pom_string(ctx, group_id, artifact_id, version, packaging_type, maven_deps)
+    pom_content = _create_pom_string(ctx, group_id, artifact_id, version, packaging_type, maven_deps, ctx.attr.excluded_dependencies)
     ctx.actions.write(output = pom, content = pom_content)
 
     metadata = ctx.actions.declare_file("%s_maven-metadata.xml" % (ctx.label.name))
@@ -227,6 +273,10 @@ maven_artifact = rule(
         ),
         "license_name": attr.string(mandatory = False),
         "license_url": attr.string(mandatory = False),
+        "excluded_dependencies": attr.string_dict(
+            mandatory = False,
+            doc = "Map of maven dependency to a csv list of excluded dependencies. eg {\"com.google.foo:foo\":\"com.google.bar:bar,com.google.bar:bar-none\"}",
+        ),
         "_jar": attr.label(
             default = Label("@bazel_tools//tools/jdk:jar"),
             executable = True,

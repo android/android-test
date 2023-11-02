@@ -15,8 +15,8 @@
 """Starlark rules to collect Maven artifacts information.
 """
 
-load("//build_extensions/maven:kotlin_info.bzl", "is_kotlin")
 load("//build_extensions:axt_versions.bzl", "KOTLIN_VERSION")
+load("//build_extensions/maven:kotlin_info.bzl", "is_kotlin")
 load("//build_extensions/maven:maven_registry.bzl", "get_artifact_from_label", "get_maven_apk_deps", "is_axt_label", "is_shaded_from_label")
 
 # logic here largely inspired from https://github.com/google/dagger/blob/master/tools/maven_info.bzl
@@ -60,7 +60,7 @@ MavenInfo = provider(
     },
 )
 
-_MAVEN_COORDINATES_PREFIX = "maven_coordinates="
+MAVEN_COORDINATES_PREFIX = "maven_coordinates="
 
 def _collect_maven_info_impl(target, ctx):
     tags = getattr(ctx.rule.attr, "tags", [])
@@ -84,10 +84,10 @@ def _collect_maven_info_impl(target, ctx):
 
     if not artifact and not is_shaded:
         for tag in tags:
-            if tag.startswith(_MAVEN_COORDINATES_PREFIX):
+            if tag.startswith(MAVEN_COORDINATES_PREFIX):
                 if artifact:
-                    fail("%s: Each target must belong to one and only one maven artifact: Does target have multiple '%s' tags?" % (target.label, _MAVEN_COORDINATES_PREFIX))
-                artifact = tag[len(_MAVEN_COORDINATES_PREFIX):]
+                    fail("%s: Each target must belong to one and only one maven artifact: Does target have multiple '%s' tags?" % (target.label, MAVEN_COORDINATES_PREFIX))
+                artifact = tag[len(MAVEN_COORDINATES_PREFIX):]
 
     included_runtime_jars = []
     included_runtime_jars += target[JavaInfo].runtime_output_jars
