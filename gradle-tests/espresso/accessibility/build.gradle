@@ -1,0 +1,46 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'androidx.test.gradletests.espresso.accessibility'
+    compileSdk rootProject.ext.compileSdk
+
+    defaultConfig {
+        minSdk rootProject.ext.minSdk
+        targetSdk rootProject.ext.targetSdk
+        multiDexEnabled = true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    testOptions {
+        animationsDisabled = true
+        managedDevices {
+            devices {
+                // run with ../gradlew  nexusOneApi30DebugAndroidTest
+                nexusOneApi30(com.android.build.api.dsl.ManagedVirtualDevice) {
+                    // A lower resolution device is used here for better emulator performance
+                    device = "Nexus One"
+                    apiLevel = 30
+                    systemImageSource = "aosp"
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    androidTestImplementation "androidx.multidex:multidex:2.0.0"
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.accessibility
+    androidTestImplementation libs.espresso.core
+    androidTestImplementation libs.espresso.intents
+}
