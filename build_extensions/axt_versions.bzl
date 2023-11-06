@@ -1,7 +1,6 @@
 """Defines current AXT versions and dependencies."""
 
 # AXT versions listed as next # last published, stable
-# LINT.IfChange
 RUNNER_VERSION = "1.6.0-alpha05"  # 1.6.0-alpha04, 1.5.1
 RULES_VERSION = "1.6.0-alpha02"  # 1.6.0-alpha01, 1.5.0
 MONITOR_VERSION = "1.7.0-alpha03"  # 1.7.0-alpha02, 1.6.0
@@ -12,11 +11,8 @@ ANDROIDX_JUNIT_VERSION = "1.2.0-alpha02"  # 1.2.0-alpha01, 1.1.4
 ANDROIDX_TRUTH_VERSION = "1.6.0-alpha02"  # 1.6.0-alpha01, 1.5.0
 ANNOTATION_VERSION = "1.1.0-alpha02"  # 1.1.0-alpha01, 1.0.1
 ORCHESTRATOR_VERSION = "1.5.0-alpha02"  # 1.5.0-alpha01, 1.4.2
-# LINT.ThenChange(//depot/google3/third_party/android/androidx_test/gradle-tests/settings.gradle)
 
-# LINT.IfChange(SERVICES_VERSION)
 SERVICES_VERSION = "1.5.0-alpha02"  # 1.5.0-alpha01, 1.4.2
-# LINT.ThenChange(//depot/google3/third_party/android/androidx_test/services/AndroidManifest.xml)
 
 # Full maven artifact strings for apks.
 SERVICES_APK_ARTIFACT = "androidx.test.services:test-services:%s" % SERVICES_VERSION
