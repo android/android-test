@@ -18,5 +18,5 @@
     package="androidx.test.ext.junit.ktx" >
     <uses-sdk
         android:minSdkVersion="19"
-        android:targetSdkVersion="33" />
+        android:targetSdkVersion="34" />
 </manifest>
