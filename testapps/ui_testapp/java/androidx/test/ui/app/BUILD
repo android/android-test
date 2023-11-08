@@ -3,8 +3,8 @@
 # Description:
 #  Test App used for UI Testing Lib integration tests.
 
-load("@build_bazel_rules_android//android:rules.bzl", "android_binary", "android_library")
 load("//build_extensions:jetify.bzl", "jetify_android_library")
+load("@build_bazel_rules_android//android:rules.bzl", "android_binary", "android_library")
 
 licenses(["notice"])
 
@@ -32,6 +32,14 @@ jetify_android_library(
         "@maven//:com_google_android_material_material",
         "@maven//:com_google_guava_guava",
     ],
+)
+
+android_library(
+    name = "lib_exported",
+    testonly = 1,
+    exports_manifest = 1,
+    manifest = "AndroidManifest.xml",
+    exports = [":lib"],
 )
 
 android_library(
