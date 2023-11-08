@@ -123,7 +123,7 @@ jobs:
       - name: 'Run gradle tests'
         run: |
           cd ${{ github.workspace }}/gradle-tests
-          ./gradlew nexusOneApi30DebugAndroidTest -Dorg.gradle.workers.max=1 -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -Pandroid.experimental.testOptions.managedDevices.emulator.showKernelLogging=true --info
+          ./gradlew nexusOneApi30DebugAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -Pandroid.experimental.testOptions.managedDevices.emulator.showKernelLogging=true --info
         shell: bash
       - name: 'Upload test reports'
         if: success() || failure()
