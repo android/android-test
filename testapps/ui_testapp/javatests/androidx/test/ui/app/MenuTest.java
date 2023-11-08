@@ -30,7 +30,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.filters.SdkSuppress;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +46,6 @@ public class MenuTest {
 
   // popup menus are post honeycomb.
   @Test
-  @SdkSuppress(minSdkVersion = 11)
   public void testPopupMenu() {
     onView(withText(R.string.popup_item_1_text)).check(doesNotExist());
     onView(withId(R.id.popup_button)).perform(click());

@@ -27,7 +27,6 @@ import android.os.Build.VERSION;
 import android.view.View;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
-import androidx.test.filters.SdkSuppress;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +48,6 @@ public class HasBackgroundMatcherTest {
   public void emptyTest() {}
 
   @Test
-  @SdkSuppress(minSdkVersion = 16)
   public void verifyViewHasBackground() {
     // TODO(b/117557353): investigate failures on API 28
     assumeFalse(VERSION.SDK_INT == 28);
@@ -64,7 +62,6 @@ public class HasBackgroundMatcherTest {
   }
 
   @Test
-  @SdkSuppress(minSdkVersion = 16)
   public void verifyBackgroundWhenBackgroundIsNotSet() {
     View view = new View(context);
     view.setBackground(null);

@@ -42,7 +42,6 @@ import android.os.Bundle;
 import androidx.test.annotation.UiThreadTest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.runner.MonitoringInstrumentation;
 import androidx.test.runner.intercepting.SingleActivityFactory;
 import org.hamcrest.CoreMatchers;
@@ -525,7 +524,6 @@ public class ActivityTestRuleTest {
     assertThat(result.getFailureCount(), equalTo(0));
   }
 
-  @SdkSuppress(minSdkVersion = 17)
   @Test
   public void shouldAskInstrumentationToInterceptActivityUsingGivenFactoryAndResetItAfterTest()
       throws Throwable {

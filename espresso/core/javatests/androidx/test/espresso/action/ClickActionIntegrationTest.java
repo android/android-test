@@ -52,8 +52,6 @@ public class ClickActionIntegrationTest {
     onView(withId(R.id.large_view)).check(matches(withText("Ouch!!!")));
   }
 
-  // Right-click support does not exist pre API_14
-  @SdkSuppress(minSdkVersion = 14)
   @Test
   public void rightClickTest() {
     onView(withId(R.id.large_view))

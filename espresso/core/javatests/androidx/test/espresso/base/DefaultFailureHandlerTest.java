@@ -39,7 +39,6 @@ import androidx.test.espresso.ViewAssertion;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.services.storage.TestStorage;
 import androidx.test.services.storage.internal.TestStorageUtil;
 import androidx.test.ui.app.MainActivity;
@@ -105,7 +104,6 @@ public class DefaultFailureHandlerTest {
   }
 
   @Test
-  @SdkSuppress(minSdkVersion = 18)
   public void screenshotSaved() throws IOException {
     assertThrows(
         NoMatchingViewException.class,

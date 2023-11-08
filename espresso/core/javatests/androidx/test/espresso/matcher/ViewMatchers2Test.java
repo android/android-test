@@ -77,7 +77,6 @@ import androidx.annotation.NonNull;
 import androidx.test.annotation.UiThreadTest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.ui.app.R;
 import java.util.List;
 import org.hamcrest.Matcher;
@@ -378,7 +377,6 @@ public class ViewMatchers2Test {
   }
 
   @Test
-  @SdkSuppress(minSdkVersion = 11)
   public void withAlphaTest() {
     View view = new TextView(context);
 
@@ -879,7 +877,6 @@ public class ViewMatchers2Test {
   }
 
   @Test
-  @SdkSuppress(minSdkVersion = 16)
   public void hasBackgroundTest() {
     // TODO(b/117557353): investigate failures on API 28
     assumeFalse(VERSION.SDK_INT == 28);

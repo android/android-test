@@ -28,7 +28,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SendActivity;
 import org.junit.Rule;
@@ -42,8 +41,6 @@ public class WindowOrderingIntegrationTest {
   @Rule
   public ActivityScenarioRule<SendActivity> rule = new ActivityScenarioRule<>(SendActivity.class);
 
-  // popup menus are post honeycomb.
-  @SdkSuppress(minSdkVersion = 11)
   @Test
   public void popupMenuTesting() {
     onView(withText(R.string.item_1_text)).check(doesNotExist());

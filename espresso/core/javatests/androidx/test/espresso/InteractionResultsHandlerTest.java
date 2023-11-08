@@ -25,7 +25,6 @@ import static org.junit.Assert.fail;
 import androidx.test.espresso.remote.NoRemoteEspressoInstanceException;
 import androidx.test.espresso.util.concurrent.ListeningExecutorService;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.ArrayList;
@@ -213,7 +212,6 @@ public class InteractionResultsHandlerTest {
   }
 
   @Test
-  @SdkSuppress(minSdkVersion = 16) // TODO(b/154808638) fails mysteriously on API 15
   public void verifyMultipleConcurrentInteractionsOnDifferentThreadsReportSuccess()
       throws Throwable {
     NoRemoteEspressoInstanceException noRemoteException =

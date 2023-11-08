@@ -30,7 +30,6 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -138,10 +137,9 @@ public class DelegatingContextTest {
 
   /**
    * Similar to test {@link #openOrCreateDatabaseWithoutHandler}, but test openOrCreateDatabase API
-   * with errorHandler, which is added in API level 11.
+   * with errorHandler.
    */
   @Test
-  @SdkSuppress(minSdkVersion = 11)
   public void openOrCreateDatabaseWithHandler() {
     assertEquals(delegatingContext.databaseList().length, 0);
     SQLiteDatabase testDatabase =
