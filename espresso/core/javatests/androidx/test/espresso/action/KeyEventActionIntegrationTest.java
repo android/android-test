@@ -43,7 +43,6 @@ import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.FlakyTest;
 import androidx.test.filters.LargeTest;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.Suppress;
 import androidx.test.ui.app.MainActivity;
 import androidx.test.ui.app.R;
@@ -95,7 +94,6 @@ public class KeyEventActionIntegrationTest {
   }
 
   @SuppressWarnings("unchecked")
-  @SdkSuppress(minSdkVersion = 10)
   @FlakyTest
   public void clickOnBackFromFragment() {
     Intent fragmentStack =
