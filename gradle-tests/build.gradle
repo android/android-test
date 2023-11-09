@@ -8,4 +8,5 @@ ext {
     minSdk = 19
     targetSdk = 34
     compileSdk = 34
+    emulatorApi = 33
 }

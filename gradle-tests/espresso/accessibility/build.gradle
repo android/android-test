@@ -25,12 +25,12 @@ android {
         animationsDisabled = true
         managedDevices {
             devices {
-                // run with ../gradlew  nexusOneApi30DebugAndroidTest
-                nexusOneApi30(com.android.build.api.dsl.ManagedVirtualDevice) {
+                // run with ../gradlew  nexusOneDebugAndroidTest
+                nexusOne(com.android.build.api.dsl.ManagedVirtualDevice) {
                     // A lower resolution device is used here for better emulator performance
                     device = "Nexus One"
-                    apiLevel = 30
-                    systemImageSource = "aosp"
+                    apiLevel = rootProject.ext.emulatorApi
+                    systemImageSource = "aosp-atd"
                 }
             }
         }

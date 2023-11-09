@@ -123,7 +123,7 @@ jobs:
       - name: 'Run gradle tests'
         run: |
           cd ${{ github.workspace }}/gradle-tests
-          ./gradlew nexusOneApi30DebugAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" --no-watch-fs --info
+          ./gradlew nexusOneDebugAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" --no-watch-fs --info
         shell: bash
       - name: 'Upload test reports'
         if: success() || failure()

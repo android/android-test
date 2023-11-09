@@ -87,7 +87,7 @@ To run the gradle integration tests:
 bazelisk build :axt_m2repository
 unzip bazel-bin/axt_m2repository.zip -d ~/.m2/
 cd gradle-tests
-./gradlew nexusOneApi30DebugAndroidTest
+./gradlew nexusOneDebugAndroidTest
 ```
 
 ### Troubleshooting

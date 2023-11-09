@@ -5,11 +5,11 @@ plugins {
 
 android {
     namespace 'androidx.test.gradletests.orchestrator'
-    compileSdk 33
+    compileSdk rootProject.ext.compileSdk
 
     defaultConfig {
-        minSdk 19
-        targetSdk 33
+        minSdk rootProject.ext.minSdk
+        targetSdk rootProject.ext.targetSdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
@@ -27,11 +27,11 @@ android {
         animationsDisabled = true
         managedDevices {
             devices {
-                // run with ../gradlew  nexusOneApi30DebugAndroidTest
-                nexusOneApi30(com.android.build.api.dsl.ManagedVirtualDevice) {
+                // run with ../gradlew  nexusOneDebugAndroidTest
+                nexusOne(com.android.build.api.dsl.ManagedVirtualDevice) {
                     // A lower resolution device is used here for better emulator performance
                     device = "Nexus One"
-                    apiLevel = 30
+                    apiLevel = rootProject.ext.emulatorApi
                     // Also use the AOSP Automated Test Device image for better emulator performance
                     systemImageSource = "aosp-atd"
                 }
