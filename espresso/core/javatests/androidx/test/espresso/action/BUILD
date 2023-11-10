@@ -175,7 +175,7 @@ axt_android_library_test(
 axt_android_application_test(
     name = "KeyEventActionIntegrationTest",
     srcs = ["KeyEventActionIntegrationTest.java"],
-    binary_under_test = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+    instruments = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
     manifest = "AndroidManifest_key.xml",
     deps = [
         "//core",
