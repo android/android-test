@@ -1,26 +1,24 @@
 # Description:
 #   Tests for espresso remote classes
 
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 load(
-    "//build_extensions:android_app_instrumentation_tests.bzl",
-    "android_app_instrumentation_tests",
+    "//build_extensions:android_library_test.bzl",
+    "axt_android_library_test",
 )
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 package(default_applicable_licenses = ["//espresso:license"])
 
 licenses(["notice"])
 
-UTIL_SRCS = [
-    "StubRootMatcher.java",
-    "TestTypes.java",
-    "TestTypeRemoteMessage.java",
-]
-
 android_library(
     name = "util",
     testonly = 1,
-    srcs = UTIL_SRCS,
+    srcs = [
+        "StubRootMatcher.java",
+        "TestTypeRemoteMessage.java",
+        "TestTypes.java",
+    ],
     visibility = ["//espresso/remote/javatests/androidx/test/espresso:__subpackages__"],
     deps = [
         "//espresso/core/java/androidx/test/espresso",
@@ -34,13 +32,10 @@ android_library(
     ],
 )
 
-android_app_instrumentation_tests(
-    name = "instrumentation_tests",
-    srcs = glob(
-        ["*.java"],
-        exclude = UTIL_SRCS,
-    ),
-    binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+axt_android_library_test(
+    name = "ConstructorInvocationTest",
+    srcs =
+        ["ConstructorInvocationTest.java"],
     deps = [
         ":util",
         "//core",
@@ -61,5 +56,20 @@ android_app_instrumentation_tests(
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_mockito_mockito_core",
+    ],
+)
+
+axt_android_library_test(
+    name = "MethodInvocationTest",
+    srcs =
+        ["MethodInvocationTest.java"],
+    deps = [
+        ":util",
+        "//core",
+        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
+        "//ext/junit",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
