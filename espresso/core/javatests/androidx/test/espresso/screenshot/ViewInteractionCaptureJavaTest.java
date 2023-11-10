@@ -1,7 +1,7 @@
 package androidx.test.espresso.screenshot;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static com.google.common.truth.Truth.assertThat;
 
 import android.graphics.Bitmap;
@@ -24,7 +24,7 @@ public class ViewInteractionCaptureJavaTest {
 
   @Test
   public void viewInteractionCapture() throws IOException {
-    Bitmap bitmap = ViewInteractionCapture.captureToBitmap(onView(withId(R.id.layout)));
+    Bitmap bitmap = ViewInteractionCapture.captureToBitmap(onView(isRoot()));
 
     assertThat(bitmap).isNotNull();
 
