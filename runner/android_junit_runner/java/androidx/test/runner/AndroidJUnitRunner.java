@@ -676,6 +676,8 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   }
 
   private void registerTestStorage(Bundle bundleArgs) {
+      Log.d(LOG_TAG, "registerTestStorage.");
+
     if (Boolean.parseBoolean(bundleArgs.getString(RunnerArgs.ARGUMENT_USE_TEST_STORAGE_SERVICE))) {
       Log.d(LOG_TAG, "Use the test storage service for managing file I/O.");
       PlatformTestStorageRegistry.registerInstance(new TestStorage());
