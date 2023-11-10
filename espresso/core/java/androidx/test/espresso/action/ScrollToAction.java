@@ -42,6 +42,16 @@ import org.hamcrest.Matcher;
 public final class ScrollToAction implements ViewAction {
   private static final String TAG = ScrollToAction.class.getSimpleName();
 
+  private final int isDisplayingAtLeastThreshold;
+
+  public ScrollToAction() {
+    this(90);
+  }
+
+  public ScrollToAction(int isDisplayingAtLeastThreshold) {
+    this.isDisplayingAtLeastThreshold = isDisplayingAtLeastThreshold;
+  }
+
   @Override
   public Matcher<View> getConstraints() {
     return allOf(
@@ -76,7 +86,7 @@ public final class ScrollToAction implements ViewAction {
 
   @Override
   public void perform(UiController uiController, View view) {
-    if (isDisplayingAtLeast(90).matches(view)) {
+    if (isDisplayingAtLeast(isDisplayingAtLeastThreshold).matches(view)) {
       Log.i(TAG, "View is already displayed. Returning.");
       return;
     }
@@ -86,7 +96,7 @@ public final class ScrollToAction implements ViewAction {
       Log.w(TAG, "Scrolling to view was requested, but none of the parents scrolled.");
     }
     uiController.loopMainThreadUntilIdle();
-    if (!isDisplayingAtLeast(90).matches(view)) {
+    if (!isDisplayingAtLeast(isDisplayingAtLeastThreshold).matches(view)) {
       throw new PerformException.Builder()
           .withActionDescription(this.getDescription())
           .withViewDescription(HumanReadables.describe(view))

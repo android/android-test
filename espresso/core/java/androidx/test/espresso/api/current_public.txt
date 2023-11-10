@@ -371,6 +371,7 @@ package androidx.test.espresso.action {
 
   public final class ScrollToAction implements androidx.test.espresso.ViewAction {
     ctor public ScrollToAction();
+    ctor public ScrollToAction(int);
     method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
     method public String! getDescription();
     method public void perform(androidx.test.espresso.UiController!, android.view.View!);
@@ -441,7 +442,9 @@ package androidx.test.espresso.action {
     method public static void removeGlobalAssertion(androidx.test.espresso.ViewAssertion!);
     method public static androidx.test.espresso.ViewAction! repeatedlyUntil(androidx.test.espresso.ViewAction!, org.hamcrest.Matcher<android.view.View!>!, int);
     method public static androidx.test.espresso.ViewAction! replaceText(String);
+    method public static androidx.test.espresso.ViewAction! scrollCompletelyTo();
     method public static androidx.test.espresso.ViewAction! scrollTo();
+    method public static androidx.test.espresso.ViewAction! scrollTo(int);
     method public static androidx.test.espresso.ViewAction! slowSwipeLeft();
     method public static androidx.test.espresso.ViewAction! swipeDown();
     method public static androidx.test.espresso.ViewAction! swipeLeft();
