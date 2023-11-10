@@ -27,8 +27,8 @@ package androidx.test.espresso;
  *
  * <p><b>Important Note:</b> it is assumed that the resource stays idle most of the time.
  *
- * <p><b>Note:</b> before writing your implementation consider using {@link
- * androidx.test.espresso.idling.CountingIdlingResource} instead.
+ * <p><b>Note:</b> before writing your implementation consider using
+ * {@link androidx.test.espresso.idling.CountingIdlingResource} instead.
  */
 public interface IdlingResource {
 
