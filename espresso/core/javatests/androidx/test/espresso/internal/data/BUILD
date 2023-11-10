@@ -1,25 +1,23 @@
 # Tests for espresso.internal.data
 load(
-    "//build_extensions:android_app_instrumentation_tests.bzl",
-    "android_app_instrumentation_tests",
+    "//build_extensions:android_library_test.bzl",
+    "axt_android_library_test",
 )
 
 package(default_applicable_licenses = ["//espresso:license"])
 
 licenses(["notice"])
 
-android_app_instrumentation_tests(
+axt_android_library_test(
     name = "TestFlowVisualizerTest",
     srcs = [
         "TestFlowVisualizerTest.java",
     ],
-    binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
     deps = [
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/internal/data",
         "//espresso/core/java/androidx/test/espresso/internal/data/model",
         "//ext/junit",
-        "//runner/android_junit_runner",
         "//runner/monitor",
         "//services/storage/java/androidx/test/services/storage",
         "@maven//:com_google_truth_truth",
