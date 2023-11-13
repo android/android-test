@@ -27,8 +27,9 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.platform.content.PermissionGranter;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.permission.UiAutomationShellCommand.PmCommand;
@@ -47,10 +48,7 @@ import java.util.HashSet;
  *
  * <p>Note: Usually this class would not be used directly, but through {@link
  * androidx.test.rule.GrantPermissionRule}.
- *
- * <p><b>This API is currently in beta.</b>
  */
-@ExperimentalTestApi
 @TargetApi(value = 23)
 public class PermissionRequester implements PermissionGranter {
 
@@ -120,6 +118,8 @@ public class PermissionRequester implements PermissionGranter {
     }
   }
 
+  /** @hide */
+  @RestrictTo(Scope.LIBRARY)
   @VisibleForTesting
   protected void setAndroidRuntimeVersion(int sdkInt) {
     androidRuntimeVersion = sdkInt;

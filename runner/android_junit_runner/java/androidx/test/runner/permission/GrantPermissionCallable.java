@@ -19,10 +19,15 @@ package androidx.test.runner.permission;
 import android.content.Context;
 import android.util.Log;
 import androidx.annotation.NonNull;
-import androidx.test.annotation.ExperimentalTestApi;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 
-/** Grants a permission at runtime using a @{link ShellCommand} */
-@ExperimentalTestApi
+/**
+ * Grants a permission at runtime using a {@link ShellCommand}
+ *
+ * @hide
+ */
+@RestrictTo(Scope.LIBRARY)
 class GrantPermissionCallable extends RequestPermissionCallable {
 
   private static final String TAG = "GrantPermissionCallable";

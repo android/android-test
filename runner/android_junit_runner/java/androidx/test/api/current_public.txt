@@ -250,6 +250,16 @@ package androidx.test.runner.intercepting {
 
 }
 
+package androidx.test.runner.permission {
+
+  public class PermissionRequester implements androidx.test.internal.platform.content.PermissionGranter {
+    ctor public PermissionRequester();
+    method public void addPermissions(java.lang.String!...);
+    method public void requestPermissions();
+  }
+
+}
+
 package androidx.test.runner.screenshot {
 
   @Deprecated public class BasicScreenCaptureProcessor implements androidx.test.runner.screenshot.ScreenCaptureProcessor {
