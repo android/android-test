@@ -37,7 +37,6 @@ axt_android_aar(
     name = "rules_aar",
     expected_class_prefixes = [
         "androidx.test.annotation.UiThreadTest",
-        "androidx.test.internal.statement",
         "androidx.test.rule",
     ],
     included_dep = ":rules",
