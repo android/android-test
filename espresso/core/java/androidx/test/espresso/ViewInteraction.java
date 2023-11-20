@@ -153,7 +153,7 @@ public final class ViewInteraction {
           checkNotNull(bindable.getIBinder(), "Bindable binder cannot be null!"));
     }
 
-    return toMap(iBinders);
+    return /* NoCollectionsKtInJava */ toMap(iBinders);
   }
 
   private static List<Bindable> getBindables(Object... objects) {

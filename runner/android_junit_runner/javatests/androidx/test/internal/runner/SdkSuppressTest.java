@@ -22,7 +22,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.internal.runner.TestRequestBuilder.DeviceBuild;
 import java.util.List;
-import kotlin.collections.CollectionsKt;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
@@ -188,8 +187,7 @@ public class SdkSuppressTest {
     Result result = new JUnitCore().run(request);
 
     List<String> failingMethods =
-        CollectionsKt.map(
-            result.getFailures(), failure -> failure.getDescription().getMethodName());
+        result.getFailures().stream().map(result.getFailures()).collect(toImmutableList());
 
     assertThat(failingMethods)
         .containsExactly(
@@ -210,8 +208,7 @@ public class SdkSuppressTest {
     Result result = new JUnitCore().run(request);
 
     List<String> failingMethods =
-        CollectionsKt.map(
-            result.getFailures(), failure -> failure.getDescription().getMethodName());
+        result.getFailures().stream().map(result.getFailures()).collect(toImmutableList());
 
     assertThat(failingMethods)
         .containsExactly(
@@ -242,8 +239,7 @@ public class SdkSuppressTest {
     Result result = new JUnitCore().run(request);
 
     List<String> failingMethods =
-        CollectionsKt.map(
-            result.getFailures(), failure -> failure.getDescription().getMethodName());
+        result.getFailures().stream().map(result.getFailures()).collect(toImmutableList());
 
     assertThat(failingMethods).containsExactly("noSdkSuppress");
   }
@@ -266,8 +262,7 @@ public class SdkSuppressTest {
     Result result = new JUnitCore().run(request);
 
     List<String> failingMethods =
-        CollectionsKt.map(
-            result.getFailures(), failure -> failure.getDescription().getMethodName());
+        result.getFailures().stream().map(result.getFailures()).collect(toImmutableList());
 
     assertThat(failingMethods).containsExactly("maxSdk18");
   }

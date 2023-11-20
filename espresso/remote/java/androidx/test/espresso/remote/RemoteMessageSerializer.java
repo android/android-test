@@ -33,7 +33,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import kotlin.collections.CollectionsKt;
 
 /**
  * Serializes an arbitrary object into its proto message representation.
@@ -102,12 +101,7 @@ final class RemoteMessageSerializer implements EspressoRemoteMessage.To<MessageL
       targetFields =
           getFilteredFieldList(
               instance.getClass(),
-              CollectionsKt.map(
-                  fieldDescriptorList,
-                  fieldDescriptor -> {
-                    // Transform fieldDescriptorList into a new list which contains field names
-                    return fieldDescriptor.fieldName;
-                  }));
+              fieldDescriptorList.stream().map(fieldDescriptorList).collect(toImmutableList()));
       return createProtoFromTargetFields(targetFields, instance);
     } catch (Exception e) {
       if ((e instanceof RemoteProtocolException)) {

@@ -128,7 +128,7 @@ class KeyEventActionBase implements ViewAction {
   static Activity getCurrentActivity() {
     Collection<Activity> resumedActivities =
         ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
-    return CollectionsKt.single(resumedActivities);
+    return /* NoCollectionsKtInJava */ CollectionsKt.single(resumedActivities);
   }
 
   static void waitForStageChangeInitialActivity(UiController controller, Activity initialActivity) {

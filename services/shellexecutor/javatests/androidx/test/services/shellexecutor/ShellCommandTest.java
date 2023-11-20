@@ -24,11 +24,11 @@ import static org.hamcrest.core.Is.is;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import com.google.common.collect.ImmutableList;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import kotlin.collections.CollectionsKt;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -80,7 +80,7 @@ public class ShellCommandTest {
 
   @Test
   public void testExecuteShellCommand_setParams() throws Exception {
-    List<String> params = CollectionsKt.listOf("-c", "2", "localhost");
+    List<String> params = ImmutableList.of("-c", "2", "localhost");
     String results = execShellCommand("ping", params, null, false);
     assertThat(results, containsString("127.0.0.1"));
   }

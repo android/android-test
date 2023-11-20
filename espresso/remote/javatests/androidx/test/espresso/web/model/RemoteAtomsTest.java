@@ -16,7 +16,6 @@
 
 package androidx.test.espresso.web.model;
 
-import static kotlin.collections.CollectionsKt.listOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasItems;
@@ -31,6 +30,7 @@ import androidx.test.espresso.web.proto.model.WebModelAtoms.ScriptWithArgsSimple
 import androidx.test.espresso.web.proto.model.WebModelAtoms.TransformingAtomProto;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -45,7 +45,7 @@ public class RemoteAtomsTest {
   private static final String SCRIPT = "return document.title;";
   private static final Object ARG1 = "arg1";
   private static final Object ARG2 = "arg1";
-  private static final List<Object> ARGS = listOf(ARG1, ARG2);
+  private static final List<Object> ARGS = ImmutableList.of(ARG1, ARG2);
 
   private static TransformingAtomProto transformingAtom_transformationToProto(Atom atom) {
     TransformingAtomProto atomProto =
@@ -106,7 +106,7 @@ public class RemoteAtomsTest {
   public void scriptWithArgs_emptyArgs_transformationToProto() {
     ScriptWithArgsSimpleAtomProto scriptWithArgsProto =
         new ScriptWithArgsSimpleAtomRemoteMessage(
-                (ScriptWithArgsSimpleAtom) Atoms.scriptWithArgs(SCRIPT, listOf()))
+                (ScriptWithArgsSimpleAtom) Atoms.scriptWithArgs(SCRIPT, ImmutableList.of()))
             .toProto();
     assertThat(scriptWithArgsProto, notNullValue());
 
@@ -118,7 +118,7 @@ public class RemoteAtomsTest {
   public void scriptWithArgs_emptyArgs_transformationFromProto() {
     ScriptWithArgsSimpleAtomProto scriptWithArgsProto =
         new ScriptWithArgsSimpleAtomRemoteMessage(
-                (ScriptWithArgsSimpleAtom) Atoms.scriptWithArgs(SCRIPT, listOf()))
+                (ScriptWithArgsSimpleAtom) Atoms.scriptWithArgs(SCRIPT, ImmutableList.of()))
             .toProto();
 
     Object objectFromProto =

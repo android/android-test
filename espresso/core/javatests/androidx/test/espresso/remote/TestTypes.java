@@ -16,7 +16,6 @@
  */
 package androidx.test.espresso.remote;
 
-import static kotlin.collections.CollectionsKt.listOf;
 
 import android.net.Uri;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
@@ -24,6 +23,7 @@ import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import androidx.test.espresso.web.model.Atom;
 import androidx.test.espresso.web.model.ElementReference;
 import androidx.test.espresso.web.model.Evaluation;
+import com.google.common.collect.ImmutableList;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -49,7 +49,7 @@ public final class TestTypes {
   static final TestType A_TEST_TYPE3 = new TestType(TEST_TYPE_STRING3);
   static final TestType A_TEST_TYPE4 = new TestType(TEST_TYPE_STRING4);
   static final Iterable<TestType> ANY_TYPE_ITERABLE =
-      listOf(A_TEST_TYPE1, A_TEST_TYPE2, A_TEST_TYPE3, A_TEST_TYPE4);
+      ImmutableList.of(A_TEST_TYPE1, A_TEST_TYPE2, A_TEST_TYPE3, A_TEST_TYPE4);
 
   private TestTypes() {
     // no instance

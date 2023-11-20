@@ -22,8 +22,8 @@ import androidx.annotation.Nullable;
 import androidx.test.espresso.core.internal.deps.guava.base.Function;
 import androidx.test.espresso.core.internal.deps.guava.base.Optional;
 import androidx.test.espresso.core.internal.deps.guava.base.Supplier;
+import com.google.common.collect.ImmutableSet;
 import java.util.Set;
-import kotlin.collections.SetsKt;
 
 /**
  * This class is a reimplementation of {@link com.google.common.base.Optional} to maintain API
@@ -82,7 +82,7 @@ public final class EspressoOptional<T> {
   }
 
   public Set<T> asSet() {
-    return isPresent() ? SetsKt.setOf(value) : SetsKt.emptySet();
+    return isPresent() ? ImmutableSet.of(value) : ImmutableSet.of();
   }
 
   @Override

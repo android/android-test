@@ -35,8 +35,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import kotlin.collections.CollectionsKt;
-import kotlin.text.StringsKt;
 
 /** Text converters for various Android objects. */
 public final class HumanReadables {
@@ -106,19 +104,9 @@ public final class HumanReadables {
 
     String viewHierarchyDump =
         StringJoinerKt.joinToString(
-            CollectionsKt.map(
-                depthFirstViewTraversalWithDistance(rootView),
-                viewAndDistance -> {
-                  String formatString = "+%s%s ";
-                  if (problemViews != null && problemViews.contains(viewAndDistance.getView())) {
-                    formatString += problemViewSuffix;
-                  }
-                  return String.format(
-                      Locale.ROOT,
-                      formatString,
-                      StringsKt.padStart(">", viewAndDistance.getDistanceFromRoot() + 1, '-'),
-                      HumanReadables.describe(viewAndDistance.getView()));
-                }),
+            stream(depthFirstViewTraversalWithDistance(rootView))
+                .map(depthFirstViewTraversalWithDistance(rootView))
+                .collect(toImmutableList()),
             "\n|\n");
 
     errorMessage.append("\n\nView Hierarchy:\n").append(viewHierarchyDump);

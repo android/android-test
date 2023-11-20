@@ -18,7 +18,6 @@ package androidx.test.espresso.matcher;
 
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.internal.util.Checks.checkNotNull;
-import static kotlin.collections.CollectionsKt.mutableListOf;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
@@ -35,6 +34,7 @@ import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.hamcrest.Description;
@@ -122,7 +122,7 @@ public final class RootMatchers {
           "suppressed: NoActivityResumedException(\"At least one activity should"
               + " be in RESUMED stage.\"");
     }
-    List<IBinder> tokens = mutableListOf();
+    List<IBinder> tokens = new ArrayList<>();
     for (Activity activity : resumedActivities) {
       tokens.add(activity.getWindow().getDecorView().getApplicationWindowToken());
     }

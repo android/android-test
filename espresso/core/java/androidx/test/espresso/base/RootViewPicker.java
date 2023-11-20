@@ -18,7 +18,6 @@ package androidx.test.espresso.base;
 
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.internal.util.Checks.checkState;
-import static kotlin.collections.CollectionsKt.mutableListOf;
 
 import android.app.Activity;
 import android.content.Context;
@@ -35,6 +34,8 @@ import androidx.test.internal.platform.os.ControlledLooper;
 import androidx.test.internal.util.LogUtil;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.Stage;
+import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
@@ -43,7 +44,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import kotlin.collections.CollectionsKt;
 import org.hamcrest.Matcher;
 
 /**
@@ -56,9 +56,9 @@ import org.hamcrest.Matcher;
 public final class RootViewPicker implements Provider<View> {
   private static final String TAG = RootViewPicker.class.getSimpleName();
 
-  private static final List<Integer> CREATED_WAIT_TIMES = CollectionsKt.listOf(10, 50, 150, 250);
+  private static final List<Integer> CREATED_WAIT_TIMES = ImmutableList.of(10, 50, 150, 250);
   private static final List<Integer> RESUMED_WAIT_TIMES =
-      CollectionsKt.listOf(10, 50, 100, 500, 2000 /* 2sec */, 30000 /* 30sec */);
+      ImmutableList.of(10, 50, 100, 500, 2000 /* 2sec */, 30000 /* 30sec */);
 
   private final UiController uiController;
   private final ActivityLifecycleMonitor activityLifecycleMonitor;
@@ -205,7 +205,7 @@ public final class RootViewPicker implements Provider<View> {
 
   /** Returns the list of all non-destroyed activities. */
   private List<Activity> getAllActiveActivities() {
-    List<Activity> activities = mutableListOf();
+    List<Activity> activities = new ArrayList<>();
     for (Stage s : EnumSet.range(Stage.PRE_ON_CREATE, Stage.RESTARTED)) {
       activities.addAll(activityLifecycleMonitor.getActivitiesInStage(s));
     }
@@ -301,7 +301,7 @@ public final class RootViewPicker implements Provider<View> {
 
     public RootResults fetch() {
       List<Root> allRoots = activeRootLister.listActiveRoots();
-      List<Root> pickedRoots = mutableListOf();
+      List<Root> pickedRoots = new ArrayList<>();
 
       for (Root root : allRoots) {
         if (selector.matches(root)) {
@@ -336,7 +336,7 @@ public final class RootViewPicker implements Provider<View> {
 
   private static final class NoActiveRootsBackoff extends BackOff {
     private static final List<Integer> NO_ACTIVE_ROOTS_BACKOFF =
-        CollectionsKt.listOf(10, 10, 20, 30, 50, 80, 130, 210, 340);
+        ImmutableList.of(10, 10, 20, 30, 50, 80, 130, 210, 340);
 
     public NoActiveRootsBackoff() {
       super(NO_ACTIVE_ROOTS_BACKOFF, TimeUnit.MILLISECONDS);
@@ -353,7 +353,7 @@ public final class RootViewPicker implements Provider<View> {
 
   private static final class NoMatchingRootBackoff extends BackOff {
     private static final List<Integer> NO_MATCHING_ROOT_BACKOFF =
-        CollectionsKt.listOf(10, 20, 200, 400, 1000, 2000 /* 2sec */);
+        ImmutableList.of(10, 20, 200, 400, 1000, 2000 /* 2sec */);
 
     public NoMatchingRootBackoff() {
       super(NO_MATCHING_ROOT_BACKOFF, TimeUnit.MILLISECONDS);
@@ -374,7 +374,7 @@ public final class RootViewPicker implements Provider<View> {
 
   private static final class RootReadyBackoff extends BackOff {
     private static final List<Integer> ROOT_READY_BACKOFF =
-        CollectionsKt.listOf(10, 25, 50, 100, 200, 400, 800, 1000 /* 1sec */);
+        ImmutableList.of(10, 25, 50, 100, 200, 400, 800, 1000 /* 1sec */);
 
     public RootReadyBackoff() {
       super(ROOT_READY_BACKOFF, TimeUnit.MILLISECONDS);

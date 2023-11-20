@@ -18,8 +18,6 @@ package androidx.test.espresso.web.webdriver;
 
 import static androidx.test.espresso.web.model.Atoms.castOrDie;
 import static androidx.test.internal.util.Checks.checkNotNull;
-import static kotlin.collections.CollectionsKt.listOf;
-import static kotlin.collections.CollectionsKt.mutableListOf;
 
 import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
@@ -30,6 +28,8 @@ import androidx.test.espresso.web.model.Evaluation;
 import androidx.test.espresso.web.model.SimpleAtom;
 import androidx.test.espresso.web.model.TransformingAtom;
 import androidx.test.espresso.web.model.WindowReference;
+import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import kotlin.Pair;
@@ -119,7 +119,7 @@ public final class DriverAtoms {
   private static Map<String, String> makeLocatorJSON(Locator locator, String value) {
     checkNotNull(locator);
     checkNotNull(value);
-    return MapsKt.mapOf(new Pair<>(locator.getType(), value));
+    return /* NoCollectionsKtInJava */ MapsKt.mapOf(new Pair<>(locator.getType(), value));
   }
 
   @VisibleForTesting
@@ -140,7 +140,7 @@ public final class DriverAtoms {
     @Override
     protected List<Object> getNonContextualArguments() {
       final Map<String, String> locatorJson = makeLocatorJSON(Locator.forType(locatorType), value);
-      return listOf(locatorJson);
+      return ImmutableList.of(locatorJson);
     }
   }
 
@@ -196,7 +196,7 @@ public final class DriverAtoms {
 
     @Override
     public List<Object> getNonContextualArguments() {
-      return listOf(text);
+      return ImmutableList.of(text);
     }
   }
 
@@ -315,7 +315,7 @@ public final class DriverAtoms {
 
     @Override
     public List<Object> getNonContextualArguments() {
-      return listOf(index);
+      return ImmutableList.of(index);
     }
   }
 
@@ -336,7 +336,7 @@ public final class DriverAtoms {
 
     @Override
     public List<Object> getNonContextualArguments() {
-      List<Object> args = listOf(index);
+      List<Object> args = ImmutableList.of(index);
       args.add(root);
       return args;
     }
@@ -376,7 +376,7 @@ public final class DriverAtoms {
 
     @Override
     public List<Object> getNonContextualArguments() {
-      return listOf(idOrName);
+      return ImmutableList.of(idOrName);
     }
   }
 
@@ -399,7 +399,7 @@ public final class DriverAtoms {
 
     @Override
     public List<Object> getNonContextualArguments() {
-      List<Object> args = listOf(idOrName);
+      List<Object> args = ImmutableList.of(idOrName);
       args.add(root);
       return args;
     }
@@ -443,7 +443,7 @@ public final class DriverAtoms {
 
     @Override
     public List<Object> getNonContextualArguments() {
-      return listOf(makeLocatorJSON(Locator.forType(locatorType), value));
+      return ImmutableList.of(makeLocatorJSON(Locator.forType(locatorType), value));
     }
   }
 
@@ -488,10 +488,10 @@ public final class DriverAtoms {
     public List<ElementReference> apply(Evaluation e) {
       Object rawValues = e.getValue();
       if (null == rawValues) {
-        return listOf();
+        return ImmutableList.of();
       }
       if (rawValues instanceof Iterable) {
-        List<ElementReference> references = mutableListOf();
+        List<ElementReference> references = new ArrayList<>();
         for (Object rawValue : ((Iterable) rawValues)) {
           if (rawValue instanceof ElementReference) {
             references.add((ElementReference) rawValue);

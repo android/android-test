@@ -17,6 +17,7 @@
 package androidx.test.espresso;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
+import static com.google.common.collect.Arrays.newArrayList;
 
 import android.view.View;
 import androidx.annotation.NonNull;
@@ -27,7 +28,6 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import kotlin.collections.CollectionsKt;
 import org.hamcrest.Matcher;
 
 /**
@@ -69,7 +69,7 @@ public final class AmbiguousViewMatcherException extends RuntimeException
   private static String getErrorMessage(Builder builder) {
     String errorMessage = "";
     if (builder.includeViewHierarchy) {
-      List<View> ambiguousViews = CollectionsKt.mutableListOf(builder.view1, builder.view2);
+      List<View> ambiguousViews = newArrayList(builder.view1, builder.view2);
       Collections.addAll(ambiguousViews, builder.others);
 
       StringBuilder viewsAsText = new StringBuilder();

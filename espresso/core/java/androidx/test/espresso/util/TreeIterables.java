@@ -17,11 +17,11 @@
 package androidx.test.espresso.util;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
-import static kotlin.collections.CollectionsKt.mutableListOf;
 
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.VisibleForTesting;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,7 +30,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import kotlin.collections.AbstractIterator;
-import kotlin.collections.CollectionsKt;
 
 /**
  * Utility methods for iterating over tree structured items.
@@ -60,9 +59,9 @@ public final class TreeIterables {
     final DistanceRecordingTreeViewer<View> distanceRecorder =
         new DistanceRecordingTreeViewer<View>(root, VIEW_TREE_VIEWER);
 
-    return CollectionsKt.map(
-        depthFirstTraversal(root, distanceRecorder),
-        view -> new ViewAndDistance(view, distanceRecorder.getDistance(view)));
+    return stream(depthFirstTraversal(root, distanceRecorder))
+        .map(depthFirstTraversal(root, distanceRecorder))
+        .collect(toImmutableList());
   }
 
   /**
@@ -181,7 +180,7 @@ public final class TreeIterables {
       if (view instanceof ViewGroup) {
         ViewGroup group = (ViewGroup) view;
         int childCount = group.getChildCount();
-        List<View> children = mutableListOf();
+        List<View> children = new ArrayList<>();
         for (int i = 0; i < childCount; i++) {
           children.add(group.getChildAt(i));
         }

@@ -16,14 +16,14 @@
 
 package androidx.test.espresso.web.model;
 
-import static kotlin.collections.CollectionsKt.listOf;
-import static kotlin.collections.CollectionsKt.toMutableList;
+import static com.google.common.collect.Arrays.newArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +44,7 @@ public class SimpleAtomTest {
 
   @Test
   public void testArgumentOrdering_nonContextualArgsSupplied() {
-    final List<Object> vals = listOf(1, 2, 3, 4, 5);
+    final List<Object> vals = ImmutableList.of(1, 2, 3, 4, 5);
     SimpleAtom atom =
         new SimpleAtom("return 1;") {
           @Override
@@ -56,14 +56,14 @@ public class SimpleAtomTest {
 
     ElementReference elementReference = new ElementReference("dog");
     List<Object> withElement = atom.getArguments(elementReference);
-    List<Object> expected = toMutableList(vals);
+    List<Object> expected = newArrayList(vals);
     expected.add(0, elementReference);
     assertEquals(expected, withElement);
   }
 
   @Test
   public void testArgumentOrdering_lastPlacement() {
-    final List<Object> vals = listOf(1, 2, 3, 4, 5);
+    final List<Object> vals = ImmutableList.of(1, 2, 3, 4, 5);
     SimpleAtom atom =
         new SimpleAtom("return 1;", SimpleAtom.ElementReferencePlacement.LAST) {
           @Override
@@ -75,7 +75,7 @@ public class SimpleAtomTest {
 
     ElementReference elementReference = new ElementReference("dog");
     List<Object> withElement = atom.getArguments(elementReference);
-    List<Object> expected = toMutableList(vals);
+    List<Object> expected = newArrayList(vals);
     expected.add(elementReference);
     assertEquals(expected, withElement);
   }

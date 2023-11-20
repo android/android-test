@@ -46,7 +46,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withParentIndex;
 import static androidx.test.espresso.matcher.ViewMatchers.withResourceName;
 import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static kotlin.collections.CollectionsKt.mutableListOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -78,6 +77,7 @@ import androidx.test.annotation.UiThreadTest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.ui.app.R;
+import java.util.ArrayList;
 import java.util.List;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -702,7 +702,7 @@ public class ViewMatchers2Test {
     // we accounted for getSelectedItem being null.
     assertFalse(withSpinnerText(R.string.something).matches(spinner));
 
-    List<String> values = mutableListOf();
+    List<String> values = new ArrayList<>();
     values.add(context.getString(R.string.something));
     values.add(context.getString(R.string.other_string));
     ArrayAdapter<String> adapter =
@@ -751,7 +751,7 @@ public class ViewMatchers2Test {
   @Test
   public void withSpinnerTextResourceId_withSelection_mismatchDescription() {
     Spinner spinner = new Spinner(context);
-    List<String> values = mutableListOf();
+    List<String> values = new ArrayList<>();
     values.add(context.getString(R.string.something));
     values.add(context.getString(R.string.other_string));
     ArrayAdapter<String> adapter =
@@ -771,7 +771,7 @@ public class ViewMatchers2Test {
     // we accounted for getSelectedItem being null.
     assertFalse(withSpinnerText(is("Hello World")).matches(spinner));
 
-    List<String> values = mutableListOf();
+    List<String> values = new ArrayList<>();
     values.add("Hello World");
     values.add("Goodbye!!");
     ArrayAdapter<String> adapter =
@@ -808,7 +808,7 @@ public class ViewMatchers2Test {
   @Test
   public void withSpinnerTextString_withSelection_mismatchDescription() {
     Spinner spinner = new Spinner(context);
-    List<String> values = mutableListOf();
+    List<String> values = new ArrayList<>();
     values.add("Hello World");
     values.add("Goodbye!!");
     ArrayAdapter<String> adapter =

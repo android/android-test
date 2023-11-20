@@ -217,7 +217,8 @@ public class ViewHierarchyExceptionHandlerTest {
             .withOtherAmbiguousViews(child2)
             .build();
 
-    Map<String, String> inputArgs = MapsKt.mapOf(new Pair<>("view_hierarchy_char_limit", "1772"));
+    Map<String, String> inputArgs = /* NoCollectionsKtInJava */
+        MapsKt.mapOf(new Pair<>("view_hierarchy_char_limit", "1772"));
     when(testStorage.getInputArgs()).thenReturn(inputArgs);
     doAnswer(invocation -> inputArgs.get(invocation.getArgument(0)))
         .when(testStorage)

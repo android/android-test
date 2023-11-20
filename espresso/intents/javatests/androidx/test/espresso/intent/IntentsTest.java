@@ -19,8 +19,6 @@ package androidx.test.espresso.intent;
 import static androidx.test.espresso.intent.Intents.times;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.anyIntent;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
-import static kotlin.collections.CollectionsKt.listOf;
-import static kotlin.collections.CollectionsKt.mutableListOf;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.junit.Assert.assertTrue;
 import static org.junit.rules.ExpectedException.none;
@@ -31,6 +29,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ResolveInfo;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
+import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -89,7 +88,7 @@ public class IntentsTest {
     intents.internalIntended(
         anyIntent(),
         times(1),
-        listOf(buildVerifiableIntent(Intent.ACTION_VIEW, "com.google.some.package")));
+        ImmutableList.of(buildVerifiableIntent(Intent.ACTION_VIEW, "com.google.some.package")));
   }
 
   @Test
@@ -97,7 +96,7 @@ public class IntentsTest {
     intents.internalIntended(
         toPackage("com.google.some.package"),
         times(1),
-        listOf(buildVerifiableIntent(Intent.ACTION_VIEW, "com.google.some.package")));
+        ImmutableList.of(buildVerifiableIntent(Intent.ACTION_VIEW, "com.google.some.package")));
   }
 
   @Test
@@ -105,7 +104,7 @@ public class IntentsTest {
     intents.internalIntended(
         toPackage("com.google.some.package"),
         times(1),
-        listOf(
+        ImmutableList.of(
             buildVerifiableIntent(
                 Intent.ACTION_VIEW, "com.google.some.package", "com.google.android.other")));
   }
@@ -115,7 +114,7 @@ public class IntentsTest {
     intents.internalIntended(
         allOf(toPackage("com.google.some.package"), toPackage("com.google.android.other")),
         times(1),
-        listOf(
+        ImmutableList.of(
             buildVerifiableIntent(
                 Intent.ACTION_VIEW, "com.google.some.package", "com.google.android.other")));
   }
@@ -133,7 +132,7 @@ public class IntentsTest {
     intents.internalIntended(
         toPackage("com.google.some.fail"),
         times(1),
-        listOf(
+        ImmutableList.of(
             buildVerifiableIntent(
                 Intent.ACTION_VIEW, "com.google.some.package", "com.google.android.other")));
   }
@@ -141,7 +140,7 @@ public class IntentsTest {
   @Test
   public void intended_MultipleCalls() {
     List<VerifiableIntent> intents =
-        listOf(
+        ImmutableList.of(
             buildVerifiableIntent(Intent.ACTION_VIEW, "com.google.android.A"),
             buildVerifiableIntent(Intent.ACTION_VIEW, "com.google.android.B"),
             buildVerifiableIntent(Intent.ACTION_VIEW, "com.google.android.C"));
@@ -153,7 +152,7 @@ public class IntentsTest {
   @Test
   public void intended_MultipleCallsWithSameIntent() {
     List<VerifiableIntent> intents =
-        listOf(
+        ImmutableList.of(
             buildVerifiableIntent(Intent.ACTION_VIEW, "com.google.android.A"),
             buildVerifiableIntent(Intent.ACTION_VIEW, "com.google.android.A"));
     this.intents.internalIntended(toPackage("com.google.android.A"), times(2), intents);
@@ -211,7 +210,7 @@ public class IntentsTest {
   @Test
   public void assertNoUnverifiedIntents() {
     List<VerifiableIntent> intents =
-        listOf(
+        ImmutableList.of(
             buildVerifiableIntent(Intent.ACTION_VIEW, "com.google.android.A"),
             buildVerifiableIntent(Intent.ACTION_VIEW, "com.google.android.B"),
             buildVerifiableIntent(Intent.ACTION_VIEW, "com.google.android.A"));
@@ -300,7 +299,7 @@ public class IntentsTest {
   }
 
   private static List<ResolveInfo> buildResolveInfoList(String... resolvePackage) {
-    List<ResolveInfo> resolveInfoList = mutableListOf();
+    List<ResolveInfo> resolveInfoList = new ArrayList<>();
     for (String pkg : resolvePackage) {
       ResolveInfo resolveInfo = new ResolveInfo();
       resolveInfo.activityInfo = new ActivityInfo();
