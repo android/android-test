@@ -1,8 +1,8 @@
-### ext.truth 1.6.0-alpha02 {:#ext.truth-1.6.0-alpha02}
+### ext.truth {version} {:#ext.truth-{version}}
 
 {{date}}
 
-`androidx.test.ext:truth:1.6.0-alpha02` is released.
+`androidx.test.ext:truth:{version}` is released.
 
 **API Changes**
 

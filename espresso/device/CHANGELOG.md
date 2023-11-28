@@ -1,8 +1,8 @@
-### Espresso Device 1.0.0-alpha07 {:#espresso-device-1.0.0-alpha07}
+### Espresso Device {version} {:#espresso-device-{version}}
 
 {{date}}
 
-`androidx.test.espresso:espresso-device:1.0.0-alpha07` is released.
+`androidx.test.espresso:espresso-device:{version}` is released.
 
 **API Changes**
 

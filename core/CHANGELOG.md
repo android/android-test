@@ -1,8 +1,8 @@
-### Core Core-ktx 1.6.0-alpha03 {:#core-1.6.0-alpha03}
+### Core Core-ktx {version} {:#core-{version}}
 
 {{date}}
 
-`androidx.test:core:1.6.0-alpha03` and `androidx.test:core-ktx:1.6.0-alpha03` are released.
+`androidx.test:core:{version}` and `androidx.test:core-ktx:{version}` are released.
 
 **Bug Fixes**
 

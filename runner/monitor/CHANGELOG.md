@@ -1,8 +1,8 @@
-### monitor 1.7.0-alpha03 {:#monitor-1.7.0-alpha03}
+### monitor {version} {:#monitor-{version}}
 
 {{date}}
 
-`androidx.test:monitor:1.7.0-alpha03` is released.
+`androidx.test:monitor:{version}` is released.
 
 **API Changes**
 

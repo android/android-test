@@ -1,8 +1,8 @@
-### services 1.5.0-alpha02 {:#services-1.5.0-alpha02}
+### services {version} {:#services-{version}}
 
 {{date}}
 
-`androidx.test.services:test-services:1.5.0-alpha02` `androidx.test.services:storage:1.5.0-alpha02` are released.
+`androidx.test.services:test-services:{version}` `androidx.test.services:storage:{version}` are released.
 
 **Bug Fixes**
 

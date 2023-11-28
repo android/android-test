@@ -1,8 +1,8 @@
-### Feature {{release-version}} {:#feature-{{release-version}}}
+### Feature {version} {:#feature-{version}}
 
 {{date}}
 
-`namespace:feature:{{release-version}}` is released.
+`namespace:feature:{version}` is released.
 
 **Bug Fixes**
 

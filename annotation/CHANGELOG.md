@@ -1,8 +1,8 @@
-### Annotation 1.1.0-alpha02 {:#annotation-1.1.0-alpha02}
+### Annotation {version} {:#annotation-{version}}
 
 {{date}}
 
-`androidx.test:annotation:1.1.0-alpha02` is released.
+`androidx.test:annotation:{version}}` is released.
 
 **API Changes**
 

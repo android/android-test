@@ -1,8 +1,8 @@
-### ext.junit 1.2.0-alpha02 {:#ext.junit-1.2.0-alpha02}
+### ext.junit {version} {:#ext.junit-{version}}
 
 {{date}}
 
-`androidx.test.ext:junit:1.2.0-alpha02` and `androidx.test.ext:junit-ktx:1.2.0-alpha02` are released.
+`androidx.test.ext:junit:{version}` and `androidx.test.ext:junit-ktx:{version}` are released.
 
 **API Changes**
 

@@ -1,8 +1,8 @@
-### orchestrator 1.5.0-alpha02 {:#orchestrator-1.5.0-alpha02}
+### orchestrator {version} {:#orchestrator-{version}}
 
 {{date}}
 
-`androidx.test:orchestrator:1.5.0-alpha02` is released.
+`androidx.test:orchestrator:{version}` is released.
 
 **API Changes**
 

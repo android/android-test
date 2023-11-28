@@ -1,8 +1,8 @@
-### rules 1.6.0-alpha02 {:#rules-1.6.0-alpha02}
+### rules {version} {:#rules-{version}}
 
 {{date}}
 
-`androidx.test:rules:1.6.0-alpha02` is released.
+`androidx.test:rules:{version}` is released.
 
 **Bug Fixes**
 

@@ -1,8 +1,8 @@
-### runner 1.6.0-alpha05 {:#runner-1.6.0-alpha05}
+### runner {version} {:#runner-{version}}
 
 {{date}}
 
-`androidx.test:runner:1.6.0-alpha05` is released.
+`androidx.test:runner:{version}` is released.
 
 **Bug Fixes**
 
