@@ -123,11 +123,11 @@ jobs:
       - name: 'Setup gradle managed device'
         run: |
           cd ${{ github.workspace }}/gradle-tests
-          ./gradlew runner:nexusOneSetup -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" --no-watch-fs --info
+          ./gradlew runner:nexusOneSetup --write-verification-metadata sha256,pgp -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" --no-watch-fs --info
       - name: 'Run gradle tests'
         run: |
           cd ${{ github.workspace }}/gradle-tests
-          ./gradlew nexusOneDebugAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" --no-watch-fs --info
+          ./gradlew nexusOneDebugAndroidTest --write-verification-metadata sha256,pgp -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" --no-watch-fs --info
         shell: bash
       - name: 'Upload test reports'
         if: success() || failure()
@@ -135,5 +135,8 @@ jobs:
         with:
           name: test-reports
           path: gradle-tests/**/build/reports/androidTests/
+      - name: 'Output verification metadata'
+        run: |
+          cat ${{ github.workspace }}/gradle-tests/gradle/verification-metadata.xml
 
 
