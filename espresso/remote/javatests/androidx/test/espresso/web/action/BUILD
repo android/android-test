@@ -1,21 +1,17 @@
 # Description: Tests for espresso web
 
 load(
-    "//build_extensions:android_app_instrumentation_tests.bzl",
-    "android_app_instrumentation_tests",
+    "//build_extensions:android_library_test.bzl",
+    "axt_android_library_test",
 )
 
 package(default_applicable_licenses = ["//espresso:license"])
 
 licenses(["notice"])
 
-android_app_instrumentation_tests(
-    name = "instrumentation_tests",
-    testonly = 1,
-    srcs = glob(
-        ["**/*.java"],
-    ),
-    binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+axt_android_library_test(
+    name = "RemoteWebActionsTest",
+    srcs = ["RemoteWebActionsTest.java"],
     deps = [
         "//core",
         "//espresso/core/java/androidx/test/espresso",
@@ -49,7 +45,7 @@ android_app_instrumentation_tests(
         "//ext/junit",
         "//runner/android_junit_runner",
         "//runner/rules",
-        "//testapps/ui_testapp/java/androidx/test/ui/app:lib_neverlink",
+        "//testapps/ui_testapp/java/androidx/test/ui/app:lib_exported",
         "@com_google_protobuf//:protobuf_javalite",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",

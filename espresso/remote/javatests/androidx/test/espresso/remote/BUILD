@@ -1,11 +1,11 @@
 # Description:
 #   Tests for espresso remote classes
 
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 load(
-    "//build_extensions:android_app_instrumentation_tests.bzl",
-    "android_app_instrumentation_tests",
+    "//build_extensions:android_library_test.bzl",
+    "axt_android_library_test",
 )
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 package(default_applicable_licenses = ["//espresso:license"])
 
@@ -39,13 +39,10 @@ android_library(
     ],
 )
 
-android_app_instrumentation_tests(
-    name = "instrumentation_tests",
-    srcs = glob(
-        ["*.java"],
-        exclude = UTIL_SRCS,
-    ),
-    binary_target = "//testapps/ui_testapp/java/androidx/test/ui/app:testapp",
+axt_android_library_test(
+    name = "AnyToTypeConverterTest",
+    srcs =
+        ["AnyToTypeConverterTest.java"],
     deps = [
         ":util",
         "//core",
@@ -81,5 +78,389 @@ android_app_instrumentation_tests(
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven//:org_mockito_mockito_core",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
+    ],
+)
+
+axt_android_library_test(
+    name = "BuilderReflectorTest",
+    srcs =
+        ["BuilderReflectorTest.java"],
+    deps = [
+        ":util",
+        "//core",
+        "//espresso/core/javatests/androidx/test/espresso/remote:util",
+        "//espresso/remote/java/androidx/test/espresso/remote",
+        "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/remote/javatests/androidx/test/espresso/proto:test_protos_android_pb3",
+        "//ext/junit",
+        "//opensource/proto:any_java_proto_lite",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+    ],
+)
+
+axt_android_library_test(
+    name = "ByteStringToTypeConverterTest",
+    srcs =
+        ["ByteStringToTypeConverterTest.java"],
+    deps = [
+        ":util",
+        "//core",
+        "//espresso/core/javatests/androidx/test/espresso/remote:util",
+        "//espresso/remote/java/androidx/test/espresso/remote",
+        "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
+        "//ext/junit",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+    ],
+)
+
+axt_android_library_test(
+    name = "EspressoRemoteTest",
+    srcs =
+        ["EspressoRemoteTest.java"],
+    deps = [
+        ":util",
+        "//core",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/assertion",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/remote:bindable",
+        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+        "//espresso/core/java/androidx/test/espresso/util/concurrent",
+        "//espresso/core/javatests/androidx/test/espresso/remote:util",
+        "//espresso/remote/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
+        "//espresso/remote/java/androidx/test/espresso/remote",
+        "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
+        "//ext/junit",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@androidsdk//:legacy_test-30",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_mockito_mockito_core",
+        "@maven_listenablefuture//:com_google_guava_listenablefuture",
+    ],
+)
+
+axt_android_library_test(
+    name = "InteractionRequestTest",
+    srcs =
+        ["InteractionRequestTest.java"],
+    deps = [
+        ":util",
+        "//core",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//espresso/core/java/androidx/test/espresso/assertion",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+        "//espresso/core/javatests/androidx/test/espresso/remote:util",
+        "//espresso/remote/java/androidx/test/espresso/action:remote_view_actions",
+        "//espresso/remote/java/androidx/test/espresso/assertion:remote_view_assertions",
+        "//espresso/remote/java/androidx/test/espresso/matcher:remote_hamcrest_v1_3_core_matchers",
+        "//espresso/remote/java/androidx/test/espresso/matcher:remote_view_matchers",
+        "//espresso/remote/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
+        "//espresso/remote/java/androidx/test/espresso/remote",
+        "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/remote/java/androidx/test/espresso/remote:registry",
+        "//ext/junit",
+        "//opensource/proto:any_java_proto_lite",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@androidsdk//:legacy_test-30",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
+    ],
+)
+
+axt_android_library_test(
+    name = "InteractionResponseTest",
+    srcs =
+        ["InteractionResponseTest.java"],
+    deps = [
+        ":util",
+        "//core",
+        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+        "//espresso/core/javatests/androidx/test/espresso/remote:util",
+        "//espresso/remote/java/androidx/test/espresso/remote",
+        "//ext/junit",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+    ],
+)
+
+axt_android_library_test(
+    name = "ProtoReflectorTest",
+    srcs =
+        ["ProtoReflectorTest.java"],
+    deps = [
+        ":util",
+        "//core",
+        "//espresso/core/javatests/androidx/test/espresso/remote:util",
+        "//espresso/remote/java/androidx/test/espresso/remote",
+        "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/remote/javatests/androidx/test/espresso/proto:test_protos_android_pb3",
+        "//ext/junit",
+        "//opensource/proto:any_java_proto_lite",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_library",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+    ],
+)
+
+axt_android_library_test(
+    name = "ProtoUtilsTest",
+    srcs =
+        ["ProtoUtilsTest.java"],
+    deps = [
+        ":util",
+        "//core",
+        "//espresso/core/javatests/androidx/test/espresso/remote:util",
+        "//espresso/remote/java/androidx/test/espresso/remote",
+        "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
+        "//ext/junit",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+    ],
+)
+
+axt_android_library_test(
+    name = "RemoteDescriptorRegistryTest",
+    srcs =
+        ["RemoteDescriptorRegistryTest.java"],
+    deps = [
+        ":util",
+        "//core",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//espresso/core/java/androidx/test/espresso/assertion",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/remote:bindable",
+        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//espresso/core/java/androidx/test/espresso/util/concurrent",
+        "//espresso/core/javatests/androidx/test/espresso/remote:util",
+        "//espresso/remote/java/androidx/test/espresso/action:remote_view_actions",
+        "//espresso/remote/java/androidx/test/espresso/assertion:remote_view_assertions",
+        "//espresso/remote/java/androidx/test/espresso/matcher:remote_hamcrest_v1_3_core_matchers",
+        "//espresso/remote/java/androidx/test/espresso/matcher:remote_view_matchers",
+        "//espresso/remote/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
+        "//espresso/remote/java/androidx/test/espresso/remote",
+        "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/remote/java/androidx/test/espresso/remote:registry",
+        "//espresso/remote/javatests/androidx/test/espresso/proto:test_protos_android_pb3",
+        "//ext/junit",
+        "//opensource/proto:any_java_proto_lite",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@androidsdk//:legacy_test-30",
+        "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+        "@maven//:org_mockito_mockito_core",
+        "@maven_listenablefuture//:com_google_guava_listenablefuture",
+    ],
+)
+
+axt_android_library_test(
+    name = "RemoteDescriptorTest",
+    srcs =
+        ["RemoteDescriptorTest.java"],
+    deps = [
+        ":util",
+        "//core",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//espresso/core/java/androidx/test/espresso/assertion",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/remote:bindable",
+        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//espresso/core/java/androidx/test/espresso/util/concurrent",
+        "//espresso/core/javatests/androidx/test/espresso/remote:util",
+        "//espresso/remote/java/androidx/test/espresso/action:remote_view_actions",
+        "//espresso/remote/java/androidx/test/espresso/assertion:remote_view_assertions",
+        "//espresso/remote/java/androidx/test/espresso/matcher:remote_hamcrest_v1_3_core_matchers",
+        "//espresso/remote/java/androidx/test/espresso/matcher:remote_view_matchers",
+        "//espresso/remote/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
+        "//espresso/remote/java/androidx/test/espresso/remote",
+        "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/remote/java/androidx/test/espresso/remote:registry",
+        "//espresso/remote/javatests/androidx/test/espresso/proto:test_protos_android_pb3",
+        "//ext/junit",
+        "//opensource/proto:any_java_proto_lite",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@androidsdk//:legacy_test-30",
+        "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+        "@maven//:org_mockito_mockito_core",
+        "@maven_listenablefuture//:com_google_guava_listenablefuture",
+    ],
+)
+
+axt_android_library_test(
+    name = "RemoteMessageDeserializerTest",
+    srcs =
+        ["RemoteMessageDeserializerTest.java"],
+    deps = [
+        ":util",
+        "//core",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//espresso/core/java/androidx/test/espresso/assertion",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/remote:bindable",
+        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//espresso/core/java/androidx/test/espresso/util/concurrent",
+        "//espresso/core/javatests/androidx/test/espresso/remote:util",
+        "//espresso/remote/java/androidx/test/espresso/action:remote_view_actions",
+        "//espresso/remote/java/androidx/test/espresso/assertion:remote_view_assertions",
+        "//espresso/remote/java/androidx/test/espresso/matcher:remote_hamcrest_v1_3_core_matchers",
+        "//espresso/remote/java/androidx/test/espresso/matcher:remote_view_matchers",
+        "//espresso/remote/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
+        "//espresso/remote/java/androidx/test/espresso/remote",
+        "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/remote/java/androidx/test/espresso/remote:registry",
+        "//espresso/remote/javatests/androidx/test/espresso/proto:test_protos_android_pb3",
+        "//ext/junit",
+        "//opensource/proto:any_java_proto_lite",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@androidsdk//:legacy_test-30",
+        "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+        "@maven//:org_mockito_mockito_core",
+        "@maven_listenablefuture//:com_google_guava_listenablefuture",
+    ],
+)
+
+axt_android_library_test(
+    name = "RemoteMessageSerializerTest",
+    srcs =
+        ["RemoteMessageSerializerTest.java"],
+    deps = [
+        ":util",
+        "//core",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//espresso/core/java/androidx/test/espresso/assertion",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/remote:bindable",
+        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//espresso/core/java/androidx/test/espresso/util/concurrent",
+        "//espresso/core/javatests/androidx/test/espresso/remote:util",
+        "//espresso/remote/java/androidx/test/espresso/action:remote_view_actions",
+        "//espresso/remote/java/androidx/test/espresso/assertion:remote_view_assertions",
+        "//espresso/remote/java/androidx/test/espresso/matcher:remote_hamcrest_v1_3_core_matchers",
+        "//espresso/remote/java/androidx/test/espresso/matcher:remote_view_matchers",
+        "//espresso/remote/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
+        "//espresso/remote/java/androidx/test/espresso/remote",
+        "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/remote/java/androidx/test/espresso/remote:registry",
+        "//espresso/remote/javatests/androidx/test/espresso/proto:test_protos_android_pb3",
+        "//ext/junit",
+        "//opensource/proto:any_java_proto_lite",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@androidsdk//:legacy_test-30",
+        "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+        "@maven//:org_mockito_mockito_core",
+        "@maven_listenablefuture//:com_google_guava_listenablefuture",
+    ],
+)
+
+axt_android_library_test(
+    name = "TypeToAnyConverterTest",
+    srcs =
+        ["TypeToAnyConverterTest.java"],
+    deps = [
+        ":util",
+        "//core",
+        "//espresso/core/java/androidx/test/espresso:framework",
+        "//espresso/core/java/androidx/test/espresso:interface",
+        "//espresso/core/java/androidx/test/espresso/action",
+        "//espresso/core/java/androidx/test/espresso/assertion",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//espresso/core/java/androidx/test/espresso/remote:bindable",
+        "//espresso/core/java/androidx/test/espresso/remote:exceptions",
+        "//espresso/core/java/androidx/test/espresso/remote:interface",
+        "//espresso/core/java/androidx/test/espresso/remote:reflectionUtils",
+        "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
+        "//espresso/core/java/androidx/test/espresso/util/concurrent",
+        "//espresso/core/javatests/androidx/test/espresso/remote:util",
+        "//espresso/remote/java/androidx/test/espresso/action:remote_view_actions",
+        "//espresso/remote/java/androidx/test/espresso/assertion:remote_view_assertions",
+        "//espresso/remote/java/androidx/test/espresso/matcher:remote_hamcrest_v1_3_core_matchers",
+        "//espresso/remote/java/androidx/test/espresso/matcher:remote_view_matchers",
+        "//espresso/remote/java/androidx/test/espresso/proto:ui_interaction_android_pb3",
+        "//espresso/remote/java/androidx/test/espresso/remote",
+        "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
+        "//espresso/remote/java/androidx/test/espresso/remote:registry",
+        "//espresso/remote/javatests/androidx/test/espresso/proto:test_protos_android_pb3",
+        "//ext/junit",
+        "//opensource/proto:any_java_proto_lite",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@androidsdk//:legacy_test-30",
+        "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
+        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+        "@maven//:org_mockito_mockito_core",
+        "@maven_listenablefuture//:com_google_guava_listenablefuture",
+    ],
+)
+
+axt_android_library_test(
+    name = "TypeToByteStringConverterTest",
+    srcs =
+        ["TypeToByteStringConverterTest.java"],
+    deps = [
+        ":util",
+        "//core",
+        "//espresso/core/javatests/androidx/test/espresso/remote:util",
+        "//espresso/remote/java/androidx/test/espresso/remote",
+        "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
+        "//ext/junit",
+        "//runner/android_junit_runner/java/androidx/test:runner",
+        "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )
