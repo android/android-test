@@ -8,3 +8,6 @@
 
 * Support setting device modes on physical devices
 
+**New Features**
+
+* Artifacts are now signed. See [verify dependencies](https://developer.android.com/jetpack/getting-started#verify_dependencies) for more details.

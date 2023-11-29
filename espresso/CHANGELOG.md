@@ -26,3 +26,7 @@ The following artifacts were released:
 * Makes Espresso.onIdle() work on the main thread to allow for draining the main thread from the main thread.
 * minSdkVersion is now 19, targetSdkVersion is now 34
 * Add scrollTo variant that allows scrolling to 90+% displayed views
+
+**New Features**
+
+* Artifacts are now signed. See [verify dependencies](https://developer.android.com/jetpack/getting-started#verify_dependencies) for more details.
