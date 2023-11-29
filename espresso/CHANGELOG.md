@@ -25,3 +25,4 @@ The following artifacts were released:
 * Adding a new IsActivatedMatcher to verify if it is activated or not.
 * Makes Espresso.onIdle() work on the main thread to allow for draining the main thread from the main thread.
 * minSdkVersion is now 19, targetSdkVersion is now 34
+* Add scrollTo variant that allows scrolling to 90+% displayed views
