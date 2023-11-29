@@ -7,3 +7,7 @@
 **API Changes**
 
 * minSdkVersion is now 19
+
+**Bug Fixes**
+
+* Fix crash when test name is too long
