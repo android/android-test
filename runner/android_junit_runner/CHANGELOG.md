@@ -6,13 +6,12 @@
 
 **Bug Fixes**
 
-* `TestDiscoveryEventServiceConnection.send()` will correctly fail the test instead of hanging if the instrumentation throws a RuntimeException.
-* Stop reparsing all args for every AndroidJUnit4 test class. This should address initialization errors like in #1948.
+**New Features**
+
+**Breaking Changes**
 
 **API Changes**
 
-* minSdkVersion is now 19
+**Breaking API Changes**
 
-**New Features**
-
-* Artifacts are now signed. See [verify dependencies](https://developer.android.com/jetpack/getting-started#verify_dependencies) for more details.
+**Known Issues**

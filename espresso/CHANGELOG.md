@@ -16,17 +16,12 @@ The following artifacts were released:
 
 **Bug Fixes**
 
-* Fix the description of IsPlatformPopup to match the behavior.
-* Fix deprecated obtainMovement impl that used the wrong coordinates.
-* Replace broken links to junit.org javadoc with @link.
+**New Features**
+
+**Breaking Changes**
 
 **API Changes**
 
-* Adding a new IsActivatedMatcher to verify if it is activated or not.
-* Makes Espresso.onIdle() work on the main thread to allow for draining the main thread from the main thread.
-* minSdkVersion is now 19, targetSdkVersion is now 34
-* Add scrollTo variant that allows scrolling to 90+% displayed views
+**Breaking API Changes**
 
-**New Features**
-
-* Artifacts are now signed. See [verify dependencies](https://developer.android.com/jetpack/getting-started#verify_dependencies) for more details.
+**Known Issues**

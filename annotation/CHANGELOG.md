@@ -4,10 +4,14 @@
 
 `androidx.test:annotation:{version}}` is released.
 
-**API Changes**
-
-* minSdkVersion is now 19, targetSdkVersion is now 34
+**Bug Fixes**
 
 **New Features**
 
-* Artifacts are now signed. See [verify dependencies](https://developer.android.com/jetpack/getting-started#verify_dependencies) for more details.
+**Breaking Changes**
+
+**API Changes**
+
+**Breaking API Changes**
+
+**Known Issues**

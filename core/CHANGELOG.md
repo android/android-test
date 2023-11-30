@@ -6,12 +6,12 @@
 
 **Bug Fixes**
 
-* Fix ActivityScenario.launchActivityWithResult when targetSdk = 34
+**New Features**
+
+**Breaking Changes**
 
 **API Changes**
 
-* targetSdkVersion is now 34
+**Breaking API Changes**
 
-**New Features**
-
-* Artifacts are now signed. See [verify dependencies](https://developer.android.com/jetpack/getting-started#verify_dependencies) for more details.
+**Known Issues**

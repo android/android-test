@@ -19,7 +19,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   package="androidx.test.services"
   android:versionCode="2"
-  android:versionName="1.5.0-alpha01">
+  android:versionName="1.5.0-alpha03">
 
   <uses-sdk
     android:minSdkVersion="19"
