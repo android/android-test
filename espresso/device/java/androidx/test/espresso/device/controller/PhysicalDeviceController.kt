@@ -16,24 +16,12 @@
 
 package androidx.test.espresso.device.controller
 
-import android.os.Handler
-import android.os.HandlerThread
-import android.provider.Settings.System
-import android.util.Log
-import android.view.Surface
 import androidx.annotation.RestrictTo
-import androidx.test.espresso.device.common.AccelerometerRotation
-import androidx.test.espresso.device.common.SettingsObserver
-import androidx.test.espresso.device.common.executeShellCommand
-import androidx.test.espresso.device.common.getAccelerometerRotationSetting
-import androidx.test.espresso.device.common.getDeviceApiLevel
-import androidx.test.espresso.device.common.getMapOfDeviceStateNamesToIdentifiers
-import androidx.test.espresso.device.common.setAccelerometerRotationSetting
+import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.device.DeviceController
 import androidx.test.platform.device.UnsupportedDeviceOperationException
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
+import androidx.test.uiautomator.UiDevice
 
 /**
  * Implementation of {@link DeviceController} for tests run on a physical device.
@@ -74,65 +62,12 @@ class PhysicalDeviceController() : DeviceController {
   }
 
   override fun setScreenOrientation(screenOrientation: Int) {
-    // Executing shell commands requires API 21+
-    if (getDeviceApiLevel() < 21) {
-      throw UnsupportedDeviceOperationException(
-        "Setting screen orientation is not suported on physical devices with APIs below 21."
-      )
-    }
-
-    // TODO(b/296910911) Support setting screen orientation on folded devices
-    val supportedDeviceStates = getMapOfDeviceStateNamesToIdentifiers()
-    if (supportedDeviceStates.isNotEmpty()) {
-      val currentDeviceStateIdentifier = executeShellCommand("cmd device_state print-state").trim()
-      if (currentDeviceStateIdentifier != getMapOfDeviceStateNamesToIdentifiers().get("OPENED")) {
-        throw UnsupportedDeviceOperationException(
-          "Setting screen orientation is not suported on physical foldable devices that are not in flat mode."
-        )
-      }
-    }
-
-    // System user_rotation values must be one of the Surface rotation constants and these values
-    // can indicate different orientations on different devices, since we check if the device is
-    // already in correct orientation in ScreenOrientationAction, set user_rotation to its opposite
-    // here to rotate the device to the opposite orientation
-    val startingUserRotation =
-      executeShellCommand("settings get system user_rotation").trim().toInt()
-    val userRotationToSet =
-      if (
-        startingUserRotation == Surface.ROTATION_0 || startingUserRotation == Surface.ROTATION_270
-      ) {
-        Surface.ROTATION_90
-      } else {
-        Surface.ROTATION_0
-      }
-
-    // Setting screen orientation with the USER_ROTATION setting requires ACCELEROMETER_ROTATION to
-    // be disabled
-    if (getAccelerometerRotationSetting() != AccelerometerRotation.DISABLED) {
-      Log.d(TAG, "Disabling auto-rotate.")
-      setAccelerometerRotationSetting(AccelerometerRotation.DISABLED)
-    }
-
-    val settingsLatch: CountDownLatch = CountDownLatch(1)
-    val thread: HandlerThread = HandlerThread("Observer_Thread")
-    thread.start()
-    val runnableHandler: Handler = Handler(thread.getLooper())
-    val context = InstrumentationRegistry.getInstrumentation().getTargetContext()
-    val settingsObserver: SettingsObserver =
-      SettingsObserver(runnableHandler, context, settingsLatch, System.USER_ROTATION)
-    settingsObserver.observe()
-    executeShellCommand("settings put system user_rotation ${userRotationToSet}")
-    settingsLatch.await(5, TimeUnit.SECONDS)
-    settingsObserver.stopObserver()
-    thread.quitSafely()
-
-    if (
-      executeShellCommand("settings get system user_rotation").trim().toInt() != userRotationToSet
-    ) {
-      throw DeviceControllerOperationException(
-        "Device could not be set to the requested screen orientation."
-      )
+    val uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+    uiDevice.unfreezeRotation()
+    if (screenOrientation == ScreenOrientation.PORTRAIT.getOrientation()) {
+      uiDevice.setOrientationPortrait()
+    } else if (screenOrientation == ScreenOrientation.LANDSCAPE.getOrientation()) {
+      uiDevice.setOrientationLandscape()
     }
   }
 
