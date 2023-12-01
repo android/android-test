@@ -168,7 +168,9 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
         isTargetActivityStarted = true;
         PendingIntent startTargetActivityIntent =
             checkNotNull(getIntent().getParcelableExtra(TARGET_ACTIVITY_INTENT_KEY));
-        Bundle options = getIntent().getBundleExtra(TARGET_ACTIVITY_OPTIONS_BUNDLE_KEY);
+        Bundle options =
+            optInToGrantBalPrivileges(
+                getIntent().getBundleExtra(TARGET_ACTIVITY_OPTIONS_BUNDLE_KEY));
         try {
           if (options == null) {
             // Override and disable FLAG_ACTIVITY_NEW_TASK flag by flagsMask and flagsValue.
@@ -441,15 +443,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
 
     activityResultWaiter = new ActivityResultWaiter(getApplicationContext());
 
-    if (VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
-      ActivityOptions activityOptions =
-          ActivityOptions.makeBasic()
-              .setPendingIntentBackgroundActivityStartMode(MODE_BACKGROUND_ACTIVITY_START_ALLOWED);
-      if (activityOptionsBundle == null) {
-        activityOptionsBundle = new Bundle();
-      }
-      activityOptionsBundle.putAll(activityOptions.toBundle());
-    }
+    activityOptionsBundle = optInToGrantBalPrivileges(activityOptionsBundle);
 
     // Note: Instrumentation.startActivitySync(Intent) cannot be used here because BootstrapActivity
     // may start in different process. Also, we use PendingIntent because the target activity may
@@ -468,6 +462,22 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
             .putExtra(TARGET_ACTIVITY_OPTIONS_BUNDLE_KEY, activityOptionsBundle);
 
     getApplicationContext().startActivity(bootstrapIntent, activityOptionsBundle);
+  }
+
+  private static Bundle optInToGrantBalPrivileges(Bundle activityOptionsBundle) {
+    if (VERSION.SDK_INT < VERSION_CODES.UPSIDE_DOWN_CAKE) {
+      return activityOptionsBundle;
+    }
+    // Initialize a bundle to grant this activities start privilege.
+    Bundle updatedActivityOptions =
+        ActivityOptions.makeBasic()
+            .setPendingIntentBackgroundActivityStartMode(MODE_BACKGROUND_ACTIVITY_START_ALLOWED)
+            .toBundle();
+    // Merge the bundle with the one passed in. This allows overriding the start mode if desired.
+    if (activityOptionsBundle != null) {
+      updatedActivityOptions.putAll(activityOptionsBundle);
+    }
+    return updatedActivityOptions;
   }
 
   @Override
