@@ -5,6 +5,7 @@
 `androidx.test:runner:{version}` is released.
 
 **Bug Fixes**
+* Attempt to clarify limitations and deprecation reasons in RequiresDevice documentation
 
 **New Features**
 
