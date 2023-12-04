@@ -72,7 +72,7 @@ public final class AdapterDataLoaderAction implements ViewAction {
 
   public AdapterViewProtocol.AdaptedData getAdaptedData() {
     synchronized (dataLock) {
-      checkState(performed, "perform hasn't beenViewFinderImpl called yet!");
+      checkState(performed, "perform hasn't been called yet!");
       return adaptedData;
     }
   }

@@ -15,6 +15,7 @@ The following artifacts were released:
 * `androidx.test.espresso.idling:idling-net:{version}`
 
 **Bug Fixes**
+* Fix typo in AdapterDataLoaderAction error message
 
 **New Features**
 
