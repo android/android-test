@@ -27,31 +27,19 @@ fun combineJars(args: Array<String>) {
   val outputFile = args[0]
   val jarOutputStream = JarOutputStream(FileOutputStream(outputFile, false))
   jarOutputStream.use {
-    // JarOutputStream will throw an error if any duplicate entry is added, which is undesirable for
-    // directories and certain classes.
-    // Keep track of the list of directories already added to prevent this
-    val alreadyAddedAllowedDuplicates: MutableSet<String> = HashSet()
-
+    // keep track of what zip each entry belongs to, in order to have a better error
+    // message in case of duplicates
     val entryToJar: MutableMap<String, String> = HashMap()
 
     for (i in 1 until args.size) {
       val inputFile = args[i]
       val jarInputStream = JarInputStream(FileInputStream(inputFile))
-      jarInputStream.use {
-        addToJar(
-          alreadyAddedAllowedDuplicates,
-          entryToJar,
-          jarOutputStream,
-          jarInputStream,
-          args[i]
-        )
-      }
+      jarInputStream.use { addToJar(entryToJar, jarOutputStream, jarInputStream, args[i]) }
     }
   }
 }
 
 private fun addToJar(
-  alreadyAddedAllowedDuplicates: MutableSet<String>,
   entryToJar: MutableMap<String, String>,
   jarOutputStream: JarOutputStream,
   inputJarStream: JarInputStream,
@@ -60,8 +48,16 @@ private fun addToJar(
 
   var entry = inputJarStream.nextEntry
   while (entry != null) {
-    if (shouldAddEntry(entry, alreadyAddedAllowedDuplicates)) {
-      checkIfAlreadyExists(entry.name, entryToJar, inputJarName)
+    // JarOutputStream will throw an error if any duplicate entry is added, which is undesirable for
+    // directories and certain classes.
+    // Keep track of the list of directories already added to prevent this
+    if (entryToJar.containsKey(entry.name)) {
+      if (!isAllowedDuplicate(entry)) {
+        throw RuntimeException(
+          "Duplicate entry: ${entry.name} is present in both ${entryToJar.get(entry.name)} and $inputJarName"
+        )
+      }
+    } else if (shouldAddEntry(entry)) {
       jarOutputStream.putNextEntry(entry)
       inputJarStream.transferTo(jarOutputStream)
       entryToJar.put(entry.name, inputJarName)
@@ -70,43 +66,29 @@ private fun addToJar(
   }
 }
 
-fun checkIfAlreadyExists(
-  name: String,
-  entryToJar: MutableMap<String, String>,
-  inputJarName: String
-) {
-  if (entryToJar.containsKey(name)) {
-    throw RuntimeException(
-      "Duplicate entry: $name is present in both ${entryToJar.get(name)} and $inputJarName"
-    )
-  }
-}
-
-private fun shouldAddEntry(
-  entry: ZipEntry,
-  alreadyAddedAllowedDuplicates: MutableSet<String>
-): Boolean {
+private fun isAllowedDuplicate(entry: ZipEntry): Boolean {
   if (entry.isDirectory) {
-    if (alreadyAddedAllowedDuplicates.contains(entry.name)) {
-      return false
-    }
-    alreadyAddedAllowedDuplicates.add(entry.name)
+    // always allow duplicate directories
     return true
   } else if (entry.name.startsWith("com/google/protobuf")) {
     // bazel's new version of rules_proto creates java wrapper libraries around any proto_library
     // dependencies, which contain classes already present in the main protobuf-javalite-3.21.7.jar
-    if (alreadyAddedAllowedDuplicates.contains(entry.name)) {
-      return false
-    }
-    alreadyAddedAllowedDuplicates.add(entry.name)
     return true
-  } else if (entry.name.matches(Regex(".*/R[\\.|\\$].*class$"))) {
+  }
+  return false
+}
+
+private fun shouldAddEntry(entry: ZipEntry): Boolean {
+  if (entry.name.matches(Regex(".*/R[\\.|\\$].*class$"))) {
     // strip generated R.class from resulting jar
     return false
   } else if (entry.name.equals("protobuf.meta")) {
     return false
   } else if (entry.name.startsWith("META-INF/maven")) {
     // strip out files added to META-INF/maven since this can lead to duplicate file errors
+    return false
+  } else if (entry.name.startsWith("META-INF/MANIFEST.MF")) {
+    // strip out files added to META-INF/MANIFEST.MF since this can lead to duplicate file errors
     return false
   } else if (entry.name.startsWith("google/protobuf")) {
     // strip out all the google/protobuf/*.proto files since this can lead to duplicate file errors

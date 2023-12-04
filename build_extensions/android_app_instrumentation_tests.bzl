@@ -23,7 +23,9 @@ def android_app_instrumentation_tests(
         library_args = {},
         binary_args = {},
         **kwargs):
-    """A macro for an instrumentation test whose target under test is an android_binary.
+    """DEPRECATED: use axt_android_library_test instead.
+
+    A macro for an instrumentation test whose target under test is an android_binary.
 
     The intent of this wrapper is to simplify the build API for creating instrumentation test rules
     for simple cases, while still supporting build_cleaner for automatic dependency management.

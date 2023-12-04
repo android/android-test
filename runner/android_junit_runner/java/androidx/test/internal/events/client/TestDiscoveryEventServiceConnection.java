@@ -42,7 +42,8 @@ public class TestDiscoveryEventServiceConnection
     }
     try {
       service.send(testDiscoveryEvent);
-    } catch (RemoteException e) {
+    } catch (RemoteException | RuntimeException e) {
+      // "IllegalStateException: Channel was closed" is a possibility here.
       throw new TestEventClientException("Failed to send test case", e);
     }
   }

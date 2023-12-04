@@ -37,17 +37,6 @@ rules_proto_toolchains()
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-http_archive(
-    name = "rules_python",
-    sha256 = "0a8003b044294d7840ac7d9d73eef05d6ceb682d7516781a4ec62eeb34702578",
-    strip_prefix = "rules_python-0.24.0",
-    url = "https://github.com/bazelbuild/rules_python/releases/download/0.24.0/rules_python-0.24.0.tar.gz",
-)
-
-load("@rules_python//python:repositories.bzl", "py_repositories")
-
-py_repositories()
-
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 load("@rules_jvm_external//:specs.bzl", "maven")
 load(
@@ -92,7 +81,7 @@ grpc_java_repositories()
 maven_install(
     name = "maven",
     artifacts = [
-        "androidx.annotation:annotation-jvm:" + ANDROIDX_ANNOTATION_VERSION,
+        "androidx.annotation:annotation:" + ANDROIDX_ANNOTATION_VERSION,
         "androidx.annotation:annotation-experimental:jar:" + ANDROIDX_ANNOTATION_EXPERIMENTAL_VERSION,
         "androidx.appcompat:appcompat:" + ANDROIDX_COMPAT_VERSION,
         "androidx.concurrent:concurrent-futures:" + ANDROIDX_CONCURRENT_VERSION,
@@ -179,7 +168,6 @@ maven_install(
         "org.pantsbuild:jarjar:1.7.2",
         "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
         "org.jetbrains.kotlinx:kotlinx-coroutines-core:%s" % KOTLINX_COROUTINES_VERSION,
-        "com.google.code.findbugs:jsr305:3.0.2",
         maven.artifact(
             artifact = "robolectric",
             exclusions = [
@@ -191,7 +179,7 @@ maven_install(
                 ),
             ],
             group = "org.robolectric",
-            version = "4.9",
+            version = "4.11.1",
         ),
     ],
     fetch_sources = True,
@@ -219,7 +207,7 @@ maven_install(
 
 android_sdk_repository(
     name = "androidsdk",
-    api_level = 33,
+    api_level = 34,
     build_tools_version = "33.0.2",
 )
 

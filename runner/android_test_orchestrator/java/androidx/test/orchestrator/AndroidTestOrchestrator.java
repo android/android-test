@@ -128,7 +128,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   private static final String ORCHESTRATOR_SERVICE_ARGUMENT = "orchestratorService";
 
   private static final String TEST_COLLECTION_FILENAME = "testCollection.txt";
-  private static final String TEST_RUN_FILENAME = "%s.txt";
+  private static final int MAX_FILENAME_LENGTH = 255;
 
   private static final Pattern FULLY_QUALIFIED_CLASS_AND_METHOD =
       Pattern.compile("[\\w\\.?]+#\\w+");
@@ -273,6 +273,27 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   }
 
   @VisibleForTesting
+  static String makeValidFilename(String testName, int maxFilenameLength) {
+    // Max filename length is limited, so tests with longer names have to be
+    // truncated.
+    // To prevent collisions when filename length exceeds the limit, we replace
+    // the last characters with the test name's hashCode, formatted in hex.
+
+    final String testRunFilenameSuffix = ".txt";
+    final int testNameMaxLength = maxFilenameLength - testRunFilenameSuffix.length();
+
+    if (testName.length() <= testNameMaxLength) {
+      return testName + testRunFilenameSuffix;
+    }
+
+    // Name exceeds max length, truncate it and append its hashCode.
+    String testHashCode = String.format("%08x", testName.hashCode());
+    testName = testName.substring(0, testNameMaxLength - testHashCode.length()) + testHashCode;
+
+    return testName + testRunFilenameSuffix;
+  }
+
+  @VisibleForTesting
   static boolean isSingleMethodTest(String classArg) {
     if (TextUtils.isEmpty(classArg)) {
       return false;
@@ -296,7 +317,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
         return;
       }
     } else {
-      listenerManager.testProcessFinished(getOutputFile());
+      listenerManager.testProcessFinished(getOutputFile(test));
     }
 
     if (runsInIsolatedMode(arguments)) {
@@ -391,17 +412,17 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
       if (Build.VERSION.SDK_INT >= 24) {
         context = ContextCompat.createDeviceProtectedStorageContext(context);
       }
-      return context.openFileOutput(getOutputFile(), 0);
+      return context.openFileOutput(getOutputFile(test), 0);
     } catch (FileNotFoundException e) {
       throw new RuntimeException("Could not open stream for output");
     }
   }
 
-  private String getOutputFile() {
-    if (null == test) {
+  private String getOutputFile(String testName) {
+    if (testName == null) {
       return TEST_COLLECTION_FILENAME;
     } else {
-      return String.format(TEST_RUN_FILENAME, test);
+      return makeValidFilename(testName, MAX_FILENAME_LENGTH);
     }
   }
 

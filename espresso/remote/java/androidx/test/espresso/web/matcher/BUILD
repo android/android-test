@@ -20,6 +20,6 @@ android_library(
         "//espresso/remote/java/androidx/test/espresso/remote:registry",
         "//espresso/remote/java/androidx/test/espresso/web/proto/matcher:remote_web_matchers_proto_android_pb3",
         "//espresso/web/java/androidx/test/espresso/web/matcher",
-        "@maven//:androidx_annotation_annotation_jvm",
+        "//opensource/androidx:annotation",
     ],
 )

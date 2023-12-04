@@ -45,6 +45,7 @@ import androidx.test.internal.runner.lifecycle.ActivityLifecycleMonitorImpl;
 import androidx.test.internal.runner.lifecycle.ApplicationLifecycleMonitorImpl;
 import androidx.test.internal.util.Checks;
 import androidx.test.internal.util.ProcSummary;
+import androidx.test.platform.app.AppComponentFactoryRegistry;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.intent.IntentMonitorRegistry;
 import androidx.test.runner.intent.IntentStubberRegistry;
@@ -150,6 +151,12 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       // On API <= 15, initialization should have been called in #onCreate().
       installMultidexAndExceptionHandler();
     }
+
+    Application application = AppComponentFactoryRegistry.instantiateApplication(cl, className);
+    if (application != null) {
+      return application;
+    }
+
     return super.newApplication(cl, className, context);
   }
 
@@ -859,9 +866,16 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   @Override
   public Activity newActivity(ClassLoader cl, String className, Intent intent)
       throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-    return interceptingActivityFactory.shouldIntercept(cl, className, intent)
-        ? interceptingActivityFactory.create(cl, className, intent)
-        : super.newActivity(cl, className, intent);
+    if (interceptingActivityFactory.shouldIntercept(cl, className, intent)) {
+      return interceptingActivityFactory.create(cl, className, intent);
+    }
+
+    Activity activity = AppComponentFactoryRegistry.instantiateActivity(cl, className, intent);
+    if (activity != null) {
+      return activity;
+    }
+
+    return super.newActivity(cl, className, intent);
   }
 
   /**

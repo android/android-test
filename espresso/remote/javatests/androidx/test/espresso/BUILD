@@ -20,5 +20,6 @@ axt_android_library_test(
         "//ext/junit",
         "//runner/android_junit_runner",
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
     ],
 )

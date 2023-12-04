@@ -23,7 +23,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.ScaledViewActivity;
 import org.junit.Rule;
@@ -39,21 +38,13 @@ public class ClickOnScaledViewIntegrationTest {
       new ActivityScenarioRule<>(ScaledViewActivity.class);
 
   @Test
-  @SdkSuppress(minSdkVersion = 12)
   public void clickUnscaledView() {
     onView(withId(R.id.scaled_view)).perform(click());
   }
 
   @Test
-  @SdkSuppress(minSdkVersion = 12)
   public void clickToScaleAndClickAgain() {
     onView(withId(R.id.scaled_view)).perform(click());
     onView(withId(R.id.scaled_view)).perform(click());
   }
-
-  // placeholder test to avoid the 'no tests found' error on api 10
-  // TODO: yuck, find a better solution
-  @Test
-  @SdkSuppress(maxSdkVersion = 10)
-  public void emptyTest() {}
 }

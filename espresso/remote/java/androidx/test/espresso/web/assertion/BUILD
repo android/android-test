@@ -22,9 +22,9 @@ android_library(
         "//espresso/remote/java/androidx/test/espresso/remote:registry",
         "//espresso/remote/java/androidx/test/espresso/web/proto/assertion:web_assertions_proto_android_pb3",
         "//espresso/web/java/androidx/test/espresso/web/assertion",
+        "//opensource/androidx:annotation",
         "//runner/android_junit_runner/java/androidx/test:runner",
         "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
@@ -33,6 +33,6 @@ java_library(
     name = "package-info",
     srcs = ["package-info.java"],
     deps = [
-        "@maven//:androidx_annotation_annotation_jvm",
+        "//opensource/androidx:annotation",
     ],
 )

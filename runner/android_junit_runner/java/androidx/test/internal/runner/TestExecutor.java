@@ -15,6 +15,8 @@
  */
 package androidx.test.internal.runner;
 
+import static androidx.test.internal.util.Checks.checkNotNull;
+
 import android.app.Instrumentation;
 import android.os.Bundle;
 import androidx.test.internal.runner.listener.InstrumentationRunListener;
@@ -114,7 +116,7 @@ public final class TestExecutor {
      * @return the {@link androidx.test.internal.runner.TestExecutor.Builder}
      */
     public Builder addRunListener(RunListener listener) {
-      listeners.add(listener);
+      listeners.add(checkNotNull(listener));
       return this;
     }
 

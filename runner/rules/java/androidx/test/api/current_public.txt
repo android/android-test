@@ -9,10 +9,10 @@ package androidx.test.annotation {
 package androidx.test.rule {
 
   @Deprecated public class ActivityTestRule<T extends android.app.Activity> implements org.junit.rules.TestRule {
+    ctor @Deprecated public ActivityTestRule(androidx.test.runner.intercepting.SingleActivityFactory<T!>!, boolean, boolean);
     ctor @Deprecated public ActivityTestRule(Class<T!>!);
     ctor @Deprecated public ActivityTestRule(Class<T!>!, boolean);
     ctor @Deprecated public ActivityTestRule(Class<T!>!, boolean, boolean);
-    ctor @Deprecated public ActivityTestRule(androidx.test.runner.intercepting.SingleActivityFactory<T!>!, boolean, boolean);
     ctor @Deprecated public ActivityTestRule(Class<T!>!, String, int, boolean, boolean);
     method @Deprecated protected void afterActivityFinished();
     method @Deprecated protected void afterActivityLaunched();

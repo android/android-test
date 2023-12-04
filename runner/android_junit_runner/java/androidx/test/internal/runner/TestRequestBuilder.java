@@ -30,7 +30,6 @@ import androidx.test.internal.runner.ClassPathScanner.ExcludePackageNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExternalClassNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.InclusivePackageNamesFilter;
 import androidx.test.internal.runner.filters.TestsRegExFilter;
-import androidx.test.internal.util.AndroidRunnerParams;
 import androidx.test.internal.util.Checks;
 import androidx.tracing.Trace;
 import java.io.IOException;
@@ -87,8 +86,6 @@ public class TestRequestBuilder {
   private boolean skipExecution = false;
   private final DeviceBuild deviceBuild;
   private long perTestTimeout = 0;
-  private final Instrumentation instr;
-  private final Bundle argsBundle;
   private ClassLoader classLoader;
 
   /**
@@ -530,17 +527,22 @@ public class TestRequestBuilder {
    *
    * @param instr the {@link Instrumentation} to pass to applicable tests
    * @param bundle the {@link Bundle} to pass to applicable tests
+   * @deprecated use {@link TestRequestBuilder()}
    */
+  @Deprecated
   public TestRequestBuilder(Instrumentation instr, Bundle bundle) {
-    this(new DeviceBuildImpl(), instr, bundle);
+    this();
+  }
+
+  /** Creates a TestRequestBuilder */
+  public TestRequestBuilder() {
+    this(new DeviceBuildImpl());
   }
 
   /** Alternate TestRequestBuilder constructor that accepts a custom DeviceBuild */
   @VisibleForTesting
-  TestRequestBuilder(DeviceBuild deviceBuildAccessor, Instrumentation instr, Bundle bundle) {
+  TestRequestBuilder(DeviceBuild deviceBuildAccessor) {
     deviceBuild = Checks.checkNotNull(deviceBuildAccessor);
-    this.instr = Checks.checkNotNull(instr);
-    argsBundle = Checks.checkNotNull(bundle);
 
     maybeAddLegacySuppressFilter();
   }
@@ -817,9 +819,7 @@ public class TestRequestBuilder {
       // If scanning then suite methods are not supported.
       boolean ignoreSuiteMethods = this.ignoreSuiteMethods || scanningPath;
 
-      AndroidRunnerParams runnerParams =
-          new AndroidRunnerParams(instr, argsBundle, perTestTimeout, ignoreSuiteMethods);
-      RunnerBuilder runnerBuilder = getRunnerBuilder(runnerParams);
+      RunnerBuilder runnerBuilder = getRunnerBuilder(ignoreSuiteMethods, perTestTimeout);
 
       TestLoader loader = TestLoader.Factory.create(classLoader, runnerBuilder, scanningPath);
       Collection<String> classNames;
@@ -853,17 +853,18 @@ public class TestRequestBuilder {
   /**
    * Get the {@link RunnerBuilder} to use to create the {@link Runner} instances.
    *
-   * @param runnerParams {@link AndroidRunnerParams} that stores common runner parameters
    * @return a {@link RunnerBuilder}.
    */
-  private RunnerBuilder getRunnerBuilder(AndroidRunnerParams runnerParams) {
+  private RunnerBuilder getRunnerBuilder(boolean shouldIgnoreSuiteMethods, long perTestTimeout) {
     RunnerBuilder builder;
     if (skipExecution) {
       // If all that is needed is the list of tests then replace the Runner which will
       // run the test with one that will simply fire events for each of the tests.
-      builder = new AndroidLogOnlyBuilder(runnerParams, customRunnerBuilderClasses);
+      builder = new AndroidLogOnlyBuilder(shouldIgnoreSuiteMethods, customRunnerBuilderClasses);
     } else {
-      builder = new AndroidRunnerBuilder(runnerParams, customRunnerBuilderClasses);
+      builder =
+          new AndroidRunnerBuilder(
+              shouldIgnoreSuiteMethods, perTestTimeout, customRunnerBuilderClasses);
     }
     return builder;
   }

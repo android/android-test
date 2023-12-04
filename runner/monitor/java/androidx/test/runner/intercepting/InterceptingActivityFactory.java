@@ -21,11 +21,14 @@ import android.content.Intent;
 
 /**
  * Implement this interface to provide custom implementation of Activity under test. It is used by
- * {@link androidx.test.runner.MonitoringInstrumentation#newActivity(ClassLoader, String,
- * Intent)} to create instance of the activity under test. Please see {@link
+ * {@link androidx.test.runner.MonitoringInstrumentation#newActivity(ClassLoader, String, Intent)}
+ * to create instance of the activity under test. Please see {@link
  * androidx.test.runner.MonitoringInstrumentation#interceptActivityUsing(InterceptingActivityFactory)}
  * for more details.
+ *
+ * @deprecated use {@link androidx.test.ext.junit.rules.AppComponentFactoryRule} instead.
  */
+@Deprecated
 public interface InterceptingActivityFactory {
 
   /**

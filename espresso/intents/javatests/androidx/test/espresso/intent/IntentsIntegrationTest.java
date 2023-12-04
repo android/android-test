@@ -212,7 +212,7 @@ public class IntentsIntegrationTest {
     intended(anyIntent(), Intents.times(2));
 
     try {
-      intended(toPackage("androidx.test.ui.app"));
+      intended(toPackage("androidx.test.espresso.intents"));
       // Can't call fail() because it throws an AssertionFailedError, just like intended() does.
       throw new IllegalStateException(
           "intended should have failed: too many matching recorded intents");
@@ -220,14 +220,14 @@ public class IntentsIntegrationTest {
       // expected.
     }
     try {
-      intended(toPackage("androidx.test.ui.app"), Intents.times(3));
+      intended(toPackage("androidx.test.espresso.intents"), Intents.times(3));
       // Can't call fail() because it throws an AssertionFailedError, just like intended() does.
       throw new IllegalStateException(
           "intended should have failed: too few matching recorded intents");
     } catch (AssertionFailedError e) {
       // expected.
     }
-    intended(toPackage("androidx.test.ui.app"), Intents.times(2));
+    intended(toPackage("androidx.test.espresso.intents"), Intents.times(2));
   }
 
   @Test
@@ -258,7 +258,7 @@ public class IntentsIntegrationTest {
     } catch (AssertionFailedError e) {
       // expected.
     }
-    intended(toPackage("androidx.test.ui.app"), Intents.times(2));
+    intended(toPackage("androidx.test.espresso.intents"), Intents.times(2));
     assertNoUnverifiedIntents();
   }
 
@@ -314,7 +314,9 @@ public class IntentsIntegrationTest {
     clickToDisplayActivity();
     intended(
         hasComponent(
-            allOf(hasPackageName("androidx.test.ui.app"), hasShortClassName(".DisplayActivity"))));
+            allOf(
+                hasPackageName("androidx.test.espresso.intents"),
+                hasShortClassName("androidx.test.ui.app.DisplayActivity"))));
   }
 
   @Test

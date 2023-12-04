@@ -32,6 +32,6 @@ java_library(
         "//espresso/remote/java/androidx/test/espresso/proto/matcher:package-info",
     ],
     deps = [
-        "@maven//:androidx_annotation_annotation_jvm",
+        "//opensource/androidx:annotation",
     ],
 )

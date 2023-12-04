@@ -19,7 +19,6 @@ import static com.google.common.truth.Truth.assertThat;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import androidx.test.internal.util.AndroidRunnerParams;
 import androidx.test.testing.fixtures.AbstractTest;
 import androidx.test.testing.fixtures.CollectingRunListener;
 import androidx.test.testing.fixtures.CustomTest;
@@ -48,10 +47,8 @@ public class DirectTestLoaderTest {
 
   @Before
   public void setUp() throws Exception {
-    AndroidRunnerParams runnerParams = new AndroidRunnerParams(null, null, -1, false);
     AndroidRunnerBuilder runnerBuilder =
-        new AndroidRunnerBuilder(
-            runnerParams, Collections.<Class<? extends RunnerBuilder>>emptyList());
+        new AndroidRunnerBuilder(false, 0, Collections.<Class<? extends RunnerBuilder>>emptyList());
     loader = TestLoader.Factory.create(null, runnerBuilder, false);
   }
 

@@ -419,6 +419,41 @@ public final class ViewActions {
   }
 
   /**
+   * Returns an action that scrolls to the view.<br>
+   * <br>
+   * In order for the scroll to be considered to have succeeded, the target view must match {@link
+   * androidx.test.espresso.matcher.ViewMatchers#isDisplayingAtLeast(int)} for the specified value.
+   * <br>
+   * <br>
+   * View preconditions:
+   *
+   * <ul>
+   *   <li>must be a descendant of ScrollView
+   *   <li>must have visibility set to View.VISIBLE
+   * </ul>
+   */
+  public static ViewAction scrollTo(int isDisplayingAtLeastThreshold) {
+    return actionWithAssertions(new ScrollToAction(isDisplayingAtLeastThreshold));
+  }
+
+  /**
+   * Returns an action that scrolls to the view.<br>
+   * <br>
+   * In order for the scroll to be considered to have succeeded, the target view must match {@link
+   * androidx.test.espresso.matcher.ViewMatchers#isDisplayingAtLeast()} for the specified value.
+   * <br>
+   * View preconditions:
+   *
+   * <ul>
+   *   <li>must be a descendant of ScrollView
+   *   <li>must have visibility set to View.VISIBLE
+   * </ul>
+   */
+  public static ViewAction scrollCompletelyTo() {
+    return scrollTo(100);
+  }
+
+  /**
    * Returns an action that types the provided string into the view. Appending a \n to the end of
    * the string translates to a ENTER key event. Note: this method does not change cursor position
    * in the focused view - text is inserted at the location where the cursor is currently pointed.

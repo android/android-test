@@ -54,7 +54,6 @@ public class TaskStackTest {
     onView(withText("drawer activity")).check(matches(isDisplayed()));
   }
 
-
   @Test
   public void testBackUnconditionallyExitsAppAndDoesNotThrow() {
     onView(withText("display activity")).check(matches(isDisplayed()));

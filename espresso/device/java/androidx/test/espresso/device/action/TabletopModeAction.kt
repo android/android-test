@@ -18,6 +18,7 @@ package androidx.test.espresso.device.action
 
 import android.content.res.Configuration
 import android.util.Log
+import androidx.test.espresso.device.common.isTestDeviceAnEmulator
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.controller.DeviceMode
 import androidx.test.platform.app.InstrumentationRegistry
@@ -41,6 +42,14 @@ internal class TabletopModeAction() :
       )
     } else if (super.foldingFeatureOrientation != FoldingFeature.Orientation.HORIZONTAL) {
       Log.d(TAG, "FoldingFeature orientation needs to be rotated.")
+      // TODO(b/296910911) On physical devices, changing screen orientation requires the device to
+      // be in FLAT mode. Open the fold, update orientation, and then restore the half-folded state.
+      if (!isTestDeviceAnEmulator()) {
+        Log.d(TAG, "Temporarily setting device to flat mode so that device can be rotated.")
+        BaseSingleFoldDeviceAction(DeviceMode.FLAT, FoldingFeature.State.FLAT)
+          .perform(deviceController)
+      }
+
       val orientationToRotateTo =
         if (
           InstrumentationRegistry.getInstrumentation()
@@ -54,6 +63,10 @@ internal class TabletopModeAction() :
           ScreenOrientation.PORTRAIT
         }
       ScreenOrientationAction(orientationToRotateTo).perform(deviceController)
+
+      if (!isTestDeviceAnEmulator()) {
+        super.perform(deviceController)
+      }
     }
   }
 }

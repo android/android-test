@@ -22,22 +22,29 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 import android.app.Activity;
+import android.app.AppComponentFactory;
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
+import androidx.test.filters.SdkSuppress;
+import androidx.test.platform.app.AppComponentFactoryRegistry;
 import androidx.test.runner.intercepting.InterceptingActivityFactory;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@MediumTest
 @RunWith(AndroidJUnit4.class)
+@MediumTest
 public class MonitoringInstrumentationTest {
 
   private MonitoringInstrumentation instrumentation;
@@ -48,91 +55,131 @@ public class MonitoringInstrumentationTest {
   }
 
   @Test
+  @SdkSuppress(minSdkVersion = 28)
+  public void shouldCreateNewAppComponentsUsingAppComponentFactorySet() {
+    final AppComponentFactory factory = new TestAppComponentFactory();
+    AppComponentFactoryRegistry.setAppComponentFactory(factory);
+
+    final AtomicReference<Activity> activity =
+        retrieveActivityOnMainThread(SomeOtherActivity.class);
+    final AtomicReference<Application> application =
+        retrieveApplicationOnMainThread(SomeOtherApplication.class);
+    instrumentation.waitForIdleSync();
+
+    assertThat(activity.get(), instanceOf(SomeOtherActivity.class));
+    assertThat(application.get(), instanceOf(SomeOtherApplication.class));
+  }
+
+  @Test
+  @SdkSuppress(minSdkVersion = 28)
+  public void shouldUseDefaultMechanismForCreatingAppComponentsIfAppComponentFactoryNotSet() {
+    AppComponentFactoryRegistry.setAppComponentFactory(null);
+
+    final AtomicReference<Activity> activity = retrieveActivityOnMainThread(TestActivity.class);
+    final AtomicReference<Application> application =
+        retrieveApplicationOnMainThread(TestApplication.class);
+    instrumentation.waitForIdleSync();
+
+    assertThat(activity.get(), instanceOf(TestActivity.class));
+    assertThat(application.get(), instanceOf(TestApplication.class));
+  }
+
+  @Test
   public void shouldUseDefaultMechanismForCreatingActivityIfInterceptingActivityFactoryNotSet()
       throws Exception {
-    final Class<TestActivity> testActivityClass = TestActivity.class;
-    final AtomicReference<Activity> activity = new AtomicReference<>();
-    retrieveActivityOnMainThread(testActivityClass, activity);
-
+    final AtomicReference<Activity> activity = retrieveActivityOnMainThread(TestActivity.class);
     instrumentation.waitForIdleSync();
+
     assertThat(activity.get(), instanceOf(TestActivity.class));
   }
 
   @Test
   public void shouldCreateNewActivityUsingInterceptingActivityFactoryIfItCanCreate()
       throws Exception {
-    final Class<TestActivity> testActivityClass = TestActivity.class;
-
-    final AtomicReference<Activity> testActivityReference = new AtomicReference<>();
     final TestActivity myTestActivity = mock(TestActivity.class);
     instrumentation.interceptActivityUsing(interceptingActivityFactory(myTestActivity, true));
 
-    retrieveActivityOnMainThread(testActivityClass, testActivityReference);
-
+    final AtomicReference<Activity> activity = retrieveActivityOnMainThread(TestActivity.class);
     instrumentation.waitForIdleSync();
-    assertThat(testActivityReference.get(), sameInstance((Activity) myTestActivity));
+
+    assertThat(activity.get(), sameInstance(myTestActivity));
   }
 
   @Test
   public void shouldNotCreateNewActivityUsingInterceptingActivityFactoryIfItCannotCreate()
       throws Exception {
-    final Class<TestActivity> testActivityClass = TestActivity.class;
-
-    final AtomicReference<Activity> testActivityReference = new AtomicReference<>();
     final TestActivity myTestActivity = mock(TestActivity.class);
     instrumentation.interceptActivityUsing(interceptingActivityFactory(myTestActivity, false));
 
-    retrieveActivityOnMainThread(testActivityClass, testActivityReference);
-
+    final AtomicReference<Activity> activity = retrieveActivityOnMainThread(TestActivity.class);
     instrumentation.waitForIdleSync();
-    assertThat(testActivityReference.get(), not(sameInstance((Activity) myTestActivity)));
+
+    assertThat(activity.get(), not(sameInstance(myTestActivity)));
   }
 
   @Test
   public void shouldNotCreateNewActivityUsingInterceptingActivityFactoryIfReset() throws Exception {
-    final Class<TestActivity> testActivityClass = TestActivity.class;
-    final AtomicReference<Activity> activity = new AtomicReference<>();
-
     final TestActivity myTestActivity = mock(TestActivity.class);
     instrumentation.interceptActivityUsing(interceptingActivityFactory(myTestActivity, true));
     instrumentation.useDefaultInterceptingActivityFactory();
-    retrieveActivityOnMainThread(testActivityClass, activity);
 
+    final AtomicReference<Activity> activity = retrieveActivityOnMainThread(TestActivity.class);
     instrumentation.waitForIdleSync();
-    assertThat(activity.get(), not(sameInstance((Activity) myTestActivity)));
+
+    assertThat(activity.get(), not(sameInstance(myTestActivity)));
   }
 
   @Test
   public void runOnMainSyncShouldRethrowAssertionException() {
     final String expectedErrorMessage =
         "This AssertionError should be re-thrown by runOnMainSync() method.";
+    Throwable actual = null;
     try {
       instrumentation.runOnMainSync(() -> fail(expectedErrorMessage));
-      fail(
-          "AssertionError thrown in the runnable should be re-thrown in the instrumentation"
-              + " thread.");
     } catch (Throwable t) {
-      assertThat(t, is(instanceOf(AssertionError.class)));
-      assertEquals(expectedErrorMessage, t.getMessage());
+      actual = t;
     }
+    assertThat(
+        /* reason= */ "AssertionError thrown in the runnable should be re-thrown in the"
+            + " instrumentation thread.",
+        /* actual= */ actual,
+        /* matcher= */ is(instanceOf(AssertionError.class)));
+    assertThat(expectedErrorMessage, equalTo(actual.getMessage()));
   }
 
-  private void retrieveActivityOnMainThread(
-      final Class<TestActivity> activityClass,
-      final AtomicReference<Activity> activityAtomicReference) {
+  private AtomicReference<Activity> retrieveActivityOnMainThread(
+      final Class<? extends Activity> classRef) {
+    final AtomicReference<Activity> atomicReference = new AtomicReference<>();
     instrumentation.runOnMainSync(
-        new Runnable() {
-          @Override
-          public void run() {
-            try {
-              activityAtomicReference.set(
-                  instrumentation.newActivity(
-                      activityClass.getClassLoader(), activityClass.getName(), new Intent()));
-            } catch (Exception ex) {
-              fail(ex.getMessage());
-            }
+        () -> {
+          try {
+            final ClassLoader cl = classRef.getClassLoader();
+            final String className = classRef.getName();
+            final Activity activity = instrumentation.newActivity(cl, className, new Intent());
+            atomicReference.set(activity);
+          } catch (Exception ex) {
+            fail(ex.getMessage());
           }
         });
+    return atomicReference;
+  }
+
+  private AtomicReference<Application> retrieveApplicationOnMainThread(
+      final Class<? extends Application> applicationClass) {
+    final AtomicReference<Application> atomicReference = new AtomicReference<>();
+    instrumentation.runOnMainSync(
+        () -> {
+          try {
+            final ClassLoader cl = applicationClass.getClassLoader();
+            final String className = applicationClass.getName();
+            final Context context = instrumentation.getTargetContext();
+            final Application application = instrumentation.newApplication(cl, className, context);
+            atomicReference.set(application);
+          } catch (Exception ex) {
+            fail(ex.getMessage());
+          }
+        });
+    return atomicReference;
   }
 
   @NonNull
@@ -151,7 +198,37 @@ public class MonitoringInstrumentationTest {
     };
   }
 
+  public static class TestApplication extends Application {}
+
   public static class TestActivity extends Activity {}
 
   public static class SomeOtherActivity extends Activity {}
+
+  public static class SomeOtherApplication extends Application {}
+
+  public static class TestAppComponentFactory extends AppComponentFactory {
+
+    @NonNull
+    @Override
+    public Activity instantiateActivity(
+        @NonNull ClassLoader cl, @NonNull String className, @Nullable Intent intent)
+        throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+      if (className.equals(SomeOtherActivity.class.getName())) {
+        return new SomeOtherActivity();
+      } else {
+        return super.instantiateActivity(cl, className, intent);
+      }
+    }
+
+    @NonNull
+    @Override
+    public Application instantiateApplication(@NonNull ClassLoader cl, @NonNull String className)
+        throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+      if (className.equals(SomeOtherApplication.class.getName())) {
+        return new SomeOtherApplication();
+      } else {
+        return super.instantiateApplication(cl, className);
+      }
+    }
+  }
 }

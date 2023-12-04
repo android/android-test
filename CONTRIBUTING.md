@@ -34,7 +34,7 @@ Currently only Linux is fully supported. Mac may work but is not regularly teste
 *   Install the [Android SDK](https://developer.android.com/studio/install) and
     run the following command to ensure you have the necessary components:
     `./tools/bin/sdkmanager --install 'build-tools;33.0.2'
-    'platforms;android-33' 'emulator' 'platform-tools'
+    'platforms;android-34' 'emulator' 'platform-tools'
 *   Set the `ANDROID_HOME` environment variable to point to the SDK install
     location. For example
     *   On Linux: `export ANDROID_HOME=/home/$USER/Android/Sdk`
@@ -46,7 +46,7 @@ Currently only Linux is fully supported. Mac may work but is not regularly teste
 
 Android Studio is recommended.
 
-*   Install the [Bazel Android Studio plugin](https://docs.bazel.build/versions/master/ide.html).
+*   Install the [Bazel Android Studio plugin](https://plugins.jetbrains.com/plugin/9185-bazel-for-android-studio)
 *   Setup Bazel Android Studio plugin:
     *   Navigate to `Settings > Other Settings > Bazel Settings`
     *   Update `Bazel binary location` to `/path/to/bazel/binary` (on Mac it's usually
@@ -87,7 +87,7 @@ To run the gradle integration tests:
 bazelisk build :axt_m2repository
 unzip bazel-bin/axt_m2repository.zip -d ~/.m2/
 cd gradle-tests
-./gradlew nexusOneApi30DebugAndroidTest
+./gradlew nexusOneDebugAndroidTest
 ```
 
 ### Troubleshooting

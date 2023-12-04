@@ -14,8 +14,8 @@ android_library(
     name = "base",
     srcs = glob(["*java"]),
     deps = [
+        "//opensource/androidx:annotation",
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

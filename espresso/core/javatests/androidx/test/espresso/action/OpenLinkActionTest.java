@@ -95,5 +95,4 @@ public class OpenLinkActionTest {
         });
     onView(withId(R.id.spanned)).perform(scrollTo(), openLinkWithText("bacon"));
   }
-
 }

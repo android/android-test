@@ -26,9 +26,9 @@ android_library(
     ],
     deps = [
         "//annotation",
+        "//opensource/androidx:annotation",
         "//runner/android_junit_runner",
         "@androidsdk//:legacy_test-30",
-        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:junit_junit",
     ],
 )
@@ -37,7 +37,6 @@ axt_android_aar(
     name = "rules_aar",
     expected_class_prefixes = [
         "androidx.test.annotation.UiThreadTest",
-        "androidx.test.internal.statement",
         "androidx.test.rule",
     ],
     included_dep = ":rules",

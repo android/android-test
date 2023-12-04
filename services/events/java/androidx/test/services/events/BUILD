@@ -23,8 +23,8 @@ android_library(
         "run/ITestRunEvent.aidl",
     ],
     deps = [
+        "//opensource/androidx:annotation",
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:junit_junit",
     ],
 )

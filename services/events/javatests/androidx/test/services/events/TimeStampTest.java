@@ -54,5 +54,4 @@ public class TimeStampTest {
     assertThat(timeStampFromParcel.seconds).isEqualTo(seconds);
     assertThat(timeStampFromParcel.nanos).isEqualTo(nanos);
   }
-
 }

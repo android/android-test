@@ -28,9 +28,9 @@ android_library(
     deps = [
         ":test_storage_constants",
         "//annotation",
+        "//opensource/androidx:annotation",
         "//runner/monitor",
         "//services/storage/java/androidx/test/services/storage/file",
-        "@maven//:androidx_annotation_annotation_jvm",
     ],
 )
 

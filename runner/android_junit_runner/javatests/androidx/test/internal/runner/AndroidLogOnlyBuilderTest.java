@@ -20,7 +20,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.internal.util.AndroidRunnerParams;
 import androidx.test.testing.fixtures.JUnit3FailingTestCase;
 import androidx.test.testing.fixtures.JUnit3FailingTestSuiteWithSuite;
 import androidx.test.testing.fixtures.JUnit4Failing;
@@ -77,10 +76,8 @@ public class AndroidLogOnlyBuilderTest {
 
   @Before
   public void initBuilder() {
-    AndroidRunnerParams runnerParams = new AndroidRunnerParams(null, null, -1, false);
     androidLogOnlyBuilder =
-        new AndroidLogOnlyBuilder(
-            runnerParams, Collections.<Class<? extends RunnerBuilder>>emptyList());
+        new AndroidLogOnlyBuilder(false, Collections.<Class<? extends RunnerBuilder>>emptyList());
   }
 
   @Test

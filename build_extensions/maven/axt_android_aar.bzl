@@ -2,8 +2,8 @@
 
 load("//build_extensions/maven:add_or_update_file_in_zip.bzl", "add_or_update_file_in_zip")
 load("//build_extensions/maven:combine_jars.bzl", "combine_jars")
+load("//build_extensions/maven:jarjar.bzl", "jarjar_rule")
 load("//build_extensions/maven:maven_info.bzl", "MavenFilesInfo", "MavenInfo", "collect_maven_info")
-load("//build_extensions/maven:jarjar.bzl", "jarjar")
 
 def _android_aar_impl(ctx):
     # current_aar will include almost everything needed: an AndroidManifest.xml, compiled resources,
@@ -27,7 +27,7 @@ def _android_aar_impl(ctx):
     # optionally use jarjar to rename shaded dependencies
     if (ctx.attr.jarjar_rule):
         jarjar_classes_jar = ctx.actions.declare_file(ctx.attr.name + "_jarjar_classes.jar")
-        jarjar(ctx, rule = ctx.file.jarjar_rule, src = classes_jar, out = jarjar_classes_jar)
+        jarjar_rule(ctx, rule = ctx.file.jarjar_rule, src = classes_jar, out = jarjar_classes_jar)
         classes_jar = jarjar_classes_jar
 
     # TODO: tying validation to an output was the only way to get this to run, but
@@ -40,6 +40,7 @@ def _android_aar_impl(ctx):
         executable = ctx.executable._validate_jar_java,
         arguments = [validation_output.path, classes_jar.path] + ctx.attr.expected_class_prefixes,
     )
+    _validate_maven_deps(sorted(ctx.attr.included_dep[MavenInfo].transitive_maven_direct_deps.to_list()), ctx.attr.banned_maven_deps)
 
     # update the aar with the new classes.jar
     add_or_update_file_in_zip(
@@ -64,6 +65,12 @@ def _android_aar_impl(ctx):
         OutputGroupInfo(_validation = depset([validation_output])),
     ]
 
+def _validate_maven_deps(maven_deps, banned_dep_patterns):
+    for banned_dep_pattern in banned_dep_patterns:
+        for dep in maven_deps:
+            if banned_dep_pattern in dep:
+                fail("%s is not an allowed dependency" % dep)
+
 axt_android_aar = rule(
     implementation = _android_aar_impl,
     attrs = {
@@ -82,6 +89,11 @@ axt_android_aar = rule(
             doc = "Optional file containing jarjar rules to be applied to the classes.",
             mandatory = False,
             allow_single_file = [".txt"],
+        ),
+        "banned_maven_deps": attr.string_list(
+            doc = ("List of strings that specify the set of disallowed maven dependencies. The " +
+                   "rule will fail if any maven dependency contains one or more of these strings."),
+            default = ["com.google.guava:guava", "com.google.dagger"],
         ),
         "_jdk": attr.label(
             default = Label("@bazel_tools//tools/jdk"),

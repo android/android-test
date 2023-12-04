@@ -19,8 +19,8 @@ kt_android_library(
         "//espresso/device/java/androidx/test/espresso/device/controller",
         "//espresso/device/java/androidx/test/espresso/device/controller:controller_impl",
         "//espresso/device/java/androidx/test/espresso/device/controller/emulator",
+        "//opensource/androidx:annotation",
         "//opensource/dagger",
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation_jvm",
     ],
 )

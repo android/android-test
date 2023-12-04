@@ -28,12 +28,19 @@ import org.junit.runners.model.RunnerBuilder;
 /** A specialized {@link AnnotatedBuilder} that can Android runner specific features */
 public class AndroidAnnotatedBuilder extends AnnotatedBuilder {
   private static final String LOG_TAG = "AndroidAnnotatedBuilder";
+  private final long perTestTimeout;
 
-  private final AndroidRunnerParams androidRunnerParams;
-
+  /**
+   * @deprecated use {@link AndroidAnnotatedBuilder()}
+   */
+  @Deprecated
   public AndroidAnnotatedBuilder(RunnerBuilder suiteBuilder, AndroidRunnerParams runnerParams) {
+    this(suiteBuilder, runnerParams.getPerTestTimeout());
+  }
+
+  public AndroidAnnotatedBuilder(RunnerBuilder suiteBuilder, long perTestTimeout) {
     super(suiteBuilder);
-    androidRunnerParams = runnerParams;
+    this.perTestTimeout = perTestTimeout;
   }
 
   @Override
@@ -67,7 +74,7 @@ public class AndroidAnnotatedBuilder extends AnnotatedBuilder {
   public Runner buildAndroidRunner(Class<? extends Runner> runnerClass, Class<?> testClass)
       throws Exception {
     return runnerClass
-        .getConstructor(Class.class, AndroidRunnerParams.class)
-        .newInstance(testClass, androidRunnerParams);
+        .getConstructor(Class.class, long.class)
+        .newInstance(testClass, perTestTimeout);
   }
 }

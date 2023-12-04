@@ -51,12 +51,24 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
    * Constructs a new instance of the default runner
    *
    * @hide
+   * @deprecated use {@link AndroidJUnit4(Class, long)}
    */
   @RestrictTo(Scope.LIBRARY)
+  @Deprecated
   public AndroidJUnit4(Class<?> klass, AndroidRunnerParams runnerParams)
       throws InitializationError {
+    this(klass, runnerParams.getPerTestTimeout());
+  }
+
+  /**
+   * Constructs a new instance of the default runner
+   *
+   * @hide
+   */
+  @RestrictTo(Scope.LIBRARY)
+  public AndroidJUnit4(Class<?> klass, long perTestTimeout) throws InitializationError {
     // this is expected to be called when in Android environment.
-    delegate = new AndroidJUnit4ClassRunner(klass, runnerParams);
+    delegate = new AndroidJUnit4ClassRunner(klass, perTestTimeout);
   }
 
   /**

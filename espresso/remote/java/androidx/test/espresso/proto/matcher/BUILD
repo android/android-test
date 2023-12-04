@@ -50,6 +50,6 @@ java_library(
     name = "package-info",
     srcs = ["package-info.java"],
     deps = [
-        "@maven//:androidx_annotation_annotation_jvm",
+        "//opensource/androidx:annotation",
     ],
 )

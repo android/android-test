@@ -103,7 +103,6 @@ public class EventActionIntegrationTest {
         .check(matches(isDisplayed()));
   }
 
-  @SdkSuppress(minSdkVersion = 15)
   @Test
   public void longClickTesting() {
     onView(withText(is(activity.getString(R.string.text_long_click))))
@@ -114,7 +113,6 @@ public class EventActionIntegrationTest {
         .check(matches(isDisplayed()));
   }
 
-  @SdkSuppress(minSdkVersion = 15)
   @Test
   public void doubleClickTesting() {
     onView(withText(is(activity.getString(R.string.text_double_click))))

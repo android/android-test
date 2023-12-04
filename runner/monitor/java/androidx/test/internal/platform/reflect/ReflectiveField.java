@@ -30,6 +30,7 @@ import java.lang.reflect.Field;
 public class ReflectiveField<T> {
   private final String className;
   private final String fieldName;
+  private final Class<?> clazz;
 
   // lazy init
   private boolean initialized = false;
@@ -42,7 +43,14 @@ public class ReflectiveField<T> {
    * @param fieldName the field name
    */
   public ReflectiveField(String className, String fieldName) {
+    this.clazz = null;
     this.className = className;
+    this.fieldName = fieldName;
+  }
+
+  public ReflectiveField(Class<?> clazz, String fieldName) {
+    this.clazz = clazz;
+    this.className = null;
     this.fieldName = fieldName;
   }
 
@@ -70,8 +78,16 @@ public class ReflectiveField<T> {
     if (initialized) {
       return;
     }
-    field = Class.forName(className).getDeclaredField(fieldName);
+    field = getClazz().getDeclaredField(fieldName);
     field.setAccessible(true);
     initialized = true;
+  }
+
+  private Class<?> getClazz() throws ClassNotFoundException {
+    if (clazz == null) {
+      return Class.forName(className);
+    } else {
+      return clazz;
+    }
   }
 }

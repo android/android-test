@@ -2,17 +2,17 @@
 #   Tests for espresso idling resources
 
 load(
-    "//build_extensions:android_library_instrumentation_tests.bzl",
-    "android_library_instrumentation_tests",
+    "//build_extensions:android_library_test.bzl",
+    "axt_android_library_test",
 )
 
 package(default_applicable_licenses = ["//espresso:license"])
 
 licenses(["notice"])
 
-android_library_instrumentation_tests(
-    name = "instrumentation_tests",
-    srcs = glob(["**/*.java"]),
+axt_android_library_test(
+    name = "IdlingRegistryTest",
+    srcs = ["IdlingRegistryTest.java"],
     deps = [
         "//core",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",

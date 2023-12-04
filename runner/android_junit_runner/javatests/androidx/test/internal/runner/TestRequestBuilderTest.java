@@ -17,7 +17,6 @@ package androidx.test.internal.runner;
 
 import static androidx.test.internal.runner.TestRequestBuilder.RequiresDeviceFilter.EMULATOR_HARDWARE_GOLDFISH;
 import static androidx.test.internal.runner.TestRequestBuilder.RequiresDeviceFilter.EMULATOR_HARDWARE_RANCHU;
-import static androidx.test.platform.app.InstrumentationRegistry.getArguments;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -497,7 +496,7 @@ public class TestRequestBuilderTest {
   }
 
   private TestRequestBuilder createBuilder() {
-    return new TestRequestBuilder(getInstrumentation(), getArguments()) {
+    return new TestRequestBuilder() {
       @Override
       ClassPathScanner createClassPathScanner(List<String> paths) {
         return mockClassPathScanner;
@@ -506,7 +505,7 @@ public class TestRequestBuilderTest {
   }
 
   private TestRequestBuilder createBuilder(DeviceBuild deviceBuild) {
-    return new TestRequestBuilder(deviceBuild, getInstrumentation(), getArguments()) {
+    return new TestRequestBuilder(deviceBuild) {
       @Override
       ClassPathScanner createClassPathScanner(List<String> paths) {
         return mockClassPathScanner;

@@ -70,8 +70,8 @@ package androidx.test.orchestrator.junit {
   }
 
   public final class ParcelableDescription implements android.os.Parcelable {
-    ctor public ParcelableDescription(org.junit.runner.Description!);
     ctor public ParcelableDescription(String!);
+    ctor public ParcelableDescription(org.junit.runner.Description!);
     method public int describeContents();
     method public String! getClassName();
     method public String! getDisplayName();
@@ -81,9 +81,9 @@ package androidx.test.orchestrator.junit {
   }
 
   public final class ParcelableFailure implements android.os.Parcelable {
-    ctor public ParcelableFailure(org.junit.runner.notification.Failure!);
-    ctor public ParcelableFailure(androidx.test.orchestrator.junit.ParcelableDescription!, Throwable!);
     ctor public ParcelableFailure(androidx.test.orchestrator.junit.ParcelableDescription!, String!);
+    ctor public ParcelableFailure(androidx.test.orchestrator.junit.ParcelableDescription!, Throwable!);
+    ctor public ParcelableFailure(org.junit.runner.notification.Failure!);
     method public int describeContents();
     method public androidx.test.orchestrator.junit.ParcelableDescription! getDescription();
     method public String! getTrace();
@@ -242,8 +242,8 @@ package androidx.test.runner.intercepting {
 
   public abstract class SingleActivityFactory<T extends android.app.Activity> implements androidx.test.runner.intercepting.InterceptingActivityFactory {
     ctor public SingleActivityFactory(Class<T!>!);
-    method public final android.app.Activity! create(ClassLoader!, String!, android.content.Intent!);
     method protected abstract T! create(android.content.Intent!);
+    method public final android.app.Activity! create(ClassLoader!, String!, android.content.Intent!);
     method public final Class<T!>! getActivityClassToIntercept();
     method public final boolean shouldIntercept(ClassLoader!, String!, android.content.Intent!);
   }
@@ -324,8 +324,8 @@ package androidx.test.services.events {
   }
 
   public final class ErrorInfo implements android.os.Parcelable {
-    ctor public ErrorInfo(String?, String?, String);
     ctor public ErrorInfo(android.os.Parcel);
+    ctor public ErrorInfo(String?, String?, String);
     method public static androidx.test.services.events.ErrorInfo! createFromFailure(org.junit.runner.notification.Failure!);
     method public int describeContents();
     method public void writeToParcel(android.os.Parcel!, int);
@@ -336,8 +336,8 @@ package androidx.test.services.events {
   }
 
   public final class FailureInfo implements android.os.Parcelable {
-    ctor public FailureInfo(String?, String?, String, androidx.test.services.events.TestCaseInfo);
     ctor public FailureInfo(android.os.Parcel);
+    ctor public FailureInfo(String?, String?, String, androidx.test.services.events.TestCaseInfo);
     method public int describeContents();
     method public void writeToParcel(android.os.Parcel!, int);
     field public static final android.os.Parcelable.Creator<androidx.test.services.events.FailureInfo!>! CREATOR;
@@ -376,8 +376,8 @@ package androidx.test.services.events {
   }
 
   public final class TestRunInfo implements android.os.Parcelable {
-    ctor public TestRunInfo(String, java.util.List<androidx.test.services.events.TestCaseInfo!>);
     ctor public TestRunInfo(android.os.Parcel);
+    ctor public TestRunInfo(String, java.util.List<androidx.test.services.events.TestCaseInfo!>);
     method public int describeContents();
     method public void writeToParcel(android.os.Parcel!, int);
     field public static final android.os.Parcelable.Creator<androidx.test.services.events.TestRunInfo!>! CREATOR;
@@ -386,8 +386,8 @@ package androidx.test.services.events {
   }
 
   public final class TestStatus implements android.os.Parcelable {
-    ctor public TestStatus(androidx.test.services.events.TestStatus.Status);
     ctor public TestStatus(android.os.Parcel);
+    ctor public TestStatus(androidx.test.services.events.TestStatus.Status);
     method public int describeContents();
     method public void writeToParcel(android.os.Parcel!, int);
     field public static final android.os.Parcelable.Creator<androidx.test.services.events.TestStatus!>! CREATOR;
@@ -404,8 +404,8 @@ package androidx.test.services.events {
   }
 
   public final class TimeStamp implements android.os.Parcelable {
-    ctor public TimeStamp(Long, Integer);
     ctor public TimeStamp(android.os.Parcel);
+    ctor public TimeStamp(Long, Integer);
     method public int describeContents();
     method public static androidx.test.services.events.TimeStamp! now();
     method public void writeToParcel(android.os.Parcel!, int);
@@ -488,8 +488,8 @@ package androidx.test.services.events.platform {
   }
 
   public final class TestCaseStartedEvent extends androidx.test.services.events.platform.TestPlatformEvent {
-    ctor public TestCaseStartedEvent(androidx.test.services.events.TestCaseInfo, androidx.test.services.events.TimeStamp);
     ctor public TestCaseStartedEvent(android.os.Parcel!);
+    ctor public TestCaseStartedEvent(androidx.test.services.events.TestCaseInfo, androidx.test.services.events.TimeStamp);
     method public androidx.test.services.events.platform.TestPlatformEvent.EventType! instanceType();
     field public final androidx.test.services.events.TestCaseInfo testCase;
     field public final androidx.test.services.events.TimeStamp timeStamp;
@@ -531,8 +531,8 @@ package androidx.test.services.events.platform {
   }
 
   public class TestRunStartedEvent extends androidx.test.services.events.platform.TestPlatformEvent {
-    ctor public TestRunStartedEvent(androidx.test.services.events.TestRunInfo, androidx.test.services.events.TimeStamp);
     ctor public TestRunStartedEvent(android.os.Parcel!);
+    ctor public TestRunStartedEvent(androidx.test.services.events.TestRunInfo, androidx.test.services.events.TimeStamp);
     field public final androidx.test.services.events.TestRunInfo! testRun;
     field public final androidx.test.services.events.TimeStamp! timeStamp;
   }

@@ -15,8 +15,6 @@
  */
 package androidx.test.internal.runner;
 
-import static androidx.test.platform.app.InstrumentationRegistry.getArguments;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
 
@@ -179,7 +177,7 @@ public class SdkSuppressTest {
   }
 
   private static TestRequestBuilder createBuilder(DeviceBuild deviceBuild) {
-    return new TestRequestBuilder(deviceBuild, getInstrumentation(), getArguments());
+    return new TestRequestBuilder(deviceBuild);
   }
 
   /** Test that {@link SdkSuppress} filters tests as appropriate */

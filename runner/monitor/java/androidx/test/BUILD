@@ -43,7 +43,7 @@ kt_android_library(
         ":errorprone_neverlink",
         ":runtime_hidden_apis",
         "//annotation",
-        "@maven//:androidx_annotation_annotation_jvm",
+        "//opensource/androidx:annotation",
         "@maven//:androidx_tracing_tracing",
     ],
 )
@@ -62,7 +62,7 @@ android_library(
     srcs = [
         "internal/runner/runtime/ExposedInstrumentationApi.java",
     ],
-    deps = ["@maven//:androidx_annotation_annotation_jvm"],
+    deps = ["//opensource/androidx:annotation"],
 )
 
 android_library(
@@ -72,7 +72,7 @@ android_library(
     ],
     neverlink = 1,
     deps = [
-        "@maven//:androidx_annotation_annotation_jvm",
+        "//opensource/androidx:annotation",
     ],
 )
 
@@ -92,7 +92,7 @@ android_library(
     ],
     deps = [
         ":monitor",
-        "@maven//:androidx_annotation_annotation_jvm",
+        "//opensource/androidx:annotation",
     ],
 )
 

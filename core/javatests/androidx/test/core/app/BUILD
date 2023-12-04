@@ -1,9 +1,9 @@
 # Description: Tests for androidx.test.core
 
-load("@build_bazel_rules_android//android:rules.bzl", "android_binary")
+load("//build_extensions:android_library_test.bzl", "axt_android_library_test")
 load("//build_extensions:axt_android_application_test.bzl", "axt_android_application_test")
 load("//build_extensions:axt_android_local_test.bzl", "axt_android_local_test")
-load("//build_extensions:android_library_test.bzl", "axt_android_library_test")
+load("@build_bazel_rules_android//android:rules.bzl", "android_binary")
 load("//build_extensions:phone_devices.bzl", "devices")
 
 package(
@@ -31,9 +31,6 @@ axt_android_application_test(
     srcs = ["ActivityScenarioTest.java"],
     args = [
         "--instrumentation_options=waitForActivitiesToComplete=false",
-        # turn off video recording. Video recording won't work anyway on the upcoming slim device with skipDrawing enabled,
-        # and turning off video recording saves significant runtime and flakiness
-        "--record_test_video=NEVER",
     ],
     instruments = ":ActivityScenarioTest_target",
     manifest = "AndroidManifest_test.xml",

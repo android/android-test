@@ -20,8 +20,8 @@ android_library(
     manifest = "AndroidManifest.xml",
     visibility = [":internal"],
     deps = [
+        "//opensource/androidx:annotation",
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:com_google_errorprone_error_prone_annotations",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",

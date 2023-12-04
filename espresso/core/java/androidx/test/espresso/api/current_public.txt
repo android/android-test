@@ -45,8 +45,8 @@ package androidx.test.espresso {
     method public static void closeSoftKeyboard();
     method @Deprecated public static java.util.List<androidx.test.espresso.IdlingResource!>! getIdlingResources();
     method @CheckResult @javax.annotation.CheckReturnValue public static androidx.test.espresso.DataInteraction! onData(org.hamcrest.Matcher<?>!);
-    method public static <T> T! onIdle(java.util.concurrent.Callable<T!>!);
     method public static void onIdle();
+    method public static <T> T! onIdle(java.util.concurrent.Callable<T!>!);
     method @CheckResult @javax.annotation.CheckReturnValue public static androidx.test.espresso.ViewInteraction! onView(org.hamcrest.Matcher<android.view.View!>!);
     method public static void openActionBarOverflowOrOptionsMenu(android.content.Context!);
     method public static void openContextualActionModeOverflowMenu();
@@ -93,8 +93,8 @@ package androidx.test.espresso {
 
   public final class InjectEventSecurityException extends androidx.test.platform.ui.InjectEventSecurityException implements androidx.test.espresso.EspressoException {
     ctor public InjectEventSecurityException(String!);
-    ctor public InjectEventSecurityException(Throwable!);
     ctor public InjectEventSecurityException(String!, Throwable!);
+    ctor public InjectEventSecurityException(Throwable!);
   }
 
   public final class NoActivityResumedException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
@@ -266,8 +266,8 @@ package androidx.test.espresso.action {
 
   public final class GeneralClickAction implements androidx.test.espresso.ViewAction {
     ctor @Deprecated public GeneralClickAction(androidx.test.espresso.action.Tapper!, androidx.test.espresso.action.CoordinatesProvider!, androidx.test.espresso.action.PrecisionDescriber!);
-    ctor public GeneralClickAction(androidx.test.espresso.action.Tapper!, androidx.test.espresso.action.CoordinatesProvider!, androidx.test.espresso.action.PrecisionDescriber!, int, int);
     ctor @Deprecated public GeneralClickAction(androidx.test.espresso.action.Tapper!, androidx.test.espresso.action.CoordinatesProvider!, androidx.test.espresso.action.PrecisionDescriber!, androidx.test.espresso.ViewAction!);
+    ctor public GeneralClickAction(androidx.test.espresso.action.Tapper!, androidx.test.espresso.action.CoordinatesProvider!, androidx.test.espresso.action.PrecisionDescriber!, int, int);
     ctor public GeneralClickAction(androidx.test.espresso.action.Tapper!, androidx.test.espresso.action.CoordinatesProvider!, androidx.test.espresso.action.PrecisionDescriber!, int, int, androidx.test.espresso.ViewAction!);
     method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
     method public String! getDescription();
@@ -306,8 +306,8 @@ package androidx.test.espresso.action {
   }
 
   public final class MotionEvents {
-    method public static android.view.MotionEvent! obtainDownEvent(float[]!, float[]!, int, int);
     method public static android.view.MotionEvent! obtainDownEvent(float[]!, float[]!);
+    method public static android.view.MotionEvent! obtainDownEvent(float[]!, float[]!, int, int);
     method public static android.view.MotionEvent obtainMovement(android.view.MotionEvent, float[]);
     method public static android.view.MotionEvent obtainMovement(android.view.MotionEvent, long, float[]);
     method @Deprecated public static android.view.MotionEvent! obtainMovement(long, float[]!);
@@ -371,6 +371,7 @@ package androidx.test.espresso.action {
 
   public final class ScrollToAction implements androidx.test.espresso.ViewAction {
     ctor public ScrollToAction();
+    ctor public ScrollToAction(int);
     method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
     method public String! getDescription();
     method public void perform(androidx.test.espresso.UiController!, android.view.View!);
@@ -397,8 +398,8 @@ package androidx.test.espresso.action {
   }
 
   public interface Tapper {
-    method public androidx.test.espresso.action.Tapper.Status! sendTap(androidx.test.espresso.UiController!, float[]!, float[]!, int, int);
     method @Deprecated public androidx.test.espresso.action.Tapper.Status! sendTap(androidx.test.espresso.UiController!, float[]!, float[]!);
+    method public androidx.test.espresso.action.Tapper.Status! sendTap(androidx.test.espresso.UiController!, float[]!, float[]!, int, int);
   }
 
   public enum Tapper.Status {
@@ -421,9 +422,9 @@ package androidx.test.espresso.action {
     method public static void addGlobalAssertion(String!, androidx.test.espresso.ViewAssertion!);
     method public static void clearGlobalAssertions();
     method public static androidx.test.espresso.ViewAction! clearText();
-    method public static androidx.test.espresso.ViewAction! click(int, int);
     method public static androidx.test.espresso.ViewAction! click();
     method public static androidx.test.espresso.ViewAction! click(androidx.test.espresso.ViewAction!);
+    method public static androidx.test.espresso.ViewAction! click(int, int);
     method public static androidx.test.espresso.ViewAction! closeSoftKeyboard();
     method public static androidx.test.espresso.ViewAction! doubleClick();
     method public static androidx.test.espresso.ViewAction! longClick();
@@ -435,13 +436,15 @@ package androidx.test.espresso.action {
     method public static androidx.test.espresso.ViewAction! pressBack();
     method public static androidx.test.espresso.ViewAction! pressBackUnconditionally();
     method public static androidx.test.espresso.ViewAction! pressImeActionButton();
-    method public static androidx.test.espresso.ViewAction! pressKey(int);
     method public static androidx.test.espresso.ViewAction! pressKey(androidx.test.espresso.action.EspressoKey!);
+    method public static androidx.test.espresso.ViewAction! pressKey(int);
     method public static androidx.test.espresso.ViewAction! pressMenuKey();
     method public static void removeGlobalAssertion(androidx.test.espresso.ViewAssertion!);
     method public static androidx.test.espresso.ViewAction! repeatedlyUntil(androidx.test.espresso.ViewAction!, org.hamcrest.Matcher<android.view.View!>!, int);
     method public static androidx.test.espresso.ViewAction! replaceText(String);
+    method public static androidx.test.espresso.ViewAction! scrollCompletelyTo();
     method public static androidx.test.espresso.ViewAction! scrollTo();
+    method public static androidx.test.espresso.ViewAction! scrollTo(int);
     method public static androidx.test.espresso.ViewAction! slowSwipeLeft();
     method public static androidx.test.espresso.ViewAction! swipeDown();
     method public static androidx.test.espresso.ViewAction! swipeLeft();
@@ -458,8 +461,8 @@ package androidx.test.espresso.assertion {
   public final class LayoutAssertions {
     method public static androidx.test.espresso.ViewAssertion! noEllipsizedText();
     method public static androidx.test.espresso.ViewAssertion! noMultilineButtons();
-    method public static androidx.test.espresso.ViewAssertion! noOverlaps(org.hamcrest.Matcher<android.view.View!>!);
     method public static androidx.test.espresso.ViewAssertion! noOverlaps();
+    method public static androidx.test.espresso.ViewAssertion! noOverlaps(org.hamcrest.Matcher<android.view.View!>!);
   }
 
   public final class PositionAssertions {
@@ -612,10 +615,10 @@ package androidx.test.espresso.matcher {
     method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowLong(String!, long);
     method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowLong(String!, org.hamcrest.Matcher<java.lang.Long!>!);
     method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowLong(org.hamcrest.Matcher<java.lang.String!>!, org.hamcrest.Matcher<java.lang.Long!>!);
-    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowShort(int, short);
     method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowShort(int, org.hamcrest.Matcher<java.lang.Short!>!);
-    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowShort(String!, short);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowShort(int, short);
     method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowShort(String!, org.hamcrest.Matcher<java.lang.Short!>!);
+    method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowShort(String!, short);
     method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowShort(org.hamcrest.Matcher<java.lang.String!>!, org.hamcrest.Matcher<java.lang.Short!>!);
     method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowString(int, String!);
     method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowString(int, org.hamcrest.Matcher<java.lang.String!>!);
@@ -665,15 +668,15 @@ package androidx.test.espresso.matcher {
   }
 
   public final class ViewMatchers {
-    method public static <T> void assertThat(T!, org.hamcrest.Matcher<T!>!);
     method public static <T> void assertThat(String!, T!, org.hamcrest.Matcher<T!>!);
+    method public static <T> void assertThat(T!, org.hamcrest.Matcher<T!>!);
     method public static org.hamcrest.Matcher<android.view.View!>! doesNotHaveFocus();
     method public static org.hamcrest.Matcher<android.view.View!>! hasBackground(int);
     method public static org.hamcrest.Matcher<android.view.View!>! hasChildCount(int);
     method public static org.hamcrest.Matcher<android.view.View!>! hasContentDescription();
     method public static org.hamcrest.Matcher<android.view.View!>! hasDescendant(org.hamcrest.Matcher<android.view.View!>!);
-    method public static org.hamcrest.Matcher<android.view.View!>! hasErrorText(org.hamcrest.Matcher<java.lang.String!>!);
     method public static org.hamcrest.Matcher<android.view.View!>! hasErrorText(String!);
+    method public static org.hamcrest.Matcher<android.view.View!>! hasErrorText(org.hamcrest.Matcher<java.lang.String!>!);
     method public static org.hamcrest.Matcher<android.view.View!>! hasFocus();
     method public static org.hamcrest.Matcher<android.view.View!>! hasImeAction(int);
     method public static org.hamcrest.Matcher<android.view.View!>! hasImeAction(org.hamcrest.Matcher<java.lang.Integer!>!);
@@ -710,9 +713,9 @@ package androidx.test.espresso.matcher {
     method public static org.hamcrest.Matcher<android.view.View!>! withContentDescription(String!);
     method public static org.hamcrest.Matcher<android.view.View!>! withContentDescription(org.hamcrest.Matcher<? extends java.lang.CharSequence>!);
     method public static org.hamcrest.Matcher<android.view.View!>! withEffectiveVisibility(androidx.test.espresso.matcher.ViewMatchers.Visibility!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withHint(int);
     method public static org.hamcrest.Matcher<android.view.View!>! withHint(String!);
     method public static org.hamcrest.Matcher<android.view.View!>! withHint(org.hamcrest.Matcher<java.lang.String!>!);
-    method public static org.hamcrest.Matcher<android.view.View!>! withHint(int);
     method public static org.hamcrest.Matcher<android.view.View!>! withId(int);
     method public static org.hamcrest.Matcher<android.view.View!>! withId(org.hamcrest.Matcher<java.lang.Integer!>!);
     method public static org.hamcrest.Matcher<android.view.View!>! withInputType(int);
@@ -721,15 +724,15 @@ package androidx.test.espresso.matcher {
     method public static org.hamcrest.Matcher<android.view.View!>! withResourceName(String!);
     method public static org.hamcrest.Matcher<android.view.View!>! withResourceName(org.hamcrest.Matcher<java.lang.String!>!);
     method public static org.hamcrest.Matcher<android.view.View!>! withSpinnerText(int);
-    method public static org.hamcrest.Matcher<android.view.View!>! withSpinnerText(org.hamcrest.Matcher<java.lang.String!>!);
     method public static org.hamcrest.Matcher<android.view.View!>! withSpinnerText(String!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withSpinnerText(org.hamcrest.Matcher<java.lang.String!>!);
     method public static org.hamcrest.Matcher<android.view.View!>! withSubstring(String!);
     method public static org.hamcrest.Matcher<android.view.View!>! withTagKey(int);
     method public static org.hamcrest.Matcher<android.view.View!>! withTagKey(int, org.hamcrest.Matcher<?>!);
     method public static org.hamcrest.Matcher<android.view.View!>! withTagValue(org.hamcrest.Matcher<java.lang.Object!>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withText(int);
     method public static org.hamcrest.Matcher<android.view.View!>! withText(String!);
     method public static org.hamcrest.Matcher<android.view.View!>! withText(org.hamcrest.Matcher<java.lang.String!>!);
-    method public static org.hamcrest.Matcher<android.view.View!>! withText(int);
   }
 
   public enum ViewMatchers.Visibility {

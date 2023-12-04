@@ -93,7 +93,6 @@ public final class IdlingPolicies {
    * This method overrides Espresso's default behaviour of disabling timeouts when a step debugger
    * is attached to the VM. Setting the timeout flag reenables the behaviour of throwing a timeout
    * exception.
-   *
    */
   public static void setMasterPolicyTimeoutWhenDebuggerAttached(
       boolean timeoutWhenDebuggerAttached) {
@@ -102,7 +101,6 @@ public final class IdlingPolicies {
             .withTimeoutIfDebuggerAttached(timeoutWhenDebuggerAttached)
             .build();
   }
-
 
   public static IdlingPolicy getMasterIdlingPolicy() {
     return masterIdlingPolicy;

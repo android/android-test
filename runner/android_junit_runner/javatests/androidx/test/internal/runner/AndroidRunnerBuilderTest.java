@@ -18,26 +18,21 @@ package androidx.test.internal.runner;
 
 import static org.hamcrest.Matchers.typeCompatibleWith;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import androidx.test.internal.runner.junit3.JUnit38ClassRunner;
-import androidx.test.internal.util.AndroidRunnerParams;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class AndroidRunnerBuilderTest {
-
-  @Mock public AndroidRunnerParams mockAndroidRunnerParams;
 
   private AndroidRunnerBuilder androidRunnerBuilder;
 
@@ -59,21 +54,11 @@ public class AndroidRunnerBuilderTest {
   @Before
   public void initMocks() {
     MockitoAnnotations.initMocks(this);
-    androidRunnerBuilder = new AndroidRunnerBuilder(mockAndroidRunnerParams);
+    androidRunnerBuilder = new AndroidRunnerBuilder(false);
   }
 
   @Test
   public void jUnit3SuitePicksJUnit38ClassRunner() throws Throwable {
-    Runner runner = androidRunnerBuilder.runnerForClass(JUnit3Suite.class);
-    assertThat(runner.getClass(), typeCompatibleWith(JUnit38ClassRunner.class));
-  }
-
-  @Test
-  public void jUnit3Suite_skippedExecutionTrue_jUnit3SuitePicksJUnit38ClassRunner()
-      throws Throwable {
-    // mock skip execution flag to return true
-    when(mockAndroidRunnerParams.isSkipExecution()).thenReturn(true);
-
     Runner runner = androidRunnerBuilder.runnerForClass(JUnit3Suite.class);
     assertThat(runner.getClass(), typeCompatibleWith(JUnit38ClassRunner.class));
   }

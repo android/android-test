@@ -26,9 +26,9 @@ android_library(
         "//espresso/remote/java/androidx/test/espresso/proto/action:ui_interaction_view_actions_android_pb3",
         "//espresso/remote/java/androidx/test/espresso/remote:protoUtils",
         "//espresso/remote/java/androidx/test/espresso/remote:registry",
+        "//opensource/androidx:annotation",
         "//runner/monitor",
         "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:androidx_annotation_annotation_jvm",
         "@maven//:org_hamcrest_hamcrest_core",
     ],
 )

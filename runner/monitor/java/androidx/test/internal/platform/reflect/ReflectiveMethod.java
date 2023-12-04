@@ -15,6 +15,7 @@
  */
 package androidx.test.internal.platform.reflect;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
 import java.lang.reflect.InvocationTargetException;
@@ -32,6 +33,7 @@ public class ReflectiveMethod<T> {
   private final String className;
   private final String methodName;
   private final Class<?>[] paramTypes;
+  private final Class<?> clazz;
 
   // lazy init
   private boolean initialized = false;
@@ -46,6 +48,14 @@ public class ReflectiveMethod<T> {
    */
   public ReflectiveMethod(String className, String methodName, Class<?>... paramTypes) {
     this.className = className;
+    this.clazz = null;
+    this.paramTypes = paramTypes;
+    this.methodName = methodName;
+  }
+
+  public ReflectiveMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) {
+    this.className = null;
+    this.clazz = clazz;
     this.paramTypes = paramTypes;
     this.methodName = methodName;
   }
@@ -92,8 +102,17 @@ public class ReflectiveMethod<T> {
     if (initialized) {
       return;
     }
-    method = Class.forName(className).getDeclaredMethod(methodName, paramTypes);
+    method = getClazz().getDeclaredMethod(methodName, paramTypes);
     method.setAccessible(true);
     initialized = true;
+  }
+
+  @NonNull
+  private Class<?> getClazz() throws ClassNotFoundException {
+    if (clazz == null) {
+      return Class.forName(className);
+    } else {
+      return clazz;
+    }
   }
 }

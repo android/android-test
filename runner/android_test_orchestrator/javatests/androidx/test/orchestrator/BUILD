@@ -1,17 +1,17 @@
 # Description: Odo tests.
 
 load(
-    "//build_extensions:phone_devices.bzl",
-    "apis",
-    "devices",
-)
-load(
     "//build_extensions:android_library_test.bzl",
     "axt_android_library_test",
 )
 load(
     "//build_extensions:axt_android_local_test.bzl",
     "axt_android_local_test",
+)
+load(
+    "//build_extensions:phone_devices.bzl",
+    "apis",
+    "devices",
 )
 
 package(default_applicable_licenses = ["//:license"])
@@ -71,6 +71,8 @@ axt_android_library_test(
     srcs = ["RuntimePermissionsIntegrationTest.java"],
     args = [
         "--grant_runtime_permissions=false",
+        "--install_test_services",
+        "--experimental_test_driver=LOCAL_TEST_DRIVER_ORCHESTRATOR_V1",
     ],
     custom_package = "androidx.test.orchestrator.tests",
     device_list = devices(

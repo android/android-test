@@ -1747,7 +1747,6 @@ public final class ViewMatchers {
     };
   }
 
-
   @VisibleForTesting
   static final class WithAlphaMatcher extends TypeSafeDiagnosingMatcher<View> {
     @RemoteMsgField(order = 0)

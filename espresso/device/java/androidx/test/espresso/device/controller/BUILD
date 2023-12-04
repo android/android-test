@@ -21,7 +21,7 @@ kt_android_library(
     deps = [
         "//annotation/java/androidx/test/annotation",
         "//espresso/core/java/androidx/test/espresso:interface",
-        "@maven//:androidx_annotation_annotation_jvm",
+        "//opensource/androidx:annotation",
     ],
 )
 
@@ -34,7 +34,7 @@ kt_android_library(
     deps = [
         "//espresso/device/java/androidx/test/espresso/device/common",
         "//espresso/device/java/androidx/test/espresso/device/controller",
+        "//opensource/androidx:annotation",
         "//runner/monitor",
-        "@maven//:androidx_annotation_annotation_jvm",
     ],
 )

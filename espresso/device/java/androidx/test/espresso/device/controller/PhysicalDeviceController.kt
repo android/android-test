@@ -19,10 +19,16 @@ package androidx.test.espresso.device.controller
 import android.os.Handler
 import android.os.HandlerThread
 import android.provider.Settings.System
+import android.util.Log
 import android.view.Surface
 import androidx.annotation.RestrictTo
+import androidx.test.espresso.device.common.AccelerometerRotation
 import androidx.test.espresso.device.common.SettingsObserver
 import androidx.test.espresso.device.common.executeShellCommand
+import androidx.test.espresso.device.common.getAccelerometerRotationSetting
+import androidx.test.espresso.device.common.getDeviceApiLevel
+import androidx.test.espresso.device.common.getMapOfDeviceStateNamesToIdentifiers
+import androidx.test.espresso.device.common.setAccelerometerRotationSetting
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.device.DeviceController
 import androidx.test.platform.device.UnsupportedDeviceOperationException
@@ -37,12 +43,55 @@ import java.util.concurrent.TimeUnit
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 class PhysicalDeviceController() : DeviceController {
   override fun setDeviceMode(deviceMode: Int) {
-    throw UnsupportedDeviceOperationException(
-      "Setting a device mode is not supported on physical devices."
-    )
+    val deviceIdentifiersMap = getMapOfDeviceStateNamesToIdentifiers()
+    if (deviceMode == DeviceMode.FLAT.getMode()) {
+      if (deviceIdentifiersMap.containsKey("OPENED")) {
+        setDeviceState(deviceIdentifiersMap.get("OPENED")!!)
+      } else {
+        throw UnsupportedDeviceOperationException("Flat mode is not supported on this device.")
+      }
+    } else if (
+      deviceMode == DeviceMode.TABLETOP.getMode() || deviceMode == DeviceMode.BOOK.getMode()
+    ) {
+      if (deviceIdentifiersMap.containsKey("HALF_OPENED")) {
+        setDeviceState(deviceIdentifiersMap.get("HALF_OPENED")!!)
+      } else {
+        val deviceModeString =
+          if (deviceMode == DeviceMode.TABLETOP.getMode()) "Tabletop" else "Book"
+        throw UnsupportedDeviceOperationException(
+          "${deviceModeString} mode is not supported on this device."
+        )
+      }
+    } else if (deviceMode == DeviceMode.CLOSED.getMode()) {
+      if (deviceIdentifiersMap.containsKey("CLOSED")) {
+        setDeviceState(deviceIdentifiersMap.get("CLOSED")!!)
+      } else {
+        throw UnsupportedDeviceOperationException("Closed mode is not supported on this device.")
+      }
+    } else {
+      throw UnsupportedDeviceOperationException("The requested device mode is not supported.")
+    }
   }
 
   override fun setScreenOrientation(screenOrientation: Int) {
+    // Executing shell commands requires API 21+
+    if (getDeviceApiLevel() < 21) {
+      throw UnsupportedDeviceOperationException(
+        "Setting screen orientation is not suported on physical devices with APIs below 21."
+      )
+    }
+
+    // TODO(b/296910911) Support setting screen orientation on folded devices
+    val supportedDeviceStates = getMapOfDeviceStateNamesToIdentifiers()
+    if (supportedDeviceStates.isNotEmpty()) {
+      val currentDeviceStateIdentifier = executeShellCommand("cmd device_state print-state").trim()
+      if (currentDeviceStateIdentifier != getMapOfDeviceStateNamesToIdentifiers().get("OPENED")) {
+        throw UnsupportedDeviceOperationException(
+          "Setting screen orientation is not suported on physical foldable devices that are not in flat mode."
+        )
+      }
+    }
+
     // System user_rotation values must be one of the Surface rotation constants and these values
     // can indicate different orientations on different devices, since we check if the device is
     // already in correct orientation in ScreenOrientationAction, set user_rotation to its opposite
@@ -57,6 +106,13 @@ class PhysicalDeviceController() : DeviceController {
       } else {
         Surface.ROTATION_0
       }
+
+    // Setting screen orientation with the USER_ROTATION setting requires ACCELEROMETER_ROTATION to
+    // be disabled
+    if (getAccelerometerRotationSetting() != AccelerometerRotation.DISABLED) {
+      Log.d(TAG, "Disabling auto-rotate.")
+      setAccelerometerRotationSetting(AccelerometerRotation.DISABLED)
+    }
 
     val settingsLatch: CountDownLatch = CountDownLatch(1)
     val thread: HandlerThread = HandlerThread("Observer_Thread")
@@ -78,5 +134,13 @@ class PhysicalDeviceController() : DeviceController {
         "Device could not be set to the requested screen orientation."
       )
     }
+  }
+
+  private fun setDeviceState(deviceIdentifier: String) {
+    executeShellCommand("cmd device_state state ${deviceIdentifier}")
+  }
+
+  companion object {
+    private val TAG = PhysicalDeviceController::class.java.simpleName
   }
 }
