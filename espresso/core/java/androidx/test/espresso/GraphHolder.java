@@ -19,7 +19,6 @@ package androidx.test.espresso;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.util.Log;
-import androidx.test.espresso.base.ActiveRootLister;
 import androidx.test.platform.io.PlatformTestStorage;
 import java.io.Serializable;
 import java.util.HashMap;

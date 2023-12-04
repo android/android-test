@@ -67,7 +67,6 @@ package androidx.test.espresso {
   }
 
   public final class GraphHolder {
-    method public static androidx.test.espresso.base.ActiveRootLister! activeRootLister();
   }
 
   public final class IdlingPolicies {
