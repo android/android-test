@@ -3,7 +3,7 @@
 package(default_visibility = ["//visibility:public"])
 
 load(
-    "//build_extensions:axt_versions.bzl",
+    "//build_extensions:axt_deps_versions.bzl",
     "ANDROIDX_ANNOTATION_VERSION",
 )
 

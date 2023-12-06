@@ -7,7 +7,7 @@ RULES_JVM_EXTERNAL_TAG = "4.5"
 
 RULES_JVM_EXTERNAL_SHA = "b17d7388feb9bfa7f2fa09031b32707df529f26c91ab9e5d909eb1676badd9a6"
 
-# These need needs to be consistent with their counterparts in build_extensions/axt_versions.bzl.
+# These need needs to be consistent with their counterparts in build_extensions/axt_deps_versions.bzl.
 KOTLIN_VERSION = "1.8.20"
 KOTLINX_COROUTINES_VERSION = "1.7.1" 
 GRPC_VERSION = "1.54.1"
@@ -40,7 +40,7 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 load("@rules_jvm_external//:specs.bzl", "maven")
 load(
-    "//build_extensions:axt_versions.bzl",
+    "//build_extensions:axt_deps_versions.bzl",
     "ANDROIDX_ANNOTATION_EXPERIMENTAL_VERSION",
     "ANDROIDX_ANNOTATION_VERSION",
     "ANDROIDX_COMPAT_VERSION",
