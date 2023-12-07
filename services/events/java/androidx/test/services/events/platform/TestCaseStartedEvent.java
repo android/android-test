@@ -20,6 +20,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.os.Parcel;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.test.services.events.TestCaseInfo;
 import androidx.test.services.events.TimeStamp;
 
@@ -38,7 +39,9 @@ import androidx.test.services.events.TimeStamp;
  *
  * @see TestCaseFinishedEvent to indicate the end of a test case
  * @see TestCaseErrorEvent for reporting various errors encountered during a test run.
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class TestCaseStartedEvent extends TestPlatformEvent {
   /** The test case that started. */
   @NonNull public final TestCaseInfo testCase;

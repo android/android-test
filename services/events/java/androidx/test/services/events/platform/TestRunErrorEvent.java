@@ -20,6 +20,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.os.Parcel;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.test.services.events.ErrorInfo;
 import androidx.test.services.events.TestRunInfo;
 import androidx.test.services.events.TimeStamp;
@@ -31,7 +32,9 @@ import androidx.test.services.events.TimeStamp;
  *
  * @see TestCaseErrorEvent for an event regarding errors for a specific test.
  * @see TestRunFinishedEvent to mark the test run as finished.
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestRunErrorEvent extends TestPlatformEvent {
   /* The test run this error is attributed to */
   @NonNull public final TestRunInfo testRun;

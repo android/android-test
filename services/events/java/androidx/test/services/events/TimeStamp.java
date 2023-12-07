@@ -25,12 +25,16 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import java.time.Clock;
 import java.time.Instant;
 
 /**
  * Denotes an android test error. Has details of the error including stack trace, type, and message.
+ *
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class TimeStamp implements Parcelable {
 
   /** Represents sends of UTC time since the Unix epoch. */

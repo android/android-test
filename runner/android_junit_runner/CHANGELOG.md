@@ -12,6 +12,7 @@
 **Breaking Changes**
 
 **API Changes**
+* Mark androidx.test.services.** as RestrictTo LIBRARY_GROUP
 
 **Breaking API Changes**
 

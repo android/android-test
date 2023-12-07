@@ -18,8 +18,14 @@ package androidx.test.services.events.discovery;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import androidx.annotation.RestrictTo;
 
-/** Base class for different test discovery events to implement. */
+/**
+ * Base class for different test discovery events to implement.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public abstract class TestDiscoveryEvent implements Parcelable {
   TestDiscoveryEvent() {}
 

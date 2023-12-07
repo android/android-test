@@ -18,8 +18,14 @@ package androidx.test.services.events.platform;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import androidx.annotation.RestrictTo;
 
-/** Base class for all other {@code TestPlatformEvents} to extend. */
+/**
+ * Base class for all other {@code TestPlatformEvents} to extend.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public abstract class TestPlatformEvent implements Parcelable {
   /** Creates a {@link TestPlatformEvent}. */
   TestPlatformEvent() {}

@@ -21,6 +21,7 @@ import static java.util.Collections.emptyList;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 import androidx.test.services.events.internal.StackTrimmer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -34,7 +35,10 @@ import org.junit.runner.notification.Failure;
 /**
  * Utility to convert JUnit {@link Description} and related test data classes to parcelables for
  * sending to a remote service.
+ *
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class ParcelableConverter {
 
   private static final String TAG = "ParcelableConverter";

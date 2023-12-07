@@ -20,13 +20,17 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.os.Parcel;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.test.services.events.FailureInfo;
 import androidx.test.services.events.TestCaseInfo;
 
 /**
  * Denotes that the test ended with a TEST_FAILURE. It has the {@link FailureInfo} object to denote
  * what was the cause of the failure/error.
+ *
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestFailureEvent extends TestRunEventWithTestCase {
   @NonNull public final FailureInfo failure;
 

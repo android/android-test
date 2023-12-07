@@ -18,12 +18,16 @@ package androidx.test.services.events.run;
 
 import android.os.Parcel;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.test.services.events.TestCaseInfo;
 
 /**
  * Denotes that the test ended with a TEST_IGNORED. It has the {@link TestCaseInfo} object to denote
  * which case this event is associated to.
+ *
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestIgnoredEvent extends TestRunEventWithTestCase {
   /**
    * Constructor to create {@link TestFinishedEvent}.

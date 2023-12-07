@@ -21,6 +21,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,10 @@ import java.util.List;
  *
  * <p>See <a href="https://developer.android.com/reference/android/os/Parcelable.html">Android
  * Parcelable</a>.
+ *
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class AnnotationInfo implements Parcelable {
   /** Name of the annotation. For example: {@code com.java.Foo}. */
   @NonNull public final String name;

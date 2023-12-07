@@ -1,1 +1,259 @@
 // Signature format: 3.0
+package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @RestrictTo({androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP}) androidx.test.services.events {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class AnnotationInfo implements android.os.Parcelable {
+    ctor public AnnotationInfo(String, java.util.List<androidx.test.services.events.AnnotationValue!>);
+    method public int describeContents();
+    method public void writeToParcel(android.os.Parcel!, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.services.events.AnnotationInfo!>! CREATOR;
+    field public final String name;
+    field public final java.util.List<androidx.test.services.events.AnnotationValue!> values;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class AnnotationValue implements android.os.Parcelable {
+    ctor public AnnotationValue(String, java.util.List<java.lang.String!>, String);
+    method public int describeContents();
+    method public void writeToParcel(android.os.Parcel!, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.services.events.AnnotationValue!>! CREATOR;
+    field public final String fieldName;
+    field public final java.util.List<java.lang.String!> fieldValues;
+    field public final String valueType;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class ErrorInfo implements android.os.Parcelable {
+    ctor public ErrorInfo(android.os.Parcel);
+    ctor public ErrorInfo(String?, String?, String);
+    method public static androidx.test.services.events.ErrorInfo! createFromFailure(org.junit.runner.notification.Failure!);
+    method public int describeContents();
+    method public void writeToParcel(android.os.Parcel!, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.services.events.ErrorInfo!>! CREATOR;
+    field public final String? errorMessage;
+    field public final String? errorType;
+    field public final String stackTrace;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class FailureInfo implements android.os.Parcelable {
+    ctor public FailureInfo(android.os.Parcel);
+    ctor public FailureInfo(String?, String?, String, androidx.test.services.events.TestCaseInfo);
+    method public int describeContents();
+    method public void writeToParcel(android.os.Parcel!, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.services.events.FailureInfo!>! CREATOR;
+    field public final String? failureMessage;
+    field public final String? failureType;
+    field public final String stackTrace;
+    field public final androidx.test.services.events.TestCaseInfo testCase;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class ParcelableConverter {
+    method public static androidx.test.services.events.AnnotationInfo getAnnotation(java.lang.annotation.Annotation);
+    method public static java.util.List<androidx.test.services.events.AnnotationInfo!> getAnnotationsFromArray(java.lang.annotation.Annotation![]);
+    method public static java.util.List<androidx.test.services.events.AnnotationInfo!> getAnnotationsFromCollection(java.util.Collection<java.lang.annotation.Annotation!>);
+    method public static androidx.test.services.events.FailureInfo getFailure(org.junit.runner.notification.Failure) throws androidx.test.services.events.TestEventException;
+    method public static java.util.List<androidx.test.services.events.FailureInfo!> getFailuresFromList(java.util.List<org.junit.runner.notification.Failure!>) throws androidx.test.services.events.TestEventException;
+    method public static androidx.test.services.events.TestCaseInfo getTestCaseFromDescription(org.junit.runner.Description) throws androidx.test.services.events.TestEventException;
+    method public static boolean isValidJUnitDescription(org.junit.runner.Description);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class TestCaseInfo implements android.os.Parcelable {
+    ctor public TestCaseInfo(android.os.Parcel);
+    ctor public TestCaseInfo(String, String, java.util.List<androidx.test.services.events.AnnotationInfo!>, java.util.List<androidx.test.services.events.AnnotationInfo!>);
+    method public int describeContents();
+    method public String getClassAndMethodName();
+    method public void writeToParcel(android.os.Parcel!, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.services.events.TestCaseInfo!>! CREATOR;
+    field public final java.util.List<androidx.test.services.events.AnnotationInfo!> classAnnotations;
+    field public final String className;
+    field public final java.util.List<androidx.test.services.events.AnnotationInfo!> methodAnnotations;
+    field public final String methodName;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestEventException extends java.lang.Exception {
+    ctor public TestEventException(String);
+    ctor public TestEventException(String, Throwable);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class TestRunInfo implements android.os.Parcelable {
+    ctor public TestRunInfo(android.os.Parcel);
+    ctor public TestRunInfo(String, java.util.List<androidx.test.services.events.TestCaseInfo!>);
+    method public int describeContents();
+    method public void writeToParcel(android.os.Parcel!, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.services.events.TestRunInfo!>! CREATOR;
+    field public final java.util.List<androidx.test.services.events.TestCaseInfo!> testCases;
+    field public final String testRunName;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class TestStatus implements android.os.Parcelable {
+    ctor public TestStatus(android.os.Parcel);
+    ctor public TestStatus(androidx.test.services.events.TestStatus.Status);
+    method public int describeContents();
+    method public void writeToParcel(android.os.Parcel!, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.services.events.TestStatus!>! CREATOR;
+    field public androidx.test.services.events.TestStatus.Status status;
+  }
+
+  public enum TestStatus.Status {
+    enum_constant public static final androidx.test.services.events.TestStatus.Status ABORTED;
+    enum_constant public static final androidx.test.services.events.TestStatus.Status CANCELLED;
+    enum_constant public static final androidx.test.services.events.TestStatus.Status FAILED;
+    enum_constant public static final androidx.test.services.events.TestStatus.Status IGNORED;
+    enum_constant public static final androidx.test.services.events.TestStatus.Status PASSED;
+    enum_constant public static final androidx.test.services.events.TestStatus.Status SKIPPED;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class TimeStamp implements android.os.Parcelable {
+    ctor public TimeStamp(android.os.Parcel);
+    ctor public TimeStamp(Long, Integer);
+    method public int describeContents();
+    method public static androidx.test.services.events.TimeStamp! now();
+    method public void writeToParcel(android.os.Parcel!, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.services.events.TimeStamp!>! CREATOR;
+    field public final Integer nanos;
+    field public final Long seconds;
+  }
+
+}
+
+package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @RestrictTo({androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP}) androidx.test.services.events.discovery {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestDiscoveryErrorEvent extends androidx.test.services.events.discovery.TestDiscoveryEvent {
+    ctor public TestDiscoveryErrorEvent(androidx.test.services.events.ErrorInfo, androidx.test.services.events.TimeStamp);
+    field public final androidx.test.services.events.ErrorInfo error;
+    field public final androidx.test.services.events.TimeStamp timeStamp;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public abstract class TestDiscoveryEvent implements android.os.Parcelable {
+    method public int describeContents();
+    method public void writeToParcel(android.os.Parcel!, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.services.events.discovery.TestDiscoveryEvent!>! CREATOR;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestDiscoveryFinishedEvent extends androidx.test.services.events.discovery.TestDiscoveryEvent {
+    ctor public TestDiscoveryFinishedEvent();
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestDiscoveryStartedEvent extends androidx.test.services.events.discovery.TestDiscoveryEvent {
+    ctor public TestDiscoveryStartedEvent();
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestFoundEvent extends androidx.test.services.events.discovery.TestDiscoveryEvent {
+    ctor public TestFoundEvent(androidx.test.services.events.TestCaseInfo);
+    field public final androidx.test.services.events.TestCaseInfo testCase;
+  }
+
+}
+
+package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @RestrictTo({androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP}) androidx.test.services.events.platform {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestCaseErrorEvent extends androidx.test.services.events.platform.TestPlatformEvent {
+    ctor public TestCaseErrorEvent(androidx.test.services.events.TestCaseInfo, androidx.test.services.events.ErrorInfo, androidx.test.services.events.TimeStamp);
+    field public final androidx.test.services.events.ErrorInfo error;
+    field public final androidx.test.services.events.TestCaseInfo testCase;
+    field public final androidx.test.services.events.TimeStamp timeStamp;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestCaseFinishedEvent extends androidx.test.services.events.platform.TestPlatformEvent {
+    ctor public TestCaseFinishedEvent(androidx.test.services.events.TestCaseInfo, androidx.test.services.events.TestStatus, androidx.test.services.events.TimeStamp);
+    field public final androidx.test.services.events.TestCaseInfo testCase;
+    field public final androidx.test.services.events.TestStatus testStatus;
+    field public final androidx.test.services.events.TimeStamp timeStamp;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class TestCaseStartedEvent extends androidx.test.services.events.platform.TestPlatformEvent {
+    ctor public TestCaseStartedEvent(android.os.Parcel!);
+    ctor public TestCaseStartedEvent(androidx.test.services.events.TestCaseInfo, androidx.test.services.events.TimeStamp);
+    method public androidx.test.services.events.platform.TestPlatformEvent.EventType! instanceType();
+    field public final androidx.test.services.events.TestCaseInfo testCase;
+    field public final androidx.test.services.events.TimeStamp timeStamp;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public abstract class TestPlatformEvent implements android.os.Parcelable {
+    method public int describeContents();
+    method public void writeToParcel(android.os.Parcel!, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.services.events.platform.TestPlatformEvent!>! CREATOR;
+  }
+
+  public enum TestPlatformEvent.EventType {
+    enum_constant public static final androidx.test.services.events.platform.TestPlatformEvent.EventType TEST_CASE_ERROR;
+    enum_constant public static final androidx.test.services.events.platform.TestPlatformEvent.EventType TEST_CASE_FINISHED;
+    enum_constant public static final androidx.test.services.events.platform.TestPlatformEvent.EventType TEST_CASE_STARTED;
+    enum_constant public static final androidx.test.services.events.platform.TestPlatformEvent.EventType TEST_RUN_ERROR;
+    enum_constant public static final androidx.test.services.events.platform.TestPlatformEvent.EventType TEST_RUN_FINISHED;
+    enum_constant public static final androidx.test.services.events.platform.TestPlatformEvent.EventType TEST_RUN_STARTED;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class TestPlatformEventFactory implements android.os.Parcelable.Creator<androidx.test.services.events.platform.TestPlatformEvent> {
+    ctor public TestPlatformEventFactory();
+    method public androidx.test.services.events.platform.TestPlatformEvent! createFromParcel(android.os.Parcel!);
+    method public androidx.test.services.events.platform.TestPlatformEvent![]! newArray(int);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestRunErrorEvent extends androidx.test.services.events.platform.TestPlatformEvent {
+    ctor public TestRunErrorEvent(androidx.test.services.events.TestRunInfo, androidx.test.services.events.ErrorInfo, androidx.test.services.events.TimeStamp);
+    field public final androidx.test.services.events.ErrorInfo error;
+    field public final androidx.test.services.events.TestRunInfo testRun;
+    field public final androidx.test.services.events.TimeStamp timeStamp;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestRunFinishedEvent extends androidx.test.services.events.platform.TestPlatformEvent {
+    ctor public TestRunFinishedEvent(androidx.test.services.events.TestRunInfo, androidx.test.services.events.TestStatus, androidx.test.services.events.TimeStamp);
+    field public final androidx.test.services.events.TestStatus! runStatus;
+    field public final androidx.test.services.events.TestRunInfo! testRun;
+    field public final androidx.test.services.events.TimeStamp! timeStamp;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestRunStartedEvent extends androidx.test.services.events.platform.TestPlatformEvent {
+    ctor public TestRunStartedEvent(android.os.Parcel!);
+    ctor public TestRunStartedEvent(androidx.test.services.events.TestRunInfo, androidx.test.services.events.TimeStamp);
+    field public final androidx.test.services.events.TestRunInfo! testRun;
+    field public final androidx.test.services.events.TimeStamp! timeStamp;
+  }
+
+}
+
+package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @RestrictTo({androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP}) androidx.test.services.events.run {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestAssumptionFailureEvent extends androidx.test.services.events.run.TestFailureEvent {
+    ctor public TestAssumptionFailureEvent(androidx.test.services.events.TestCaseInfo, androidx.test.services.events.FailureInfo);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestFailureEvent extends androidx.test.services.events.run.TestRunEventWithTestCase {
+    ctor public TestFailureEvent(androidx.test.services.events.TestCaseInfo, androidx.test.services.events.FailureInfo);
+    field public final androidx.test.services.events.FailureInfo failure;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestFinishedEvent extends androidx.test.services.events.run.TestRunEventWithTestCase {
+    ctor public TestFinishedEvent(androidx.test.services.events.TestCaseInfo);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestIgnoredEvent extends androidx.test.services.events.run.TestRunEventWithTestCase {
+    ctor public TestIgnoredEvent(androidx.test.services.events.TestCaseInfo);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public abstract class TestRunEvent implements android.os.Parcelable {
+    method public int describeContents();
+    method public void writeToParcel(android.os.Parcel!, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.services.events.run.TestRunEvent!>! CREATOR;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public abstract class TestRunEventWithTestCase extends androidx.test.services.events.run.TestRunEvent {
+    field public final androidx.test.services.events.TestCaseInfo testCase;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestRunFinishedEvent extends androidx.test.services.events.run.TestRunEvent {
+    ctor public TestRunFinishedEvent(int, int, long, java.util.List<androidx.test.services.events.FailureInfo!>);
+    field public final int count;
+    field public final java.util.List<androidx.test.services.events.FailureInfo!> failures;
+    field public final int ignoreCount;
+    field public final long runTime;
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestRunStartedEvent extends androidx.test.services.events.run.TestRunEventWithTestCase {
+    ctor public TestRunStartedEvent(androidx.test.services.events.TestCaseInfo);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestStartedEvent extends androidx.test.services.events.run.TestRunEventWithTestCase {
+    ctor public TestStartedEvent(androidx.test.services.events.TestCaseInfo);
+  }
+
+}
+

@@ -20,13 +20,17 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.os.Parcel;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.test.services.events.ErrorInfo;
 import androidx.test.services.events.TimeStamp;
 
 /**
  * This event is sent when an error is encountered during test discovery. Multiple {@link
  * TestDiscoveryErrorEvent}s may be reported. This event does not mean discovery has finished.
+ *
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestDiscoveryErrorEvent extends TestDiscoveryEvent {
   /* The error that occurred */
   @NonNull public final ErrorInfo error;

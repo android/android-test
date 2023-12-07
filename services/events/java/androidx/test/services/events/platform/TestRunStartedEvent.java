@@ -20,6 +20,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.os.Parcel;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.test.services.events.TestRunInfo;
 import androidx.test.services.events.TimeStamp;
 
@@ -29,7 +30,9 @@ import androidx.test.services.events.TimeStamp;
  *
  * @see TestRunFinishedEvent to report that a test run is finished.
  * @see TestCaseStartedEvent to report individual test cases have begun.
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestRunStartedEvent extends TestPlatformEvent {
   /* The test run that started */
   public final TestRunInfo testRun;

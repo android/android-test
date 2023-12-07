@@ -21,8 +21,14 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 
-/** The final status of a Test Case or Test Run. */
+/**
+ * The final status of a Test Case or Test Run.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class TestStatus implements Parcelable {
   /**
    * Valid test statuses for individual test cases and test runs. Check the documentation on

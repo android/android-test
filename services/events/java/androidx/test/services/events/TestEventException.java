@@ -17,8 +17,14 @@
 package androidx.test.services.events;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 
-/** A checked {@link Exception} indicating that a test event operation failed. */
+/**
+ * A checked {@link Exception} indicating that a test event operation failed.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestEventException extends Exception {
   /** Creates a new {@link TestEventException} with the given message. */
   public TestEventException(@NonNull String message) {

@@ -20,9 +20,15 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.os.Parcel;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.test.services.events.TestCaseInfo;
 
-/** Represents a {@link TestRunEvent} with an associated {@link TestCaseInfo}. */
+/**
+ * Represents a {@link TestRunEvent} with an associated {@link TestCaseInfo}.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public abstract class TestRunEventWithTestCase extends TestRunEvent {
   /** The {@link TestCaseInfo} this event is associated with. */
   @NonNull public final TestCaseInfo testCase;

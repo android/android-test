@@ -20,6 +20,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.os.Parcel;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.test.services.events.TestCaseInfo;
 import androidx.test.services.events.TestStatus;
 import androidx.test.services.events.TimeStamp;
@@ -39,7 +40,9 @@ import androidx.test.services.events.TimeStamp;
  * @see TestCaseStartedEvent to signal that a test case has started.
  * @see TestCaseErrorEvent for reporting errors that occurred while this test case was running.
  * @see TestStatus.Status for more information on our test statuses.
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestCaseFinishedEvent extends TestPlatformEvent {
   /* The test case that finished */
   @NonNull public final TestCaseInfo testCase;

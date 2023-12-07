@@ -18,13 +18,17 @@ package androidx.test.services.events.run;
 
 import android.os.Parcel;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.test.services.events.FailureInfo;
 import androidx.test.services.events.TestCaseInfo;
 
 /**
  * Denotes that the test ended with a TEST_ASSUMPTION_FAILURE. It has the {@link FailureInfo} object
  * to denote what was the cause of the failure/error.
+ *
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestAssumptionFailureEvent extends TestFailureEvent {
   /**
    * Creates a {@link TestAssumptionFailureEvent} from {@link TestCaseInfo} and {@link FailureInfo}.

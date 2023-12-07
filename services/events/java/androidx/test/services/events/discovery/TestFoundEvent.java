@@ -20,12 +20,16 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.os.Parcel;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.test.services.events.TestCaseInfo;
 
 /**
  * Denotes that test discovery has found a test case. The {@link TestCaseInfo} is provided along
  * with the event.
+ *
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestFoundEvent extends TestDiscoveryEvent {
   @NonNull public final TestCaseInfo testCase;
 

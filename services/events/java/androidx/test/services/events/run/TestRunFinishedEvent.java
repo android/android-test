@@ -21,11 +21,17 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.test.services.events.FailureInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Denotes that the test ended with a TEST_RUN_FINISHED event. */
+/**
+ * Denotes that the test ended with a TEST_RUN_FINISHED event.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestRunFinishedEvent extends TestRunEvent {
   public final int count;
   public final int ignoreCount;

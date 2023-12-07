@@ -18,8 +18,14 @@ package androidx.test.services.events.run;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import androidx.annotation.RestrictTo;
 
-/** Base class for all other {@code TestRunEvents} to extend. */
+/**
+ * Base class for all other {@code TestRunEvents} to extend.
+ *
+ * @hide
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public abstract class TestRunEvent implements Parcelable {
   /** Creates a {@link TestRunEvent}. */
   TestRunEvent() {}

@@ -22,11 +22,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RestrictTo;
 
 /**
  * Denotes an android test failure, has details of the failure including stack trace / type and
  * message.
+ *
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class FailureInfo implements Parcelable {
 
   /** The failure message associated with the failure. */
