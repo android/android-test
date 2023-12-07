@@ -6,6 +6,8 @@
 
 **Bug Fixes**
 
+Fix synchronization in IntentMonitorImpl callbacks
+
 **New Features**
 
 **Breaking Changes**

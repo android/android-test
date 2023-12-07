@@ -25,7 +25,6 @@ import androidx.test.runner.intent.IntentCallback;
 import androidx.test.runner.intent.IntentMonitor;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -45,8 +44,7 @@ public final class IntentMonitorImpl implements IntentMonitor {
   // Accessed from any thread. Wrapping callbacks in WeakReference because we don't fully
   // trust the users to remove the callbacks (and we don't want to build up a set of dangling
   // ones as the instrumentation runs).
-  List<WeakReference<IntentCallback>> callbacks =
-      Collections.synchronizedList(new ArrayList<WeakReference<IntentCallback>>());
+  private final List<WeakReference<IntentCallback>> callbacks = new ArrayList<>();
 
   /**
    * Registers a intent callback which is notified if an outgoing intent was detected by {@link
@@ -58,17 +56,19 @@ public final class IntentMonitorImpl implements IntentMonitor {
       throw new NullPointerException("callback cannot be null!");
     }
     boolean needsAdd = true;
-    Iterator<WeakReference<IntentCallback>> refIter = callbacks.iterator();
-    while (refIter.hasNext()) {
-      IntentCallback storedCallback = refIter.next().get();
-      if (null == storedCallback) {
-        refIter.remove();
-      } else if (storedCallback == callback) {
-        needsAdd = false;
+    synchronized (callbacks) {
+      Iterator<WeakReference<IntentCallback>> refIter = callbacks.iterator();
+      while (refIter.hasNext()) {
+        IntentCallback storedCallback = refIter.next().get();
+        if (null == storedCallback) {
+          refIter.remove();
+        } else if (storedCallback == callback) {
+          needsAdd = false;
+        }
       }
-    }
-    if (needsAdd) {
-      callbacks.add(new WeakReference<IntentCallback>(callback));
+      if (needsAdd) {
+        callbacks.add(new WeakReference<IntentCallback>(callback));
+      }
     }
   }
 
@@ -78,13 +78,15 @@ public final class IntentMonitorImpl implements IntentMonitor {
     if (null == callback) {
       throw new NullPointerException("callback cannot be null!");
     }
-    Iterator<WeakReference<IntentCallback>> refIter = callbacks.iterator();
-    while (refIter.hasNext()) {
-      IntentCallback storedCallback = refIter.next().get();
-      if (null == storedCallback) {
-        refIter.remove();
-      } else if (storedCallback == callback) {
-        refIter.remove();
+    synchronized (callbacks) {
+      Iterator<WeakReference<IntentCallback>> refIter = callbacks.iterator();
+      while (refIter.hasNext()) {
+        IntentCallback storedCallback = refIter.next().get();
+        if (null == storedCallback) {
+          refIter.remove();
+        } else if (storedCallback == callback) {
+          refIter.remove();
+        }
       }
     }
   }
@@ -97,21 +99,23 @@ public final class IntentMonitorImpl implements IntentMonitor {
    * @param intent the intent to signal
    */
   public void signalIntent(Intent intent) {
-    Iterator<WeakReference<IntentCallback>> refIter = callbacks.iterator();
-    while (refIter.hasNext()) {
-      IntentCallback callback = refIter.next().get();
-      if (null == callback) {
-        refIter.remove();
-      } else {
-        try {
-          // invoke callback with a copy of the intent (in case the object is mutable).
-          callback.onIntentSent(new Intent(intent));
-        } catch (RuntimeException e) {
-          Log.e(
-              TAG,
-              String.format(
-                  "Callback threw exception! (callback: %s intent: %s)", callback, intent),
-              e);
+    synchronized (callbacks) {
+      Iterator<WeakReference<IntentCallback>> refIter = callbacks.iterator();
+      while (refIter.hasNext()) {
+        IntentCallback callback = refIter.next().get();
+        if (null == callback) {
+          refIter.remove();
+        } else {
+          try {
+            // invoke callback with a copy of the intent (in case the object is mutable).
+            callback.onIntentSent(new Intent(intent));
+          } catch (RuntimeException e) {
+            Log.e(
+                TAG,
+                String.format(
+                    "Callback threw exception! (callback: %s intent: %s)", callback, intent),
+                e);
+          }
         }
       }
     }
