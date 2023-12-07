@@ -2,6 +2,12 @@ plugins {
     id 'com.android.library'
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
 android {
     namespace 'androidx.test.gradletests.runner'
     compileSdk rootProject.ext.compileSdk

@@ -3,6 +3,12 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
 android {
     namespace 'androidx.test.gradletests.orchestrator'
     compileSdk rootProject.ext.compileSdk
