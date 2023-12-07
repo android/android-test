@@ -60,7 +60,6 @@ import java.util.function.Consumer
  * This API is currently experimental and subject to change or removal.
  */
 @ExperimentalTestApi
-@RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
 fun View.captureToBitmap(rect: Rect? = null): ListenableFuture<Bitmap> {
   val bitmapFuture: ResolvableFuture<Bitmap> = ResolvableFuture.create()
   val mainExecutor = HandlerExecutor(Handler(Looper.getMainLooper()))
@@ -91,7 +90,6 @@ fun View.captureToBitmap(rect: Rect? = null): ListenableFuture<Bitmap> {
  * @return a [ListenableFuture] that will be complete once ui drawing is complete
  */
 // NoClassDefFoundError occurs on API 15
-@RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
 // @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @ExperimentalTestApi
 fun View.forceRedraw(): ListenableFuture<Void> {
@@ -128,7 +126,6 @@ private fun View.generateBitmap(bitmapFuture: ResolvableFuture<Bitmap>, rect: Re
   val destBitmap = Bitmap.createBitmap(rectWidth, rectHeight, Bitmap.Config.ARGB_8888)
   when {
     Build.VERSION.SDK_INT < 26 -> generateBitmapFromDraw(destBitmap, bitmapFuture, rect)
-    Build.VERSION.SDK_INT >= 34 -> generateBitmapFromPixelCopy(destBitmap, bitmapFuture, rect)
     this is SurfaceView -> generateBitmapFromSurfaceViewPixelCopy(destBitmap, bitmapFuture, rect)
     else -> generateBitmapFromPixelCopy(this.getSurface(), destBitmap, bitmapFuture, rect)
   }
