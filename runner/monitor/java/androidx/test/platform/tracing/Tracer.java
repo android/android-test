@@ -17,6 +17,7 @@
 package androidx.test.platform.tracing;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import com.google.errorprone.annotations.MustBeClosed;
 import java.io.Closeable;
 
@@ -44,7 +45,10 @@ import java.io.Closeable;
  *     ...action to be traced...
  *   }
  * </pre>
+ *
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public interface Tracer {
 
   /**

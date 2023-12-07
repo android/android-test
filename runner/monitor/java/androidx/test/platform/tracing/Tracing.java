@@ -21,6 +21,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import android.os.Build;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 import androidx.test.platform.tracing.Tracer.Span;
 import com.google.errorprone.annotations.MustBeClosed;
 import java.util.ArrayList;
@@ -40,7 +41,10 @@ import java.util.Map;
  * tests by invoking the {@link #beginSpan(String)} method. The returned {@link Span} object must be
  * properly closed by invoking the {@link Span#close()} method or wrapping them in a try-resource
  * block.
+ *
+ * @hide
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class Tracing {
   private static final String TAG = Tracing.class.getSimpleName();
   private static final Tracing singleton = new Tracing();
