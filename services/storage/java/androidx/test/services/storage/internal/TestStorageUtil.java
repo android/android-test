@@ -93,7 +93,8 @@ public final class TestStorageUtil {
     ContentProviderClient providerClient = null;
     try {
       providerClient = makeContentProviderClient(contentResolver, uri);
-      String mode = append ? "wa" : "w";
+      // https://developer.android.com/reference/android/os/ParcelFileDescriptor#parseMode(java.lang.String)
+      String mode = append ? "wa" : "wt"; // t is "truncate", not "text".
       return new ParcelFileDescriptor.AutoCloseOutputStream(providerClient.openFile(uri, mode));
     } catch (RemoteException re) {
       throw new TestStorageException("Unable to access content provider: " + uri, re);

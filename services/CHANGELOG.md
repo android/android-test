@@ -6,6 +6,10 @@
 
 **Bug Fixes**
 
+* When files are opened for writing, TestStorage now truncates the file unless
+it is explicitly opened for appending. This prevents bytes from a prior write
+to the file from remaining at the end of the file.
+
 **New Features**
 
 **Breaking Changes**

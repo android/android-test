@@ -110,6 +110,31 @@ public final class TestStorageTest {
   }
 
   @Test
+  public void readWriteOverwriteReadFile() throws IOException {
+    try (OutputStream output = testStorage.openOutputFile("path/to/file")) {
+      output.write(new byte[] {'h', 'e', 'l', 'l', 'o', '1', '2', '3'});
+    }
+
+    try (OutputStream output = testStorage.openOutputFile("path/to/file")) {
+      output.write(new byte[] {'w', 'o', 'r', 'l', 'd'}); // Strictly shorter
+    }
+
+    StringBuilder contents = new StringBuilder();
+    Uri outputFileUri = TestStorage.getOutputFileUri("path/to/file");
+    try (InputStream input =
+        TestStorageUtil.getInputStream(
+            outputFileUri, getApplicationContext().getContentResolver())) {
+      int nextVal = input.read();
+      while (nextVal != -1) {
+        contents.append((char) nextVal);
+        nextVal = input.read();
+      }
+    }
+
+    assertThat(contents.toString()).isEqualTo("world");
+  }
+
+  @Test
   public void writeFileInAppendMode() throws IOException {
     try (OutputStream output = testStorage.openOutputFile("path/to/file")) {
       output.write(new byte[] {'h', 'e', 'l', 'l', 'o'});
