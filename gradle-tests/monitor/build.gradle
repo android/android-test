@@ -1,0 +1,50 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
+android {
+    namespace 'androidx.test.gradletests.monitor'
+    compileSdk rootProject.ext.compileSdk
+
+    defaultConfig {
+        minSdk rootProject.ext.minSdk
+        targetSdk rootProject.ext.targetSdk
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    testOptions {
+        animationsDisabled = true
+        managedDevices {
+            devices {
+                // run with ../gradlew  nexusOneDebugAndroidTest
+                nexusOne(com.android.build.api.dsl.ManagedVirtualDevice) {
+                    // A lower resolution device is used here for better emulator performance
+                    device = "Nexus One"
+                    apiLevel = rootProject.ext.emulatorApi
+                    // Also use the AOSP Automated Test Device image for better emulator performance
+                    systemImageSource = "aosp-atd"
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    androidTestImplementation libs.monitor
+    androidTestImplementation libs.runner
+}
+
