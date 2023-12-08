@@ -12,4 +12,6 @@ exports_files([
     "AndroidManifest_robolectric.xml",
     "robolectric.properties",
     "mainDexClasses.rules",
+    "axt_released_versions.bzl",
+    "axt_versions.bzl",
 ])
