@@ -33,5 +33,7 @@ filegroup(
         "//services/shellexecutor/java/androidx/test/services/shellexecutor:libexec_client-src.jar",
         "//services/shellexecutor/java/androidx/test/services/shellexecutor:libexec_server-src.jar",
     ],
-    visibility = [":server_access"],
+    visibility = [
+        "//visibility:private",  # Only private by automation, not intent. Owner may accept CLs adding visibility. See go/scheuklappen#explicit-private.
+    ],
 )
