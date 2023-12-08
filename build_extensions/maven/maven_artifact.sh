@@ -63,7 +63,7 @@ do
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters in case we need that
 
-out_tmp="$(mktemp -d --suffix=_repo)"
+out_tmp="$(mktemp -d )"
 dirname="repository"
 repo="$out_tmp/$dirname"
 
