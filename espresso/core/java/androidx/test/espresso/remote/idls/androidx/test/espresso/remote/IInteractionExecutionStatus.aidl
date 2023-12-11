@@ -16,7 +16,11 @@
 
 package androidx.test.espresso.remote;
 
-/** Enables the ability to share interaction execution status cross process */
+/**
+* Enables the ability to share interaction execution status cross process
+* @hide
+*/
+@JavaPassthrough(annotation="@androidx.annotation.RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP)")
 interface IInteractionExecutionStatus {
   /**
    * Returns {@code false} if the given interaction was already executed on the

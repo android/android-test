@@ -58,6 +58,9 @@ android_library(
     idl_import_root = "idls",
     idl_srcs = glob(["idls/**"]),
     visibility = ["//visibility:public"],
+    deps = [
+        "//opensource/androidx:annotation",
+    ],
 )
 
 REMOTE_EXCEPTIONS = [

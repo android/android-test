@@ -769,19 +769,6 @@ package androidx.test.espresso.remote {
     method public M! toProto();
   }
 
-  @javax.annotation.processing.Generated("tmp_aidl_gen_path") public interface IInteractionExecutionStatus extends android.os.IInterface {
-    method public boolean canExecute() throws android.os.RemoteException;
-  }
-
-  public abstract static class IInteractionExecutionStatus.Stub extends com.google.android.aidl.BaseStub implements androidx.test.espresso.remote.IInteractionExecutionStatus {
-    ctor public IInteractionExecutionStatus.Stub();
-    method public static androidx.test.espresso.remote.IInteractionExecutionStatus! asInterface(android.os.IBinder!);
-  }
-
-  public static class IInteractionExecutionStatus.Stub.Proxy extends com.google.android.aidl.BaseProxy implements androidx.test.espresso.remote.IInteractionExecutionStatus {
-    method public boolean canExecute() throws android.os.RemoteException;
-  }
-
   public final class NoRemoteEspressoInstanceException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
     ctor public NoRemoteEspressoInstanceException(String!);
   }

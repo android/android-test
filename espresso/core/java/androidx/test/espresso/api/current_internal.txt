@@ -1,4 +1,26 @@
 // Signature format: 3.0
+package androidx.test.espresso.remote {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public interface IInteractionExecutionStatus extends android.os.IInterface {
+    method public boolean canExecute() throws android.os.RemoteException;
+    field public static final String! DESCRIPTOR = "androidx.test.espresso.remote.IInteractionExecutionStatus";
+  }
+
+  public static class IInteractionExecutionStatus.Default implements androidx.test.espresso.remote.IInteractionExecutionStatus {
+    ctor public IInteractionExecutionStatus.Default();
+    method public android.os.IBinder! asBinder();
+    method public boolean canExecute() throws android.os.RemoteException;
+  }
+
+  public abstract static class IInteractionExecutionStatus.Stub extends android.os.Binder implements androidx.test.espresso.remote.IInteractionExecutionStatus {
+    ctor public IInteractionExecutionStatus.Stub();
+    method public android.os.IBinder! asBinder();
+    method public static androidx.test.espresso.remote.IInteractionExecutionStatus! asInterface(android.os.IBinder!);
+    method public boolean onTransact(int, android.os.Parcel!, android.os.Parcel!, int) throws android.os.RemoteException;
+  }
+
+}
+
 package androidx.test.espresso.util {
 
   public final class IterablesKt {

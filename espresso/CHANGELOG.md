@@ -15,6 +15,7 @@ The following artifacts were released:
 * `androidx.test.espresso.idling:idling-net:{version}`
 
 **Bug Fixes**
+
 * Fix typo in AdapterDataLoaderAction error message
 
 **New Features**
@@ -22,6 +23,8 @@ The following artifacts were released:
 **Breaking Changes**
 
 **API Changes**
+
+* Mark generated IInteractionExecutionStatus class as RestrictTo LIBRARY_GROUP
 
 **Breaking API Changes**
 
