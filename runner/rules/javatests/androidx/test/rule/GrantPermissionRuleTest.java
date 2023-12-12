@@ -16,73 +16,56 @@
 
 package androidx.test.rule;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.not;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static android.content.Context.POWER_SERVICE;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static org.junit.Assert.assertThrows;
 
 import android.Manifest.permission;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.SmallTest;
-import androidx.test.runner.permission.PermissionRequester;
-import java.util.Set;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.Statement;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 /** Tests for {@link GrantPermissionRule} */
-@SmallTest
 @RunWith(AndroidJUnit4.class)
 public class GrantPermissionRuleTest {
 
-  private static final String RUNTIME_PERMISSION1 = "android.permission.PERMISSION1";
+  @Test
+  public void newWakelock_permissionGranted() {
+    WakeLock wakeLock = createWakeLock();
+    assertThrows(SecurityException.class, wakeLock::acquire);
 
-  @Mock public PermissionRequester permissionRequester;
-
-  private GrantPermissionRule grantPermissionRule;
-
-  @Before
-  public void initMocks() {
-    MockitoAnnotations.initMocks(this);
-    grantPermissionRule = GrantPermissionRule.grant(RUNTIME_PERMISSION1);
-    grantPermissionRule.setPermissionGranter(permissionRequester);
+    GrantPermissionRule rule = GrantPermissionRule.grant(permission.WAKE_LOCK);
+    rule.apply(new EmptyStatement(), Description.EMPTY);
+    // now should succeed
+    wakeLock.acquire();
+    wakeLock.release();
   }
 
+  /**
+   * Simple test that external storage permission can be granted without error.
+   *
+   * <p>This is useful since libraries such as androidx.benchmark depend on this functionality. See
+   * b/268058721
+   */
   @Test
-  public void applyingRuleRunsPermissionRunsTest() throws Throwable {
-    Statement mockBaseStatement = mock(Statement.class);
-    Description mockDescription = mock(Description.class);
-
-    grantPermissionRule.apply(mockBaseStatement, mockDescription).evaluate();
-
-    verify(mockBaseStatement).evaluate();
-    verify(permissionRequester).requestPermissions();
+  public void externalStorage_granted() {
+    GrantPermissionRule rule = GrantPermissionRule.grant(permission.WRITE_EXTERNAL_STORAGE);
+    rule.apply(new EmptyStatement(), Description.EMPTY);
   }
 
-  @Test
-  public void requestingWriteExternalStoragePermission_addsReadExternalStoragePermission()
-      throws Throwable {
-    GrantPermissionRule grantPermissionRule = new GrantPermissionRule(permissionRequester);
-    Set<String> permissions =
-        grantPermissionRule.satisfyPermissionDependencies(permission.WRITE_EXTERNAL_STORAGE);
-    assertThat(permissions, hasSize(2));
-    assertThat(
-        permissions,
-        containsInAnyOrder(permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE));
+  private static WakeLock createWakeLock() {
+    PowerManager powerManager =
+        (PowerManager) getApplicationContext().getSystemService(POWER_SERVICE);
+    return powerManager.newWakeLock(
+        PowerManager.PARTIAL_WAKE_LOCK, "GrantPermissionRuleTest::MyWakelockTag");
   }
 
-  @Test
-  public void requestingPermission_doesNotAddReadExternalStoragePermission() throws Throwable {
-    GrantPermissionRule grantPermissionRule = new GrantPermissionRule(permissionRequester);
-    assertThat(
-        grantPermissionRule.satisfyPermissionDependencies(RUNTIME_PERMISSION1),
-        not(contains(permission.READ_EXTERNAL_STORAGE)));
+  private static class EmptyStatement extends Statement {
+    @Override
+    public void evaluate() throws Throwable {}
   }
 }

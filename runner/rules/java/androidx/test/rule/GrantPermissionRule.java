@@ -102,8 +102,7 @@ public class GrantPermissionRule implements TestRule {
     permissionGranter.addPermissions(permissionSet.toArray(new String[permissionSet.size()]));
   }
 
-  @VisibleForTesting
-  Set<String> satisfyPermissionDependencies(String... permissions) {
+  private Set<String> satisfyPermissionDependencies(String... permissions) {
     Set<String> permissionList = new LinkedHashSet<>(Arrays.asList(permissions));
     // Explicitly grant READ_EXTERNAL_STORAGE permission when WRITE_EXTERNAL_STORAGE was requested.
     if (permissionList.contains(permission.WRITE_EXTERNAL_STORAGE)) {
@@ -117,8 +116,7 @@ public class GrantPermissionRule implements TestRule {
     return new RequestPermissionStatement(base);
   }
 
-  @VisibleForTesting
-  void setPermissionGranter(PermissionGranter permissionGranter) {
+  private void setPermissionGranter(PermissionGranter permissionGranter) {
     this.permissionGranter = checkNotNull(permissionGranter, "permissionRequester cannot be null!");
   }
 

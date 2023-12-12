@@ -1,5 +1,6 @@
 # Description: Tests for Rules.
 load("//build_extensions:android_library_test.bzl", "axt_android_library_test")
+load("//build_extensions:phone_devices.bzl", "apis", "devices")
 
 package(
     default_applicable_licenses = ["//:license"],
@@ -55,15 +56,13 @@ axt_android_library_test(
 axt_android_library_test(
     name = "GrantPermissionRuleTest",
     srcs = ["GrantPermissionRuleTest.java"],
+    # runtime permissions only a thing from api 23+
+    device_list = devices(apis(min_api = 23)),
     deps = [
         "//core",
         "//ext/junit",
-        "//runner/android_junit_runner",
         "//runner/rules",
         "@maven//:junit_junit",
-        "@maven//:org_hamcrest_hamcrest_core",
-        "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_mockito_mockito_core",
     ],
 )
 
