@@ -120,10 +120,6 @@ jobs:
         shell: bash
       - name: 'Setup Android SDK'
         uses: android-actions/setup-android@v2
-      - name: 'Setup gradle managed device'
-        run: |
-          cd ${{ github.workspace }}/gradle-tests
-          ./gradlew runner:nexusOneSetup -Pandroid.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" --no-watch-fs --info
       - name: 'Run gradle tests'
         run: |
           cd ${{ github.workspace }}/gradle-tests
