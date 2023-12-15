@@ -16,7 +16,8 @@ env:
 jobs:
   build:
     runs-on:
-      group: Large Runners
+      group: large-runner
+      labels: ubuntu-22.04-16core
     timeout-minutes: 20
     steps:
       - name: Check out repository code
@@ -58,7 +59,8 @@ jobs:
         shell: bash
   test:
     runs-on:
-      group: Large Runners
+      group: large-runner
+      labels: ubuntu-22.04-16core
     timeout-minutes: 20
     steps:
       - name: Check out repository code
@@ -90,7 +92,8 @@ jobs:
         shell: bash
   gradle-emulator-test:
     runs-on:
-      group: Large Runners
+      group: large-runner
+      labels: ubuntu-22.04-16core
     needs: build
     timeout-minutes: 20
     steps:
