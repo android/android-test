@@ -60,7 +60,7 @@ jobs:
   test:
     runs-on:
       group: large-runner
-      labels: ubuntu-22.04-8core
+      labels: ubuntu-22.04-16core
     timeout-minutes: 20
     steps:
       - name: Check out repository code
@@ -93,7 +93,7 @@ jobs:
   gradle-emulator-test:
     runs-on:
       group: large-runner
-      labels: ubuntu-22.04-8core
+      labels: ubuntu-22.04-16core
     needs: build
     timeout-minutes: 20
     steps:
