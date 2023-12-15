@@ -17,14 +17,14 @@ package androidx.test.ext.truth.os;
 
 import static com.google.common.truth.Fact.simpleFact;
 
-import android.os.Bundle;
-import android.os.Parcelable;
+import android.os.Build;
+import android.os.PersistableBundle;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import com.google.common.truth.BooleanSubject;
 import com.google.common.truth.DoubleSubject;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.IntegerSubject;
-import com.google.common.truth.IterableSubject;
 import com.google.common.truth.LongSubject;
 import com.google.common.truth.ObjectArraySubject;
 import com.google.common.truth.StringSubject;
@@ -32,26 +32,27 @@ import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
 
 // LINT.IfChange
-// TODO(b/308978831) once minSdkVersion >= 21, unify most methods with PersistableBundleSubject
-// through a (library-internal) BaseBundleSubject superclass.
+// TODO(b/308978831) once minSdkVersion >= 21, unify most methods with BundleSubject through a
+// (library-internal) BaseBundleSubject superclass.
 /**
- * Subject for making assertions about {@link Bundle}s.
+ * Subject for making assertions about {@link PersistableBundle}s.
  *
- * <p>To assert about {@link android.os.PersistableBundle}s, use {@link PersistableBundleSubject}.
+ * <p>To assert about "regular" {@link android.os.Bundle}s, use {@link BundleSubject}.
  */
-public final class BundleSubject extends Subject {
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+public final class PersistableBundleSubject extends Subject {
 
-  public static BundleSubject assertThat(Bundle bundle) {
-    return Truth.assertAbout(bundles()).that(bundle);
+  public static PersistableBundleSubject assertThat(PersistableBundle persistableBundle) {
+    return Truth.assertAbout(persistableBundles()).that(persistableBundle);
   }
 
-  public static Subject.Factory<BundleSubject, Bundle> bundles() {
-    return BundleSubject::new;
+  public static Subject.Factory<PersistableBundleSubject, PersistableBundle> persistableBundles() {
+    return PersistableBundleSubject::new;
   }
 
-  private final Bundle actual;
+  private final PersistableBundle actual;
 
-  BundleSubject(FailureMetadata failureMetadata, Bundle subject) {
+  PersistableBundleSubject(FailureMetadata failureMetadata, PersistableBundle subject) {
     super(failureMetadata, subject);
     this.actual = subject;
   }
@@ -89,19 +90,9 @@ public final class BundleSubject extends Subject {
     return check("getDouble(%s)", key).that(actual.getDouble(key));
   }
 
+  @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
   public BooleanSubject bool(String key) {
     return check("getBoolean(%s)", key).that(actual.getBoolean(key));
-  }
-
-  public <T extends Parcelable> ParcelableSubject<T> parcelable(String key) {
-    return check("getParcelable(%s)", key)
-        .about(ParcelableSubject.<T>parcelables())
-        .that(actual.<T>getParcelable(key));
-  }
-
-  public <T extends Parcelable, SubjectT extends Subject> SubjectT parcelableAsType(
-      String key, Subject.Factory<SubjectT, T> subjectFactory) {
-    return check("getParcelable(%s)", key).about(subjectFactory).that(actual.<T>getParcelable(key));
   }
 
   @NonNull
@@ -109,17 +100,10 @@ public final class BundleSubject extends Subject {
     return check("getStringArray(%s)", key).that(actual.getStringArray(key));
   }
 
-  public IterableSubject stringArrayList(String key) {
-    return check("getStringArrayList(%s)", key).that(actual.getStringArrayList(key));
-  }
-
-  public IterableSubject parcelableArrayList(String key) {
-    return check("getParcelableArrayList(%s)", key).that(actual.getParcelableArrayList(key));
-  }
-
-  /** Returns a truth subject for the value associated with the given key. */
-  public Subject serializable(String key) {
-    return check("getSerializable(%s)", key).that(actual.getSerializable(key));
+  public PersistableBundleSubject persistableBundle(String key) {
+    return check("getPersistableBundle(%s)", key)
+        .about(persistableBundles())
+        .that(actual.getPersistableBundle(key));
   }
 
   public void containsKey(String key) {
@@ -134,4 +118,4 @@ public final class BundleSubject extends Subject {
     }
   }
 }
-// LINT.ThenChange(PersistableBundleSubject.java)
+// LINT.ThenChange(BundleSubject.java)

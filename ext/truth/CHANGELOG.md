@@ -8,6 +8,8 @@
 
 **New Features**
 
+* Added `PersistableBundleSubject`
+
 **Breaking Changes**
 
 **API Changes**
