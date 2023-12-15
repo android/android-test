@@ -17,6 +17,7 @@ jobs:
   build:
     runs-on:
       group: Large Runners
+      label: ubuntu-22.04-8core
     timeout-minutes: 20
     steps:
       - name: Check out repository code
@@ -59,6 +60,7 @@ jobs:
   test:
     runs-on:
       group: Large Runners
+      label: ubuntu-22.04-8core
     timeout-minutes: 20
     steps:
       - name: Check out repository code
@@ -91,6 +93,7 @@ jobs:
   gradle-emulator-test:
     runs-on:
       group: Large Runners
+      label: ubuntu-22.04-8core
     needs: build
     timeout-minutes: 20
     steps:
