@@ -42,7 +42,7 @@ jobs:
           cp bazel-bin/axt_m2repository.zip ~/download
         shell: bash
       - name: 'Upload local snapshot for tests'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: local-snapshot
           path: ~/download
@@ -109,7 +109,7 @@ jobs:
       - name: 'Cache Gradle files'
         uses: gradle/gradle-build-action@v2
       - name: 'Download local snapshot for tests'
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: local-snapshot
           path: ~/download
@@ -127,7 +127,7 @@ jobs:
         shell: bash
       - name: 'Upload test reports'
         if: success() || failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: gradle-tests/**/build/reports/androidTests/
