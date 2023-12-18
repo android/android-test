@@ -18,8 +18,6 @@
     package="androidx.test.monitor.tests"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
     <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="34"/>
 
     <application android:label="AndroidJUnitRunner">
