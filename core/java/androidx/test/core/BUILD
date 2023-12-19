@@ -107,6 +107,7 @@ maven_artifact(
 
 dackka_test(
     name = "core_doc",
+    testonly = 1,
     runtime_dep = ":core_aar_lib",
     src_jar = ":core_aar-src.jar",
 )
