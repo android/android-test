@@ -14,9 +14,16 @@ env:
   cache-version: v1
 
 jobs:
+  gradle-wrapper-validation:
+    name: gradle-wrapper-validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gradle/wrapper-validation-action@v1
   build:
     runs-on:
       group: Large Runners
+    needs: gradle-wrapper-validation
     timeout-minutes: 20
     steps:
       - name: Check out repository code
@@ -59,6 +66,7 @@ jobs:
   test:
     runs-on:
       group: Large Runners
+    needs: gradle-wrapper-validation
     timeout-minutes: 20
     steps:
       - name: Check out repository code
