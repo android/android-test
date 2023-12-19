@@ -70,12 +70,7 @@ public final class FileTestStorage implements PlatformTestStorage {
    */
   @Override
   public OutputStream openOutputFile(String pathname) throws IOException {
-    File outputFile = new File(pathname);
-    if (!outputFile.isAbsolute()) {
-      outputFile = new File(outputDirCalculator.getOutputDir(), pathname);
-    }
-
-    return new FileOutputStream(outputFile);
+    return openOutputFile(pathname, false);
   }
 
   @Override
@@ -84,6 +79,7 @@ public final class FileTestStorage implements PlatformTestStorage {
     if (!outputFile.isAbsolute()) {
       outputFile = new File(outputDirCalculator.getOutputDir(), pathname);
     }
+    Log.d("FileTestStorage", "openOutputFile from " + outputFile.getAbsolutePath());
     return new FileOutputStream(outputFile, append);
   }
 
