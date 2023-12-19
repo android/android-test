@@ -7,6 +7,7 @@
 **Bug Fixes**
 
 * Add better error messaging when process does not have INTERNET permission
+* Make exception class references in Espresso Device documentation clickable links
 
 **New Features**
 

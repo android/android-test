@@ -1,11 +1,11 @@
 # Description:
 #   EspressoDevice - the new Synchronized Device State Change API for Android.
 
+load("//build_extensions:api_checks.bzl", "api_checks")
+load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions:kt_android_library.bzl", "kt_android_library")
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
-load("//build_extensions:dackka_test.bzl", "dackka_test")
-load("//build_extensions:api_checks.bzl", "api_checks")
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 licenses(["notice"])
@@ -35,7 +35,6 @@ kt_android_library(
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
     ],
     deps = [
-        "//annotation/java/androidx/test/annotation",
         "//espresso/device/java/androidx/test/espresso/device/action",
         "//espresso/device/java/androidx/test/espresso/device/dagger",
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
@@ -50,6 +49,7 @@ android_library(
     testonly = 1,
     custom_package = "androidx.test.espresso.device",
     manifest = "AndroidManifest.xml",
+    visibility = ["//:__subpackages__"],
     exports = [
         ":device",
         "//espresso/device/java/androidx/test/espresso/device/action",

@@ -29,9 +29,7 @@ import androidx.test.internal.util.Checks.checkNotMainThread
 import androidx.test.platform.device.DeviceController
 import javax.inject.Inject
 
-/**
- * API surface for performing device-centric operations.
- */
+/** API surface for performing device-centric operations. */
 class DeviceInteraction @Inject constructor(private val deviceController: DeviceController) {
 
   /**
@@ -57,8 +55,10 @@ class DeviceInteraction @Inject constructor(private val deviceController: Device
      * This action is for foldable devices only. Currently only supported for tests run on Android
      * Emulators.
      *
-     * @throws UnsupportedDeviceOperationException if used on a real device.
-     * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
+     * @throws androidx.test.platform.device.UnsupportedDeviceOperationException if used on a real
+     *   device.
+     * @throws androidx.test.espresso.device.controller.DeviceControllerOperationException when
+     *   called on a non-foldable Emulator.
      */
     fun DeviceInteraction.setTabletopMode(): DeviceInteraction {
       perform(getSetTabletopModeDeviceAction())
@@ -73,8 +73,10 @@ class DeviceInteraction @Inject constructor(private val deviceController: Device
      * This action is for foldable devices only. Currently only supported for tests run on Android
      * Emulators.
      *
-     * @throws UnsupportedDeviceOperationException if used on a real device.
-     * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
+     * @throws androidx.test.platform.device.UnsupportedDeviceOperationException if used on a real
+     *   device.
+     * @throws androidx.test.espresso.device.controller.DeviceControllerOperationException when
+     *   called on a non-foldable Emulator.
      */
     fun DeviceInteraction.setBookMode(): DeviceInteraction {
       perform(getSetBookModeDeviceAction())
@@ -88,8 +90,10 @@ class DeviceInteraction @Inject constructor(private val deviceController: Device
      * This action is for foldable devices only. Currently only supported for tests run on Android
      * Emulators.
      *
-     * @throws UnsupportedDeviceOperationException if used on a real device.
-     * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
+     * @throws androidx.test.platform.device.UnsupportedDeviceOperationException if used on a real
+     *   device.
+     * @throws androidx.test.espresso.device.controller.DeviceControllerOperationException when
+     *   called on a non-foldable Emulator.
      */
     fun DeviceInteraction.setFlatMode(): DeviceInteraction {
       perform(getSetFlatModeDeviceAction())
@@ -102,8 +106,10 @@ class DeviceInteraction @Inject constructor(private val deviceController: Device
      * This action is for foldable devices only. Currently only supported for tests run on Android
      * Emulators.
      *
-     * @throws UnsupportedDeviceOperationException if used on a real device.
-     * @throws DeviceControllerOperationException when called on a non-foldable Emulator.
+     * @throws androidx.test.platform.device.UnsupportedDeviceOperationException if used on a real
+     *   device.
+     * @throws androidx.test.espresso.device.controller.DeviceControllerOperationException when
+     *   called on a non-foldable Emulator.
      */
     fun DeviceInteraction.setClosedMode(): DeviceInteraction {
       perform(getSetClosedModeDeviceAction())
