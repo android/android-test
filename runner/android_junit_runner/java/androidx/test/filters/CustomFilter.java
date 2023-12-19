@@ -16,7 +16,6 @@
 
 package androidx.test.filters;
 
-import androidx.test.annotation.ExperimentalTestApi;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -33,10 +32,7 @@ import java.lang.annotation.Target;
  * @CustomFilter(MyCustomFilterClass::class)
  * public @interface MyCustomFilterAnnotation {}
  * }</pre>
- *
- * <p>This API is experimental and subject to change or removal.
  */
-@ExperimentalTestApi
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.ANNOTATION_TYPE})
 public @interface CustomFilter {

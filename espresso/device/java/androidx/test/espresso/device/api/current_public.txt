@@ -66,12 +66,12 @@ package androidx.test.espresso.device.controller {
 
 package androidx.test.espresso.device.filter {
 
-  @java.lang.annotation.Repeatable(RequiresDeviceModes::class) @kotlin.annotation.Retention(kotlin.annotation.AnnotationRetention.RUNTIME) @kotlin.annotation.Target(allowedTargets={kotlin.annotation.AnnotationTarget.CLASS, kotlin.annotation.AnnotationTarget.FUNCTION}) public @interface RequiresDeviceMode {
+  @androidx.test.filters.CustomFilter(filterClass=RequiresDeviceModeFilter::class) @java.lang.annotation.Repeatable(RequiresDeviceModes::class) @kotlin.annotation.Retention(kotlin.annotation.AnnotationRetention.RUNTIME) @kotlin.annotation.Target(allowedTargets={kotlin.annotation.AnnotationTarget.CLASS, kotlin.annotation.AnnotationTarget.FUNCTION}) public @interface RequiresDeviceMode {
     method public abstract androidx.test.espresso.device.controller.DeviceMode mode();
     property public abstract androidx.test.espresso.device.controller.DeviceMode mode;
   }
 
-  @kotlin.annotation.Retention(kotlin.annotation.AnnotationRetention.RUNTIME) @kotlin.annotation.Target(allowedTargets={kotlin.annotation.AnnotationTarget.CLASS, kotlin.annotation.AnnotationTarget.FUNCTION}) public @interface RequiresDisplay {
+  @androidx.test.filters.CustomFilter(filterClass=RequiresDisplayFilter::class) @kotlin.annotation.Retention(kotlin.annotation.AnnotationRetention.RUNTIME) @kotlin.annotation.Target(allowedTargets={kotlin.annotation.AnnotationTarget.CLASS, kotlin.annotation.AnnotationTarget.FUNCTION}) public @interface RequiresDisplay {
     method public abstract androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum heightSizeClass();
     method public abstract androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum widthSizeClass();
     property public abstract androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum heightSizeClass;

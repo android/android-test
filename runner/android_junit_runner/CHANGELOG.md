@@ -13,6 +13,7 @@
 
 **API Changes**
 * Mark androidx.test.services.** as RestrictTo LIBRARY_GROUP
+* Remove ExperimentalTestApi from CustomFilter 
 
 **Breaking API Changes**
 

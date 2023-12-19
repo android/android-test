@@ -13,6 +13,7 @@
 **Breaking Changes**
 
 **API Changes**
+* Remove ExperimentalTestApi from androidx.test.filter.CustomFilter
 
 **Breaking API Changes**
 
