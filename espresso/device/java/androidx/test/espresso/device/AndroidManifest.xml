@@ -17,8 +17,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="androidx.test.espresso.device" >
 
+    <!-- espresso-device uses GRPC to emulator, which requires internet permissions -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <uses-sdk
         android:minSdkVersion="19"
-        android:targetSdkVersion="31" />
+        android:targetSdkVersion="34" />
 
 </manifest>

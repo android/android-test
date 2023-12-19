@@ -6,6 +6,8 @@
 
 **Bug Fixes**
 
+* Add better error messaging when process does not have INTERNET permission
+
 **New Features**
 
 **Breaking Changes**

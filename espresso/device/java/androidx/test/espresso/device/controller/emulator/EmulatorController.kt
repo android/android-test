@@ -15,6 +15,9 @@
  */
 package androidx.test.espresso.device.controller.emulator
 
+import android.Manifest.permission
+import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.os.Process
 import android.util.Log
 import androidx.annotation.RestrictTo
 import androidx.annotation.RestrictTo.Scope
@@ -25,12 +28,12 @@ import androidx.test.espresso.device.common.getDeviceApiLevel
 import androidx.test.espresso.device.common.setAccelerometerRotationSetting
 import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.espresso.device.controller.DeviceMode
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.platform.device.DeviceController
 import androidx.test.platform.device.UnsupportedDeviceOperationException
 import com.android.emulator.control.EmulatorControllerGrpc
 import com.android.emulator.control.ParameterValue
 import com.android.emulator.control.PhysicalModelValue
-import com.android.emulator.control.PhysicalModelValue.PhysicalType
 import com.android.emulator.control.Posture
 import com.android.emulator.control.Posture.PostureValue
 import io.grpc.StatusRuntimeException
@@ -72,12 +75,13 @@ constructor(
         PostureValue.POSTURE_HALF_OPENED
       }
     val posture: Posture = Posture.newBuilder().setValue(postureValue).build()
+    checkInternetPermission()
     try {
       emulatorControllerStub.setPosture(posture)
     } catch (e: StatusRuntimeException) {
       throw DeviceControllerOperationException(
         "Failed to set device mode. Please make sure the connected Emulator is foldable, the Android Emulator version" +
-          " is updated to 33.1.11+, and the controller gRPC service is enabled on the emulator." +
+          " is updated to 33.1.11+, and the controller gRPC service is enabled on the emulator" +
           " See https://developer.android.com/studio/preview/features#set_up_your_project_for_the_espresso_device_api for set up instructions.",
         e
       )
@@ -97,6 +101,8 @@ constructor(
         )
       }
     }
+
+    checkInternetPermission()
 
     try {
       val physicalModelValue: PhysicalModelValue =
@@ -127,6 +133,25 @@ constructor(
           " is updated to 33.1.11+ and the controller gRPC service is enabled on the emulator." +
           " See https://developer.android.com/studio/preview/features#set_up_your_project_for_the_espresso_device_api for set up instructions.",
         e
+      )
+    }
+  }
+
+  /**
+   * Making a connection to the Emulator GRPC requires the INTERNET permission. This method checks
+   * if the current process has the permission, and if not, throws a meaninful error message.
+   */
+  private fun checkInternetPermission() {
+    if (
+      getInstrumentation()
+        .getTargetContext()
+        .checkPermission(permission.INTERNET, Process.myPid(), Process.myUid()) !=
+        PERMISSION_GRANTED
+    ) {
+      throw DeviceControllerOperationException(
+        "The current process does not have the INTERNET permission. Ensure the app-under-test has '<uses-permission " +
+          "android:name=\"android.permission.INTERNET\"/>' in its AndroidManifest.xml. See " +
+          "See https://developer.android.com/studio/preview/features#set_up_your_project_for_the_espresso_device_api for set up instructions."
       )
     }
   }
