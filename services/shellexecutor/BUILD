@@ -26,12 +26,3 @@ package_group(
         "//services/shellexecutor/javatests/androidx/test/services/shellexecutor",
     ],
 )
-
-filegroup(
-    name = "shellexecuter_src",
-    srcs = [
-        "//services/shellexecutor/java/androidx/test/services/shellexecutor:libexec_client-src.jar",
-        "//services/shellexecutor/java/androidx/test/services/shellexecutor:libexec_server-src.jar",
-    ],
-    visibility = [":server_access"],
-)
