@@ -20,7 +20,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.LogUtil.logDebugWithProcess;
-import static kotlin.collections.MapsKt.toMap;
 
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -152,8 +151,7 @@ public final class ViewInteraction {
           checkNotNull(bindable.getId(), "Bindable id cannot be null!"),
           checkNotNull(bindable.getIBinder(), "Bindable binder cannot be null!"));
     }
-
-    return toMap(iBinders);
+    return iBinders;
   }
 
   private static List<Bindable> getBindables(Object... objects) {

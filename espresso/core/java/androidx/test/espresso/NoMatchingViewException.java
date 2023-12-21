@@ -17,7 +17,6 @@
 package androidx.test.espresso;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
-import static kotlin.collections.CollectionsKt.mutableListOf;
 
 import android.view.View;
 import androidx.annotation.NonNull;
@@ -25,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.test.espresso.util.EspressoOptional;
 import androidx.test.espresso.util.HumanReadables;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import org.hamcrest.Matcher;
@@ -45,7 +45,7 @@ public final class NoMatchingViewException extends RuntimeException implements R
 
   private Matcher<? super View> viewMatcher;
   private View rootView;
-  private List<View> adapterViews = mutableListOf();
+  private List<View> adapterViews = new ArrayList<>();
   private boolean includeViewHierarchy = true;
   @Nullable private String adapterViewWarning = null;
 
@@ -111,7 +111,7 @@ public final class NoMatchingViewException extends RuntimeException implements R
 
     private Matcher<? super View> viewMatcher;
     private View rootView;
-    private List<View> adapterViews = mutableListOf();
+    private List<View> adapterViews = new ArrayList<>();
     private boolean includeViewHierarchy = true;
     @Nullable private String adapterViewWarning = null;
     private Throwable cause;

@@ -18,7 +18,6 @@ package androidx.test.espresso.action;
 
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static androidx.test.internal.util.Checks.checkArgument;
-import static kotlin.collections.CollectionsKt.mutableListOf;
 
 import android.database.Cursor;
 import android.os.Build;
@@ -31,6 +30,7 @@ import android.widget.AdapterViewAnimator;
 import android.widget.AdapterViewFlipper;
 import androidx.annotation.Nullable;
 import androidx.test.espresso.util.EspressoOptional;
+import java.util.ArrayList;
 import java.util.List;
 
 /** Implementations of {@link AdapterViewProtocol} for standard SDK Widgets. */
@@ -84,7 +84,7 @@ public final class AdapterViewProtocols {
 
     @Override
     public Iterable<AdaptedData> getDataInAdapterView(AdapterView<? extends Adapter> adapterView) {
-      List<AdaptedData> datas = mutableListOf();
+      List<AdaptedData> datas = new ArrayList<>();
       for (int i = 0; i < adapterView.getCount(); i++) {
         int position = i;
         Object dataAtPosition = adapterView.getItemAtPosition(position);

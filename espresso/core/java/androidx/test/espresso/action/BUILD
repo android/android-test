@@ -27,7 +27,6 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/util",
         "//opensource/androidx:annotation",
         "//runner/monitor",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 
@@ -51,6 +50,5 @@ android_library(
         "@maven//:com_google_errorprone_error_prone_annotations",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

@@ -17,7 +17,6 @@
 package androidx.test.espresso.action;
 
 import static androidx.test.internal.util.Checks.checkState;
-import static kotlin.collections.CollectionsKt.single;
 import static org.hamcrest.Matchers.any;
 
 import android.app.Activity;
@@ -138,7 +137,7 @@ public final class CloseKeyboardAction implements ViewAction {
         "More than one activity is in RESUMED stage."
             + " There may have been an error during the activity creation/startup process,"
             + " please check your logs.");
-    return single(resumedActivities);
+    return resumedActivities.iterator().next();
   }
 
   @Override

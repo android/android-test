@@ -16,12 +16,13 @@
 package androidx.test.espresso.core.internal.deps.guava.base;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
 
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import kotlin.collections.SetsKt;
 
 /**
  * Redefinition of Guava's Optional, created to avoid compatibilty breakages for users of
@@ -88,7 +89,7 @@ public class Optional<T> implements java.io.Serializable {
   }
 
   public Set<T> asSet() {
-    return isPresent() ? SetsKt.setOf(value) : SetsKt.emptySet();
+    return isPresent() ? singleton(value) : emptySet();
   }
 
   public boolean isPresent() {

@@ -20,7 +20,6 @@ import static androidx.test.espresso.util.Throwables.throwIfUnchecked;
 import static androidx.test.internal.util.Checks.checkArgument;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
-import static kotlin.collections.CollectionsKt.mutableListOf;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
@@ -41,6 +40,7 @@ import androidx.test.espresso.UiController;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
 import androidx.test.espresso.util.StringJoinerKt;
 import androidx.test.espresso.util.concurrent.ThreadFactoryBuilder;
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -55,7 +55,6 @@ import java.util.concurrent.FutureTask;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import kotlin.collections.CollectionsKt;
 
 /** Implementation of {@link UiController}. */
 @Singleton
@@ -260,7 +259,7 @@ final class UiControllerImpl
     checkState(events.iterator().hasNext(), "Expecting non-empty events to inject");
     checkState(Looper.myLooper() == mainLooper, "Expecting to be on main thread!");
     final Iterator<MotionEvent> mei = events.iterator();
-    final long downTime = CollectionsKt.first(events).getEventTime();
+    final long downTime = events.iterator().next().getEventTime();
     final long shift = SystemClock.uptimeMillis() - downTime;
     FutureTask<Boolean> injectTask =
         new SignalingTask<>(
@@ -528,7 +527,7 @@ final class UiControllerImpl
       }
 
       // timed out... what went wrong?
-      List<String> idleConditions = mutableListOf();
+      List<String> idleConditions = new ArrayList<>();
       for (IdleCondition condition : conditions) {
         if (!condition.isSignaled(conditionSet)) {
           String conditionName = condition.name();

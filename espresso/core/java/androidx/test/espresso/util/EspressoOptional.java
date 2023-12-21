@@ -17,13 +17,14 @@
 package androidx.test.espresso.util;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
 
 import androidx.annotation.Nullable;
 import androidx.test.espresso.core.internal.deps.guava.base.Function;
 import androidx.test.espresso.core.internal.deps.guava.base.Optional;
 import androidx.test.espresso.core.internal.deps.guava.base.Supplier;
 import java.util.Set;
-import kotlin.collections.SetsKt;
 
 /**
  * This class is a reimplementation of {@link com.google.common.base.Optional} to maintain API
@@ -82,7 +83,7 @@ public final class EspressoOptional<T> {
   }
 
   public Set<T> asSet() {
-    return isPresent() ? SetsKt.setOf(value) : SetsKt.emptySet();
+    return isPresent() ? singleton(value) : emptySet();
   }
 
   @Override
