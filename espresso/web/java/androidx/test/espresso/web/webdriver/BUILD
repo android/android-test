@@ -24,6 +24,5 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/model",
         "//opensource/androidx:annotation",
         "//runner/monitor",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

@@ -23,6 +23,5 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",
         "//opensource/androidx:annotation",
         "//runner/monitor",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
