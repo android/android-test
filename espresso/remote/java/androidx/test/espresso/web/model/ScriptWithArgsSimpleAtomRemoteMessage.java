@@ -16,7 +16,6 @@
  */
 package androidx.test.espresso.web.model;
 
-import static kotlin.collections.CollectionsKt.mutableListOf;
 
 import androidx.test.espresso.remote.EspressoRemoteMessage;
 import androidx.test.espresso.remote.TypeProtoConverters;
@@ -46,7 +45,7 @@ public class ScriptWithArgsSimpleAtomRemoteMessage
               (ScriptWithArgsSimpleAtomProto) message;
 
           String script = scriptWithArgsSimpleAtomProto.getScript();
-          List<Object> nonContextualArguments = mutableListOf();
+          List<Object> nonContextualArguments = new ArrayList<>();
           List<ByteString> argsList = scriptWithArgsSimpleAtomProto.getArgsList();
           for (ByteString arg : argsList) {
             nonContextualArguments.add(TypeProtoConverters.byteStringToType(arg));

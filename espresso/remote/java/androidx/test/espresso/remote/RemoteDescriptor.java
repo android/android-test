@@ -19,8 +19,7 @@ package androidx.test.espresso.remote;
 import static androidx.test.internal.util.Checks.checkArgument;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
-import static kotlin.collections.CollectionsKt.listOf;
-import static kotlin.collections.CollectionsKt.mutableListOf;
+import static java.util.Collections.singletonList;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
@@ -28,6 +27,8 @@ import androidx.annotation.Nullable;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import androidx.test.espresso.util.StringJoinerKt;
 import com.google.protobuf.Parser;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -162,7 +163,7 @@ public final class RemoteDescriptor {
         "androidx.test.espresso.remote.GenericRemoteMessage";
 
     private Class<?> instanceType;
-    private List<FieldDescriptor> instanceFieldDescriptorList = mutableListOf();
+    private List<FieldDescriptor> instanceFieldDescriptorList = new ArrayList<>();
 
     private Class<?> remoteType;
     private List<Class<?>> remoteConstrTypes;
@@ -228,7 +229,7 @@ public final class RemoteDescriptor {
      * @return fluent builder interface
      */
     public Builder setInstanceFieldDescriptors(@Nullable FieldDescriptor... fieldDescriptors) {
-      this.instanceFieldDescriptorList = listOf(fieldDescriptors);
+      this.instanceFieldDescriptorList = Arrays.asList(fieldDescriptors);
       return this;
     }
 
@@ -260,7 +261,7 @@ public final class RemoteDescriptor {
      * @return fluent builder interface
      */
     public Builder setRemoteConstrTypes(@Nullable Class<?>... remoteConstrTypes) {
-      this.remoteConstrTypes = listOf(remoteConstrTypes);
+      this.remoteConstrTypes = Arrays.asList(remoteConstrTypes);
       return this;
     }
 
@@ -320,13 +321,13 @@ public final class RemoteDescriptor {
 
       // Most remote message constructors will use the instance type as constructor param type
       if (null == remoteConstrTypes) {
-        remoteConstrTypes = listOf(instanceType);
+        remoteConstrTypes = singletonList(instanceType);
       }
 
       // GenericRemoteMessage constructor param type is always Object.class
       try {
         if (remoteType.isAssignableFrom(Class.forName(GENERIC_REMOTE_MESSAGE_CLS))) {
-          remoteConstrTypes = listOf(Object.class);
+          remoteConstrTypes = singletonList(Object.class);
         }
       } catch (ClassNotFoundException cnfe) {
         throw new IllegalStateException(

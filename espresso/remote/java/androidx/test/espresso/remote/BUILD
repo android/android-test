@@ -1,11 +1,11 @@
 # Description:
 #  Remote package for espresso.
 
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")
-load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
+load("//build_extensions:api_checks.bzl", "api_checks")
 load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
-load("//build_extensions:api_checks.bzl", "api_checks")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 licenses(["notice"])
 
@@ -37,7 +37,6 @@ android_library(
         "//opensource/androidx:annotation",
         "//runner/monitor",
         "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 
@@ -79,7 +78,6 @@ android_library(
         "//runner/android_junit_runner",
         "@com_google_protobuf//:protobuf_javalite",
         "@maven//:org_hamcrest_hamcrest_core",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 
@@ -126,7 +124,6 @@ android_library(
         "//runner/android_junit_runner",
         "@com_google_protobuf//:protobuf_javalite",
         "@maven//:org_hamcrest_hamcrest_core",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 

@@ -25,7 +25,6 @@ android_library(
         "//opensource/androidx:annotation",
         "//runner/android_junit_runner/java/androidx/test:runner",
         "@com_google_protobuf//:protobuf_javalite",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 

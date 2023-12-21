@@ -19,7 +19,6 @@ package androidx.test.espresso.remote;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.LogUtil.lazyArg;
 import static androidx.test.internal.util.LogUtil.logDebug;
-import static kotlin.collections.CollectionsKt.mutableListOf;
 
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
@@ -29,10 +28,9 @@ import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.MessageLite;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import kotlin.collections.CollectionsKt;
-import kotlin.jvm.functions.Function1;
 
 /**
  * Deserializes a proto message, into its object representation.
@@ -100,7 +98,7 @@ final class RemoteMessageDeserializer implements EspressoRemoteMessage.From<Obje
   private Object fromProtoInternal(MessageLite messageLite, RemoteDescriptor remoteDescriptor) {
     // List that will be used to store constructor parameters. These values will later be passed
     // along to the constructor of the target object
-    List<Object> constructorParams = mutableListOf();
+    List<Object> constructorParams = new ArrayList<>();
     // Create a new proto reflector to interact with a proto msg
     ProtoReflector protoReflector =
         new ProtoReflector(remoteDescriptor.getProtoType(), messageLite);
@@ -113,9 +111,11 @@ final class RemoteMessageDeserializer implements EspressoRemoteMessage.From<Obje
       // Process Iterable types
       if (Iterable.class.isAssignableFrom(fieldDescriptor.fieldType)) {
         List<Any> iterable = protoReflector.getAnyList(fieldDescriptor.fieldName);
-        constructorParam =
-            CollectionsKt.map(
-                iterable, any -> TypeProtoConverters.anyToType(any, remoteDescriptorRegistry));
+        List<Object> anys = new ArrayList<>();
+        for (Any any : iterable) {
+          anys.add(TypeProtoConverters.anyToType(any, remoteDescriptorRegistry));
+        }
+        constructorParam = anys;
       } else if (Serializable.class.isAssignableFrom(fieldDescriptor.fieldType)
           || Object.class == fieldDescriptor.fieldType
           || fieldDescriptor.fieldType.isPrimitive()) {
@@ -139,15 +139,11 @@ final class RemoteMessageDeserializer implements EspressoRemoteMessage.From<Obje
     // Reflectively create the instance and return it
     Object instance = null;
     try {
+      // Transform fieldDescriptorList into a new list which contains only field types
       Class<?>[] constructorTypes = new Class<?>[fieldDescriptorList.size()];
-      CollectionsKt.map(
-              fieldDescriptorList,
-              (Function1<FieldDescriptor, Class<?>>)
-                  fieldDescriptor ->
-                      // Transform fieldDescriptorList into a new list which contains only field
-                      // types
-                      fieldDescriptor.fieldType)
-          .toArray(constructorTypes);
+      for (int i = 0; i < fieldDescriptorList.size(); i++) {
+        constructorTypes[i] = fieldDescriptorList.get(i).fieldType;
+      }
 
       instance =
           new ConstructorInvocation(

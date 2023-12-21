@@ -23,10 +23,10 @@ import androidx.annotation.NonNull;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.TreeMap;
-import kotlin.collections.CollectionsKt;
 
 /**
  * Provides additional meta data about a {@link Field} declared in a class.
@@ -87,7 +87,7 @@ public final class FieldDescriptor {
         targetFields.put(order, of(field, remoteMsgFieldAnnotation));
       }
     }
-    return CollectionsKt.toList(targetFields.values());
+    return new ArrayList<>(targetFields.values());
   }
 
   @Override
