@@ -16,7 +16,6 @@
  */
 package androidx.test.espresso.remote;
 
-import static kotlin.collections.CollectionsKt.listOf;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -31,6 +30,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -79,7 +79,7 @@ public class BuilderReflectorTest {
     Any any3 = buildAny(ANY_TYPE_URL_THREE, ANY_TYPE_VALUE_THREE);
 
     Any anyValue = any1;
-    List<Any> anyList = listOf(any2, any3);
+    List<Any> anyList = Arrays.asList(any2, any3);
     ByteString value = TypeProtoConverters.typeToByteString(STRING_VALUE);
 
     Object protoMsg =

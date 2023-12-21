@@ -75,7 +75,6 @@ axt_android_library_test(
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven//:org_mockito_mockito_core",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
@@ -99,7 +98,6 @@ axt_android_library_test(
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 
@@ -215,7 +213,6 @@ axt_android_library_test(
         "@com_google_protobuf//:protobuf_javalite",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 
@@ -233,7 +230,6 @@ axt_android_library_test(
         "//runner/android_junit_runner/java/androidx/test:runner",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 
@@ -273,7 +269,6 @@ axt_android_library_test(
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven//:org_mockito_mockito_core",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
@@ -315,7 +310,6 @@ axt_android_library_test(
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven//:org_mockito_mockito_core",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
@@ -357,7 +351,6 @@ axt_android_library_test(
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven//:org_mockito_mockito_core",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
@@ -399,7 +392,6 @@ axt_android_library_test(
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven//:org_mockito_mockito_core",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
@@ -441,7 +433,6 @@ axt_android_library_test(
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven//:org_mockito_mockito_core",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
