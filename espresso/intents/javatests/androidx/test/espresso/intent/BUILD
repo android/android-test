@@ -91,7 +91,6 @@ axt_android_library_test(
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 
@@ -117,6 +116,5 @@ axt_android_library_test(
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

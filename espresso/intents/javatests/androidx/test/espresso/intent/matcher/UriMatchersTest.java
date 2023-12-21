@@ -32,8 +32,9 @@ import static org.junit.Assert.assertTrue;
 import android.net.Uri;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Set;
-import kotlin.collections.SetsKt;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -209,7 +210,8 @@ public class UriMatchersTest {
   @Test
   public void getQueryParameterNamesTesting() {
     Set<String> paramNames = getQueryParameterNames(uri);
-    assertTrue(paramNames.equals(SetsKt.setOf("q", "aq", "oq", "sourceid", "ie")));
+    assertTrue(
+        paramNames.equals(new LinkedHashSet<>(Arrays.asList("q", "aq", "oq", "sourceid", "ie"))));
   }
 
   @Test
