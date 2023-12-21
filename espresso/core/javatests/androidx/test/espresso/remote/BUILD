@@ -28,7 +28,6 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/model",
         "@com_google_protobuf//:protobuf_javalite",
         "@maven//:org_hamcrest_hamcrest_core",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 

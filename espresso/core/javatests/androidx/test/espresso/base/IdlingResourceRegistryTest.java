@@ -17,8 +17,10 @@
 package androidx.test.espresso.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertTrue;
-import static kotlin.collections.CollectionsKt.listOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -33,6 +35,7 @@ import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallba
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.platform.tracing.Tracing;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -40,7 +43,6 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-import kotlin.collections.SetsKt;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -83,8 +85,8 @@ public class IdlingResourceRegistryTest {
     r1.forceIdleNow();
     OnDemandIdlingResource r2 = new OnDemandIdlingResource("r2");
     r2.forceIdleNow();
-    registry.registerResources(listOf(r1));
-    registry.registerResources(listOf(r2));
+    registry.registerResources(singletonList(r1));
+    registry.registerResources(singletonList(r2));
     FutureTask<Boolean> resourcesIdle = createIdleCheckTask(registry);
     handler.post(resourcesIdle);
 
@@ -95,7 +97,7 @@ public class IdlingResourceRegistryTest {
     handler.post(resourcesIdle);
     assertFalse(resourcesIdle.get());
 
-    registry.unregisterResources(listOf(r1));
+    registry.unregisterResources(singletonList(r1));
     resourcesIdle = createIdleCheckTask(registry);
     handler.post(resourcesIdle);
     assertFalse(resourcesIdle.get());
@@ -118,9 +120,9 @@ public class IdlingResourceRegistryTest {
   public void registerDuplicates() {
     IdlingResource r1 = new OnDemandIdlingResource("r1");
     IdlingResource r1dup = new OnDemandIdlingResource("r1");
-    assertTrue(registry.registerResources(listOf(r1)));
-    assertFalse(registry.registerResources(listOf(r1)));
-    assertFalse(registry.registerResources(listOf(r1dup)));
+    assertTrue(registry.registerResources(singletonList(r1)));
+    assertFalse(registry.registerResources(singletonList(r1)));
+    assertFalse(registry.registerResources(singletonList(r1dup)));
     assertEquals(1, registry.getResources().size());
 
     assertThat(tracer.getSpans()).containsExactly("beginSpan: IdleResource.r1").inOrder();
@@ -131,8 +133,8 @@ public class IdlingResourceRegistryTest {
     IdlingResource r1 = new OnDemandIdlingResource("r1");
     IdlingResource r2 = new OnDemandIdlingResource("r2");
 
-    assertTrue(registry.registerResources(listOf(r1)));
-    assertFalse(registry.unregisterResources(listOf(r2)));
+    assertTrue(registry.registerResources(singletonList(r1)));
+    assertFalse(registry.unregisterResources(singletonList(r2)));
 
     FutureTask<Boolean> resourcesIdle = createIdleCheckTask(registry);
     handler.post(resourcesIdle);
@@ -153,12 +155,12 @@ public class IdlingResourceRegistryTest {
     OnDemandIdlingResource r2 = new OnDemandIdlingResource("r2");
     OnDemandIdlingResource r3 = new OnDemandIdlingResource("r3");
 
-    assertTrue(registry.registerResources(listOf(r1, r2, r3)));
+    assertTrue(registry.registerResources(Arrays.asList(r1, r2, r3)));
 
     FutureTask<Boolean> resourcesIdle = createIdleCheckTask(registry);
     handler.post(resourcesIdle);
     assertFalse(resourcesIdle.get());
-    assertTrue(registry.unregisterResources(listOf(r3)));
+    assertTrue(registry.unregisterResources(singletonList(r3)));
 
     resourcesIdle = createIdleCheckTask(registry);
     handler.post(resourcesIdle);
@@ -204,7 +206,7 @@ public class IdlingResourceRegistryTest {
 
     r1.reset();
 
-    assertFalse(registry.unregisterResources(listOf(r1)));
+    assertFalse(registry.unregisterResources(singletonList(r1)));
 
     resourcesIdle = createIdleCheckTask(registry);
     handler.post(resourcesIdle);
@@ -216,13 +218,13 @@ public class IdlingResourceRegistryTest {
   @Test
   public void registerAndUnregisterNeverIdling() throws Exception {
     IdlingResource r1 = new OnDemandIdlingResource("r1");
-    registry.registerResources(listOf(r1));
+    registry.registerResources(singletonList(r1));
 
     FutureTask<Boolean> resourcesIdle = createIdleCheckTask(registry);
     handler.post(resourcesIdle);
     assertFalse(resourcesIdle.get());
 
-    registry.unregisterResources(listOf(r1));
+    registry.unregisterResources(singletonList(r1));
 
     resourcesIdle = createIdleCheckTask(registry);
     handler.post(resourcesIdle);
@@ -238,21 +240,21 @@ public class IdlingResourceRegistryTest {
     IdlingResource r1 = new OnDemandIdlingResource("r1");
     IdlingResource r2 = new OnDemandIdlingResource("r2");
 
-    assertTrue(registry.registerResources(listOf(r1)));
-    assertFalse(registry.registerResources(listOf(r1)));
-    assertTrue(registry.registerResources(listOf(r2)));
+    assertTrue(registry.registerResources(singletonList(r1)));
+    assertFalse(registry.registerResources(singletonList(r1)));
+    assertTrue(registry.registerResources(singletonList(r2)));
 
     IdlingResource r3 = new OnDemandIdlingResource("r3");
-    assertFalse(registry.registerResources(listOf(r3, r3)));
+    assertFalse(registry.registerResources(Arrays.asList(r3, r3)));
 
     IdlingResource r4 = new OnDemandIdlingResource("r4");
-    assertFalse(registry.unregisterResources(listOf(r4)));
+    assertFalse(registry.unregisterResources(singletonList(r4)));
 
-    assertTrue(registry.unregisterResources(listOf(r1)));
-    assertFalse(registry.unregisterResources(listOf(r1)));
-    assertTrue(registry.unregisterResources(listOf(r2)));
+    assertTrue(registry.unregisterResources(singletonList(r1)));
+    assertFalse(registry.unregisterResources(singletonList(r1)));
+    assertTrue(registry.unregisterResources(singletonList(r2)));
 
-    assertFalse(registry.unregisterResources(listOf(r3, r3)));
+    assertFalse(registry.unregisterResources(Arrays.asList(r3, r3)));
 
     assertThat(tracer.getSpans())
         .containsExactly(
@@ -272,10 +274,10 @@ public class IdlingResourceRegistryTest {
 
     assertEquals(0, registry.getResources().size());
 
-    registry.registerResources(listOf(r1, r2));
+    registry.registerResources(Arrays.asList(r1, r2));
     assertEquals(2, registry.getResources().size());
 
-    registry.unregisterResources(listOf(r1, r2));
+    registry.unregisterResources(Arrays.asList(r1, r2));
     assertEquals(0, registry.getResources().size());
 
     assertThat(tracer.getSpans())
@@ -294,12 +296,12 @@ public class IdlingResourceRegistryTest {
     IdlingResource r3 = new OnDemandIdlingResource("r3");
     r1.forceIdleNow();
     r2.forceIdleNow();
-    registry.registerResources(listOf(r1, r2));
+    registry.registerResources(Arrays.asList(r1, r2));
     FutureTask<Boolean> resourcesIdle = createIdleCheckTask(registry);
     handler.post(resourcesIdle);
     assertTrue(resourcesIdle.get());
 
-    registry.registerResources(listOf(r3));
+    registry.registerResources(singletonList(r3));
 
     resourcesIdle = createIdleCheckTask(registry);
     handler.post(resourcesIdle);
@@ -311,7 +313,7 @@ public class IdlingResourceRegistryTest {
   @Test
   public void allResourcesAreIdle_RepeatingToIdleTransitions() throws Exception {
     OnDemandIdlingResource r1 = new OnDemandIdlingResource("r1");
-    registry.registerResources(listOf(r1));
+    registry.registerResources(singletonList(r1));
     for (int i = 1; i <= 3; i++) {
       FutureTask<Boolean> resourcesIdle = createIdleCheckTask(registry);
       handler.post(resourcesIdle);
@@ -347,7 +349,7 @@ public class IdlingResourceRegistryTest {
     OnDemandIdlingResource r1 = new OnDemandIdlingResource("r1");
     OnDemandIdlingResource r2 = new OnDemandIdlingResource("r2");
     OnDemandIdlingResource r3 = new OnDemandIdlingResource("r3");
-    registry.registerResources(listOf(r1, r2, r3));
+    registry.registerResources(Arrays.asList(r1, r2, r3));
 
     handler.post(
         new Runnable() {
@@ -416,7 +418,7 @@ public class IdlingResourceRegistryTest {
     OnDemandIdlingResource r1 = new OnDemandIdlingResource("r1");
     OnDemandIdlingResource r2 = new OnDemandIdlingResource("r2");
     OnDemandIdlingResource r3 = new OnDemandIdlingResource("r3");
-    registry.registerResources(listOf(r1, r2, r3));
+    registry.registerResources(Arrays.asList(r1, r2, r3));
 
     handler.post(
         new Runnable() {
@@ -556,7 +558,7 @@ public class IdlingResourceRegistryTest {
   @Test
   public void testSync_ofIdlingResource() {
     IdlingResource r1 = new OnDemandIdlingResource("r1");
-    registry.sync(SetsKt.setOf(r1), SetsKt.setOf());
+    registry.sync(singleton(r1), emptySet());
     assertEquals(1, registry.getResources().size());
     assertTrue(registry.getResources().contains(r1));
   }
@@ -564,7 +566,7 @@ public class IdlingResourceRegistryTest {
   @Test
   public void testSync_ofLooperAsIdlingResource() {
     IdlingResource r1 = LooperIdlingResourceInterrogationHandler.forLooper(handler.getLooper());
-    registry.sync(SetsKt.setOf(r1), SetsKt.setOf(handler.getLooper()));
+    registry.sync(singleton(r1), singleton(handler.getLooper()));
     assertEquals(1, registry.getResources().size());
     String expectedLooperResourceName =
         LooperIdlingResourceInterrogationHandler.forLooper(handler.getLooper()).getName();
@@ -577,9 +579,9 @@ public class IdlingResourceRegistryTest {
     IdlingResource r2 = new OnDemandIdlingResource("r2");
 
     // Register r1 directly
-    assertTrue(registry.registerResources(listOf(r1)));
+    assertTrue(registry.registerResources(singletonList(r1)));
     // Sync with second r2 and a looper
-    registry.sync(SetsKt.setOf(r2), SetsKt.setOf(Looper.getMainLooper()));
+    registry.sync(singleton(r2), singleton(Looper.getMainLooper()));
     // Verify r2 and looper registered
     // Verify r1 is unregister
     assertEquals(2, registry.getResources().size());
@@ -597,11 +599,11 @@ public class IdlingResourceRegistryTest {
     IdlingResource newReg = new OnDemandIdlingResource("newReg");
 
     // Register "toUnReg" and "alreadyReg"
-    assertTrue(registry.registerResources(listOf(toUnReg)));
-    assertTrue(registry.registerResources(listOf(alreadyReg)));
+    assertTrue(registry.registerResources(singletonList(toUnReg)));
+    assertTrue(registry.registerResources(singletonList(alreadyReg)));
 
     // Sync with second "alreadyReg" and "newReg"
-    registry.sync(SetsKt.setOf(alreadyReg, newReg), SetsKt.setOf());
+    registry.sync(Arrays.asList(alreadyReg, newReg), emptySet());
     // Verify toUnReg is unregistered
     // Verify alreadyReg stayed registered
     // verify newReg registered
