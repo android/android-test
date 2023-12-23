@@ -23,8 +23,9 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.runner.permission.RequestPermissionCallable.Result;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -33,9 +34,11 @@ import java.util.concurrent.Callable;
  * Base class for runtime permission {@link Callable}s.
  *
  * <p>Note: This class is visible only for testing. Please do not use it directly.
+ *
+ * @hide
  */
 @VisibleForTesting
-@ExperimentalTestApi
+@RestrictTo(Scope.LIBRARY)
 public abstract class RequestPermissionCallable implements Callable<Result> {
 
   private final ShellCommand shellCommand;

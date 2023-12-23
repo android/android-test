@@ -24,6 +24,7 @@ import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.services.storage.TestStorageException;
 import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
@@ -36,6 +37,7 @@ import java.io.OutputStream;
  * @hide
  */
 @RestrictTo(Scope.LIBRARY)
+@ExperimentalTestApi
 public final class TestStorageUtil {
   /**
    * Gets the input stream for a given Uri.

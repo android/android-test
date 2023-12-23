@@ -17,16 +17,19 @@
 package androidx.test.runner.permission;
 
 import android.app.UiAutomation;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.annotation.VisibleForTesting;
-import androidx.test.annotation.ExperimentalTestApi;
 
 /**
  * Ideally we wouldn't need this abstraction but since {@link UiAutomation} is final we need an
  * abstraction on top to be able to mock it in tests. It also gives us the flexibility to switch to
  * another implementation in the future.
+ *
+ * @hide
  */
 @VisibleForTesting
-@ExperimentalTestApi
+@RestrictTo(Scope.LIBRARY)
 public abstract class ShellCommand {
 
   /** Characters that have no special meaning to the shell. */

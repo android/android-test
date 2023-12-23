@@ -29,6 +29,7 @@ import android.util.Log;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
 import androidx.annotation.VisibleForTesting;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.MediumTest;
 import androidx.test.filters.SmallTest;
@@ -304,6 +305,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   }
 
   /** {@inheritDoc} */
+  @ExperimentalTestApi
   @Override
   public void onCreate(Bundle arguments) {
     Log.i(LOG_TAG, "onCreate " + arguments.toString());
@@ -411,6 +413,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
    *
    * @param arguments
    */
+  @ExperimentalTestApi
   private void parseRunnerArgs(Bundle arguments) {
     runnerArgs = new RunnerArgs.Builder().fromManifest(this).fromBundle(this, arguments).build();
   }
@@ -429,6 +432,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     return instrumentationResultPrinter;
   }
 
+  @ExperimentalTestApi
   @Override
   public void onStart() {
     Log.d(LOG_TAG, "onStart is called.");
@@ -477,6 +481,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     finish(Activity.RESULT_OK, results);
   }
 
+  @ExperimentalTestApi
   @VisibleForTesting
   final void addListeners(RunnerArgs args, TestExecutor.Builder builder) {
     if (args.newRunListenerMode) {
@@ -486,6 +491,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     }
   }
 
+  @ExperimentalTestApi
   private void addListenersLegacyOrder(RunnerArgs args, TestExecutor.Builder builder) {
     if (args.logOnly) {
       // Only add the listener that will report the list of tests when running in logOnly
@@ -524,6 +530,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     addListenersFromArg(args, builder);
   }
 
+  @ExperimentalTestApi
   private void addListenersNewOrder(RunnerArgs args, TestExecutor.Builder builder) {
     // User defined listeners go first, to guarantee running before InstrumentationResultPrinter
     // and ActivityFinisherRunListener. Delay and Coverage Listener are also moved before for the
@@ -569,6 +576,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
         new HashSet<ScreenCaptureProcessor>(args.screenCaptureProcessors));
   }
 
+  @ExperimentalTestApi
   private void addCoverageListener(RunnerArgs args, TestExecutor.Builder builder) {
     if (args.codeCoverage) {
       builder.addRunListener(
@@ -675,6 +683,7 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     return new TestRequestBuilder(instr, arguments);
   }
 
+  @ExperimentalTestApi
   private void registerTestStorage(Bundle bundleArgs) {
     if (Boolean.parseBoolean(bundleArgs.getString(RunnerArgs.ARGUMENT_USE_TEST_STORAGE_SERVICE))) {
       Log.d(LOG_TAG, "Use the test storage service for managing file I/O.");

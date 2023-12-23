@@ -22,9 +22,10 @@ import android.annotation.TargetApi;
 import android.app.UiAutomation;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.InstrumentationRegistry;
-import androidx.test.annotation.ExperimentalTestApi;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -34,9 +35,11 @@ import java.util.concurrent.TimeoutException;
 /**
  * {@link ShellCommand} implementation which uses {@link UiAutomation} to grant a permission at
  * runtime.
+ *
+ * @hide
  */
 @TargetApi(value = 23)
-@ExperimentalTestApi
+@RestrictTo(Scope.LIBRARY)
 class UiAutomationShellCommand extends ShellCommand {
 
   private static final String TAG = "UiAutomationShellCmd";

@@ -78,6 +78,7 @@ internal constructor(private val bitmapFuture: ResolvableFuture<Bitmap>) : ViewA
   }
 
   @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
+  @ExperimentalTestApi
   override fun perform(uiController: UiController, view: View) {
     uiController.loopMainThreadUntilIdle()
     bitmapFuture.setFuture(view.captureToBitmap())

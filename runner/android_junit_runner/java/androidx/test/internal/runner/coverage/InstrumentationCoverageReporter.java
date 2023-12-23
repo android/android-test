@@ -19,6 +19,7 @@ import android.app.Instrumentation;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.platform.io.PlatformTestStorage;
 import androidx.test.services.storage.TestStorage;
 import java.io.File;
@@ -78,6 +79,7 @@ public class InstrumentationCoverageReporter {
    * @return the actual file path the coverage report was written to, when the provided path is
    *     {@code null}.
    */
+  @ExperimentalTestApi
   public String generateCoverageReport(
       @Nullable String coverageFilePath, PrintStream instrumentationResultWriter) {
     // Unfortunately, the JaCoCo (Emma-compatible) API only supports dumping the execution data to a
@@ -124,6 +126,7 @@ public class InstrumentationCoverageReporter {
    * Dumps the coverage execution data to file and then moves it to the test storage internal
    * folder.
    */
+  @ExperimentalTestApi
   private String dumpCoverageToTestStorage(
       String coverageFilePath, PrintStream instrumentationResultWriter) {
     if (coverageFilePath == null) {
@@ -158,6 +161,7 @@ public class InstrumentationCoverageReporter {
     return null;
   }
 
+  @ExperimentalTestApi
   private void moveFileToTestStorage(String srcFilePath, String destFilePath) throws IOException {
     File srcFile = new File(srcFilePath);
     if (srcFile.exists()) {

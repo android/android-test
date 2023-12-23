@@ -26,6 +26,7 @@ import android.os.ParcelFileDescriptor.AutoCloseInputStream;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.platform.io.PlatformTestStorage;
 import androidx.test.platform.io.PlatformTestStorageRegistry;
 import androidx.test.runner.lifecycle.ApplicationLifecycleCallback;
@@ -248,6 +249,7 @@ public class RunnerArgs {
     private boolean testPlatformMigration = false;
     private final PlatformTestStorage testStorage;
 
+    @ExperimentalTestApi
     public Builder() {
       this(PlatformTestStorageRegistry.getInstance());
     }
@@ -261,6 +263,7 @@ public class RunnerArgs {
      *
      * <p>Note: This will override any manifest-provided args
      */
+    @ExperimentalTestApi
     public Builder fromBundle(Instrumentation instr, Bundle bundle) {
       this.debug = parseBoolean(bundle.getString(ARGUMENT_DEBUG));
       this.useTestStorageService =
@@ -327,6 +330,7 @@ public class RunnerArgs {
       return this;
     }
 
+    @ExperimentalTestApi
     private TestFileArgs parseTestFile(
         Instrumentation instr, boolean useStorageService, String filePath) {
       if (filePath == null) {
@@ -358,6 +362,7 @@ public class RunnerArgs {
     }
 
     /** Populate the arg data from the instrumentation:metadata attribute in Manifest. */
+    @ExperimentalTestApi
     public Builder fromManifest(Instrumentation instr) {
       PackageManager pm = instr.getContext().getPackageManager();
       try {

@@ -19,6 +19,7 @@ import android.app.Instrumentation;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.runner.coverage.InstrumentationCoverageReporter;
 import androidx.test.platform.io.PlatformTestStorage;
 import androidx.test.platform.io.PlatformTestStorageRegistry;
@@ -45,6 +46,7 @@ public class CoverageListener extends InstrumentationRunListener {
    * @param customCoverageFilePath an optional user specified path for the coverage file. Can be
    *     {@code null}.
    */
+  @ExperimentalTestApi
   public CoverageListener(@Nullable String customCoverageFilePath) {
     this(customCoverageFilePath, PlatformTestStorageRegistry.getInstance());
   }
@@ -81,6 +83,7 @@ public class CoverageListener extends InstrumentationRunListener {
     coverageReporter = new InstrumentationCoverageReporter(getInstrumentation(), runnerIO);
   }
 
+  @ExperimentalTestApi
   @Override
   public void instrumentationRunFinished(
       PrintStream streamResult, Bundle resultBundle, Result junitResults) {

@@ -148,6 +148,7 @@ fun takeScreenshotNoSync(): Bitmap {
 }
 
 @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+@ExperimentalTestApi
 private fun forceRedrawGlobalWindowViews(mainExecutor: Executor): ListenableFuture<List<Void>> {
   val future: ResolvableFuture<List<Void>> = ResolvableFuture.create()
   mainExecutor.execute {
