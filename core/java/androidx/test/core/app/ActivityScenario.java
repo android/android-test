@@ -62,8 +62,9 @@ import java.util.concurrent.locks.ReentrantLock;
  * <p>The ActivityScenario API uses {@link State} extensively. If you are unfamiliar with {@link
  * androidx.lifecycle} components, please read <a
  * href="https://developer.android.com/topic/libraries/architecture/lifecycle#lc">lifecycle</a>
- * before starting. It is crucial to understand the difference between {@link State} and {@link
- * Event}.
+ * before starting.
+ *
+ * <p>It is crucial to understand the difference between {@link State} and {@link Event}.
  *
  * <p>{@link ActivityScenario#moveToState(State)} allows you to transition your Activity's state to
  * {@link State#CREATED}, {@link State#STARTED}, {@link State#RESUMED}, or {@link State#DESTROYED}.
