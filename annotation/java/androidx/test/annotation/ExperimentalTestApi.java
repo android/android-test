@@ -17,8 +17,6 @@
 package androidx.test.annotation;
 
 import androidx.annotation.RequiresOptIn;
-import androidx.annotation.RestrictTo;
-import androidx.annotation.RestrictTo.Scope;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -30,8 +28,6 @@ import java.lang.annotation.Target;
  * exempt from any compatibility guarantees made by its containing library. Note that the presence
  * of this annotation implies nothing about the quality or performance of the API in question, only
  * the fact that it is not "API-frozen."
- *
- * @hide
  */
 @Retention(RetentionPolicy.CLASS)
 @Target({
@@ -41,6 +37,5 @@ import java.lang.annotation.Target;
   ElementType.METHOD,
   ElementType.TYPE
 })
-@RestrictTo(Scope.LIBRARY_GROUP)
 @RequiresOptIn
 public @interface ExperimentalTestApi {}

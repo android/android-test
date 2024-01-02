@@ -1,9 +1,10 @@
 # Description: Build rules for building androidx.test.annotation from source
 
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")
+load("//build_extensions:api_checks.bzl", "api_checks")
+load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
-load("//build_extensions:api_checks.bzl", "api_checks")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 # all users should reference the equivalent targets in //annotation
 package(
@@ -41,13 +42,11 @@ maven_artifact(
     target = ":annotation_aar",
 )
 
-# annotation currently doesn't have any public API
-# uncomment once/if public API is added
-#dackka_test(
-#    name = "annotation_doc",
-#    runtime_dep = ":annotation",
-#    src_jar = ":annotation_aar-src.jar",
-#)
+dackka_test(
+    name = "annotation_doc",
+    runtime_dep = ":annotation",
+    src_jar = ":annotation_aar-src.jar",
+)
 
 api_checks(
     name = "annotation_api",
