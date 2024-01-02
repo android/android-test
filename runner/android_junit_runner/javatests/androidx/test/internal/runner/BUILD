@@ -1,14 +1,14 @@
 # Description: Tests for Runner
 
-load("//build_extensions:axt_android_local_test.bzl", "axt_android_local_test")
 load("//build_extensions:android_library_test.bzl", "axt_android_library_test")
 load("//build_extensions:axt_android_application_test.bzl", "axt_android_application_test")
+load("//build_extensions:axt_android_local_test.bzl", "axt_android_local_test")
+load("@build_bazel_rules_android//android:rules.bzl", "android_binary")
 load(
     "//build_extensions:phone_devices.bzl",
     "apis",
     "devices",
 )
-load("@build_bazel_rules_android//android:rules.bzl", "android_binary")
 
 package(
     default_applicable_licenses = ["//:license"],
@@ -281,7 +281,6 @@ axt_android_local_test(
     deps = [
         "//runner/android_junit_runner",
         "@maven//:com_google_truth_truth",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 

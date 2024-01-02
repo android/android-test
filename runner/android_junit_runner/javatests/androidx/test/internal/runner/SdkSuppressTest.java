@@ -21,13 +21,14 @@ import static org.junit.Assert.fail;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.internal.runner.TestRequestBuilder.DeviceBuild;
+import java.util.ArrayList;
 import java.util.List;
-import kotlin.collections.CollectionsKt;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
+import org.junit.runner.notification.Failure;
 
 @RunWith(AndroidJUnit4.class)
 public class SdkSuppressTest {
@@ -187,9 +188,10 @@ public class SdkSuppressTest {
     Request request = builder.addTestClass(SampleSdkSuppress.class.getName()).build();
     Result result = new JUnitCore().run(request);
 
-    List<String> failingMethods =
-        CollectionsKt.map(
-            result.getFailures(), failure -> failure.getDescription().getMethodName());
+    List<String> failingMethods = new ArrayList<>();
+    for (Failure failure : result.getFailures()) {
+      failingMethods.add(failure.getDescription().getMethodName());
+    }
 
     assertThat(failingMethods)
         .containsExactly(
@@ -209,9 +211,10 @@ public class SdkSuppressTest {
     Request request = builder.addTestClass(SampleSdkSuppress.class.getName()).build();
     Result result = new JUnitCore().run(request);
 
-    List<String> failingMethods =
-        CollectionsKt.map(
-            result.getFailures(), failure -> failure.getDescription().getMethodName());
+    List<String> failingMethods = new ArrayList<>();
+    for (Failure failure : result.getFailures()) {
+      failingMethods.add(failure.getDescription().getMethodName());
+    }
 
     assertThat(failingMethods)
         .containsExactly(
@@ -241,9 +244,10 @@ public class SdkSuppressTest {
     Request request = builder.addTestClass(SampleSdkSuppressOnClass.class.getName()).build();
     Result result = new JUnitCore().run(request);
 
-    List<String> failingMethods =
-        CollectionsKt.map(
-            result.getFailures(), failure -> failure.getDescription().getMethodName());
+    List<String> failingMethods = new ArrayList<>();
+    for (Failure failure : result.getFailures()) {
+      failingMethods.add(failure.getDescription().getMethodName());
+    }
 
     assertThat(failingMethods).containsExactly("noSdkSuppress");
   }
@@ -265,9 +269,10 @@ public class SdkSuppressTest {
         builder.addTestClass(SampleSdkSuppressOnClassAndMethodMaxMin.class.getName()).build();
     Result result = new JUnitCore().run(request);
 
-    List<String> failingMethods =
-        CollectionsKt.map(
-            result.getFailures(), failure -> failure.getDescription().getMethodName());
+    List<String> failingMethods = new ArrayList<>();
+    for (Failure failure : result.getFailures()) {
+      failingMethods.add(failure.getDescription().getMethodName());
+    }
 
     assertThat(failingMethods).containsExactly("maxSdk18");
   }

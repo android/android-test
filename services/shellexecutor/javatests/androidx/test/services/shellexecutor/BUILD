@@ -1,6 +1,6 @@
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")
-load("//build_extensions:axt_android_local_test.bzl", "axt_android_local_test")
 load("//build_extensions:android_library_test.bzl", "axt_android_library_test")
+load("//build_extensions:axt_android_local_test.bzl", "axt_android_local_test")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 package(default_applicable_licenses = ["//services:license"])
 
@@ -42,7 +42,6 @@ axt_android_library_test(
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 
