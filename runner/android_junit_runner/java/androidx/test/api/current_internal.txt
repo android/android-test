@@ -1,15 +1,4 @@
 // Signature format: 3.0
-package androidx.test.runner.permission {
-
-  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class PermissionRequester implements androidx.test.internal.platform.content.PermissionGranter {
-    ctor public PermissionRequester();
-    method public void addPermissions(java.lang.String!...);
-    method public void requestPermissions();
-    method @VisibleForTesting protected void setAndroidRuntimeVersion(int);
-  }
-
-}
-
 package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @RestrictTo({androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP}) androidx.test.services.events {
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class AnnotationInfo implements android.os.Parcelable {

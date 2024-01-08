@@ -26,11 +26,9 @@ import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
-import androidx.annotation.ChecksSdkIntAtLeast;
 import androidx.annotation.NonNull;
-import androidx.annotation.RestrictTo;
-import androidx.annotation.RestrictTo.Scope;
 import androidx.annotation.VisibleForTesting;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.platform.content.PermissionGranter;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.permission.UiAutomationShellCommand.PmCommand;
@@ -47,19 +45,17 @@ import java.util.HashSet;
  * #addPermissions(String...)} to add a permission to the permission list. To request all
  * permissions use the {@link #requestPermissions()} method.
  *
- * <p>Note: This class is not intended to be used directly, but rather through {@link
- * androidx.test.rule.GrantPermissionRule}. For tests running on Android SDKs >= API 28, use {@link
- * android.app.UiAutomation#grantRuntimePermission(String, String)} instead.
+ * <p>Note: Usually this class would not be used directly, but through {@link
+ * androidx.test.rule.GrantPermissionRule}.
  *
- * @hide
+ * <p><b>This API is currently in beta.</b>
  */
-@RestrictTo(Scope.LIBRARY_GROUP) // used by rule
+@ExperimentalTestApi
 @TargetApi(value = 23)
 public class PermissionRequester implements PermissionGranter {
 
   private static final String TAG = "PermissionRequester";
 
-  @ChecksSdkIntAtLeast(extension = 0)
   private int androidRuntimeVersion = Build.VERSION.SDK_INT;
 
   @NonNull private final Context targetContext;
@@ -85,7 +81,6 @@ public class PermissionRequester implements PermissionGranter {
    *
    * @param permissions a list of Android runtime permissions.
    */
-  @Override
   public void addPermissions(@NonNull String... permissions) {
     checkNotNull(permissions, "permissions cannot be null!");
     if (deviceSupportsRuntimePermissions()) {
@@ -108,7 +103,6 @@ public class PermissionRequester implements PermissionGranter {
    * <p>Precondition: This method does nothing when called on an API level lower than {@link
    * Build.VERSION_CODES#M}.
    */
-  @Override
   public void requestPermissions() {
     if (deviceSupportsRuntimePermissions()) {
       for (RequestPermissionCallable requestPermissionCallable : requestedPermissions) {
