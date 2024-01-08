@@ -25,6 +25,7 @@ The following artifacts were released:
 **API Changes**
 
 * Mark generated IInteractionExecutionStatus class as RestrictTo LIBRARY_GROUP
+* Remove ExperimentalTestApi from RuntimePermissionStubber
 
 **Breaking API Changes**
 

@@ -55,6 +55,30 @@ package androidx.test.espresso.intent {
     method public android.content.Intent! getIntent();
   }
 
+  public final class RuntimePermissionsStubber {
+    ctor public RuntimePermissionsStubber();
+    method public static void intendingGrantedPermissions(java.lang.String!...);
+    method public static void intendingRevokedPermissions(java.lang.String!...);
+    field public static final String EXTRA_REQUEST_PERMISSIONS_NAMES = "android.content.pm.extra.REQUEST_PERMISSIONS_NAMES";
+  }
+
+  public static class RuntimePermissionsStubber.ActivityResultBuilder {
+    ctor public RuntimePermissionsStubber.ActivityResultBuilder();
+    method public android.app.Instrumentation.ActivityResult! build();
+    method public androidx.test.espresso.intent.RuntimePermissionsStubber.ActivityResultBuilder! withGrantedPermissions(java.lang.String!...);
+    method public androidx.test.espresso.intent.RuntimePermissionsStubber.ActivityResultBuilder! withResultCode(int);
+    method public androidx.test.espresso.intent.RuntimePermissionsStubber.ActivityResultBuilder! withRevokedPermissions(java.lang.String!...);
+  }
+
+  public static class RuntimePermissionsStubber.Matchers {
+    ctor public RuntimePermissionsStubber.Matchers();
+    method public static org.hamcrest.Matcher<android.content.Intent!>! anyPermission();
+    method public static org.hamcrest.Matcher<android.content.Intent!>! hasPermission(String!);
+    method public static org.hamcrest.Matcher<android.content.Intent!>! hasPermissions(java.lang.String!...);
+    method public static org.hamcrest.Matcher<android.content.Intent!>! hasPermissions(org.hamcrest.Matcher<java.lang.Iterable<java.lang.String!>!>!);
+    field public static final String ACTION_REQUEST_PERMISSIONS = "android.content.pm.action.REQUEST_PERMISSIONS";
+  }
+
   public interface VerifiableIntent extends androidx.test.espresso.intent.ResolvedIntent {
     method public boolean hasBeenVerified();
     method public void markAsVerified();

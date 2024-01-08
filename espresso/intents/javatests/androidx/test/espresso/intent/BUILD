@@ -7,7 +7,6 @@ load(
 )
 load(
     "//build_extensions:phone_devices.bzl",
-    "apis",
     "devices",
 )
 
@@ -20,7 +19,6 @@ axt_android_library_test(
     srcs = ["RuntimePermissionStubberIntegrationTest.java"],
     args = ["--clear_package_data"],
     device_list = devices(
-        apis(max_api = 29),
     ),
     manifest = "AndroidManifest.xml",
     deps = [
