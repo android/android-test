@@ -304,5 +304,8 @@ package androidx.test.runner.suites {
   @org.junit.runner.RunWith(RunnerSuite.class) public final class AndroidClasspathSuite {
   }
 
+  public final class PackagePrefixClasspathSuite extends org.junit.runners.Suite {
+  }
+
 }
 

@@ -20,7 +20,6 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
-import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.runner.ClassPathScanner;
 import androidx.test.internal.runner.ClassPathScanner.ChainedClassNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExternalClassNameFilter;
@@ -52,10 +51,7 @@ import org.junit.runners.model.RunnerBuilder;
  *
  * <p>This class was intended for large applications using {@link AndroidClasspathSuite} results in
  * LinearAlloc errors (b/36936369) and performance overhead when scanning the entire classpath.
- *
- * <p>This API is currently experimental and subject to change in future releases.
  */
-@ExperimentalTestApi
 public final class PackagePrefixClasspathSuite extends Suite {
 
   /**
