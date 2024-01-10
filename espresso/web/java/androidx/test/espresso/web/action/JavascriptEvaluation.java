@@ -169,7 +169,7 @@ final class JavascriptEvaluation {
                 new UnpreparedScript(
                     unprepared.view,
                     DOC_ELEMENT_PRESENT,
-                    Collections.EMPTY_LIST,
+                    Collections.emptyList(),
                     unprepared.window));
         ListenableFuture<String> futureRaw = null;
         try {

@@ -16,20 +16,22 @@
 
 package androidx.test.espresso.base;
 
+import static java.util.Collections.unmodifiableList;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.espresso.UiController;
+import java.util.Arrays;
 import java.util.List;
-import kotlin.collections.CollectionsKt;
 
 /** Helper methods to synchronize configuration changes with onView actions. */
 final class ConfigurationSynchronizationUtils {
   private static final String TAG = ConfigurationSynchronizationUtils.class.getSimpleName();
   private static final List<Integer> ORIENTATION_WAIT_TIMES =
-      CollectionsKt.listOf(10, 50, 100, 250, 500, 2000 /* 2sec */);
+      unmodifiableList(Arrays.asList(10, 50, 100, 250, 500, 2000 /* 2sec */));
 
   private ConfigurationSynchronizationUtils() {}
 

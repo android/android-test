@@ -43,7 +43,6 @@ android_library(
         "//runner/android_junit_runner",
         "@maven//:javax_inject_javax_inject",
         "@maven//:org_hamcrest_hamcrest_core",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 
@@ -73,7 +72,6 @@ android_library(
         "//opensource/androidx:annotation",
         "//runner/monitor",
         "@maven//:javax_inject_javax_inject",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 

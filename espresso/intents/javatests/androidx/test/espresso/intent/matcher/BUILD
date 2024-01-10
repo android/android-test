@@ -100,6 +100,5 @@ axt_android_library_test(
         "//testapps/ui_testapp/javatests/androidx/test/ui/app:test_resources",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

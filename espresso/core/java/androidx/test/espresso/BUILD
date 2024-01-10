@@ -1,11 +1,11 @@
 # Description:
 #   Espresso - the new UI Test API for Android.
 
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")
+load("//build_extensions:api_checks.bzl", "api_checks")
+load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
-load("//build_extensions:dackka_test.bzl", "dackka_test")
-load("//build_extensions:api_checks.bzl", "api_checks")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 licenses(["notice"])
 
@@ -86,7 +86,6 @@ android_library(
         "@maven//:javax_inject_javax_inject",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
 )
@@ -189,7 +188,6 @@ android_library(
         "//runner/monitor",
         "@maven//:com_google_errorprone_error_prone_annotations",
         "@maven//:org_hamcrest_hamcrest_core",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 

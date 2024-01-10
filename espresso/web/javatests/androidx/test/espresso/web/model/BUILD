@@ -21,7 +21,6 @@ axt_android_library_test(
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_exported",
         "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )
 
@@ -36,6 +35,5 @@ axt_android_library_test(
         "//runner/android_junit_runner",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_exported",
         "@maven//:junit_junit",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

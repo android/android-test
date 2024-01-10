@@ -17,6 +17,7 @@ The following artifacts were released:
 **Bug Fixes**
 
 * Fix typo in AdapterDataLoaderAction error message
+* Remove Kotlin collect stdlib calls in Java from espresso
 
 **New Features**
 

@@ -19,9 +19,7 @@ package androidx.test.espresso.base;
 import static androidx.test.internal.util.Checks.checkArgument;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
-import static kotlin.collections.CollectionsKt.listOf;
-import static kotlin.collections.CollectionsKt.mutableListOf;
-import static kotlin.collections.CollectionsKt.toMutableList;
+import static java.util.Collections.singletonList;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -47,7 +45,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import kotlin.collections.CollectionsKt;
 
 /**
  * Keeps track of user-registered {@link IdlingResource IdlingResources}. Consider using {@link
@@ -150,7 +147,7 @@ public final class IdlingResourceRegistry {
       }
 
       unregisterResources(resourcesToUnRegister);
-      registerResources(toMutableList(resourcesToRegister.values()));
+      registerResources(new ArrayList<>(resourcesToRegister.values()));
     }
   }
 
@@ -246,7 +243,7 @@ public final class IdlingResourceRegistry {
     checkNotNull(looper);
     checkArgument(Looper.getMainLooper() != looper, "Not intended for use with main looper!");
 
-    registerResources(listOf(LooperIdlingResourceInterrogationHandler.forLooper(looper)));
+    registerResources(singletonList(LooperIdlingResourceInterrogationHandler.forLooper(looper)));
   }
 
   /**
@@ -265,11 +262,11 @@ public final class IdlingResourceRegistry {
             }
           });
     } else {
-      List<IdlingResource> irs = mutableListOf();
+      List<IdlingResource> irs = new ArrayList<>();
       for (IdlingState is : idlingStates) {
         irs.add(is.resource);
       }
-      return CollectionsKt.toList(irs);
+      return irs;
     }
   }
 
@@ -364,8 +361,8 @@ public final class IdlingResourceRegistry {
   }
 
   List<String> getBusyResources() {
-    List<String> busyResourceNames = mutableListOf();
-    List<IdlingState> racyResources = mutableListOf();
+    List<String> busyResourceNames = new ArrayList<>();
+    List<IdlingState> racyResources = new ArrayList<>();
 
     for (IdlingState state : idlingStates) {
       if (!state.idle) {

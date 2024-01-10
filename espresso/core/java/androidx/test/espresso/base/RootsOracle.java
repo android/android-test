@@ -17,8 +17,7 @@
 package androidx.test.espresso.base;
 
 import static androidx.test.internal.util.Checks.checkState;
-import static kotlin.collections.CollectionsKt.emptyList;
-import static kotlin.collections.CollectionsKt.toList;
+import static java.util.Collections.emptyList;
 
 import android.os.Looper;
 import android.util.Log;
@@ -67,8 +66,7 @@ final class RootsOracle implements ActiveRootLister {
                 .withWindowLayoutParams((LayoutParams) view.getLayoutParams())
                 .build());
       }
-      // return an immutable list
-      return toList(roots);
+      return Collections.unmodifiableList(roots);
     } catch (ViewRetrievalException e) {
       Log.w(TAG, "Failed to retrieve root views", e);
       return emptyList();

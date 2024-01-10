@@ -16,6 +16,5 @@ android_library(
     deps = [
         "//opensource/androidx:annotation",
         "//runner/monitor",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
     ],
 )

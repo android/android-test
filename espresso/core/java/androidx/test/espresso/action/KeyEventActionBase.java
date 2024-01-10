@@ -20,6 +20,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.util.ActivityLifecycles.hasForegroundActivities;
 import static androidx.test.espresso.util.ActivityLifecycles.hasTransitioningActivities;
 import static androidx.test.internal.util.Checks.checkNotNull;
+import static androidx.test.internal.util.Checks.checkState;
 
 import android.app.Activity;
 import android.os.SystemClock;
@@ -37,7 +38,6 @@ import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
 import java.util.Collection;
 import java.util.Locale;
-import kotlin.collections.CollectionsKt;
 import org.hamcrest.Matcher;
 
 /** Enables pressing KeyEvents on views. */
@@ -128,7 +128,8 @@ class KeyEventActionBase implements ViewAction {
   static Activity getCurrentActivity() {
     Collection<Activity> resumedActivities =
         ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
-    return CollectionsKt.single(resumedActivities);
+    checkState(resumedActivities.size() == 1, "There is not a single resumed Activity");
+    return resumedActivities.iterator().next();
   }
 
   static void waitForStageChangeInitialActivity(UiController controller, Activity initialActivity) {

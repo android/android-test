@@ -17,6 +17,7 @@ package androidx.test.espresso.base;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Collections.singletonMap;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -36,8 +37,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import kotlin.Pair;
-import kotlin.collections.MapsKt;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -217,7 +216,7 @@ public class ViewHierarchyExceptionHandlerTest {
             .withOtherAmbiguousViews(child2)
             .build();
 
-    Map<String, String> inputArgs = MapsKt.mapOf(new Pair<>("view_hierarchy_char_limit", "1772"));
+    Map<String, String> inputArgs = singletonMap("view_hierarchy_char_limit", "1772");
     when(testStorage.getInputArgs()).thenReturn(inputArgs);
     doAnswer(invocation -> inputArgs.get(invocation.getArgument(0)))
         .when(testStorage)

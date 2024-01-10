@@ -17,8 +17,6 @@
 package androidx.test.espresso.util;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
-import static kotlin.collections.CollectionsKt.listOf;
-import static kotlin.collections.CollectionsKt.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasEntry;
@@ -29,12 +27,14 @@ import androidx.test.espresso.util.TreeIterables.DistanceRecordingTreeViewer;
 import androidx.test.espresso.util.TreeIterables.TreeViewer;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import kotlin.collections.CollectionsKt;
-import kotlin.collections.MapsKt;
 import kotlin.jvm.functions.Function1;
 import org.junit.Rule;
 import org.junit.Test;
@@ -54,7 +54,7 @@ public class TreeIterablesTest {
 
     public TestElement(String data, TestElement... children) {
       this.data = checkNotNull(data);
-      this.children = CollectionsKt.listOf(children);
+      this.children = Arrays.asList(children);
     }
   }
 
@@ -112,7 +112,8 @@ public class TreeIterablesTest {
         new DistanceRecordingTreeViewer<TestElement>(complexTree, new TestElementTreeViewer());
 
     @SuppressWarnings("unused")
-    List<TestElement> createdForSideEffect = toList(distanceRecorder.children(complexTree));
+    List<TestElement> createdForSideEffect =
+        new ArrayList<>(distanceRecorder.children(complexTree));
 
     assertThat(distanceRecorder.getDistance(complexTree), is(0));
     assertThat(distanceRecorder.getDistance(complexTree.children.iterator().next()), is(1));
@@ -124,8 +125,11 @@ public class TreeIterablesTest {
         new DistanceRecordingTreeViewer<TestElement>(complexTree, new TestElementTreeViewer());
     Iterable<TestElement> complexIterable =
         TreeIterables.depthFirstTraversal(complexTree, distanceRecorder);
-    Set<TestElement> complexSet = CollectionsKt.toSet(complexIterable);
-    Map<String, Integer> distancesByData = MapsKt.mutableMapOf();
+    Set<TestElement> complexSet = new LinkedHashSet<>();
+    for (TestElement e : complexIterable) {
+      complexSet.add(e);
+    }
+    Map<String, Integer> distancesByData = new LinkedHashMap<>();
     for (TestElement e : complexSet) {
       distancesByData.put(e.data, distanceRecorder.getDistance(e));
     }
@@ -152,14 +156,13 @@ public class TreeIterablesTest {
             hasEntry("q", 3)));
     assertThat(distancesByData.size(), is(17));
 
-    List<String> traversalOrder =
-        toList(CollectionsKt.map(complexIterable, new TestElementStringConvertor()));
+    List<String> traversalOrder = map(complexIterable, new TestElementStringConvertor());
 
     // should be depth first if forwarding correctly.
     assertThat(
         traversalOrder,
         is(
-            listOf(
+            Arrays.asList(
                 "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
                 "q")));
   }
@@ -167,15 +170,14 @@ public class TreeIterablesTest {
   @Test
   public void complexTraversal_depthFirst() {
     List<String> breadthFirst =
-        toList(
-            CollectionsKt.map(
-                TreeIterables.depthFirstTraversal(complexTree, new TestElementTreeViewer()),
-                new TestElementStringConvertor()));
+        map(
+            TreeIterables.depthFirstTraversal(complexTree, new TestElementTreeViewer()),
+            new TestElementStringConvertor());
     assertThat(
         breadthFirst,
         is(
             (Iterable<String>)
-                listOf(
+                Arrays.asList(
                     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
                     "q")));
   }
@@ -183,14 +185,13 @@ public class TreeIterablesTest {
   @Test
   public void complexTraversal_breadthFirst() {
     List<String> breadthFirst =
-        toList(
-            CollectionsKt.map(
-                TreeIterables.breadthFirstTraversal(complexTree, new TestElementTreeViewer()),
-                new TestElementStringConvertor()));
+        map(
+            TreeIterables.breadthFirstTraversal(complexTree, new TestElementTreeViewer()),
+            new TestElementStringConvertor());
     assertThat(
         breadthFirst,
         is(
-            listOf(
+            Arrays.asList(
                 "a", // root
                 "b", "l", "m", "n", // L1
                 "c", "g", "h", "o", // L2
@@ -203,21 +204,19 @@ public class TreeIterablesTest {
   public void trivialTraversal_breadthFirst() {
     // essentially the same as depth first.
     List<String> breadthFirst =
-        toList(
-            CollectionsKt.map(
-                TreeIterables.breadthFirstTraversal(trivialTree, new TestElementTreeViewer()),
-                new TestElementStringConvertor()));
-    assertThat(breadthFirst, is(listOf("a", "b", "c", "d")));
+        map(
+            TreeIterables.breadthFirstTraversal(trivialTree, new TestElementTreeViewer()),
+            new TestElementStringConvertor());
+    assertThat(breadthFirst, is(Arrays.asList("a", "b", "c", "d")));
   }
 
   @Test
   public void trivialTraversal_depthFirst() {
     List<String> depthFirst =
-        toList(
-            CollectionsKt.map(
-                TreeIterables.depthFirstTraversal(trivialTree, new TestElementTreeViewer()),
-                new TestElementStringConvertor()));
-    assertThat(depthFirst, is(listOf("a", "b", "c", "d")));
+        map(
+            TreeIterables.depthFirstTraversal(trivialTree, new TestElementTreeViewer()),
+            new TestElementStringConvertor());
+    assertThat(depthFirst, is(Arrays.asList("a", "b", "c", "d")));
   }
 
   @Test
@@ -227,8 +226,11 @@ public class TreeIterablesTest {
 
     Iterable<TestElement> trivialIterable =
         TreeIterables.depthFirstTraversal(trivialTree, distanceRecorder);
-    Set<TestElement> trivialSet = CollectionsKt.toSet(trivialIterable);
-    Map<String, Integer> distancesByData = MapsKt.mutableMapOf();
+    Set<TestElement> trivialSet = new LinkedHashSet<>();
+    for (TestElement e : trivialIterable) {
+      trivialSet.add(e);
+    }
+    Map<String, Integer> distancesByData = new LinkedHashMap<>();
     for (TestElement e : trivialSet) {
       distancesByData.put(e.data, distanceRecorder.getDistance(e));
     }
@@ -237,5 +239,13 @@ public class TreeIterablesTest {
         distancesByData,
         allOf(hasEntry("a", 0), hasEntry("b", 1), hasEntry("c", 2), hasEntry("d", 3)));
     assertThat(distancesByData.size(), is(4));
+  }
+
+  private static <T, U> List<U> map(Iterable<T> iterable, Function1<T, U> mapper) {
+    List<U> values = new ArrayList<>();
+    for (T t : iterable) {
+      values.add(mapper.invoke(t));
+    }
+    return values;
   }
 }

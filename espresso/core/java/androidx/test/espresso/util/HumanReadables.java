@@ -31,11 +31,12 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.Checkable;
 import android.widget.TextView;
+import androidx.test.espresso.util.TreeIterables.ViewAndDistance;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import kotlin.collections.CollectionsKt;
 import kotlin.text.StringsKt;
 
 /** Text converters for various Android objects. */
@@ -104,22 +105,22 @@ public final class HumanReadables {
               Locale.ROOT, "\nProblem views are marked with '%s' below.", problemViewSuffix));
     }
 
-    String viewHierarchyDump =
-        StringJoinerKt.joinToString(
-            CollectionsKt.map(
-                depthFirstViewTraversalWithDistance(rootView),
-                viewAndDistance -> {
-                  String formatString = "+%s%s ";
-                  if (problemViews != null && problemViews.contains(viewAndDistance.getView())) {
-                    formatString += problemViewSuffix;
-                  }
-                  return String.format(
-                      Locale.ROOT,
-                      formatString,
-                      StringsKt.padStart(">", viewAndDistance.getDistanceFromRoot() + 1, '-'),
-                      HumanReadables.describe(viewAndDistance.getView()));
-                }),
-            "\n|\n");
+    List<String> tokens = new ArrayList<>();
+    for (ViewAndDistance viewAndDistance : depthFirstViewTraversalWithDistance(rootView)) {
+      String formatString = "+%s%s ";
+      if (problemViews != null && problemViews.contains(viewAndDistance.getView())) {
+        formatString += problemViewSuffix;
+      }
+      String token =
+          String.format(
+              Locale.ROOT,
+              formatString,
+              StringsKt.padStart(">", viewAndDistance.getDistanceFromRoot() + 1, '-'),
+              HumanReadables.describe(viewAndDistance.getView()));
+      tokens.add(token);
+    }
+
+    String viewHierarchyDump = StringJoinerKt.joinToString(tokens, "\n|\n");
 
     errorMessage.append("\n\nView Hierarchy:\n").append(viewHierarchyDump);
 
