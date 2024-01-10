@@ -21,7 +21,7 @@ class Main {
           if (line.isNotBlank()) {
             val firstChar = line[0]
             if (firstChar.category == CharCategory.UPPERCASE_LETTER) {
-              val parsedLine = line.split(" ")rele
+              val parsedLine = line.split(" ")
               // line is of the form 'KEY_VERSION = "value" # comment'
               if (parsedLine[0].endsWith("VERSION")) {
                 map[parsedLine[0]] = parsedLine[2].drop(1).dropLast(1)
