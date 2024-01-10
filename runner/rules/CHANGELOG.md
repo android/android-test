@@ -12,6 +12,8 @@
 
 **API Changes**
 
+* Recommend use of UiAutomation#grantRuntimePermissions instead of GrantPermissionRule
+
 **Breaking API Changes**
 
 **Known Issues**

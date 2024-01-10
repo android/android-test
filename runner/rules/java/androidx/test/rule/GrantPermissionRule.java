@@ -67,6 +67,9 @@ import org.junit.runners.model.Statement;
  *
  * <p>See <a href="https://developer.android.com/training/permissions/requesting">Request App
  * Permissions</a> for more details on runtime permissions.
+ *
+ * <p>For tests running on Android SDKs >= API 28, use <br>
+ * {@link android.app.UiAutomation#grantRuntimePermission(String, String)} instead.
  */
 public class GrantPermissionRule implements TestRule {
 

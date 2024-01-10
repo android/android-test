@@ -24,7 +24,6 @@ import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.InstrumentationRegistry;
-import androidx.test.annotation.ExperimentalTestApi;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,7 +35,6 @@ import java.util.concurrent.TimeoutException;
  * runtime.
  */
 @TargetApi(value = 23)
-@ExperimentalTestApi
 class UiAutomationShellCommand extends ShellCommand {
 
   private static final String TAG = "UiAutomationShellCmd";
