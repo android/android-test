@@ -206,6 +206,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
 
   /**
    * @see #launch(Class)
+   * @param activityClass an activity class to launch
    * @param activityOptions an activity options bundle to be passed along with the intent to start
    *     activity.
    */
@@ -241,6 +242,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * Launches an activity by a given intent and activity options and constructs ActivityScenario
    * with the activity. @see #launch(Intent)
    *
+   * @param startActivityIntent an intent to start the activity
    * @param activityOptions an activity options bundle to be passed along with the intent to start
    *     activity.
    */
@@ -279,6 +281,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * Launches an activity of a given class and activity options and constructs ActivityScenario with
    * the activity. @see #launchActivityForResult(Class)
    *
+   * @param activityClass an activity class to launch
    * @param activityOptions an activity options bundle to be passed along with the intent to start
    *     activity.
    */
@@ -318,6 +321,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    * Launches an activity by a given intent and constructs ActivityScenario with the activity. @see
    * #launchActivityForResult(Intent)
    *
+   * @param startActivityIntent an intent to start the activity
    * @param activityOptions an activity options bundle to be passed along with the intent to start
    *     activity.
    */

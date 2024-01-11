@@ -236,6 +236,8 @@ public class DataInteraction {
      *
      * @param adapterMatcher matcher that matches an {@link AdapterView}
      * @param dataMatcher the data matcher for matching a {@link View} by it's adapter data
+     * @param rootMatcher matcher for view's root
+     * @param atPosition optional position of the view to match
      * @param adapterViewProtocol the {@link AdapterViewProtocol} used for this data interaction
      * @deprecated use {@link #displayDataMatcher(Matcher, Matcher, Matcher, Integer,
      *     AdapterViewProtocol)} instead.

@@ -7,6 +7,8 @@
 **Bug Fixes**
 Update Activity Scenario reference documentation to fix missing links
 
+* Reference doc cleanup - document previously missing parameters, fix links, etc
+
 **New Features**
 
 **Breaking Changes**

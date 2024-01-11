@@ -173,6 +173,15 @@ public final class EspressoRemote implements RemoteInteraction {
     return isRemoteProcess;
   }
 
+  /**
+   * Creates a callable to run Espresso check interaction on remote processes
+   *
+   * @param rootMatcher the root matcher to use.
+   * @param viewMatcher the view matcher to use.
+   * @param iBinders a list of binders to pass along to the remote process instance
+   * @param viewAssertion the view assertion to use.
+   * @return the Callable
+   */
   @Override
   public synchronized Callable<Void> createRemoteCheckCallable(
       final Matcher<Root> rootMatcher,

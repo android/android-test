@@ -157,8 +157,8 @@ public final class Intents {
    * Intents.init is called.
    *
    * @param matcher the {@link Matcher} to be applied to captured intents
-   * @throws AssertionFailedError if the given {@link Matcher} did not match any or matched more
-   *     than one of the recorded intents
+   * @throws junit.framework.AssertionFailedError if the given {@link Matcher} did not match any or
+   *     matched more than one of the recorded intents
    */
   public static void intended(Matcher<Intent> matcher) {
     intended(matcher, times(1));
@@ -171,8 +171,9 @@ public final class Intents {
    * that Intents.init is called.
    *
    * @param matcher the {@link Matcher} to be applied to captured intents
-   * @throws AssertionFailedError if the given {@link Matcher} did not match the expected number of
-   *     recorded intents
+   * @param verificationMode the verification mode to use
+   * @throws junit.framework.AssertionFailedError if the given {@link Matcher} did not match the
+   *     expected number of recorded intents
    */
   public static void intended(
       final Matcher<Intent> matcher, final VerificationMode verificationMode) {

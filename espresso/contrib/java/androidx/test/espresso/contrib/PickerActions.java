@@ -30,8 +30,8 @@ import org.hamcrest.Matcher;
 /**
  * Espresso action for interacting with {@link DatePicker} and {@link TimePicker}.
  *
- * @see <a href="http://developer.android.com/guide/topics/ui/controls/pickers.html">Pickers API
- *     guide</a>
+ * <p>See <a href="http://developer.android.com/guide/topics/ui/controls/pickers.html">Pickers API
+ * guide</a>
  */
 public final class PickerActions {
 
@@ -39,7 +39,13 @@ public final class PickerActions {
     // no Instance
   }
 
-  /** Returns a {@link ViewAction} that sets a date on a {@link DatePicker}. */
+  /**
+   * Returns a {@link ViewAction} that sets a date on a {@link DatePicker}.
+   *
+   * @param year The year.
+   * @param monthOfYear The month which is starting from zero.
+   * @param dayOfMonth The day of the month.
+   */
   public static ViewAction setDate(final int year, final int monthOfYear, final int dayOfMonth) {
 
     // monthOfYear which starts with zero in DatePicker widget.
@@ -58,7 +64,6 @@ public final class PickerActions {
         return "set date";
       }
 
-      @SuppressWarnings("unchecked")
       @Override
       public Matcher<View> getConstraints() {
         return allOf(isAssignableFrom(DatePicker.class), isDisplayed());
@@ -66,7 +71,12 @@ public final class PickerActions {
     };
   }
 
-  /** Returns a {@link ViewAction} that sets a time on a {@link TimePicker}. */
+  /**
+   * Returns a {@link ViewAction} that sets a time on a {@link TimePicker}.
+   *
+   * @param hours the hour to set, in the range (0-23).
+   * @param minutes the minute to set, in the range (0-59).
+   */
   public static ViewAction setTime(final int hours, final int minutes) {
 
     return new ViewAction() {
@@ -83,7 +93,6 @@ public final class PickerActions {
         return "set time";
       }
 
-      @SuppressWarnings("unchecked")
       @Override
       public Matcher<View> getConstraints() {
         return allOf(isAssignableFrom(TimePicker.class), isDisplayed());

@@ -34,6 +34,15 @@ public class NoopRemoteInteraction implements RemoteInteraction {
     return false;
   }
 
+  /**
+   * Creates a callable to run Espresso check interaction on remote processes
+   *
+   * @param rootMatcher the root matcher to use.
+   * @param viewMatcher the view matcher to use.
+   * @param iBinders a list of binders to pass along to the remote process instance
+   * @param viewAssertion the view assertion to use.
+   * @return the created Callable
+   */
   @Override
   public Callable<Void> createRemoteCheckCallable(
       Matcher<Root> rootMatcher,
@@ -48,6 +57,15 @@ public class NoopRemoteInteraction implements RemoteInteraction {
     };
   }
 
+  /**
+   * Creates a callable to run Espresso perform interaction on remote processes
+   *
+   * @param rootMatcher the root matcher to use.
+   * @param viewMatcher the view matcher to use.
+   * @param iBinders a list of binders to pass along to the remote process instance
+   * @param viewActions one or more actions to execute.
+   * @return
+   */
   @Override
   public Callable<Void> createRemotePerformCallable(
       Matcher<Root> rootMatcher,

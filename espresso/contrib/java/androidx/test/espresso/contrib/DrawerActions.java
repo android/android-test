@@ -36,8 +36,8 @@ import org.hamcrest.Matcher;
 /**
  * Espresso actions for using a {@link DrawerLayout}.
  *
- * @see <a href="http://developer.android.com/design/patterns/navigation-drawer.html">Navigation
- *     drawer design guide</a>
+ * <p>See <a href="http://developer.android.com/design/patterns/navigation-drawer.html">Navigation
+ * drawer design guide</a>
  */
 public final class DrawerActions {
   private static final AtomicInteger nextId = new AtomicInteger();

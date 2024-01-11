@@ -131,6 +131,7 @@ public final class TypeProtoConverters {
    * Performs a {@link ByteString} to {@link Parcelable} conversion.
    *
    * @param byteString the {@link ByteString} to convert to a {@link Parcelable}
+   * @param parcelableClass the class type to create
    * @return instance of {@link Parcelable}
    */
   public static Parcelable byteStringToParcelable(

@@ -79,6 +79,7 @@ public final class ActivityScenarioRule<A extends Activity> extends ExternalReso
 
   /**
    * @see #ActivityScenarioRule(Class)
+   * @param activityClass an activity class to launch
    * @param activityOptions an activity options bundle to be passed along with the intent to start
    *     activity.
    */
@@ -97,6 +98,7 @@ public final class ActivityScenarioRule<A extends Activity> extends ExternalReso
 
   /**
    * @see #ActivityScenarioRule(Intent)
+   * @param startActivityIntent an intent to start an activity
    * @param activityOptions an activity options bundle to be passed along with the intent to start
    *     activity.
    */
