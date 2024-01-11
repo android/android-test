@@ -86,7 +86,6 @@ java_library(
         "ClientNotConnected.java",
     ],
     visibility = [
-        ":__pkg__",
     ],
 )
 
