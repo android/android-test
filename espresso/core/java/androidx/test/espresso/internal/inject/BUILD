@@ -11,7 +11,6 @@ android_library(
     name = "inject",
     srcs = glob(["*java"]),
     visibility = [
-        ":__pkg__",
         "//:__subpackages__",
     ],
     deps = [
