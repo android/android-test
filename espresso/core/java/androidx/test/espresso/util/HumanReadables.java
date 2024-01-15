@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import kotlin.text.StringsKt;
 
 /** Text converters for various Android objects. */
 public final class HumanReadables {
@@ -106,18 +105,21 @@ public final class HumanReadables {
     }
 
     List<String> tokens = new ArrayList<>();
+
     for (ViewAndDistance viewAndDistance : depthFirstViewTraversalWithDistance(rootView)) {
-      String formatString = "+%s%s ";
-      if (problemViews != null && problemViews.contains(viewAndDistance.getView())) {
-        formatString += problemViewSuffix;
+      // Build a string that looks like "+----->View description [suffix]"
+      StringBuilder token = new StringBuilder();
+      token.append('+');
+      for (int i = 0; i < viewAndDistance.getDistanceFromRoot(); i++) {
+        token.append('-');
       }
-      String token =
-          String.format(
-              Locale.ROOT,
-              formatString,
-              StringsKt.padStart(">", viewAndDistance.getDistanceFromRoot() + 1, '-'),
-              HumanReadables.describe(viewAndDistance.getView()));
-      tokens.add(token);
+      token.append('>');
+      token.append(HumanReadables.describe(viewAndDistance.getView()));
+      token.append(' ');
+      if (problemViews != null && problemViews.contains(viewAndDistance.getView())) {
+        token.append(problemViewSuffix);
+      }
+      tokens.add(token.toString());
     }
 
     String viewHierarchyDump = StringJoinerKt.joinToString(tokens, "\n|\n");
