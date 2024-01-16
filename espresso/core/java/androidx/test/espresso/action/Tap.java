@@ -19,6 +19,7 @@ package androidx.test.espresso.action;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.os.Build;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
@@ -109,6 +110,7 @@ public enum Tap implements Tapper {
       checkNotNull(uiController);
       checkNotNull(coordinates);
       checkNotNull(precision);
+      long firstDownTime = SystemClock.uptimeMillis();
       Tapper.Status stat =
           sendSingleTap(uiController, coordinates, precision, inputDevice, buttonState);
       if (stat == Tapper.Status.FAILURE) {
@@ -117,6 +119,13 @@ public enum Tap implements Tapper {
 
       if (0 < DOUBLE_TAP_MIN_TIMEOUT) {
         uiController.loopMainThreadForAtLeast(DOUBLE_TAP_MIN_TIMEOUT);
+      }
+
+      if (SystemClock.uptimeMillis() - firstDownTime > ViewConfiguration.getDoubleTapTimeout()) {
+        // Checking against firstDownTime, since if this much time has elapsed, the first click
+        // has already been considered a single click.
+        Log.w(TAG, "Injection took too long - double click will be considered a single click");
+        return Tapper.Status.WARNING;
       }
 
       Tapper.Status secondStat =
