@@ -28,7 +28,7 @@ android_library(
         "//annotation",
         "//opensource/androidx:annotation",
         "//runner/android_junit_runner",
-        "@androidsdk//:legacy_test-30",
+        "@androidsdk//:legacy_test-34",
         "@maven//:junit_junit",
     ],
 )
