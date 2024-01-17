@@ -1,4 +1,8 @@
-"""Defines next to be released AXT versions."""
+"""Defines next to be released AXT versions.
+
+Use tools/release/validate_and_propagate_versions.sh to propagate these versions to
+//:axt_m2_repository and gradle-tests/settings.gradle
+"""
 
 RUNNER_VERSION = "1.6.0-alpha06"
 RULES_VERSION = "1.6.0-alpha03"
