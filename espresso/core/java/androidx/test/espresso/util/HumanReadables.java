@@ -22,7 +22,6 @@ import static java.lang.Math.max;
 
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.os.Build;
 import android.util.Printer;
 import android.util.StringBuilderPrinter;
 import android.view.View;
@@ -147,10 +146,8 @@ public final class HumanReadables {
     String[] columns = c.getColumnNames();
     for (int i = 0; i < columns.length; i++) {
       result.append(columns[i]).append(":");
-      int type = Cursor.FIELD_TYPE_STRING;
-      if (Build.VERSION.SDK_INT > 10) {
-        type = c.getType(i);
-      }
+
+      int type = c.getType(i);
       switch (type) {
         case Cursor.FIELD_TYPE_STRING:
           result.append("\"").append(c.getString(i)).append("\"");
@@ -258,11 +255,7 @@ public final class HumanReadables {
       sb.append("]");
       helper.add("editor-info", sb.toString().replace("\n", " "));
     }
-
-    if (Build.VERSION.SDK_INT > 10) {
-      helper.add("x", v.getX()).add("y", v.getY());
-    }
-
+    helper.add("x", v.getX()).add("y", v.getY());
     if (v instanceof TextView) {
       innerDescribe((TextView) v, helper);
     }

@@ -18,12 +18,10 @@
 package androidx.test.core.app
 
 import android.graphics.Bitmap
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.Choreographer
-import androidx.annotation.RequiresApi
 import androidx.annotation.RestrictTo
 import androidx.concurrent.futures.ResolvableFuture
 import androidx.test.annotation.ExperimentalTestApi
@@ -49,9 +47,7 @@ import java.util.concurrent.TimeUnit
  */
 @ExperimentalTestApi
 fun canTakeScreenshot(): Boolean =
-  Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 &&
-    getInstrumentation().uiAutomation != null &&
-    Looper.myLooper() != Looper.getMainLooper()
+  getInstrumentation().uiAutomation != null && Looper.myLooper() != Looper.getMainLooper()
 
 /**
  * Captures an image of the device's screen into a [Bitmap].
@@ -75,7 +71,6 @@ fun canTakeScreenshot(): Boolean =
  *   to UiAutomation, [RuntimeException] if UiAutomation fails to take the screenshot
  */
 @ExperimentalTestApi
-@RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 @Suppress("FutureReturnValueIgnored")
 @Throws(RuntimeException::class)
 fun takeScreenshot(): Bitmap {
@@ -96,7 +91,6 @@ fun takeScreenshot(): Bitmap {
  */
 @ExperimentalTestApi
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-@RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 @Suppress("FutureReturnValueIgnored")
 @Throws(RuntimeException::class)
 fun takeScreenshotNoSync(): Bitmap {
@@ -147,7 +141,6 @@ fun takeScreenshotNoSync(): Bitmap {
   }
 }
 
-@RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 private fun forceRedrawGlobalWindowViews(mainExecutor: Executor): ListenableFuture<List<Void>> {
   val future: ResolvableFuture<List<Void>> = ResolvableFuture.create()
   mainExecutor.execute {

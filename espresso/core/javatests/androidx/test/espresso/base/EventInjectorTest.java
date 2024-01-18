@@ -45,15 +45,7 @@ public class EventInjectorTest {
 
   @Before
   public void setUp() throws Exception {
-    if (Build.VERSION.SDK_INT > 15) {
-      InputManagerEventInjectionStrategy strat = new InputManagerEventInjectionStrategy();
-      strat.initialize();
-      injector = new EventInjector(strat);
-    } else {
-      WindowManagerEventInjectionStrategy strat = new WindowManagerEventInjectionStrategy();
-      strat.initialize();
-      injector = new EventInjector(strat);
-    }
+    injector = new EventInjector(new InputManagerEventInjectionStrategy().initialize());
   }
 
   @Test

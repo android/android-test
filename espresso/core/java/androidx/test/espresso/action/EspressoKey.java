@@ -18,7 +18,6 @@ package androidx.test.espresso.action;
 
 import static androidx.test.internal.util.Checks.checkState;
 
-import android.os.Build;
 import android.view.KeyEvent;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
@@ -73,10 +72,7 @@ public final class EspressoKey {
       return this;
     }
 
-    /**
-     * On Honeycomb and above, sets the CTRL_ON meta state of the resulting key. On Gingerbread and
-     * below, this is a noop.
-     */
+    /** Sets the CTRL_ON meta state of the resulting key. */
     public Builder withCtrlPressed(boolean ctrlPressed) {
       isCtrlPressed = ctrlPressed;
       return this;
@@ -98,7 +94,7 @@ public final class EspressoKey {
         metaState |= KeyEvent.META_ALT_ON;
       }
 
-      if (isCtrlPressed && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+      if (isCtrlPressed) {
         metaState |= KeyEvent.META_CTRL_ON;
       }
 

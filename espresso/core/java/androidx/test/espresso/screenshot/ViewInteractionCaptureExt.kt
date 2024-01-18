@@ -18,9 +18,7 @@
 package androidx.test.espresso.screenshot
 
 import android.graphics.Bitmap
-import android.os.Build
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.concurrent.futures.ResolvableFuture
 import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.core.view.captureToBitmap
@@ -46,7 +44,6 @@ import org.hamcrest.Matchers.any
  * This API is currently experimental and subject to change or removal.
  */
 @ExperimentalTestApi
-@RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
 fun ViewInteraction.captureToBitmap(): Bitmap {
   var bitmapFuture = ResolvableFuture.create<Bitmap>()
 
@@ -77,7 +74,6 @@ internal constructor(private val bitmapFuture: ResolvableFuture<Bitmap>) : ViewA
     return String.format(Locale.ROOT, "capture view to image")
   }
 
-  @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
   override fun perform(uiController: UiController, view: View) {
     uiController.loopMainThreadUntilIdle()
     bitmapFuture.setFuture(view.captureToBitmap())

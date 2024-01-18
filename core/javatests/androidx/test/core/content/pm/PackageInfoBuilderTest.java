@@ -74,8 +74,6 @@ public final class PackageInfoBuilderTest {
 
   @Test
   public void build_withRequestedPermissionsFlags() {
-    // API added in API 16 or newer.
-    assumeTrue(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN);
     int permissionFlag = PackageInfo.REQUESTED_PERMISSION_GRANTED;
 
     PackageInfo packageInfo =

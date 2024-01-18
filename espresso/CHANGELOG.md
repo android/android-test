@@ -20,6 +20,7 @@ The following artifacts were released:
 * Remove Kotlin collect stdlib calls in Java from espresso
 * Reference doc cleanup - document previously missing parameters, fix links, etc
 * Remove Kotlin StringKt calls from Java code
+* Remove all support for Android SDKs < 19. Minimum is API 19 (Android Kit Kat 4.4)
 
 **New Features**
 

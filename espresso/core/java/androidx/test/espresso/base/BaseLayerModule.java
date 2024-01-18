@@ -17,7 +17,6 @@
 package androidx.test.espresso.base;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.RestrictTo;
@@ -122,28 +121,12 @@ public class BaseLayerModule {
   @Provides
   @Singleton
   public EventInjector provideEventInjector() {
-    // On API 16 and above, android uses input manager to inject events. On API < 16,
-    // they use Window Manager. So we need to create our InjectionStrategy depending on the api
-    // level. Instrumentation does not check if the event presses went through by checking the
+    // Adroid uses input manager to inject events.
+    // Instrumentation does not check if the event presses went through by checking the
     // boolean return value of injectInputEvent, which is why we created this class to better
     // handle lost/dropped press events. Instrumentation cannot be used as a fallback strategy,
     // since this will be executed on the main thread.
-    int sdkVersion = Build.VERSION.SDK_INT;
-    EventInjectionStrategy injectionStrategy = null;
-    if (sdkVersion >= 16) { // Use InputManager for API level 16 and up.
-      InputManagerEventInjectionStrategy strategy = new InputManagerEventInjectionStrategy();
-      strategy.initialize();
-      injectionStrategy = strategy;
-    } else if (sdkVersion >= 7) {
-      // else Use WindowManager for API level 15 through 7.
-      WindowManagerEventInjectionStrategy strategy = new WindowManagerEventInjectionStrategy();
-      strategy.initialize();
-      injectionStrategy = strategy;
-    } else {
-      throw new RuntimeException(
-          "API Level 6 and below is not supported. You are running: " + sdkVersion);
-    }
-    return new EventInjector(injectionStrategy);
+    return new EventInjector(new InputManagerEventInjectionStrategy().initialize());
   }
 
   /** Holder for AtomicReference<FailureHandler> which allows updating it at runtime. */

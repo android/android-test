@@ -18,7 +18,6 @@ package androidx.test.espresso.web.action;
 
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 
-import android.os.Build;
 import android.view.View;
 import android.webkit.WebView;
 import androidx.test.espresso.UiController;
@@ -52,9 +51,6 @@ public class EnableJavascriptAction implements ViewAction {
     WebView webView = (WebView) view;
     if (!webView.getSettings().getJavaScriptEnabled()) {
       webView.getSettings().setJavaScriptEnabled(true);
-      if (Build.VERSION.SDK_INT < 19) {
-        webView.reload();
-      }
     }
   }
 }

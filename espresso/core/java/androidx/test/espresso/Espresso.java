@@ -29,8 +29,6 @@ import static org.hamcrest.Matchers.endsWith;
 
 import android.content.Context;
 import android.os.Build;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Looper;
 import android.util.Log;
 import android.view.Choreographer;
@@ -297,11 +295,6 @@ public final class Espresso {
   }
 
   private static void waitUntilNextFrame(int times) {
-    // Choreographer API is added in API 16.
-    if (VERSION.SDK_INT < VERSION_CODES.JELLY_BEAN) {
-      return;
-    }
-
     for (int i = 0; i < times; ++i) {
       CountDownLatch latch = new CountDownLatch(1);
       InstrumentationRegistry.getInstrumentation()
@@ -393,11 +386,7 @@ public final class Espresso {
   }
 
   private static boolean hasVirtualOverflowButton(Context context) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
-    } else {
-      return !ViewConfiguration.get(context).hasPermanentMenuKey();
-    }
+    return !ViewConfiguration.get(context).hasPermanentMenuKey();
   }
 
   /**

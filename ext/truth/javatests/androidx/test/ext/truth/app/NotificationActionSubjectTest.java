@@ -18,7 +18,6 @@ package androidx.test.ext.truth.app;
 import static androidx.test.ext.truth.app.NotificationActionSubject.assertThat;
 
 import android.app.Notification;
-import android.os.Build;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,10 +29,7 @@ public class NotificationActionSubjectTest {
 
   @Test
   public void hasTitle() {
-    if (Build.VERSION.SDK_INT >= 16) {
-      final Notification.Action action = new Notification.Action(0, EXPECTED_TEXT, null);
-
-      assertThat(action).title().isEqualTo(EXPECTED_TEXT);
-    }
+    final Notification.Action action = new Notification.Action(0, EXPECTED_TEXT, null);
+    assertThat(action).title().isEqualTo(EXPECTED_TEXT);
   }
 }

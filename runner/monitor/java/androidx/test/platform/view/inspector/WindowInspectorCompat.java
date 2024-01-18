@@ -25,7 +25,6 @@ import androidx.test.internal.platform.reflect.ReflectiveField;
 import androidx.test.internal.platform.reflect.ReflectiveMethod;
 import androidx.test.internal.util.Checks;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -37,22 +36,12 @@ import java.util.List;
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // currently used by core, consider making public
 public class WindowInspectorCompat {
 
-  // type WindowManagerImpl for API < 17
-  private static final ReflectiveMethod<Object> getWindowManagerImplReflectiveCall =
-      new ReflectiveMethod<>("android.view.WindowManagerImpl", "getDefault");
-
   // type WindowManagerGlobal
   private static final ReflectiveMethod<Object> getWindowManagerGlobalReflectiveCall =
       new ReflectiveMethod<>("android.view.WindowManagerGlobal", "getInstance");
 
   private static final ReflectiveField<List<View>> windowViewsReflectiveField =
       new ReflectiveField<>("android.view.WindowManagerGlobal", "mViews");
-
-  private static final ReflectiveField<View[]> windowViewsPreKitkatReflectiveField =
-      new ReflectiveField<>("android.view.WindowManagerGlobal", "mViews");
-
-  private static final ReflectiveField<View[]> windowViewsPreJBReflectiveField =
-      new ReflectiveField<>("android.view.WindowManagerImpl", "mViews");
 
   /**
    * Thrown when there is a failure retrieving window views.
@@ -100,23 +89,10 @@ public class WindowInspectorCompat {
   }
 
   private static Object getWindowManager() throws ReflectionException {
-    if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
-      return getWindowManagerGlobalReflectiveCall.invokeStatic();
-    } else {
-      return getWindowManagerImplReflectiveCall.invokeStatic();
-    }
+    return getWindowManagerGlobalReflectiveCall.invokeStatic();
   }
 
   private static List<View> getViews(Object windowManagerGlobal) throws ReflectionException {
-    if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
-      return new ArrayList<>(windowViewsReflectiveField.get(windowManagerGlobal));
-    } else if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
-      View[] views = windowViewsPreKitkatReflectiveField.get(windowManagerGlobal);
-      // create a new list for consistency with other apis
-      return views != null ? new ArrayList<>(Arrays.asList(views)) : new ArrayList<>();
-    } else {
-      View[] views = windowViewsPreJBReflectiveField.get(windowManagerGlobal);
-      return views != null ? new ArrayList<>(Arrays.asList(views)) : new ArrayList<>();
-    }
+    return new ArrayList<>(windowViewsReflectiveField.get(windowManagerGlobal));
   }
 }

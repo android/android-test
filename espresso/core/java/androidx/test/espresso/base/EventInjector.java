@@ -18,7 +18,6 @@ package androidx.test.espresso.base;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 
-import android.os.Build;
 import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -55,36 +54,19 @@ final class EventInjector {
       downTime = eventTime;
     }
 
-    // API < 9 does not have constructor with source (nor has source field).
-    KeyEvent newEvent;
-    if (Build.VERSION.SDK_INT < 9) {
-      newEvent =
-          new KeyEvent(
-              downTime,
-              eventTime,
-              action,
-              code,
-              repeatCount,
-              metaState,
-              deviceId,
-              scancode,
-              flags | KeyEvent.FLAG_FROM_SYSTEM);
-    } else {
-      int source = event.getSource();
-      newEvent =
-          new KeyEvent(
-              downTime,
-              eventTime,
-              action,
-              code,
-              repeatCount,
-              metaState,
-              deviceId,
-              scancode,
-              flags | KeyEvent.FLAG_FROM_SYSTEM,
-              source);
-    }
-
+    int source = event.getSource();
+    KeyEvent newEvent =
+        new KeyEvent(
+            downTime,
+            eventTime,
+            action,
+            code,
+            repeatCount,
+            metaState,
+            deviceId,
+            scancode,
+            flags | KeyEvent.FLAG_FROM_SYSTEM,
+            source);
     return injectionStrategy.injectKeyEvent(newEvent);
   }
 

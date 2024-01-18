@@ -24,8 +24,6 @@ import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -101,7 +99,7 @@ public class SimpleFileContentProvider extends ContentProvider {
           String.format("error happened creating parent dir for file %s", requestedFile));
     }
 
-    return ParcelFileDescriptor.open(requestedFile, parseMode(mode));
+    return ParcelFileDescriptor.open(requestedFile, ParcelFileDescriptor.parseMode(mode));
   }
 
   @Override
@@ -145,32 +143,4 @@ public class SimpleFileContentProvider extends ContentProvider {
         String.format("Uri %s refers to a file not managed by this provider", uri));
   }
 
-  private static int parseMode(String mode) {
-    if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
-      return ParcelFileDescriptor.parseMode(mode);
-    } else {
-      final int modeBits;
-      if ("r".equals(mode)) {
-        modeBits = ParcelFileDescriptor.MODE_READ_ONLY;
-      } else if ("w".equals(mode) || "wt".equals(mode)) {
-        modeBits = ParcelFileDescriptor.MODE_WRITE_ONLY
-            | ParcelFileDescriptor.MODE_CREATE
-            | ParcelFileDescriptor.MODE_TRUNCATE;
-      } else if ("wa".equals(mode)) {
-        modeBits = ParcelFileDescriptor.MODE_WRITE_ONLY
-            | ParcelFileDescriptor.MODE_CREATE
-            | ParcelFileDescriptor.MODE_APPEND;
-      } else if ("rw".equals(mode)) {
-        modeBits = ParcelFileDescriptor.MODE_READ_WRITE
-            | ParcelFileDescriptor.MODE_CREATE;
-      } else if ("rwt".equals(mode)) {
-        modeBits = ParcelFileDescriptor.MODE_READ_WRITE
-            | ParcelFileDescriptor.MODE_CREATE
-            | ParcelFileDescriptor.MODE_TRUNCATE;
-      } else {
-        throw new IllegalArgumentException("Bad mode '" + mode + "'");
-      }
-      return modeBits;
-    }
-  }
 }

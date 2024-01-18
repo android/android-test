@@ -41,8 +41,8 @@ import androidx.annotation.RestrictTo.Scope;
 public class ExposedInstrumentationApi extends Instrumentation {
 
   /**
-   * This API was removed in Android API 15 (ICE_CREAM_SANDWICH_MR1). We need to keep it around in
-   * case the code is compiled against API 15.
+   * This API was removed in Android API 15 (ICE_CREAM_SANDWICH_MR1). We need to keep it around for
+   * API backwards compatibility in extending classes.
    */
   public ActivityResult execStartActivity(
       Context who,

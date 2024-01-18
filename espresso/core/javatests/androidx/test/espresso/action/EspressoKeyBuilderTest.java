@@ -18,7 +18,6 @@ package androidx.test.espresso.action;
 
 import static org.junit.Assert.assertEquals;
 
-import android.os.Build;
 import android.view.KeyEvent;
 import androidx.test.espresso.action.EspressoKey.Builder;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -51,12 +50,7 @@ public class EspressoKeyBuilderTest {
   public void buildWithCtrlPressed() {
     EspressoKey key = new Builder().withKeyCode(KEY_CODE).withCtrlPressed(true).build();
     assertEquals(KEY_CODE, key.getKeyCode());
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      assertEquals(KeyEvent.META_CTRL_ON, key.getMetaState());
-    } else {
-      assertEquals(0, key.getMetaState());
-    }
+    assertEquals(KeyEvent.META_CTRL_ON, key.getMetaState());
   }
 
   @Test
@@ -77,12 +71,7 @@ public class EspressoKeyBuilderTest {
             .build();
 
     assertEquals(KEY_CODE, key.getKeyCode());
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      assertEquals(
-          KeyEvent.META_SHIFT_ON | KeyEvent.META_CTRL_ON | KeyEvent.META_ALT_ON,
-          key.getMetaState());
-    } else {
-      assertEquals(KeyEvent.META_SHIFT_ON | KeyEvent.META_ALT_ON, key.getMetaState());
-    }
+    assertEquals(
+        KeyEvent.META_SHIFT_ON | KeyEvent.META_CTRL_ON | KeyEvent.META_ALT_ON, key.getMetaState());
   }
 }

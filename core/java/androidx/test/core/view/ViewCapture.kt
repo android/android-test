@@ -60,7 +60,6 @@ import java.util.function.Consumer
  * This API is currently experimental and subject to change or removal.
  */
 @ExperimentalTestApi
-@RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
 fun View.captureToBitmap(rect: Rect? = null): ListenableFuture<Bitmap> {
   val bitmapFuture: ResolvableFuture<Bitmap> = ResolvableFuture.create()
   val mainExecutor = HandlerExecutor(Handler(Looper.getMainLooper()))
@@ -90,8 +89,7 @@ fun View.captureToBitmap(rect: Rect? = null): ListenableFuture<Bitmap> {
  *
  * @return a [ListenableFuture] that will be complete once ui drawing is complete
  */
-// NoClassDefFoundError occurs on API 15
-@RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
+// TODO(b/316921934): uncomment once @ExperimentalTestApi is removed
 // @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @ExperimentalTestApi
 fun View.forceRedraw(): ListenableFuture<Void> {

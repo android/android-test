@@ -16,14 +16,11 @@
 
 package androidx.test.services.speakeasy;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.ResultReceiver;
 import android.util.Log;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * SpeakEasyProtocol abstracts away sending commands / interpreting responses from speakeasy via
@@ -59,8 +56,6 @@ public final class SpeakEasyProtocol {
   public final FindResult findResult;
 
   private static final String TYPE_KEY = "sep_type";
-  private static final Method GET_IBINDER;
-  private static final Method PUT_IBINDER;
 
   private SpeakEasyProtocol(Publish p) {
     this.type = PUBLISH_TYPE;
@@ -432,44 +427,14 @@ public final class SpeakEasyProtocol {
     }
   }
 
-  static {
-    Method getIBinder = null;
-    Method putIBinder = null;
-    if (Build.VERSION.SDK_INT < 18) {
-      try {
-        getIBinder = Bundle.class.getMethod("getIBinder", String.class);
-        putIBinder = Bundle.class.getMethod("putIBinder", String.class, IBinder.class);
-      } catch (NoSuchMethodException nsme) {
-        Log.e(TAG, "Cannot find methods for IBinders on bundle object", nsme);
-        throw new RuntimeException(nsme);
-      }
-    }
-    GET_IBINDER = getIBinder;
-    PUT_IBINDER = putIBinder;
-  }
 
   /** Gets an IBinder from a bundle safely. */
   private static IBinder getBinder(Bundle b, String key) {
-    if (null != GET_IBINDER) {
-      try {
-        return (IBinder) GET_IBINDER.invoke(b, key);
-      } catch (InvocationTargetException | IllegalAccessException ex) {
-        throw new RuntimeException(ex);
-      }
-    }
     return b.getBinder(key);
   }
 
   /** Puts an IBinder in a bundle safely. */
   private static void putBinder(Bundle b, String key, IBinder val) {
-    if (null != PUT_IBINDER) {
-      try {
-        PUT_IBINDER.invoke(b, key, val);
-        return;
-      } catch (InvocationTargetException | IllegalAccessException ex) {
-        throw new RuntimeException(ex);
-      }
-    }
     b.putBinder(key, val);
   }
 }

@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.view.Gravity;
@@ -188,10 +187,6 @@ public class SendActivity extends Activity {
   }
 
   public boolean showPopupMenu(View view) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-      return false;
-    }
-
     PopupMenu popup = new PopupMenu(this, view);
     MenuInflater inflater = popup.getMenuInflater();
     inflater.inflate(R.menu.popup_menu, popup.getMenu());

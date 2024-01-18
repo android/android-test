@@ -40,7 +40,6 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -143,22 +142,17 @@ class DelegatingContext extends ContextWrapper {
   public SQLiteDatabase openOrCreateDatabase(
       @NonNull String name, int mode, CursorFactory factory, DatabaseErrorHandler errorHandler) {
     checkArgument(!TextUtils.isEmpty(name), "Database name cannot be empty or null");
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      String prefixName = getPrefixName(name);
-      if (!databases.contains(name)) {
-        addDatabase(name);
-        if (context.getDatabasePath(prefixName).exists() && !context.deleteDatabase(prefixName)) {
-          Log.w(
-              TAG,
-              "Database with prefixed name "
-                  + prefixName
-                  + " already exists and cannot be deleted.");
-        }
+
+    String prefixName = getPrefixName(name);
+    if (!databases.contains(name)) {
+      addDatabase(name);
+      if (context.getDatabasePath(prefixName).exists() && !context.deleteDatabase(prefixName)) {
+        Log.w(
+            TAG,
+            "Database with prefixed name " + prefixName + " already exists and cannot be deleted.");
       }
-      return context.openOrCreateDatabase(prefixName, mode, factory, errorHandler);
     }
-    throw new UnsupportedOperationException(
-        "For API level < 11, use openOrCreateDatabase(String, int, CursorFactory) instead");
+    return context.openOrCreateDatabase(prefixName, mode, factory, errorHandler);
   }
 
   /**
@@ -268,10 +262,8 @@ class DelegatingContext extends ContextWrapper {
   @Override
   public Object getSystemService(@NonNull String name) {
     checkArgument(!TextUtils.isEmpty(name), "name cannot be empty or null");
-    // getSystemService(Context.APP_OPS_SERVICE) is only used in ContentProvider#attachInfo for
-    // API level >= 19.
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-        && Context.APP_OPS_SERVICE.equals(name)) {
+    // getSystemService(Context.APP_OPS_SERVICE) is only used in ContentProvider#attachInfo
+    if (Context.APP_OPS_SERVICE.equals(name)) {
       return context.getSystemService(Context.APP_OPS_SERVICE);
     }
     throw new UnsupportedOperationException();

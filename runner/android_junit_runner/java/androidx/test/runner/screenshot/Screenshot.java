@@ -20,7 +20,6 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Looper;
 import android.view.View;
 import androidx.annotation.NonNull;
@@ -46,7 +45,6 @@ import java.util.concurrent.FutureTask;
  */
 @Deprecated
 public final class Screenshot {
-  private static int androidRuntimeVersion = Build.VERSION.SDK_INT;
   private static UiAutomationWrapper uiWrapper = new UiAutomationWrapper();
   // Set of processors to pass to every ScreenCapture when it is created.
   private static Set<ScreenCaptureProcessor> screenCaptureProcessorSet = new HashSet<>();
@@ -54,16 +52,10 @@ public final class Screenshot {
       new TakeScreenshotCallable.Factory();
 
   /**
-   * Creates a {@link ScreenCapture} that contains a {@link Bitmap} of the visible screen content
-   * for Build.VERSION_CODES.JELLY_BEAN_MR2 and above.
+   * Creates a {@link ScreenCapture} that contains a {@link Bitmap} of the visible screen content.
    *
    * <p>The {@link ScreenCapture} that is returned will also contain the set of {@link
    * ScreenCaptureProcessor}s that have been set in this instance.
-   *
-   * <p>Note: Only use this method if all your tests run on API versions
-   * Build.VERSION_CODES.JELLY_BEAN_MR2 or above. If you need to take screenshots on lower API
-   * levels, you need to use {@link #capture(Activity)} or {@link #capture(View)} for those
-   * versions.
    *
    * @return a {@link ScreenCapture} that contains the bitmap of the visible screen content.
    * @throws IllegalStateException if used on API below Build.VERSION_CODES.JELLY_BEAN_MR2
@@ -165,7 +157,7 @@ public final class Screenshot {
   private static ScreenCapture captureImpl(View targetView)
       throws IOException, InterruptedException, ExecutionException {
     Bitmap bitmap;
-    if (targetView == null && androidRuntimeVersion >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+    if (targetView == null) {
       bitmap = captureUiAutomatorImpl();
     } else {
       bitmap = captureViewBasedImpl(targetView);
@@ -202,11 +194,6 @@ public final class Screenshot {
   @VisibleForTesting
   static void setUiAutomationWrapper(UiAutomationWrapper wrapper) {
     uiWrapper = wrapper;
-  }
-
-  @VisibleForTesting
-  static void setAndroidRuntimeVersion(int sdkInt) {
-    androidRuntimeVersion = sdkInt;
   }
 
   /**

@@ -44,7 +44,6 @@ public class MenuTest {
     ActivityScenario.launch(MenuActivity.class);
   }
 
-  // popup menus are post honeycomb.
   @Test
   public void testPopupMenu() {
     onView(withText(R.string.popup_item_1_text)).check(doesNotExist());

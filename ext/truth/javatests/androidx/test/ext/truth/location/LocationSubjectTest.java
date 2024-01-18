@@ -203,8 +203,6 @@ public class LocationSubjectTest {
 
   @Test
   public void elapsedRealtime() {
-    assumeTrue(VERSION.SDK_INT > VERSION_CODES.JELLY_BEAN_MR1);
-
     Location location = new Location(GPS_PROVIDER);
     location.setElapsedRealtimeNanos(100000000);
 

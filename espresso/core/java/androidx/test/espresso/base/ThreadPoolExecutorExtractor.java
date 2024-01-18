@@ -16,7 +16,6 @@
 
 package androidx.test.espresso.base;
 
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.Nullable;
@@ -41,7 +40,6 @@ final class ThreadPoolExecutorExtractor {
   private static final String MODERN_ASYNC_TASK_CLASS_NAME =
       "androidx.loader.content.ModernAsyncTask";
   private static final String MODERN_ASYNC_TASK_FIELD_NAME = "THREAD_POOL_EXECUTOR";
-  private static final String LEGACY_ASYNC_TASK_FIELD_NAME = "sExecutor";
   private final Handler mainHandler;
 
   @Inject
@@ -51,13 +49,7 @@ final class ThreadPoolExecutorExtractor {
 
   @Nullable
   public ThreadPoolExecutor getAsyncTaskThreadPool() {
-    FutureTask<ThreadPoolExecutor> getTask = null;
-    if (Build.VERSION.SDK_INT < 11) {
-      getTask = new FutureTask<ThreadPoolExecutor>(LEGACY_ASYNC_TASK_EXECUTOR);
-    } else {
-      getTask = new FutureTask<ThreadPoolExecutor>(POST_HONEYCOMB_ASYNC_TASK_EXECUTOR);
-    }
-
+    FutureTask<ThreadPoolExecutor> getTask = new FutureTask<>(ASYNC_TASK_EXECUTOR);
     try {
       return runOnMainThread(getTask).get();
     } catch (InterruptedException ie) {
@@ -129,21 +121,7 @@ final class ThreadPoolExecutorExtractor {
   private static final Callable<Class<?>> LOAD_ASYNC_TASK_CLASS =
       () -> Class.forName(ASYNC_TASK_CLASS_NAME);
 
-  private static final Callable<ThreadPoolExecutor> LEGACY_ASYNC_TASK_EXECUTOR =
-      () -> {
-        try {
-          Field executorField =
-              LOAD_ASYNC_TASK_CLASS.call().getDeclaredField(LEGACY_ASYNC_TASK_FIELD_NAME);
-          executorField.setAccessible(true);
-          return (ThreadPoolExecutor) executorField.get(null);
-        } catch (ClassNotFoundException cnfe) {
-          return null;
-        } catch (NoSuchFieldException nsfe) {
-          return null;
-        }
-      };
-
-  private static final Callable<ThreadPoolExecutor> POST_HONEYCOMB_ASYNC_TASK_EXECUTOR =
+  private static final Callable<ThreadPoolExecutor> ASYNC_TASK_EXECUTOR =
       () -> {
         try {
           Field executorField = LOAD_ASYNC_TASK_CLASS.call().getField(MODERN_ASYNC_TASK_FIELD_NAME);

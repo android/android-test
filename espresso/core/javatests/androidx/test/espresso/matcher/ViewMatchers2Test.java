@@ -1112,10 +1112,6 @@ public class ViewMatchers2Test {
 
   @Test
   public void withResourceName_mismatchDescription_generatedId() {
-    if (VERSION.SDK_INT < 17) {
-      // View.generateViewId() is only available on SDK 17+.
-      return;
-    }
     View view = new View(context);
     view.setId(View.generateViewId());
     assertThat(

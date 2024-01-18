@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -109,16 +108,8 @@ public class UiControllerImplTest {
         new IdlingResourceRegistry(testThread.getLooper(), Tracing.getInstance());
     asyncPool =
         new ThreadPoolExecutor(3, 3, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
-    EventInjector injector = null;
-    if (Build.VERSION.SDK_INT > 15) {
-      InputManagerEventInjectionStrategy strat = new InputManagerEventInjectionStrategy();
-      strat.initialize();
-      injector = new EventInjector(strat);
-    } else {
-      WindowManagerEventInjectionStrategy strat = new WindowManagerEventInjectionStrategy();
-      strat.initialize();
-      injector = new EventInjector(strat);
-    }
+    EventInjector injector =
+        new EventInjector(new InputManagerEventInjectionStrategy().initialize());
 
     uiController.set(
         new UiControllerImpl(

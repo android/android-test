@@ -26,7 +26,6 @@ import static org.mockito.Mockito.verify;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.view.View;
 import android.view.Window;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -35,9 +34,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -53,8 +50,6 @@ public class ScreenshotTest {
   @Mock private Activity activity;
   @Mock private Window window;
   @Mock private View view;
-
-  @Rule public final ExpectedException expectedException = ExpectedException.none();
 
   private Bitmap stubBitmap = Bitmap.createBitmap(10, 10, ARGB_8888);
   private Bitmap stubBitmapLegacy = Bitmap.createBitmap(10, 10, ARGB_8888);
@@ -74,7 +69,6 @@ public class ScreenshotTest {
 
     Screenshot.setUiAutomationWrapper(uiAutomationWrapper);
     Screenshot.setTakeScreenshotCallableFactory(stubCallableFactory);
-    Screenshot.setAndroidRuntimeVersion(Build.VERSION.SDK_INT);
     Screenshot.setScreenshotProcessors(new HashSet<ScreenCaptureProcessor>());
 
     doReturn(stubBitmap).when(uiAutomationWrapper).takeScreenshot();
@@ -84,8 +78,7 @@ public class ScreenshotTest {
   }
 
   @Test
-  public void captureScreenshotAbove18WithoutActivity_shouldCapture() throws Exception {
-    Screenshot.setAndroidRuntimeVersion(18);
+  public void captureScreenshotWithoutActivity_shouldCapture() throws Exception {
     ScreenCapture comparableScreenCapture = new ScreenCapture(stubBitmap);
 
     assertEquals(Screenshot.capture(), comparableScreenCapture);
@@ -94,8 +87,7 @@ public class ScreenshotTest {
   }
 
   @Test
-  public void captureScreenshotAbove18WithActivity_shouldCapture() throws Exception {
-    Screenshot.setAndroidRuntimeVersion(18);
+  public void captureScreenshotWithActivity_shouldCapture() throws Exception {
     ScreenCapture comparableScreenCapture = new ScreenCapture(stubBitmapLegacy);
 
     assertEquals(Screenshot.capture(activity), comparableScreenCapture);
@@ -104,49 +96,16 @@ public class ScreenshotTest {
   }
 
   @Test
-  public void captureScreenshotAbove18WithView_shouldCapture() throws Exception {
-    Screenshot.setAndroidRuntimeVersion(18);
+  public void captureScreenshotWithView_shouldCapture() throws Exception {
     ScreenCapture comparableScreenCapture = new ScreenCapture(stubBitmapLegacy);
 
     assertEquals(Screenshot.capture(view), comparableScreenCapture);
     verify(uiAutomationWrapper, never()).takeScreenshot();
     verify(callable).call();
-  }
-
-  @Test
-  public void captureScreenshotBelow18WithActivity_shouldCapture() throws Exception {
-    Screenshot.setAndroidRuntimeVersion(17);
-    ScreenCapture comparableScreenCapture = new ScreenCapture(stubBitmapLegacy);
-
-    assertEquals(Screenshot.capture(activity), comparableScreenCapture);
-    verify(uiAutomationWrapper, never()).takeScreenshot();
-    verify(callable).call();
-  }
-
-  @Test
-  public void captureScreenshotBelow18WithView_shouldCapture() throws Exception {
-    Screenshot.setAndroidRuntimeVersion(17);
-    ScreenCapture comparableScreenCapture = new ScreenCapture(stubBitmapLegacy);
-
-    assertEquals(Screenshot.capture(view), comparableScreenCapture);
-    verify(uiAutomationWrapper, never()).takeScreenshot();
-    verify(callable).call();
-  }
-
-  @Test
-  public void captureScreenshotBelow18_WithoutActivityOrView_shouldThrowIllegalState()
-      throws Exception {
-    Screenshot.setAndroidRuntimeVersion(17);
-    expectedException.expect(IllegalStateException.class);
-
-    Screenshot.capture();
-    verify(callable, never()).call();
-    verify(uiAutomationWrapper, never()).takeScreenshot();
   }
 
   @Test
   public void capture_ShouldAddProcessor() throws Exception {
-    Screenshot.setAndroidRuntimeVersion(18);
     Set screenshotProcessorSet = new HashSet<>();
     screenshotProcessorSet.add(screenCaptureProcessor);
     Screenshot.setScreenshotProcessors(screenshotProcessorSet);
@@ -157,7 +116,6 @@ public class ScreenshotTest {
 
   @Test
   public void capture_ShouldAddMultipleProcessors() throws Exception {
-    Screenshot.setAndroidRuntimeVersion(18);
     Set screenshotProcessorSet = new HashSet<>();
     screenshotProcessorSet.add(screenCaptureProcessor);
     screenshotProcessorSet.add(screenCaptureProcessorAdditional);

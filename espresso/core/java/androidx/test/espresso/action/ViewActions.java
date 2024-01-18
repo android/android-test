@@ -22,7 +22,6 @@ import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 
 import android.net.Uri;
-import android.os.Build;
 import android.util.Log;
 import android.util.Pair;
 import android.view.InputDevice;
@@ -166,9 +165,6 @@ public final class ViewActions {
    *     MotionEvent#BUTTON_PRIMARY}
    */
   public static ViewAction click(int inputDevice, int buttonState) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      throw new UnsupportedOperationException();
-    }
     return actionWithAssertions(
         new GeneralClickAction(
             Tap.SINGLE, GeneralLocation.VISIBLE_CENTER, Press.FINGER, inputDevice, buttonState));

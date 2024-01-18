@@ -21,7 +21,6 @@ import static androidx.test.espresso.web.util.concurrent.Futures.transformAsync;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
 
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -76,13 +75,9 @@ final class JavascriptEvaluation {
       };
 
   static {
-    if (Build.VERSION.SDK_INT < 19) {
-      SCRIPT_PREPARER = new ScriptPreparer(true);
-      RAW_EVALUATOR = new AsyncConduitEvaluation();
-    } else {
+
       SCRIPT_PREPARER = new ScriptPreparer(false);
       RAW_EVALUATOR = new AsyncJavascriptEvaluation();
-    }
   }
 
   /**
@@ -189,23 +184,20 @@ final class JavascriptEvaluation {
                   Evaluation eval = futureParsed.get();
                   if (eval.getStatus() == 0) {
                     if ((Boolean) eval.getValue()) {
-                      if (Build.VERSION.SDK_INT == 10) {
-                        set(unprepared);
-                      } else {
-                        // webview seems ready, but force it to respond to a requestFocusNodeHref
-                        // call
-                        // and check if it is still sane after the response.
-                        // This works around flakes in API 15 where progress updates may not be sent
-                        // without a requestFocusNodeHref call.
-                        unprepared.view.post(
-                            new Runnable() {
-                              @Override
-                              public void run() {
-                                unprepared.view.requestFocusNodeHref(
-                                    MAIN_HANDLER.obtainMessage(SANITIZER_SYNC, SanitizerTask.this));
-                              }
-                            });
-                      }
+
+                      // webview seems ready, but force it to respond to a requestFocusNodeHref
+                      // call
+                      // and check if it is still sane after the response.
+                      // This works around flakes in API 15 where progress updates may not be sent
+                      // without a requestFocusNodeHref call.
+                      unprepared.view.post(
+                          new Runnable() {
+                            @Override
+                            public void run() {
+                              unprepared.view.requestFocusNodeHref(
+                                  MAIN_HANDLER.obtainMessage(SANITIZER_SYNC, SanitizerTask.this));
+                            }
+                          });
                     } else {
                       unprepared.view.postDelayed(SanitizerTask.this, DELAY);
                     }
@@ -401,30 +393,6 @@ final class JavascriptEvaluation {
       }
       scriptBuffer.append("\"");
       return scriptBuffer;
-    }
-  }
-
-  private static final class AsyncConduitEvaluation
-      implements AsyncFunction<PreparedScript, String> {
-    @Override
-    public ListenableFuture<String> apply(final PreparedScript in) {
-
-      if (null == in.conduit) {
-        return Futures.<String>immediateFailedFuture(new RuntimeException("Not a conduit script!"));
-      } else {
-        if (Looper.myLooper() == Looper.getMainLooper()) {
-          in.view.loadUrl(in.script);
-        } else {
-          in.view.post(
-              new Runnable() {
-                @Override
-                public void run() {
-                  in.view.loadUrl(in.script);
-                }
-              });
-        }
-        return in.conduit.getResult();
-      }
     }
   }
 

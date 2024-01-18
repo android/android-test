@@ -22,7 +22,6 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
@@ -377,16 +376,7 @@ final class UiControllerImpl
   @VisibleForTesting
   @SuppressWarnings("deprecation")
   public static KeyCharacterMap getKeyCharacterMap() {
-    KeyCharacterMap keyCharacterMap = null;
-
-    // KeyCharacterMap.VIRTUAL_KEYBOARD is present from API11.
-    // For earlier APIs we use KeyCharacterMap.BUILT_IN_KEYBOARD
-    if (Build.VERSION.SDK_INT < 11) {
-      keyCharacterMap = KeyCharacterMap.load(KeyCharacterMap.BUILT_IN_KEYBOARD);
-    } else {
-      keyCharacterMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD);
-    }
-    return keyCharacterMap;
+    return KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD);
   }
 
   @Override

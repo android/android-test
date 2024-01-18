@@ -16,8 +16,6 @@
 
 package androidx.test.espresso.base;
 
-import static androidx.test.internal.util.Checks.checkState;
-
 import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
@@ -47,13 +45,11 @@ final class InputManagerEventInjectionStrategy implements EventInjectionStrategy
   private int asyncEventMode;
   private int syncEventMode;
 
-  InputManagerEventInjectionStrategy() {
-    checkState(Build.VERSION.SDK_INT >= 16, "Unsupported API level.");
-  }
+  InputManagerEventInjectionStrategy() {}
 
-  void initialize() {
+  InputManagerEventInjectionStrategy initialize() {
     if (initComplete) {
-      return;
+      return this;
     }
 
     try {
@@ -104,6 +100,7 @@ final class InputManagerEventInjectionStrategy implements EventInjectionStrategy
     } catch (NoSuchFieldException e) {
       throw new RuntimeException(e);
     }
+    return this;
   }
 
   @Override

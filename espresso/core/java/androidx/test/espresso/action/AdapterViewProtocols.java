@@ -20,7 +20,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static androidx.test.internal.util.Checks.checkArgument;
 
 import android.database.Cursor;
-import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
@@ -133,25 +132,19 @@ public final class AdapterViewProtocols {
       boolean moved = false;
       // set selection should always work, we can give a little better experience if per subtype
       // though.
-      if (Build.VERSION.SDK_INT > 7) {
-        if (adapterView instanceof AbsListView) {
-          if (Build.VERSION.SDK_INT > 10) {
-            ((AbsListView) adapterView)
-                .smoothScrollToPositionFromTop(position, adapterView.getPaddingTop(), 0);
-          } else {
-            ((AbsListView) adapterView).smoothScrollToPosition(position);
-          }
-          moved = true;
+      if (adapterView instanceof AbsListView) {
+        ((AbsListView) adapterView)
+            .smoothScrollToPositionFromTop(position, adapterView.getPaddingTop(), 0);
+
+        moved = true;
+      }
+
+      if (adapterView instanceof AdapterViewAnimator) {
+        if (adapterView instanceof AdapterViewFlipper) {
+          ((AdapterViewFlipper) adapterView).stopFlipping();
         }
-        if (Build.VERSION.SDK_INT > 10) {
-          if (adapterView instanceof AdapterViewAnimator) {
-            if (adapterView instanceof AdapterViewFlipper) {
-              ((AdapterViewFlipper) adapterView).stopFlipping();
-            }
-            ((AdapterViewAnimator) adapterView).setDisplayedChild(position);
-            moved = true;
-          }
-        }
+        ((AdapterViewAnimator) adapterView).setDisplayedChild(position);
+        moved = true;
       }
       if (!moved) {
         adapterView.setSelection(position);

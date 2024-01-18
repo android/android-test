@@ -18,9 +18,6 @@ package androidx.test.espresso.web.bridge;
 
 import static androidx.test.internal.util.Checks.checkState;
 
-import android.os.Build;
-import android.os.Looper;
-import android.util.Log;
 import androidx.concurrent.futures.ResolvableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -54,29 +51,5 @@ public final class JavaScriptBridge {
             .build();
     boundBridge.addConduit(conduit);
     return conduit;
-  }
-
-  /**
-   * Sets up Java / Javascript bridging on every WebView in the app.
-   *
-   * <p>This method must be called very early (eg: before webviews are loaded in your app).
-   * GoogleInstrumentation invokes this method if this library is present on your classpath.
-   *
-   * <p>This method must be called from the main thread. It'll return immedately if the bridge
-   * is already installed.
-   */
-  public static void installBridge() {
-    checkState(Looper.getMainLooper() == Looper.myLooper(), "Must be on main thread!");
-    if (initialized) {
-      return;
-    }
-    try {
-      if (Build.VERSION.SDK_INT < 19) {
-        boundBridge = new AndroidJavaScriptBridgeInstaller().install();
-      }
-    } catch (JavaScriptBridgeInstallException e) {
-      Log.e(TAG, "Unable to bridge web views!", e);
-    }
-    initialized = true;
   }
 }

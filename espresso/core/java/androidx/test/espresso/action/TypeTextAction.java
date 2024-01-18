@@ -24,7 +24,6 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 
-import android.os.Build;
 import android.util.Log;
 import android.view.InputDevice;
 import android.view.MotionEvent;
@@ -102,14 +101,9 @@ public final class TypeTextAction implements ViewAction {
     if (!tapToFocus) {
       matchers = allOf(matchers, hasFocus());
     }
-
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-      return allOf(matchers, supportsInputMethods());
-    } else {
-      // SearchView does not support input methods itself (rather it delegates to an internal text
-      // view for input).
-      return allOf(matchers, anyOf(supportsInputMethods(), isAssignableFrom(SearchView.class)));
-    }
+    // SearchView does not support input methods itself (rather it delegates to an internal text
+    // view for input).
+    return allOf(matchers, anyOf(supportsInputMethods(), isAssignableFrom(SearchView.class)));
   }
 
   @Override

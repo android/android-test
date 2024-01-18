@@ -18,7 +18,6 @@ package androidx.test.espresso.action;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 
-import android.os.Build;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
@@ -139,7 +138,6 @@ public enum Tap implements Tapper {
 
   static {
     int timeVal = 0;
-    if (Build.VERSION.SDK_INT > 18) {
       try {
         Method getDoubleTapMinTimeMethod =
             ViewConfiguration.class.getDeclaredMethod("getDoubleTapMinTime");
@@ -151,7 +149,7 @@ public enum Tap implements Tapper {
       } catch (IllegalAccessException iae) {
         Log.w(TAG, "Unable to query double tap min time!", iae);
       }
-    }
+
     DOUBLE_TAP_MIN_TIMEOUT = timeVal;
   }
 

@@ -21,7 +21,6 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
 import static java.util.Collections.unmodifiableSet;
 
-import android.os.Build;
 import android.util.JsonReader;
 import android.util.Log;
 import java.io.IOException;
@@ -41,7 +40,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
-import org.json.JSONTokener;
 
 /** Encodes/Decodes JSON. */
 public final class ModelCodec {
@@ -125,28 +123,9 @@ public final class ModelCodec {
     checkArgument(!"".equals(json), "Empty docs not supported.");
 
     try {
-      if (Build.VERSION.SDK_INT < 13) {
-        // After API 13, there is the JSONReader API - which is nicer to work with.
-        return decodeViaJSONObject(json);
-      } else {
-        return decodeViaJSONReader(json);
-      }
-    } catch (JSONException je) {
-      throw new RuntimeException(String.format("Could not parse: %s", json), je);
+      return decodeViaJSONReader(json);
     } catch (IOException ioe) {
       throw new RuntimeException(String.format("Could not parse: %s", json), ioe);
-    }
-  }
-
-  private static Object decodeViaJSONObject(String json) throws JSONException {
-    JSONTokener tokener = new JSONTokener(json);
-    Object value = tokener.nextValue();
-    if (value instanceof JSONArray) {
-      return decodeArray((JSONArray) value);
-    } else if (value instanceof JSONObject) {
-      return decodeObject((JSONObject) value);
-    } else {
-      throw new IllegalArgumentException("No top level object or array: " + json);
     }
   }
 

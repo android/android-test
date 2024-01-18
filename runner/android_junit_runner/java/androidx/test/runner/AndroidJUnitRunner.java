@@ -20,8 +20,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.Instrumentation;
 import android.content.Context;
-import android.os.Build;
-import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.StrictMode;
@@ -289,10 +287,9 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   public Application newApplication(ClassLoader cl, String className, Context context)
       throws InstantiationException, IllegalAccessException, ClassNotFoundException {
     Log.i(LOG_TAG, "newApplication " + className);
-    if (VERSION.SDK_INT >= 16) {
-      // install multidex as soon as possible
-      installMultidex();
-    }
+    // install multidex as soon as possible
+    installMultidex();
+
     if (instrumentationResultPrinter == null) {
       // Create instrumentationResultPrinter as early as possible to assist with
       // exception handling. InstrumentationResultPrinter use ConcurrentLinkedList,
@@ -580,10 +577,6 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   private void addDelayListener(RunnerArgs args, TestExecutor.Builder builder) {
     if (args.delayInMillis > 0) {
       builder.addRunListener(new DelayInjector(args.delayInMillis));
-    } else if (args.logOnly && Build.VERSION.SDK_INT < 16) {
-      // On older platforms, collecting tests can fail for large volume of tests.
-      // Insert a small delay between each test to prevent this
-      builder.addRunListener(new DelayInjector(15 /* msec */));
     }
   }
 

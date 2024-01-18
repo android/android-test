@@ -26,7 +26,6 @@ import android.content.Context;
 import android.content.pm.ProviderInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.os.Build;
 import android.test.mock.MockContentResolver;
 import android.text.TextUtils;
 import android.util.Log;
@@ -323,16 +322,12 @@ public class ProviderTestRule implements TestRule {
   }
 
   private void cleanUpProviders() {
-    // ContentProvider.shutdown() method is added in HONEYCOMB
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      for (WeakReference<ContentProvider> providerRef : providersRef) {
-        ContentProvider provider = providerRef.get();
-        if (provider != null) {
-          provider.shutdown();
-        }
+    for (WeakReference<ContentProvider> providerRef : providersRef) {
+      ContentProvider provider = providerRef.get();
+      if (provider != null) {
+        provider.shutdown();
       }
     }
-
     for (DatabaseArgs databaseArgs : databaseArgsSet) {
       String dbName = databaseArgs.getDBName();
       if (dbName != null) {

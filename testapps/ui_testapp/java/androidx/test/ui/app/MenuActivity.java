@@ -17,7 +17,6 @@
 package androidx.test.ui.app;
 
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -71,15 +70,10 @@ public class MenuActivity extends Activity {
   }
 
   public void showPopup(View view) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-      TextView text = (TextView) findViewById(R.id.text_menu_result);
-      text.setText("Not supported in API " + Build.VERSION.SDK_INT);
-    } else {
-      PopupMenu popup = new PopupMenu(this, view);
-      popup.setOnMenuItemClickListener(new PopupMenuListener());
-      popup.getMenuInflater().inflate(R.menu.popupmenu, popup.getMenu());
-      popup.show();
-    }
+    PopupMenu popup = new PopupMenu(this, view);
+    popup.setOnMenuItemClickListener(new PopupMenuListener());
+    popup.getMenuInflater().inflate(R.menu.popupmenu, popup.getMenu());
+    popup.show();
   }
 
   @Override

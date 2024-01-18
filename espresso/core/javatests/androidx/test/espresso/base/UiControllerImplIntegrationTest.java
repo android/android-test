@@ -57,16 +57,9 @@ public class UiControllerImplIntegrationTest {
 
   @Before
   public void setUp() throws Exception {
-    EventInjector injector = null;
-    if (Build.VERSION.SDK_INT > 15) {
-      InputManagerEventInjectionStrategy strat = new InputManagerEventInjectionStrategy();
-      strat.initialize();
-      injector = new EventInjector(strat);
-    } else {
-      WindowManagerEventInjectionStrategy strat = new WindowManagerEventInjectionStrategy();
-      strat.initialize();
-      injector = new EventInjector(strat);
-    }
+    EventInjector injector =
+        new EventInjector(new InputManagerEventInjectionStrategy().initialize());
+
     uiController =
         new UiControllerImpl(
             injector,

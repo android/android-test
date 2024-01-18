@@ -23,7 +23,6 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.Gravity;
@@ -152,9 +151,7 @@ public class ChatHeadService extends Service {
     int color = Color.TRANSPARENT;
     Drawable background = view.getBackground();
     if (background instanceof ColorDrawable) {
-      if (Build.VERSION.SDK_INT >= 11) {
-        color = ((ColorDrawable) background).getColor();
-      }
+      color = ((ColorDrawable) background).getColor();
     }
     int red = (color >> 16) & 0xFF;
     int green = (color >> 8) & 0xFF;

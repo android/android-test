@@ -62,11 +62,9 @@ public class LocationSubject extends Subject {
 
     check("getProvider()").that(actual.getProvider()).isEqualTo(other.getProvider());
     check("getTime()").that(actual.getTime()).isEqualTo(other.getTime());
-    if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
-      check("getElapsedRealtimeNanos()")
-          .that(actual.getElapsedRealtimeNanos())
-          .isEqualTo(other.getElapsedRealtimeNanos());
-    }
+    check("getElapsedRealtimeNanos()")
+        .that(actual.getElapsedRealtimeNanos())
+        .isEqualTo(other.getElapsedRealtimeNanos());
     check("getLatitude()").that(actual.getLatitude()).isEqualTo(other.getLatitude());
     check("getLongitude()").that(actual.getLongitude()).isEqualTo(other.getLongitude());
     check("getAltitude()").that(actual.getAltitude()).isEqualTo(other.getAltitude());

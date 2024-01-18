@@ -25,8 +25,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.instanceOf;
 
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.view.View;
 import android.widget.ListView;
 import androidx.test.espresso.UiController;
@@ -75,9 +73,6 @@ public class MainActivityTest {
         if ("TaskStackActivity".equals(title)
             || "TransitionActivityMain".equals(title)
             || "SimpleActivity".equals(title)) {
-          continue;
-        } else if ("FragmentStack".equals(title)
-            && VERSION.SDK_INT < VERSION_CODES.ICE_CREAM_SANDWICH) {
           continue;
         }
         contents.add(title);

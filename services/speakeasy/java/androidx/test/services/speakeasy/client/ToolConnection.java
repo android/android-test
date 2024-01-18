@@ -18,7 +18,6 @@ package androidx.test.services.speakeasy.client;
 
 import android.app.ActivityManager;
 import android.app.ActivityManagerNative;
-import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,8 +36,6 @@ import java.util.Random;
 public abstract class ToolConnection implements Connection {
   private static final String PACKAGE_NAME = "androidx.test.services";
   private static final String CONTENT_PROVIDER = "androidx_test_services.speak_easy";
-  private static final String SERVICE =
-      "androidx.test.services.speakeasy.server.SpeakEasyService";
   private static final String ATTRIBUTON_SOURCE_CLASS_NAME = "android.content.AttributionSource";
   private static final String TAG = "ToolConnection";
 
@@ -52,9 +49,7 @@ public abstract class ToolConnection implements Connection {
   }
 
   static Connection makeConnection(String packageName, String contentProvider) {
-    if (Build.VERSION.SDK_INT < 17) {
-      return new ToolConnectionCompat(packageName, contentProvider);
-    } else if (Build.VERSION.SDK_INT <= 25) {
+    if (Build.VERSION.SDK_INT <= 25) {
       return new ToolConnectionJBToN(packageName, contentProvider);
     } else {
       return new ToolConnectionO(packageName, contentProvider);
@@ -97,23 +92,6 @@ public abstract class ToolConnection implements Connection {
   }
 
   protected abstract void doCall(Bundle b) throws RemoteException;
-
-  private static class ToolConnectionCompat extends ToolConnection {
-
-    ToolConnectionCompat(String packageName, String contentProvider) {
-      super(packageName, contentProvider);
-    }
-
-    @Override
-    protected final void doCall(Bundle b) throws RemoteException {
-      Intent intent = new Intent();
-      intent.setClassName(packageName, SERVICE);
-      intent.putExtras(b);
-      Log.i(TAG, "Invoking ActivityManagerNative.getDefault().startService(...)");
-      ActivityManagerNative.getDefault().startService(null, intent, null);
-      Log.i(TAG, "Intent sent!");
-    }
-  }
 
   private abstract static class ToolConnectionPostIcs extends ToolConnection {
 

@@ -25,7 +25,6 @@ import static com.google.android.apps.common.testing.accessibility.framework.Acc
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import android.os.Build;
 import android.view.View;
 import android.widget.LinearLayout.LayoutParams;
 import androidx.test.core.app.ActivityScenario;
@@ -139,10 +138,7 @@ public class AccessibilityChecksTest {
     try {
       onView(withId(R.id.large_view)).perform(pressMenuKey());
     } catch (AccessibilityViewCheckException e) {
-      // There are framework bugs for APIs 16 and below that cause extra errors.
-      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-        fail(String.format("Exception should have been suppressed. %1$s", e.toString()));
-      }
+      fail(String.format("Exception should have been suppressed. %1$s", e.toString()));
     }
   }
 

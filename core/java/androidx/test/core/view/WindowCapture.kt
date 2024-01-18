@@ -24,7 +24,6 @@ import android.os.Handler
 import android.os.Looper
 import android.view.PixelCopy
 import android.view.Window
-import androidx.annotation.RequiresApi
 import androidx.concurrent.futures.ResolvableFuture
 import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.core.internal.os.HandlerExecutor
@@ -45,7 +44,6 @@ import com.google.common.util.concurrent.ListenableFuture
  * This API is currently experimental and subject to change or removal.
  */
 @ExperimentalTestApi
-@RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
 fun Window.captureRegionToBitmap(boundsInWindow: Rect? = null): ListenableFuture<Bitmap> {
   val bitmapFuture: ResolvableFuture<Bitmap> = ResolvableFuture.create()
   val mainExecutor = HandlerExecutor(Handler(Looper.getMainLooper()))

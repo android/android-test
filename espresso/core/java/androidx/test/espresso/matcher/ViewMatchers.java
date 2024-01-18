@@ -999,11 +999,9 @@ public final class ViewMatchers {
       float viewHeight = (view.getHeight() > screen.height()) ? screen.height() : view.getHeight();
       float viewWidth = (view.getWidth() > screen.width()) ? screen.width() : view.getWidth();
 
-      if (Build.VERSION.SDK_INT >= 11) {
-        // For API level 11 and above, factor in the View's scaleX and scaleY properties.
-        viewHeight = Math.min(view.getHeight() * Math.abs(view.getScaleY()), screen.height());
-        viewWidth = Math.min(view.getWidth() * Math.abs(view.getScaleX()), screen.width());
-      }
+      // factor in the View's scaleX and scaleY properties.
+      viewHeight = Math.min(view.getHeight() * Math.abs(view.getScaleY()), screen.height());
+      viewWidth = Math.min(view.getWidth() * Math.abs(view.getScaleX()), screen.width());
 
       double maxArea = viewHeight * viewWidth;
       double visibleArea = visibleParts.height() * visibleParts.width();

@@ -96,7 +96,6 @@ public final class PackageInfoBuilder {
    * @see PackageInfo#requestedPermissions
    * @see PackageInfo#requestedPermissionsFlags
    */
-  @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
   public PackageInfoBuilder addRequestedPermission(
       String requestedPermission, int requestedPermissionFlag) {
     requestedPermissionsMap.put(requestedPermission, requestedPermissionFlag);
@@ -137,16 +136,13 @@ public final class PackageInfoBuilder {
     packageInfo.applicationInfo = applicationInfo;
     packageInfo.requestedPermissions = requestedPermissionsMap.keySet().toArray(new String[0]);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      Integer[] requestedPermissionsFlags =
-          requestedPermissionsMap.values().toArray(new Integer[0]);
-      // Stream APIs such as `mapToInt` are not supported below API 24.
-      int[] requestedPermissionsFlagsIntArray = new int[requestedPermissionsFlags.length];
-      for (int i = 0; i < requestedPermissionsFlags.length; i++) {
-        requestedPermissionsFlagsIntArray[i] = requestedPermissionsFlags[i];
-      }
-      packageInfo.requestedPermissionsFlags = requestedPermissionsFlagsIntArray;
+    Integer[] requestedPermissionsFlags = requestedPermissionsMap.values().toArray(new Integer[0]);
+    // Stream APIs such as `mapToInt` are not supported below API 24.
+    int[] requestedPermissionsFlagsIntArray = new int[requestedPermissionsFlags.length];
+    for (int i = 0; i < requestedPermissionsFlags.length; i++) {
+      requestedPermissionsFlagsIntArray[i] = requestedPermissionsFlags[i];
     }
+    packageInfo.requestedPermissionsFlags = requestedPermissionsFlagsIntArray;
 
     checkState(
         packageInfo.packageName.equals(packageInfo.applicationInfo.packageName),

@@ -27,7 +27,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -147,10 +146,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   @Override
   public Application newApplication(ClassLoader cl, String className, Context context)
       throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-    if (VERSION.SDK_INT >= 16) {
-      // On API <= 15, initialization should have been called in #onCreate().
-      installMultidexAndExceptionHandler();
-    }
+    installMultidexAndExceptionHandler();
 
     Application application = AppComponentFactoryRegistry.instantiateApplication(cl, className);
     if (application != null) {
@@ -168,11 +164,6 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
    */
   @Override
   public void onCreate(Bundle arguments) {
-    if (VERSION.SDK_INT <= 15) {
-      // On API level <= 15, #onCreate is called earlier than #newApplication. We should install
-      // Multidex and register the uncaught exception handler here.
-      installMultidexAndExceptionHandler();
-    }
     InstrumentationRegistry.registerInstance(this, arguments);
     androidx.test.InstrumentationRegistry.registerInstance(this, arguments);
     ActivityLifecycleMonitorRegistry.registerInstance(lifecycleMonitor);
@@ -321,16 +312,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
                 String.format(
                     "Handling an uncaught exception thrown on the thread %s.", t.getName()),
                 e);
-            if (VERSION.SDK_INT == 18
-                && e instanceof SecurityException
-                && e.getMessage().equals("Calling from not trusted UID!")) {
-              Log.d(
-                  TAG,
-                  "Catching and ignoring SecurityException: Calling from not trusted UID!, as"
-                      + " this is an android platform bug on API 18 - b/10930931.");
-            } else {
-              onException(t, e);
-            }
+            onException(t, e);
             if (null != oldDefaultExceptionHandler) {
               Log.w(
                   TAG,
@@ -653,7 +635,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       Activity target,
       Intent[] intents,
       Bundle options) {
-    // This method is used in HONEYCOMB and higher to create a synthetic back stack for the
+    // This method is used to create a synthetic back stack for the
     // launched activity. The intent at the end of the array is the top most, user visible
     // activity, and the intents beneath it are launched when the user presses back.
     Log.d(TAG, "execStartActivities(context, ibinder, ibinder, activity, intent[], bundle)");

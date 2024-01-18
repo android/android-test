@@ -49,10 +49,8 @@ public final class LocationCorrespondences {
           if (actual.getTime() != expected.getTime()) {
             return false;
           }
-          if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
-            if (actual.getElapsedRealtimeNanos() != expected.getElapsedRealtimeNanos()) {
-              return false;
-            }
+          if (actual.getElapsedRealtimeNanos() != expected.getElapsedRealtimeNanos()) {
+            return false;
           }
           if (actual.getLatitude() != expected.getLatitude()) {
             return false;

@@ -36,12 +36,8 @@ import static org.junit.rules.ExpectedException.none;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
-import android.os.Build;
-import android.util.Log;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
@@ -536,79 +532,8 @@ public class CursorMatchersTest {
   /** Returns an {@link MatrixCursor} populated with fake data. */
   private static Cursor makeCursor(String[] columnNames, Object[] values) {
     assertTrue(columnNames.length == values.length);
-    MatrixCursor cursorStub;
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      cursorStub = newMatrixCursorV10(columnNames);
-    } else {
-      cursorStub = newMatrixCursorV14(columnNames);
-    }
+    MatrixCursor cursorStub = new MatrixCursor(columnNames);
     cursorStub.addRow(values);
     return cursorStub;
-  }
-
-  private static MatrixCursor newMatrixCursorV10(String[] columnNames) {
-    return new MatrixCursorCompat(columnNames);
-  }
-
-  private static MatrixCursor newMatrixCursorV14(String[] columnNames) {
-    return new MatrixCursor(columnNames);
-  }
-
-  /**
-   * This test uses {@link MatrixCursor} as data source. {@link MatrixCursor#getBlob(int)} support
-   * was added in ICS. This class enabled getBlob() for API levels < 14.
-   */
-  private static class MatrixCursorCompat extends MatrixCursor {
-
-    private static final String TAG = "MatrixCursorCompat";
-
-    public MatrixCursorCompat(String[] columnNames) {
-      super(columnNames);
-    }
-
-    @Override
-    public byte[] getBlob(int columnIndex) {
-      Object value = get(columnIndex);
-      return (byte[]) value;
-    }
-
-    /**
-     * {@link MatrixCursor} internally uses get(int) to read data from its internal data structure
-     * (Object[]). As this method is private we need to use reflection in order to invoke it.
-     */
-    private byte[] get(int columnIndex) {
-      final String instanceMethod = "get";
-      byte[] blob = new byte[0];
-      try {
-        Method getInstanceMethod =
-            this.getClass().getSuperclass().getDeclaredMethod(instanceMethod, Integer.TYPE);
-        getInstanceMethod.setAccessible(true);
-        blob = (byte[]) getInstanceMethod.invoke(this, columnIndex);
-      } catch (NoSuchMethodException nsme) {
-        Log.e(TAG, String.format("could not find method: %s", instanceMethod), nsme);
-      } catch (IllegalAccessException iae) {
-        Log.e(
-            TAG,
-            String.format(
-                "reflective setup failed using obj: %s method: %s",
-                getClass().getSimpleName(), instanceMethod),
-            iae);
-      } catch (IllegalArgumentException iae) {
-        Log.e(
-            TAG,
-            String.format(
-                "reflective setup failed using obj: %s method: %s",
-                getClass().getSimpleName(), instanceMethod),
-            iae);
-      } catch (InvocationTargetException ite) {
-        Log.e(
-            TAG,
-            String.format(
-                "reflective setup failed using obj: %s method: %s",
-                getClass().getSimpleName(), instanceMethod),
-            ite);
-      }
-      return blob;
-    }
   }
 }

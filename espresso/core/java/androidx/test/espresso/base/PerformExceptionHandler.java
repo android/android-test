@@ -19,7 +19,6 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.os.Build;
 import android.provider.Settings;
 import android.view.View;
 import androidx.test.espresso.PerformException;
@@ -89,13 +88,8 @@ class PerformExceptionHandler extends TypedFailureHandler<PerformException> {
   }
 
   private static float getAnimatorDurationScale(ContentResolver resolver) {
-    if (isJellyBeanMR1OrHigher()) {
-      return getSetting(
-          resolver,
-          Settings.Global.ANIMATOR_DURATION_SCALE,
-          Settings.System.ANIMATOR_DURATION_SCALE);
-    }
-    return 0f;
+    return getSetting(
+        resolver, Settings.Global.ANIMATOR_DURATION_SCALE, Settings.System.ANIMATOR_DURATION_SCALE);
   }
 
   /**
@@ -110,16 +104,7 @@ class PerformExceptionHandler extends TypedFailureHandler<PerformException> {
    * @see #getSystemSetting(ContentResolver, String)
    */
   private static float getSetting(ContentResolver resolver, String current, String deprecated) {
-    if (isJellyBeanMR1OrHigher()) {
-      return getGlobalSetting(resolver, current);
-    } else {
-      return getSystemSetting(resolver, deprecated);
-    }
-  }
-
-  /** Helper method to determine if API level is JellyBean MR1 or higher. */
-  private static boolean isJellyBeanMR1OrHigher() {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1;
+    return getGlobalSetting(resolver, current);
   }
 
   /**
@@ -132,21 +117,6 @@ class PerformExceptionHandler extends TypedFailureHandler<PerformException> {
   private static float getGlobalSetting(ContentResolver resolver, String setting) {
     try {
       return Settings.Global.getFloat(resolver, setting);
-    } catch (Settings.SettingNotFoundException e) {
-      return 0f;
-    }
-  }
-
-  /**
-   * Method to get system settings, which hold desired values until {@link JELLY_BEAN_MR1}.
-   *
-   * @param resolver The target context's content resolver.
-   * @param setting The system setting to look for.
-   * @return The setting's value or <code>0f</code> if none was found.
-   */
-  private static float getSystemSetting(ContentResolver resolver, String setting) {
-    try {
-      return Settings.System.getFloat(resolver, setting);
     } catch (Settings.SettingNotFoundException e) {
       return 0f;
     }
