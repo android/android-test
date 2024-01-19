@@ -8,6 +8,7 @@
 
 * Attempt to clarify limitations and deprecation reasons in RequiresDevice documentation
 * Remove all support for Android SDKs < 19. Minimum is API 19 (Android Kit Kat 4.4)
+* Fix that "-e class" and "-e notClass" on the same class/method should perform the same result (no tests run)
 
 **New Features**
 

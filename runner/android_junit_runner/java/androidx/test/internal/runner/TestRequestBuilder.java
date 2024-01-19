@@ -811,7 +811,6 @@ public class TestRequestBuilder {
     Trace.beginSection("build test request");
     try {
       includedPackages.removeAll(excludedPackages);
-      includedClasses.removeAll(excludedClasses);
       validate(includedClasses);
 
       boolean scanningPath = includedClasses.isEmpty();
@@ -828,6 +827,15 @@ public class TestRequestBuilder {
         Log.d(TAG, "Using class path scanning to discover tests");
         classNames = getClassNamesFromClassPath();
       } else {
+        // If the set of excludedClasses is equal to the set of includedClasses, no tests should
+        // run (that's what includeMethods and excludeMethods do currently).
+        // E.g.,
+        // 1. adb shell am instrument -w -e class com.android.foo.FooTest#testFoo -e notClass
+        // com.android.foo.FooTest#testFoo com.android.foo/androidx.test.runner.AndroidJUnitRunner
+        // 2. adb shell am instrument -w -e class com.android.foo.FooTest -e notClass
+        // com.android.foo.FooTest com.android.foo/androidx.test.runner.AndroidJUnitRunner
+        // should perform the same result (no tests run).
+        includedClasses.removeAll(excludedClasses);
         classNames = includedClasses;
       }
 

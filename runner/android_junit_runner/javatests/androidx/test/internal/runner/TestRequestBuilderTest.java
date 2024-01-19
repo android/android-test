@@ -66,9 +66,7 @@ import junit.framework.TestSuite;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
@@ -1056,15 +1054,18 @@ public class TestRequestBuilderTest {
     Assert.assertEquals(3, result.getRunCount());
   }
 
-  /** Verify adding and removing same class is rejected */
+  /** Verify adding a class method and removing same class leaves no tests. */
   @Test
   public void testFilterClassAddMethod() {
-    thrown.expect(IllegalArgumentException.class);
-    thrown.expectMessage(TestRequestBuilder.MISSING_ARGUMENTS_MSG);
-    builder
-        .addTestMethod(SampleRunnerFilterSizeTest.class.getName(), "testSmall")
-        .removeTestClass(SampleRunnerFilterSizeTest.class.getName())
-        .build();
+    Request request =
+        builder
+            .addTestMethod(SampleRunnerFilterSizeTest.class.getName(), "testSmall")
+            .removeTestClass(SampleRunnerFilterSizeTest.class.getName())
+            .build();
+
+    JUnitCore testRunner = new JUnitCore();
+    Result result = testRunner.run(request);
+    Assert.assertEquals(0, result.getRunCount());
   }
 
   /** Verify that including and excluding different methods leaves 1 method. */
@@ -1122,12 +1123,15 @@ public class TestRequestBuilderTest {
   /** Verify that including and excluding the same class leaves no tests. */
   @Test
   public void testClassAndNotClass_same() {
-    thrown.expect(IllegalArgumentException.class);
-    thrown.expectMessage(TestRequestBuilder.MISSING_ARGUMENTS_MSG);
-    builder
-        .addTestClass(SampleRunnerFilterSizeTest.class.getName())
-        .removeTestClass(SampleRunnerFilterSizeTest.class.getName())
-        .build();
+    Request request =
+        builder
+            .addTestClass(SampleRunnerFilterSizeTest.class.getName())
+            .removeTestClass(SampleRunnerFilterSizeTest.class.getName())
+            .build();
+
+    JUnitCore testRunner = new JUnitCore();
+    Result result = testRunner.run(request);
+    Assert.assertEquals(0, result.getRunCount());
   }
 
   /** Verify that exclusion filter is filtering out a single test in a class and leaves the rest */
@@ -1274,8 +1278,6 @@ public class TestRequestBuilderTest {
         IllegalArgumentException.class,
         () -> builder.addTestPackage("androidx.test.internal.runner").build());
   }
-
-  @Rule public ExpectedException thrown = ExpectedException.none();
 
   /** Take intersection of test package and class */
   @Test
@@ -1864,6 +1866,7 @@ public class TestRequestBuilderTest {
   private static class RecordingRunListener extends RunListener {
     ArrayList<String> methods = new ArrayList<>();
 
+    @Override
     public void testFinished(Description description) {
       methods.add(description.getClassName() + "#" + description.getMethodName());
     }
