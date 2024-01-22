@@ -21,6 +21,7 @@ The following artifacts were released:
 * Reference doc cleanup - document previously missing parameters, fix links, etc
 * Remove Kotlin StringKt calls from Java code
 * Remove all support for Android SDKs < 19. Minimum is API 19 (Android Kit Kat 4.4)
+* Stop posting empty tasks to background threads when running in non-remote mode
 
 **New Features**
 

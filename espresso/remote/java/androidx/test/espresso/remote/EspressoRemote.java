@@ -173,6 +173,11 @@ public final class EspressoRemote implements RemoteInteraction {
     return isRemoteProcess;
   }
 
+  @Override
+  public boolean isRemoteClient() {
+    return !isRemoteProcess();
+  }
+
   /**
    * Creates a callable to run Espresso check interaction on remote processes
    *

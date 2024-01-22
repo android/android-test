@@ -436,6 +436,7 @@ public class ViewInteractionTest {
     when(mockViewFinder.getView()).thenThrow(noActivityResumed);
     // enable remote interaction
     when(mockRemoteInteraction.isRemoteProcess()).thenReturn(false);
+    when(mockRemoteInteraction.isRemoteClient()).thenReturn(true);
     // noinspection unchecked
     when(mockRemoteInteraction.createRemoteCheckCallable(
             ArgumentMatchers.any(),
@@ -624,6 +625,7 @@ public class ViewInteractionTest {
 
     // enable remote interaction
     when(mockRemoteInteraction.isRemoteProcess()).thenReturn(false);
+    when(mockRemoteInteraction.isRemoteClient()).thenReturn(true);
   }
 
   private static final class BindableViewAction implements ViewAction, Bindable {

@@ -788,6 +788,7 @@ package androidx.test.espresso.remote {
   public interface RemoteInteraction {
     method public java.util.concurrent.Callable<java.lang.Void!>! createRemoteCheckCallable(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, org.hamcrest.Matcher<android.view.View!>!, java.util.Map<java.lang.String!,android.os.IBinder!>!, androidx.test.espresso.ViewAssertion!);
     method public java.util.concurrent.Callable<java.lang.Void!>! createRemotePerformCallable(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, org.hamcrest.Matcher<android.view.View!>!, java.util.Map<java.lang.String!,android.os.IBinder!>!, androidx.test.espresso.ViewAction!...);
+    method public default boolean isRemoteClient();
     method public boolean isRemoteProcess();
     field public static final String BUNDLE_EXECUTION_STATUS = "executionStatus";
   }

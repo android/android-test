@@ -33,8 +33,16 @@ import org.hamcrest.Matcher;
 public interface RemoteInteraction {
   static final String BUNDLE_EXECUTION_STATUS = "executionStatus";
 
-  /** @return {@code true} if the current Espresso instance running in a remote process. */
+  /** Returns {@code true} if the current Espresso instance running in a remote process. */
   boolean isRemoteProcess();
+
+  /**
+   * Returns {code true} if the current Espresso instance is communicating with another Espresso
+   * instance in a remote process.
+   */
+  default boolean isRemoteClient() {
+    return false;
+  }
 
   /**
    * Creates a callable to run Espresso check interaction on remote processes

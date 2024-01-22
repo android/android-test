@@ -198,7 +198,7 @@ public final class ViewInteraction {
 
     List<ListenableFuture<Void>> interactions = new ArrayList<>();
     interactions.add(postAsynchronouslyOnUiThread(performInteraction));
-    if (!remoteInteraction.isRemoteProcess()) {
+    if (!remoteInteraction.isRemoteProcess() && remoteInteraction.isRemoteClient()) {
       // Only the original process should submit remote interactionsList;
       interactions.add(
           remoteExecutor.submit(
@@ -352,7 +352,7 @@ public final class ViewInteraction {
 
     List<ListenableFuture<Void>> interactions = new ArrayList<>();
     interactions.add(postAsynchronouslyOnUiThread(checkInteraction));
-    if (!remoteInteraction.isRemoteProcess()) {
+    if (!remoteInteraction.isRemoteProcess() && remoteInteraction.isRemoteClient()) {
       // Only the original process should submit remote interactionsList;
       interactions.add(
           remoteExecutor.submit(
