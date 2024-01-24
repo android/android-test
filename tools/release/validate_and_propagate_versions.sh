@@ -13,6 +13,9 @@
 # bash tools/release/validate_and_propagate_versions.sh
 #
 
-bazelisk run //tools/release/java/androidx/test/tools/releaseupdater:releaseupdater | xargs buildozer
+OUTPUT=`bazelisk run //tools/release/java/androidx/test/tools/releaseupdater:releaseupdater`
+if [[ ! -z "$OUTPUT" ]]; then
+  echo $OUTPUT | xargs buildozer
+fi
 bazelisk build //tools/release:update_settings_gradle_rule
 cp bazel-bin/tools/release/settings.gradle gradle-tests/settings.gradle
