@@ -22,6 +22,7 @@ The following artifacts were released:
 * Remove Kotlin StringKt calls from Java code
 * Remove all support for Android SDKs < 19. Minimum is API 19 (Android Kit Kat 4.4)
 * Stop posting empty tasks to background threads when running in non-remote mode
+* Better handle exceptions that may occur in DefaultFailureHandler's hierarchy capture and screenshot process.
 
 **New Features**
 

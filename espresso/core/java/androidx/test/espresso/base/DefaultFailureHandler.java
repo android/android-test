@@ -119,8 +119,14 @@ public final class DefaultFailureHandler implements FailureHandler {
   @Override
   public void handle(Throwable error, Matcher<View> viewMatcher) {
     int count = failureCount.incrementAndGet();
-    TestOutputEmitter.captureWindowHierarchy("explore-window-hierarchy-" + count + ".xml");
-    takeScreenshot("view-op-error-" + count);
+    try {
+      TestOutputEmitter.captureWindowHierarchy("explore-window-hierarchy-" + count + ".xml");
+      takeScreenshot("view-op-error-" + count);
+    } catch (RuntimeException screenshotException) {
+      // Ensure that the root cause exception is surfaced, not an auxiliary exception that may occur
+      // during the capture/screenshot process.
+      error.addSuppressed(screenshotException);
+    }
 
     // Iterates through the list of handlers to handle the exception, but at most one handler will
     // update the exception and throw at the end of the handling.
