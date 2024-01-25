@@ -31,12 +31,18 @@ public final class ApplicationInfoBuilderTest {
   public void buildAllFields() {
     String name = "TestName";
     String packageName = "test.package.name";
+    int flags = 0x00000001;
 
     ApplicationInfo applicationInfo =
-        ApplicationInfoBuilder.newBuilder().setName(name).setPackageName(packageName).build();
+        ApplicationInfoBuilder.newBuilder()
+            .setFlags(flags)
+            .setName(name)
+            .setPackageName(packageName)
+            .build();
 
     assertThat(applicationInfo.name).isEqualTo(name);
     assertThat(applicationInfo.packageName).isEqualTo(packageName);
+    assertThat(applicationInfo.flags).isEqualTo(flags);
   }
 
   @Test

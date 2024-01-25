@@ -33,6 +33,7 @@ package androidx.test.core.content.pm {
   public final class ApplicationInfoBuilder {
     method public android.content.pm.ApplicationInfo! build();
     method public static androidx.test.core.content.pm.ApplicationInfoBuilder! newBuilder();
+    method public androidx.test.core.content.pm.ApplicationInfoBuilder! setFlags(int);
     method public androidx.test.core.content.pm.ApplicationInfoBuilder! setName(String?);
     method public androidx.test.core.content.pm.ApplicationInfoBuilder! setPackageName(String!);
   }
