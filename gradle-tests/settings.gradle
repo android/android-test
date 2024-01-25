@@ -22,6 +22,7 @@ dependencyResolutionManagement {
             library('espresso.accessibility', 'androidx.test.espresso:espresso-accessibility:3.6.0-alpha03')
             library('espresso.contrib', 'androidx.test.espresso:espresso-contrib:3.6.0-alpha03')
             library('espresso.core', 'androidx.test.espresso:espresso-core:3.6.0-alpha03')
+            library('espresso.device', 'androidx.test.espresso:espresso-device:1.0.0-alpha08')
             library('espresso.idlingresource', 'androidx.test.espresso:espresso-idling-resource:3.6.0-alpha03')
             library('espresso.intents', 'androidx.test.espresso:espresso-intents:3.6.0-alpha03')
             library('espresso.web', 'androidx.test.espresso:espresso-web:3.6.0-alpha03')
@@ -34,6 +35,7 @@ dependencyResolutionManagement {
 rootProject.name = "Gradle Tests"
 include ':runner'
 include ':espresso'
+include ':espresso-device'
 include ':espresso:accessibility'
 include ':espresso:contrib'
 include ':espresso:idling_resource'
