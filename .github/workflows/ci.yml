@@ -22,7 +22,6 @@ jobs:
       - uses: gradle/wrapper-validation-action@v1
   build:
     runs-on: ubuntu-latest
-    needs: gradle-wrapper-validation
     timeout-minutes: 20
     steps:
       - name: Check out repository code
@@ -64,7 +63,6 @@ jobs:
         shell: bash
   test:
     runs-on: ubuntu-latest
-    needs: gradle-wrapper-validation
     timeout-minutes: 20
     steps:
       - name: Check out repository code
@@ -96,7 +94,7 @@ jobs:
         shell: bash
   gradle-emulator-test:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, gradle-wrapper-validation]
     timeout-minutes: 20
     steps:
       - name: Check out repository code
