@@ -1,3 +1,4 @@
+load("//build_extensions:axt_versions.bzl", "SERVICES_VERSION")
 load("//build_extensions/maven:axt_maven_apk.bzl", "axt_maven_apk")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("@build_bazel_rules_android//android:rules.bzl", "android_binary")
@@ -25,6 +26,9 @@ android_binary(
     licenses = ["permissive"],
     main_dex_proguard_specs = ["//build_extensions:mainDexClasses.rules"],
     manifest = "AndroidManifest.xml",
+    manifest_values = {
+        "appVersion": SERVICES_VERSION,
+    },
     multidex = "legacy",  # to support android_fix_libs
     proguard_specs = [
         "//:proguard_binary.cfg",

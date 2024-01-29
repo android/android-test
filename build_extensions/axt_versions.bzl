@@ -14,7 +14,6 @@ ANDROIDX_JUNIT_VERSION = "1.2.0-alpha04"
 ANDROIDX_TRUTH_VERSION = "1.6.0-alpha04"
 ANNOTATION_VERSION = "1.1.0-alpha04"
 ORCHESTRATOR_VERSION = "1.5.0-alpha03"
-
 SERVICES_VERSION = "1.5.0-alpha04"
 
 # Full maven artifact strings for apks.
