@@ -6,8 +6,6 @@
 
 **Bug Fixes**
 
-* Reference doc cleanup - document previously missing parameters, fix links, etc
-
 **New Features**
 
 **Breaking Changes**

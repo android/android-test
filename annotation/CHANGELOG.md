@@ -12,8 +12,6 @@
 
 **API Changes**
 
-* Un-hide ExperimentalTestApi 
-
 **Breaking API Changes**
 
 **Known Issues**
