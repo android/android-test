@@ -37,6 +37,16 @@ package androidx.test.platform.app {
 
 package androidx.test.platform.device {
 
+  public interface DeviceController {
+    method public void setDeviceMode(int);
+    method public void setScreenOrientation(int);
+  }
+
+  public enum DeviceController.ScreenOrientation {
+    enum_constant public static final androidx.test.platform.device.DeviceController.ScreenOrientation LANDSCAPE;
+    enum_constant public static final androidx.test.platform.device.DeviceController.ScreenOrientation PORTRAIT;
+  }
+
   public class UnsupportedDeviceOperationException extends java.lang.RuntimeException implements androidx.test.platform.TestFrameworkException {
     ctor public UnsupportedDeviceOperationException(String!);
     ctor public UnsupportedDeviceOperationException(String!, Throwable!);

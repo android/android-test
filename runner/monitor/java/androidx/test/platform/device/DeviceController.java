@@ -16,7 +16,6 @@
 
 package androidx.test.platform.device;
 
-import androidx.test.annotation.ExperimentalTestApi;
 
 /**
  * Provides base-level device operations that can be used to build user actions such as folding a
@@ -25,10 +24,7 @@ import androidx.test.annotation.ExperimentalTestApi;
  * <p>This is a low level API, typically used by higher level test frameworks. It is generally not
  * recommended for direct use by most tests. Please use high-level Espresso device APIs to interact
  * with the device.
- *
- * <p>This API is experimental and is subject to change or removal in future releases.
  */
-@ExperimentalTestApi
 public interface DeviceController {
   /**
    * Sets the connected device to the provided mode. unsupported device mode.

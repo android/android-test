@@ -11,6 +11,7 @@
 **Breaking Changes**
 
 **API Changes**
+* Make DeviceController an public API from ExperimentalTestApi
 
 **Breaking API Changes**
 
