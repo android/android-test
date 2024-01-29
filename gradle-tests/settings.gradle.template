@@ -1,3 +1,5 @@
+{MODIFY_WARNING}
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -36,7 +38,6 @@ include ':runner'
 include ':espresso'
 include ':espresso:accessibility'
 include ':espresso:contrib'
-include ':espresso-device'
 include ':espresso:idling_resource'
 include ':espresso:web'
 include ':orchestrator'

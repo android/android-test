@@ -1,4 +1,5 @@
 load("@bazel_skylib//rules:expand_template.bzl", "expand_template")
+load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 load(
     "//build_extensions:axt_versions.bzl",
     "ANDROIDX_JUNIT_VERSION",
@@ -33,6 +34,7 @@ expand_template(
         "{RULES_VERSION}": RULES_VERSION,
         "{RUNNER_VERSION}": RUNNER_VERSION,
         "{SERVICES_VERSION}": SERVICES_VERSION,
+        "{MODIFY_WARNING}": "// This file is auto-generated from tools/release/validation_and_propagate_versions.sh\n// DO NOT MODIFY locally",
     },
     template = "settings.gradle.template",
 )
@@ -40,6 +42,14 @@ expand_template(
 genrule(
     name = "update_settings_gradle_rule",
     srcs = [":update_settings_gradle"],
-    outs = ["settings.gradle"],
+    outs = ["settings.gradle.generated"],
     cmd = "cp $(location :update_settings_gradle) \"$@\"",
+)
+
+diff_test(
+    name = "settings_gradle_diff_test",
+    file1 = "settings.gradle",
+    file2 = ":settings.gradle.generated",
+    failure_message = "Unexpected diff detected in settings.gradle. Have you run tools/release/validate_and_propagate_versions.sh?",
+    tags = ["fast"],
 )
