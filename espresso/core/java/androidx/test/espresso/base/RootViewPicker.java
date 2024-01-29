@@ -19,10 +19,13 @@ package androidx.test.espresso.base;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.internal.util.Checks.checkState;
 import static java.util.Collections.unmodifiableList;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import androidx.test.espresso.EspressoException;
@@ -103,9 +106,9 @@ public final class RootViewPicker implements Provider<View> {
    * root view is not being requested and the root view has window focus or is focusable.
    */
   private Root waitForRootToBeReady(Root pickedRoot) {
-    long timeout = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(10) /* 10 seconds */;
+    long timeout = SystemClock.uptimeMillis() + SECONDS.toMillis(10) /* 10 seconds */;
     BackOff rootReadyBackoff = new RootReadyBackoff();
-    while (System.currentTimeMillis() <= timeout) {
+    while (SystemClock.uptimeMillis() <= timeout) {
       if (pickedRoot.isReady()) {
         return pickedRoot;
       } else {
@@ -125,11 +128,11 @@ public final class RootViewPicker implements Provider<View> {
   }
 
   private Root pickARoot() {
-    long timeout = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(60) /* 60 seconds */;
+    long timeout = SystemClock.uptimeMillis() + SECONDS.toMillis(60) /* 60 seconds */;
     RootResults rootResults = rootResultFetcher.fetch();
     BackOff noActiveRootsBackoff = new NoActiveRootsBackoff();
     BackOff noMatchingRootBackoff = new NoMatchingRootBackoff();
-    while (System.currentTimeMillis() <= timeout) {
+    while (SystemClock.uptimeMillis() <= timeout) {
       switch (rootResults.getState()) {
         case ROOTS_PICKED:
           return rootResults.getPickedRoot();
@@ -341,7 +344,7 @@ public final class RootViewPicker implements Provider<View> {
         unmodifiableList(Arrays.asList(10, 10, 20, 30, 50, 80, 130, 210, 340));
 
     public NoActiveRootsBackoff() {
-      super(NO_ACTIVE_ROOTS_BACKOFF, TimeUnit.MILLISECONDS);
+      super(NO_ACTIVE_ROOTS_BACKOFF, MILLISECONDS);
     }
 
     @Override
@@ -358,7 +361,7 @@ public final class RootViewPicker implements Provider<View> {
         unmodifiableList(Arrays.asList(10, 20, 200, 400, 1000, 2000 /* 2sec */));
 
     public NoMatchingRootBackoff() {
-      super(NO_MATCHING_ROOT_BACKOFF, TimeUnit.MILLISECONDS);
+      super(NO_MATCHING_ROOT_BACKOFF, MILLISECONDS);
     }
 
     @Override
@@ -379,7 +382,7 @@ public final class RootViewPicker implements Provider<View> {
         unmodifiableList(Arrays.asList(10, 25, 50, 100, 200, 400, 800, 1000 /* 1sec */));
 
     public RootReadyBackoff() {
-      super(ROOT_READY_BACKOFF, TimeUnit.MILLISECONDS);
+      super(ROOT_READY_BACKOFF, MILLISECONDS);
     }
 
     @Override

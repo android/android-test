@@ -16,6 +16,8 @@ The following artifacts were released:
 
 **Bug Fixes**
 
+* Fix slow inRoot operations in Robolectric
+
 **New Features**
 
 **Breaking Changes**
