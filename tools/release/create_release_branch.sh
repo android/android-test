@@ -28,6 +28,8 @@ git checkout -b ${RELEASE_BRANCH}_in_progress
 echo "Creating complete. Now do the following steps"
 echo "vim build_extensions/axt_versions.bzl"
 echo "bash tools/release/validate_and_propagate_versions.sh"
+echo "git diff"
+echo "Examine the output and ensure the changes to settings.gradle and BUILD look correct"
 echo "git commit -a -m 'Update artifacts and version numbers for $DATE release'"
 echo "git push --set-upstream origin ${RELEASE_BRANCH}_in_progress"
 echo "Navigate to https://github.com/android/android-test/compare/${RELEASE_BRANCH}...${RELEASE_BRANCH}_in_progress to create a PR"
