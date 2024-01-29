@@ -12,6 +12,8 @@
 
 **API Changes**
 
+* Added ApplicationInfoBuilder.setFlags(int)
+
 **Breaking API Changes**
 
 **Known Issues**

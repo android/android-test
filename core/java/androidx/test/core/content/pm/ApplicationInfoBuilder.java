@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 public final class ApplicationInfoBuilder {
   @Nullable private String name;
   @Nullable private String packageName;
+  private int flags = 0;
 
   private ApplicationInfoBuilder() {}
 
@@ -58,11 +59,22 @@ public final class ApplicationInfoBuilder {
     return this;
   }
 
+  /**
+   * Sets the flags.
+   *
+   * @see ApplicationInfo#flags
+   */
+  public ApplicationInfoBuilder setFlags(int flags) {
+    this.flags = flags;
+    return this;
+  }
+
   /** Returns a {@link ApplicationInfo} with the provided data. */
   public ApplicationInfo build() {
     checkNotNull(packageName, "Mandatory field 'packageName' missing.");
 
     ApplicationInfo applicationInfo = new ApplicationInfo();
+    applicationInfo.flags = flags;
     applicationInfo.name = name;
     applicationInfo.packageName = packageName;
 
