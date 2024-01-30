@@ -17,5 +17,5 @@ OUTPUT=`bazelisk run //tools/release/java/androidx/test/tools/releaseupdater:rel
 if [[ ! -z "$OUTPUT" ]]; then
   echo $OUTPUT | xargs buildozer
 fi
-bazelisk build //tools/release:update_settings_gradle_rule
-cp bazel-bin/tools/release/settings.gradle gradle-tests/settings.gradle
+bazelisk build //gradle-tests:update_settings_gradle_rule
+cp bazel-bin/gradle-tests/settings.gradle.generated gradle-tests/settings.gradle
