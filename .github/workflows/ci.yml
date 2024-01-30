@@ -73,8 +73,8 @@ jobs:
           key: ${{ runner.os }}-${{ env.cache-version }}-bazel-test-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-version }}-bazel-test-
-      - name: Run Robolectric tests
-        run: bazelisk test --test_tag_filters=robolectric --build_tag_filters=robolectric --test_output=all ...
+      - name: Run Robolectric tests and fast tagged tests
+        run: bazelisk test --test_tag_filters=robolectric,fast --build_tag_filters=robolectric,fast --test_output=all ...
         shell: bash
       - name: 'Clean bazel cache'
         # Don't cache the bazel/external directory, since it can be  > 2GB
@@ -130,5 +130,4 @@ jobs:
         with:
           name: test-reports
           path: gradle-tests/**/build/reports/androidTests/
-
 

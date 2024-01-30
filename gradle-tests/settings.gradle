@@ -1,3 +1,6 @@
+// This file is auto-generated from tools/release/validation_and_propagate_versions.sh
+// DO NOT MODIFY locally
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
