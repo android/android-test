@@ -130,9 +130,6 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   private static final String TEST_COLLECTION_FILENAME = "testCollection.txt";
   private static final int MAX_FILENAME_LENGTH = 255;
 
-  private static final Pattern FULLY_QUALIFIED_CLASS_AND_METHOD =
-      Pattern.compile("[\\w\\.?]+#\\w+");
-
   private static final List<String> RUNTIME_PERMISSIONS =
       Arrays.asList(permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE);
 
@@ -253,23 +250,14 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
       };
 
   private void collectTests() {
-    String classArg = arguments.getString(AJUR_CLASS_ARGUMENT);
-    // If we are given a single, fully qualified test then there's no point in test collection.
-    // Proceed as if we had done collection and gotten the single argument.
-    if (isSingleMethodTest(classArg)) {
-      Log.i(TAG, String.format("Single test parameter %s, skipping test collection", classArg));
-      callbackLogic.addTest(classArg);
-      runFinished();
-    } else {
-      Log.i(TAG, String.format("Multiple test parameter %s, starting test collection", classArg));
-      executorService.execute(
-          TestRunnable.testCollectionRunnable(
-              getContext(),
-              getSecret(arguments),
-              arguments,
-              getOutputStream(),
-              AndroidTestOrchestrator.this));
-    }
+    Log.i(TAG, "Starting test collection");
+    executorService.execute(
+        TestRunnable.testCollectionRunnable(
+            getContext(),
+            getSecret(arguments),
+            arguments,
+            getOutputStream(),
+            AndroidTestOrchestrator.this));
   }
 
   @VisibleForTesting
@@ -293,13 +281,6 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     return testName + testRunFilenameSuffix;
   }
 
-  @VisibleForTesting
-  static boolean isSingleMethodTest(String classArg) {
-    if (TextUtils.isEmpty(classArg)) {
-      return false;
-    }
-    return FULLY_QUALIFIED_CLASS_AND_METHOD.matcher(classArg).matches();
-  }
 
   /** Invoked every time the TestRunnable finishes, including after test collection. */
   @Override
