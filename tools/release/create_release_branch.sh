@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Script to create a release branch and associated working 'in progress' branch
-# TODO: add support for creating a 'stable' branch
+#
+# Usage: bash tools/release/create_release_branch.sh [--stable]
 
 set -e
 
@@ -16,7 +17,11 @@ git checkout main
 git pull
 
 DATE=$(date -u "+%Y_%m_%d")
-RELEASE_BRANCH="axt_${DATE}_release_branch"
+if [[ $1 == "--stable" ]]; then
+    RELEASE_BRANCH="axt_${DATE}_stable_release_branch"
+else
+    RELEASE_BRANCH="axt_${DATE}_release_branch"
+fi
 
 echo "Creating $RELEASE_BRANCH"
 git checkout -b $RELEASE_BRANCH
