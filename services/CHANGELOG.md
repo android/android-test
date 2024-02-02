@@ -12,6 +12,8 @@
 
 **API Changes**
 
+* Upstream TestStorage.isTestStoragePath to PlatformTestStorage
+
 **Breaking API Changes**
 
 **Known Issues**

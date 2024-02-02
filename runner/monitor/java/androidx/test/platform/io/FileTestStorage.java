@@ -17,6 +17,7 @@ package androidx.test.platform.io;
 
 import android.os.Bundle;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.io.File;
@@ -139,5 +140,11 @@ public final class FileTestStorage implements PlatformTestStorage {
   @Override
   public OutputStream openInternalOutputFile(String pathname) throws IOException {
     return openOutputFile(pathname);
+  }
+
+  @Override
+  public boolean isTestStorageFilePath(@NonNull String pathname) {
+    String outputDir = outputDirCalculator.getOutputDir().getAbsolutePath();
+    return pathname.startsWith(outputDir);
   }
 }

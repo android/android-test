@@ -15,6 +15,7 @@
  */
 package androidx.test.platform.io;
 
+import androidx.annotation.NonNull;
 import androidx.test.annotation.ExperimentalTestApi;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +37,7 @@ import java.util.Map;
  */
 @ExperimentalTestApi
 public interface PlatformTestStorage {
+
   /**
    * Provides an InputStream to a test file dependency.
    *
@@ -103,4 +105,13 @@ public interface PlatformTestStorage {
    * @return an OutputStream to the given output file.
    */
   OutputStream openInternalOutputFile(String pathname) throws IOException;
+
+  /**
+   * Returns true if {@code pathname} corresponds to a file or directory that is in a directory
+   * where the storage stores files.
+   *
+   * @param pathname path to a file or directory. Should not be null. This is an absolute path to a
+   *     file that may be a part of the storage service.
+   */
+  boolean isTestStorageFilePath(@NonNull String pathname);
 }

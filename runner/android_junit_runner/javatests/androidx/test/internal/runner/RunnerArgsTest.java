@@ -755,5 +755,10 @@ public class RunnerArgsTest {
     public OutputStream openInternalOutputFile(String pathname) throws IOException {
       throw new UnsupportedOperationException();
     }
+
+    @Override
+    public boolean isTestStorageFilePath(String pathname) {
+      return false;
+    }
   }
 }

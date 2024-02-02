@@ -79,5 +79,9 @@ class BitmapStorageTest {
     override fun openInternalOutputFile(pathname: String?): OutputStream {
       TODO("Not yet implemented")
     }
+
+    override fun isTestStorageFilePath(pathname: String): Boolean {
+      TODO("Not yet implemented")
+    }
   }
 }

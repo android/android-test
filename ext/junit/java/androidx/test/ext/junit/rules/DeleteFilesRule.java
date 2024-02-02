@@ -19,7 +19,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.services.storage.TestStorage;
+import androidx.test.platform.io.PlatformTestStorageRegistry;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -107,7 +107,7 @@ public final class DeleteFilesRule implements TestRule {
     if (files != null) {
       for (File file : files) {
         if (file.isDirectory()) {
-          if (TestStorage.isTestStorageFilePath(file.getPath())) {
+          if (PlatformTestStorageRegistry.getInstance().isTestStorageFilePath(file.getPath())) {
             continue;
           }
           deleteFilesRecursively(existingFiles, file);

@@ -120,7 +120,8 @@ public final class TestStorage implements PlatformTestStorage {
    * @param pathname path to a file or directory. Should not be null. This is an absolute path to a
    *     file that may be a part of the storage service.
    */
-  public static boolean isTestStorageFilePath(@NonNull String pathname) {
+  @Override
+  public boolean isTestStorageFilePath(@NonNull String pathname) {
     File onDevicePathRoot =
         new File(HostedFile.getRootDirectory(), TestStorageConstants.ON_DEVICE_PATH_ROOT);
     // Append a trailing slash because ON_DEVICE_PATH_ROOT has a trailing slash. If pathname already

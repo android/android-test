@@ -17,6 +17,7 @@ package androidx.test.platform.io;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 
+import androidx.annotation.NonNull;
 import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import java.io.IOException;
@@ -114,6 +115,11 @@ public final class PlatformTestStorageRegistry {
     @Override
     public OutputStream openInternalOutputFile(String pathname) throws IOException {
       return new NullOutputStream();
+    }
+
+    @Override
+    public boolean isTestStorageFilePath(@NonNull String pathname) {
+      return false;
     }
 
     static class NullInputStream extends InputStream {
