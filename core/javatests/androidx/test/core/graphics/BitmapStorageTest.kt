@@ -16,6 +16,7 @@
 package androidx.test.core.graphics
 
 import android.graphics.Bitmap
+import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.io.PlatformTestStorage
 import java.io.IOException
@@ -77,6 +78,14 @@ class BitmapStorageTest {
     }
 
     override fun openInternalOutputFile(pathname: String?): OutputStream {
+      TODO("Not yet implemented")
+    }
+
+    override fun getInputFileUri2(pathname: String): Uri {
+      TODO("Not yet implemented")
+    }
+
+    override fun getOutputFileUri2(pathname: String): Uri {
       TODO("Not yet implemented")
     }
 

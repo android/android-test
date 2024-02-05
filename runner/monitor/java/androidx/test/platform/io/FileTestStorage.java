@@ -15,6 +15,7 @@
  */
 package androidx.test.platform.io;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.annotation.NonNull;
@@ -140,6 +141,20 @@ public final class FileTestStorage implements PlatformTestStorage {
   @Override
   public OutputStream openInternalOutputFile(String pathname) throws IOException {
     return openOutputFile(pathname);
+  }
+
+  @Override
+  public Uri getInputFileUri2(@NonNull String pathname) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Uri getOutputFileUri2(@NonNull String pathname) {
+    File outputFile = new File(pathname);
+    if (!outputFile.isAbsolute()) {
+      outputFile = new File(outputDirCalculator.getOutputDir(), pathname);
+    }
+    return Uri.fromFile(outputFile);
   }
 
   @Override

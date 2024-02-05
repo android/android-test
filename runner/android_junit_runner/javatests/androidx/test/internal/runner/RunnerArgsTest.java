@@ -27,6 +27,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeFalse;
 
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -753,6 +754,16 @@ public class RunnerArgsTest {
 
     @Override
     public OutputStream openInternalOutputFile(String pathname) throws IOException {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Uri getInputFileUri2(String pathname) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Uri getOutputFileUri2(String pathname) {
       throw new UnsupportedOperationException();
     }
 

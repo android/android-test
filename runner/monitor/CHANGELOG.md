@@ -13,6 +13,7 @@
 **API Changes**
 * Make DeviceController an public API from ExperimentalTestApi
 * Upstream TestStorage.isTestStoragePath to PlatformTestStorage
+* Upstream TestStorage.getInputFileUri and getOutputFileUri  to PlatformTestStorage
 
 **Breaking API Changes**
 

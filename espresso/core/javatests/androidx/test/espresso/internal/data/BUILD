@@ -14,6 +14,7 @@ axt_android_library_test(
         "TestFlowVisualizerTest.java",
     ],
     deps = [
+        "//core/java/androidx/test/core",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/internal/data",
         "//espresso/core/java/androidx/test/espresso/internal/data/model",

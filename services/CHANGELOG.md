@@ -13,6 +13,7 @@
 **API Changes**
 
 * Upstream TestStorage.isTestStoragePath to PlatformTestStorage
+* Upstream TestStorage.getInputFileUri and getOutputFileUri  to PlatformTestStorage
 
 **Breaking API Changes**
 

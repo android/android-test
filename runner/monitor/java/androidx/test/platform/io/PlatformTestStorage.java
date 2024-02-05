@@ -15,6 +15,7 @@
  */
 package androidx.test.platform.io;
 
+import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.test.annotation.ExperimentalTestApi;
 import java.io.IOException;
@@ -105,6 +106,42 @@ public interface PlatformTestStorage {
    * @return an OutputStream to the given output file.
    */
   OutputStream openInternalOutputFile(String pathname) throws IOException;
+
+  /**
+   * Provides a Uri to a test file dependency.
+   *
+   * <p>In most of the cases, you would use {@link #openInputFile(String)} for opening up an
+   * InputStream to the input file content immediately. Only use this method if you would like to
+   * store the file Uri and use it for I/O operations later.
+   *
+   * <p><b>Note:</b> temporary API - will be renamed to getInpFileUri in future
+   *
+   * @param pathname path to the test file dependency. Should not be null. This is a relative path
+   *     to where the storage service stores the input files. For example, if the storage service
+   *     stores the input files under "/sdcard/test_input_files", with a pathname
+   *     "/path/to/my_input.txt", the file will end up at
+   *     "/sdcard/test_input_files/path/to/my_input.txt" on device.
+   * @return a content Uri to the test file dependency.
+   *     <p>Note: temporary API - will be renamed to getInputFileUri in future
+   */
+  Uri getInputFileUri2(@NonNull String pathname);
+
+  /**
+   * Provides a Uri to a test output file.
+   *
+   * <p>In most of the cases, you would use {@link #openOutputFile(String)} for opening up an
+   * OutputStream to the output file content immediately. Only use this method if you would like to
+   * store the file Uri and use it for I/O operations later.
+   *
+   * <p><b>Note:</b> temporary API - will be renamed to getOutputFileUri in future
+   *
+   * @param pathname path to the test output file. Should not be null. This is a relative path to
+   *     where the storage service stores the output files. For example, if the storage service
+   *     stores the output files under "/sdcard/test_output_files", with a pathname
+   *     "/path/to/my_output.txt", the file will end up at
+   *     "/sdcard/test_output_files/path/to/my_output.txt" on device.
+   */
+  Uri getOutputFileUri2(@NonNull String pathname);
 
   /**
    * Returns true if {@code pathname} corresponds to a file or directory that is in a directory
