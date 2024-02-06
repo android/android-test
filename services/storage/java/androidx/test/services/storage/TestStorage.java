@@ -338,7 +338,7 @@ public final class TestStorage implements PlatformTestStorage {
    */
   @RestrictTo(Scope.LIBRARY)
   @Override
-  public InputStream openInternalInputFile(String pathname) throws IOException {
+  public InputStream openInternalInputFile(String pathname) throws FileNotFoundException {
     checkNotNull(pathname);
     Uri outputUri = HostedFile.buildUri(FileHost.INTERNAL_USE_ONLY, pathname);
     return TestStorageUtil.getInputStream(outputUri, contentResolver);
@@ -356,7 +356,7 @@ public final class TestStorage implements PlatformTestStorage {
    */
   @RestrictTo(Scope.LIBRARY)
   @Override
-  public OutputStream openInternalOutputFile(String pathname) throws IOException {
+  public OutputStream openInternalOutputFile(String pathname) throws FileNotFoundException {
     checkNotNull(pathname);
     Uri outputUri = HostedFile.buildUri(FileHost.INTERNAL_USE_ONLY, pathname);
     return TestStorageUtil.getOutputStream(outputUri, contentResolver);

@@ -41,6 +41,7 @@ import androidx.test.testing.fixtures.CustomTestFilterTakesBundle;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -704,11 +705,11 @@ public class RunnerArgsTest {
     private final Map<String, InputStream> inputFileMap = new HashMap<>();
 
     @Override
-    public InputStream openInputFile(String pathname) throws IOException {
+    public InputStream openInputFile(String pathname) throws FileNotFoundException {
 
       InputStream is = inputFileMap.get(pathname);
       if (is == null) {
-        throw new IOException();
+        throw new FileNotFoundException();
       }
       return is;
     }
@@ -728,12 +729,12 @@ public class RunnerArgsTest {
     }
 
     @Override
-    public OutputStream openOutputFile(String pathname) throws IOException {
+    public OutputStream openOutputFile(String pathname) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public OutputStream openOutputFile(String pathname, boolean append) throws IOException {
+    public OutputStream openOutputFile(String pathname, boolean append) {
       throw new UnsupportedOperationException();
     }
 
@@ -748,12 +749,12 @@ public class RunnerArgsTest {
     }
 
     @Override
-    public InputStream openInternalInputFile(String pathname) throws IOException {
+    public InputStream openInternalInputFile(String pathname) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public OutputStream openInternalOutputFile(String pathname) throws IOException {
+    public OutputStream openInternalOutputFile(String pathname) {
       throw new UnsupportedOperationException();
     }
 

@@ -23,6 +23,7 @@ import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,12 +56,19 @@ public final class FileTestStorage implements PlatformTestStorage {
    *     apk's asset directory
    */
   @Override
-  public InputStream openInputFile(String pathname) throws IOException {
+  public InputStream openInputFile(String pathname) throws FileNotFoundException {
     File inputFile = new File(pathname);
     if (inputFile.isAbsolute()) {
       return new FileInputStream(inputFile);
     }
-    return InstrumentationRegistry.getInstrumentation().getContext().getAssets().open(pathname);
+    try {
+      return InstrumentationRegistry.getInstrumentation().getContext().getAssets().open(pathname);
+    } catch (IOException e) {
+      FileNotFoundException fe =
+          new FileNotFoundException(String.format("failed to open %s from apk assets", pathname));
+      fe.initCause(e);
+      throw fe;
+    }
   }
 
   /**
@@ -71,12 +79,12 @@ public final class FileTestStorage implements PlatformTestStorage {
    *     writable output dir based on API level.
    */
   @Override
-  public OutputStream openOutputFile(String pathname) throws IOException {
+  public OutputStream openOutputFile(String pathname) throws FileNotFoundException {
     return openOutputFile(pathname, false);
   }
 
   @Override
-  public OutputStream openOutputFile(String pathname, boolean append) throws IOException {
+  public OutputStream openOutputFile(String pathname, boolean append) throws FileNotFoundException {
     File outputFile = new File(pathname);
     if (!outputFile.isAbsolute()) {
       outputFile = new File(outputDirCalculator.getOutputDir(), pathname);
@@ -127,7 +135,7 @@ public final class FileTestStorage implements PlatformTestStorage {
    *     file path is readable.
    */
   @Override
-  public InputStream openInternalInputFile(String pathname) throws IOException {
+  public InputStream openInternalInputFile(String pathname) throws FileNotFoundException {
     return openInputFile(pathname);
   }
 
@@ -139,7 +147,7 @@ public final class FileTestStorage implements PlatformTestStorage {
    *     apk's asset directory
    */
   @Override
-  public OutputStream openInternalOutputFile(String pathname) throws IOException {
+  public OutputStream openInternalOutputFile(String pathname) throws FileNotFoundException {
     return openOutputFile(pathname);
   }
 

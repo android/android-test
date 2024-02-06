@@ -21,7 +21,6 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -109,12 +108,12 @@ public final class PlatformTestStorageRegistry {
     }
 
     @Override
-    public InputStream openInternalInputFile(String pathname) throws IOException {
+    public InputStream openInternalInputFile(String pathname) {
       return new NullInputStream();
     }
 
     @Override
-    public OutputStream openInternalOutputFile(String pathname) throws IOException {
+    public OutputStream openInternalOutputFile(String pathname) {
       return new NullOutputStream();
     }
 

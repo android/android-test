@@ -18,7 +18,7 @@ package androidx.test.platform.io;
 import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.test.annotation.ExperimentalTestApi;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -44,8 +44,9 @@ public interface PlatformTestStorage {
    *
    * @param pathname path to the test file dependency. Should not be null.
    * @return an InputStream to the given test file.
+   * @throws FileNotFoundException if pathname does not exist
    */
-  InputStream openInputFile(String pathname) throws IOException;
+  InputStream openInputFile(String pathname) throws FileNotFoundException;
 
   /**
    * Returns the value of a given argument name.
@@ -64,8 +65,9 @@ public interface PlatformTestStorage {
    *
    * @param pathname path to the test output file. Should not be null.
    * @return an OutputStream to the given output file.
+   * @throws FileNotFoundException if pathname does not exist
    */
-  OutputStream openOutputFile(String pathname) throws IOException;
+  OutputStream openOutputFile(String pathname) throws FileNotFoundException;
 
   /**
    * Provides an OutputStream to a test output file.
@@ -74,8 +76,9 @@ public interface PlatformTestStorage {
    * @param append if true, then the lines will be added to the end of the file rather than
    *     overwriting.
    * @return an OutputStream to the given output file.
+   * @throws FileNotFoundException if pathname does not exist
    */
-  OutputStream openOutputFile(String pathname, boolean append) throws IOException;
+  OutputStream openOutputFile(String pathname, boolean append) throws FileNotFoundException;
 
   /**
    * Adds the given properties.
@@ -96,16 +99,18 @@ public interface PlatformTestStorage {
    *
    * @param pathname path to the internal file. Should not be null.
    * @return an InputStream to the given test file.
+   * @throws FileNotFoundException if pathname does not exist
    */
-  InputStream openInternalInputFile(String pathname) throws IOException;
+  InputStream openInternalInputFile(String pathname) throws FileNotFoundException;
 
   /**
    * Provides an OutputStream to an internal file used by the testing infrastructure.
    *
    * @param pathname path to the internal file. Should not be null.
    * @return an OutputStream to the given output file.
+   * @throws FileNotFoundException if pathname does not exist
    */
-  OutputStream openInternalOutputFile(String pathname) throws IOException;
+  OutputStream openInternalOutputFile(String pathname) throws FileNotFoundException;
 
   /**
    * Provides a Uri to a test file dependency.

@@ -14,6 +14,8 @@
 * Make DeviceController an public API from ExperimentalTestApi
 * Upstream TestStorage.isTestStoragePath to PlatformTestStorage
 * Upstream TestStorage.getInputFileUri and getOutputFileUri  to PlatformTestStorage
+* Change PlatformTestStorage methods to throw FileNotFoundException instead of 
+  IOException
 
 **Breaking API Changes**
 
