@@ -31,14 +31,11 @@ import androidx.test.espresso.PerformException;
 import androidx.test.espresso.base.ViewHierarchyExceptionHandler.Truncater;
 import androidx.test.espresso.internal.inject.TargetContext;
 import androidx.test.internal.platform.util.TestOutputEmitter;
-import androidx.test.platform.io.PlatformTestStorage;
-import androidx.test.platform.io.PlatformTestStorageRegistry;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.inject.Inject;
 import junit.framework.AssertionFailedError;
 import org.hamcrest.Matcher;
 
@@ -50,23 +47,15 @@ public final class DefaultFailureHandler implements FailureHandler {
 
   private static final AtomicInteger failureCount = new AtomicInteger(0);
   private final List<FailureHandler> handlers = new ArrayList<>();
-  private final PlatformTestStorage testStorage;
   private final boolean captureScreenshotOnFailure;
 
   public DefaultFailureHandler(@TargetContext Context appContext) {
-    this(appContext, PlatformTestStorageRegistry.getInstance(), true);
+    this(appContext, true);
   }
 
   public DefaultFailureHandler(
       @TargetContext Context appContext, boolean captureScreenshotOnFailure) {
-    this(appContext, PlatformTestStorageRegistry.getInstance(), captureScreenshotOnFailure);
-  }
 
-  @Inject
-  DefaultFailureHandler(
-      @TargetContext Context appContext,
-      PlatformTestStorage testStorage,
-      boolean captureScreenshotOnFailure) {
     // Adds a chain of exception handlers.
     // Order matters and a matching failure handler in the chain will throw after the exception is
     // handled. Always adds the handler of the child class ahead of its superclasses to make sure
@@ -77,17 +66,14 @@ public final class DefaultFailureHandler implements FailureHandler {
     // PerformException ---------> EspressoException
     //                  ---------> Throwable
     // AssertionError ----------->
-    this.testStorage = testStorage;
     this.captureScreenshotOnFailure = captureScreenshotOnFailure;
     handlers.add(
         new ViewHierarchyExceptionHandler<>(
-            testStorage,
             failureCount,
             NoMatchingViewException.class,
             getNoMatchingViewExceptionTruncater()));
     handlers.add(
         new ViewHierarchyExceptionHandler<>(
-            testStorage,
             failureCount,
             AmbiguousViewMatcherException.class,
             getAmbiguousViewMatcherExceptionTruncater()));
@@ -141,8 +127,7 @@ public final class DefaultFailureHandler implements FailureHandler {
     }
     try {
       if (DeviceCapture.canTakeScreenshot()) {
-        BitmapStorage.writeToTestStorage(
-            DeviceCapture.takeScreenshotNoSync(), testStorage, outputName);
+        BitmapStorage.writeToTestStorage(DeviceCapture.takeScreenshotNoSync(), outputName);
       } else {
         TestOutputEmitter.takeScreenshot(outputName + ".png");
       }

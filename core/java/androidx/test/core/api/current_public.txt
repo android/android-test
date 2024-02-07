@@ -50,6 +50,13 @@ package androidx.test.core.content.pm {
 
 }
 
+package androidx.test.core.graphics {
+
+  public final class BitmapStorage {
+  }
+
+}
+
 package androidx.test.core.os {
 
   public final class Parcelables {

@@ -33,6 +33,7 @@ import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.io.PlatformTestStorage;
+import androidx.test.platform.io.PlatformTestStorageRegistry;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
@@ -40,6 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -59,20 +61,23 @@ public class ViewHierarchyExceptionHandlerTest {
       ambiguousViewMatcherExceptionHandler;
   private Matcher<View> alwaysFalseMatcher;
   @Mock private PlatformTestStorage testStorage;
+  private PlatformTestStorage originalTestStorage;
 
   @Before
   public void setUp() throws IOException {
+    originalTestStorage = PlatformTestStorageRegistry.getInstance();
+    PlatformTestStorageRegistry.registerInstance(testStorage);
     when(testStorage.openOutputFile("view-hierarchy-1.txt"))
         .thenReturn(new ByteArrayOutputStream());
     noMatchingViewExceptionHandler =
         new ViewHierarchyExceptionHandler<>(
-            testStorage,
+
             failureCount,
             NoMatchingViewException.class,
             DefaultFailureHandler.getNoMatchingViewExceptionTruncater());
     ambiguousViewMatcherExceptionHandler =
         new ViewHierarchyExceptionHandler<>(
-            testStorage,
+
             failureCount,
             AmbiguousViewMatcherException.class,
             DefaultFailureHandler.getAmbiguousViewMatcherExceptionTruncater());
@@ -88,6 +93,11 @@ public class ViewHierarchyExceptionHandlerTest {
             description.appendText("A view matcher");
           }
         };
+  }
+
+  @After
+  public void tearDown() throws IOException {
+    PlatformTestStorageRegistry.registerInstance(originalTestStorage);
   }
 
   @Test

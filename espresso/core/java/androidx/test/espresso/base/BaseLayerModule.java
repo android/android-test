@@ -30,7 +30,6 @@ import androidx.test.espresso.util.concurrent.ThreadFactoryBuilder;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.os.ControlledLooper;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.platform.io.PlatformTestStorage;
 import androidx.test.platform.tracing.Tracing;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
@@ -173,9 +172,8 @@ public class BaseLayerModule {
   }
 
   @Provides
-  DefaultFailureHandler provideDefaultFailureHander(
-      @TargetContext Context context, PlatformTestStorage testStorage) {
-    return new DefaultFailureHandler(context, testStorage, true);
+  DefaultFailureHandler provideDefaultFailureHander(@TargetContext Context context) {
+    return new DefaultFailureHandler(context, true);
   }
 
   @Provides

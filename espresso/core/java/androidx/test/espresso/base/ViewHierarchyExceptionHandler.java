@@ -16,7 +16,6 @@
 package androidx.test.espresso.base;
 
 import static androidx.test.espresso.util.Throwables.throwIfUnchecked;
-import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.util.Log;
 import android.view.View;
@@ -25,6 +24,7 @@ import androidx.test.espresso.RootViewException;
 import androidx.test.espresso.base.DefaultFailureHandler.TypedFailureHandler;
 import androidx.test.espresso.util.HumanReadables;
 import androidx.test.platform.io.PlatformTestStorage;
+import androidx.test.platform.io.PlatformTestStorageRegistry;
 import androidx.test.services.storage.TestStorageException;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -44,7 +44,6 @@ class ViewHierarchyExceptionHandler<T extends Throwable & RootViewException>
   private static final int MAX_MSG_SIZE = (64 - 2) * 1024;
   private static final String VIEW_HIERARCHY_CHAR_LIMIT = "view_hierarchy_char_limit";
 
-  private final PlatformTestStorage testStorage;
   private final AtomicInteger failureCount;
   private final Truncater<T> truncater;
 
@@ -53,12 +52,10 @@ class ViewHierarchyExceptionHandler<T extends Throwable & RootViewException>
   }
 
   public ViewHierarchyExceptionHandler(
-      PlatformTestStorage testStorage,
       AtomicInteger failureCount,
       Class<T> expectedType,
       Truncater<T> truncater) {
     super(expectedType);
-    this.testStorage = checkNotNull(testStorage);
     this.failureCount = failureCount;
     this.truncater = truncater;
   }
@@ -79,6 +76,7 @@ class ViewHierarchyExceptionHandler<T extends Throwable & RootViewException>
   }
 
   private int getMsgLen() {
+    PlatformTestStorage testStorage = PlatformTestStorageRegistry.getInstance();
     try {
       if (testStorage.getInputArgs().containsKey(VIEW_HIERARCHY_CHAR_LIMIT)) {
         String limit = testStorage.getInputArg(VIEW_HIERARCHY_CHAR_LIMIT);
@@ -116,7 +114,7 @@ class ViewHierarchyExceptionHandler<T extends Throwable & RootViewException>
   }
 
   private void addOutputFile(String filename, String content) throws IOException {
-    try (OutputStream out = testStorage.openOutputFile(filename)) {
+    try (OutputStream out = PlatformTestStorageRegistry.getInstance().openOutputFile(filename)) {
       out.write(content.getBytes());
     }
   }

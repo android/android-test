@@ -17,6 +17,7 @@ The following artifacts were released:
 **Bug Fixes**
 
 * Fix slow inRoot operations in Robolectric
+* Use PlatformTestStorageRegistry.getInstance consistently instead of passing a reference around
 
 **New Features**
 

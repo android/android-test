@@ -13,6 +13,7 @@
 **API Changes**
 
 * Added ApplicationInfoBuilder.setFlags(int)
+* Make Bitmap.writeToTestStorage use the registered PlatformTestStorage instead of hardcoding TestStorage
 
 **Breaking API Changes**
 

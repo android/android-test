@@ -16,14 +16,7 @@
 package androidx.test.core.graphics
 
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.io.PlatformTestStorage
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
-import java.io.Serializable
-import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -34,63 +27,5 @@ class BitmapStorageTest {
   fun writeToTestStorage() {
     val bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
     bitmap.writeToTestStorage("test")
-  }
-
-  @Test
-  fun writeToTestStorage_throws() {
-    val bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
-    assertThrows(IOException::class.java) {
-      bitmap.writeToTestStorage(ThrowingPlatformTestStorage(), "test")
-    }
-  }
-
-  class ThrowingPlatformTestStorage : PlatformTestStorage {
-    override fun openInputFile(pathname: String?): InputStream {
-      TODO("Not yet implemented")
-    }
-
-    override fun getInputArg(argName: String?): String {
-      TODO("Not yet implemented")
-    }
-
-    override fun getInputArgs(): MutableMap<String, String> {
-      TODO("Not yet implemented")
-    }
-
-    override fun openOutputFile(pathname: String?): OutputStream {
-      throw IOException("error")
-    }
-
-    override fun openOutputFile(pathname: String?, append: Boolean): OutputStream {
-      TODO("Not yet implemented")
-    }
-
-    override fun addOutputProperties(properties: MutableMap<String, Serializable>?) {
-      TODO("Not yet implemented")
-    }
-
-    override fun getOutputProperties(): MutableMap<String, Serializable> {
-      TODO("Not yet implemented")
-    }
-
-    override fun openInternalInputFile(pathname: String?): InputStream {
-      TODO("Not yet implemented")
-    }
-
-    override fun openInternalOutputFile(pathname: String?): OutputStream {
-      TODO("Not yet implemented")
-    }
-
-    override fun getInputFileUri2(pathname: String): Uri {
-      TODO("Not yet implemented")
-    }
-
-    override fun getOutputFileUri2(pathname: String): Uri {
-      TODO("Not yet implemented")
-    }
-
-    override fun isTestStorageFilePath(pathname: String): Boolean {
-      TODO("Not yet implemented")
-    }
   }
 }

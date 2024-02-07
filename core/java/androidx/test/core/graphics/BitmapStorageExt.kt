@@ -19,13 +19,14 @@
 package androidx.test.core.graphics
 
 import android.graphics.Bitmap
+import androidx.annotation.RestrictTo
 import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.platform.io.PlatformTestStorage
-import androidx.test.services.storage.TestStorage
+import androidx.test.platform.io.PlatformTestStorageRegistry
 import java.io.IOException
 
 /**
- * Writes the contents of the [Bitmap] to a compressed png file on [TestStorage]
+ * Writes the contents of the [Bitmap] to a compressed png file on [PlatformTestStorage]
  *
  * @param name a descriptive base name for the resulting file. '.png' will be appended to this name.
  * @throws IOException if bitmap could not be compressed or written to ds
@@ -33,25 +34,27 @@ import java.io.IOException
 @ExperimentalTestApi
 @Throws(IOException::class)
 fun Bitmap.writeToTestStorage(name: String) {
-  writeToTestStorage(TestStorage(), name)
+  writeToTestStorage(PlatformTestStorageRegistry.getInstance(), name)
 }
 
 /**
- * Writes the contents of the [Bitmap] to a compressed png file to the given [PlatformTestStorage]
- *
- * @param testStorage the [PlatformTestStorage] to use
- * @param name a descriptive base name for the resulting file
- * @throws IOException if bitmap could not be compressed or written to storage
+ * @deprecated
+ * @hide
  */
-@ExperimentalTestApi
+@Deprecated(
+  "use  PlatformTestStorageRegistry.setInstance in the rare cases where you want to override the PlatformTestStorage to use",
+  replaceWith = ReplaceWith("writeToTestStorage()"),
+)
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // legacy - used by espresso 3.5.0 DefaultFailureHandler
 @Throws(IOException::class)
 fun Bitmap.writeToTestStorage(testStorage: PlatformTestStorage, name: String) {
   testStorage.openOutputFile("$name.png").use {
-    if (!this.compress(
+    if (
+      !this.compress(
         Bitmap.CompressFormat.PNG,
         /** PNG is lossless, so quality is ignored. */
         0,
-        it
+        it,
       )
     ) {
       throw IOException("Failed to compress bitmap")
