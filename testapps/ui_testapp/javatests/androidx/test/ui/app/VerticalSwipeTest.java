@@ -24,23 +24,20 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.LargeTest;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /** Demonstrates use of {@link ViewActions#swipeUp()} and {@link ViewActions#swipeDown()}. */
 @RunWith(AndroidJUnit4.class)
-@LargeTest
 public class VerticalSwipeTest {
 
-  @Before
-  public void setUp() throws Exception {
-    ActivityScenario.launch(VerticalViewPagerActivity.class);
-  }
+  @Rule
+  public ActivityScenarioRule<VerticalViewPagerActivity> activityScenarioRule =
+      new ActivityScenarioRule<>(VerticalViewPagerActivity.class);
 
   @Test
   public void testSwipingThroughViews() {
