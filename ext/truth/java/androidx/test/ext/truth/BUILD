@@ -54,6 +54,7 @@ maven_artifact(
 
 dackka_test(
     name = "truth_doc",
+    testonly = 1,
     runtime_dep = ":truth",
     src_jar = ":truth_aar-src.jar",
 )

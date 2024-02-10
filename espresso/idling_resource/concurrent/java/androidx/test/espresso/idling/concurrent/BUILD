@@ -1,11 +1,11 @@
 # Description:
 #   Light weight module that contains IdlinResources around concurrent Java APIs
 
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")
-load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
-load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
-load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions:api_checks.bzl", "api_checks")
+load("//build_extensions:dackka_test.bzl", "dackka_test")
+load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 package(
     default_applicable_licenses = ["//espresso:license"],
@@ -65,6 +65,7 @@ maven_artifact(
 
 dackka_test(
     name = "idling_concurrent_doc",
+    testonly = 1,
     runtime_dep = ":idling_concurrent",
     src_jar = ":idling_concurrent_aar-src.jar",
 )

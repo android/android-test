@@ -145,6 +145,7 @@ maven_artifact(
 
 dackka_test(
     name = "espresso_remote_doc",
+    testonly = 1,
     runtime_dep = ":remote",
     src_jar = ":espresso_remote_aar-src.jar",
 )

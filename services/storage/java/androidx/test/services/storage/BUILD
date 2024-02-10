@@ -80,6 +80,7 @@ maven_artifact(
 
 dackka_test(
     name = "test_storage_doc",
+    testonly = 1,
     runtime_dep = ":storage",
     src_jar = ":test_storage_aar-src.jar",
 )

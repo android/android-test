@@ -231,6 +231,7 @@ maven_artifact(
 
 dackka_test(
     name = "espresso_core_doc",
+    testonly = 1,
     runtime_dep = ":espresso_aar_lib",
     src_jar = ":espresso_core_aar-src.jar",
 )

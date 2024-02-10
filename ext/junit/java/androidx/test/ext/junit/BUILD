@@ -67,6 +67,7 @@ maven_artifact(
 
 dackka_test(
     name = "junit_doc",
+    testonly = 1,
     runtime_dep = ":junit",
     src_jar = ":junit_aar-src.jar",
 )

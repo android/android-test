@@ -84,6 +84,7 @@ maven_artifact(
 
 dackka_test(
     name = "device_doc",
+    testonly = 1,
     runtime_dep = ":device_aar_lib",
     src_jar = ":device_aar-src.jar",
 )
