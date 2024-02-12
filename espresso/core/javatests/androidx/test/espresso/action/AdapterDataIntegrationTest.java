@@ -31,6 +31,7 @@ import static org.hamcrest.Matchers.is;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.filters.Suppress;
 import androidx.test.ui.app.LongListActivity;
 import androidx.test.ui.app.R;
 import java.util.Map;
@@ -48,11 +49,17 @@ public class AdapterDataIntegrationTest {
       new ActivityScenarioRule<>(LongListActivity.class);
 
   @Test
+  @Suppress // flaky
   public void clickAroundList() {
     onData(allOf(is(instanceOf(Map.class)), hasEntry(is(LongListActivity.STR), is("item: 99"))))
         .perform(click());
     onView(withId(R.id.selection_row_value)).check(matches(withText("99")));
 
+    // approximately 1-2% of the time this click isn't delivered to the onClickListener for unknown
+    // reasons
+    // the click is delivered to the right coordinates, but just appears to get silently swallowed
+    // by
+    // the android platform
     onData(allOf(is(instanceOf(Map.class)), hasEntry(is(LongListActivity.STR), is("item: 1"))))
         .perform(click());
 
