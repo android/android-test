@@ -97,6 +97,14 @@ public class BundleSubjectTest {
   }
 
   @Test
+  public void byteArray() {
+    Bundle bundle = new Bundle();
+    bundle.putByteArray("foo", new byte[] {1, 2, 3});
+
+    assertThat(bundle).byteArray("foo").isEqualTo(new byte[] {1, 2, 3});
+  }
+
+  @Test
   public void parcelable() {
     Bundle bundle = new Bundle();
     Account account = new Account("bar", "type");

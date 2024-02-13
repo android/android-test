@@ -27,6 +27,7 @@ import com.google.common.truth.IntegerSubject;
 import com.google.common.truth.IterableSubject;
 import com.google.common.truth.LongSubject;
 import com.google.common.truth.ObjectArraySubject;
+import com.google.common.truth.PrimitiveByteArraySubject;
 import com.google.common.truth.StringSubject;
 import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
@@ -91,6 +92,10 @@ public final class BundleSubject extends Subject {
 
   public BooleanSubject bool(String key) {
     return check("getBoolean(%s)", key).that(actual.getBoolean(key));
+  }
+
+  public PrimitiveByteArraySubject byteArray(String key) {
+    return check("getByteArray(%s)", key).that(actual.getByteArray(key));
   }
 
   public <T extends Parcelable> ParcelableSubject<T> parcelable(String key) {

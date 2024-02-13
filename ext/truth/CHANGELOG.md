@@ -8,6 +8,8 @@
 
 **New Features**
 
+* Added `byteArray()` method to `BundleSubject`.
+
 **Breaking Changes**
 
 **API Changes**
