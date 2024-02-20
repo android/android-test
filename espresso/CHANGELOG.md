@@ -21,6 +21,8 @@ The following artifacts were released:
 
 **New Features**
 
+* Add waitForClose to DrawerActions.
+
 **Breaking Changes**
 
 **API Changes**

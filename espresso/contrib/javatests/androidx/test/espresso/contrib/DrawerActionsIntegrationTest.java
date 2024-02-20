@@ -24,6 +24,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerActions.close;
 import static androidx.test.espresso.contrib.DrawerActions.open;
+import static androidx.test.espresso.contrib.DrawerActions.waitForClose;
 import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -90,6 +91,8 @@ public class DrawerActionsIntegrationTest {
     int rowIndex = 2;
     String rowContents = DrawerActivity.DRAWER_CONTENTS[rowIndex];
     onData(allOf(is(instanceOf(String.class)), is(rowContents))).perform(click());
+
+    onView(withId(R.id.drawer_layout)).perform(waitForClose());
 
     // clicking the item should close the drawer.
     onView(withId(R.id.drawer_layout)).check(matches(isClosed()));

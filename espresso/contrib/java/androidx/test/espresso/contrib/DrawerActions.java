@@ -60,7 +60,6 @@ public final class DrawerActions {
   }
 
   private abstract static class DrawerAction implements ViewAction {
-
     @Override
     public final Matcher<View> getConstraints() {
       return isAssignableFrom(DrawerLayout.class);
@@ -84,7 +83,6 @@ public final class DrawerActions {
         drawer.addDrawerListener(idlingListener);
         IdlingRegistry.getInstance().register(idlingListener);
       }
-
       performAction(uiController, drawer);
       uiController.loopMainThreadUntilIdle();
 
@@ -194,15 +192,79 @@ public final class DrawerActions {
       }
 
       @Override
-      protected void performAction(UiController uiController, DrawerLayout view) {
-        view.closeDrawer(gravity);
+      public void performAction(UiController uiController, DrawerLayout drawer) {
+        IdlingDrawerClosedListener closeListener = new IdlingDrawerClosedListener();
+        drawer.addDrawerListener(closeListener);
+        drawer.closeDrawer(gravity);
         uiController.loopMainThreadUntilIdle();
-        // If still open wait some more...
-        if (view.isDrawerVisible(gravity)) {
-          uiController.loopMainThreadForAtLeast(300);
-        }
+        // Need to wait extra time after it closes to reduce flakiness.
+        uiController.loopMainThreadForAtLeast(300);
+        drawer.removeDrawerListener(closeListener);
       }
     };
+  }
+
+  /**
+   * Creates an action that will wait for the drawer to close. Use this in cases where the closing
+   * of the drawer is implicit, such as selecting an item in the drawer. No operation if the drawer
+   * is closed. This uses an idling resource to wait for close, so it will fail if it does not close
+   * within the idling resource timeout.
+   */
+  public static ViewAction waitForClose() {
+    return new DrawerAction() {
+      @Override
+      public String getDescription() {
+        return "waiting for drawer to close";
+      }
+
+      @Override
+      protected Matcher<View> checkAction() {
+        return isOpen();
+      }
+
+      @Override
+      public void performAction(UiController uiController, DrawerLayout drawer) {
+        // Add a listener that waits for the drawer to be closed, wait for it to idle,
+        // and then remove the listener immediately.
+        IdlingDrawerClosedListener closeListener = new IdlingDrawerClosedListener();
+        drawer.addDrawerListener(closeListener);
+        uiController.loopMainThreadUntilIdle();
+        drawer.removeDrawerListener(closeListener);
+      }
+    };
+  }
+
+  /** Drawer listener that functions as an {@link IdlingResource} for Espresso. */
+  private static final class IdlingDrawerClosedListener extends SimpleDrawerListener
+      implements IdlingResource {
+
+    private final int id = nextId.getAndIncrement();
+
+    private ResourceCallback callback;
+    private boolean isClosed = false;
+
+    @Override
+    public void onDrawerClosed(View view) {
+      isClosed = true;
+      if (callback != null) {
+        callback.onTransitionToIdle();
+      }
+    }
+
+    @Override
+    public String getName() {
+      return "IdlingDrawerListener::" + id;
+    }
+
+    @Override
+    public boolean isIdleNow() {
+      return isClosed;
+    }
+
+    @Override
+    public void registerIdleTransitionCallback(ResourceCallback callback) {
+      this.callback = callback;
+    }
   }
 
   /** Drawer listener that functions as an {@link IdlingResource} for Espresso. */

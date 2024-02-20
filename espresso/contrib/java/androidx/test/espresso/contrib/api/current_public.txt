@@ -20,6 +20,7 @@ package androidx.test.espresso.contrib {
     method public static androidx.test.espresso.ViewAction! open(int);
     method @Deprecated public static void openDrawer(int);
     method @Deprecated public static void openDrawer(int, int);
+    method public static androidx.test.espresso.ViewAction! waitForClose();
   }
 
   public final class DrawerMatchers {
