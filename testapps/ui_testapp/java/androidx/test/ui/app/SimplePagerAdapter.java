@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.viewpager.widget.PagerAdapter;
 
+@SuppressWarnings("SetTextI18n")
 class SimplePagerAdapter extends PagerAdapter {
 
   private static final int[] COLORS = {
@@ -49,6 +50,7 @@ class SimplePagerAdapter extends PagerAdapter {
   }
 
   @Override
+  @SuppressWarnings("InflateParams")
   public Object instantiateItem(ViewGroup container, int position) {
     LayoutInflater inflater = LayoutInflater.from(container.getContext());
     View view = inflater.inflate(R.layout.pager_view, null);

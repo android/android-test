@@ -30,8 +30,8 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 
 /**
- * {@link RecyclerViewIntegrationTest}s for {@link androidx.recyclerview.widget.RecyclerView} using a
- * {@link androidx.recyclerview.widget.StaggeredGridLayoutManager}
+ * {@link RecyclerViewIntegrationTest}s for {@link androidx.recyclerview.widget.RecyclerView} using
+ * a {@link androidx.recyclerview.widget.StaggeredGridLayoutManager}
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest

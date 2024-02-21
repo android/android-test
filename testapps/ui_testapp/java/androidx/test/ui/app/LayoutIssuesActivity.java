@@ -22,9 +22,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-/**
- * Activity designed to have layout issues in it for testing purposes.
- */
+/** Activity designed to have layout issues in it for testing purposes. */
+@SuppressWarnings("SetTextI18n")
 public class LayoutIssuesActivity extends Activity {
 
   @Override

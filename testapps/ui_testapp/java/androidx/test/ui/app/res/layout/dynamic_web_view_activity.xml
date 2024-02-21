@@ -16,112 +16,111 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_alignParentRight="true"
     android:layout_alignParentTop="true"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <LinearLayout
+  <LinearLayout
       android:layout_width="fill_parent"
       android:layout_height="wrap_content">
-      <Button
+    <Button
         android:id="@+id/go_dyn_url"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="GOTO"/>
-      <EditText
+        android:text="GOTO" />
+    <EditText
         android:id="@+id/dyn_url"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:imeOptions="actionDone"
-        android:text=""/>
-    </LinearLayout>
+        android:inputType="textUri"
+        android:text="" />
+  </LinearLayout>
 
-    <LinearLayout
+  <LinearLayout
       android:layout_width="fill_parent"
       android:layout_height="wrap_content">
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-        android:text="Redirect Count"/>
-      <Button
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Redirect Count" />
+    <Button
         android:id="@+id/redirect_increment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+"/>
-      <TextView
+        android:text="+" />
+    <TextView
         android:id="@+id/redirect_val"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0"/>
-      <Button
+        android:text="0" />
+    <Button
         android:id="@+id/redirect_decrement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="false"
-        android:text="-"/>
-    </LinearLayout>
-    <LinearLayout
+        android:text="-" />
+  </LinearLayout>
+  <LinearLayout
       android:layout_width="fill_parent"
       android:layout_height="wrap_content">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delay (Secs)"/>
+        android:text="Delay (Secs)" />
     <Button
         android:id="@+id/delay_increment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+"/>
-      <TextView
+        android:text="+" />
+    <TextView
         android:id="@+id/delay_val"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0"/>
-      <Button
+        android:text="0" />
+    <Button
         android:id="@+id/delay_decrement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="false"
-        android:text="-"/>
-    </LinearLayout>
+        android:text="-" />
+  </LinearLayout>
 
-    <LinearLayout
+  <LinearLayout
       android:layout_width="fill_parent"
       android:layout_height="wrap_content">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Override url"
-        />
+        android:text="Override url" />
     <CheckBox
+        android:id="@+id/naive_override"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-      android:id="@+id/naive_override"/>
-    </LinearLayout>
+        android:layout_height="wrap_content" />
+  </LinearLayout>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/override_message"/>
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/page_change_message"/>
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/progress_value"/>
-    <WebView
-        android:id="@+id/dynamic_web_view"
-        android:layout_width="fill_parent"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:layout_height="fill_parent"/>
+  <TextView
+      android:id="@+id/override_message"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:textAppearance="?android:attr/textAppearanceSmall" />
+  <TextView
+      android:id="@+id/page_change_message"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:textAppearance="?android:attr/textAppearanceSmall" />
+  <TextView
+      android:id="@+id/progress_value"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:textAppearance="?android:attr/textAppearanceSmall" />
+  <WebView
+      android:id="@+id/dynamic_web_view"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+      android:focusable="true"
+      android:focusableInTouchMode="true" />
 </LinearLayout>

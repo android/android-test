@@ -25,6 +25,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:background="#0594ED"
-        android:clickable="true" />
+        android:clickable="true"
+        android:focusable="true" />
 
 </LinearLayout>

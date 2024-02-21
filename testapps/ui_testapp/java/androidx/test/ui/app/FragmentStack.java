@@ -27,9 +27,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-/**
- * Displays a counter using fragments.
- */
+/** Displays a counter using fragments. */
+@SuppressWarnings("SetTextI18n")
 public class FragmentStack extends Activity {
   int stackLevel = 1;
 

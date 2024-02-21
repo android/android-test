@@ -29,6 +29,7 @@ import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnKeyListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -39,9 +40,8 @@ import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-/**
- * Simple activity used for validating intent sending and UI behavior.
- */
+/** Simple activity used for validating intent sending and UI behavior. */
+@SuppressWarnings("SetTextI18n")
 public class SendActivity extends Activity {
 
   private static final int PICK_CONTACT_REQUEST = 1;  // The request code
@@ -171,7 +171,8 @@ public class SendActivity extends Activity {
   }
 
   public boolean showPopupView(View view) {
-    View content = getLayoutInflater().inflate(R.layout.popup_window, null, false);
+    View content =
+        getLayoutInflater().inflate(R.layout.popup_window, (ViewGroup) view.getRootView(), false);
     popupWindow = new PopupWindow(content, LayoutParams.WRAP_CONTENT,
         LayoutParams.WRAP_CONTENT, true);
     content.setOnClickListener(new View.OnClickListener() {
@@ -195,8 +196,10 @@ public class SendActivity extends Activity {
   }
 
   public void pickContact(@SuppressWarnings("unused") View view) {
-    Intent pickContactIntent = new Intent(Intent.ACTION_PICK, Uri.parse("content://contacts"));
-    pickContactIntent.setType(Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
+    Intent pickContactIntent = new Intent(Intent.ACTION_PICK);
+    pickContactIntent.setDataAndType(
+        Uri.parse("content://contacts"),
+        Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
     startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);
   }
 

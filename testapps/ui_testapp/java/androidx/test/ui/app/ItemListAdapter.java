@@ -20,17 +20,15 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkPositionIndex;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
-/**
- * An {@link androidx.recyclerview.widget.RecyclerView.Adapter} with a list of String items.
- */
+/** An {@link androidx.recyclerview.widget.RecyclerView.Adapter} with a list of String items. */
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemViewHolder> {
 
   private final LayoutInflater inflater;
@@ -72,9 +70,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
     return items.size();
   }
 
-  /**
-   * {@link androidx.recyclerview.widget.RecyclerView.ViewHolder} used for list items.
-   */
+  /** {@link androidx.recyclerview.widget.RecyclerView.ViewHolder} used for list items. */
   public static class ItemViewHolder extends RecyclerView.ViewHolder {
 
     public TextView textView;

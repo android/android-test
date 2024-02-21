@@ -39,13 +39,13 @@ package androidx.test.espresso.contrib {
   }
 
   public final class RecyclerViewActions {
-    method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.contrib.RecyclerViewActions.PositionableRecyclerViewAction! actionOnHolderItem(org.hamcrest.Matcher<VH!>!, androidx.test.espresso.ViewAction!);
-    method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.contrib.RecyclerViewActions.PositionableRecyclerViewAction! actionOnItem(org.hamcrest.Matcher<android.view.View!>!, androidx.test.espresso.ViewAction!);
-    method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.ViewAction! actionOnItemAtPosition(int, androidx.test.espresso.ViewAction!);
-    method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.contrib.RecyclerViewActions.PositionableRecyclerViewAction! scrollTo(org.hamcrest.Matcher<android.view.View!>!);
-    method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.contrib.RecyclerViewActions.PositionableRecyclerViewAction! scrollToHolder(org.hamcrest.Matcher<VH!>!);
-    method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.ViewAction scrollToLastPosition();
-    method public static <VH extends android.support.v7.widget.RecyclerView.ViewHolder> androidx.test.espresso.ViewAction! scrollToPosition(int);
+    method public static <VH extends androidx.recyclerview.widget.RecyclerView.ViewHolder> androidx.test.espresso.contrib.RecyclerViewActions.PositionableRecyclerViewAction! actionOnHolderItem(org.hamcrest.Matcher<VH!>!, androidx.test.espresso.ViewAction!);
+    method public static <VH extends androidx.recyclerview.widget.RecyclerView.ViewHolder> androidx.test.espresso.contrib.RecyclerViewActions.PositionableRecyclerViewAction! actionOnItem(org.hamcrest.Matcher<android.view.View!>!, androidx.test.espresso.ViewAction!);
+    method public static <VH extends androidx.recyclerview.widget.RecyclerView.ViewHolder> androidx.test.espresso.ViewAction! actionOnItemAtPosition(int, androidx.test.espresso.ViewAction!);
+    method public static <VH extends androidx.recyclerview.widget.RecyclerView.ViewHolder> androidx.test.espresso.contrib.RecyclerViewActions.PositionableRecyclerViewAction! scrollTo(org.hamcrest.Matcher<android.view.View!>!);
+    method public static <VH extends androidx.recyclerview.widget.RecyclerView.ViewHolder> androidx.test.espresso.contrib.RecyclerViewActions.PositionableRecyclerViewAction! scrollToHolder(org.hamcrest.Matcher<VH!>!);
+    method public static <VH extends androidx.recyclerview.widget.RecyclerView.ViewHolder> androidx.test.espresso.ViewAction scrollToLastPosition();
+    method public static <VH extends androidx.recyclerview.widget.RecyclerView.ViewHolder> androidx.test.espresso.ViewAction! scrollToPosition(int);
   }
 
   public static interface RecyclerViewActions.PositionableRecyclerViewAction extends androidx.test.espresso.ViewAction {

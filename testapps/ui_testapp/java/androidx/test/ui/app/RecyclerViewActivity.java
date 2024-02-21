@@ -17,14 +17,14 @@
 package androidx.test.ui.app;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.util.SparseArray;
+import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import android.util.Log;
-import android.util.SparseArray;
-import android.view.ViewGroup;
 import androidx.test.ui.app.RecyclerViewFragment.LayoutManagerType;
 import androidx.viewpager.widget.ViewPager;
 import com.google.common.annotations.VisibleForTesting;
@@ -66,8 +66,8 @@ public class RecyclerViewActivity extends FragmentActivity {
   }
 
   /**
-   * The {@link androidx.fragment.app.FragmentPagerAdapter} to display the different
-   * {@link androidx.test.ui.app.RecyclerViewFragment}s
+   * The {@link androidx.fragment.app.FragmentPagerAdapter} to display the different {@link
+   * androidx.test.ui.app.RecyclerViewFragment}s
    */
   private static class RecyclerViewPagerAdapter extends FragmentPagerAdapter {
 

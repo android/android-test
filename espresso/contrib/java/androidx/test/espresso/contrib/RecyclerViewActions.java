@@ -22,13 +22,13 @@ import static androidx.test.internal.util.Checks.checkArgument;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static org.hamcrest.Matchers.allOf;
 
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.Adapter;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
@@ -36,6 +36,7 @@ import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.util.HumanReadables;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -211,13 +212,18 @@ public final class RecyclerViewActions {
     public String getDescription() {
       if (atPosition == NO_POSITION) {
         return String.format(
+            Locale.ROOT,
             "performing ViewAction: %s on item matching: %s",
-            viewAction.getDescription(), viewHolderMatcher);
+            viewAction.getDescription(),
+            viewHolderMatcher);
 
       } else {
         return String.format(
+            Locale.ROOT,
             "performing ViewAction: %s on %d-th item matching: %s",
-            viewAction.getDescription(), atPosition, viewHolderMatcher);
+            viewAction.getDescription(),
+            atPosition,
+            viewHolderMatcher);
       }
     }
 
@@ -350,7 +356,10 @@ public final class RecyclerViewActions {
         return "scroll RecyclerView to: " + viewHolderMatcher;
       } else {
         return String.format(
-            "scroll RecyclerView to the: %dth matching %s.", atPosition, viewHolderMatcher);
+            Locale.ROOT,
+            "scroll RecyclerView to the: %dth matching %s.",
+            atPosition,
+            viewHolderMatcher);
       }
     }
 

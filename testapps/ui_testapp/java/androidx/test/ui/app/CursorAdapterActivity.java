@@ -17,9 +17,9 @@
 package androidx.test.ui.app;
 
 import android.os.Bundle;
-import androidx.fragment.app.FragmentActivity;
 import android.widget.AdapterView;
 import androidx.cursoradapter.widget.CursorAdapter;
+import androidx.fragment.app.FragmentActivity;
 
 /**
  * An activity displaying an {@link AdapterView} backed by a {@link CursorAdapter}.

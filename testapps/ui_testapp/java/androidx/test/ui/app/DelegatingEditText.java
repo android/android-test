@@ -27,9 +27,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-/**
- * Custom edit text widget.
- */
+/** Custom edit text widget. */
+@SuppressWarnings("SetTextI18n")
 public class DelegatingEditText extends LinearLayout {
 
   private final EditText delegateEditText;

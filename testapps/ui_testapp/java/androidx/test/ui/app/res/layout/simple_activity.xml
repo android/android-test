@@ -69,6 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:ems="10"
+            android:inputType="text"
             android:hint="@string/send_hint" />
 
         <Button

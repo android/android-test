@@ -23,9 +23,8 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.TextView;
 
-/**
- * Activity that contains a {@link TextView} larger than the display.
- */
+/** Activity that contains a {@link TextView} larger than the display. */
+@SuppressWarnings("SetTextI18n")
 public class LargeViewActivity extends Activity {
 
   @Override

@@ -62,7 +62,7 @@ public final class ScrollToAction implements ViewAction {
                 isAssignableFrom(HorizontalScrollView.class),
                 isAssignableFrom(ListView.class),
                 isAssignableFromClassName("androidx.core.widget.NestedScrollView"),
-                isAssignableFromClassName("androidx.recyclerview.widget.RecyclerView"),
+                isAssignableFromClassName("android.support.v7.widget.RecyclerView"),
                 isAssignableFromClassName("androidx.recyclerview.widget.RecyclerView"))));
   }
 

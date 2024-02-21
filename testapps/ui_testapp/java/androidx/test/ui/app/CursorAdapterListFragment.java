@@ -19,18 +19,17 @@ package androidx.test.ui.app;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
 import android.os.Bundle;
-import androidx.fragment.app.ListFragment;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.cursoradapter.widget.CursorAdapter;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
+import androidx.fragment.app.ListFragment;
 import com.google.common.annotations.VisibleForTesting;
 
-/**
- * A {@link ListFragment} which uses a {@link CursorAdapter} as a data source.
- */
+/** A {@link ListFragment} which uses a {@link CursorAdapter} as a data source. */
+@SuppressWarnings("SetTextI18n")
 public class CursorAdapterListFragment extends ListFragment {
 
   private static final String COLUMN_ID = "_id";

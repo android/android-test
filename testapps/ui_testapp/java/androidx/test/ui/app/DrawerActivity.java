@@ -18,8 +18,6 @@ package androidx.test.ui.app;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,9 +26,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 /** Activity to demonstrate actions on a {@link DrawerLayout}. */
+@SuppressWarnings("SetTextI18n")
 public class DrawerActivity extends AppCompatActivity {
 
   public static final String[] DRAWER_CONTENTS =

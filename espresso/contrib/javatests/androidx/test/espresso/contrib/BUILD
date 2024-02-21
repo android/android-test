@@ -13,9 +13,15 @@ licenses(["notice"])
 ## Android tests
 
 jetify_android_library(
-    name = "recycler_view_test_baseclass",
+    name = "recycler_view_tests",
     testonly = 1,
-    srcs = ["RecyclerViewIntegrationTest.java"],
+    srcs = [
+        "RecyclerViewGridLayoutManagerTest.java",
+        "RecyclerViewIntegrationTest.java",
+        "RecyclerViewLinearLayoutManagerTest.java",
+        "RecyclerViewStaggeredGridLayoutManagerTest.java",
+    ],
+    jetify_sources = True,
     deps = [
         "//core",
         "//espresso/contrib/java/androidx/test/espresso/contrib:recycler_view",
@@ -24,10 +30,12 @@ jetify_android_library(
         "//espresso/core/java/androidx/test/espresso/action",
         "//espresso/core/java/androidx/test/espresso/assertion",
         "//espresso/core/java/androidx/test/espresso/matcher",
+        "//ext/junit",
         "//runner/android_junit_runner",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib",
         "//testapps/ui_testapp/javatests/androidx/test/ui/app:test_resources",
         "@maven//:androidx_recyclerview_recyclerview",
+        "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
@@ -104,10 +112,8 @@ axt_android_library_test(
 
 axt_android_library_test(
     name = "RecyclerViewGridLayoutManagerTest",
-    srcs =
-        ["RecyclerViewGridLayoutManagerTest.java"],
     deps = [
-        ":recycler_view_test_baseclass",
+        ":recycler_view_tests",
         "//espresso/contrib/java/androidx/test/espresso/contrib:recycler_view",
         "//espresso/core/java/androidx/test/espresso",
         "//ext/junit",
@@ -119,10 +125,8 @@ axt_android_library_test(
 
 axt_android_library_test(
     name = "RecyclerViewLinearLayoutManagerTest",
-    srcs =
-        ["RecyclerViewLinearLayoutManagerTest.java"],
     deps = [
-        ":recycler_view_test_baseclass",
+        ":recycler_view_tests",
         "//espresso/contrib/java/androidx/test/espresso/contrib:recycler_view",
         "//espresso/core/java/androidx/test/espresso",
         "//ext/junit",
@@ -136,10 +140,8 @@ axt_android_library_test(
 
 axt_android_library_test(
     name = "RecyclerViewStaggeredGridLayoutManagerTest",
-    srcs =
-        ["RecyclerViewStaggeredGridLayoutManagerTest.java"],
     deps = [
-        ":recycler_view_test_baseclass",
+        ":recycler_view_tests",
         "//espresso/contrib/java/androidx/test/espresso/contrib:recycler_view",
         "//espresso/core/java/androidx/test/espresso",
         "//ext/junit",

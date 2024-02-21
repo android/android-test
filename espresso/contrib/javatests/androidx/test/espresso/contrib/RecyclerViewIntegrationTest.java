@@ -37,9 +37,9 @@ import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.fail;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ActivityScenario.ActivityAction;
 import androidx.test.espresso.PerformException;
@@ -362,7 +362,9 @@ public abstract class RecyclerViewIntegrationTest {
     onView(withId(selectedItemId)).check(matches(withText(expectedItem0Text)));
   }
 
-  /** @return the layout id of the {@link androidx.recyclerview.widget.RecyclerView} used. */
+  /**
+   * @return the layout id of the {@link androidx.recyclerview.widget.RecyclerView} used.
+   */
   protected abstract int getRVLayoutId();
 
   /** @return the view id of the selected item {@link android.widget.TextView} */

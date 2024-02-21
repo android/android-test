@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 /** Activity that updates a TextView when its screen orientation is changed. */
 public class ScreenOrientationActivity extends Activity {
-  private static final String TAG = "ScreenOrientationActivity";
+  private static final String TAG = "ScreenOrientActivity";
 
   @Override
   public void onCreate(Bundle savedInstanceState) {

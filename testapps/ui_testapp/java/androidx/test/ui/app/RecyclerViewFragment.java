@@ -19,13 +19,6 @@ package androidx.test.ui.app;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.LayoutManager;
-import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,6 +26,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.core.view.GestureDetectorCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.LayoutManager;
+import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.google.common.collect.Lists;
 import java.util.List;
 
@@ -55,8 +55,8 @@ public class RecyclerViewFragment extends Fragment implements OnItemTouchListene
   private ItemListAdapter adapter;
 
   /**
-   * The type of {@link androidx.recyclerview.widget.RecyclerView.LayoutManager} that will be used to
-   * render the content of the {@link androidx.recyclerview.widget.RecyclerView}
+   * The type of {@link androidx.recyclerview.widget.RecyclerView.LayoutManager} that will be used
+   * to render the content of the {@link androidx.recyclerview.widget.RecyclerView}
    */
   public enum LayoutManagerType {
     LINEAR(R.layout.rv_llm_fragment, R.id.rv_llm_item_list, R.id.rv_llm_selected_item),
@@ -98,9 +98,8 @@ public class RecyclerViewFragment extends Fragment implements OnItemTouchListene
   ;
 
   /**
-   * Factory method to create an instance of
-   * {@link androidx.test.ui.app.RecyclerViewFragment}
-   * with a particular {@link androidx.recyclerview.widget.RecyclerView.LayoutManager}
+   * Factory method to create an instance of {@link androidx.test.ui.app.RecyclerViewFragment} with
+   * a particular {@link androidx.recyclerview.widget.RecyclerView.LayoutManager}
    *
    * @param layoutManagerType the layout manager to render the content
    * @return fragment instance

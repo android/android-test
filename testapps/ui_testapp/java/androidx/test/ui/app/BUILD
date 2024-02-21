@@ -3,8 +3,7 @@
 # Description:
 #  Test App used for UI Testing Lib integration tests.
 
-load("//build_extensions:jetify.bzl", "jetify_android_library")
-load("@build_bazel_rules_android//android:rules.bzl", "android_binary", "android_library")
+load("//build_extensions:jetify.bzl", "jetify_android_binary", "jetify_android_library")
 
 licenses(["notice"])
 
@@ -23,6 +22,7 @@ jetify_android_library(
     ),
     assets = glob(["assets/**"]),
     assets_dir = "assets",
+    jetify_sources = True,
     manifest = "AndroidManifest.xml",
     resource_files = glob(["res/**"]),
     deps = [
@@ -35,29 +35,32 @@ jetify_android_library(
     ],
 )
 
-android_library(
+jetify_android_library(
     name = "lib_exported",
     testonly = 1,
     exports_manifest = 1,
+    jetify_sources = True,
     manifest = "AndroidManifest.xml",
     exports = [
         ":lib",
     ],
 )
 
-android_library(
+jetify_android_library(
     name = "lib_neverlink",
     testonly = 1,
+    jetify_sources = True,
     # No other libraries should depend on this one
     neverlink = 1,
     exports = [":lib"],
 )
 
-android_binary(
+jetify_android_binary(
     name = "testapp",
     testonly = 1,
     assets = glob(["assets/**"]),
     assets_dir = "assets",
+    jetify_sources = True,
     manifest = "AndroidManifest.xml",
     multidex = "legacy",
     resource_files = glob(["res/**"]),

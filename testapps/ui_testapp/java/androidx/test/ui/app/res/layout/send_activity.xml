@@ -39,6 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:clickable="true"
+            android:focusable="true"
             android:onClick="sendData"
             android:text="@string/send_title"
             android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -49,6 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ems="10"
+            android:inputType="text"
             android:hint="@string/send_hint" />
 
         <Button
@@ -64,6 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:inputType="text"
             android:ems="10"
             android:hint="@string/enter_hint" />
 
@@ -89,6 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ems="10"
+            android:inputType="textMultiLine"
             android:hint="@string/send_hint_for_call" />
 
         <Button
@@ -113,6 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ems="10"
+            android:inputType="text"
             android:hint="@string/send_hint"
             android:text="@string/send_data_to_message_edit_text" />
 
@@ -138,6 +143,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ems="10"
+            android:inputType="text"
             android:hint="@string/send_hint" />
 
         <Button
@@ -184,6 +190,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ems="10"
+            android:inputType="text"
             android:hint="@string/send_hint_to_market" />
 
         <Button
@@ -314,6 +321,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1000dp"
             android:clickable="true"
+            android:focusable="true"
             android:onClick="sendData"
             android:text="@string/send_title" />
     </LinearLayout>

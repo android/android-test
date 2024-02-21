@@ -33,8 +33,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * {@link RecyclerViewIntegrationTest}s for {@link androidx.recyclerview.widget.RecyclerView} using a
- * {@link androidx.recyclerview.widget.LinearLayoutManager}
+ * {@link RecyclerViewIntegrationTest}s for {@link androidx.recyclerview.widget.RecyclerView} using
+ * a {@link androidx.recyclerview.widget.LinearLayoutManager}
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest

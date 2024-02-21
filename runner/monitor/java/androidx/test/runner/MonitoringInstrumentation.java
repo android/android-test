@@ -231,7 +231,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       return Class.forName("androidx.multidex.MultiDex");
     } catch (ClassNotFoundException e) {
       // check for support multidex
-      return Class.forName("androidx.multidex.MultiDex");
+      return Class.forName("android.support.multidex.MultiDex");
     }
   }
 

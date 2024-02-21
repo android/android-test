@@ -32,6 +32,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
+import java.util.Locale;
 
 /**
  * Will use WindowManager to create a chat head button on the screen.
@@ -156,7 +157,7 @@ public class ChatHeadService extends Service {
     int red = (color >> 16) & 0xFF;
     int green = (color >> 8) & 0xFF;
     int blue = (color >> 0) & 0xFF;
-    return String.format("RGB(%d,%d,%d)", red, green, blue);
+    return String.format(Locale.ROOT, "RGB(%d,%d,%d)", red, green, blue);
   }
 
   @Override

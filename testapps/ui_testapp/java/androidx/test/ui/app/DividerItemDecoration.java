@@ -21,13 +21,12 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.view.View;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
 
-/**
- * Simple Decorator which draws a line between each list item. Copied from AOSP.
- */
+/** Simple Decorator which draws a line between each list item. Copied from AOSP. */
+@SuppressWarnings("DuplicateDivider")
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private static final int[] ATTRS = new int[]{

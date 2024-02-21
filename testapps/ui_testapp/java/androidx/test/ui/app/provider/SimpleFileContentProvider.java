@@ -31,6 +31,7 @@ import androidx.annotation.NonNull;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * A ContentProvider to provide read/write access to files in a hosted directory.
@@ -79,7 +80,7 @@ public class SimpleFileContentProvider extends ContentProvider {
       throws FileNotFoundException {
     checkNotNull(uri);
     checkNotNull(mode);
-    String lowerMode = mode.toLowerCase();
+    String lowerMode = mode.toLowerCase(Locale.ROOT);
     boolean withWriteAccess = lowerMode.contains("w") || lowerMode.contains("t");
     if (withWriteAccess) {
       // Requires caller has WRITE_EXTERNAL_STORAGE permission for "w" or "t"

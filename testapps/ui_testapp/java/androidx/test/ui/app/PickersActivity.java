@@ -22,16 +22,17 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 import android.text.TextUtils;
 import android.text.format.Time;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * An activity that let's you pick a date {@link DatePicker} and time {@link TimePicker} and
@@ -147,7 +148,8 @@ public class PickersActivity extends FragmentActivity {
    */
   public static class PickerHelper {
 
-    private static final SimpleDateFormat DATE_FORMAT_MMDDyyyy = new SimpleDateFormat("MM/dd/yyyy");
+    private static final SimpleDateFormat DATE_FORMAT_MMDDyyyy =
+        new SimpleDateFormat("MM/dd/yyyy", Locale.US);
     private static final String TIME_FORMAT_HM = "%H:%M";
 
     private PickerHelper() {

@@ -26,6 +26,7 @@
         android:layout_height="94105dp"
         android:onClick="largeViewClicked"
         android:clickable="true"
+        android:focusable="true"
         android:text="large view" />
 
 </LinearLayout>

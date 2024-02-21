@@ -34,9 +34,8 @@ import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
 
-/**
- * An activity displaying a long list.
- */
+/** An activity displaying a long list. */
+@SuppressWarnings("SetTextI18n")
 public class LongListActivity extends Activity {
 
   @VisibleForTesting
@@ -62,37 +61,43 @@ public class LongListActivity extends Activity {
     int[] to = new int[] {R.id.item_content, R.id.item_size};
     layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-    ListAdapter adapter = new SimpleAdapter(this, data, R.layout.list_item, from, to) {
-      @Override
-      public View getView(final int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-          convertView = layoutInflater.inflate(R.layout.list_item, null);
-        }
-
-        TextView textViewOne = (TextView) convertView.findViewById(R.id.item_content);
-        if (textViewOne != null) {
-          textViewOne.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              ((TextView) findViewById(R.id.selection_row_value)).setText(String.valueOf(position));
-              ((TextView) findViewById(R.id.selection_column_value)).setText("1");
+    ListAdapter adapter =
+        new SimpleAdapter(this, data, R.layout.list_item, from, to) {
+          @Override
+          @SuppressWarnings("InflateParams")
+          public View getView(final int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+              convertView = layoutInflater.inflate(R.layout.list_item, null);
             }
-          });
-        }
 
-        TextView textViewTwo = (TextView) convertView.findViewById(R.id.item_size);
-        if (textViewTwo != null) {
-          textViewTwo.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              ((TextView) findViewById(R.id.selection_row_value)).setText(String.valueOf(position));
-              ((TextView) findViewById(R.id.selection_column_value)).setText("2");
+            TextView textViewOne = (TextView) convertView.findViewById(R.id.item_content);
+            if (textViewOne != null) {
+              textViewOne.setOnClickListener(
+                  new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                      ((TextView) findViewById(R.id.selection_row_value))
+                          .setText(String.valueOf(position));
+                      ((TextView) findViewById(R.id.selection_column_value)).setText("1");
+                    }
+                  });
             }
-          });
-        }
-        return super.getView(position, convertView, parent);
-      }
-    };
+
+            TextView textViewTwo = (TextView) convertView.findViewById(R.id.item_size);
+            if (textViewTwo != null) {
+              textViewTwo.setOnClickListener(
+                  new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                      ((TextView) findViewById(R.id.selection_row_value))
+                          .setText(String.valueOf(position));
+                      ((TextView) findViewById(R.id.selection_column_value)).setText("2");
+                    }
+                  });
+            }
+            return super.getView(position, convertView, parent);
+          }
+        };
 
     View footerView = layoutInflater.inflate(R.layout.list_item, listView, false);
     ((TextView) footerView.findViewById(R.id.item_content)).setText("count:");
