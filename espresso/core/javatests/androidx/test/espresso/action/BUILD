@@ -9,6 +9,7 @@ load(
     "//build_extensions:axt_android_application_test.bzl",
     "axt_android_application_test",
 )
+load("//build_extensions:phone_devices.bzl", "apis", "devices")
 
 package(default_applicable_licenses = ["//espresso:license"])
 
@@ -312,8 +313,8 @@ axt_android_library_test(
 axt_android_library_test(
     name = "SwipeActionIntegrationTest",
     srcs = ["SwipeActionIntegrationTest.java"],
-    # flaky
-    tags = ["notap"],
+    # flaky on APIs < 30
+    device_list = devices(apis(min_api = 30)),
     deps = [
         "//core",
         "//espresso/core/java/androidx/test/espresso",
