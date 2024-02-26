@@ -451,18 +451,17 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
 
   @Override
   public void finish(int resultCode, Bundle results) {
-
-      try {
-        super.finish(resultCode, results);
-      } catch (SecurityException e) {
-        Log.e(TAG, "Security exception thrown on shutdown", e);
-        // On API Level 18 a security exception can be occasionally thrown when calling finish
-        // with a result bundle taken from a remote message.  Recreating the result bundle and
-        // retrying finish has a high probability of suppressing the flake.
-        results = createResultBundle();
-        super.finish(resultCode, results);
-      }
-
+    // This is a comment
+    try {
+      super.finish(resultCode, results);
+    } catch (SecurityException e) {
+      Log.e(TAG, "Security exception thrown on shutdown", e);
+      // On API Level 18 a security exception can be occasionally thrown when calling finish
+      // with a result bundle taken from a remote message.  Recreating the result bundle and
+      // retrying finish has a high probability of suppressing the flake.
+      results = createResultBundle();
+      super.finish(resultCode, results);
+    }
   }
 
   @Override
