@@ -18,6 +18,7 @@ package androidx.test.orchestrator;
 import static androidx.test.orchestrator.OrchestratorConstants.AJUR_CLASS_ARGUMENT;
 import static androidx.test.orchestrator.OrchestratorConstants.AJUR_LIST_TESTS_ARGUMENT;
 import static androidx.test.orchestrator.OrchestratorConstants.ISOLATED_ARGUMENT;
+import static androidx.test.orchestrator.OrchestratorConstants.ORCHESTRATOR_FORWARDED_INSTRUMENTATION_ARGS;
 import static androidx.test.orchestrator.OrchestratorConstants.TARGET_INSTRUMENTATION_ARGUMENT;
 
 import android.content.Context;
@@ -184,11 +185,29 @@ public class TestRunnable implements Runnable {
     return targetArgs;
   }
 
+  /**
+   * Instrumentation params are delimited by comma, each param is stripped from leading and trailing
+   * whitespace.
+   */
+  private List<String> getInstrumentationParamsAndRemoveBundleArgs(Bundle arguments) {
+    List<String> cleanedParams = new ArrayList<>();
+    String forwardedArgs = arguments.getString(ORCHESTRATOR_FORWARDED_INSTRUMENTATION_ARGS);
+    if (forwardedArgs != null) {
+      for (String param : forwardedArgs.split(",")) {
+        cleanedParams.add(param.strip());
+      }
+      arguments.remove(ORCHESTRATOR_FORWARDED_INSTRUMENTATION_ARGS);
+    }
+    return cleanedParams;
+  }
+
   private List<String> buildShellParams(Bundle arguments) throws IOException, ClientNotConnected {
     List<String> params = new ArrayList<>();
     params.add("instrument");
     params.add("-w");
     params.add("-r");
+
+    params.addAll(getInstrumentationParamsAndRemoveBundleArgs(arguments));
 
     for (String key : arguments.keySet()) {
       params.add("-e");
@@ -196,7 +215,6 @@ public class TestRunnable implements Runnable {
       params.add(arguments.getString(key));
     }
     params.add(getTargetInstrumentation());
-
     return params;
   }
 

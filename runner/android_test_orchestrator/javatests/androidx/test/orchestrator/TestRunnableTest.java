@@ -168,6 +168,50 @@ public class TestRunnableTest {
         "-e class com.google.android.example.MyClass");
   }
 
+  @Test
+  public void testRun_buildsParams_givenInstrumentationParamsAreHandledCorrectlyWhenTrue() {
+    arguments.putString(
+        "orchestratorInstrumentationArgs", "--no-hidden-api-checks, --no-isolated-storage");
+    FakeListener listener = new FakeListener();
+    FakeTestRunnable runnable =
+        new FakeTestRunnable(context, "secret", arguments, outputStream, listener, null, true);
+    runnable.run();
+    assertContainsRunnerArgs(runnable.params, "-no-hidden-api-checks --no-isolated-storage");
+  }
+
+  @Test
+  public void testRun_buildsParams_givenInstrumentationParamsAreHandledCorrectlyWithSpace() {
+    arguments.putString(
+        "orchestratorInstrumentationArgs",
+        "--no-hidden-api-checks, --no-isolated-storage, --abi x86_64");
+    FakeListener listener = new FakeListener();
+    FakeTestRunnable runnable =
+        new FakeTestRunnable(context, "secret", arguments, outputStream, listener, null, true);
+    runnable.run();
+    assertContainsRunnerArgs(
+        runnable.params, "-no-hidden-api-checks --no-isolated-storage --abi x86_64");
+  }
+
+  @Test
+  public void testRun_buildsParams_givenInstrumentationParamsAreHandledCorrectlySingleParam() {
+    arguments.putString("orchestratorInstrumentationArgs", "--no-hidden-api-checks");
+    FakeListener listener = new FakeListener();
+    FakeTestRunnable runnable =
+        new FakeTestRunnable(context, "secret", arguments, outputStream, listener, null, true);
+    runnable.run();
+    assertContainsRunnerArgs(runnable.params, "--no-hidden-api-checks");
+  }
+
+  @Test
+  public void testRun_buildsParams_givenInstrumentationParamsAreHandledCorrectlyMultipleParam() {
+    arguments.putString("orchestratorInstrumentationArgs", "--A,--B,--C,--key value");
+    FakeListener listener = new FakeListener();
+    FakeTestRunnable runnable =
+        new FakeTestRunnable(context, "secret", arguments, outputStream, listener, null, true);
+    runnable.run();
+    assertContainsRunnerArgs(runnable.params, "--A --B --C --key value");
+  }
+
   private static void assertContainsRunnerArgs(List<String> params, String... containsArgs) {
     String cmdArgs = Joiner.on(" ").join(params);
     assertThat(cmdArgs, startsWith("instrument -w -r"));

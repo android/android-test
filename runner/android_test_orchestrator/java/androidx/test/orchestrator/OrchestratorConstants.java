@@ -30,6 +30,11 @@ final class OrchestratorConstants {
   static final String AJUR_COVERAGE = "coverage";
   static final String AJUR_COVERAGE_FILE = "coverageFile";
 
+  // Holds a comma separated listed of args that will be passed to the instrumentation invocation
+  // directly.
+  static final String ORCHESTRATOR_FORWARDED_INSTRUMENTATION_ARGS =
+      "orchestratorInstrumentationArgs";
+
   private OrchestratorConstants() {
     // Do not initialize
   }

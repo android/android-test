@@ -118,6 +118,11 @@ import java.util.regex.Pattern;
  *
  * <p>Pass {@code -e orchestratorDebug} flag if you need to debug orchestrator itself. Note, to
  * debug test code you still need to pass {@code -e debug}.
+ *
+ * <p>Pass {@code -e orchestratorInstrumentationArgs "params"} to pass {@code params} to the
+ * instrumentation invocation directly instead of adding them to the bundle, {@code params} are
+ * expected to be comma delimited parameters (eg: {@code -e orchestratorInstrumentationArgs
+ * "--no-hidden-api-checks, --no-isolated-storage"})
  */
 public final class AndroidTestOrchestrator extends android.app.Instrumentation
     implements RunFinishedListener {
@@ -452,17 +457,16 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   @Override
   public void finish(int resultCode, Bundle results) {
 
-      try {
-        super.finish(resultCode, results);
-      } catch (SecurityException e) {
-        Log.e(TAG, "Security exception thrown on shutdown", e);
-        // On API Level 18 a security exception can be occasionally thrown when calling finish
-        // with a result bundle taken from a remote message.  Recreating the result bundle and
-        // retrying finish has a high probability of suppressing the flake.
-        results = createResultBundle();
-        super.finish(resultCode, results);
-      }
-
+    try {
+      super.finish(resultCode, results);
+    } catch (SecurityException e) {
+      Log.e(TAG, "Security exception thrown on shutdown", e);
+      // On API Level 18 a security exception can be occasionally thrown when calling finish
+      // with a result bundle taken from a remote message.  Recreating the result bundle and
+      // retrying finish has a high probability of suppressing the flake.
+      results = createResultBundle();
+      super.finish(resultCode, results);
+    }
   }
 
   @Override
