@@ -5,9 +5,9 @@ package androidx.test.espresso {
     method public static androidx.test.espresso.IdlingRegistry! getInstance();
     method public java.util.Collection<android.os.Looper!>! getLoopers();
     method public java.util.Collection<androidx.test.espresso.IdlingResource!>! getResources();
-    method public boolean register(androidx.test.espresso.IdlingResource!...);
+    method public boolean register(androidx.test.espresso.IdlingResource!...!);
     method public void registerLooperAsIdlingResource(android.os.Looper!);
-    method public boolean unregister(androidx.test.espresso.IdlingResource!...);
+    method public boolean unregister(androidx.test.espresso.IdlingResource!...!);
     method public boolean unregisterLooperAsIdlingResource(android.os.Looper!);
   }
 

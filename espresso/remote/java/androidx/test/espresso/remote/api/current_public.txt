@@ -7,7 +7,7 @@ package androidx.test.espresso.remote {
 
   public final class EspressoRemote implements androidx.test.espresso.remote.RemoteInteraction {
     method public java.util.concurrent.Callable<java.lang.Void!>! createRemoteCheckCallable(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, org.hamcrest.Matcher<android.view.View!>!, java.util.Map<java.lang.String!,android.os.IBinder!>!, androidx.test.espresso.ViewAssertion!);
-    method public java.util.concurrent.Callable<java.lang.Void!>! createRemotePerformCallable(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, org.hamcrest.Matcher<android.view.View!>!, java.util.Map<java.lang.String!,android.os.IBinder!>!, androidx.test.espresso.ViewAction!...);
+    method public java.util.concurrent.Callable<java.lang.Void!>! createRemotePerformCallable(org.hamcrest.Matcher<androidx.test.espresso.Root!>!, org.hamcrest.Matcher<android.view.View!>!, java.util.Map<java.lang.String!,android.os.IBinder!>!, androidx.test.espresso.ViewAction!...!);
     method public static androidx.test.espresso.remote.EspressoRemote! getInstance();
     method public void init();
     method public boolean isRemoteProcess();
@@ -92,12 +92,12 @@ package androidx.test.espresso.remote {
   public static final class RemoteDescriptor.Builder {
     ctor public RemoteDescriptor.Builder();
     method public androidx.test.espresso.remote.RemoteDescriptor! build();
-    method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setInstanceFieldDescriptors(androidx.test.espresso.remote.FieldDescriptor!...);
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setInstanceFieldDescriptors(androidx.test.espresso.remote.FieldDescriptor!...?);
     method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setInstanceType(Class<?>);
     method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setProtoBuilderType(Class<?>);
     method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setProtoParser(com.google.protobuf.Parser<?>);
     method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setProtoType(Class<?>);
-    method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setRemoteConstrTypes(Class<?>!...);
+    method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setRemoteConstrTypes(Class<?>!...?);
     method public androidx.test.espresso.remote.RemoteDescriptor.Builder! setRemoteType(Class<?>);
   }
 

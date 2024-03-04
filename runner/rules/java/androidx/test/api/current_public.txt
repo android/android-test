@@ -34,7 +34,7 @@ package androidx.test.rule {
 
   public class GrantPermissionRule implements org.junit.rules.TestRule {
     method public final org.junit.runners.model.Statement! apply(org.junit.runners.model.Statement!, org.junit.runner.Description!);
-    method public static androidx.test.rule.GrantPermissionRule! grant(java.lang.String!...);
+    method public static androidx.test.rule.GrantPermissionRule! grant(java.lang.String!...!);
   }
 
   public class ServiceTestRule implements org.junit.rules.TestRule {

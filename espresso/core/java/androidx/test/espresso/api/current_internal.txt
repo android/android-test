@@ -3,7 +3,7 @@ package androidx.test.espresso.remote {
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public interface IInteractionExecutionStatus extends android.os.IInterface {
     method public boolean canExecute() throws android.os.RemoteException;
-    field public static final String! DESCRIPTOR = "androidx.test.espresso.remote.IInteractionExecutionStatus";
+    field public static final String DESCRIPTOR = "androidx.test.espresso.remote.IInteractionExecutionStatus";
   }
 
   public static class IInteractionExecutionStatus.Default implements androidx.test.espresso.remote.IInteractionExecutionStatus {

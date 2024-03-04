@@ -29,7 +29,7 @@ package androidx.test.ext.truth.content {
 
   public final class IntentCorrespondences {
     method public static com.google.common.truth.Correspondence<android.content.Intent!,android.content.Intent!>! action();
-    method public static com.google.common.truth.Correspondence<android.content.Intent!,android.content.Intent!>! all(com.google.common.truth.Correspondence<android.content.Intent!,android.content.Intent!>!...);
+    method public static com.google.common.truth.Correspondence<android.content.Intent!,android.content.Intent!>! all(com.google.common.truth.Correspondence<android.content.Intent!,android.content.Intent!>!...!);
     method public static com.google.common.truth.Correspondence<android.content.Intent!,android.content.Intent!>! data();
   }
 

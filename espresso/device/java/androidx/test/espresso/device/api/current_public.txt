@@ -43,6 +43,7 @@ package androidx.test.espresso.device.action {
   }
 
   public enum ScreenOrientation {
+    method public static kotlin.enums.EnumEntries<androidx.test.espresso.device.action.ScreenOrientation> getEntries();
     method public static androidx.test.espresso.device.action.ScreenOrientation valueOf(String value) throws java.lang.IllegalArgumentException, java.lang.NullPointerException;
     method public static androidx.test.espresso.device.action.ScreenOrientation[] values();
     enum_constant public static final androidx.test.espresso.device.action.ScreenOrientation LANDSCAPE;
@@ -54,6 +55,7 @@ package androidx.test.espresso.device.action {
 package androidx.test.espresso.device.controller {
 
   public enum DeviceMode {
+    method public static kotlin.enums.EnumEntries<androidx.test.espresso.device.controller.DeviceMode> getEntries();
     method public static androidx.test.espresso.device.controller.DeviceMode valueOf(String value) throws java.lang.IllegalArgumentException, java.lang.NullPointerException;
     method public static androidx.test.espresso.device.controller.DeviceMode[] values();
     enum_constant public static final androidx.test.espresso.device.controller.DeviceMode BOOK;
@@ -122,10 +124,11 @@ package androidx.test.espresso.device.sizeclass {
   }
 
   public enum HeightSizeClass.Companion.HeightSizeClassEnum {
-    method public final String! getDescription();
+    method public final String getDescription();
+    method public static kotlin.enums.EnumEntries<androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum> getEntries();
     method public static androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum valueOf(String value) throws java.lang.IllegalArgumentException, java.lang.NullPointerException;
     method public static androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum[] values();
-    property public final String! description;
+    property public final String description;
     enum_constant public static final androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum COMPACT;
     enum_constant public static final androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum EXPANDED;
     enum_constant public static final androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum MEDIUM;
@@ -148,10 +151,11 @@ package androidx.test.espresso.device.sizeclass {
   }
 
   public enum WidthSizeClass.Companion.WidthSizeClassEnum {
-    method public final String! getDescription();
+    method public final String getDescription();
+    method public static kotlin.enums.EnumEntries<androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum> getEntries();
     method public static androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum valueOf(String value) throws java.lang.IllegalArgumentException, java.lang.NullPointerException;
     method public static androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum[] values();
-    property public final String! description;
+    property public final String description;
     enum_constant public static final androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum COMPACT;
     enum_constant public static final androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum EXPANDED;
     enum_constant public static final androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum MEDIUM;

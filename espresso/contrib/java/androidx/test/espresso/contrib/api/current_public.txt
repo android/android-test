@@ -7,8 +7,8 @@ package androidx.test.espresso.contrib {
   }
 
   public final class ActivityResultMatchers {
-    method public static org.hamcrest.Matcher<? super android.app.Instrumentation.ActivityResult>! hasResultCode(int);
-    method public static org.hamcrest.Matcher<? super android.app.Instrumentation.ActivityResult>! hasResultData(org.hamcrest.Matcher<android.content.Intent!>!);
+    method public static org.hamcrest.Matcher<? super android.app.Instrumentation.ActivityResult!>! hasResultCode(int);
+    method public static org.hamcrest.Matcher<? super android.app.Instrumentation.ActivityResult!>! hasResultData(org.hamcrest.Matcher<android.content.Intent!>!);
   }
 
   public final class DrawerActions {

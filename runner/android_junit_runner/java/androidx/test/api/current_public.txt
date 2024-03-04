@@ -10,7 +10,7 @@ package androidx.test.filters {
   }
 
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.ANNOTATION_TYPE}) public @interface CustomFilter {
-    method public abstract Class<? extends androidx.test.filters.AbstractFilter> filterClass();
+    method public abstract Class<? extends androidx.test.filters.AbstractFilter!> filterClass();
   }
 
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.METHOD, java.lang.annotation.ElementType.TYPE}) public @interface FlakyTest {

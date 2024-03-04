@@ -55,7 +55,7 @@ package androidx.test.espresso.web.assertion {
   public final class WebViewAssertions {
     method public static androidx.test.espresso.web.assertion.WebAssertion<org.w3c.dom.Document!>! webContent(org.hamcrest.Matcher<org.w3c.dom.Document!>!);
     method public static <E> androidx.test.espresso.web.assertion.WebAssertion<E!>! webMatches(androidx.test.espresso.web.model.Atom<E!>!, org.hamcrest.Matcher<E!>!);
-    method public static <E> androidx.test.espresso.web.assertion.WebAssertion<E!>! webMatches(androidx.test.espresso.web.model.Atom<E!>!, org.hamcrest.Matcher<E!>!, androidx.test.espresso.web.assertion.WebViewAssertions.ResultDescriber<? super E>!);
+    method public static <E> androidx.test.espresso.web.assertion.WebAssertion<E!>! webMatches(androidx.test.espresso.web.model.Atom<E!>!, org.hamcrest.Matcher<E!>!, androidx.test.espresso.web.assertion.WebViewAssertions.ResultDescriber<? super E!>!);
   }
 
   public static interface WebViewAssertions.ResultDescriber<E> {
