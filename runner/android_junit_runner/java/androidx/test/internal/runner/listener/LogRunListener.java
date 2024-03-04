@@ -58,16 +58,14 @@ public class LogRunListener extends RunListener {
   @Override
   public void testFailure(Failure failure) throws Exception {
     Log.e(TAG, "failed: " + failure.getDescription().getDisplayName());
-    Log.e(TAG, "----- begin exception -----");
-    Log.e(TAG, failure.getTrace());
+    Log.e(TAG, "----- begin exception -----", failure.getException());
     Log.e(TAG, "----- end exception -----");
   }
 
   @Override
   public void testAssumptionFailure(Failure failure) {
     Log.e(TAG, "assumption failed: " + failure.getDescription().getDisplayName());
-    Log.e(TAG, "----- begin exception -----");
-    Log.e(TAG, failure.getTrace());
+    Log.e(TAG, "----- begin exception -----", failure.getException());
     Log.e(TAG, "----- end exception -----");
   }
 

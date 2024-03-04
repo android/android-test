@@ -6,6 +6,9 @@
 
 **Bug Fixes**
 
+* When logging test exceptions, use Log's built-in support for throwables to avoid stack truncation
+
+
 **New Features**
 
 **Breaking Changes**
