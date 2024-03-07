@@ -12,6 +12,8 @@
 
 **API Changes**
 
+* Made ScreenOrientationRule's defaultOrientation parameter optional
+
 **Breaking API Changes**
 
 **Known Issues**

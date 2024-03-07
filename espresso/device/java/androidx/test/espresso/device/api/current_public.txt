@@ -94,6 +94,7 @@ package androidx.test.espresso.device.rules {
   }
 
   public final class ScreenOrientationRule implements org.junit.rules.TestRule {
+    ctor public ScreenOrientationRule();
     ctor public ScreenOrientationRule(androidx.test.espresso.device.action.ScreenOrientation? defaultOrientation);
     method public org.junit.runners.model.Statement apply(org.junit.runners.model.Statement statement, org.junit.runner.Description description);
   }

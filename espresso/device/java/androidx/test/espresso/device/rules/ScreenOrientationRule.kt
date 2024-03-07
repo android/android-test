@@ -31,6 +31,8 @@ import org.junit.runners.model.Statement
  *   that the test starts with if none is given.
  */
 class ScreenOrientationRule(private val defaultOrientation: ScreenOrientation?) : TestRule {
+  constructor() : this(null)
+
   override fun apply(statement: Statement, description: Description): Statement {
     return object : Statement() {
       override fun evaluate() {
