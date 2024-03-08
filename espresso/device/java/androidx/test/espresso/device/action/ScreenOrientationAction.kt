@@ -62,7 +62,7 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
    * @param deviceController the controller to use to interact with the device.
    */
   override fun perform(deviceController: DeviceController) {
-    val context = InstrumentationRegistry.getInstrumentation().getTargetContext()
+    val context = InstrumentationRegistry.getInstrumentation().targetContext
     if (screenOrientation == getCurrentScreenOrientation(context)) {
       if (Log.isLoggable(TAG, Log.DEBUG)) {
         Log.d(TAG, "Device screen is already in the requested orientation, no need to rotate.")
@@ -75,27 +75,24 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
       return
     }
 
-    var startingAccelRotationSetting = getAccelerometerRotationSetting()
     val currentActivity = getResumedActivityOrNull()
-    val currentActivityName: String? = currentActivity?.getLocalClassName()
-    val configChangesHandled =
-      if (currentActivity != null) {
-        currentActivity.isConfigurationChangeHandled(CONFIG_ORIENTATION)
-      } else {
-        false
-      }
+    if (currentActivity == null) {
+      Log.d(TAG, "No activity was found in the RESUMED stage.")
+      throw DeviceControllerOperationException(
+        "Device could not be set to the requested screen orientation because no activity was found."
+      )
+    }
 
+    var startingAccelRotationSetting = getAccelerometerRotationSetting()
+    val currentActivityName: String? = currentActivity.localClassName
+    val configChangesHandled = currentActivity.isConfigurationChangeHandled(CONFIG_ORIENTATION)
     val latch: CountDownLatch = CountDownLatch(1)
     val requestedOrientation =
       if (screenOrientation == ScreenOrientation.LANDSCAPE) Configuration.ORIENTATION_LANDSCAPE
       else Configuration.ORIENTATION_PORTRAIT
 
-    if (currentActivity == null || configChangesHandled) {
-      if (currentActivity == null) {
-        Log.d(TAG, "No activity was found in the RESUMED stage.")
-      } else if (configChangesHandled) {
-        Log.d(TAG, "The current activity handles configuration changes.")
-      }
+    if (configChangesHandled) {
+      Log.d(TAG, "The current activity handles configuration changes.")
       context.registerComponentCallbacks(
         object : ComponentCallbacks {
           override fun onConfigurationChanged(newConfig: Configuration) {
@@ -122,9 +119,9 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
           object : ActivityLifecycleCallback {
             override fun onActivityLifecycleChanged(activity: Activity, stage: Stage) {
               if (
-                activity.getLocalClassName() == currentActivityName &&
+                activity.localClassName == currentActivityName &&
                   stage == Stage.RESUMED &&
-                  activity.getResources().getConfiguration().orientation == requestedOrientation
+                  activity.resources.configuration.orientation == requestedOrientation
               ) {
                 if (Log.isLoggable(TAG, Log.DEBUG)) {
                   Log.d(TAG, "Test activity was resumed in the requested orientation.")
@@ -154,7 +151,7 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
   }
 
   private fun getCurrentScreenOrientation(context: Context): ScreenOrientation {
-    var currentOrientation = context.getResources().getConfiguration().orientation
+    var currentOrientation = context.resources.configuration.orientation
     return if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE)
       ScreenOrientation.LANDSCAPE
     else ScreenOrientation.PORTRAIT

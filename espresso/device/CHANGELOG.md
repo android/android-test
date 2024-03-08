@@ -5,6 +5,7 @@
 `androidx.test.espresso:espresso-device:{version}` is released.
 
 **Bug Fixes**
+Clarify error messaging for setting screen orientation without a resumed activity
 
 **New Features**
 
