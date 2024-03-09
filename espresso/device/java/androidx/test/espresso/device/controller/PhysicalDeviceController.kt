@@ -81,16 +81,7 @@ class PhysicalDeviceController() : DeviceController {
       )
     }
 
-    // TODO(b/296910911) Support setting screen orientation on folded devices
-    val supportedDeviceStates = getMapOfDeviceStateNamesToIdentifiers()
-    if (supportedDeviceStates.isNotEmpty()) {
-      val currentDeviceStateIdentifier = executeShellCommand("cmd device_state print-state").trim()
-      if (currentDeviceStateIdentifier != getMapOfDeviceStateNamesToIdentifiers().get("OPENED")) {
-        throw UnsupportedDeviceOperationException(
-          "Setting screen orientation is not suported on physical foldable devices that are not in flat mode."
-        )
-      }
-    }
+    
 
     // System user_rotation values must be one of the Surface rotation constants and these values
     // can indicate different orientations on different devices, since we check if the device is

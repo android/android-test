@@ -43,12 +43,10 @@ internal class TabletopModeAction() :
     } else if (super.foldingFeatureOrientation != FoldingFeature.Orientation.HORIZONTAL) {
       Log.d(TAG, "FoldingFeature orientation needs to be rotated.")
       // TODO(b/296910911) On physical devices, changing screen orientation requires the device to
-      // be in FLAT mode. Open the fold, update orientation, and then restore the half-folded state.
-      if (!isTestDeviceAnEmulator()) {
-        Log.d(TAG, "Temporarily setting device to flat mode so that device can be rotated.")
-        BaseSingleFoldDeviceAction(DeviceMode.FLAT, FoldingFeature.State.FLAT)
-          .perform(deviceController)
-      }
+      // be in FLAT mode. Open the fold, update orientation, and then restore the half-folded state.{
+      Log.d(TAG, "Temporarily setting device to flat mode so that device can be rotated.")
+      BaseSingleFoldDeviceAction(DeviceMode.FLAT, FoldingFeature.State.FLAT)
+        .perform(deviceController)
 
       val orientationToRotateTo =
         if (

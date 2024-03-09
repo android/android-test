@@ -36,6 +36,9 @@ import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import androidx.test.espresso.device.common.executeShellCommand
+import androidx.test.espresso.device.common.getMapOfDeviceStateNamesToIdentifiers
+import androidx.test.platform.device.UnsupportedDeviceOperationException
 
 /** Action to set the test device to the provided screen orientation. */
 internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation) : DeviceAction {
@@ -73,6 +76,17 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
     if (isRobolectricTest()) {
       deviceController.setScreenOrientation(screenOrientation.getOrientation())
       return
+    }
+    
+    // TODO(b/296910911) Support setting screen orientation on folded devices
+    val supportedDeviceStates = getMapOfDeviceStateNamesToIdentifiers()
+    if (supportedDeviceStates.isNotEmpty()) {
+      val currentDeviceStateIdentifier = executeShellCommand("cmd device_state print-state").trim()
+      if (currentDeviceStateIdentifier != getMapOfDeviceStateNamesToIdentifiers().get("OPENED")) {
+        throw UnsupportedDeviceOperationException(
+          "Setting screen orientation is not suported on foldable devices that are not in flat mode."
+        )
+      }
     }
 
     val currentActivity = getResumedActivityOrNull()
