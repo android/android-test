@@ -57,6 +57,9 @@ import java.util.function.Consumer
  * bitmap will be a 5x5 bitmap that spans (15, 15 - 20, 20). This is particularly useful for
  * Compose, which only has a singular view that contains a hierarchy of nodes.
  *
+ * Note: This API will likely change in the future to a kotlin suspend function. If you want a
+ * method that returns a ListenableFuture instead, use [captureToBitmapAsync].
+ *
  * This API is currently experimental and subject to change or removal.
  */
 @ExperimentalTestApi
@@ -80,6 +83,15 @@ fun View.captureToBitmap(rect: Rect? = null): ListenableFuture<Bitmap> {
   }
 
   return bitmapFuture
+}
+
+/**
+ * Equivalent to [captureToBitmap] for now. In the future [captureToBitmap] will be changed to a
+ * suspend function.
+ */
+@ExperimentalTestApi
+fun View.captureToBitmapAsync(rect: Rect? = null): ListenableFuture<Bitmap> {
+  return captureToBitmap(rect)
 }
 
 /**
@@ -195,7 +207,7 @@ private fun View.generateBitmapFromPixelCopy(
         bounds.left + rect.left,
         bounds.top + rect.top,
         bounds.left + rect.right,
-        bounds.top + rect.bottom
+        bounds.top + rect.bottom,
       )
   }
   PixelCopy.request(surface, bounds, destBitmap, onCopyFinished, Handler(Looper.getMainLooper()))
@@ -256,7 +268,7 @@ private fun View.reflectivelyGetLocationInSurface(locationInSurface: IntArray) {
     // ART restrictions introduced in API 29 disallow reflective access to mWindowAttributes
     Log.w(
       "ViewCapture",
-      "Could not calculate offset of view in surface on API 28, resulting image may have incorrect positioning"
+      "Could not calculate offset of view in surface on API 28, resulting image may have incorrect positioning",
     )
   }
 }

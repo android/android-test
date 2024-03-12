@@ -41,6 +41,9 @@ import com.google.common.util.concurrent.ListenableFuture
  * This API is primarily intended for use in lower layer libraries or frameworks. For test authors,
  * its recommended to use espresso or compose's captureToImage.
  *
+ * Note: This API will likely change in the future to a kotlin suspend function. If you want a
+ * method that returns a ListenableFuture instead, use [captureRegionToBitmapAsync].
+ *
  * This API is currently experimental and subject to change or removal.
  */
 @ExperimentalTestApi
@@ -62,15 +65,24 @@ fun Window.captureRegionToBitmap(boundsInWindow: Rect? = null): ListenableFuture
   return bitmapFuture
 }
 
+/**
+ * Equivalent to [captureRegionToBitmap] for now. In the future [captureRegionToBitmap] will be
+ * changed to a suspend function.
+ */
+@ExperimentalTestApi
+fun Window.captureRegionToBitmapAsync(boundsInWindow: Rect? = null): ListenableFuture<Bitmap> {
+  return captureRegionToBitmap(boundsInWindow)
+}
+
 internal fun Window.generateBitmap(
   boundsInWindow: Rect? = null,
-  bitmapFuture: ResolvableFuture<Bitmap>
+  bitmapFuture: ResolvableFuture<Bitmap>,
 ) {
   val destBitmap =
     Bitmap.createBitmap(
       boundsInWindow?.width() ?: decorView.width,
       boundsInWindow?.height() ?: decorView.height,
-      Bitmap.Config.ARGB_8888
+      Bitmap.Config.ARGB_8888,
     )
   when {
     Build.VERSION.SDK_INT < 26 ->
@@ -84,7 +96,7 @@ internal fun Window.generateBitmap(
 internal fun Window.generateBitmapFromPixelCopy(
   boundsInWindow: Rect? = null,
   destBitmap: Bitmap,
-  bitmapFuture: ResolvableFuture<Bitmap>
+  bitmapFuture: ResolvableFuture<Bitmap>,
 ) {
   val onCopyFinished =
     PixelCopy.OnPixelCopyFinishedListener { result ->
@@ -99,6 +111,6 @@ internal fun Window.generateBitmapFromPixelCopy(
     boundsInWindow,
     destBitmap,
     onCopyFinished,
-    Handler(Looper.getMainLooper())
+    Handler(Looper.getMainLooper()),
   )
 }

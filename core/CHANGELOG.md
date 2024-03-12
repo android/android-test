@@ -14,6 +14,7 @@
 
 * Added ApplicationInfoBuilder.setFlags(int)
 * Make Bitmap.writeToTestStorage use the registered PlatformTestStorage instead of hardcoding TestStorage
+* Add *Async variants of capture*ToBitmap methods
 
 **Breaking API Changes**
 
