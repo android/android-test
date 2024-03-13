@@ -26,7 +26,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.platform.io.PlatformTestStorage;
 import androidx.test.platform.io.PlatformTestStorageRegistry;
-import androidx.test.services.storage.TestStorage;
 import androidx.test.services.storage.internal.TestStorageUtil;
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,7 +69,7 @@ public class TestFlowVisualizerTest {
     testFlowVisualizer.visualize();
     InputStream outputGalleryFile =
         TestStorageUtil.getInputStream(
-            TestStorage.getOutputFileUri("output_gallery.html"),
+            PlatformTestStorageRegistry.getInstance().getOutputFileUri2("output_gallery.html"),
             InstrumentationRegistry.getInstrumentation().getTargetContext().getContentResolver());
     int size = outputGalleryFile.available();
     byte[] directFileContents = new byte[size];

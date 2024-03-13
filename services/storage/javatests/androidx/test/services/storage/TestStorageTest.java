@@ -120,7 +120,7 @@ public final class TestStorageTest {
     }
 
     StringBuilder contents = new StringBuilder();
-    Uri outputFileUri = TestStorage.getOutputFileUri("path/to/file");
+    Uri outputFileUri = testStorage.getOutputFileUri2("path/to/file");
     try (InputStream input =
         TestStorageUtil.getInputStream(
             outputFileUri, getApplicationContext().getContentResolver())) {
@@ -145,7 +145,7 @@ public final class TestStorageTest {
     }
 
     byte[] data = new byte[11];
-    Uri outputFileUri = TestStorage.getOutputFileUri("path/to/file");
+    Uri outputFileUri = testStorage.getOutputFileUri2("path/to/file");
     try (InputStream input =
         TestStorageUtil.getInputStream(
             outputFileUri, getApplicationContext().getContentResolver())) {

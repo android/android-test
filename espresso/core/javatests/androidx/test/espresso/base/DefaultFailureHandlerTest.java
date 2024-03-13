@@ -39,7 +39,7 @@ import androidx.test.espresso.ViewAssertion;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.services.storage.TestStorage;
+import androidx.test.platform.io.PlatformTestStorageRegistry;
 import androidx.test.services.storage.internal.TestStorageUtil;
 import androidx.test.ui.app.MainActivity;
 import java.io.IOException;
@@ -116,7 +116,7 @@ public class DefaultFailureHandlerTest {
   }
 
   private Bitmap readBitmapFromTestStorage(String pathName) throws IOException {
-    Uri outputFileUri = TestStorage.getOutputFileUri(pathName);
+    Uri outputFileUri = PlatformTestStorageRegistry.getInstance().getOutputFileUri2(pathName);
     try (InputStream input =
         TestStorageUtil.getInputStream(
             outputFileUri, getApplicationContext().getContentResolver())) {

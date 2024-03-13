@@ -30,7 +30,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.platform.io.PlatformTestStorageRegistry;
-import androidx.test.services.storage.TestStorage;
 import androidx.test.services.storage.internal.TestStorageUtil;
 import androidx.test.ui.app.LargeViewActivity;
 import androidx.test.ui.app.R;
@@ -88,7 +87,7 @@ public class EspressoActionsWithTestFlowTest {
       assertThat(testFlowVisualizer.getLastActionIndexAndIncrement()).isEqualTo(2);
       InputStream outputGalleryFile =
           TestStorageUtil.getInputStream(
-              TestStorage.getOutputFileUri("output_gallery.html"),
+              PlatformTestStorageRegistry.getInstance().getOutputFileUri2("output_gallery.html"),
               InstrumentationRegistry.getInstrumentation().getTargetContext().getContentResolver());
       int size = outputGalleryFile.available();
       byte[] directFileContents = new byte[size];
@@ -130,7 +129,8 @@ public class EspressoActionsWithTestFlowTest {
           FileNotFoundException.class,
           () ->
               TestStorageUtil.getInputStream(
-                  TestStorage.getOutputFileUri("output_gallery.html"),
+                  PlatformTestStorageRegistry.getInstance()
+                      .getOutputFileUri2("output_gallery.html"),
                   InstrumentationRegistry.getInstrumentation()
                       .getTargetContext()
                       .getContentResolver()));
