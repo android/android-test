@@ -21,6 +21,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 import android.util.Pair;
@@ -29,6 +30,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.NonNull;
+import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
@@ -567,5 +569,24 @@ public final class ViewActions {
     checkNotNull(desiredStateMatcher);
     return actionWithAssertions(
         new RepeatActionUntilViewState(action, desiredStateMatcher, maxAttempts));
+  }
+
+  @ExperimentalTestApi
+  public interface BitmapReceiver {
+    void onBitmapCaptured(Bitmap bitmap);
+  }
+
+  /**
+   * Returns an action that captures an image of the desired View and performs some other operation
+   * on the result.
+   *
+   * @see androidx.test.core.view.ViewCapture.captureToBitmap
+   * @param bitmapReceiver the BitmapReceiver that receives the result. This will be called on main
+   *     thread.
+   * @return the ViewAction
+   */
+  @ExperimentalTestApi
+  public static ViewAction captureToBitmap(BitmapReceiver bitmapReceiver) {
+    return new CaptureToBitmapAction(bitmapReceiver);
   }
 }

@@ -391,3 +391,18 @@ axt_android_library_test(
         "@maven//:junit_junit",
     ],
 )
+
+axt_android_library_test(
+    name = "CaptureToBitmapActionTest",
+    srcs =
+        ["CaptureToBitmapActionTest.kt"],
+    deps = [
+        "//core",
+        "//espresso/core/java/androidx/test/espresso",
+        "//espresso/core/java/androidx/test/espresso:espresso_compiletime",
+        "//ext/junit",
+        "//testapps/ui_testapp/java/androidx/test/ui/app:lib_exported",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+    ],
+)

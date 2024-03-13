@@ -27,6 +27,8 @@ The following artifacts were released:
 
 **API Changes**
 
+* Delete ViewInteraction.captureToBitmap in favor of ViewActions.captureToBitmap
+
 **Breaking API Changes**
 
 **Known Issues**
