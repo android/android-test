@@ -16,6 +16,7 @@
 * Upstream TestStorage.getInputFileUri and getOutputFileUri  to PlatformTestStorage
 * Change PlatformTestStorage methods to throw FileNotFoundException instead of 
   IOException
+* Add internal ControlledLooper#isDrawCallbacksSupported.
 
 **Breaking API Changes**
 

@@ -39,6 +39,11 @@ public interface ControlledLooper {
   /** Generate window focus event for given view. */
   void simulateWindowFocus(View decorView);
 
+  /** Returns true if registerFrameCommitCallback() and addOnDrawListener callbacks are supported */
+  default boolean areDrawCallbacksSupported() {
+    return false;
+  }
+
   public static final ControlledLooper NO_OP_CONTROLLED_LOOPER =
       new ControlledLooper() {
         @Override
@@ -46,5 +51,10 @@ public interface ControlledLooper {
 
         @Override
         public void simulateWindowFocus(View decorView) {}
+
+        @Override
+        public boolean areDrawCallbacksSupported() {
+          return true;
+        }
       };
 }

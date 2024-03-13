@@ -35,6 +35,8 @@ import androidx.annotation.RequiresApi
 import androidx.concurrent.futures.ResolvableFuture
 import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.core.internal.os.HandlerExecutor
+import androidx.test.internal.platform.ServiceLoaderWrapper
+import androidx.test.internal.platform.os.ControlledLooper
 import androidx.test.internal.platform.reflect.ReflectiveField
 import androidx.test.internal.platform.reflect.ReflectiveMethod
 import androidx.test.platform.graphics.HardwareRendererCompat
@@ -74,15 +76,21 @@ fun View.captureToBitmap(rect: Rect? = null): ListenableFuture<Bitmap> {
   }
 
   mainExecutor.execute {
-    if (Build.FINGERPRINT.contains("robolectric")) {
-      generateBitmap(bitmapFuture, rect)
-    } else {
+    if (getControlledLooper().areDrawCallbacksSupported()) {
       val forceRedrawFuture = forceRedraw()
       forceRedrawFuture.addListener({ generateBitmap(bitmapFuture, rect) }, mainExecutor)
+    } else {
+      generateBitmap(bitmapFuture, rect)
     }
   }
 
   return bitmapFuture
+}
+
+private fun getControlledLooper(): ControlledLooper {
+  return ServiceLoaderWrapper.loadSingleService(ControlledLooper::class.java) {
+    ControlledLooper.NO_OP_CONTROLLED_LOOPER
+  }
 }
 
 /**

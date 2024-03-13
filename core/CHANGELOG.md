@@ -6,6 +6,8 @@
 
 **Bug Fixes**
 
+* make ViewCapture use ControlledLooper API instead of hardcoding is Robolectric check
+
 **New Features**
 
 **Breaking Changes**

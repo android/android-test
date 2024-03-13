@@ -53,6 +53,7 @@ package androidx.test.internal.platform.content {
 package androidx.test.internal.platform.os {
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public interface ControlledLooper {
+    method public default boolean areDrawCallbacksSupported();
     method public void drainMainThreadUntilIdle();
     method public void simulateWindowFocus(android.view.View!);
     field public static final androidx.test.internal.platform.os.ControlledLooper! NO_OP_CONTROLLED_LOOPER;
