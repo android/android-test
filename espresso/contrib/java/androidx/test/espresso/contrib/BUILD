@@ -119,6 +119,7 @@ android_library(
     srcs = [
         "AccessibilityChecks.java",
     ],
+    deprecation = "use //espresso/accessibility/java/androidx/test/espresso/accessibility:accessibility_checks instead",
     visibility = ["//visibility:public"],
     deps = [
         "//espresso/core/java/androidx/test/espresso",
