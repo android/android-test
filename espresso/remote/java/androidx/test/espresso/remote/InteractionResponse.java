@@ -129,10 +129,8 @@ public final class InteractionResponse implements To<MessageLite> {
     Error
   }
 
-  /**
-   * TODO(b/31122396): parse this from a proto Enum representing wire protocol error codes and their
-   * default description.
-   */
+  // TODO(b/31122396): parse this from a proto Enum representing wire protocol error codes and their
+  // default description.
   public static final class RemoteError {
     private static final String TAG = "RemoteError";
 

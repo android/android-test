@@ -18,6 +18,7 @@ The following artifacts were released:
 
 * Fix slow inRoot operations in Robolectric
 * Use PlatformTestStorageRegistry.getInstance consistently instead of passing a reference around
+* Remove TODO from InteractionResponse public ref docs
 
 **New Features**
 
