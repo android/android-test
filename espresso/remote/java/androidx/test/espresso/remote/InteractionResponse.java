@@ -129,7 +129,7 @@ public final class InteractionResponse implements To<MessageLite> {
     Error
   }
 
-  /**
+  /*
    * TODO(b/31122396): parse this from a proto Enum representing wire protocol error codes and their
    * default description.
    */
