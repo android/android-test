@@ -141,7 +141,6 @@ android_library(
         "//espresso/core/java/androidx/test/espresso/assertion",
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//espresso/core/java/androidx/test/espresso/util",
-        "//espresso/core/java/androidx/test/espresso/screenshot",
         "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
     ],
     deps = [
