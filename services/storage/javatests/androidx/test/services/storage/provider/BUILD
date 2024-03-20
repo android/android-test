@@ -4,7 +4,6 @@
 load("//build_extensions:android_library_test.bzl", "axt_android_library_test")
 load(
     "//build_extensions:phone_devices.bzl",
-    "apis",
     "devices",
 )
 
@@ -18,7 +17,7 @@ axt_android_library_test(
     args = [
         "--install_test_services=True",
     ],
-    device_list = devices(apis(min_api = 19)),
+    device_list = devices(),
     manifest = "AndroidManifest.xml",
     deps = [
         "//ext/junit",
@@ -38,7 +37,7 @@ axt_android_library_test(
     args = [
         "--install_test_services=True",
     ],
-    device_list = devices(apis(min_api = 19)),
+    device_list = devices(),
     manifest = "AndroidManifest.xml",
     deps = [
         "//ext/junit",
