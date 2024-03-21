@@ -759,12 +759,12 @@ public class RunnerArgsTest {
     }
 
     @Override
-    public Uri getInputFileUri2(String pathname) {
+    public Uri getInputFileUri(String pathname) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public Uri getOutputFileUri2(String pathname) {
+    public Uri getOutputFileUri(String pathname) {
       throw new UnsupportedOperationException();
     }
 

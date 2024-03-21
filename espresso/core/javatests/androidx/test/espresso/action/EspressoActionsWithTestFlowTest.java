@@ -87,7 +87,7 @@ public class EspressoActionsWithTestFlowTest {
       assertThat(testFlowVisualizer.getLastActionIndexAndIncrement()).isEqualTo(2);
       InputStream outputGalleryFile =
           TestStorageUtil.getInputStream(
-              PlatformTestStorageRegistry.getInstance().getOutputFileUri2("output_gallery.html"),
+              PlatformTestStorageRegistry.getInstance().getOutputFileUri("output_gallery.html"),
               InstrumentationRegistry.getInstrumentation().getTargetContext().getContentResolver());
       int size = outputGalleryFile.available();
       byte[] directFileContents = new byte[size];
@@ -129,8 +129,7 @@ public class EspressoActionsWithTestFlowTest {
           FileNotFoundException.class,
           () ->
               TestStorageUtil.getInputStream(
-                  PlatformTestStorageRegistry.getInstance()
-                      .getOutputFileUri2("output_gallery.html"),
+                  PlatformTestStorageRegistry.getInstance().getOutputFileUri("output_gallery.html"),
                   InstrumentationRegistry.getInstrumentation()
                       .getTargetContext()
                       .getContentResolver()));

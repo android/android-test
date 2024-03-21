@@ -129,7 +129,15 @@ public interface PlatformTestStorage {
    * @return a content Uri to the test file dependency.
    *     <p>Note: temporary API - will be renamed to getInputFileUri in future
    */
-  Uri getInputFileUri2(@NonNull String pathname);
+  Uri getInputFileUri(@NonNull String pathname);
+
+  /**
+   * @deprecated use getInputFileUri instead
+   */
+  @Deprecated
+  default Uri getInputFileUri2(@NonNull String pathname) {
+    return getInputFileUri(pathname);
+  }
 
   /**
    * Provides a Uri to a test output file.
@@ -146,7 +154,15 @@ public interface PlatformTestStorage {
    *     "/path/to/my_output.txt", the file will end up at
    *     "/sdcard/test_output_files/path/to/my_output.txt" on device.
    */
-  Uri getOutputFileUri2(@NonNull String pathname);
+  Uri getOutputFileUri(@NonNull String pathname);
+
+  /**
+   * @deprecated use getOutputFileUri instead
+   */
+  @Deprecated
+  default Uri getOutputFileUri2(@NonNull String pathname) {
+    return getOutputFileUri(pathname);
+  }
 
   /**
    * Returns true if {@code pathname} corresponds to a file or directory that is in a directory

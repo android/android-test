@@ -69,7 +69,7 @@ public class TestFlowVisualizerTest {
     testFlowVisualizer.visualize();
     InputStream outputGalleryFile =
         TestStorageUtil.getInputStream(
-            PlatformTestStorageRegistry.getInstance().getOutputFileUri2("output_gallery.html"),
+            PlatformTestStorageRegistry.getInstance().getOutputFileUri("output_gallery.html"),
             InstrumentationRegistry.getInstrumentation().getTargetContext().getContentResolver());
     int size = outputGalleryFile.available();
     byte[] directFileContents = new byte[size];

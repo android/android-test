@@ -152,12 +152,12 @@ public final class FileTestStorage implements PlatformTestStorage {
   }
 
   @Override
-  public Uri getInputFileUri2(@NonNull String pathname) {
+  public Uri getInputFileUri(@NonNull String pathname) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public Uri getOutputFileUri2(@NonNull String pathname) {
+  public Uri getOutputFileUri(@NonNull String pathname) {
     File outputFile = new File(pathname);
     if (!outputFile.isAbsolute()) {
       outputFile = new File(outputDirCalculator.getOutputDir(), pathname);

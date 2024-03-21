@@ -77,15 +77,6 @@ public final class TestStorage implements PlatformTestStorage {
   }
 
   /**
-   * @deprecated call getInputFileUri2 instead
-   */
-  @Deprecated
-  public static Uri getInputFileUri(@NonNull String pathname) {
-    checkNotNull(pathname);
-    return HostedFile.buildUri(HostedFile.FileHost.TEST_FILE, pathname);
-  }
-
-  /**
    * Provides a Uri to a test file dependency.
    *
    * <p>In most of the cases, you would use {@link #openInputFile(String)} for opening up an
@@ -100,7 +91,7 @@ public final class TestStorage implements PlatformTestStorage {
    * @return a content Uri to the test file dependency.
    */
   @Override
-  public Uri getInputFileUri2(@NonNull String pathname) {
+  public Uri getInputFileUri(@NonNull String pathname) {
     checkNotNull(pathname);
     return HostedFile.buildUri(HostedFile.FileHost.TEST_FILE, pathname);
   }
@@ -119,16 +110,7 @@ public final class TestStorage implements PlatformTestStorage {
    *     "/sdcard/test_output_files/path/to/my_output.txt" on device.
    */
   @Override
-  public Uri getOutputFileUri2(@NonNull String pathname) {
-    checkNotNull(pathname);
-    return HostedFile.buildUri(HostedFile.FileHost.OUTPUT, pathname);
-  }
-
-  /**
-   * @deprecated call getOutputFileUri2 instead
-   */
-  @Deprecated
-  public static Uri getOutputFileUri(@NonNull String pathname) {
+  public Uri getOutputFileUri(@NonNull String pathname) {
     checkNotNull(pathname);
     return HostedFile.buildUri(HostedFile.FileHost.OUTPUT, pathname);
   }

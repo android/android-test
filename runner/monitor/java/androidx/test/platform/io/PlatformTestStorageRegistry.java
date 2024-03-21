@@ -118,12 +118,12 @@ public final class PlatformTestStorageRegistry {
     }
 
     @Override
-    public Uri getInputFileUri2(@NonNull String pathname) {
+    public Uri getInputFileUri(@NonNull String pathname) {
       return null;
     }
 
     @Override
-    public Uri getOutputFileUri2(@NonNull String pathname) {
+    public Uri getOutputFileUri(@NonNull String pathname) {
       return null;
     }
 

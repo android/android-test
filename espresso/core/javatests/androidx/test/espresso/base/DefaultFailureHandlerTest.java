@@ -116,7 +116,7 @@ public class DefaultFailureHandlerTest {
   }
 
   private Bitmap readBitmapFromTestStorage(String pathName) throws IOException {
-    Uri outputFileUri = PlatformTestStorageRegistry.getInstance().getOutputFileUri2(pathName);
+    Uri outputFileUri = PlatformTestStorageRegistry.getInstance().getOutputFileUri(pathName);
     try (InputStream input =
         TestStorageUtil.getInputStream(
             outputFileUri, getApplicationContext().getContentResolver())) {
