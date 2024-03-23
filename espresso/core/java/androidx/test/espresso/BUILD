@@ -99,7 +99,7 @@ android_library(
     name = "espresso-graph",
     srcs = ESPRESSO_GRAPH,
     visibility = [
-        ":espresso_first_party",
+        "//visibility:private",  # Only private by automation, not intent. Owner may accept CLs adding visibility. See go/scheuklappen#explicit-private.
     ],
     deps = [
         ":interface",
