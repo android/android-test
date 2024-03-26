@@ -1,6 +1,6 @@
 load("@build_bazel_rules_android//android:rules.bzl", "android_binary")
-load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 load("//build_extensions/maven:axt_maven_apk.bzl", "axt_maven_apk")
+load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 
 licenses(["notice"])
 

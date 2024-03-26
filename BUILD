@@ -1,6 +1,6 @@
-load("//build_extensions/maven:maven_repo.bzl", "maven_repository")
 load("@rules_jvm_external//:defs.bzl", "artifact")
 load("@rules_license//rules:license.bzl", "license")
+load("//build_extensions/maven:maven_repo.bzl", "maven_repository")
 
 package(default_visibility = ["//:__subpackages__"])
 
