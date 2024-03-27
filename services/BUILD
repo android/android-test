@@ -1,8 +1,8 @@
+load("@build_bazel_rules_android//android:rules.bzl", "android_binary")
+load("@rules_license//rules:license.bzl", "license")
 load("//build_extensions:axt_versions.bzl", "SERVICES_VERSION")
 load("//build_extensions/maven:axt_maven_apk.bzl", "axt_maven_apk")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
-load("@build_bazel_rules_android//android:rules.bzl", "android_binary")
-load("@rules_license//rules:license.bzl", "license")
 
 # Description:
 
