@@ -1,6 +1,5 @@
 """A rule wrapper for an instrumentation test for an android library."""
 
-load("//build_extensions:kt_android_library.bzl", "kt_android_library")
 load(
     "//build_extensions:generate_instrumentation_tests.bzl",
     "generate_instrumentation_tests",
@@ -9,6 +8,7 @@ load(
     "//build_extensions:infer_java_package_name.bzl",
     "infer_java_package_name",
 )
+load("//build_extensions:kt_android_library.bzl", "kt_android_library")
 load("//build_extensions:register_extension_info.bzl", "register_extension_info")
 
 def android_library_instrumentation_tests(
