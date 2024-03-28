@@ -32,7 +32,6 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 import static com.google.common.truth.Truth.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasValue;
@@ -58,7 +57,6 @@ import androidx.test.ui.app.ActionBarTestActivity;
 import androidx.test.ui.app.KeyboardTestActivity;
 import androidx.test.ui.app.MainActivity;
 import androidx.test.ui.app.R;
-import androidx.test.ui.app.SendActivity;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -262,45 +260,26 @@ public class EspressoTest {
   }
 
   @Test
-  public void closeSoftKeyboard() {
-    onData(allOf(instanceOf(Map.class), hasValue(SendActivity.class.getSimpleName())))
+  public void closeSoftKeyboard() throws InterruptedException {
+    onData(allOf(instanceOf(Map.class), hasValue(KeyboardTestActivity.class.getSimpleName())))
         .perform(click());
+    // click on the edit text which bring the soft keyboard up
+    onView(withId(R.id.editTextUserInput)).perform(typeText("Espresso"));
 
-    onView(withId(R.id.enter_data_edit_text))
-        .perform(
-            new ViewAction() {
+    onView(withId(R.id.editTextUserInput))
+        .check(
+            new ViewAssertion() {
               @Override
-              public Matcher<View> getConstraints() {
-                return any(View.class);
-              }
-
-              @Override
-              public void perform(UiController uiController, View view) {
-                // This doesn't do anything if hardware keyboard is present - that is, soft keyboard
-                // is _not_ present. Whether it's present or not can be verified under the following
-                // device settings: Settings > Language & Input > Under Keyboard and input method
+              public void check(View view, NoMatchingViewException noViewFoundException) {
                 InputMethodManager imm =
                     (InputMethodManager)
-                        getInstrumentation()
-                            .getTargetContext()
-                            .getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(view, 0);
-                uiController.loopMainThreadUntilIdle();
-              }
-
-              @Override
-              public String getDescription() {
-                return "show soft input";
+                        view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                assertTrue(imm.isActive(view));
               }
             });
 
-    onView(withId(R.id.enter_data_edit_text)).perform(ViewActions.closeSoftKeyboard());
+    onView(withId(R.id.editTextUserInput)).perform(ViewActions.closeSoftKeyboard());
 
-    assertThat(tracer.getSpans())
-        .containsAtLeast(
-            "beginSpan: Espresso.perform(show soft input, view.getId() is <ID>)",
-            "+-endSpan: Espresso.perform(show soft input, view.getId() is <ID>)")
-        .inOrder();
     assertThat(tracer.getSpans())
         .containsAtLeast(
             "beginSpan: Espresso.perform(CloseKeyboardAction, view.getId() is <ID>)",
