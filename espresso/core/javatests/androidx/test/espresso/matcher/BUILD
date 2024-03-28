@@ -1,11 +1,11 @@
 # Description:
 #   Tests for espresso matchers
 
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 load(
     "//build_extensions:android_library_test.bzl",
     "axt_android_library_test",
 )
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 load(
     "//build_extensions:phone_devices.bzl",
     "apis",

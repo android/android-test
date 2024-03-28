@@ -1,6 +1,7 @@
 # Description:
 #   Tests for espresso core
 
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 load(
     "//build_extensions:android_library_test.bzl",
     "axt_android_library_test",
@@ -9,7 +10,6 @@ load(
     "//build_extensions:axt_android_application_test.bzl",
     "axt_android_application_test",
 )
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 package(default_applicable_licenses = ["//espresso:license"])
 

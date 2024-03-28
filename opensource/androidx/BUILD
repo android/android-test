@@ -1,11 +1,11 @@
 # Targets to handle androidx dependencies in bazel
 
-package(default_visibility = ["//visibility:public"])
-
 load(
     "//build_extensions:axt_deps_versions.bzl",
     "ANDROIDX_ANNOTATION_VERSION",
 )
+
+package(default_visibility = ["//visibility:public"])
 
 # Alias target for androidx.annotation
 # Ideally libraries could directly depend on the @maven targets instead, but:

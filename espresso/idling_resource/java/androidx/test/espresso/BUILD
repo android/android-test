@@ -2,11 +2,11 @@
 #   Light weight module represents a resources of an application under test which can cause
 #   asynchronous background work to happen during test execution.
 
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
+load("//build_extensions:api_checks.bzl", "api_checks")
+load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
-load("//build_extensions:dackka_test.bzl", "dackka_test")
-load("//build_extensions:api_checks.bzl", "api_checks")
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 package(
     default_applicable_licenses = ["//espresso:license"],
