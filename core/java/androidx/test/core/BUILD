@@ -84,7 +84,7 @@ android_library(
 alias(
     name = "core-src",
     actual = ":core_aar-src.jar",
-    visibility = ["//:__pkg__"],
+    visibility = ["//visibility:private"],
 )
 
 # Generate rules for the release artifacts.
