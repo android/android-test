@@ -98,9 +98,7 @@ ESPRESSO_GRAPH = [
 android_library(
     name = "espresso-graph",
     srcs = ESPRESSO_GRAPH,
-    visibility = [
-        ":espresso_first_party",
-    ],
+    visibility = ["//visibility:private"],
     deps = [
         ":interface",
         ":view-interaction",
