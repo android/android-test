@@ -101,7 +101,9 @@ public interface PlatformTestStorage {
    * @return an InputStream to the given test file.
    * @throws FileNotFoundException if pathname does not exist
    */
-  InputStream openInternalInputFile(String pathname) throws FileNotFoundException;
+  default InputStream openInternalInputFile(String pathname) throws FileNotFoundException {
+    return openInputFile(pathname);
+  }
 
   /**
    * Provides an OutputStream to an internal file used by the testing infrastructure.
@@ -110,7 +112,9 @@ public interface PlatformTestStorage {
    * @return an OutputStream to the given output file.
    * @throws FileNotFoundException if pathname does not exist
    */
-  OutputStream openInternalOutputFile(String pathname) throws FileNotFoundException;
+  default OutputStream openInternalOutputFile(String pathname) throws FileNotFoundException {
+    return openOutputFile(pathname);
+  }
 
   /**
    * Provides a Uri to a test file dependency.
