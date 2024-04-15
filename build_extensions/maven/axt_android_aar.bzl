@@ -1,5 +1,6 @@
 """Generate AXT android archive (aar)."""
 
+load("@rules_java//java:defs.bzl", "JavaInfo", "java_common")
 load("//build_extensions/maven:add_or_update_file_in_zip.bzl", "add_or_update_file_in_zip")
 load("//build_extensions/maven:combine_jars.bzl", "combine_jars")
 load("//build_extensions/maven:jarjar.bzl", "jarjar_rule")

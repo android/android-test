@@ -1,5 +1,7 @@
 """Runs jarjar over a jar file."""
 
+load("@rules_java//java:defs.bzl", "java_common")
+
 def jarjar_rule(ctx, rule, src, out):
     """API to run jarjar from a rule.
 

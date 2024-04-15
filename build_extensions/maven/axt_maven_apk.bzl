@@ -1,5 +1,6 @@
 """Generate AXT android archive (aar)."""
 
+load("@rules_java//java:defs.bzl", "JavaInfo")
 load("//build_extensions/maven:combine_jars.bzl", "combine_jars")
 load("//build_extensions/maven:maven_info.bzl", "MavenFilesInfo", "MavenInfo", "collect_maven_apk_info")
 
