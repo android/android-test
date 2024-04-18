@@ -19,11 +19,13 @@ package androidx.test.rule;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.Manifest.permission;
+import android.os.Build.VERSION;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
 import androidx.test.internal.platform.content.PermissionGranter;
 import androidx.test.runner.permission.PermissionRequester;
+import androidx.test.runner.permission.UiAutomationPermissionGranter;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -76,7 +78,18 @@ public class GrantPermissionRule implements TestRule {
   private PermissionGranter permissionGranter;
 
   private GrantPermissionRule() {
-    this(ServiceLoaderWrapper.loadSingleService(PermissionGranter.class, PermissionRequester::new));
+    PermissionGranter granter =
+        ServiceLoaderWrapper.loadSingleServiceOrNull(PermissionGranter.class);
+    if (granter == null) {
+      if (VERSION.SDK_INT >= 28) {
+        granter = new UiAutomationPermissionGranter();
+      } else {
+        // use the shell permission requester
+        granter = new PermissionRequester();
+      }
+    }
+
+    setPermissionGranter(granter);
   }
 
   @VisibleForTesting

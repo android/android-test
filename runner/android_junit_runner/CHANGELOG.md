@@ -7,7 +7,7 @@
 **Bug Fixes**
 
 * When logging test exceptions, use Log's built-in support for throwables to avoid stack truncation
-
+* Internal changes to support GrantPermissionRule using UiAutomation#grantRuntimePermissions
 
 **New Features**
 
