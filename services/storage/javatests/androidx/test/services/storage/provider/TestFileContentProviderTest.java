@@ -18,6 +18,7 @@ package androidx.test.services.storage.provider;
 import static org.junit.Assert.assertThrows;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
@@ -70,7 +71,7 @@ public class TestFileContentProviderTest
   @Override
   public void setUp() throws Exception {
     hostedDirectory = new File(Environment.getExternalStorageDirectory(), "fcp_test/" + getName());
-    hostedDirectory.getParentFile().mkdirs();
+    hostedDirectory.mkdirs();
     access = Access.READ_ONLY;
     super.setUp();
     initResolver();
@@ -375,16 +376,15 @@ public class TestFileContentProviderTest
   }
 
   public static class TestFileContentProvider extends AbstractFileContentProvider {
-    private final Predicate<Void> onCreateHookResult;
 
-    public TestFileContentProvider() {
-      super(resolverHostedDirectory, resolverAccess);
-      this.onCreateHookResult = resolverOnCreateHookResult;
+    @Override
+    protected File getHostedDirectory(Context context) {
+      return resolverHostedDirectory;
     }
 
     @Override
-    public boolean onCreateHook() {
-      return onCreateHookResult.apply(null);
+    protected Access getAccess() {
+      return resolverAccess;
     }
   }
 }

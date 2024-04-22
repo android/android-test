@@ -23,10 +23,12 @@ import static org.junit.Assert.assertEquals;
 import android.net.Uri;
 import androidx.test.services.storage.file.HostedFile;
 import androidx.test.services.storage.internal.TestStorageUtil;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -46,6 +48,17 @@ public final class TestStorageTest {
   private static final String OUTPUT_PATH = "parent_dir/output_file";
 
   private final TestStorage testStorage = new TestStorage();
+
+  @Test
+  public void readInputFile() throws IOException {
+    try (BufferedReader br =
+        new BufferedReader(
+            new InputStreamReader(
+                testStorage.openInputFile(
+                    "google3/third_party/android/androidx_test/services/storage/javatests/androidx/test/services/storage/testinput.txt")))) {
+      assertThat(br.readLine().trim()).isEqualTo("Hi I'm an input file");
+    }
+  }
 
   @Test
   public void readNonExistentInputFile() {
@@ -96,17 +109,10 @@ public final class TestStorageTest {
   }
 
   @Test
-  public void readWriteInternalFile() throws IOException {
+  public void writeInternalFile() throws IOException {
     try (OutputStream output = testStorage.openInternalOutputFile("path/to/file")) {
       output.write(new byte[] {'h', 'e', 'l', 'l', 'o'});
     }
-
-    byte[] data = new byte[5];
-    try (InputStream input = testStorage.openInternalInputFile("path/to/file")) {
-      input.read(data);
-    }
-
-    assertThat(new String(data, Charset.defaultCharset())).isEqualTo("hello");
   }
 
   @Test

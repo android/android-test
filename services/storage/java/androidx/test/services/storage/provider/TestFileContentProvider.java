@@ -15,8 +15,7 @@
  */
 package androidx.test.services.storage.provider;
 
-import android.os.Environment;
-import android.util.Log;
+import android.content.Context;
 import androidx.test.services.storage.file.HostedFile;
 import java.io.File;
 
@@ -24,28 +23,11 @@ import java.io.File;
  * Content Provider that allows access to reading/writing files that were written to disk for tests.
  */
 abstract class TestFileContentProvider extends AbstractFileContentProvider {
-  private static final String TAG = TestFileContentProvider.class.getSimpleName();
 
-  private final File outputDirectory;
-
-  public TestFileContentProvider(String filePath, AbstractFileContentProvider.Access access) {
-    super(new File(HostedFile.getRootDirectory(), filePath), access);
-    outputDirectory = new File(HostedFile.getRootDirectory(), filePath);
-  }
+  protected abstract String getHostedRelativePath();
 
   @Override
-  protected boolean onCreateHook() {
-    if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-      Log.e(TAG, "sdcard in bad state: " + Environment.getExternalStorageState());
-      return false;
-    } else {
-      if (!outputDirectory.exists()) {
-        if (!outputDirectory.mkdirs()) {
-          Log.e(TAG, String.format("'%s': could not create output dir! ", outputDirectory));
-          return false;
-        }
-      }
-      return true;
-    }
+  protected final File getHostedDirectory(Context context) {
+    return new File(HostedFile.getOutputRootDirectory(context), getHostedRelativePath());
   }
 }

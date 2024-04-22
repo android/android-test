@@ -19,6 +19,7 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
@@ -43,52 +44,25 @@ import java.io.IOException;
 abstract class AbstractFileContentProvider extends ContentProvider {
   private static final String TAG = AbstractFileContentProvider.class.getSimpleName();
 
-  private final File hostedDirectory;
-  private final Access access;
+  private File hostedDirectory;
+  private Access access;
 
   enum Access {
     READ_ONLY,
     READ_WRITE
   }
 
-  /**
-   * Called during onCreate(). Subclasses should return true if they are ready to serve data and
-   * false if there is something wrong accessing their data. Such as the sdcard not being mounted.
-   */
-  protected abstract boolean onCreateHook();
+  /** Returns the root directory where this content provider should manage files from */
+  protected abstract File getHostedDirectory(Context context);
 
-  AbstractFileContentProvider(File hostedDirectory, Access access) {
-    super();
-    try {
-      this.hostedDirectory = checkNotNull(hostedDirectory).getCanonicalFile();
-    } catch (IOException ioe) {
-      throw new RuntimeException(ioe);
-    }
-    this.access = access;
-  }
+  /** Returns the access mode of this content provider */
+  protected abstract Access getAccess();
 
   @Override
   public boolean onCreate() {
-    if (onCreateHook()) {
-      if (!hostedDirectory.exists()) {
-        if (!hostedDirectory.mkdirs()) {
-          Log.e(TAG, "Cannot create hosted directory: " + hostedDirectory);
-          return false;
-        }
-      }
-      if (!hostedDirectory.isDirectory()) {
-        Log.e(TAG, "Hosted directory not a directory: " + hostedDirectory);
-        return false;
-      }
-      if ((Access.READ_WRITE == access) && !hostedDirectory.canWrite()) {
-        Log.e(TAG, "Hosted directory is not writable and write was requested: " + hostedDirectory);
-        return false;
-      }
-      return true;
-    } else {
-      Log.e(TAG, "Subclass claims hosted directory not ready: " + hostedDirectory);
-      return false;
-    }
+    hostedDirectory = getHostedDirectory(getContext());
+    access = getAccess();
+    return true;
   }
 
   @Override
@@ -107,10 +81,15 @@ abstract class AbstractFileContentProvider extends ContentProvider {
       try {
         requestedFile.getParentFile().mkdirs();
         if (!requestedFile.getParentFile().exists()) {
+          Log.e(
+              TAG,
+              "Failed to create parent directory "
+                  + requestedFile.getParentFile().getAbsolutePath());
           throw new FileNotFoundException(String.format("No parent directory for '%s'", uri));
         }
 
         if (!requestedFile.createNewFile()) {
+          Log.e(TAG, "Failed to create file" + requestedFile.getAbsolutePath());
           throw new FileNotFoundException("Could not create file: " + uri);
         }
       } catch (IOException ioe) {

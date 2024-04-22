@@ -15,29 +15,22 @@
  */
 package androidx.test.services.storage.provider;
 
-import android.os.Environment;
-import android.util.Log;
+import android.content.Context;
 import androidx.test.services.storage.TestStorageConstants;
 import androidx.test.services.storage.file.HostedFile;
 import java.io.File;
 
 /** Provides access to files in the test data section. */
 public final class TestDataContentProvider extends AbstractFileContentProvider {
-  private static final String TAG = TestDataContentProvider.class.getSimpleName();
 
-  public TestDataContentProvider() {
-    super(
-        new File(HostedFile.getRootDirectory(), TestStorageConstants.ON_DEVICE_TEST_RUNFILES),
-        AbstractFileContentProvider.Access.READ_ONLY);
+  @Override
+  protected File getHostedDirectory(Context context) {
+    return new File(
+        HostedFile.getInputRootDirectory(context), TestStorageConstants.ON_DEVICE_TEST_RUNFILES);
   }
 
   @Override
-  protected boolean onCreateHook() {
-    if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-      Log.e(TAG, "sdcard in bad state: " + Environment.getExternalStorageState());
-      return false;
-    } else {
-      return true;
-    }
+  protected Access getAccess() {
+    return Access.READ_ONLY;
   }
 }

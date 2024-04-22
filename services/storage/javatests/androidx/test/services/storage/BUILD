@@ -2,6 +2,7 @@
 #   Tests for the test storage.
 
 load("//build_extensions:android_library_test.bzl", "axt_android_library_test")
+load("//build_extensions:phone_devices.bzl", "devices")
 
 package(default_applicable_licenses = ["//services:license"])
 
@@ -9,12 +10,20 @@ licenses(["notice"])
 
 axt_android_library_test(
     name = "TestStorageTest",
+    size = "large",
     srcs = [
         "TestStorageTest.java",
     ],
     args = [
         "--install_test_services=true",
         "--test_args=arg1=value1,arg2=value2,arg3=value3",
+    ],
+    data = [
+        ":testinput.txt",
+    ],
+    device_list = devices(),
+    support_apps = [
+        "//services:test_services",
     ],
     deps = [
         "//core/java/androidx/test/core",

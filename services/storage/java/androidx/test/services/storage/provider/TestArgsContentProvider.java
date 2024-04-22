@@ -19,9 +19,11 @@ import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
+import android.util.Log;
 import androidx.test.services.storage.TestStorageConstants;
 import androidx.test.services.storage.TestStorageServiceProto.TestArgument;
 import androidx.test.services.storage.TestStorageServiceProto.TestArguments;
@@ -108,7 +110,7 @@ public final class TestArgsContentProvider extends ContentProvider {
   private Map<String, String> buildArgMapFromFile() {
     Map<String, String> argMap = new HashMap<>();
 
-    for (TestArgument testArg : readProtoFromFile().getArgList()) {
+    for (TestArgument testArg : readProtoFromFile(this.getContext()).getArgList()) {
       String key = testArg.getName();
       String val = testArg.getValue();
       argMap.put(key, val);
@@ -116,16 +118,17 @@ public final class TestArgsContentProvider extends ContentProvider {
     return argMap;
   }
 
-  private static TestArguments readProtoFromFile() {
+  private static TestArguments readProtoFromFile(Context context) {
     File testArgsFile =
         new File(
-            HostedFile.getRootDirectory(),
+            HostedFile.getInputRootDirectory(context),
             TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE
                 + TestStorageConstants.TEST_ARGS_FILE_NAME);
     if (!testArgsFile.exists()) {
       return TestArguments.getDefaultInstance();
     }
     try {
+      Log.i(TAG, "Parsing test args from " + testArgsFile.getAbsolutePath());
       return TestArguments.parseFrom(new FileInputStream(testArgsFile));
     } catch (IOException e) {
       throw new RuntimeException("Not able to read from file: " + testArgsFile.getName(), e);

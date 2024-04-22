@@ -20,9 +20,13 @@ import androidx.test.services.storage.TestStorageConstants;
 /** Hosts the output directory for tests. */
 public final class TestOutputFilesContentProvider extends TestFileContentProvider {
 
-  public TestOutputFilesContentProvider() {
-    super(
-        TestStorageConstants.ON_DEVICE_PATH_TEST_OUTPUT,
-        AbstractFileContentProvider.Access.READ_WRITE);
+  @Override
+  protected Access getAccess() {
+    return AbstractFileContentProvider.Access.READ_WRITE;
+  }
+
+  @Override
+  protected String getHostedRelativePath() {
+    return TestStorageConstants.ON_DEVICE_PATH_TEST_OUTPUT;
   }
 }

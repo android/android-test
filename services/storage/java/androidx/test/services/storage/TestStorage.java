@@ -125,7 +125,10 @@ public final class TestStorage implements PlatformTestStorage {
   @Override
   public boolean isTestStorageFilePath(@NonNull String pathname) {
     File onDevicePathRoot =
-        new File(HostedFile.getRootDirectory(), TestStorageConstants.ON_DEVICE_PATH_ROOT);
+        new File(
+            HostedFile.getOutputRootDirectory(
+                InstrumentationRegistry.getInstrumentation().getTargetContext()),
+            TestStorageConstants.ON_DEVICE_PATH_ROOT);
     // Append a trailing slash because ON_DEVICE_PATH_ROOT has a trailing slash. If pathname already
     // has a trailing slash or other suffix, this won't affect the startsWith() matching logic.
     pathname = pathname + "/";
@@ -318,6 +321,7 @@ public final class TestStorage implements PlatformTestStorage {
    * @return an InputStream to the given test file.
    * @hide
    */
+  // TODO(b/335660740): remove this unused method
   @RestrictTo(Scope.LIBRARY)
   @Override
   public InputStream openInternalInputFile(String pathname) throws FileNotFoundException {

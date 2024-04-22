@@ -15,9 +15,13 @@
  */
 package androidx.test.services.storage.file;
 
+import android.content.Context;
 import android.net.Uri;
+import android.os.Build.VERSION;
 import android.os.Environment;
+import android.os.UserManager;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.services.storage.TestStorageConstants;
 import java.io.File;
@@ -25,6 +29,8 @@ import java.io.File;
 /** Constants to access hosted file data and convenience methods for building Uris. */
 @ExperimentalTestApi
 public final class HostedFile {
+
+  private static final String TAG = "HostedFile";
 
   /** An enum of the columns returned by the hosted file service. */
   public enum HostedFileColumn {
@@ -132,8 +138,38 @@ public final class HostedFile {
         .build();
   }
 
-  public static File getRootDirectory() {
+  public static File getInputRootDirectory(Context context) {
+    // always use external storage dir for input
+    Log.i(
+        TAG,
+        "Choosing external storage as root dir for input: "
+            + Environment.getExternalStorageDirectory().getAbsolutePath());
     return Environment.getExternalStorageDirectory();
+  }
+
+  public static File getOutputRootDirectory(Context context) {
+    UserManager userManager = (UserManager) context.getSystemService(Context.USER_SERVICE);
+    if (VERSION.SDK_INT < 23) {
+      Log.i(
+          TAG,
+          "Running on API < 23; Choosing external storage as output root dir: "
+              + Environment.getExternalStorageDirectory().getAbsolutePath());
+      return Environment.getExternalStorageDirectory();
+    } else if (userManager.isSystemUser()) {
+      Log.i(
+          TAG,
+          "System user detected. Choosing external storage as output root dir: "
+              + Environment.getExternalStorageDirectory().getAbsolutePath());
+      return Environment.getExternalStorageDirectory();
+    } else {
+      // using legacy external storage for output in automotive devices where tests run as
+      // a secondary user has been flaky. So use local storage instead.
+      Log.i(
+          TAG,
+          "Secondary user detected. Choosing local storage as output root dir: "
+              + context.getCacheDir().getAbsolutePath());
+      return context.getCacheDir();
+    }
   }
 
   private static <T> T checkNotNull(T reference) {

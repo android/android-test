@@ -20,9 +20,13 @@ import androidx.test.services.storage.TestStorageConstants;
 /** Hosts the properties file that are exported to the testing infrastructure for tests. */
 public final class ExportTestPropertiesContentProvider extends TestFileContentProvider {
 
-  public ExportTestPropertiesContentProvider() {
-    super(
-        TestStorageConstants.ON_DEVICE_PATH_TEST_PROPERTIES,
-        AbstractFileContentProvider.Access.READ_WRITE);
+  @Override
+  protected Access getAccess() {
+    return AbstractFileContentProvider.Access.READ_WRITE;
+  }
+
+  @Override
+  protected String getHostedRelativePath() {
+    return TestStorageConstants.ON_DEVICE_PATH_TEST_PROPERTIES;
   }
 }
