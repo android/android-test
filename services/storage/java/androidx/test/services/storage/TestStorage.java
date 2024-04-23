@@ -24,7 +24,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
-import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.platform.io.PlatformTestStorage;
 import androidx.test.services.storage.file.HostedFile;
@@ -45,10 +44,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Provides convenient I/O operations for reading/writing testing relevant files, properties in a
- * test.
+ * An implementation of {@link PlatformTestStorage} that uses a content provider housed in the
+ * androidx.test.services apk.
+ *
+ * <p>As such, in order to use this implementation the test services apk must be installed on the
+ * device, and thus isn't supported in environments where test services is not installed such as
+ * Robolectric.
+ *
+ * <p>Users should ideally not reference this class directly, but rather retrieve the
+ * PlatformTestStorage implementation appropriate for their execution environment from {@link
+ * androidx.test.platform.io.PlatformTestStorageRegistry}.
  */
-@ExperimentalTestApi
+@RestrictTo(Scope.LIBRARY_GROUP)
 public final class TestStorage implements PlatformTestStorage {
   private static final String TAG = TestStorage.class.getSimpleName();
   private static final String PROPERTIES_FILE_NAME = "properties.dat";

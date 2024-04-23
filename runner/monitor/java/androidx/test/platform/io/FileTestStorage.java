@@ -19,13 +19,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.annotation.NonNull;
-import androidx.test.annotation.ExperimentalTestApi;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -34,41 +34,35 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A class that reads/writes the runner data using the raw file system.
+ * An implementation of {@link PlatformTestStorage} that reads and writes test data to the test
+ * process's local storage.
  *
- * <p>This API is experimental and is subject to change or removal in future releases.
+ * <p>Typically the test runner infrastructure will configure where test data is stored and
+ * retrieved from by passing 'additionalTestOutputDir' and 'testInputDir' instrumentation arguments.
+ * If these arguments are not provided, the implementation will choose an appropriate location based
+ * on android API level that minimizes the need for any extra permissions. See TestDirCalculator.
+ *
+ * @hide
  */
-@ExperimentalTestApi
+@RestrictTo(Scope.LIBRARY_GROUP)
 public final class FileTestStorage implements PlatformTestStorage {
 
   private static final String TAG = FileTestStorage.class.getSimpleName();
-  private final OutputDirCalculator outputDirCalculator;
+  private final TestDirCalculator testDirCalculator;
 
   public FileTestStorage() {
-    outputDirCalculator = new OutputDirCalculator();
+    testDirCalculator = new TestDirCalculator();
   }
 
   /**
    * Provides an InputStream to a test file dependency.
    *
-   * @param pathname path to the test file dependency. Should not be null. Can be either a relative
-   *     or absolute path. If relative, the implementation will read the input file from the test
-   *     apk's asset directory
+   * @param pathname relative path to the test file dependency. Should not be null.
    */
   @Override
   public InputStream openInputFile(String pathname) throws FileNotFoundException {
-    File inputFile = new File(pathname);
-    if (inputFile.isAbsolute()) {
-      return new FileInputStream(inputFile);
-    }
-    try {
-      return InstrumentationRegistry.getInstrumentation().getContext().getAssets().open(pathname);
-    } catch (IOException e) {
-      FileNotFoundException fe =
-          new FileNotFoundException(String.format("failed to open %s from apk assets", pathname));
-      fe.initCause(e);
-      throw fe;
-    }
+    File inputFile = new File(testDirCalculator.getInputDir(), pathname);
+    return new FileInputStream(inputFile);
   }
 
   /**
@@ -85,11 +79,14 @@ public final class FileTestStorage implements PlatformTestStorage {
 
   @Override
   public OutputStream openOutputFile(String pathname, boolean append) throws FileNotFoundException {
-    File outputFile = new File(pathname);
-    if (!outputFile.isAbsolute()) {
-      outputFile = new File(outputDirCalculator.getOutputDir(), pathname);
-    }
+    File outputFile = new File(testDirCalculator.getOutputDir(), pathname);
     Log.d("FileTestStorage", "openOutputFile from " + outputFile.getAbsolutePath());
+    if (!outputFile.getParentFile().exists()) {
+      if (!outputFile.getParentFile().mkdirs()) {
+        throw new FileNotFoundException(
+            "Failed to create output dir " + outputFile.getParentFile().getAbsolutePath());
+      }
+    }
     return new FileOutputStream(outputFile, append);
   }
 
@@ -153,21 +150,19 @@ public final class FileTestStorage implements PlatformTestStorage {
 
   @Override
   public Uri getInputFileUri(@NonNull String pathname) {
-    throw new UnsupportedOperationException();
+    File inputFile = new File(testDirCalculator.getInputDir(), pathname);
+    return Uri.fromFile(inputFile);
   }
 
   @Override
   public Uri getOutputFileUri(@NonNull String pathname) {
-    File outputFile = new File(pathname);
-    if (!outputFile.isAbsolute()) {
-      outputFile = new File(outputDirCalculator.getOutputDir(), pathname);
-    }
+    File outputFile = new File(testDirCalculator.getOutputDir(), pathname);
     return Uri.fromFile(outputFile);
   }
 
   @Override
   public boolean isTestStorageFilePath(@NonNull String pathname) {
-    String outputDir = outputDirCalculator.getOutputDir().getAbsolutePath();
+    String outputDir = testDirCalculator.getOutputDir().getAbsolutePath();
     return pathname.startsWith(outputDir);
   }
 }

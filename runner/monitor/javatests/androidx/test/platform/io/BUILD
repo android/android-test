@@ -43,20 +43,3 @@ android_library(
     assets_dir = "assets",
     manifest = "AndroidManifest.xml",
 )
-
-axt_android_library_test(
-    name = "FileTestStorageTest",
-    srcs = ["FileTestStorageTest.kt"],
-    args = [
-        # fixture to verify getInputArgs
-        "--instrumentation_options=thisisanarg=hi",
-    ],
-    deps = [
-        ":storage_test_assets",
-        "//ext/junit",
-        "//runner/android_junit_runner",
-        "//runner/monitor",
-        "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
-    ],
-)

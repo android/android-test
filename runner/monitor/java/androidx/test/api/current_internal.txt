@@ -213,6 +213,29 @@ package androidx.test.platform.concurrent {
 
 }
 
+package androidx.test.platform.io {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class FileTestStorage implements androidx.test.platform.io.PlatformTestStorage {
+    ctor public FileTestStorage();
+    method public void addOutputProperties(java.util.Map<java.lang.String!,java.io.Serializable!>!);
+    method public String! getInputArg(String!);
+    method public java.util.Map<java.lang.String!,java.lang.String!>! getInputArgs();
+    method public android.net.Uri! getInputFileUri(String);
+    method public android.net.Uri! getOutputFileUri(String);
+    method public java.util.Map<java.lang.String!,java.io.Serializable!>! getOutputProperties();
+    method public boolean isTestStorageFilePath(String);
+    method public java.io.InputStream! openInputFile(String!) throws java.io.FileNotFoundException;
+    method public java.io.OutputStream! openOutputFile(String!) throws java.io.FileNotFoundException;
+    method public java.io.OutputStream! openOutputFile(String!, boolean) throws java.io.FileNotFoundException;
+  }
+
+  public interface PlatformTestStorage {
+    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public default java.io.InputStream! openInternalInputFile(String!) throws java.io.FileNotFoundException;
+    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public default java.io.OutputStream! openInternalOutputFile(String!) throws java.io.FileNotFoundException;
+  }
+
+}
+
 package androidx.test.platform.tracing {
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public interface Tracer {

@@ -12,10 +12,7 @@
 
 **API Changes**
 * Make DeviceController an public API from ExperimentalTestApi
-* Upstream TestStorage.isTestStoragePath to PlatformTestStorage
-* Upstream TestStorage.getInputFileUri and getOutputFileUri  to PlatformTestStorage
-* Change PlatformTestStorage methods to throw FileNotFoundException instead of 
-  IOException
+* Move PlatformTestStorage to a public API
 * Add internal ControlledLooper#isDrawCallbacksSupported.
 
 **Breaking API Changes**

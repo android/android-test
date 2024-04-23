@@ -18,21 +18,41 @@ package androidx.test.platform.io
 import android.os.Build
 import android.os.Environment
 import androidx.annotation.RestrictTo
+import androidx.annotation.RestrictTo.Scope
 import androidx.test.platform.app.InstrumentationRegistry
 import java.io.File
 
 /** @hide */
-@RestrictTo(RestrictTo.Scope.LIBRARY)
-class OutputDirCalculator {
+// this should be just an internal class, but lint complains about accessing a kotlin internal class
+// from java
+@RestrictTo(Scope.LIBRARY)
+class TestDirCalculator {
   val outputDir: File by lazy { calculateOutputDir() }
+  val inputDir: File by lazy { calculateInputDir() }
 
   private fun calculateOutputDir(): File {
-    val context = InstrumentationRegistry.getInstrumentation().targetContext
     val additionalOutputTestDir =
       InstrumentationRegistry.getArguments().getString("additionalTestOutputDir")
     if (additionalOutputTestDir != null) {
       return File(additionalOutputTestDir)
     }
+
+    val rootdir = File(calculateDefaultRootDir(), "additionalTestOutputDir")
+
+    return rootdir
+  }
+
+  private fun calculateInputDir(): File {
+    val testInputDir = InstrumentationRegistry.getArguments().getString("testInputDir")
+    if (testInputDir != null) {
+      return File(testInputDir)
+    }
+
+    return File(calculateDefaultRootDir(), "testInputDir")
+  }
+
+  private fun calculateDefaultRootDir(): File {
+    val context = InstrumentationRegistry.getInstrumentation().targetContext
     if (Build.VERSION.SDK_INT >= 29) {
       // On Android Q+ first attempt to use the media directory because that is
       // writable without any extra storage permissions

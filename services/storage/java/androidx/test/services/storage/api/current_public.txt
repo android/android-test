@@ -1,1 +1,20 @@
 // Signature format: 3.0
+package androidx.test.services.storage {
+
+  public final class TestStorage implements androidx.test.platform.io.PlatformTestStorage {
+    ctor public TestStorage();
+    ctor public TestStorage(android.content.ContentResolver);
+    method public void addOutputProperties(java.util.Map<java.lang.String!,java.io.Serializable!>!);
+    method public String! getInputArg(String);
+    method public java.util.Map<java.lang.String!,java.lang.String!>! getInputArgs();
+    method public android.net.Uri! getInputFileUri(String);
+    method public android.net.Uri! getOutputFileUri(String);
+    method public java.util.Map<java.lang.String!,java.io.Serializable!>! getOutputProperties();
+    method public boolean isTestStorageFilePath(String);
+    method public java.io.InputStream! openInputFile(String) throws java.io.FileNotFoundException;
+    method public java.io.OutputStream! openOutputFile(String) throws java.io.FileNotFoundException;
+    method public java.io.OutputStream! openOutputFile(String, boolean) throws java.io.FileNotFoundException;
+  }
+
+}
+

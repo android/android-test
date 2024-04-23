@@ -63,6 +63,28 @@ package androidx.test.platform.graphics {
 
 }
 
+package androidx.test.platform.io {
+
+  public interface PlatformTestStorage {
+    method public void addOutputProperties(java.util.Map<java.lang.String!,java.io.Serializable!>!);
+    method public String! getInputArg(String!);
+    method public java.util.Map<java.lang.String!,java.lang.String!>! getInputArgs();
+    method public android.net.Uri! getInputFileUri(String);
+    method public android.net.Uri! getOutputFileUri(String);
+    method public java.util.Map<java.lang.String!,java.io.Serializable!>! getOutputProperties();
+    method public boolean isTestStorageFilePath(String);
+    method public java.io.InputStream! openInputFile(String!) throws java.io.FileNotFoundException;
+    method public java.io.OutputStream! openOutputFile(String!) throws java.io.FileNotFoundException;
+    method public java.io.OutputStream! openOutputFile(String!, boolean) throws java.io.FileNotFoundException;
+  }
+
+  public final class PlatformTestStorageRegistry {
+    method public static androidx.test.platform.io.PlatformTestStorage! getInstance();
+    method public static void registerInstance(androidx.test.platform.io.PlatformTestStorage!);
+  }
+
+}
+
 package androidx.test.platform.ui {
 
   public class InjectEventSecurityException extends java.lang.Exception implements androidx.test.platform.TestFrameworkException {

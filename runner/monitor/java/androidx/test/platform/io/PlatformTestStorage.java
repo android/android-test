@@ -17,7 +17,9 @@ package androidx.test.platform.io;
 
 import android.net.Uri;
 import androidx.annotation.NonNull;
-import androidx.test.annotation.ExperimentalTestApi;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
+import androidx.test.platform.app.InstrumentationRegistry;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,25 +27,32 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * An interface represents on-device I/O operations in an Android test.
+ * An interface representing on-device I/O operations in an Android test.
  *
- * <p>This is a low level API, typically used by higher level test frameworks. It is generally not
- * recommended for direct use by most tests.
+ * <p>This API allows users to retrieve test data specified in the build configuration, and write
+ * output test data that can be automatically collected by the test runner infrastructure, if the
+ * environment supports it.
  *
- * <p>Use a concrete implementation class of this interface if you need to read/write files in your
- * tests. For example, in an Android Instrumentation test, use {@code
- * androidx.test.services.storage.TestStorage} when the test services is installed on the device.
+ * <p>Typically users will retrieve the appropriate implementation via {@link
+ * PlatformTestStorageRegistry#getInstance()}.
  *
- * <p>This API is experimental and is subject to change or removal in future releases.
+ * <p>Implementers would need to also implement the appropriate test runner support for pushing and
+ * pulling the test data to and from the device from the build environment.
  */
-@ExperimentalTestApi
 public interface PlatformTestStorage {
 
   /**
    * Provides an InputStream to a test file dependency.
    *
-   * @param pathname path to the test file dependency. Should not be null.
-   * @return an InputStream to the given test file.
+   * <p>In bazel/blaze environments, this corresponds to files passed in the 'data' attribute of the
+   * android_instrumentation_test or android_local_test build rule.
+   *
+   * <p>This API is currently not supported in gradle environments.
+   *
+   * @param pathname the path to the test file dependency, relative to the root where the storage
+   *     implementation stores input files. Should not be null.
+   * @return a potentially unbuffered InputStream to the given test file. Users will typically want
+   *     to buffer the input in memory when reading from this stream.
    * @throws FileNotFoundException if pathname does not exist
    */
   InputStream openInputFile(String pathname) throws FileNotFoundException;
@@ -51,26 +60,45 @@ public interface PlatformTestStorage {
   /**
    * Returns the value of a given argument name.
    *
+   * <p>In bazel/blaze environments, this corresponds to flags passed in the 'args' attribute of the
+   * android_instrumentation_test or android_local_test build rule.
+   *
+   * <p>This API is currently unsupported in gradle environments. It is recommended to use {@link
+   * InstrumentationRegistry#getArguments()} as an alternative.
+   *
    * @param argName the argument name. Should not be null.
    */
   String getInputArg(String argName);
 
   /**
    * Returns the name/value map of all test arguments or an empty map if no arguments are defined.
+   *
+   * @see {@link #getInputArg(String)}
    */
   Map<String, String> getInputArgs();
 
   /**
-   * Provides an OutputStream to a test output file.
+   * Provides an OutputStream to a test output file. Will overwrite any data written to the same
+   * pathname in the same test run.
    *
-   * @param pathname path to the test output file. Should not be null.
-   * @return an OutputStream to the given output file.
+   * <p>Supported test runners will pull the files from the device once the test completes.
+   *
+   * <p>In gradle android instrumentation test environments, the files will typically be stored in
+   * path_to_your_project/module_name/build/outputs/managed_device_android_test_additional_output
+   * <br>
+   *
+   * @param pathname relative path to the test output file. Should not be null.
+   * @return a potentially unbuffered OutputStream to the given output file. Users will typically
+   *     want to buffer the output in memory when writing to this stream.
    * @throws FileNotFoundException if pathname does not exist
    */
   OutputStream openOutputFile(String pathname) throws FileNotFoundException;
 
   /**
    * Provides an OutputStream to a test output file.
+   *
+   * <p>This API is identical to {@link #openOutputFile(String)} with the additional feature of
+   * allowing appending or overwriting test data.
    *
    * @param pathname path to the test output file. Should not be null.
    * @param append if true, then the lines will be added to the end of the file rather than
@@ -85,6 +113,8 @@ public interface PlatformTestStorage {
    *
    * <p>Adding a property with the same name would append new values and overwrite the old values if
    * keys already exist.
+   *
+   * <p>This API is unsupported in gradle environments. <br>
    */
   void addOutputProperties(Map<String, Serializable> properties);
 
@@ -100,7 +130,9 @@ public interface PlatformTestStorage {
    * @param pathname path to the internal file. Should not be null.
    * @return an InputStream to the given test file.
    * @throws FileNotFoundException if pathname does not exist
+   * @hide
    */
+  @RestrictTo(Scope.LIBRARY_GROUP)
   default InputStream openInternalInputFile(String pathname) throws FileNotFoundException {
     return openInputFile(pathname);
   }
@@ -111,7 +143,9 @@ public interface PlatformTestStorage {
    * @param pathname path to the internal file. Should not be null.
    * @return an OutputStream to the given output file.
    * @throws FileNotFoundException if pathname does not exist
+   * @hide
    */
+  @RestrictTo(Scope.LIBRARY_GROUP)
   default OutputStream openInternalOutputFile(String pathname) throws FileNotFoundException {
     return openOutputFile(pathname);
   }
@@ -123,11 +157,9 @@ public interface PlatformTestStorage {
    * InputStream to the input file content immediately. Only use this method if you would like to
    * store the file Uri and use it for I/O operations later.
    *
-   * <p><b>Note:</b> temporary API - will be renamed to getInpFileUri in future
-   *
    * @param pathname path to the test file dependency. Should not be null. This is a relative path
-   *     to where the storage service stores the input files. For example, if the storage service
-   *     stores the input files under "/sdcard/test_input_files", with a pathname
+   *     to where the storage implementation stores the input files. For example, if the storage
+   *     service stores the input files under "/sdcard/test_input_files", with a pathname
    *     "/path/to/my_input.txt", the file will end up at
    *     "/sdcard/test_input_files/path/to/my_input.txt" on device.
    * @return a content Uri to the test file dependency.
@@ -142,11 +174,9 @@ public interface PlatformTestStorage {
    * OutputStream to the output file content immediately. Only use this method if you would like to
    * store the file Uri and use it for I/O operations later.
    *
-   * <p><b>Note:</b> temporary API - will be renamed to getOutputFileUri in future
-   *
    * @param pathname path to the test output file. Should not be null. This is a relative path to
-   *     where the storage service stores the output files. For example, if the storage service
-   *     stores the output files under "/sdcard/test_output_files", with a pathname
+   *     where the storage implementation stores the output files. For example, if the storage
+   *     service stores the output files under "/sdcard/test_output_files", with a pathname
    *     "/path/to/my_output.txt", the file will end up at
    *     "/sdcard/test_output_files/path/to/my_output.txt" on device.
    */
@@ -154,7 +184,7 @@ public interface PlatformTestStorage {
 
   /**
    * Returns true if {@code pathname} corresponds to a file or directory that is in a directory
-   * where the storage stores files.
+   * where the storage implementation stores files.
    *
    * @param pathname path to a file or directory. Should not be null. This is an absolute path to a
    *     file that may be a part of the storage service.

@@ -17,26 +17,14 @@ package androidx.test.platform.io;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 
-import android.net.Uri;
-import androidx.annotation.NonNull;
-import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.internal.platform.ServiceLoaderWrapper;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * An exposed registry instance that holds a reference to an {@code PlatformTestStorage} instance.
+ * A registry instance that holds a reference to an {@code PlatformTestStorage} instance.
  *
- * <p>{@code PlatformTestStorage} and {@code PlatformTestStorageRegistry} are low level APIs,
- * typically used by higher level test frameworks. It is generally not recommended for direct use by
- * most tests.
- *
- * <p>This API is experimental and is subject to change or removal in future releases.
+ * <p>Users should use this to retrieve the appropriate {@link PlatformTestStorage} for the current
+ * execution environment.
  */
-@ExperimentalTestApi
 public final class PlatformTestStorageRegistry {
   private static PlatformTestStorage testStorageInstance;
 
@@ -44,8 +32,7 @@ public final class PlatformTestStorageRegistry {
     // By default, uses the instance loaded by the service loader if available; otherwise, uses a
     // default no_op implementation.
     testStorageInstance =
-        ServiceLoaderWrapper.loadSingleService(
-            PlatformTestStorage.class, NoOpPlatformTestStorage::new);
+        ServiceLoaderWrapper.loadSingleService(PlatformTestStorage.class, FileTestStorage::new);
   }
 
   private PlatformTestStorageRegistry() {}
@@ -53,6 +40,9 @@ public final class PlatformTestStorageRegistry {
   /**
    * Registers a new {@code PlatformTestStorage} instance. This will override any previously set
    * instance.
+   *
+   * <p>Users should not typically call this directly - it is intended for use by the test
+   * infrastructure.
    *
    * @param instance the instance to be registered. Cannot be null.
    */
@@ -63,85 +53,22 @@ public final class PlatformTestStorageRegistry {
   /**
    * Returns the registered {@code PlatformTestStorage} instance.
    *
+   * <p>By default, a {@link FileTestStorage} implementation is used. The default implementation is
+   * currently recommended for users using android gradle plugins version 8.0 or greater which
+   * supports writing output files (only). Gradle users using versions 8.0 or greater can optionally
+   * also opt in the test services {@link TestStorage} implementation by adding the following
+   * configuration to their build.gradle file: <br>
+   * <code>
+   * defaultConfig { testInstrumentationRunnerArguments useTestStorageService: "true" }
+   * dependencies { androidTestUtil "androidx.test.services:test-services:$servicesVersion" }
+   * </code> <br>
+   *
    * <p>This method returns the instance last registered by the {@link
    * #registerInstance(PlatformTestStorage)} method, or the default instance if none is ever
-   * registered.
+   * registered. Advanced users can provide {@link java.util.ServiceLoader} metadata to provide an
+   * alternate implementation to load.
    */
   public static synchronized PlatformTestStorage getInstance() {
     return testStorageInstance;
-  }
-
-  /** A test storage that does nothing. All the I/O operations in this class are ignored. */
-  static class NoOpPlatformTestStorage implements PlatformTestStorage {
-
-    @Override
-    public InputStream openInputFile(String pathname) {
-      return new NullInputStream();
-    }
-
-    @Override
-    public String getInputArg(String argName) {
-      return null;
-    }
-
-    @Override
-    public Map<String, String> getInputArgs() {
-      return new HashMap<>();
-    }
-
-    @Override
-    public OutputStream openOutputFile(String pathname) {
-      return new NullOutputStream();
-    }
-
-    @Override
-    public OutputStream openOutputFile(String pathname, boolean append) {
-      return new NullOutputStream();
-    }
-
-    @Override
-    public void addOutputProperties(Map<String, Serializable> properties) {}
-
-    @Override
-    public Map<String, Serializable> getOutputProperties() {
-      return new HashMap<>();
-    }
-
-    @Override
-    public InputStream openInternalInputFile(String pathname) {
-      return new NullInputStream();
-    }
-
-    @Override
-    public OutputStream openInternalOutputFile(String pathname) {
-      return new NullOutputStream();
-    }
-
-    @Override
-    public Uri getInputFileUri(@NonNull String pathname) {
-      return null;
-    }
-
-    @Override
-    public Uri getOutputFileUri(@NonNull String pathname) {
-      return null;
-    }
-
-    @Override
-    public boolean isTestStorageFilePath(@NonNull String pathname) {
-      return false;
-    }
-
-    static class NullInputStream extends InputStream {
-      @Override
-      public int read() {
-        return -1;
-      }
-    }
-
-    static class NullOutputStream extends OutputStream {
-      @Override
-      public void write(int b) {}
-    }
   }
 }

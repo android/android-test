@@ -14,10 +14,7 @@
 
 **API Changes**
 
-* Upstream TestStorage.isTestStoragePath to PlatformTestStorage
-* Upstream TestStorage.getInputFileUri and getOutputFileUri  to PlatformTestStorage
-* Change openInternal* methods to throw FileNotFoundException instead of 
-  IOException for consistency
+* Make TestStorage an internal API from experimental
 
 **Breaking API Changes**
 
