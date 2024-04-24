@@ -24,14 +24,17 @@ import android.os.Handler
 import android.os.Looper
 import android.view.PixelCopy
 import android.view.Window
-import androidx.concurrent.futures.ResolvableFuture
+import androidx.annotation.RequiresApi
+import androidx.concurrent.futures.SuspendToFutureAdapter
 import androidx.test.annotation.ExperimentalTestApi
-import androidx.test.core.internal.os.HandlerExecutor
 import androidx.test.platform.graphics.HardwareRendererCompat
 import com.google.common.util.concurrent.ListenableFuture
+import kotlin.coroutines.resumeWithException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 /**
- * Asynchronously captures an image of the underlying window into a [Bitmap].
+ * Suspend function that captures an image of the underlying window into a [Bitmap].
  *
  * For devices below [Build.VERSION_CODES#O] the image is obtained using [View#draw] on the windows
  * decorView. Otherwise, [PixelCopy] is used.
@@ -41,43 +44,39 @@ import com.google.common.util.concurrent.ListenableFuture
  * This API is primarily intended for use in lower layer libraries or frameworks. For test authors,
  * its recommended to use espresso or compose's captureToImage.
  *
- * Note: This API will likely change in the future to a kotlin suspend function. If you want a
- * method that returns a ListenableFuture instead, use [captureRegionToBitmapAsync].
+ * This API must be called from the UI thread.
+ *
+ * The resulting image is captured after forcing the View to redraw, and waiting for the draw to
+ * operation complete. This is done as a means to improve the stability of the resulting image -
+ * especially in cases where hardware rendering drawing is off initially.
  *
  * This API is currently experimental and subject to change or removal.
  */
 @ExperimentalTestApi
-fun Window.captureRegionToBitmap(boundsInWindow: Rect? = null): ListenableFuture<Bitmap> {
-  val bitmapFuture: ResolvableFuture<Bitmap> = ResolvableFuture.create()
-  val mainExecutor = HandlerExecutor(Handler(Looper.getMainLooper()))
+suspend fun Window.captureRegionToBitmap(boundsInWindow: Rect? = null): Bitmap {
+  var bitmap: Bitmap? = null
 
-  // disable drawing again if necessary once work is complete
-  if (!HardwareRendererCompat.isDrawingEnabled()) {
-    HardwareRendererCompat.setDrawingEnabled(true)
-    bitmapFuture.addListener({ HardwareRendererCompat.setDrawingEnabled(false) }, mainExecutor)
+  val hardwareDrawingEnabled = HardwareRendererCompat.isDrawingEnabled()
+  HardwareRendererCompat.setDrawingEnabled(true)
+  try {
+    decorView.forceRedraw()
+    bitmap = generateBitmap(boundsInWindow)
+  } finally {
+    HardwareRendererCompat.setDrawingEnabled(hardwareDrawingEnabled)
   }
 
-  mainExecutor.execute {
-    val forceRedrawFuture = decorView.forceRedraw()
-    forceRedrawFuture.addListener({ generateBitmap(boundsInWindow, bitmapFuture) }, mainExecutor)
-  }
-
-  return bitmapFuture
+  return bitmap!!
 }
 
-/**
- * Equivalent to [captureRegionToBitmap] for now. In the future [captureRegionToBitmap] will be
- * changed to a suspend function.
- */
+/** A ListenableFuture variant of captureRegionToBitmap intended for use from Java. */
 @ExperimentalTestApi
 fun Window.captureRegionToBitmapAsync(boundsInWindow: Rect? = null): ListenableFuture<Bitmap> {
-  return captureRegionToBitmap(boundsInWindow)
+  return SuspendToFutureAdapter.launchFuture(Dispatchers.Main) {
+    captureRegionToBitmap(boundsInWindow)
+  }
 }
 
-internal fun Window.generateBitmap(
-  boundsInWindow: Rect? = null,
-  bitmapFuture: ResolvableFuture<Bitmap>,
-) {
+internal suspend fun Window.generateBitmap(boundsInWindow: Rect? = null): Bitmap {
   val destBitmap =
     Bitmap.createBitmap(
       boundsInWindow?.width() ?: decorView.width,
@@ -87,30 +86,34 @@ internal fun Window.generateBitmap(
   when {
     Build.VERSION.SDK_INT < 26 ->
       // TODO: handle boundsInWindow
-      decorView.generateBitmapFromDraw(destBitmap, bitmapFuture, null)
-    else -> generateBitmapFromPixelCopy(boundsInWindow, destBitmap, bitmapFuture)
+      decorView.generateBitmapFromDraw(destBitmap, boundsInWindow)
+    else -> generateBitmapFromPixelCopy(boundsInWindow, destBitmap)
   }
+
+  return destBitmap
 }
 
-@SuppressWarnings("NewApi")
-internal fun Window.generateBitmapFromPixelCopy(
+@RequiresApi(Build.VERSION_CODES.O)
+internal suspend fun Window.generateBitmapFromPixelCopy(
   boundsInWindow: Rect? = null,
   destBitmap: Bitmap,
-  bitmapFuture: ResolvableFuture<Bitmap>,
-) {
-  val onCopyFinished =
-    PixelCopy.OnPixelCopyFinishedListener { result ->
-      if (result == PixelCopy.SUCCESS) {
-        bitmapFuture.set(destBitmap)
-      } else {
-        bitmapFuture.setException(RuntimeException(String.format("PixelCopy failed: %d", result)))
+): Bitmap {
+  return suspendCancellableCoroutine<Bitmap> { cont ->
+    val onCopyFinished =
+      PixelCopy.OnPixelCopyFinishedListener { result ->
+        if (result == PixelCopy.SUCCESS) {
+          cont.resume(destBitmap, {})
+        } else {
+          cont.resumeWithException(RuntimeException("PixelCopy failed: $result"))
+        }
       }
-    }
-  PixelCopy.request(
-    this,
-    boundsInWindow,
-    destBitmap,
-    onCopyFinished,
-    Handler(Looper.getMainLooper()),
-  )
+
+    PixelCopy.request(
+      this,
+      boundsInWindow,
+      destBitmap,
+      onCopyFinished,
+      Handler(Looper.getMainLooper()),
+    )
+  }
 }

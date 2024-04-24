@@ -5,7 +5,7 @@ import android.os.Looper
 import android.view.View
 import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.core.internal.os.HandlerExecutor
-import androidx.test.core.view.captureToBitmap
+import androidx.test.core.view.captureToBitmapAsync
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -31,7 +31,7 @@ class CaptureToBitmapAction(val bitmapReceiver: ViewActions.BitmapReceiver) : Vi
     IdlingRegistry.getInstance().register(captureIdlingResource)
 
     // Have the bitmap mark the idling resource as idle when it completes.
-    val futureBitmap = view.captureToBitmap()
+    val futureBitmap = view.captureToBitmapAsync()
     val mainExecutor = HandlerExecutor(Handler(Looper.getMainLooper()))
     futureBitmap.addListener(captureIdlingResource, mainExecutor)
 

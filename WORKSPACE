@@ -91,6 +91,7 @@ maven_install(
         "androidx.annotation:annotation-experimental:jar:" + ANDROIDX_ANNOTATION_EXPERIMENTAL_VERSION,
         "androidx.appcompat:appcompat:" + ANDROIDX_COMPAT_VERSION,
         "androidx.concurrent:concurrent-futures:" + ANDROIDX_CONCURRENT_VERSION,
+        "androidx.concurrent:concurrent-futures-ktx:" + ANDROIDX_CONCURRENT_VERSION,
         "androidx.core:core:" + ANDROIDX_CORE_VERSION,
         "androidx.cursoradapter:cursoradapter:" + ANDROIDX_CURSOR_ADAPTER_VERSION,
         "androidx.drawerlayout:drawerlayout:" + ANDROIDX_DRAWER_LAYOUT_VERSION,
@@ -174,6 +175,8 @@ maven_install(
         "org.pantsbuild:jarjar:1.7.2",
         "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
         "org.jetbrains.kotlinx:kotlinx-coroutines-core:%s" % KOTLINX_COROUTINES_VERSION,
+        "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:%s" % KOTLINX_COROUTINES_VERSION,
+        "org.jetbrains.kotlinx:kotlinx-coroutines-android:%s" % KOTLINX_COROUTINES_VERSION,
         maven.artifact(
             artifact = "robolectric",
             exclusions = [
