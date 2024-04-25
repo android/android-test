@@ -26,7 +26,6 @@ import android.view.PixelCopy
 import android.view.Window
 import androidx.annotation.RequiresApi
 import androidx.concurrent.futures.SuspendToFutureAdapter
-import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.platform.graphics.HardwareRendererCompat
 import com.google.common.util.concurrent.ListenableFuture
 import kotlin.coroutines.resumeWithException
@@ -49,10 +48,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
  * The resulting image is captured after forcing the View to redraw, and waiting for the draw to
  * operation complete. This is done as a means to improve the stability of the resulting image -
  * especially in cases where hardware rendering drawing is off initially.
- *
- * This API is currently experimental and subject to change or removal.
  */
-@ExperimentalTestApi
 suspend fun Window.captureRegionToBitmap(boundsInWindow: Rect? = null): Bitmap {
   var bitmap: Bitmap? = null
 
@@ -69,7 +65,6 @@ suspend fun Window.captureRegionToBitmap(boundsInWindow: Rect? = null): Bitmap {
 }
 
 /** A ListenableFuture variant of captureRegionToBitmap intended for use from Java. */
-@ExperimentalTestApi
 fun Window.captureRegionToBitmapAsync(boundsInWindow: Rect? = null): ListenableFuture<Bitmap> {
   return SuspendToFutureAdapter.launchFuture(Dispatchers.Main) {
     captureRegionToBitmap(boundsInWindow)

@@ -1,8 +1,25 @@
 // Signature format: 3.0
+package androidx.test.core.app {
+
+  public final class DeviceCapture {
+    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static boolean canTakeScreenshot();
+    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static android.graphics.Bitmap takeScreenshotNoSync() throws java.lang.RuntimeException;
+  }
+
+}
+
 package androidx.test.core.graphics {
 
   public final class BitmapStorage {
     method @Deprecated @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static void writeToTestStorage(android.graphics.Bitmap, androidx.test.platform.io.PlatformTestStorage testStorage, String name) throws java.io.IOException;
+  }
+
+}
+
+package androidx.test.core.view {
+
+  public final class ViewCapture {
+    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static suspend Object? forceRedraw(android.view.View, kotlin.coroutines.Continuation<? super kotlin.Unit>);
   }
 
 }

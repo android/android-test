@@ -30,7 +30,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.NonNull;
-import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
@@ -571,7 +570,6 @@ public final class ViewActions {
         new RepeatActionUntilViewState(action, desiredStateMatcher, maxAttempts));
   }
 
-  @ExperimentalTestApi
   public interface BitmapReceiver {
     void onBitmapCaptured(Bitmap bitmap);
   }
@@ -585,7 +583,6 @@ public final class ViewActions {
    *     thread.
    * @return the ViewAction
    */
-  @ExperimentalTestApi
   public static ViewAction captureToBitmap(BitmapReceiver bitmapReceiver) {
     return new CaptureToBitmapAction(bitmapReceiver);
   }

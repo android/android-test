@@ -15,10 +15,10 @@
 **API Changes**
 
 * Added ApplicationInfoBuilder.setFlags(int)
-* Make suspend function versions of ViewCapture/WindowCapture/DeviceCapture APIs
+* Make suspend function versions of ViewCapture/WindowCapture/DeviceCapture APIs,  
+  and rename existing methods as *Async variants that return ListenableFutures
 * Make Bitmap.writeToTestStorage use the registered PlatformTestStorage instead of hardcoding TestStorage
-* Add *Async variants of capture*ToBitmap methods
-
+* Remove ExperimentalTestApi/RequiresOptIn restrictions from captureToBitmap and takeScreenshot APIs
 
 **Breaking API Changes**
 

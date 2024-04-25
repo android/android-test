@@ -3,7 +3,6 @@ package androidx.test.espresso.action
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.core.internal.os.HandlerExecutor
 import androidx.test.core.view.captureToBitmapAsync
 import androidx.test.espresso.IdlingRegistry
@@ -14,7 +13,6 @@ import java.util.concurrent.TimeUnit
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.any
 
-@ExperimentalTestApi
 class CaptureToBitmapAction(val bitmapReceiver: ViewActions.BitmapReceiver) : ViewAction {
   override fun getConstraints(): Matcher<View> {
     return any(View::class.java)

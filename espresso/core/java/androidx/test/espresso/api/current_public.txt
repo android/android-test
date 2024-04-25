@@ -231,6 +231,15 @@ package androidx.test.espresso.action {
     method public static androidx.test.espresso.action.AdapterViewProtocol! standardProtocol();
   }
 
+  public final class CaptureToBitmapAction implements androidx.test.espresso.ViewAction {
+    ctor public CaptureToBitmapAction(androidx.test.espresso.action.ViewActions.BitmapReceiver bitmapReceiver);
+    method public androidx.test.espresso.action.ViewActions.BitmapReceiver getBitmapReceiver();
+    method public org.hamcrest.Matcher<android.view.View> getConstraints();
+    method public String getDescription();
+    method public void perform(androidx.test.espresso.UiController uiController, android.view.View view);
+    property public final androidx.test.espresso.action.ViewActions.BitmapReceiver bitmapReceiver;
+  }
+
   public final class CloseKeyboardAction implements androidx.test.espresso.ViewAction {
     ctor @androidx.test.espresso.remote.annotation.RemoteMsgConstructor public CloseKeyboardAction();
     method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
@@ -419,6 +428,7 @@ package androidx.test.espresso.action {
   @com.google.errorprone.annotations.CheckReturnValue public final class ViewActions {
     method public static androidx.test.espresso.ViewAction! actionWithAssertions(androidx.test.espresso.ViewAction!);
     method public static void addGlobalAssertion(String!, androidx.test.espresso.ViewAssertion!);
+    method public static androidx.test.espresso.ViewAction! captureToBitmap(androidx.test.espresso.action.ViewActions.BitmapReceiver!);
     method public static void clearGlobalAssertions();
     method public static androidx.test.espresso.ViewAction! clearText();
     method public static androidx.test.espresso.ViewAction! click();
@@ -451,6 +461,10 @@ package androidx.test.espresso.action {
     method public static androidx.test.espresso.ViewAction! swipeUp();
     method public static androidx.test.espresso.ViewAction! typeText(String!);
     method public static androidx.test.espresso.ViewAction! typeTextIntoFocusedView(String!);
+  }
+
+  public static interface ViewActions.BitmapReceiver {
+    method public void onBitmapCaptured(android.graphics.Bitmap!);
   }
 
 }

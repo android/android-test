@@ -24,7 +24,6 @@ import android.os.Looper
 import android.util.Log
 import android.view.Choreographer
 import androidx.annotation.RestrictTo
-import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.core.internal.os.HandlerExecutor
 import androidx.test.core.view.forceRedraw
 import androidx.test.internal.util.Checks
@@ -46,8 +45,10 @@ import kotlinx.coroutines.withTimeout
  * this method returns false then attempting to take a screenshot will fail. Note that taking a
  * screenshot may still fail if this method returns true, for example if the call to [UiAutomation]
  * fails.
+ *
+ * @hide
  */
-@ExperimentalTestApi
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun canTakeScreenshot(): Boolean =
   getInstrumentation().uiAutomation != null && Looper.myLooper() != Looper.getMainLooper()
 
@@ -72,7 +73,6 @@ fun canTakeScreenshot(): Boolean =
  * @throws [IllegalStateException] if called on the main thread. This is a limitation of connecting
  *   to UiAutomation, [RuntimeException] if UiAutomation fails to take the screenshot
  */
-@ExperimentalTestApi
 @Suppress("FutureReturnValueIgnored")
 @Throws(RuntimeException::class)
 fun takeScreenshot(): Bitmap {
@@ -91,7 +91,6 @@ fun takeScreenshot(): Bitmap {
  *   to UiAutomation, [RuntimeException] if UiAutomation fails to take the screenshot
  * @hide
  */
-@ExperimentalTestApi
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("FutureReturnValueIgnored")
 @Throws(RuntimeException::class)
