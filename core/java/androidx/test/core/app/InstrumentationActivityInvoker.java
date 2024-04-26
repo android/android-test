@@ -445,6 +445,12 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
 
     activityOptionsBundle = optInToGrantBalPrivileges(activityOptionsBundle);
 
+    // make an immutable intent if its implicit
+    int intentMutability =
+        intent.getPackage() == null && intent.getComponent() == null
+            ? PendingIntent.FLAG_IMMUTABLE
+            : PendingIntent.FLAG_MUTABLE;
+
     // Note: Instrumentation.startActivitySync(Intent) cannot be used here because BootstrapActivity
     // may start in different process. Also, we use PendingIntent because the target activity may
     // set "exported" attribute to false so that it prohibits starting the activity outside of their
@@ -458,7 +464,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
                     getApplicationContext(),
                     /* requestCode= */ 0,
                     intent,
-                    /* flags= */ PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE))
+                    /* flags= */ PendingIntent.FLAG_UPDATE_CURRENT | intentMutability))
             .putExtra(TARGET_ACTIVITY_OPTIONS_BUNDLE_KEY, activityOptionsBundle);
 
     getApplicationContext().startActivity(bootstrapIntent, activityOptionsBundle);

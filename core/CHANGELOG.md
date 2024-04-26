@@ -6,7 +6,8 @@
 
 **Bug Fixes**
 
-* make ViewCapture use ControlledLooper API instead of hardcoding is Robolectric check
+* Make ViewCapture use ControlledLooper API instead of hardcoding is Robolectric check
+* Fix using ActivityScenario#launchActivityForResult with an implicit Intent
 
 **New Features**
 

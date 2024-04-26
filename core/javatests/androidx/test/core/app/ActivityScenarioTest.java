@@ -540,6 +540,15 @@ public final class ActivityScenarioTest {
     assertThat(activityScenario).isNotNull();
   }
 
+  @Test
+  public void launchActivityForResult_intentWithAction() {
+    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("scenario://test"));
+
+    ActivityScenario<IntentActivity> activityScenario =
+        ActivityScenario.launchActivityForResult(intent);
+    assertThat(activityScenario).isNotNull();
+  }
+
   private static Stage lastLifeCycleTransition(Activity activity) {
     return ActivityLifecycleMonitorRegistry.getInstance().getLifecycleStageOf(activity);
   }
