@@ -29,8 +29,7 @@ The following artifacts were released:
 **API Changes**
 
 * Adapt to ViewCapture API changes
-* Delete ViewInteraction.captureToBitmap in favor of ViewActions.captureToBitmap,
-  and promote to a stable API from ExperimentalTestApi
+* Delete ViewInteraction.captureToBitmap in favor of ViewActions.captureToBitmap
 
 
 **Breaking API Changes**

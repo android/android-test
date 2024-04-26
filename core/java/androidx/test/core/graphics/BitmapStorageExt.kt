@@ -20,6 +20,7 @@ package androidx.test.core.graphics
 
 import android.graphics.Bitmap
 import androidx.annotation.RestrictTo
+import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.platform.io.PlatformTestStorage
 import androidx.test.platform.io.PlatformTestStorageRegistry
 import java.io.IOException
@@ -30,6 +31,7 @@ import java.io.IOException
  * @param name a descriptive base name for the resulting file. '.png' will be appended to this name.
  * @throws IOException if bitmap could not be compressed or written to ds
  */
+@ExperimentalTestApi
 @Throws(IOException::class)
 fun Bitmap.writeToTestStorage(name: String) {
   writeToTestStorage(PlatformTestStorageRegistry.getInstance(), name)

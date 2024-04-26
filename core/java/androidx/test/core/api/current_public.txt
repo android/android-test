@@ -26,10 +26,6 @@ package androidx.test.core.app {
     method public static <T extends android.content.Context> T! getApplicationContext();
   }
 
-  public final class DeviceCapture {
-    method @kotlin.jvm.Throws(exceptionClasses=RuntimeException::class) public static android.graphics.Bitmap takeScreenshot() throws java.lang.RuntimeException;
-  }
-
 }
 
 package androidx.test.core.content.pm {
@@ -57,7 +53,6 @@ package androidx.test.core.content.pm {
 package androidx.test.core.graphics {
 
   public final class BitmapStorage {
-    method @kotlin.jvm.Throws(exceptionClasses=IOException::class) public static void writeToTestStorage(android.graphics.Bitmap, String name) throws java.io.IOException;
   }
 
 }
@@ -107,16 +102,6 @@ package androidx.test.core.view {
     method public static androidx.test.core.view.PointerPropertiesBuilder! newBuilder();
     method public androidx.test.core.view.PointerPropertiesBuilder! setId(int);
     method public androidx.test.core.view.PointerPropertiesBuilder! setToolType(int);
-  }
-
-  public final class ViewCapture {
-    method public static suspend Object? captureToBitmap(android.view.View, android.graphics.Rect? rect = null, kotlin.coroutines.Continuation<? super android.graphics.Bitmap>);
-    method public static com.google.common.util.concurrent.ListenableFuture<android.graphics.Bitmap> captureToBitmapAsync(android.view.View, android.graphics.Rect? rect = null);
-  }
-
-  public final class WindowCapture {
-    method public static suspend Object? captureRegionToBitmap(android.view.Window, android.graphics.Rect? boundsInWindow = null, kotlin.coroutines.Continuation<? super android.graphics.Bitmap>);
-    method public static com.google.common.util.concurrent.ListenableFuture<android.graphics.Bitmap> captureRegionToBitmapAsync(android.view.Window, android.graphics.Rect? boundsInWindow = null);
   }
 
 }

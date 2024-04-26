@@ -32,8 +32,8 @@ import android.view.View
 import android.view.ViewTreeObserver.OnDrawListener
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
-import androidx.annotation.RestrictTo
 import androidx.concurrent.futures.SuspendToFutureAdapter
+import androidx.test.annotation.ExperimentalTestApi
 import androidx.test.core.internal.os.HandlerExecutor
 import androidx.test.internal.platform.ServiceLoaderWrapper
 import androidx.test.internal.platform.os.ControlledLooper
@@ -79,7 +79,10 @@ import kotlinx.coroutines.suspendCancellableCoroutine
  * The resulting image is captured after forcing the View to redraw, and waiting for the draw to
  * operation complete. This is done as a means to improve the stability of the resulting image -
  * especially in cases where hardware rendering drawing is off initially.
+ *
+ * This API is currently experimental and subject to change or removal.
  */
+@ExperimentalTestApi
 suspend fun View.captureToBitmap(rect: Rect? = null): Bitmap {
   checkState(isAttachedToWindow, "View must be attached to a window")
   checkState(
@@ -107,6 +110,7 @@ private fun getControlledLooper(): ControlledLooper {
 }
 
 /** A ListenableFuture variant of captureToBitmap intended for use from Java. */
+@ExperimentalTestApi
 fun View.captureToBitmapAsync(rect: Rect? = null): ListenableFuture<Bitmap> {
   return SuspendToFutureAdapter.launchFuture(Dispatchers.Main) { captureToBitmap(rect) }
 }
@@ -115,10 +119,10 @@ fun View.captureToBitmapAsync(rect: Rect? = null): ListenableFuture<Bitmap> {
  * Trigger a redraw of the given view.
  *
  * Should only be called on UI thread.
- *
- * @hide
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+// TODO(b/316921934): uncomment once @ExperimentalTestApi is removed
+// @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@ExperimentalTestApi
 suspend fun View.forceRedraw() {
   checkState(handler.looper.isCurrentThread, "Must be called from view's handler thread")
   if (!getControlledLooper().areDrawCallbacksSupported()) {
