@@ -14,7 +14,7 @@ android_library(
     name = "file",
     srcs = glob(["*.java"]),
     deps = [
-        "//annotation",
+        "//opensource/androidx:annotation",
         "//runner/monitor",
         "//services/storage/java/androidx/test/services/storage:test_storage_constants",
     ],

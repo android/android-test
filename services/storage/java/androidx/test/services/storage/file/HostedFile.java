@@ -22,12 +22,18 @@ import android.os.Environment;
 import android.os.UserManager;
 import android.provider.OpenableColumns;
 import android.util.Log;
-import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.services.storage.TestStorageConstants;
 import java.io.File;
 
-/** Constants to access hosted file data and convenience methods for building Uris. */
-@ExperimentalTestApi
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
+
+/**
+ * Constants to access hosted file data and convenience methods for building Uris.
+ *
+ * @hide
+ */
+@RestrictTo(Scope.LIBRARY)
 public final class HostedFile {
 
   private static final String TAG = "HostedFile";

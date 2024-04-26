@@ -54,6 +54,8 @@ import java.util.Map;
  * <p>Users should ideally not reference this class directly, but rather retrieve the
  * PlatformTestStorage implementation appropriate for their execution environment from {@link
  * androidx.test.platform.io.PlatformTestStorageRegistry}.
+ *
+ * @hide
  */
 @RestrictTo(Scope.LIBRARY_GROUP)
 public final class TestStorage implements PlatformTestStorage {

@@ -15,10 +15,15 @@
  */
 package androidx.test.services.storage;
 
-import androidx.test.annotation.ExperimentalTestApi;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 
-/** Holds constants that are shared between on-device and host-side testing infrastructure. */
-@ExperimentalTestApi
+/**
+ * Holds constants that are shared between on-device and host-side testing infrastructure.
+ *
+ * @hide
+ */
+@RestrictTo(Scope.LIBRARY)
 public final class TestStorageConstants {
 
   /** The parent folder name for all the test related files. */

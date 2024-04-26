@@ -18,14 +18,18 @@ package androidx.test.services.storage.file;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.net.Uri;
-import androidx.test.annotation.ExperimentalTestApi;
 import androidx.test.services.storage.TestStorageConstants;
+
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 
 /**
  * Constants to access property file data (holding name/value pairs) and convenience methods for
  * build URIs.
+ *
+ * @hide
  */
-@ExperimentalTestApi
+@RestrictTo(Scope.LIBRARY)
 public final class PropertyFile {
 
   /** Represents columns returned by the property file service. */

@@ -3,7 +3,6 @@
 
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 load("//build_extensions:api_checks.bzl", "api_checks")
-load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 
@@ -44,7 +43,7 @@ java_library(
     name = "test_storage_constants",
     srcs = ["TestStorageConstants.java"],
     deps = [
-        "//annotation",
+        "//opensource/androidx:annotation",
     ],
 )
 
@@ -78,11 +77,12 @@ maven_artifact(
     target = ":test_storage_aar",
 )
 
-dackka_test(
-    name = "test_storage_doc",
-    runtime_dep = ":storage",
-    src_jar = ":test_storage_aar-src.jar",
-)
+# no public documentation
+# dackka_test(
+#     name = "test_storage_doc",
+#     runtime_dep = ":storage",
+#     src_jar = ":test_storage_aar-src.jar",
+# )
 
 api_checks(
     name = "storage_api",
