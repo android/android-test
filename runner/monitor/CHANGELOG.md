@@ -11,9 +11,6 @@
 **Breaking Changes**
 
 **API Changes**
-* Make DeviceController an public API from ExperimentalTestApi
-* Move PlatformTestStorage to a public API
-* Add internal ControlledLooper#isDrawCallbacksSupported.
 
 **Breaking API Changes**
 

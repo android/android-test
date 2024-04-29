@@ -16,22 +16,11 @@ The following artifacts were released:
 
 **Bug Fixes**
 
-* Fix slow inRoot operations in Robolectric
-* Use PlatformTestStorageRegistry.getInstance consistently instead of passing a reference around
-* Remove TODO from InteractionResponse public ref docs
-
 **New Features**
-
-* Add waitForClose to DrawerActions.
 
 **Breaking Changes**
 
 **API Changes**
-
-* Adapt to ViewCapture API changes
-* Delete ViewInteraction.captureToBitmap in favor of ViewActions.captureToBitmap,
-  and promote to a stable API from ExperimentalTestApi
-
 
 **Breaking API Changes**
 

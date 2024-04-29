@@ -6,8 +6,6 @@
 
 **Bug Fixes**
 
-* Use PlatformTestStorage instead of TestStorage in DeleteFilesRule 
-
 **New Features**
 
 **Breaking Changes**

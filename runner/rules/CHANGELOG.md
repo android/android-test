@@ -6,8 +6,6 @@
 
 **Bug Fixes**
 
-* Make GrantPermissionRule use UiAutomation to grant permissions on APIs > =28 to fix issues running on automotive.
-
 **New Features**
 
 **Breaking Changes**
