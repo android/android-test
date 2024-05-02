@@ -6,6 +6,8 @@
 
 **Bug Fixes**
 
+* Reduce HostedFile log spam
+
 **New Features**
 
 **Breaking Changes**

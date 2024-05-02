@@ -24,6 +24,7 @@ import android.provider.OpenableColumns;
 import android.util.Log;
 import androidx.test.services.storage.TestStorageConstants;
 import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
@@ -37,6 +38,8 @@ import androidx.annotation.RestrictTo.Scope;
 public final class HostedFile {
 
   private static final String TAG = "HostedFile";
+
+  private static final AtomicBoolean loggedOutputDir = new AtomicBoolean(false);
 
   /** An enum of the columns returned by the hosted file service. */
   public enum HostedFileColumn {
@@ -146,34 +149,25 @@ public final class HostedFile {
 
   public static File getInputRootDirectory(Context context) {
     // always use external storage dir for input
-    Log.i(
-        TAG,
-        "Choosing external storage as root dir for input: "
-            + Environment.getExternalStorageDirectory().getAbsolutePath());
     return Environment.getExternalStorageDirectory();
   }
 
   public static File getOutputRootDirectory(Context context) {
     UserManager userManager = (UserManager) context.getSystemService(Context.USER_SERVICE);
     if (VERSION.SDK_INT < 23) {
-      Log.i(
-          TAG,
-          "Running on API < 23; Choosing external storage as output root dir: "
-              + Environment.getExternalStorageDirectory().getAbsolutePath());
       return Environment.getExternalStorageDirectory();
     } else if (userManager.isSystemUser()) {
-      Log.i(
-          TAG,
-          "System user detected. Choosing external storage as output root dir: "
-              + Environment.getExternalStorageDirectory().getAbsolutePath());
       return Environment.getExternalStorageDirectory();
     } else {
       // using legacy external storage for output in automotive devices where tests run as
       // a secondary user has been flaky. So use local storage instead.
-      Log.i(
-          TAG,
-          "Secondary user detected. Choosing local storage as output root dir: "
-              + context.getCacheDir().getAbsolutePath());
+      if (!loggedOutputDir.getAndSet(true)) {
+        // limit log spam by only logging choice once
+        Log.d(
+            TAG,
+            "Secondary user detected. Choosing local storage as output root dir: "
+                + context.getCacheDir().getAbsolutePath());
+      }
       return context.getCacheDir();
     }
   }
