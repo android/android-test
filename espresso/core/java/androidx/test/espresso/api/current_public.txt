@@ -76,8 +76,6 @@ package androidx.test.espresso {
     method public static void setIdlingResourceTimeout(long, java.util.concurrent.TimeUnit!);
     method public static void setMasterPolicyTimeout(long, java.util.concurrent.TimeUnit!);
     method public static void setMasterPolicyTimeoutWhenDebuggerAttached(boolean);
-    method @androidx.test.annotation.ExperimentalTestApi public static void unsafeMakeIdlingResourceErrorPolicyWarning();
-    method @androidx.test.annotation.ExperimentalTestApi public static void unsafeMakeMasterPolicyWarning();
   }
 
   public final class IdlingPolicy {
@@ -721,7 +719,6 @@ package androidx.test.espresso.matcher {
     method public static org.hamcrest.Matcher<android.view.View!>! isRoot();
     method public static org.hamcrest.Matcher<android.view.View!>! isSelected();
     method public static org.hamcrest.Matcher<android.view.View!>! supportsInputMethods();
-    method @androidx.test.annotation.ExperimentalTestApi public static org.hamcrest.Matcher<android.view.View!>! thatMatchesFirst(org.hamcrest.Matcher<android.view.View!>!);
     method public static org.hamcrest.Matcher<android.view.View!>! withAlpha(float);
     method public static org.hamcrest.Matcher<android.view.View!>! withChild(org.hamcrest.Matcher<android.view.View!>!);
     method public static org.hamcrest.Matcher<android.view.View!>! withClassName(org.hamcrest.Matcher<java.lang.String!>!);

@@ -19,7 +19,6 @@ package androidx.test.espresso;
 import static androidx.test.internal.util.Checks.checkArgument;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
-import androidx.test.annotation.ExperimentalTestApi;
 import java.util.concurrent.TimeUnit;
 
 /**

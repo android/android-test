@@ -61,6 +61,9 @@ VIEW_INTERACTION = [
     "InteractionResultsHandler.java",
 ]
 
+INTERNAL_API_ANNOTATION = [
+]
+
 android_library(
     name = "view-interaction",
     srcs = VIEW_INTERACTION,
@@ -119,7 +122,7 @@ android_library(
     name = "espresso",
     srcs = glob(
         ["*.java"],
-        exclude = BASE_LAYER_INTERFACES + PUBLIC_FRAMEWORK_LAYER + ESPRESSO_GRAPH + VIEW_INTERACTION,
+        exclude = BASE_LAYER_INTERFACES + PUBLIC_FRAMEWORK_LAYER + ESPRESSO_GRAPH + VIEW_INTERACTION + INTERNAL_API_ANNOTATION,
     ),
     exports = [
         # Anything listed here is instantly available to targets that
