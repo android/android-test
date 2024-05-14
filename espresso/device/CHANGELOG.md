@@ -7,6 +7,7 @@
 **Bug Fixes**
 
 * Remove unused androidx.test.annotation dependency
+* Add support for multiple resumed activities
 
 **New Features**
 

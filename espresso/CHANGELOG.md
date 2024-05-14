@@ -17,6 +17,7 @@ The following artifacts were released:
 **Bug Fixes**
 
 * Remove unused androidx.test.annotation dependency
+* Wait for configuration changes to finish on all resumed activities before selecting root view
 
 **New Features**
 

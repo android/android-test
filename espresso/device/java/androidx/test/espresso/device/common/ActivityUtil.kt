@@ -65,6 +65,7 @@ fun getResumedActivityOrNull(): Activity? {
           TAG,
           "More than one activity was found in the RESUMED stage. Activities found: $activityNames"
         )
+        activity = activities.first()
       } else if (activities.isEmpty()) {
         Log.d(TAG, "No activity found in the RESUMED stage. Waiting up to 2 seconds for one.")
         val latch = CountDownLatch(1)

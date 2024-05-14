@@ -202,10 +202,11 @@ public final class RootViewPicker implements Provider<View> {
               + "launch the activity. (test.getActivity() or similar)?");
     }
 
-    // Wait for configuration changes to finish on the activity if there are any in progress.
-    Activity currentActivity = (Activity) resumedActivities.toArray()[0];
-    ConfigurationSynchronizationUtils.waitForConfigurationChangesOnActivity(
-        currentActivity, uiController, appContext);
+    // Wait for configuration changes to finish on all resumed activities.
+    for (Activity activity : resumedActivities) {
+      ConfigurationSynchronizationUtils.waitForConfigurationChangesOnActivity(
+          activity, uiController, appContext);
+    }
   }
 
   /** Returns the list of all non-destroyed activities. */
