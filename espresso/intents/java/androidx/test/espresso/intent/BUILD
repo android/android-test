@@ -28,7 +28,6 @@ android_library(
     deps = [
         ":precondition_checks",
         ":resolved_intent_interface",
-        "//annotation",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",

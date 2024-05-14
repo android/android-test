@@ -25,7 +25,6 @@ android_library(
     ),
     manifest = "AndroidManifest.xml",
     deps = [
-        "//annotation",
         "//core",
         "//opensource/androidx:annotation",
         "@maven//:com_google_guava_guava",

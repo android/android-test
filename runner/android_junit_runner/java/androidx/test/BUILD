@@ -38,7 +38,6 @@ android_library(
         "//runner/monitor",
     ],
     deps = [
-        "//annotation",
         "//opensource/androidx:annotation",
         "//runner/monitor",
         "//services/events/java/androidx/test/services/events",

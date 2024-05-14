@@ -15,7 +15,6 @@ maven_repository(
     name = "axt_m2repository",
     testonly = 1,
     srcs = [
-        "//annotation/java/androidx/test/annotation:annotation_maven_artifact",
         "//core/java/androidx/test/core:core_maven_artifact",
         "//espresso/accessibility/java/androidx/test/espresso/accessibility:accessibility_checks_maven_artifact",
         "//espresso/contrib/java/androidx/test/espresso/contrib:espresso_contrib_maven_artifact",

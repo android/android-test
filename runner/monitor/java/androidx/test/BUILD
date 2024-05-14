@@ -42,7 +42,6 @@ kt_android_library(
         ":compiletime_hidden_apis",
         ":errorprone_neverlink",
         ":runtime_hidden_apis",
-        "//annotation",
         "//opensource/androidx:annotation",
         "@maven//:androidx_tracing_tracing",
     ],

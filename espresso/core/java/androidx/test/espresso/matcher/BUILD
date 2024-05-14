@@ -20,7 +20,6 @@ android_library(
         "@maven//:org_hamcrest_hamcrest_library",
     ],
     deps = [
-        "//annotation",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/remote:interface",
         "//espresso/core/java/androidx/test/espresso/remote/annotation:remote_msg_annotations",

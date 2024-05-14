@@ -7,6 +7,7 @@
 **Bug Fixes**
 
 * Reduce HostedFile log spam
+* Remove unused androidx.test.annotation dependency
 
 **New Features**
 

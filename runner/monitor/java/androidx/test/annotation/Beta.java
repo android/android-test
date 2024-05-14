@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * annotation implies nothing about the quality or performance of the API in question, only the fact
  * that it is not "API-frozen."
  *
- * @deprecated Use {@link ExperimentalTestApi} instead.
+ * @deprecated unused.
  */
 @Retention(RetentionPolicy.CLASS)
 @Target({

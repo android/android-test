@@ -4,7 +4,6 @@ load(
     "//build_extensions:axt_versions.bzl",
     "ANDROIDX_JUNIT_VERSION",
     "ANDROIDX_TRUTH_VERSION",
-    "ANNOTATION_VERSION",
     "CORE_VERSION",
     "ESPRESSO_DEVICE_VERSION",
     "ESPRESSO_VERSION",
@@ -20,7 +19,6 @@ load(
 # under a given directory. Or in other words, that code in this repo is organized according to which
 # maven artifact it belongs to.
 _TARGET_TO_MAVEN_ARTIFACT = {
-    "//annotation/java/": "androidx.test:annotation:%s" % ANNOTATION_VERSION,
     "//runner/android_junit_runner/java/": "androidx.test:runner:%s" % RUNNER_VERSION,
     "//runner/rules/java/": "androidx.test:rules:%s" % RULES_VERSION,
     "//runner/rules:rules": "androidx.test:rules:%s" % RULES_VERSION,

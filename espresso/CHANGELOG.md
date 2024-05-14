@@ -16,6 +16,8 @@ The following artifacts were released:
 
 **Bug Fixes**
 
+* Remove unused androidx.test.annotation dependency
+
 **New Features**
 
 **Breaking Changes**

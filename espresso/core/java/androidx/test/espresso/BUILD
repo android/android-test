@@ -182,7 +182,6 @@ android_library(
     srcs = BASE_LAYER_INTERFACES,
     manifest = "AndroidManifest.xml",
     deps = [
-        "//annotation",
         "//espresso/core/java/androidx/test/espresso/util",
         "//opensource/androidx:annotation",
         "//runner/monitor",

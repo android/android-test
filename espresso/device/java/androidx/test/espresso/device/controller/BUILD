@@ -19,7 +19,6 @@ kt_android_library(
         "DeviceMode.kt",
     ],
     deps = [
-        "//annotation/java/androidx/test/annotation",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//opensource/androidx:annotation",
     ],

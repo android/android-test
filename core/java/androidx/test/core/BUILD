@@ -46,7 +46,6 @@ kt_android_library(
     visibility = ["//visibility:private"],
     deps = [
         ":manifest",
-        "//annotation",
         "//opensource/androidx:annotation",
         "//runner/monitor",
         "@maven//:androidx_concurrent_concurrent_futures_ktx",

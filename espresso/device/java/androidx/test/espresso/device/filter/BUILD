@@ -17,7 +17,6 @@ kt_android_library(
     testonly = 1,
     srcs = glob(["*.kt"]),
     deps = [
-        "//annotation/java/androidx/test/annotation",
         "//espresso/device/java/androidx/test/espresso/device/common",
         "//espresso/device/java/androidx/test/espresso/device/controller",
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
@@ -35,7 +34,6 @@ kt_android_library(
         "RequiresDisplayFilter.kt",
     ],
     deps = [
-        "//annotation/java/androidx/test/annotation",
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
         "//runner/android_junit_runner",
         "//runner/monitor",

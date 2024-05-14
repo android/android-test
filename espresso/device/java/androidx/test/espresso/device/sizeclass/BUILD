@@ -18,6 +18,5 @@ kt_android_library(
     testonly = 1,
     srcs = glob(["*.kt"]),
     deps = [
-        "//annotation",
     ],
 )
