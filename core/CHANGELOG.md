@@ -7,6 +7,7 @@
 **Bug Fixes**
 
 * Remove unused androidx.test.annotation dependency
+* Fix `Rect` handling in `ViewCapture` for SDK >= 34 for non root views.
 
 **New Features**
 

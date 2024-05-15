@@ -217,13 +217,7 @@ private suspend fun View.generateBitmapFromPixelCopy(
   return suspendCancellableCoroutine<Bitmap> { cont ->
     var bounds = getBoundsInSurface()
     if (rect != null) {
-      bounds =
-        Rect(
-          bounds.left + rect.left,
-          bounds.top + rect.top,
-          bounds.left + rect.right,
-          bounds.top + rect.bottom,
-        )
+      bounds = Rect(rect).apply { offset(bounds.left, bounds.top) }
     }
     val onCopyFinished =
       PixelCopy.OnPixelCopyFinishedListener { result ->
@@ -302,10 +296,17 @@ private suspend fun View.generateBitmapFromPixelCopy(
   destBitmap: Bitmap,
   rect: Rect? = null,
 ): Bitmap {
+  val boundsInWindow = getBoundsInWindow()
+  val sourceRect =
+    if (rect != null) {
+      Rect(rect).apply { offset(boundsInWindow.left, boundsInWindow.top) }
+    } else {
+      boundsInWindow
+    }
   return suspendCancellableCoroutine<Bitmap> { cont ->
     val request =
       PixelCopy.Request.Builder.ofWindow(this)
-        .setSourceRect(rect ?: getBoundsInWindow())
+        .setSourceRect(sourceRect)
         .setDestinationBitmap(destBitmap)
         .build()
     val onCopyFinished =
