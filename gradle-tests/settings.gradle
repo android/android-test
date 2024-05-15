@@ -18,17 +18,17 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         libs {
-            library('core', 'androidx.test:core:1.6.0-alpha07')
-            library('runner', 'androidx.test:runner:1.6.0-alpha08')
-            library('ext.junit', 'androidx.test.ext:junit:1.2.0-alpha05')
-            library('ext.truth', 'androidx.test.ext:truth:1.6.0-alpha05')
-            library('espresso.accessibility', 'androidx.test.espresso:espresso-accessibility:3.6.0-alpha05')
-            library('espresso.contrib', 'androidx.test.espresso:espresso-contrib:3.6.0-alpha05')
-            library('espresso.core', 'androidx.test.espresso:espresso-core:3.6.0-alpha05')
-            library('espresso.idlingresource', 'androidx.test.espresso:espresso-idling-resource:3.6.0-alpha05')
-            library('espresso.intents', 'androidx.test.espresso:espresso-intents:3.6.0-alpha05')
-            library('espresso.web', 'androidx.test.espresso:espresso-web:3.6.0-alpha05')
-            library('orchestrator', 'androidx.test:orchestrator:1.5.0-alpha05')
+            library('core', 'androidx.test:core:1.6.0-beta01')
+            library('runner', 'androidx.test:runner:1.6.0-beta01')
+            library('ext.junit', 'androidx.test.ext:junit:1.2.0-beta01')
+            library('ext.truth', 'androidx.test.ext:truth:1.6.0-beta01')
+            library('espresso.accessibility', 'androidx.test.espresso:espresso-accessibility:3.6.0-beta01')
+            library('espresso.contrib', 'androidx.test.espresso:espresso-contrib:3.6.0-beta01')
+            library('espresso.core', 'androidx.test.espresso:espresso-core:3.6.0-beta01')
+            library('espresso.idlingresource', 'androidx.test.espresso:espresso-idling-resource:3.6.0-beta01')
+            library('espresso.intents', 'androidx.test.espresso:espresso-intents:3.6.0-beta01')
+            library('espresso.web', 'androidx.test.espresso:espresso-web:3.6.0-beta01')
+            library('orchestrator', 'androidx.test:orchestrator:1.5.0-beta01')
 
         }
     }
