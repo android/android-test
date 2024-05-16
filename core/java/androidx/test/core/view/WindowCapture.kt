@@ -25,7 +25,6 @@ import android.os.Looper
 import android.view.PixelCopy
 import android.view.Window
 import androidx.annotation.RequiresApi
-import androidx.concurrent.futures.SuspendToFutureAdapter
 import androidx.test.platform.graphics.HardwareRendererCompat
 import com.google.common.util.concurrent.ListenableFuture
 import kotlin.coroutines.resumeWithException
