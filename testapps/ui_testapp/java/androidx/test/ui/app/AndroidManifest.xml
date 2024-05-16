@@ -39,8 +39,7 @@
       android:label="UI Test App"
       android:name="androidx.multidex.MultiDexApplication"
       android:supportsRtl="true"
-      android:usesCleartextTraffic="true"
-      android:taskAffinity="" >
+      android:usesCleartextTraffic="true" >
     <activity android:exported="true"
         android:label="UI Test App"
         android:name=".MainActivity">

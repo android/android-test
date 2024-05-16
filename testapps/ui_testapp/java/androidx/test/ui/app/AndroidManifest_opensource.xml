@@ -33,8 +33,7 @@
   <application
       android:icon="@drawable/ic_launcher"
       android:label="UI Test App"
-      android:supportsRtl="true"
-      android:taskAffinity="">
+      android:supportsRtl="true">
     <activity android:exported="true"
         android:label="UI Test App"
         android:name=".MainActivity">
