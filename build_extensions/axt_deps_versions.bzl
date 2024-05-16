@@ -1,30 +1,12 @@
-"""Defines current AXT versions and dependencies."""
-
-# AXT versions listed as next # last published, stable
-RUNNER_VERSION = "1.6.0-alpha06"  # 1.6.0-alpha05, 1.5.1
-RULES_VERSION = "1.6.0-alpha03"  # 1.6.0-alpha02, 1.5.0
-MONITOR_VERSION = "1.7.0-alpha04"  # 1.7.0-alpha03, 1.6.0
-ESPRESSO_VERSION = "3.6.0-alpha03"  # 3.6.0-alpha02, 3.5.0
-CORE_VERSION = "1.6.0-alpha05"  # 1.6.0-alpha04, 1.5.0
-ESPRESSO_DEVICE_VERSION = "1.0.0-alpha08"  # 1.0.0-alpha07
-ANDROIDX_JUNIT_VERSION = "1.2.0-alpha03"  # 1.2.0-alpha02, 1.1.4
-ANDROIDX_TRUTH_VERSION = "1.6.0-alpha03"  # 1.6.0-alpha02, 1.5.0
-ANNOTATION_VERSION = "1.1.0-alpha03"  # 1.1.0-alpha02, 1.0.1
-ORCHESTRATOR_VERSION = "1.5.0-alpha03"  # 1.5.0-alpha02, 1.4.2
-
-SERVICES_VERSION = "1.5.0-alpha03"  # 1.5.0-alpha02, 1.4.2
-
-# Full maven artifact strings for apks.
-SERVICES_APK_ARTIFACT = "androidx.test.services:test-services:%s" % SERVICES_VERSION
-ORCHESTRATOR_ARTIFACT = "androidx.test:orchestrator:%s" % ORCHESTRATOR_VERSION
+"""Defines versions of androidx.test dependencies."""
 
 # Maven dependency versions
 ANDROIDX_ANNOTATION_VERSION = "1.7.0-beta01"
 ANDROIDX_ANNOTATION_EXPERIMENTAL_VERSION = "1.1.0"
 ANDROIDX_COMPAT_VERSION = "1.3.1"
 
-# TODO(i336855276): update to beta/stable release when available
-ANDROIDX_CONCURRENT_VERSION = "1.2.0-alpha03"
+# TODO(i336855276): update to 1.2.0 release when available
+ANDROIDX_CONCURRENT_VERSION = "1.1.0"
 ANDROIDX_CORE_VERSION = "1.6.0"
 ANDROIDX_FRAGMENT_VERSION = "1.3.6"
 ANDROIDX_CURSOR_ADAPTER_VERSION = "1.0.0"
