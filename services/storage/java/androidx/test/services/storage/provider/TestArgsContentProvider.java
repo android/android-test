@@ -125,6 +125,7 @@ public final class TestArgsContentProvider extends ContentProvider {
             TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE
                 + TestStorageConstants.TEST_ARGS_FILE_NAME);
     if (!testArgsFile.exists()) {
+      Log.i(TAG, "Test args file not found at " + testArgsFile.getAbsolutePath());
       return TestArguments.getDefaultInstance();
     }
     try {

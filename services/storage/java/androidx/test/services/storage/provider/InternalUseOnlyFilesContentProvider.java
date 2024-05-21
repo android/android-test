@@ -25,8 +25,9 @@ public final class InternalUseOnlyFilesContentProvider extends AbstractFileConte
 
   @Override
   protected File getHostedDirectory(Context context) {
+    // use input root directory here, as TestArgsContentProvider also uses this directory
     return new File(
-        HostedFile.getOutputRootDirectory(context),
+        HostedFile.getInputRootDirectory(context),
         TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE);
   }
 

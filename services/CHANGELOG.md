@@ -6,6 +6,8 @@
 
 **Bug Fixes**
 
+* TestStorage: Use input directory location for internal files 
+
 **New Features**
 
 **Breaking Changes**
