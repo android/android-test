@@ -30,7 +30,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 /** Collection of utility methods for interacting with activities. */
-private val TAG = "ActivityUtil"
+private const val TAG = "ActivityUtil"
 
 /**
  * Detects if configuration changes are handled by the activity.
@@ -42,7 +42,7 @@ private val TAG = "ActivityUtil"
  */
 @RestrictTo(Scope.LIBRARY)
 fun Activity.isConfigurationChangeHandled(configBit: Int): Boolean {
-  val activityInfo = this.getPackageManager().getActivityInfo(this.getComponentName(), 0)
+  val activityInfo = this.packageManager.getActivityInfo(this.componentName, 0)
   return (activityInfo.configChanges and configBit) != 0
 }
 
@@ -60,11 +60,12 @@ fun getResumedActivityOrNull(): Activity? {
       val activities: Collection<Activity> =
         ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED)
       if (activities.size > 1) {
-        val activityNames = activities.map { it.getLocalClassName() }
+        val activityNames = activities.map { it.localClassName }
         Log.d(
           TAG,
-          "More than one activity was found in the RESUMED stage. Activities found: $activityNames"
+          "More than one activity was found in the RESUMED stage. Activities found: $activityNames",
         )
+        activity = activities.first()
       } else if (activities.isEmpty()) {
         Log.d(TAG, "No activity found in the RESUMED stage. Waiting up to 2 seconds for one.")
         val latch = CountDownLatch(1)

@@ -6,6 +6,8 @@
 
 **Bug Fixes**
 
+* Add support for setting screen orientation with multiple resumed activities
+
 **New Features**
 
 **Breaking Changes**
