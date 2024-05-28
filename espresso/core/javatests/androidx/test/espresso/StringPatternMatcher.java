@@ -6,16 +6,11 @@ import org.hamcrest.core.SubstringMatcher;
 class StringPatternMatcher extends SubstringMatcher {
 
   public StringPatternMatcher(String substringRegexPattern) {
-    super(substringRegexPattern);
+    super(/* relationship= */ "matching", /* ignoringCase= */ false, substringRegexPattern);
   }
 
   @Override
   protected boolean evalSubstringOf(String s) {
     return s.matches(substring);
-  }
-
-  @Override
-  protected String relationship() {
-    return "matching";
   }
 }
