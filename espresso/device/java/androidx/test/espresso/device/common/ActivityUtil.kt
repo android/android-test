@@ -69,20 +69,19 @@ fun getResumedActivityOrNull(): Activity? {
       } else if (activities.isEmpty()) {
         Log.d(TAG, "No activity found in the RESUMED stage. Waiting up to 2 seconds for one.")
         val latch = CountDownLatch(1)
-        ActivityLifecycleMonitorRegistry.getInstance()
-          .addLifecycleCallback(
-            object : ActivityLifecycleCallback {
-              override fun onActivityLifecycleChanged(newActivity: Activity, stage: Stage) {
-                if (stage == Stage.RESUMED) {
-                  Log.d(TAG, "Found ${newActivity.getLocalClassName()} in the RESUMED stage.")
-                  ActivityLifecycleMonitorRegistry.getInstance().removeLifecycleCallback(this)
-                  latch.countDown()
-                  activity = newActivity
-                }
+        val callback =
+          object : ActivityLifecycleCallback {
+            override fun onActivityLifecycleChanged(newActivity: Activity, stage: Stage) {
+              if (stage == Stage.RESUMED) {
+                Log.d(TAG, "Found ${newActivity.localClassName} in the RESUMED stage.")
+                latch.countDown()
+                activity = newActivity
               }
             }
-          )
+          }
+        ActivityLifecycleMonitorRegistry.getInstance().addLifecycleCallback(callback)
         latch.await(2, TimeUnit.SECONDS)
+        ActivityLifecycleMonitorRegistry.getInstance().removeLifecycleCallback(callback)
       } else {
         activity = activities.elementAtOrNull(0)
       }

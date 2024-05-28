@@ -91,50 +91,57 @@ internal class ScreenOrientationAction(val screenOrientation: ScreenOrientation)
       if (screenOrientation == ScreenOrientation.LANDSCAPE) Configuration.ORIENTATION_LANDSCAPE
       else Configuration.ORIENTATION_PORTRAIT
 
+    val componentCallback =
+      object : ComponentCallbacks {
+        override fun onConfigurationChanged(newConfig: Configuration) {
+          if (newConfig.orientation == requestedOrientation) {
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+              Log.d(TAG, "Application's orientation was set to the requested orientation.")
+            }
+            latch.countDown()
+          }
+        }
+
+        @Deprecated("Deprecated in API 34") override fun onLowMemory() {}
+      }
+
+    val activityLifecycleCallback =
+      object : ActivityLifecycleCallback {
+        override fun onActivityLifecycleChanged(activity: Activity, stage: Stage) {
+          if (
+            activity.localClassName == currentActivityName &&
+              stage == Stage.RESUMED &&
+              activity.resources.configuration.orientation == requestedOrientation
+          ) {
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+              Log.d(TAG, "Test activity was resumed in the requested orientation.")
+            }
+            latch.countDown()
+          }
+        }
+      }
+
     if (configChangesHandled) {
       Log.d(TAG, "The current activity handles configuration changes.")
-      context.registerComponentCallbacks(
-        object : ComponentCallbacks {
-          override fun onConfigurationChanged(newConfig: Configuration) {
-            if (newConfig.orientation == requestedOrientation) {
-              if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "Application's orientation was set to the requested orientation.")
-              }
-              context.unregisterComponentCallbacks(this)
-              latch.countDown()
-            }
-          }
-
-          override fun onLowMemory() {}
-        }
-      )
+      context.registerComponentCallbacks(componentCallback)
     } else {
       Log.d(
         TAG,
         "The current activity does not handle configuration changes and will be recreated when " +
-          "its orientation changes."
+          "its orientation changes.",
       )
-      ActivityLifecycleMonitorRegistry.getInstance()
-        .addLifecycleCallback(
-          object : ActivityLifecycleCallback {
-            override fun onActivityLifecycleChanged(activity: Activity, stage: Stage) {
-              if (
-                activity.localClassName == currentActivityName &&
-                  stage == Stage.RESUMED &&
-                  activity.resources.configuration.orientation == requestedOrientation
-              ) {
-                if (Log.isLoggable(TAG, Log.DEBUG)) {
-                  Log.d(TAG, "Test activity was resumed in the requested orientation.")
-                }
-                ActivityLifecycleMonitorRegistry.getInstance().removeLifecycleCallback(this)
-                latch.countDown()
-              }
-            }
-          }
-        )
+      ActivityLifecycleMonitorRegistry.getInstance().addLifecycleCallback(activityLifecycleCallback)
     }
+
     deviceController.setScreenOrientation(screenOrientation.getOrientation())
     latch.await(5, TimeUnit.SECONDS)
+
+    if (configChangesHandled) {
+      context.unregisterComponentCallbacks(componentCallback)
+    } else {
+      ActivityLifecycleMonitorRegistry.getInstance()
+        .removeLifecycleCallback(activityLifecycleCallback)
+    }
 
     // Restore accelerometer rotation setting if it was changed
     if (
