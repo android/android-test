@@ -2,8 +2,8 @@
 
 # Script to cherry pick a commit to a 'in progress' release branch
 #
-# 
-# Usage: 
+#
+# Usage:
 # export RELEASE_BRANCH=axt_XXX_release_branch # if not already defined
 # bash tools/release/cherrypick_to_release_branch.sh commit_hash
 
