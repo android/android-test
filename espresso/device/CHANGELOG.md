@@ -6,9 +6,6 @@
 
 **Bug Fixes**
 
-* Add support for setting screen orientation with multiple resumed activities
-* Fix concurrent modification issue when setting screen orientation and fold modes
-
 **New Features**
 
 **Breaking Changes**
