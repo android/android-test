@@ -22,6 +22,7 @@ kt_android_library(
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
         "//runner/android_junit_runner",
         "//runner/monitor",
+        "@maven//:androidx_window_window_core",
         "@maven//:junit_junit",
     ],
 )
@@ -37,6 +38,7 @@ kt_android_library(
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
         "//runner/android_junit_runner",
         "//runner/monitor",
+        "@maven//:androidx_window_window_core",
         "@maven//:junit_junit",
     ],
 )

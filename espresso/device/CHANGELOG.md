@@ -14,6 +14,7 @@
 **Breaking Changes**
 
 **API Changes**
+* Update WidthSizeClass and HeightSizeClass to use androidx.window size classes
 
 **Breaking API Changes**
 

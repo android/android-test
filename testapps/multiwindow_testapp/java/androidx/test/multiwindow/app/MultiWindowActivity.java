@@ -23,6 +23,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import androidx.window.core.layout.WindowHeightSizeClass;
+import androidx.window.core.layout.WindowSizeClass;
+import androidx.window.core.layout.WindowWidthSizeClass;
 
 /** Activity that updates a TextView when entering or exiting multi-window mode. */
 public class MultiWindowActivity extends Activity {
@@ -57,31 +60,36 @@ public class MultiWindowActivity extends Activity {
 
   private void computeWindowSizeClasses() {
     TextView screenWidthTextView = (TextView) findViewById(R.id.screen_width_display_size);
+    TextView screenHeightTextView = (TextView) findViewById(R.id.screen_height_display_size);
+
     float width =
         this.getResources().getDisplayMetrics().widthPixels
             / this.getResources().getDisplayMetrics().density;
+    float height =
+        this.getResources().getDisplayMetrics().heightPixels
+            / this.getResources().getDisplayMetrics().density;
+    WindowSizeClass sizeClass = WindowSizeClass.compute(width, height);
     String screenWidthText;
-    if (width < 600f) {
+    WindowWidthSizeClass widthSizeClass = sizeClass.getWindowWidthSizeClass();
+    if (widthSizeClass.equals(WindowWidthSizeClass.COMPACT)) {
       screenWidthText = "Compact width";
-    } else if (width < 840f) {
+    } else if (widthSizeClass.equals(WindowWidthSizeClass.MEDIUM)) {
       screenWidthText = "Medium width";
     } else {
       screenWidthText = "Expanded width";
     }
-    screenWidthTextView.setText(screenWidthText);
 
-    TextView screenHeightTextView = (TextView) findViewById(R.id.screen_height_display_size);
-    float height =
-        this.getResources().getDisplayMetrics().heightPixels
-            / this.getResources().getDisplayMetrics().density;
+    WindowHeightSizeClass heightSizeClass = sizeClass.getWindowHeightSizeClass();
     String screenHeightText;
-    if (height < 480f) {
+    if (heightSizeClass.equals(WindowHeightSizeClass.COMPACT)) {
       screenHeightText = "Compact height";
-    } else if (height < 900f) {
+    } else if (heightSizeClass.equals(WindowHeightSizeClass.MEDIUM)) {
       screenHeightText = "Medium height";
     } else {
       screenHeightText = "Expanded height";
     }
+
+    screenWidthTextView.setText(screenWidthText);
     screenHeightTextView.setText(screenHeightText);
   }
 }

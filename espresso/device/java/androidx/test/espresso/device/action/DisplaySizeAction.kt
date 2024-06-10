@@ -37,7 +37,7 @@ import kotlin.math.roundToInt
 /** Action to set the test device to the provided display size. */
 internal class DisplaySizeAction(
   val widthDisplaySize: WidthSizeClass,
-  val heightDisplaySize: HeightSizeClass
+  val heightDisplaySize: HeightSizeClass,
 ) : DeviceAction {
   override fun perform(deviceController: DeviceController) {
     if (getDeviceApiLevel() < 24) {
@@ -48,12 +48,11 @@ internal class DisplaySizeAction(
 
     val currentActivity = getResumedActivityOrNull()
     if (currentActivity != null) {
-      val displaySize = calculateCurrentDisplayWidthAndHeightDp(currentActivity)
-      val startingWidth = displaySize.first
-      val startingHeight = displaySize.second
+      val (startingWidthDp, startingHeightDp) =
+        calculateCurrentDisplayWidthAndHeightDp(currentActivity)
       if (
-        widthDisplaySize == WidthSizeClass.compute(startingWidth) &&
-          heightDisplaySize == HeightSizeClass.compute(startingHeight)
+        WidthSizeClass.compute(startingWidthDp) == widthDisplaySize &&
+          HeightSizeClass.compute(startingHeightDp) == heightDisplaySize
       ) {
         Log.d(TAG, "Device display is already the requested size, no changes needed.")
         return
@@ -65,10 +64,10 @@ internal class DisplaySizeAction(
         object : View(currentActivity) {
           override fun onConfigurationChanged(newConfig: Configuration?) {
             super.onConfigurationChanged(newConfig)
-            val currentDisplaySize = calculateCurrentDisplayWidthAndHeightDp(currentActivity)
+            val (newWidthDp, newHeightDp) = calculateCurrentDisplayWidthAndHeightDp(currentActivity)
             if (
-              WidthSizeClass.compute(currentDisplaySize.first) == widthDisplaySize &&
-                HeightSizeClass.compute(currentDisplaySize.second) == heightDisplaySize
+              WidthSizeClass.compute(newWidthDp) == widthDisplaySize &&
+                HeightSizeClass.compute(newHeightDp) == heightDisplaySize
             ) {
               latch.countDown()
             }
@@ -78,21 +77,21 @@ internal class DisplaySizeAction(
         currentActivity.getWindow().findViewById(android.R.id.content) as ViewGroup
       currentActivity.runOnUiThread { container.addView(currentActivityView) }
 
-      val widthDp = WidthSizeClass.getWidthDpInSizeClass(widthDisplaySize)
-      val heightDp = HeightSizeClass.getHeightDpInSizeClass(heightDisplaySize)
+      val widthDpToSet = WidthSizeClass.getWidthDpInSizeClass(widthDisplaySize)
+      val heightDpToSet = HeightSizeClass.getHeightDpInSizeClass(heightDisplaySize)
 
-      executeShellCommand("wm size ${widthDp}dpx${heightDp}dp")
+      executeShellCommand("wm size ${widthDpToSet}dpx${heightDpToSet}dp")
 
       latch.await(5, TimeUnit.SECONDS)
       currentActivity.runOnUiThread { container.removeView(currentActivityView) }
 
-      val finalSize = calculateCurrentDisplayWidthAndHeightDp(currentActivity)
+      val (finalWidthDp, finalHeightDp) = calculateCurrentDisplayWidthAndHeightDp(currentActivity)
       if (
-        WidthSizeClass.compute(finalSize.first) != widthDisplaySize ||
-          HeightSizeClass.compute(finalSize.second) != heightDisplaySize
+        WidthSizeClass.compute(finalWidthDp) != widthDisplaySize ||
+          HeightSizeClass.compute(finalHeightDp) != heightDisplaySize
       ) {
         // Display could not be set to the requested size, reset to starting size
-        executeShellCommand("wm size ${startingWidth}dpx${startingHeight}dp")
+        executeShellCommand("wm size ${startingWidthDp}dpx${startingHeightDp}dp")
         throw UnsupportedDeviceOperationException(
           "Device could not be set to the requested display size."
         )

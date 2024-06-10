@@ -16,6 +16,10 @@
 
 package androidx.test.espresso.device.sizeclass
 
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.window.core.layout.WindowHeightSizeClass
+import androidx.window.core.layout.WindowSizeClass
+
 /**
  * A class to create buckets for the height of a window.
  *
@@ -23,41 +27,16 @@ package androidx.test.espresso.device.sizeclass
  * https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes.
  */
 public class HeightSizeClass
-private constructor(
-  private val lowerBound: Int,
-  internal val upperBound: Int,
-  private val description: String
-) {
-  override fun toString(): String {
-    return description
-  }
-
-  override fun equals(other: Any?): Boolean {
-    if (this === other) return true
-    if (javaClass != other?.javaClass) return false
-    other as HeightSizeClass
-    if (lowerBound != other.lowerBound) return false
-    if (upperBound != other.upperBound) return false
-    if (description != other.description) return false
-    return true
-  }
-
-  override fun hashCode(): Int {
-    var result = lowerBound
-    result = 31 * result + upperBound
-    result = 31 * result + description.hashCode()
-    return result
-  }
-
+private constructor(private val windowHeightSizeClass: WindowHeightSizeClass) {
   public companion object {
     /** A bucket to represent a compact height. One use-case is a phone that is in landscape. */
-    @JvmField public val COMPACT: HeightSizeClass = HeightSizeClass(0, 480, "COMPACT")
+    @JvmField public val COMPACT: HeightSizeClass = HeightSizeClass(WindowHeightSizeClass.COMPACT)
     /** A bucket to represent a medium height. One use-case is a phone in portrait or a tablet. */
-    @JvmField public val MEDIUM: HeightSizeClass = HeightSizeClass(480, 900, "MEDIUM")
+    @JvmField public val MEDIUM: HeightSizeClass = HeightSizeClass(WindowHeightSizeClass.MEDIUM)
     /**
      * A bucket to represent an expanded height window. One use-case is a tablet or a desktop app.
      */
-    @JvmField public val EXPANDED: HeightSizeClass = HeightSizeClass(900, Int.MAX_VALUE, "EXPANDED")
+    @JvmField public val EXPANDED: HeightSizeClass = HeightSizeClass(WindowHeightSizeClass.EXPANDED)
 
     /**
      * Returns a recommended [HeightSizeClass] for the height of a window given the height in DP.
@@ -68,12 +47,17 @@ private constructor(
      */
     @JvmStatic
     public fun compute(dpHeight: Int): HeightSizeClass {
-      return when {
-        dpHeight < COMPACT.lowerBound -> {
-          throw IllegalArgumentException("Negative size: $dpHeight")
-        }
-        dpHeight < COMPACT.upperBound -> COMPACT
-        dpHeight < MEDIUM.upperBound -> MEDIUM
+      if (dpHeight < 0) {
+        throw IllegalArgumentException("Negative size: $dpHeight")
+      }
+      val instrumentation = InstrumentationRegistry.getInstrumentation()
+      val displayMetrics = instrumentation.getTargetContext().getResources().displayMetrics
+      val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+      val heightSizeClass =
+        WindowSizeClass.compute(dpWidth, dpHeight.toFloat()).windowHeightSizeClass
+      return when (heightSizeClass) {
+        WindowHeightSizeClass.COMPACT -> COMPACT
+        WindowHeightSizeClass.MEDIUM -> MEDIUM
         else -> EXPANDED
       }
     }
@@ -111,7 +95,7 @@ private constructor(
     public enum class HeightSizeClassEnum(val description: String) {
       COMPACT("COMPACT"),
       MEDIUM("MEDIUM"),
-      EXPANDED("EXPANDED")
+      EXPANDED("EXPANDED"),
     }
   }
 }

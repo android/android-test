@@ -104,6 +104,7 @@ maven_install(
         "androidx.viewpager:viewpager:" + ANDROIDX_VIEWPAGER_VERSION,
         "androidx.window:window:" + ANDROIDX_WINDOW_VERSION,
         "androidx.window:window-java:" + ANDROIDX_WINDOW_VERSION,
+        "androidx.window:window-core:" + ANDROIDX_WINDOW_VERSION,
         "aopalliance:aopalliance:1.0",
         "com.android.tools.lint:lint-api:30.1.0",
         "com.android.tools.lint:lint-checks:30.1.0",

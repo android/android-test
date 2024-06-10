@@ -1,6 +1,5 @@
 # Description:
 #   Size classes
-#   TODO(b/236387720): Replace these classes with core window module size classes when available
 
 load("//build_extensions:kt_android_library.bzl", "kt_android_library")
 
@@ -18,5 +17,7 @@ kt_android_library(
     testonly = 1,
     srcs = glob(["*.kt"]),
     deps = [
+        "//runner/monitor",
+        "@maven//:androidx_window_window_core",
     ],
 )
