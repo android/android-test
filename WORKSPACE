@@ -67,6 +67,7 @@ load(
     "GUAVA_VERSION",
     "JUNIT_VERSION",
     "UIAUTOMATOR_VERSION",
+    "ATF_VERSION"
 )
 
 # gRPC
@@ -129,7 +130,7 @@ maven_install(
                 ),
             ],
             group = "com.google.android.apps.common.testing.accessibility.framework",
-            version = "3.1",
+            version = ATF_VERSION,
         ),
         "com.google.android.material:material:" + GOOGLE_MATERIAL_VERSION,
         "com.google.auto.value:auto-value:1.5.1",
