@@ -27,15 +27,11 @@ maven_repository(
         "//espresso/remote/java/androidx/test/espresso/remote:espresso_remote_maven_artifact",
         "//espresso/web/java/androidx/test/espresso/web:espresso_web_maven_artifact",
         "//ext/junit/java/androidx/test/ext/junit:junit_maven_artifact",
-        "//ext/truth/java/androidx/test/ext/truth:truth_maven_artifact",
         "//ktx/core/java/androidx/test/core:core_maven_artifact",
         "//ktx/ext/junit/java/androidx/test/ext/junit:junit_maven_artifact",
         "//runner/android_junit_runner/java/androidx/test:runner_maven_artifact",
-        "//runner/android_test_orchestrator/stubapp:orchestrator_release_maven_artifact",
         "//runner/monitor/java/androidx/test:monitor_maven_artifact",
         "//runner/rules/java/androidx/test:rules_maven_artifact",
-        "//services:test_services_maven_artifact",
-        "//services/storage/java/androidx/test/services/storage:test_storage_maven_artifact",
     ],
 )
 
