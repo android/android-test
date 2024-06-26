@@ -6,6 +6,8 @@
 
 **Bug Fixes**
 
+* Catch and log NoSuchMethodError on forceEnableAppTracing calls
+
 **New Features**
 
 **Breaking Changes**
