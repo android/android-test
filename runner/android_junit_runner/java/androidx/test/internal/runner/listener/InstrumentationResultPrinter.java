@@ -44,7 +44,7 @@ import org.junit.runner.notification.Failure;
  */
 public class InstrumentationResultPrinter extends InstrumentationRunListener {
 
-  private static final String TAG = "InstrumentationResultPrinter";
+  private static final String TAG = "InstrResultPrinter";
 
   /**
    * This value, if stored with key {@link android.app.Instrumentation#REPORT_KEY_IDENTIFIER},
@@ -152,14 +152,12 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
 
   @Override
   public void testFailure(Failure failure) throws Exception {
-    boolean shouldCallFinish = false;
-    if (!isAnyTestStarted()) {
-      // Junit failed during initialization and testStarted was never called. For example, an
-      // exception was thrown in @BeforeClass method. We must artificially call testStarted and
-      // testFinished in order to print a descriptive result that external tools (like Studio) can
-      // understand.
+    // getMethodName() == null when an exception is thrown during @BeforeClass or @AfterClass.
+    // No matching testStart() / testFinish() is emitted, so simulate them here for the sake of
+    // instrumentation consumers.
+    boolean shouldCallFinish = failure.getDescription().getMethodName() == null;
+    if (shouldCallFinish) {
       testStarted(failure.getDescription());
-      shouldCallFinish = true;
     }
     testResultCode = REPORT_VALUE_RESULT_FAILURE;
     reportFailure(failure);

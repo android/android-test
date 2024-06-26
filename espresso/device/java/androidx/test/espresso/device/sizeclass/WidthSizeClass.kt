@@ -16,6 +16,10 @@
 
 package androidx.test.espresso.device.sizeclass
 
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.window.core.layout.WindowSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
+
 /**
  * A class to create buckets for the width of a window.
  *
@@ -23,42 +27,18 @@ package androidx.test.espresso.device.sizeclass
  * https://developer.android.com/guide/topics/large-screens/support-different-screen-sizes.
  */
 public class WidthSizeClass
-private constructor(
-  private val lowerBound: Int,
-  internal val upperBound: Int,
-  private val description: String
-) {
-  override fun toString(): String {
-    return description
-  }
-
-  override fun equals(other: Any?): Boolean {
-    if (this === other) return true
-    if (javaClass != other?.javaClass) return false
-    other as WidthSizeClass
-    if (lowerBound != other.lowerBound) return false
-    if (upperBound != other.upperBound) return false
-    if (description != other.description) return false
-    return true
-  }
-
-  override fun hashCode(): Int {
-    var result = lowerBound
-    result = 31 * result + upperBound
-    result = 31 * result + description.hashCode()
-    return result
-  }
+private constructor(private val windowWidthSizeClass: WindowWidthSizeClass) {
 
   public companion object {
     /** A bucket to represent a compact width window. One use-case is a phone in portrait. */
-    @JvmField public val COMPACT: WidthSizeClass = WidthSizeClass(0, 600, "COMPACT")
+    @JvmField public val COMPACT: WidthSizeClass = WidthSizeClass(WindowWidthSizeClass.COMPACT)
     /**
      * A bucket to represent a medium width window. Some use-cases are a phone in landscape or a
      * tablet.
      */
-    @JvmField public val MEDIUM: WidthSizeClass = WidthSizeClass(600, 840, "MEDIUM")
+    @JvmField public val MEDIUM: WidthSizeClass = WidthSizeClass(WindowWidthSizeClass.MEDIUM)
     /** A bucket to represent an expanded width window. One use-case is a desktop app. */
-    @JvmField public val EXPANDED: WidthSizeClass = WidthSizeClass(840, Int.MAX_VALUE, "EXPANDED")
+    @JvmField public val EXPANDED: WidthSizeClass = WidthSizeClass(WindowWidthSizeClass.EXPANDED)
 
     /**
      * Returns a recommended [WidthSizeClass] for the width of a window given the width in DP.
@@ -69,12 +49,16 @@ private constructor(
      */
     @JvmStatic
     public fun compute(dpWidth: Int): WidthSizeClass {
-      return when {
-        dpWidth < COMPACT.lowerBound -> {
-          throw IllegalArgumentException("Negative size: $dpWidth")
-        }
-        dpWidth < COMPACT.upperBound -> COMPACT
-        dpWidth < MEDIUM.upperBound -> MEDIUM
+      if (dpWidth < 0) {
+        throw IllegalArgumentException("Negative size: $dpWidth")
+      }
+      val instrumentation = InstrumentationRegistry.getInstrumentation()
+      val displayMetrics = instrumentation.getTargetContext().getResources().displayMetrics
+      val dpHeight = displayMetrics.heightPixels / displayMetrics.density
+      val widthSizeClass = WindowSizeClass.compute(dpWidth.toFloat(), dpHeight).windowWidthSizeClass
+      return when (widthSizeClass) {
+        WindowWidthSizeClass.COMPACT -> COMPACT
+        WindowWidthSizeClass.MEDIUM -> MEDIUM
         else -> EXPANDED
       }
     }

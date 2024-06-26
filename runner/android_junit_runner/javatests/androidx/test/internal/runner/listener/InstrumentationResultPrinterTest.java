@@ -23,11 +23,17 @@ import static junit.framework.Assert.assertTrue;
 import android.os.Bundle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
+import java.util.ArrayList;
+import java.util.List;
 import junit.framework.Assert;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.Computer;
 import org.junit.runner.Description;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Request;
 import org.junit.runner.RunWith;
-import org.junit.runner.notification.Failure;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
@@ -62,27 +68,50 @@ public class InstrumentationResultPrinterTest {
     assertTrue(resultBundle[0].containsKey(REPORT_KEY_STACK));
   }
 
+  private static class TestInstrumentationResultPrinter extends InstrumentationResultPrinter {
+    final List<String> resultsLog = new ArrayList<>();
+
+    @Override
+    public void sendStatus(int code, Bundle bundle) {
+      resultsLog.add(
+          String.format(
+              "code=%s, name=%s#%s",
+              code,
+              bundle.getString(REPORT_KEY_NAME_CLASS),
+              bundle.getString(REPORT_KEY_NAME_TEST)));
+    }
+  }
+
+  public static class ThrowingTest {
+    @BeforeClass
+    public static void setUpClass() {
+      throw new RuntimeException();
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+      throw new RuntimeException();
+    }
+
+    @Test
+    public void emptyTest() {}
+  }
+
   @Test
-  public void verifyFailureDescriptionPropagatedToStartAndFinishMethods() throws Exception {
-    Description[] descriptions = new Description[2];
-    InstrumentationResultPrinter intrResultPrinter =
-        new InstrumentationResultPrinter() {
-          @Override
-          public void testStarted(Description description) throws Exception {
-            descriptions[0] = description;
-          }
+  public void verifyBeforeClassExceptionsReported() throws Exception {
+    JUnitCore core = new JUnitCore();
+    var intrResultPrinter = new TestInstrumentationResultPrinter();
+    core.addListener(intrResultPrinter);
+    Request testRequest = Request.classes(new Computer(), new Class<?>[] {ThrowingTest.class});
+    core.run(testRequest);
 
-          @Override
-          public void testFinished(Description description) throws Exception {
-            descriptions[1] = description;
-          }
-        };
-
-    Description d = Description.createTestDescription(this.getClass(), "Failure Description");
-    Failure testFailure = new Failure(d, new Exception());
-    intrResultPrinter.testFailure(testFailure);
-
-    assertEquals(d, descriptions[0]);
-    assertEquals(d, descriptions[1]);
+    String className = ThrowingTest.class.getName();
+    assertEquals(
+        List.of(
+            "code=1, name=" + className + "#null",
+            "code=-2, name=" + className + "#null",
+            "code=1, name=" + className + "#null",
+            "code=-2, name=" + className + "#null"),
+        intrResultPrinter.resultsLog);
   }
 }

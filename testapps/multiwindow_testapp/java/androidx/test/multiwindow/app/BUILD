@@ -27,6 +27,7 @@ jetify_android_library(
     deps = [
         "//opensource/androidx:annotation",
         "@maven//:androidx_appcompat_appcompat",
+        "@maven//:androidx_window_window_core",
     ],
 )
 

@@ -6,6 +6,8 @@
 
 **Bug Fixes**
 
+* Exceptions during `@AfterClass` were not being reported via `InstrumentationResultPrinter`.
+
 **New Features**
 
 **Breaking Changes**

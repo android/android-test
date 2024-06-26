@@ -16,10 +16,13 @@
 package androidx.test.espresso.device.filter
 
 import android.app.Instrumentation
-import androidx.test.espresso.device.sizeclass.HeightSizeClass
-import androidx.test.espresso.device.sizeclass.WidthSizeClass
+import androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum
+import androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum
 import androidx.test.filters.AbstractFilter
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.window.core.layout.WindowHeightSizeClass
+import androidx.window.core.layout.WindowSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import org.junit.runner.Description
 
 /**
@@ -37,10 +40,9 @@ internal class RequiresDisplayFilter(
 
     if (!annotations.isEmpty() && annotations[0] is RequiresDisplay) {
       val requiresDisplay: RequiresDisplay = annotations[0] as RequiresDisplay
-      return requiresDisplay.widthSizeClass ==
-        WidthSizeClass.getEnum(WidthSizeClass.compute(getWidthDp())) &&
-        requiresDisplay.heightSizeClass ==
-          HeightSizeClass.getEnum(HeightSizeClass.compute(getHeightDp()))
+      val windowSize = WindowSizeClass.compute(getWidthDp(), getHeightDp())
+      return requiresDisplay.widthSizeClass == getWidthEnum(windowSize.windowWidthSizeClass) &&
+        requiresDisplay.heightSizeClass == getHeightEnum(windowSize.windowHeightSizeClass)
     } else {
       return true // no RequiresDisplay annotation, run the test
     }
@@ -51,14 +53,30 @@ internal class RequiresDisplayFilter(
   }
 
   /** Returns the current screen width in dp */
-  private fun getWidthDp(): Int {
+  private fun getWidthDp(): Float {
     val displayMetrics = instrumentation.getTargetContext().getResources().displayMetrics
-    return (displayMetrics.widthPixels / displayMetrics.density).toInt()
+    return (displayMetrics.widthPixels / displayMetrics.density)
   }
 
   /** Returns the current screen height in dp */
-  private fun getHeightDp(): Int {
+  private fun getHeightDp(): Float {
     val displayMetrics = instrumentation.getTargetContext().getResources().displayMetrics
-    return (displayMetrics.heightPixels / displayMetrics.density).toInt()
+    return (displayMetrics.heightPixels / displayMetrics.density)
+  }
+
+  private fun getWidthEnum(widthSizeClass: WindowWidthSizeClass): WidthSizeClassEnum {
+    return when (widthSizeClass) {
+      WindowWidthSizeClass.COMPACT -> WidthSizeClassEnum.COMPACT
+      WindowWidthSizeClass.MEDIUM -> WidthSizeClassEnum.MEDIUM
+      else -> WidthSizeClassEnum.EXPANDED
+    }
+  }
+
+  private fun getHeightEnum(heightSizeClass: WindowHeightSizeClass): HeightSizeClassEnum {
+    return when (heightSizeClass) {
+      WindowHeightSizeClass.COMPACT -> HeightSizeClassEnum.COMPACT
+      WindowHeightSizeClass.MEDIUM -> HeightSizeClassEnum.MEDIUM
+      else -> HeightSizeClassEnum.EXPANDED
+    }
   }
 }

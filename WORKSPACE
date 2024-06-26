@@ -67,6 +67,7 @@ load(
     "GUAVA_VERSION",
     "JUNIT_VERSION",
     "UIAUTOMATOR_VERSION",
+    "ATF_VERSION"
 )
 
 # gRPC
@@ -104,6 +105,7 @@ maven_install(
         "androidx.viewpager:viewpager:" + ANDROIDX_VIEWPAGER_VERSION,
         "androidx.window:window:" + ANDROIDX_WINDOW_VERSION,
         "androidx.window:window-java:" + ANDROIDX_WINDOW_VERSION,
+        "androidx.window:window-core:" + ANDROIDX_WINDOW_VERSION,
         "aopalliance:aopalliance:1.0",
         "com.android.tools.lint:lint-api:30.1.0",
         "com.android.tools.lint:lint-checks:30.1.0",
@@ -128,7 +130,7 @@ maven_install(
                 ),
             ],
             group = "com.google.android.apps.common.testing.accessibility.framework",
-            version = "3.1",
+            version = ATF_VERSION,
         ),
         "com.google.android.material:material:" + GOOGLE_MATERIAL_VERSION,
         "com.google.auto.value:auto-value:1.5.1",

@@ -59,6 +59,15 @@ class AndroidXTracer implements Tracer {
       // The AndroidX call can fail if reflection is not allowed.
       // We want to log the error yet we should not break any test in this case.
       Log.e(TAG, "enableTracing failed", e);
+    } catch (NoSuchMethodError e) {
+      // This can occur if an androidx.tracing < 1.1.0 is put on classpath instead.
+      // See http://issuetracker.google.com/349628366).
+      // We want to log the error yet we should not break any test in this case.
+      Log.e(
+          TAG,
+          "enableTracing failed. "
+              + "You may need to upgrade your androidx.tracing:tracing version",
+          e);
     }
     return this;
   }
