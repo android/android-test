@@ -22,6 +22,8 @@ The following artifacts were released:
 
 **API Changes**
 
+* Update to minSdkVersion 21
+
 **Breaking API Changes**
 
 **Known Issues**

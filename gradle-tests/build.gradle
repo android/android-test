@@ -10,7 +10,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
 }
 
 ext {
-    minSdk = 19
+    minSdk = 21
     targetSdk = 34
     compileSdk = 34
     emulatorApi = 33

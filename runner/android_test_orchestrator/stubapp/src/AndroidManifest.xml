@@ -33,7 +33,7 @@
   <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
   <uses-sdk
-      android:minSdkVersion="19"
+      android:minSdkVersion="21"
       android:targetSdkVersion="30" />
 
   <application android:directBootAware="true">

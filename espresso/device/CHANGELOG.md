@@ -15,6 +15,7 @@
 
 **API Changes**
 * Update WidthSizeClass and HeightSizeClass to use androidx.window size classes
+* Update to minSdkVersion 21
 
 **Breaking API Changes**
 

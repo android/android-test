@@ -18,7 +18,7 @@
     package="androidx.test.services.storage" >
 
     <uses-sdk
-        android:minSdkVersion="19"
+        android:minSdkVersion="21"
         android:targetSdkVersion="30" />
 
 </manifest>
