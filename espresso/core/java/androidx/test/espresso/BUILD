@@ -67,7 +67,7 @@ INTERNAL_API_ANNOTATION = [
 android_library(
     name = "view-interaction",
     srcs = VIEW_INTERACTION,
-    visibility = [":espresso_pkg"],
+    visibility = ["//visibility:private"],
     deps = [
         ":framework",
         ":interface",
