@@ -152,7 +152,7 @@ private suspend fun takeScreenshotOnNextFrame(
         Log.w("DeviceCapture", "failed to get bitmap, returning exception")
         cont.resumeWithException(RuntimeException("uiAutomation.takeScreenshot returned null"))
       } else {
-        cont.resume(bitmap, {})
+        cont.resume(bitmap) { _, _, _ -> }
       }
     }
   }
