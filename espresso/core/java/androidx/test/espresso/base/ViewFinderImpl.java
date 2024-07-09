@@ -45,7 +45,7 @@ public final class ViewFinderImpl implements ViewFinder {
   private final Provider<View> rootViewProvider;
 
   @Inject
-  ViewFinderImpl(Matcher<View> viewMatcher, Provider<View> rootViewProvider) {
+  public ViewFinderImpl(Matcher<View> viewMatcher, Provider<View> rootViewProvider) {
     this.viewMatcher = viewMatcher;
     this.rootViewProvider = rootViewProvider;
   }

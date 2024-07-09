@@ -28,6 +28,7 @@ android_library(
             "ViewHierarchyExceptionHandler.java",
         ],
     ),
+    visibility = ["//visibility:public"],
     deps = [
         ":default_failure_handler",
         ":idling_resource_registry",
