@@ -17,8 +17,7 @@
 package androidx.test.services.events;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static java.time.ZoneOffset.UTC;
 
 import android.os.Build;
 import android.os.Parcel;
