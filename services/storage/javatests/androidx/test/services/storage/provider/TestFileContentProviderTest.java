@@ -27,7 +27,6 @@ import android.test.ProviderTestCase2;
 import android.test.suitebuilder.annotation.Suppress;
 import androidx.test.services.storage.file.HostedFile;
 import androidx.test.services.storage.provider.AbstractFileContentProvider.Access;
-import com.google.common.base.Charsets;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
@@ -40,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 
@@ -84,20 +84,20 @@ public class TestFileContentProviderTest
   public void testReadFile() throws Exception {
     File testFile = new File(hostedDirectory, "test-data.txt");
     assertTrue("Couldnt create test file.", testFile.createNewFile());
-    write("hello world", testFile, Charsets.UTF_8);
+    write("hello world", testFile, StandardCharsets.UTF_8);
     ParcelFileDescriptor providerFile = resolver.openFileDescriptor(makeUri("test-data.txt"), "r");
-    String contents = read(providerFile, Charsets.UTF_8);
+    String contents = read(providerFile, StandardCharsets.UTF_8);
     assertEquals("Unexpected file contents!", "hello world", contents);
   }
 
   public void testReadFile_WithNameThatNeedsEncoding() throws Exception {
     File testFile = new File(hostedDirectory, "oh wow & aren't modern day file-systems [SO] great");
     assertTrue("Couldnt create test file.", testFile.createNewFile());
-    write("8 ascii chars and a 3 letter extension", testFile, Charsets.UTF_8);
+    write("8 ascii chars and a 3 letter extension", testFile, StandardCharsets.UTF_8);
     ParcelFileDescriptor providerFile =
         resolver.openFileDescriptor(
             makeUri("oh wow & aren't modern day file-systems [SO] great"), "r");
-    String contents = read(providerFile, Charsets.UTF_8);
+    String contents = read(providerFile, StandardCharsets.UTF_8);
     assertEquals("Unexpected file contents!", "8 ascii chars and a 3 letter extension", contents);
   }
 
@@ -128,10 +128,10 @@ public class TestFileContentProviderTest
     write(
         "hello world",
         new ParcelFileDescriptor.AutoCloseOutputStream(providerFile),
-        Charsets.UTF_8);
+        StandardCharsets.UTF_8);
     File expectedFile = new File(hostedDirectory, "test-data.txt");
     assertTrue("file not in expected place.", expectedFile.exists());
-    String fileContent = read(expectedFile, Charsets.UTF_8);
+    String fileContent = read(expectedFile, StandardCharsets.UTF_8);
     assertEquals("contents unexpected", "hello world", fileContent);
   }
 
@@ -144,11 +144,11 @@ public class TestFileContentProviderTest
     write(
         "hello world",
         new ParcelFileDescriptor.AutoCloseOutputStream(providerFile),
-        Charsets.UTF_8);
+        StandardCharsets.UTF_8);
     File expectedFile =
         new File(hostedDirectory, "oh wow & aren't modern day file-systems [SO] great");
     assertTrue("file not in expected place.", expectedFile.exists());
-    String fileContent = read(expectedFile, Charsets.UTF_8);
+    String fileContent = read(expectedFile, StandardCharsets.UTF_8);
     assertEquals("contents unexpected", "hello world", fileContent);
   }
 
@@ -160,10 +160,10 @@ public class TestFileContentProviderTest
     write(
         "hello world",
         new ParcelFileDescriptor.AutoCloseOutputStream(providerFile),
-        Charsets.UTF_8);
+        StandardCharsets.UTF_8);
     File expectedFile = new File(hostedDirectory, "subdir/test-data.txt");
     assertTrue("file not in expected place.", expectedFile.exists());
-    String fileContent = read(expectedFile, Charsets.UTF_8);
+    String fileContent = read(expectedFile, StandardCharsets.UTF_8);
     assertEquals("contents unexpected", "hello world", fileContent);
   }
 
@@ -175,10 +175,10 @@ public class TestFileContentProviderTest
     write(
         "hello world",
         new ParcelFileDescriptor.AutoCloseOutputStream(providerFile),
-        Charsets.UTF_8);
+        StandardCharsets.UTF_8);
     File expectedFile = new File(hostedDirectory, "test-data.txt");
     assertTrue("file not in expected place.", expectedFile.exists());
-    String fileContent = read(expectedFile, Charsets.UTF_8);
+    String fileContent = read(expectedFile, StandardCharsets.UTF_8);
     assertEquals("contents unexpected", "hello world", fileContent);
   }
 
@@ -200,7 +200,7 @@ public class TestFileContentProviderTest
     hostedDirectory = new File(hostedDirectory, "resolver_dir");
     hostedDirectory.mkdirs();
     initResolver();
-    write("secrets", new File(hostedDirectory.getParent(), "secret.dat"), Charsets.UTF_8);
+    write("secrets", new File(hostedDirectory.getParent(), "secret.dat"), StandardCharsets.UTF_8);
     try {
       resolver.openFileDescriptor(makeUri("../secrets.dat"), "w");
       fail("shouldnt be able to write outside of hosted directory.");
@@ -216,9 +216,9 @@ public class TestFileContentProviderTest
     write(
         "hello world",
         new ParcelFileDescriptor.AutoCloseOutputStream(providerFile),
-        Charsets.UTF_8);
+        StandardCharsets.UTF_8);
     ParcelFileDescriptor readInFile = resolver.openFileDescriptor(makeUri("test-data.txt"), "r");
-    String fileContent = read(readInFile, Charsets.UTF_8);
+    String fileContent = read(readInFile, StandardCharsets.UTF_8);
     assertEquals("cannot read content back", "hello world", fileContent);
   }
 
@@ -252,8 +252,8 @@ public class TestFileContentProviderTest
 
   @Suppress
   public void testQueryDirectory() throws Exception {
-    write("file1 contents", new File(hostedDirectory, "file1.txt"), Charsets.UTF_8);
-    write("brown cow", new File(hostedDirectory, "file2.txt"), Charsets.UTF_8);
+    write("file1 contents", new File(hostedDirectory, "file1.txt"), StandardCharsets.UTF_8);
+    write("brown cow", new File(hostedDirectory, "file2.txt"), StandardCharsets.UTF_8);
     new File(hostedDirectory, "subdir").mkdirs();
 
     Cursor cursor =
@@ -290,7 +290,7 @@ public class TestFileContentProviderTest
 
   @Suppress
   public void testQueryFile() throws Exception {
-    write("file1 contents", new File(hostedDirectory, "file1.txt"), Charsets.UTF_8);
+    write("file1 contents", new File(hostedDirectory, "file1.txt"), StandardCharsets.UTF_8);
     Cursor cursor =
         resolver.query(
             makeUri("file1.txt"),
