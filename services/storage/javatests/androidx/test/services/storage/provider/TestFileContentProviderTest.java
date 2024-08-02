@@ -306,7 +306,7 @@ public class TestFileContentProviderTest
       assertEquals("file1.txt", cursor.getString(nameIndex));
       assertEquals(
           HostedFile.FileType.FILE, HostedFile.FileType.fromTypeCode(cursor.getString(typeIndex)));
-      assertEquals("file1 contents".length(), cursor.getString(sizeIndex));
+      assertEquals("file1 contents", cursor.getString(sizeIndex));
     } finally {
       cursor.close();
     }
