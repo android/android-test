@@ -41,7 +41,7 @@ final class InputManagerEventInjectionStrategy implements EventInjectionStrategy
   private boolean initComplete;
   private Method injectInputEventMethod;
   private Method setSourceMotionMethod;
-  private Object instanceInputManagerObject;
+  private Object instanceInputManagerGlobalObject;
   private int asyncEventMode;
   private int syncEventMode;
 
@@ -57,13 +57,17 @@ final class InputManagerEventInjectionStrategy implements EventInjectionStrategy
 
       // Get the InputManager class object and initialize if necessary.
       Class<?> inputManagerClassObject = Class.forName("android.hardware.input.InputManager");
-      Method getInstanceMethod = inputManagerClassObject.getDeclaredMethod("getInstance");
+      // Get the InputManagerGlobal class object and initialize if necessary.
+      Class<?> inputManagerGlobalClassObject =
+          Class.forName("android.hardware.input.InputManagerGlobal");
+
+      Method getInstanceMethod = inputManagerGlobalClassObject.getDeclaredMethod("getInstance");
       getInstanceMethod.setAccessible(true);
 
-      instanceInputManagerObject = getInstanceMethod.invoke(inputManagerClassObject);
+      instanceInputManagerGlobalObject = getInstanceMethod.invoke(inputManagerGlobalClassObject);
 
       injectInputEventMethod =
-          instanceInputManagerObject
+          instanceInputManagerGlobalObject
               .getClass()
               .getDeclaredMethod("injectInputEvent", InputEvent.class, Integer.TYPE);
       injectInputEventMethod.setAccessible(true);
@@ -107,7 +111,7 @@ final class InputManagerEventInjectionStrategy implements EventInjectionStrategy
   public boolean injectKeyEvent(KeyEvent keyEvent) throws InjectEventSecurityException {
     try {
       return (Boolean)
-          injectInputEventMethod.invoke(instanceInputManagerObject, keyEvent, syncEventMode);
+          injectInputEventMethod.invoke(instanceInputManagerGlobalObject, keyEvent, syncEventMode);
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
@@ -140,7 +144,7 @@ final class InputManagerEventInjectionStrategy implements EventInjectionStrategy
       }
       int eventMode = sync ? syncEventMode : asyncEventMode;
       return (Boolean)
-          injectInputEventMethod.invoke(instanceInputManagerObject, motionEvent, eventMode);
+          injectInputEventMethod.invoke(instanceInputManagerGlobalObject, motionEvent, eventMode);
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (IllegalArgumentException e) {
