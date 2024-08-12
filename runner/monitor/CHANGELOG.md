@@ -7,6 +7,7 @@
 **Bug Fixes**
 
 * Catch and log NoSuchMethodError on forceEnableAppTracing calls
+* Fix ActivityInvoker$-CC ClassNotFoundErrors when used with older androidx.test:core
 
 **New Features**
 

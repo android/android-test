@@ -35,6 +35,7 @@ kt_android_library(
             "internal/runner/runtime/ExposedInstrumentationApi.java",
             "internal/runner/hidden/ExposedInstrumentationApi.java",
             "internal/platform/app/ActivityInvoker$$CC.java",
+            "internal/platform/app/ActivityInvokerDesugar.java",
         ],
     ),
     tags = ["alt_dep=//runner/monitor"],
@@ -81,6 +82,7 @@ android_library(
     srcs = [
         # only needed for external release backwards compatibility
         "internal/platform/app/ActivityInvoker$$CC.java",
+        "internal/platform/app/ActivityInvokerDesugar.java",
     ],
     custom_package = "androidx.test.monitor",
     manifest = "AndroidManifest.xml",
@@ -108,6 +110,7 @@ axt_android_aar(
         "androidx.test.runner",
     ],
     included_dep = ":monitor_release_lib",
+    jarjar_rule = ":jarjar.txt",
 )
 
 maven_artifact(
