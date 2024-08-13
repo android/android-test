@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     versionCatalogs {
         libs {
             library('core', 'androidx.test:core:1.6.1')
-            library('runner', 'androidx.test:runner:1.6.1')
+            library('runner', 'androidx.test:runner:1.6.2')
             library('ext.junit', 'androidx.test.ext:junit:1.2.1')
             library('ext.truth', 'androidx.test.ext:truth:1.6.0')
             library('espresso.accessibility', 'androidx.test.espresso:espresso-accessibility:3.6.1')
