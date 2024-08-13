@@ -1,0 +1,1 @@
+rule androidx.test.internal.platform.app.ActivityInvokerDesugar androidx.test.internal.platform.app.ActivityInvoker$-CC
