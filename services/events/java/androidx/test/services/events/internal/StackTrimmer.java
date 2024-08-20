@@ -47,7 +47,14 @@ public final class StackTrimmer {
   }
 
   public static String getTrimmedMessage(Failure failure) {
-    String message = failure.getMessage();
+    String message = null;
+    try {
+      // Even this can fail! If so, don't let it wreck error reporting.
+      message = failure.getMessage();
+    } catch (Throwable t) {
+      Log.e(TAG, "Failed to get message from " + failure, t);
+      message = "Couldn't get message due to " + t.getMessage();
+    }
     if (message != null && message.length() > MAX_TRACE_SIZE) {
       // Since AJUR needs to report failures back to AM via a binder IPC, we need to make sure that
       // we don't exceed the Binder transaction limit - which is 1MB per process.

@@ -7,6 +7,7 @@
 **Bug Fixes**
 
 * TestStorage: Use input directory location for internal files 
+* StackTrimmer: harden against exceptions coming from Failure.getMessage().
 
 **New Features**
 

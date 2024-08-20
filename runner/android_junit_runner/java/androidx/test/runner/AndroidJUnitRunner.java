@@ -426,6 +426,21 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     return instrumentationResultPrinter;
   }
 
+  private void invokeRemoteMethod() {
+    try {
+      new ReflectiveMethod<Void>(
+              runnerArgs.remoteMethod.testClassName, runnerArgs.remoteMethod.methodName)
+          .invokeStatic();
+    } catch (ReflectionException e) {
+      Log.e(
+          LOG_TAG,
+          String.format(
+              "Reflective call to remote method %s#%s failed",
+              runnerArgs.remoteMethod.testClassName, runnerArgs.remoteMethod.methodName),
+          e);
+    }
+  }
+
   @Override
   public void onStart() {
     Log.d(LOG_TAG, "onStart is called.");
@@ -434,21 +449,11 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
     try {
       setJsBridgeClassName("androidx.test.espresso.web.bridge.JavaScriptBridge");
       super.onStart();
+
       Request testRequest = buildRequest(runnerArgs, getArguments());
 
       if (runnerArgs.remoteMethod != null) {
-        try {
-          new ReflectiveMethod<Void>(
-                  runnerArgs.remoteMethod.testClassName, runnerArgs.remoteMethod.methodName)
-              .invokeStatic();
-        } catch (ReflectionException e) {
-          Log.e(
-              LOG_TAG,
-              String.format(
-                  "Reflective call to remote method %s#%s failed",
-                  runnerArgs.remoteMethod.testClassName, runnerArgs.remoteMethod.methodName),
-              e);
-        }
+        invokeRemoteMethod();
       }
 
       // TODO(b/162075422): using deprecated isPrimaryInstrProcess(argsProcessName) method
@@ -457,16 +462,13 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
         return;
       }
 
-      try {
-        TestExecutor.Builder executorBuilder = new TestExecutor.Builder(this);
-        addListeners(runnerArgs, executorBuilder);
-        results = executorBuilder.build().execute(testRequest);
-      } catch (Throwable t) {
-        final String msg = "Fatal exception when running tests";
-        Log.e(LOG_TAG, msg, t);
-        onException(this, t);
-      }
-
+      TestExecutor.Builder executorBuilder = new TestExecutor.Builder(this);
+      addListeners(runnerArgs, executorBuilder);
+      results = executorBuilder.build().execute(testRequest);
+    } catch (Throwable t) {
+      final String msg = "Fatal exception when running tests";
+      Log.e(LOG_TAG, msg, t);
+      onException(this, t);
     } finally {
       Trace.endSection();
     }
@@ -623,6 +625,13 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
       final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
       try {
         instResultPrinter.reportProcessCrash(e);
+      } catch (Throwable t) {
+        // It is possible for the test infrastructure to get sufficiently messed up that even this
+        // can fail (with a NoSuchMethodError from Failure.getTrace()!). Don't let that get in the
+        // way of sending events reporting the problems, since that can make the difference between
+        // "test failed with a useful error message" and "test mysteriously timed out and the
+        // developer has to go spelunking in the system logcat".
+        Log.e(LOG_TAG, "Failed to report process crash.", t);
       } finally {
         StrictMode.setThreadPolicy(oldPolicy);
       }

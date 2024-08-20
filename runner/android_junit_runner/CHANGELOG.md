@@ -7,6 +7,7 @@
 **Bug Fixes**
 
 * Exceptions during `@AfterClass` were not being reported via `InstrumentationResultPrinter`.
+* Exceptions arising in AndroidJUnitRunner.buildRequest are now handled.
 
 **New Features**
 
