@@ -23,20 +23,26 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.inject.Provider;
+import javax.inject.Inject;
 import org.hamcrest.Matcher;
 
 public class EventtoViewInteraction {
   // private final Matcher<View> viewMatcher;
-  private final ViewFinder viewFinder;
+    private final Provider<View> rootViewPicker;
+  private  final EventtoViewFinderImpl viewFinder;
   private long timeoutMillis;
+ // private final UiController uiController;
   private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
   private static long defaultTimeoutMillis = Duration.ofSeconds(5).toMillis();
 
+  @Inject
   EventtoViewInteraction(Matcher<View> viewMatcher) {
-    // this.viewMatcher = viewMatcher;
-    this.viewFinder = new ViewFinderImpl(viewMatcher, new SimpleRootViewPicker());
+    //this.viewMatcher = viewMatcher;
+    this.rootViewPicker = new SimpleRootViewPicker();
+    this.viewFinder = new EventtoViewFinderImpl(viewMatcher);
     this.timeoutMillis = defaultTimeoutMillis;
+    //this.uiController = new EventtoUiController();
   }
 
   static void setDefaultTimeout(Duration duration) {
@@ -49,11 +55,11 @@ public class EventtoViewInteraction {
   }
 
   public void check(ViewAssertion assertion) {
-    ViewAssertionCallable viewAssertionCallable = new ViewAssertionCallable(viewFinder, assertion);
-    performRetryingTaskOnUiThread(viewAssertionCallable);
+      ViewAssertionCallable viewAssertionCallable = new ViewAssertionCallable(rootViewPicker, viewFinder, assertion);
+      performRetryingTaskOnUiThread_polling(viewAssertionCallable);
   }
 
-  private void performRetryingTaskOnUiThread(Callable<ExecutionStatus> viewInteractionCallable) {
+  private void performRetryingTaskOnUiThread_polling(Callable<ExecutionStatus> viewInteractionCallable) {
     long startTime = SystemClock.uptimeMillis();
     long remainingTimeout = timeoutMillis;
     long pollDelay = 0;
@@ -65,7 +71,8 @@ public class EventtoViewInteraction {
         if (uiTask.get(remainingTimeout, TimeUnit.MILLISECONDS) == ExecutionStatus.SUCCESS) {
           return;
         }
-        remainingTimeout = SystemClock.uptimeMillis() - startTime - timeoutMillis;
+        remainingTimeout = timeoutMillis - (SystemClock.uptimeMillis() - startTime);
+        Log.i("Eventto", "possibly retrying ui task, remainingTimeout " + remainingTimeout);
         pollDelay = 100;
       } catch (InterruptedException ie) {
         throw new RuntimeException("Interrupted running UI task", ie);
@@ -81,12 +88,14 @@ public class EventtoViewInteraction {
         throw new RuntimeException(e);
       }
     }
+    throw new RuntimeException("timeout");
   }
 
   public void perform(ViewAction action) {
-    ViewActionCallable callable =
-        new ViewActionCallable(viewFinder, action, new EventtoUiController());
-    performRetryingTaskOnUiThread(callable);
+    throw new UnsupportedOperationException();
+//   ViewActionCallable callable =
+//        new ViewActionCallable(viewFinder, action, uiController);
+//   performRetryingTaskOnUiThread(callable);
   }
 
   private static class SimpleRootViewPicker implements Provider<View> {
@@ -114,10 +123,12 @@ public class EventtoViewInteraction {
   }
 
   private static class ViewAssertionCallable implements Callable<ExecutionStatus> {
-    private final ViewFinder viewFinder;
+    private final Provider<View> rootViewPicker;
+    private final EventtoViewFinderImpl viewFinder;
     private final ViewAssertion viewAssertion;
 
-    ViewAssertionCallable(ViewFinder viewFinder, ViewAssertion viewAssertion) {
+    ViewAssertionCallable(Provider<View> rootViewPicker, EventtoViewFinderImpl viewFinder, ViewAssertion viewAssertion) {
+      this.rootViewPicker = rootViewPicker;
       this.viewFinder = viewFinder;
       this.viewAssertion = viewAssertion;
     }
@@ -126,11 +137,18 @@ public class EventtoViewInteraction {
     public ExecutionStatus call() throws Exception {
       Log.i("Eventto", "Running ViewAssertionCallable");
       try {
-        View matchedView = viewFinder.getView();
+        View rootView = rootViewPicker.get();
+        if (rootView == null) {
+            Log.i("Eventto", "Could not find root view, retrying");
+            return ExecutionStatus.RESCHEDULE;
+        }
+        Log.i("Eventto", "Found root view" );
+        View matchedView = viewFinder.getView(rootView);
+        Log.i("Eventto", "Found view  " );
         viewAssertion.check(matchedView, null);
         return ExecutionStatus.SUCCESS;
       } catch (NoMatchingViewException e) {
-        Log.i("Eventto", "Could not find view, retrying", e);
+        Log.i("Eventto", "Could not find view, retrying");
         return ExecutionStatus.RESCHEDULE;
       }
     }
@@ -142,7 +160,7 @@ public class EventtoViewInteraction {
     private final UiController uiController;
 
     ViewActionCallable(
-        ViewFinder viewFinder, EventoViewAction viewAction, UiController uiController) {
+        ViewFinder viewFinder, ViewAction viewAction, UiController uiController) {
       this.viewFinder = viewFinder;
       this.viewAction = viewAction;
       this.uiController = uiController;
@@ -156,7 +174,7 @@ public class EventtoViewInteraction {
         viewAction.perform(uiController, matchedView);
         return ExecutionStatus.SUCCESS;
       } catch (NoMatchingViewException e) {
-        Log.i("Eventto", "Could not find view, retrying", e);
+        Log.i("Eventto", "Could not find view, retrying");
         return ExecutionStatus.RESCHEDULE;
       }
     }

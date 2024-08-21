@@ -66,6 +66,7 @@ android_library(
         "Interrogator.java",
         "LooperIdlingResourceInterrogationHandler.java",
     ],
+    visibility = ["//visibility:public"],
     deps = [
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/util",

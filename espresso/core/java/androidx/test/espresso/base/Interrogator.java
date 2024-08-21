@@ -31,7 +31,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /** Isolates the nasty details of touching the message queue. */
-final class Interrogator {
+public final class Interrogator {
 
   private static final String TAG = "Interrogator";
   private static final Method messageQueueNextMethod;
@@ -106,7 +106,7 @@ final class Interrogator {
    * Informed of the state of the looper/queue and controls whether to continue interrogation or
    * quit.
    */
-  interface InterrogationHandler<R> extends QueueInterrogationHandler<R> {
+  public interface InterrogationHandler<R> extends QueueInterrogationHandler<R> {
     /**
      * Notifies that the queue is about to dispatch a task.
      *
@@ -129,7 +129,7 @@ final class Interrogator {
    *
    * @param handler an interrogation handler that controls whether to continue looping or not.
    */
-  static <R> R loopAndInterrogate(InterrogationHandler<R> handler) {
+  public static <R> R loopAndInterrogate(InterrogationHandler<R> handler) {
     checkSanity();
     interrogating.set(Boolean.TRUE);
     boolean stillInterested = true;

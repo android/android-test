@@ -26,6 +26,7 @@ maven_repository(
         "//espresso/intents/java/androidx/test/espresso/intent:espresso_intents_maven_artifact",
         "//espresso/remote/java/androidx/test/espresso/remote:espresso_remote_maven_artifact",
         "//espresso/web/java/androidx/test/espresso/web:espresso_web_maven_artifact",
+        "//eventto/java/androidx/test/eventto:eventto_maven_artifact",
         "//ext/junit/java/androidx/test/ext/junit:junit_maven_artifact",
         "//ext/truth/java/androidx/test/ext/truth:truth_maven_artifact",
         "//ktx/core/java/androidx/test/core:core_maven_artifact",

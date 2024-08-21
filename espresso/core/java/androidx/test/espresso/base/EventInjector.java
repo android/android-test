@@ -27,7 +27,7 @@ import androidx.test.espresso.InjectEventSecurityException;
  * Responsible for selecting the proper strategy for injecting MotionEvents to the application under
  * test.
  */
-final class EventInjector {
+public final class EventInjector {
   private static final String TAG = EventInjector.class.getSimpleName();
   private final EventInjectionStrategy injectionStrategy;
 
