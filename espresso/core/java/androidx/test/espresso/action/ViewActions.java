@@ -586,4 +586,23 @@ public final class ViewActions {
   public static ViewAction captureToBitmap(BitmapReceiver bitmapReceiver) {
     return new CaptureToBitmapAction(bitmapReceiver);
   }
+
+  /**
+   * Returns an action that performs a swipe slowly from bottom-to-top across the horizontal center
+   * of the view. The swipe doesn't start at the very edge of the view, but has a bit of offset.<br>
+   * <br>
+   * View constraints:
+   *
+   * <ul>
+   *   <li>must be displayed on screen
+   * </ul>
+   */
+  public static ViewAction slowSwipeUp() {
+    return actionWithAssertions(
+        new GeneralSwipeAction(
+            Swipe.SLOW,
+            GeneralLocation.translate(GeneralLocation.BOTTOM_CENTER, 0, -EDGE_FUZZ_FACTOR),
+            GeneralLocation.TOP_CENTER,
+            Press.FINGER));
+  }
 }
