@@ -17,8 +17,10 @@
 package androidx.test.internal.runner.listener;
 
 import static androidx.test.internal.runner.listener.InstrumentationResultPrinter.REPORT_KEY_STACK;
+import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 import android.os.Bundle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -113,5 +115,30 @@ public class InstrumentationResultPrinterTest {
             "code=1, name=" + className + "#null",
             "code=-2, name=" + className + "#null"),
         intrResultPrinter.resultsLog);
+  }
+
+  public static class AssumptionFailureInClassTest {
+    @BeforeClass
+    public static void setUpClass() {
+      assumeTrue(false);
+    }
+
+    @Test
+    public void emptyTest() {}
+  }
+
+  @Test
+  public void verifyBeforeClassAssumptionsReported() throws Exception {
+    JUnitCore core = new JUnitCore();
+    var intrResultPrinter = new TestInstrumentationResultPrinter();
+    core.addListener(intrResultPrinter);
+    Request testRequest = Request.classes(new Computer(), AssumptionFailureInClassTest.class);
+    core.run(testRequest);
+
+    String className = AssumptionFailureInClassTest.class.getName();
+    assertThat(intrResultPrinter.resultsLog)
+        .containsExactly(
+            "code=1, name=" + className + "#null", "code=-4, name=" + className + "#null")
+        .inOrder();
   }
 }

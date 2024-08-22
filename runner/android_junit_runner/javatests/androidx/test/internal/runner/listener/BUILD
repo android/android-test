@@ -45,6 +45,7 @@ axt_android_library_test(
         "//runner/android_junit_runner",
         "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
         "@androidsdk//:legacy_test-34",
+        "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
     ],
 )

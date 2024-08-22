@@ -113,14 +113,14 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
   }
 
   @Override
-  public void testRunStarted(Description description) throws Exception {
+  public void testRunStarted(Description description) {
     resultTemplate.putString(Instrumentation.REPORT_KEY_IDENTIFIER, REPORT_VALUE_ID);
     resultTemplate.putInt(REPORT_KEY_NUM_TOTAL, description.testCount());
   }
 
   /** send a status for the start of a each test, so long tests can be seen as "running" */
   @Override
-  public void testStarted(Description description) throws Exception {
+  public void testStarted(Description description) {
     testNum.incrementAndGet();
     this.description = description; // cache Description in case of a crash
     String testClass = description.getClassName();
@@ -143,7 +143,7 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
   }
 
   @Override
-  public void testFinished(Description description) throws Exception {
+  public void testFinished(Description description) {
     if (testResultCode == REPORT_VALUE_RESULT_OK) {
       testResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT, ".");
     }
@@ -151,7 +151,16 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
   }
 
   @Override
-  public void testFailure(Failure failure) throws Exception {
+  public void testFailure(Failure failure) {
+    handleFailure(
+        failure,
+        () -> {
+          testResultCode = REPORT_VALUE_RESULT_FAILURE;
+          reportFailure(failure);
+        });
+  }
+
+  private void handleFailure(Failure failure, Runnable action) {
     // getMethodName() == null when an exception is thrown during @BeforeClass or @AfterClass.
     // No matching testStart() / testFinish() is emitted, so simulate them here for the sake of
     // instrumentation consumers.
@@ -159,8 +168,7 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
     if (shouldCallFinish) {
       testStarted(failure.getDescription());
     }
-    testResultCode = REPORT_VALUE_RESULT_FAILURE;
-    reportFailure(failure);
+    action.run();
     if (shouldCallFinish) {
       testFinished(failure.getDescription());
     }
@@ -168,8 +176,12 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
 
   @Override
   public void testAssumptionFailure(Failure failure) {
-    testResultCode = REPORT_VALUE_RESULT_ASSUMPTION_FAILURE;
-    testResult.putString(REPORT_KEY_STACK, failure.getTrace());
+    handleFailure(
+        failure,
+        () -> {
+          testResultCode = REPORT_VALUE_RESULT_ASSUMPTION_FAILURE;
+          testResult.putString(REPORT_KEY_STACK, StackTrimmer.getTrimmedStackTrace(failure));
+        });
   }
 
   private void reportFailure(Failure failure) {
@@ -182,7 +194,7 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
   }
 
   @Override
-  public void testIgnored(Description description) throws Exception {
+  public void testIgnored(Description description) {
     testStarted(description);
     testResultCode = REPORT_VALUE_RESULT_IGNORED;
     testFinished(description);
