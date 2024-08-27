@@ -28,12 +28,19 @@ package_group(
 kt_android_library(
     name = "device",
     testonly = 1,
-    srcs = glob(["*.kt"]),
     exports = [
+        ":espresso_device",
         "//espresso/device/java/androidx/test/espresso/device/action",
         "//espresso/device/java/androidx/test/espresso/device/filter",
+        "//espresso/device/java/androidx/test/espresso/device/rules",
         "//espresso/device/java/androidx/test/espresso/device/sizeclass",
     ],
+)
+
+kt_android_library(
+    name = "espresso_device",
+    testonly = 1,
+    srcs = glob(["*.kt"]),
     deps = [
         "//espresso/device/java/androidx/test/espresso/device/action",
         "//espresso/device/java/androidx/test/espresso/device/dagger",
@@ -51,7 +58,7 @@ android_library(
     manifest = "AndroidManifest.xml",
     visibility = ["//:__subpackages__"],
     exports = [
-        ":device",
+        ":espresso_device",
         "//espresso/device/java/androidx/test/espresso/device/action",
         "//espresso/device/java/androidx/test/espresso/device/filter",
         "//espresso/device/java/androidx/test/espresso/device/internal/deps/emulator",
