@@ -21,19 +21,24 @@ package androidx.test.espresso.web.action {
     method public void perform(androidx.test.espresso.UiController!, android.view.View!);
   }
 
-  @javax.annotation.processing.Generated("tmp_aidl_gen_path") public interface IAtomActionResultPropagator extends android.os.IInterface {
+  public interface IAtomActionResultPropagator extends android.os.IInterface {
+    method public void setError(android.os.Bundle!) throws android.os.RemoteException;
+    method public void setResult(androidx.test.espresso.web.model.Evaluation!) throws android.os.RemoteException;
+    field public static final String DESCRIPTOR = "androidx.test.espresso.web.action.IAtomActionResultPropagator";
+  }
+
+  public static class IAtomActionResultPropagator.Default implements androidx.test.espresso.web.action.IAtomActionResultPropagator {
+    ctor public IAtomActionResultPropagator.Default();
+    method public android.os.IBinder! asBinder();
     method public void setError(android.os.Bundle!) throws android.os.RemoteException;
     method public void setResult(androidx.test.espresso.web.model.Evaluation!) throws android.os.RemoteException;
   }
 
-  public abstract static class IAtomActionResultPropagator.Stub extends com.google.android.aidl.BaseStub implements androidx.test.espresso.web.action.IAtomActionResultPropagator {
+  public abstract static class IAtomActionResultPropagator.Stub extends android.os.Binder implements androidx.test.espresso.web.action.IAtomActionResultPropagator {
     ctor public IAtomActionResultPropagator.Stub();
+    method public android.os.IBinder! asBinder();
     method public static androidx.test.espresso.web.action.IAtomActionResultPropagator! asInterface(android.os.IBinder!);
-  }
-
-  public static class IAtomActionResultPropagator.Stub.Proxy extends com.google.android.aidl.BaseProxy implements androidx.test.espresso.web.action.IAtomActionResultPropagator {
-    method public void setError(android.os.Bundle!) throws android.os.RemoteException;
-    method public void setResult(androidx.test.espresso.web.model.Evaluation!) throws android.os.RemoteException;
+    method public boolean onTransact(int, android.os.Parcel!, android.os.Parcel!, int) throws android.os.RemoteException;
   }
 
 }

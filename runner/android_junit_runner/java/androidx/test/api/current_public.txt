@@ -44,19 +44,24 @@ package androidx.test.filters {
 
 package androidx.test.orchestrator.callback {
 
-  @javax.annotation.processing.Generated("tmp_aidl_gen_path") public interface OrchestratorCallback extends android.os.IInterface {
+  public interface OrchestratorCallback extends android.os.IInterface {
     method public void addTest(String!) throws android.os.RemoteException;
+    method public void sendTestNotification(android.os.Bundle!) throws android.os.RemoteException;
+    field public static final String DESCRIPTOR = "androidx.test.orchestrator.callback.OrchestratorCallback";
+  }
+
+  public static class OrchestratorCallback.Default implements androidx.test.orchestrator.callback.OrchestratorCallback {
+    ctor public OrchestratorCallback.Default();
+    method public void addTest(String!) throws android.os.RemoteException;
+    method public android.os.IBinder! asBinder();
     method public void sendTestNotification(android.os.Bundle!) throws android.os.RemoteException;
   }
 
-  public abstract static class OrchestratorCallback.Stub extends com.google.android.aidl.BaseStub implements androidx.test.orchestrator.callback.OrchestratorCallback {
+  public abstract static class OrchestratorCallback.Stub extends android.os.Binder implements androidx.test.orchestrator.callback.OrchestratorCallback {
     ctor public OrchestratorCallback.Stub();
+    method public android.os.IBinder! asBinder();
     method public static androidx.test.orchestrator.callback.OrchestratorCallback! asInterface(android.os.IBinder!);
-  }
-
-  public static class OrchestratorCallback.Stub.Proxy extends com.google.android.aidl.BaseProxy implements androidx.test.orchestrator.callback.OrchestratorCallback {
-    method public void addTest(String!) throws android.os.RemoteException;
-    method public void sendTestNotification(android.os.Bundle!) throws android.os.RemoteException;
+    method public boolean onTransact(int, android.os.Parcel!, android.os.Parcel!, int) throws android.os.RemoteException;
   }
 
 }
