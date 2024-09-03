@@ -53,7 +53,7 @@ constructor(
     private const val DEGREES_TO_ROTATE_LANDSCAPE_TO_PORTRAIT = -90F
     private const val DEGREES_TO_ROTATE_PORTRAIT_TO_LANDSCAPE = 90F
     private const val additionalSetUpInstructions =
-      " See https://developer.android.com/studio/test/espresso-api#set_up_your_project_for_the_espresso_device_api for set up instructions."
+      " See https://developer.android.com/studio/test/espresso-api#set_up_your_project_for_the_espresso_device_api for setup instructions."
   }
 
   override fun setDeviceMode(deviceMode: Int) {
