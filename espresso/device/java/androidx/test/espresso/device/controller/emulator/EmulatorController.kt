@@ -52,6 +52,8 @@ constructor(
     private val TAG = EmulatorController::class.java.simpleName
     private const val DEGREES_TO_ROTATE_LANDSCAPE_TO_PORTRAIT = -90F
     private const val DEGREES_TO_ROTATE_PORTRAIT_TO_LANDSCAPE = 90F
+    private const val additionalSetUpInstructions =
+      " See https://developer.android.com/studio/test/espresso-api#set_up_your_project_for_the_espresso_device_api for set up instructions."
   }
 
   override fun setDeviceMode(deviceMode: Int) {
@@ -82,8 +84,8 @@ constructor(
       throw DeviceControllerOperationException(
         "Failed to set device mode. Please make sure the connected Emulator is foldable, the Android Emulator version" +
           " is updated to 33.1.11+, and the controller gRPC service is enabled on the emulator" +
-          " See https://developer.android.com/studio/preview/features#set_up_your_project_for_the_espresso_device_api for set up instructions.",
-        e
+          additionalSetUpInstructions,
+        e,
       )
     }
   }
@@ -131,8 +133,8 @@ constructor(
       throw DeviceControllerOperationException(
         "Failed to set screen orientation. Please make sure the Android Emulator version" +
           " is updated to 33.1.11+ and the controller gRPC service is enabled on the emulator." +
-          " See https://developer.android.com/studio/preview/features#set_up_your_project_for_the_espresso_device_api for set up instructions.",
-        e
+          additionalSetUpInstructions,
+        e,
       )
     }
   }
@@ -150,8 +152,8 @@ constructor(
     ) {
       throw DeviceControllerOperationException(
         "The current process does not have the INTERNET permission. Ensure the app-under-test has '<uses-permission " +
-          "android:name=\"android.permission.INTERNET\"/>' in its AndroidManifest.xml. See " +
-          "See https://developer.android.com/studio/preview/features#set_up_your_project_for_the_espresso_device_api for set up instructions."
+          "android:name=\"android.permission.INTERNET\"/>' in its AndroidManifest.xml." +
+          additionalSetUpInstructions
       )
     }
   }
