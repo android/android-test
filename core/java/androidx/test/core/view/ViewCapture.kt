@@ -313,7 +313,9 @@ private suspend fun View.generateBitmapFromPixelCopy(
         if (result.status == PixelCopy.SUCCESS) {
           cont.resume(result.bitmap)
         } else {
-          cont.resumeWithException(RuntimeException("PixelCopy failed: $(result.status)"))
+          cont.resumeWithException(
+            RuntimeException("PixelCopy failed with status code: ${result.status}")
+          )
         }
       }
     PixelCopy.request(request, HandlerExecutor(handler), onCopyFinished)
