@@ -11,6 +11,8 @@
 
 **New Features**
 
+* SPA FON
+
 **Breaking Changes**
 
 **API Changes**
