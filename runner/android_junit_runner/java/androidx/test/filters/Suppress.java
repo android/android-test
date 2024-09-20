@@ -30,7 +30,10 @@ import java.lang.annotation.Target;
  * href="http://developer.android.com/reference/android/test/suitebuilder/annotation/Suppress.html">
  * android.test.suitebuilder.annotation.Suppress</a> and is the recommended way to suppress tests
  * written with the AndroidX Test Library.
+ *
+ * @deprecated Use {@link org.junit.Ignore} instead.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
+@Deprecated
 public @interface Suppress {}

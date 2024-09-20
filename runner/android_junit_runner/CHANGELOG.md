@@ -17,6 +17,7 @@
 **API Changes**
 
 * Update to minSdkVersion 21
+* Deprecate androidx.test.filters.Suppress in favor of org.junit.Ignore
 
 **Breaking API Changes**
 
