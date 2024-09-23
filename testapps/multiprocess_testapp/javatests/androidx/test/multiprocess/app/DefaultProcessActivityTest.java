@@ -33,7 +33,7 @@ import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.remote.RemoteEspressoException;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.Suppress;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -95,7 +95,7 @@ public class DefaultProcessActivityTest {
   }
 
   @Test
-  @Suppress // flaky b/264579367
+  @Ignore // flaky b/264579367
   public void verifySwitchingBetweenTwoProcessesQuicklyWorks() {
     Log.d(TAG, "Checking main process name...");
     onView(withId(R.id.textNamedProcess)).check(matches(withText(is(DEFAULT_PROC_NAME))));

@@ -31,10 +31,10 @@ import static org.hamcrest.Matchers.is;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.filters.Suppress;
 import androidx.test.ui.app.LongListActivity;
 import androidx.test.ui.app.R;
 import java.util.Map;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +49,7 @@ public class AdapterDataIntegrationTest {
       new ActivityScenarioRule<>(LongListActivity.class);
 
   @Test
-  @Suppress // flaky
+  @Ignore // flaky
   public void clickAroundList() {
     onData(allOf(is(instanceOf(Map.class)), hasEntry(is(LongListActivity.STR), is("item: 99"))))
         .perform(click());

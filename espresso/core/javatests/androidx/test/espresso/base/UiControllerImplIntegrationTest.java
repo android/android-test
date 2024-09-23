@@ -36,7 +36,6 @@ import androidx.test.espresso.action.MotionEvents;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.filters.Suppress;
 import androidx.test.platform.tracing.Tracing;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SendActivity;
@@ -45,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Provider;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -189,7 +189,7 @@ public class UiControllerImplIntegrationTest {
   }
 
   @Test
-  @Suppress // flaky, uiController.injectMotionEventSequence can intermittently return false
+  @Ignore // flaky, uiController.injectMotionEventSequence can intermittently return false
   public void injectMotionEventSequence() throws InterruptedException {
     try (ActivityScenario<SendActivity> scenario = ActivityScenario.launch(SendActivity.class)) {
 

@@ -43,7 +43,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ActivityScenario.ActivityAction;
 import androidx.test.espresso.PerformException;
-import androidx.test.filters.Suppress;
 import androidx.test.ui.app.ItemListAdapter.CustomViewHolder;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.RecyclerViewActivity;
@@ -51,6 +50,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public abstract class RecyclerViewIntegrationTest {
@@ -191,7 +191,7 @@ public abstract class RecyclerViewIntegrationTest {
   }
 
   // TODO(b/68003948): flaky
-  @Suppress
+  @Ignore
   @Test
   public void testScrolling_scrollToMultipleViewsAndClick() {
     onView(withId(rvLayoutId)).perform(scrollTo(hasDescendant(withText(ITEM_16))));
@@ -338,7 +338,7 @@ public abstract class RecyclerViewIntegrationTest {
   }
 
   // TODO(b/68003948): flaky
-  @Suppress
+  @Ignore
   @Test
   public void testActionsOnItem_clickMultipleItems() throws InterruptedException {
     onView(withItemText(ITEM_64)).check(doesNotExist());

@@ -43,10 +43,10 @@ import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.FlakyTest;
 import androidx.test.filters.LargeTest;
-import androidx.test.filters.Suppress;
 import androidx.test.ui.app.MainActivity;
 import androidx.test.ui.app.R;
 import java.util.Map;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -63,7 +63,7 @@ public class KeyEventActionIntegrationTest {
    * Test only passes if run in isolation. Unless Gradle supports a single instrumentation per test
    * this test is ignored"
    */
-  @Suppress
+  @Ignore
   @Test
   public void clickBackOnRootAction() {
     ActivityScenario.launch(MainActivity.class);

@@ -21,7 +21,6 @@ import static org.junit.Assert.assertTrue;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.filters.Suppress;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
@@ -31,6 +30,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -97,7 +97,7 @@ public class AsyncTaskPoolMonitorTest {
   }
 
   // TODO(b/68003948): flaky
-  @Suppress
+  @Ignore
   @Test
   public void idleNotificationAndRestart() throws Exception {
 
@@ -153,7 +153,7 @@ public class AsyncTaskPoolMonitorTest {
   }
 
   // TODO(b/68003948): flaky
-  @Suppress
+  @Ignore
   @Test
   public void idleNotification_extraWork() throws Exception {
     final CountDownLatch firstRunLatch = new CountDownLatch(1);
