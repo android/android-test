@@ -198,7 +198,7 @@ package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @Restric
     enum_constant public static final androidx.test.services.events.platform.TestPlatformEvent.EventType TEST_RUN_STARTED;
   }
 
-  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class TestPlatformEventFactory implements android.os.Parcelable.Creator<androidx.test.services.events.platform.TestPlatformEvent> {
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class TestPlatformEventFactory implements android.os.Parcelable.Creator<androidx.test.services.events.platform.TestPlatformEvent!> {
     ctor public TestPlatformEventFactory();
     method public androidx.test.services.events.platform.TestPlatformEvent! createFromParcel(android.os.Parcel!);
     method public androidx.test.services.events.platform.TestPlatformEvent![]! newArray(int);

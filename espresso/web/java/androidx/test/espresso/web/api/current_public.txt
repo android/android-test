@@ -138,7 +138,7 @@ package androidx.test.espresso.web.model {
     method public static void removeDeJSONFactory(androidx.test.espresso.web.model.JSONAble.DeJSONFactory!);
   }
 
-  public class SimpleAtom implements androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.Evaluation> {
+  public class SimpleAtom implements androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.Evaluation!> {
     ctor public SimpleAtom(String!);
     ctor public SimpleAtom(String!, androidx.test.espresso.web.model.SimpleAtom.ElementReferencePlacement!);
     method public final java.util.List<java.lang.Object!>! getArguments(androidx.test.espresso.web.model.ElementReference?);
@@ -154,7 +154,7 @@ package androidx.test.espresso.web.model {
     enum_constant public static final androidx.test.espresso.web.model.SimpleAtom.ElementReferencePlacement LAST;
   }
 
-  public class TransformingAtom<I, O> implements androidx.test.espresso.web.model.Atom<O> {
+  public class TransformingAtom<I, O> implements androidx.test.espresso.web.model.Atom<O!> {
     ctor @androidx.test.espresso.remote.annotation.RemoteMsgConstructor public TransformingAtom(androidx.test.espresso.web.model.Atom<I!>!, androidx.test.espresso.web.model.TransformingAtom.Transformer<I!,O!>!);
     method public java.util.List<java.lang.Object!>! getArguments(androidx.test.espresso.web.model.ElementReference?);
     method public String! getScript();

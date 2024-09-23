@@ -34,17 +34,17 @@ package androidx.test.espresso {
     method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.DataInteraction! usingAdapterViewProtocol(androidx.test.espresso.action.AdapterViewProtocol!);
   }
 
-  public static final class DataInteraction.DisplayDataMatcher extends org.hamcrest.TypeSafeMatcher<android.view.View> {
+  public static final class DataInteraction.DisplayDataMatcher extends org.hamcrest.TypeSafeMatcher<android.view.View!> {
     method public void describeTo(org.hamcrest.Description!);
-    method @Deprecated public static androidx.test.espresso.DataInteraction.DisplayDataMatcher! displayDataMatcher(org.hamcrest.Matcher<android.view.View!>, org.hamcrest.Matcher<?>, org.hamcrest.Matcher<androidx.test.espresso.Root!>, androidx.test.espresso.util.EspressoOptional<java.lang.Integer!>!, androidx.test.espresso.action.AdapterViewProtocol);
-    method public static androidx.test.espresso.DataInteraction.DisplayDataMatcher! displayDataMatcher(org.hamcrest.Matcher<android.view.View!>, org.hamcrest.Matcher<?>, org.hamcrest.Matcher<androidx.test.espresso.Root!>, Integer?, androidx.test.espresso.action.AdapterViewProtocol);
+    method @Deprecated public static androidx.test.espresso.DataInteraction.DisplayDataMatcher! displayDataMatcher(org.hamcrest.Matcher<android.view.View!>, org.hamcrest.Matcher<? extends java.lang.Object!>, org.hamcrest.Matcher<androidx.test.espresso.Root!>, androidx.test.espresso.util.EspressoOptional<java.lang.Integer!>!, androidx.test.espresso.action.AdapterViewProtocol);
+    method public static androidx.test.espresso.DataInteraction.DisplayDataMatcher! displayDataMatcher(org.hamcrest.Matcher<android.view.View!>, org.hamcrest.Matcher<? extends java.lang.Object!>, org.hamcrest.Matcher<androidx.test.espresso.Root!>, Integer?, androidx.test.espresso.action.AdapterViewProtocol);
     method public boolean matchesSafely(android.view.View!);
   }
 
   public final class Espresso {
     method public static void closeSoftKeyboard();
     method @Deprecated public static java.util.List<androidx.test.espresso.IdlingResource!>! getIdlingResources();
-    method @CheckResult @javax.annotation.CheckReturnValue public static androidx.test.espresso.DataInteraction! onData(org.hamcrest.Matcher<?>!);
+    method @CheckResult @javax.annotation.CheckReturnValue public static androidx.test.espresso.DataInteraction! onData(org.hamcrest.Matcher<? extends java.lang.Object!>!);
     method public static void onIdle();
     method public static <T> T! onIdle(java.util.concurrent.Callable<T!>!);
     method @CheckResult @javax.annotation.CheckReturnValue public static androidx.test.espresso.ViewInteraction! onView(org.hamcrest.Matcher<android.view.View!>!);
@@ -193,8 +193,8 @@ package androidx.test.espresso {
 package androidx.test.espresso.action {
 
   public final class AdapterDataLoaderAction implements androidx.test.espresso.ViewAction {
-    ctor @Deprecated public AdapterDataLoaderAction(org.hamcrest.Matcher<?>!, androidx.test.espresso.util.EspressoOptional<java.lang.Integer!>!, androidx.test.espresso.action.AdapterViewProtocol!);
-    ctor public AdapterDataLoaderAction(org.hamcrest.Matcher<?>!, Integer?, androidx.test.espresso.action.AdapterViewProtocol!);
+    ctor @Deprecated public AdapterDataLoaderAction(org.hamcrest.Matcher<? extends java.lang.Object!>!, androidx.test.espresso.util.EspressoOptional<java.lang.Integer!>!, androidx.test.espresso.action.AdapterViewProtocol!);
+    ctor public AdapterDataLoaderAction(org.hamcrest.Matcher<? extends java.lang.Object!>!, Integer?, androidx.test.espresso.action.AdapterViewProtocol!);
     method public androidx.test.espresso.action.AdapterViewProtocol.AdaptedData! getAdaptedData();
     method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
     method public String! getDescription();
@@ -544,7 +544,7 @@ package androidx.test.espresso.base {
     ctor public PlatformTestStorageModule();
   }
 
-  @androidx.test.espresso.base.RootViewPickerScope public final class RootViewPicker implements javax.inject.Provider<android.view.View> {
+  @androidx.test.espresso.base.RootViewPickerScope public final class RootViewPicker implements javax.inject.Provider<android.view.View!> {
     method public android.view.View! get();
   }
 
@@ -585,9 +585,9 @@ package androidx.test.espresso.core.internal.deps.guava.base {
 
 package androidx.test.espresso.matcher {
 
-  public abstract class BoundedDiagnosingMatcher<S, T extends S> extends org.hamcrest.BaseMatcher<S> {
+  public abstract class BoundedDiagnosingMatcher<S, T extends S> extends org.hamcrest.BaseMatcher<S!> {
     ctor public BoundedDiagnosingMatcher(Class<? extends S!>!);
-    ctor public BoundedDiagnosingMatcher(Class<? extends S!>!, Class<?>!, Class<?>!...!);
+    ctor public BoundedDiagnosingMatcher(Class<? extends S!>!, Class<? extends java.lang.Object!>!, Class<? extends java.lang.Object!>!...!);
     method public final void describeMismatch(Object!, org.hamcrest.Description!);
     method protected abstract void describeMoreTo(org.hamcrest.Description!);
     method public final void describeTo(org.hamcrest.Description!);
@@ -595,9 +595,9 @@ package androidx.test.espresso.matcher {
     method protected abstract boolean matchesSafely(T!, org.hamcrest.Description!);
   }
 
-  public abstract class BoundedMatcher<T, S extends T> extends org.hamcrest.BaseMatcher<T> {
+  public abstract class BoundedMatcher<T, S extends T> extends org.hamcrest.BaseMatcher<T!> {
     ctor public BoundedMatcher(Class<? extends S!>!);
-    ctor public BoundedMatcher(Class<?>!, Class<?>!, Class<?>!...!);
+    ctor public BoundedMatcher(Class<? extends java.lang.Object!>!, Class<? extends java.lang.Object!>!, Class<? extends java.lang.Object!>!...!);
     method public final boolean matches(Object!);
     method protected abstract boolean matchesSafely(S!);
   }
@@ -640,13 +640,13 @@ package androidx.test.espresso.matcher {
     method public static androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withRowString(org.hamcrest.Matcher<java.lang.String!>!, org.hamcrest.Matcher<java.lang.String!>!);
   }
 
-  public static class CursorMatchers.CursorMatcher extends androidx.test.espresso.matcher.BoundedMatcher<java.lang.Object,android.database.Cursor> {
+  public static class CursorMatchers.CursorMatcher extends androidx.test.espresso.matcher.BoundedMatcher<java.lang.Object!,android.database.Cursor!> {
     method public void describeTo(org.hamcrest.Description!);
     method public boolean matchesSafely(android.database.Cursor!);
     method public androidx.test.espresso.matcher.CursorMatchers.CursorMatcher! withStrictColumnChecks(boolean);
   }
 
-  public final class HasBackgroundMatcher extends org.hamcrest.TypeSafeMatcher<android.view.View> {
+  public final class HasBackgroundMatcher extends org.hamcrest.TypeSafeMatcher<android.view.View!> {
     ctor public HasBackgroundMatcher(int);
     method public void describeTo(org.hamcrest.Description!);
     method protected boolean matchesSafely(android.view.View!);
@@ -741,7 +741,7 @@ package androidx.test.espresso.matcher {
     method public static org.hamcrest.Matcher<android.view.View!>! withSpinnerText(org.hamcrest.Matcher<java.lang.String!>!);
     method public static org.hamcrest.Matcher<android.view.View!>! withSubstring(String!);
     method public static org.hamcrest.Matcher<android.view.View!>! withTagKey(int);
-    method public static org.hamcrest.Matcher<android.view.View!>! withTagKey(int, org.hamcrest.Matcher<?>!);
+    method public static org.hamcrest.Matcher<android.view.View!>! withTagKey(int, org.hamcrest.Matcher<? extends java.lang.Object!>!);
     method public static org.hamcrest.Matcher<android.view.View!>! withTagValue(org.hamcrest.Matcher<java.lang.Object!>!);
     method public static org.hamcrest.Matcher<android.view.View!>! withText(int);
     method public static org.hamcrest.Matcher<android.view.View!>! withText(String!);
@@ -768,7 +768,7 @@ package androidx.test.espresso.remote {
   }
 
   public final class ConstructorInvocation {
-    ctor public ConstructorInvocation(Class<?>, Class<? extends java.lang.annotation.Annotation!>?, Class<?>!...?);
+    ctor public ConstructorInvocation(Class<? extends java.lang.Object!>, Class<? extends java.lang.annotation.Annotation!>?, Class<? extends java.lang.Object!>!...?);
     method public Object! invokeConstructor(java.lang.Object!...!);
   }
 

@@ -24,7 +24,7 @@ package androidx.test.ext.junit.rules {
 package androidx.test.ext.junit.runners {
 
   public final class AndroidJUnit4 extends org.junit.runner.Runner implements org.junit.runner.manipulation.Filterable org.junit.runner.manipulation.Sortable {
-    ctor public AndroidJUnit4(Class<?>!) throws org.junit.runners.model.InitializationError;
+    ctor public AndroidJUnit4(Class<? extends java.lang.Object!>!) throws org.junit.runners.model.InitializationError;
     method public void filter(org.junit.runner.manipulation.Filter!) throws org.junit.runner.manipulation.NoTestsRemainException;
     method public org.junit.runner.Description! getDescription();
     method public void run(org.junit.runner.notification.RunNotifier!);

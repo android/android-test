@@ -34,7 +34,7 @@ import java.util.concurrent.Future;
  * @since 10.0
  * @param <V>
  */
-interface FutureCallback<V> {
+public interface FutureCallback<V> {
   /** Invoked with the result of the {@code Future} computation when it is successful. */
   void onSuccess(@Nullable V result);
 

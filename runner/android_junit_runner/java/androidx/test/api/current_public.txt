@@ -227,7 +227,7 @@ package androidx.test.orchestrator.listeners.result {
 package androidx.test.runner {
 
   @Deprecated public final class AndroidJUnit4 extends org.junit.runner.Runner implements org.junit.runner.manipulation.Filterable org.junit.runner.manipulation.Sortable {
-    ctor @Deprecated public AndroidJUnit4(Class<?>!) throws org.junit.runners.model.InitializationError;
+    ctor @Deprecated public AndroidJUnit4(Class<? extends java.lang.Object!>!) throws org.junit.runners.model.InitializationError;
     method @Deprecated public void filter(org.junit.runner.manipulation.Filter!) throws org.junit.runner.manipulation.NoTestsRemainException;
     method @Deprecated public org.junit.runner.Description! getDescription();
     method @Deprecated public void run(org.junit.runner.notification.RunNotifier!);

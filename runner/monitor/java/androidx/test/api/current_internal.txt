@@ -67,14 +67,14 @@ package androidx.test.internal.platform.reflect {
   }
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ReflectiveField<T> {
-    ctor public ReflectiveField(Class<?>!, String!);
+    ctor public ReflectiveField(Class<? extends java.lang.Object!>!, String!);
     ctor public ReflectiveField(String!, String!);
     method public T! get(Object!) throws androidx.test.internal.platform.reflect.ReflectionException;
   }
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ReflectiveMethod<T> {
-    ctor public ReflectiveMethod(Class<?>!, String!, Class<?>!...!);
-    ctor public ReflectiveMethod(String!, String!, Class<?>!...!);
+    ctor public ReflectiveMethod(Class<? extends java.lang.Object!>!, String!, Class<? extends java.lang.Object!>!...!);
+    ctor public ReflectiveMethod(String!, String!, Class<? extends java.lang.Object!>!...!);
     method public T! invoke(Object!, java.lang.Object!...!) throws androidx.test.internal.platform.reflect.ReflectionException;
     method public T! invokeStatic(java.lang.Object!...!) throws androidx.test.internal.platform.reflect.ReflectionException;
   }
@@ -177,7 +177,7 @@ package androidx.test.internal.util {
 
   @Deprecated @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ReflectionUtil {
     ctor @Deprecated public ReflectionUtil();
-    method @Deprecated public static Object! callStaticMethod(Class<?>!, String!, androidx.test.internal.util.ReflectionUtil.ReflectionParams!...!) throws androidx.test.internal.util.ReflectionUtil.ReflectionException;
+    method @Deprecated public static Object! callStaticMethod(Class<? extends java.lang.Object!>!, String!, androidx.test.internal.util.ReflectionUtil.ReflectionParams!...!) throws androidx.test.internal.util.ReflectionUtil.ReflectionException;
     method @Deprecated public static Object! callStaticMethod(String!, String!, androidx.test.internal.util.ReflectionUtil.ReflectionParams!...!) throws androidx.test.internal.util.ReflectionUtil.ReflectionException;
   }
 
@@ -185,8 +185,8 @@ package androidx.test.internal.util {
   }
 
   @Deprecated public static class ReflectionUtil.ReflectionParams {
-    ctor @Deprecated public ReflectionUtil.ReflectionParams(Class<?>!, Object!);
-    method @Deprecated public static Class<?>![]! getTypes(androidx.test.internal.util.ReflectionUtil.ReflectionParams![]!);
+    ctor @Deprecated public ReflectionUtil.ReflectionParams(Class<? extends java.lang.Object!>!, Object!);
+    method @Deprecated public static Class<? extends java.lang.Object!>![]! getTypes(androidx.test.internal.util.ReflectionUtil.ReflectionParams![]!);
     method @Deprecated public static Object![]! getValues(androidx.test.internal.util.ReflectionUtil.ReflectionParams![]!);
   }
 

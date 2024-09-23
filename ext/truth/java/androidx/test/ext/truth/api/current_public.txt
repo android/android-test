@@ -41,7 +41,7 @@ package androidx.test.ext.truth.content {
     method public void hasAction(String!);
     method public void hasComponent(android.content.ComponentName!);
     method public void hasComponent(String!, String!);
-    method public void hasComponentClass(Class<?>!);
+    method public void hasComponentClass(Class<? extends java.lang.Object!>!);
     method public void hasComponentClass(String!);
     method public void hasComponentPackage(String!);
     method public void hasData(android.net.Uri!);

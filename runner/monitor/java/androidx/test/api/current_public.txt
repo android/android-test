@@ -116,7 +116,7 @@ package androidx.test.runner {
     method public android.app.Instrumentation.ActivityResult! execStartActivity(android.content.Context!, android.os.IBinder!, android.os.IBinder!, String!, android.content.Intent!, int, android.os.Bundle!);
     method protected String! getThreadState();
     method protected void installMultidex();
-    method protected void installOldMultiDex(Class<?>!) throws java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.NoSuchMethodException;
+    method protected void installOldMultiDex(Class<? extends java.lang.Object!>!) throws java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException, java.lang.NoSuchMethodException;
     method public void interceptActivityUsing(androidx.test.runner.intercepting.InterceptingActivityFactory!);
     method protected final boolean isPrimaryInstrProcess();
     method @Deprecated protected boolean isPrimaryInstrProcess(String?);
