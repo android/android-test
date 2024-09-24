@@ -187,7 +187,7 @@ maven_install(
                 ),
             ],
             group = "org.robolectric",
-            version = "4.11.1",
+            version = "4.13",
         ),
     ],
     fetch_sources = True,
