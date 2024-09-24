@@ -1,3 +1,4 @@
+load("@rules_java//java:defs.bzl", "java_library")
 load("//build_extensions:kt_android_library.bzl", "kt_android_library")
 
 # A shell command execution server to allow shell commands to be run at elevated permissions

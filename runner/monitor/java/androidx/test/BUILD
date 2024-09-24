@@ -1,6 +1,7 @@
 # Description: Build rules for building androidx.test from source
 
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
+load("@rules_java//java:defs.bzl", "java_library")
 load("//build_extensions:api_checks.bzl", "api_checks")
 load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions:kt_android_library.bzl", "kt_android_library")
