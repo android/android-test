@@ -1,6 +1,8 @@
 # Description:
 #   Internal package that will contain shaded dagger classes for external release
 
+load("@rules_java//java:defs.bzl", "java_library")
+
 licenses(["notice"])
 
 package(

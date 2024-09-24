@@ -1,5 +1,7 @@
 # Protocol buffer definitions for remote root, view and hamcrest matchers (v1.3)
 
+load("@rules_java//java:defs.bzl", "java_library")
+
 licenses(["notice"])
 
 package(

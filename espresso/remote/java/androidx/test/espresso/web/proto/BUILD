@@ -1,5 +1,7 @@
 # Protocol buffer definitions for web remote UI interactions
 
+load("@rules_java//java:defs.bzl", "java_library")
+
 licenses(["notice"])
 
 package(

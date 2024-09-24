@@ -1,5 +1,7 @@
 # Protocol buffer definitions for remote web sugar atoms
 
+load("@rules_java//java:defs.bzl", "java_library")
+
 licenses(["notice"])
 
 package(
