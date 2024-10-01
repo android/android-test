@@ -36,6 +36,7 @@ axt_android_library_test(
         "//runner/android_junit_runner",
         "//services/shellexecutor:exec_client",
         "//services/shellexecutor:exec_server",
+        "//services/shellexecutor/java/androidx/test/services/shellexecutor:local_socket_protocol",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
@@ -106,6 +107,23 @@ axt_android_library_test(
         "//services/shellexecutor/java/androidx/test/services/shellexecutor:file_observer_protocol",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
+    ],
+)
+
+axt_android_library_test(
+    name = "ShellCommandLocalSocketExecutorServerTest",
+    srcs = [
+        "ShellCommandLocalSocketExecutorServerTest.kt",
+    ],
+    deps = [
+        "//runner/monitor",
+        "//services/shellexecutor:exec_server",
+        "//services/shellexecutor/java/androidx/test/services/shellexecutor:local_socket_protocol",
+        "//services/shellexecutor/java/androidx/test/services/shellexecutor:local_socket_protocol_pb_java_proto_lite",
+        "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+        "@maven//:org_jetbrains_kotlinx_kotlinx_coroutines_android",
     ],
 )
 

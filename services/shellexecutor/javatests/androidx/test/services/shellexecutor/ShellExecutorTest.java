@@ -36,10 +36,11 @@ public class ShellExecutorTest {
 
   @Before
   public void initShellExec() {
-    this.shellExecutor =
-        new ShellExecutorImpl(
+    ShellExecutorFactory factory =
+        new ShellExecutorFactory(
             InstrumentationRegistry.getInstrumentation().getContext(),
             InstrumentationRegistry.getArguments().getString(ShellExecSharedConstants.BINDER_KEY));
+    this.shellExecutor = factory.create();
   }
 
   @Test
