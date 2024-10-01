@@ -42,7 +42,7 @@ jarjar = rule(
             allow_single_file = [".txt"],
         ),
         "_jdk": attr.label(
-            default = Label("@bazel_tools//tools/jdk"),
+            default = Label("@local_jdk//:bin/java"),
             providers = [java_common.JavaRuntimeInfo],
         ),
         "_jarjar": attr.label(

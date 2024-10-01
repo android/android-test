@@ -1,10 +1,10 @@
 """A rule wrapper for generating android_local_test ."""
 
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("@rules_kotlin//kotlin:android.bzl", "kt_android_library")
 
 _CONFIG_JAR_COMMAND = """
 set -e
-JAR="$(location @bazel_tools//tools/jdk:jar)"
+JAR="$(location @local_jdk//:bin/jar)"
 SRC="$<"
 [[ "$$(basename "$${SRC}")" = 'robolectric.properties' ]] || {
   echo 'Must be named: robolectric.properties';
