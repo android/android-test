@@ -11,6 +11,14 @@
 
 **New Features**
 
+* LocalSocketProtocol: a replacement for SpeakEasy.
+* ShellCommandLocalSocketClient: client that speaks LocalSocketProtocol.
+* ShellCommandLocalSocketExecutorServer: server that speaks LocalSocketProtocol.
+* LocalSocketShellMain: a replacement for ShellMain. Using this in place of
+  ShellMain avoids the use of the SpeakEasy protocol, so androidx.test.services
+  can be freely killed and restarted by the operating system without breaking
+  tests.
+
 **Breaking Changes**
 
 **API Changes**
