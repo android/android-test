@@ -31,8 +31,11 @@ public final class ShellExecutorFactory {
 
   public ShellExecutor create() {
     // Binder keys for SpeakEasy are a string of hex digits. Binder keys for the FileObserver
-    // protocol are the absolute path of the directory that the server is watching.
-    if (binderKey.startsWith("/")) {
+    // protocol are the absolute path of the directory that the server is watching. Binder keys for
+    // the LocalSocket protocol start and end with a colon.
+    if (LocalSocketProtocol.isBinderKey(binderKey)) {
+      return new ShellExecutorLocalSocketImpl(binderKey);
+    } else if (binderKey.startsWith("/")) {
       return new ShellExecutorFileObserverImpl(binderKey);
     } else {
       return new ShellExecutorImpl(context, binderKey);
