@@ -11,6 +11,9 @@
 
 **New Features**
 
+* LocalSocketProtocol: a replacement for SpeakEasy.
+* ShellCommandLocalSocketClient: client that speaks LocalSocketProtocol.
+
 **Breaking Changes**
 
 **API Changes**
