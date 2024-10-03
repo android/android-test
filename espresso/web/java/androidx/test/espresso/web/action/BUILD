@@ -35,6 +35,7 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/util/concurrent",
         "//opensource/androidx:annotation",
         "//runner/monitor",
+        "//tools/android/webdriver/atom:EvaluationAtom",
         "@maven//:androidx_concurrent_concurrent_futures",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_jetbrains_kotlin_kotlin_stdlib",

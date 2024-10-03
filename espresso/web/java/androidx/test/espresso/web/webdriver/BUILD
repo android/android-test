@@ -24,5 +24,6 @@ android_library(
         "//espresso/web/java/androidx/test/espresso/web/model",
         "//opensource/androidx:annotation",
         "//runner/monitor",
+        "//tools/android/webdriver/atom:WebDriverScripts",  # build-cleaner: keep
     ],
 )
