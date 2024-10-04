@@ -18,11 +18,6 @@ package androidx.test.espresso;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 
-import android.util.Log;
-import androidx.test.platform.io.PlatformTestStorage;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 /** Holds Espresso's object graph. */
@@ -43,31 +38,12 @@ public final class GraphHolder {
     if (null == instanceRef) {
       instanceRef = new GraphHolder(DaggerBaseLayerComponent.create());
       if (instance.compareAndSet(null, instanceRef)) {
-        // Also adds the usage data as test output properties. By default it's no-op.
-        Map<String, Serializable> usageProperties = new HashMap<>();
-        usageProperties.put("Espresso", "1");
-        addUsageToOutputProperties(usageProperties, instanceRef.component.testStorage());
         return instanceRef.component;
       } else {
         return instance.get().component;
       }
     } else {
       return instanceRef.component;
-    }
-  }
-
-  private static void addUsageToOutputProperties(
-      Map<String, Serializable> usageProperties, PlatformTestStorage testStorage) {
-    try {
-      testStorage.addOutputProperties(usageProperties);
-    } catch (RuntimeException e) {
-      // The properties.dat file can be created only once on an automotive emulator with API 30,
-      // which causes the `addOutputProperties` call to fail when running multiple test cases. Catch
-      // the exception and log until the issue is fixed in the emulator.
-      Log.w(
-          TAG,
-          "Failed to add the output properties. This could happen when running on Robolectric or an"
-              + " automotive emulator with API 30. Ignore for now.");
     }
   }
 }
