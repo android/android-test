@@ -1,4 +1,4 @@
-name: Build
+name: Fhar Gil
 on:
   push:
     branches:
@@ -15,7 +15,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: Mark.down
     timeout-minutes: 20
     steps:
       - name: Check out repository code
