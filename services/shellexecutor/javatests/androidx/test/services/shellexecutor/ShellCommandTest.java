@@ -24,7 +24,9 @@ import static org.hamcrest.core.Is.is;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -48,14 +50,54 @@ public class ShellCommandTest {
   private static String execShellCommand(
       String command, List<String> params, Map<String, String> env, boolean executeThroughShell)
       throws Exception {
-    return ShellCommandClient.execOnServerSync(
-        InstrumentationRegistry.getInstrumentation().getContext(),
-        getSecret(),
-        command,
-        params,
-        env,
-        executeThroughShell,
-        0L);
+    if (LocalSocketProtocol.isBinderKey(getSecret())) {
+      ShellCommandLocalSocketClient client =
+          new ShellCommandLocalSocketClient(LocalSocketProtocol.fromBinderKey(getSecret()));
+      InputStream is =
+          client.request(command, params, env, executeThroughShell, Duration.ofSeconds(10));
+      ByteArrayOutputStream result = new ByteArrayOutputStream();
+      try {
+        byte[] buffer = new byte[ShellExecSharedConstants.BUFFER_SIZE];
+        int length;
+        while ((length = is.read(buffer)) != -1) {
+          result.write(buffer, 0, length);
+        }
+      } finally {
+        if (is != null) {
+          is.close();
+        }
+      }
+      return result.toString("UTF-8");
+
+    } else {
+      return ShellCommandClient.execOnServerSync(
+          InstrumentationRegistry.getInstrumentation().getContext(),
+          getSecret(),
+          command,
+          params,
+          env,
+          executeThroughShell,
+          0L);
+    }
+  }
+
+  private static InputStream execShellCommandAsync(
+      String command, List<String> params, Map<String, String> env, boolean executeThroughShell)
+      throws Exception {
+    if (LocalSocketProtocol.isBinderKey(getSecret())) {
+      ShellCommandLocalSocketClient client =
+          new ShellCommandLocalSocketClient(LocalSocketProtocol.fromBinderKey(getSecret()));
+      return client.request(command, params, env, executeThroughShell, Duration.ofMinutes(2));
+    } else {
+      return ShellCommandClient.execOnServer(
+          InstrumentationRegistry.getInstrumentation().getContext(),
+          getSecret(),
+          command,
+          params,
+          env,
+          executeThroughShell,
+          0L);
+    }
   }
 
   @Test
@@ -123,14 +165,7 @@ public class ShellCommandTest {
     // handle. If the buffer blocks and overflows this test will timeout.
 
     InputStream stream =
-        ShellCommandClient.execOnServer(
-            InstrumentationRegistry.getInstrumentation().getContext(),
-            getSecret(),
-            "dd if=/dev/urandom bs=2048 count=16384",
-            null,
-            null,
-            true,
-            0L);
+        execShellCommandAsync("dd if=/dev/urandom bs=2048 count=16384", null, null, true);
 
     boolean weReadSomething = false;
 
