@@ -278,7 +278,7 @@ maven_artifact = rule(
             doc = "Map of maven dependency to a csv list of excluded dependencies. eg {\"com.google.foo:foo\":\"com.google.bar:bar,com.google.bar:bar-none\"}",
         ),
         "_jar": attr.label(
-            default = Label("@bazel_tools//tools/jdk:jar"),
+            default = Label("@local_jdk//:bin/jar"),
             executable = True,
             allow_files = True,
             cfg = "exec",

@@ -11,6 +11,8 @@
 
 **New Features**
 
+* Added a new protocol to replace SpeakEasy.
+
 **Breaking Changes**
 
 **API Changes**

@@ -1,54 +1,22 @@
-# TODO(b/114418172): rename to androidx_test. Requires a bazel change
-workspace(name = "android_test_support")
+module(name = "android_test_support")
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+bazel_dep(name = "rules_android", version = "0.5.1")
+bazel_dep(name = "rules_java", version = "7.12.1")
+bazel_dep(name = "rules_jvm_external", version = "6.4")
+bazel_dep(name = "rules_license", version = "1.0.0")
+bazel_dep(name = "rules_kotlin", version = "2.0.0")
+bazel_dep(name = "rules_proto", version = "6.0.2")
+bazel_dep(name = "rules_robolectric", version = "4.13")
+bazel_dep(name = "grpc-java", version = "1.66.0")
+bazel_dep(name = "abseil-py", version = "2.1.0")
 
-http_archive(
-    name = "rules_java",
-    url = "https://github.com/bazelbuild/rules_java/releases/download/5.3.5/rules_java-5.3.5.tar.gz",
-    sha256 = "c73336802d0b4882e40770666ad055212df4ea62cfa6edf9cb0f9d29828a0934",
-)
-
-RULES_JVM_EXTERNAL_TAG = "4.5"
-
-RULES_JVM_EXTERNAL_SHA = "b17d7388feb9bfa7f2fa09031b32707df529f26c91ab9e5d909eb1676badd9a6"
-
-# These need needs to be consistent with their counterparts in build_extensions/axt_deps_versions.bzl.
+# These need to be consistent with their counterparts in build_extensions/axt_deps_versions.bzl.
 KOTLIN_VERSION = "1.8.20"
 KOTLINX_COROUTINES_VERSION = "1.7.1" 
-GRPC_VERSION = "1.54.1"
+GRPC_VERSION = "1.66.0"
 
-# Get from https://github.com/JetBrains/kotlin/releases/
-KOTLINC_RELEASE_SHA = "10df74c3c6e2eafd4c7a5572352d37cbe41774996e42de627023cb4c82b50ae4"
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
 
-http_archive(
-    name = "rules_jvm_external",
-    sha256 = RULES_JVM_EXTERNAL_SHA,
-    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
-    url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_TAG,
-)
-
-# rules_proto defines proto_library, as well as @com_google_protobuf_javalite
-http_archive(
-    name = "rules_proto",
-    sha256 = "6fb6767d1bef535310547e03247f7518b03487740c11b6c6adb7952033fe1295",
-    strip_prefix = "rules_proto-6.0.2",
-    url = "https://github.com/bazelbuild/rules_proto/releases/download/6.0.2/rules_proto-6.0.2.tar.gz",
-)
-
-load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies")
-rules_proto_dependencies()
-
-load("@rules_proto//proto:setup.bzl", "rules_proto_setup")
-rules_proto_setup()
-
-load("@rules_proto//proto:toolchains.bzl", "rules_proto_toolchains")
-rules_proto_toolchains()
-
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-load("@rules_jvm_external//:defs.bzl", "maven_install")
-load("@rules_jvm_external//:specs.bzl", "maven")
 load(
     "//build_extensions:axt_deps_versions.bzl",
     "ANDROIDX_ANNOTATION_EXPERIMENTAL_VERSION",
@@ -74,19 +42,7 @@ load(
     "ATF_VERSION"
 )
 
-# gRPC
-http_archive(
-    name = "io_grpc_grpc_java",
-    sha256 = "98c32df8a878cbca5a6799922d28e9df93a4d5607316e0e3f8269a5886d9e429",
-    strip_prefix = "grpc-java-%s" % GRPC_VERSION,
-    url = "https://github.com/grpc/grpc-java/archive/v%s.tar.gz" % GRPC_VERSION,
-)
-
-load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
-
-grpc_java_repositories()
-
-maven_install(
+maven.install(
     name = "maven",
     artifacts = [
         "androidx.annotation:annotation:" + ANDROIDX_ANNOTATION_VERSION,
@@ -205,7 +161,7 @@ maven_install(
 
 # need to have a isolated version tree for listenablefuture, because otherwise
 # listenablefuture will get resolved to 9999.0-empty-to-avoid-conflict-with-guava
-maven_install(
+maven.install(
     name = "maven_listenablefuture",
     artifacts = [
         "com.google.guava:listenablefuture:" + GUAVA_LISTENABLEFUTURE_VERSION,
@@ -216,72 +172,3 @@ maven_install(
         "https://dl.bintray.com/linkedin/maven",
     ],
 )
-
-android_sdk_repository(
-    name = "androidsdk",
-    api_level = 34,
-    build_tools_version = "33.0.2",
-)
-
-load("//:repo.bzl", "android_test_repositories")
-
-android_test_repositories(with_dev_repositories = True)
-
-load("@robolectric//bazel:robolectric.bzl", "robolectric_repositories")
-
-robolectric_repositories()
-
-# Kotlin toolchains
-
-http_archive(
-    name = "rules_kotlin",
-    sha256 = "d89723cc9ebbb7bdb2ebaca1af7d2383e074615643cf97a366b758a76b7dc443",
-    url = "https://github.com/bazelbuild/rules_kotlin/releases/download/v2.0.0/rules_kotlin-v2.0.0.tar.gz",
-)
-
-load("@rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", "kotlinc_version")
-
-kotlin_repositories(
-    compiler_release = kotlinc_version(
-        release = KOTLIN_VERSION,
-        sha256 = KOTLINC_RELEASE_SHA,
-    ),
-)
-
-load("@rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
-
-kt_register_toolchains()
-
-http_archive(
-    name = "rules_android",
-    sha256 = "b1599e4604c1594a1b0754184c5e50f895a68f444d1a5a82b688b2370d990ba0",
-    strip_prefix = "rules_android-0.5.1",
-    url = "https://github.com/bazelbuild/rules_android/releases/download/v0.5.1/rules_android-v0.5.1.tar.gz",
-)
-load("@rules_android//:prereqs.bzl", "rules_android_prereqs")
-rules_android_prereqs()
-load("@rules_android//:defs.bzl", "rules_android_workspace")
-rules_android_workspace()
-
-load("@rules_android//rules:rules.bzl", "android_sdk_repository")
-android_sdk_repository(
-    name = "androidsdk",
-)
-
-register_toolchains(
-    "@rules_android//toolchains/android:android_default_toolchain",
-    "@rules_android//toolchains/android_sdk:android_sdk_tools",
-)
-
-# Updated 2023-02-01
-http_archive(
-    name = "rules_license",
-    sha256 = "6157e1e68378532d0241ecd15d3c45f6e5cfd98fc10846045509fb2a7cc9e381",
-    urls = [
-        "https://github.com/bazelbuild/rules_license/releases/download/0.0.4/rules_license-0.0.4.tar.gz",
-    ],
-)
-
-load("@maven//:compat.bzl", "compat_repositories")
-
-compat_repositories()

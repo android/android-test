@@ -97,7 +97,7 @@ axt_android_aar = rule(
             default = ["com.google.guava:guava", "com.google.dagger"],
         ),
         "_jdk": attr.label(
-            default = Label("@bazel_tools//tools/jdk"),
+            default = Label("@local_jdk//:bin/java"),
             providers = [java_common.JavaRuntimeInfo],
         ),
         "_combine_jars_java": attr.label(
