@@ -17,6 +17,7 @@
 package androidx.test.services.shellexecutor;
 
 import android.content.Context;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 /** Factory class for providing ShellExecutors. */
 public final class ShellExecutorFactory {
@@ -32,7 +33,10 @@ public final class ShellExecutorFactory {
   public ShellExecutor create() {
     // Binder keys for SpeakEasy are a string of hex digits. Binder keys for the FileObserver
     // protocol are the absolute path of the directory that the server is watching.
-    if (binderKey.startsWith("/")) {
+    if (true || binderKey.equals(UiAutomationShellExecutor.BINDER_KEY)) {
+      return new UiAutomationShellExecutor(
+          InstrumentationRegistry.getInstrumentation().getUiAutomation());
+    } else if (binderKey.startsWith("/")) {
       return new ShellExecutorFileObserverImpl(binderKey);
     } else {
       return new ShellExecutorImpl(context, binderKey);
