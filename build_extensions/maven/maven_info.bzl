@@ -15,6 +15,7 @@
 """Starlark rules to collect Maven artifacts information.
 """
 
+load("@rules_java//java:defs.bzl", "JavaInfo")
 load("//build_extensions:axt_deps_versions.bzl", "KOTLIN_VERSION")
 load("//build_extensions/maven:kotlin_info.bzl", "is_kotlin")
 load("//build_extensions/maven:maven_registry.bzl", "get_artifact_from_label", "get_maven_apk_deps", "is_axt_label", "is_shaded_from_label")
