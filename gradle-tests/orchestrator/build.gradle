@@ -14,7 +14,8 @@ android {
     compileSdk rootProject.ext.compileSdk
 
     defaultConfig {
-        minSdk rootProject.ext.minSdk
+        // test with whitespace requires min sdk 30
+        minSdk 30
         targetSdk rootProject.ext.targetSdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

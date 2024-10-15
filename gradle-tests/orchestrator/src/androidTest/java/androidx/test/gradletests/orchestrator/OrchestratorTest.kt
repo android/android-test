@@ -37,6 +37,11 @@ class OrchestratorTest {
     verifyStorageClearedThenAdd()
   }
 
+  @Test
+  fun `test with whitespace`() {
+
+  }
+
   private fun verifyStorageClearedThenAdd() {
     val savedFile =
       File(ApplicationProvider.getApplicationContext<Context>().filesDir, "myfile.txt")
