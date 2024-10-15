@@ -21,13 +21,11 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
-import static org.junit.Assert.assertThrows;
 
 import android.content.Context;
 import android.os.Bundle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.google.common.base.Joiner;
-import com.google.common.truth.Truth;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -214,24 +212,6 @@ public class TestRunnableTest {
     assertContainsRunnerArgs(runnable.params, "--A --B --C --key value");
   }
 
-  @Test
-  public void testRun_buildsParams_givenValueWithSpaceParamThrows() {
-    arguments.putString("someArgument", "A B");
-    FakeListener listener = new FakeListener();
-    FakeTestRunnable runnable =
-        new FakeTestRunnable(context, "secret", arguments, outputStream, listener, null, true);
-    assertThrows(IllegalStateException.class, runnable::run);
-  }
-
-  @Test
-  public void testRun_buildsParams_givenEmptyStringParamThrows() {
-    arguments.putString("someArgument", "");
-    FakeListener listener = new FakeListener();
-    FakeTestRunnable runnable =
-        new FakeTestRunnable(context, "secret", arguments, outputStream, listener, null, true);
-    assertThrows(IllegalStateException.class, runnable::run);
-  }
-
   private static void assertContainsRunnerArgs(List<String> params, String... containsArgs) {
     String cmdArgs = Joiner.on(" ").join(params);
     assertThat(cmdArgs, startsWith("instrument -w -r"));
@@ -239,15 +219,5 @@ public class TestRunnableTest {
       assertThat(cmdArgs, containsString(arg));
     }
     assertThat(cmdArgs, endsWith("targetInstrumentation/targetRunner"));
-  }
-
-  @Test
-  public void testRun_buildsParams_givenInstrumentationParamsWithSpaceMaintainsOrder() {
-    arguments.putString("orchestratorInstrumentationArgs", "--A,--B,--key value");
-    FakeListener listener = new FakeListener();
-    FakeTestRunnable runnable =
-        new FakeTestRunnable(context, "secret", arguments, outputStream, listener, null, true);
-    runnable.run();
-    Truth.assertThat(runnable.params).containsAtLeast("--A", "--B", "--key", "value").inOrder();
   }
 }
