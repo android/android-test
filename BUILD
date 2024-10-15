@@ -14,10 +14,7 @@ exports_files([
 maven_repository(
     name = "axt_m2repository",
     testonly = 1,
-    srcs = [
-        "//runner/android_junit_runner/java/androidx/test:runner_maven_artifact",
-        "//runner/monitor/java/androidx/test:monitor_maven_artifact",
-    ],
+    srcs = ["//runner/android_test_orchestrator/stubapp:orchestrator_release_maven_artifact"],
 )
 
 java_test(
