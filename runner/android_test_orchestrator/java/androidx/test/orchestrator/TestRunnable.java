@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /** Runnable to run a single am instrument command to execute a single test. */
@@ -189,32 +188,19 @@ public class TestRunnable implements Runnable {
   /**
    * Instrumentation params are delimited by comma, each param is stripped from leading and trailing
    * whitespace.
-   *
-   * <p>The order of the params are critical to the correctness here as we split up params that have
-   * whitespace (eg: key value) into two different params `key` and `value` which means that those
-   * two different params must be next to each other the entire time.
    */
   private List<String> getInstrumentationParamsAndRemoveBundleArgs(Bundle arguments) {
     List<String> cleanedParams = new ArrayList<>();
     String forwardedArgs = arguments.getString(ORCHESTRATOR_FORWARDED_INSTRUMENTATION_ARGS);
     if (forwardedArgs != null) {
       for (String param : forwardedArgs.split(",")) {
-        // ShellExecutor exhibits weird behavior when a param has a whitespace in it.
-        // so we need to split by white-space to remove the spaces.
-        Collections.addAll(cleanedParams, param.strip().split(" "));
+        cleanedParams.add(param.strip());
       }
       arguments.remove(ORCHESTRATOR_FORWARDED_INSTRUMENTATION_ARGS);
     }
     return cleanedParams;
   }
 
-  /**
-   * This method must maintain the order of the params
-   *
-   * <p>The order of the params are critical to the correctness here as we split up params that have
-   * whitespace (eg: key value) into two different params `key` and `value` which means that those
-   * two different params must be next to each other the entire time.
-   */
   private List<String> buildShellParams(Bundle arguments) throws IOException, ClientNotConnected {
     List<String> params = new ArrayList<>();
     params.add("instrument");
@@ -229,12 +215,6 @@ public class TestRunnable implements Runnable {
       params.add(arguments.getString(key));
     }
     params.add(getTargetInstrumentation());
-    for (String param : params) {
-      if (param.isEmpty() || param.contains(" ")) {
-        throw new IllegalStateException(
-            "Params must not contain any white-space to avoid encoding issues.");
-      }
-    }
     return params;
   }
 
