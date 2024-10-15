@@ -6,6 +6,8 @@
 
 **Bug Fixes**
 
+* Fix execution of test names with whitespace
+
 **New Features**
 
 **Breaking Changes**
