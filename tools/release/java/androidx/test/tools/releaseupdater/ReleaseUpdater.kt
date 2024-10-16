@@ -18,6 +18,8 @@ class ReleaseUpdater {
    *    passes
    * 2) X.X.X-suffix1 -> X.X.X-suffix2 where validateSuffixIncrement(suffix1, suffix2) passes
    *
+   * For more details (and the full source-of-truth), see go/androidx/versioning. // copybara:strip
+   *
    * @param oldVersion The original version
    * @param newVersion The incremented "+1" version
    * @throws IllegalArgumentException If the version was incorrectly incremented
