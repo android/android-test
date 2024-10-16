@@ -11,6 +11,8 @@
 
 **New Features**
 
+* LocalSocketProtocol: a replacement for SpeakEasy.
+
 **Breaking Changes**
 
 **API Changes**
