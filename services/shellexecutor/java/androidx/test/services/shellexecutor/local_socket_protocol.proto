@@ -1,0 +1,50 @@
+//
+// Copyright (C) 2024 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package androidx.test.services.storage;
+
+option java_package = "androidx.test.services.shellexecutor";
+option java_outer_classname = 'LocalSocketProtocolProto';
+
+// Message sent from client to server to start a process.
+message RunCommandRequest {
+  // Secret to authenticate the request.
+  string secret = 1;
+
+  // argv of the command line to run.
+  repeated string argv = 2;
+
+  // Environment varialbes to provide.
+  map<string, string> environment = 3;
+
+  // Timeout for the command. Any value <= 0 is treated as "forever".
+  int64 timeout_ms = 4;
+}
+
+// Multiple responses can be streamed back to the client. The one that has an
+// exit code indicates the end of the stream.
+message RunCommandResponse {
+  // A buffer of the command's output (stdout and stderr combined by specifying
+  // redirectErrorStream(true) on ProcessBuilder).
+  bytes buffer = 1;
+
+  // The exit code of the command. While we're stuck on proto3, the magic value
+  // 0xCA7F00D indicates that the command is still running; once we can move to
+  // a newer version where we can test hasExitCode(), we will remove the magic
+  // value.
+  int32 exit_code = 2;
+}

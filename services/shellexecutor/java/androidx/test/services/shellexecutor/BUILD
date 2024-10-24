@@ -29,6 +29,32 @@ kt_android_library(
     ],
 )
 
+proto_library(
+    name = "local_socket_protocol_pb",
+    srcs = ["local_socket_protocol.proto"],
+)
+
+java_lite_proto_library(
+    name = "local_socket_protocol_pb_java_proto_lite",
+    visibility = [
+        "//services/shellexecutor/javatests/androidx/test/services/shellexecutor:__subpackages__",
+    ],
+    deps = [":local_socket_protocol_pb"],
+)
+
+kt_android_library(
+    name = "local_socket_protocol",
+    srcs = ["LocalSocketProtocol.kt"],
+    visibility = [
+        "//services/shellexecutor/javatests/androidx/test/services/shellexecutor:__subpackages__",
+    ],
+    deps = [
+        ":local_socket_protocol_pb_java_proto_lite",
+        "@com_google_protobuf//:protobuf_javalite",
+        "@maven//:org_jetbrains_kotlinx_kotlinx_coroutines_core",
+    ],
+)
+
 kt_android_library(
     name = "exec_server",
     srcs = [
@@ -62,6 +88,7 @@ kt_android_library(
         "ShellCommand.java",
         "ShellCommandClient.java",
         "ShellCommandFileObserverClient.kt",
+        "ShellCommandLocalSocketClient.kt",
         "ShellExecSharedConstants.java",
         "ShellExecutor.java",
         "ShellExecutorFactory.java",
@@ -73,6 +100,8 @@ kt_android_library(
     deps = [
         ":coroutine_file_observer",
         ":file_observer_protocol",
+        ":local_socket_protocol",
+        ":local_socket_protocol_pb_java_proto_lite",
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
         "//services/speakeasy/java/androidx/test/services/speakeasy/client",
         "//services/speakeasy/java/androidx/test/services/speakeasy/client:tool_connection",
