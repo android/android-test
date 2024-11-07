@@ -64,6 +64,7 @@ kt_android_library(
         "ShellCommandExecutor.java",
         "ShellCommandExecutorServer.java",
         "ShellCommandFileObserverExecutorServer.kt",
+        "ShellCommandLocalSocketExecutorServer.kt",
         "ShellExecSharedConstants.java",
         "ShellMain.java",
     ],
@@ -72,6 +73,8 @@ kt_android_library(
     deps = [
         ":coroutine_file_observer",
         ":file_observer_protocol",
+        ":local_socket_protocol",
+        ":local_socket_protocol_pb_java_proto_lite",
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
         "//services/speakeasy/java/androidx/test/services/speakeasy/client",
         "//services/speakeasy/java/androidx/test/services/speakeasy/client:tool_connection",
