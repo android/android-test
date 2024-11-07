@@ -60,6 +60,7 @@ kt_android_library(
     srcs = [
         "BlockingPublish.java",
         "FileObserverShellMain.kt",
+        "LocalSocketShellMain.kt",
         "ShellCommand.java",
         "ShellCommandExecutor.java",
         "ShellCommandExecutorServer.java",
