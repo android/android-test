@@ -98,6 +98,7 @@ kt_android_library(
         "ShellExecutorFactory.java",
         "ShellExecutorFileObserverImpl.kt",
         "ShellExecutorImpl.java",
+        "ShellExecutorLocalSocketImpl.kt",
     ],
     idl_srcs = ["Command.aidl"],
     visibility = [":export"],

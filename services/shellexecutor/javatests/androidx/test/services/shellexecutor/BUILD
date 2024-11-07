@@ -36,6 +36,7 @@ axt_android_library_test(
         "//runner/android_junit_runner",
         "//services/shellexecutor:exec_client",
         "//services/shellexecutor:exec_server",
+        "//services/shellexecutor/java/androidx/test/services/shellexecutor:local_socket_protocol",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
