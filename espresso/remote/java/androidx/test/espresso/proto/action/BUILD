@@ -1,5 +1,7 @@
 # Protocol buffer definitions for remote UI interactions view matchers
 
+load("@com_google_protobuf//bazel:java_lite_proto_library.bzl", "java_lite_proto_library")
+load("@com_google_protobuf//bazel:proto_library.bzl", "proto_library")
 load("@rules_java//java:defs.bzl", "java_library")
 
 licenses(["notice"])

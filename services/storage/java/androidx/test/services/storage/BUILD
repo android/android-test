@@ -2,6 +2,9 @@
 #   Exposes sd card storage to tests regardless of permissions.
 
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
+load("@com_google_protobuf//bazel:java_lite_proto_library.bzl", "java_lite_proto_library")
+load("@com_google_protobuf//bazel:java_proto_library.bzl", "java_proto_library")
+load("@com_google_protobuf//bazel:proto_library.bzl", "proto_library")
 load("@rules_java//java:defs.bzl", "java_library")
 load("//build_extensions:api_checks.bzl", "api_checks")
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
