@@ -75,7 +75,7 @@ package androidx.test.espresso.intent {
     method public static org.hamcrest.Matcher<android.content.Intent!>! anyPermission();
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasPermission(String!);
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasPermissions(java.lang.String!...!);
-    method public static org.hamcrest.Matcher<android.content.Intent!>! hasPermissions(org.hamcrest.Matcher<java.lang.Iterable<java.lang.String!>!>!);
+    method public static org.hamcrest.Matcher<android.content.Intent!>! hasPermissions(org.hamcrest.Matcher<java.lang.Iterable<? extends java.lang.String!>!>!);
     field public static final String ACTION_REQUEST_PERMISSIONS = "android.content.pm.action.REQUEST_PERMISSIONS";
   }
 
@@ -129,7 +129,7 @@ package androidx.test.espresso.intent.matcher {
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasAction(String!);
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasAction(org.hamcrest.Matcher<java.lang.String!>!);
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasCategories(java.util.Set<java.lang.String!>!);
-    method public static org.hamcrest.Matcher<android.content.Intent!>! hasCategories(org.hamcrest.Matcher<? extends java.lang.Iterable<? super java.lang.String!>!>!);
+    method public static org.hamcrest.Matcher<android.content.Intent!>! hasCategories(org.hamcrest.Matcher<? extends java.lang.Iterable<? extends java.lang.String!>!>!);
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasComponent(android.content.ComponentName!);
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasComponent(String!);
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasComponent(org.hamcrest.Matcher<android.content.ComponentName!>!);

@@ -182,7 +182,7 @@ public final class UriMatchers {
     checkNotNull(paramName);
     checkNotNull(paramVal);
     final Matcher<QueryParamEntry> qpe = queryParamEntry(paramName, paramVal);
-    final Matcher<Iterable<? super QueryParamEntry>> matcherImpl = hasItem(qpe);
+    final Matcher<Iterable<? extends QueryParamEntry>> matcherImpl = hasItem(qpe);
 
     return new TypeSafeMatcher<Uri>() {
 
@@ -207,7 +207,7 @@ public final class UriMatchers {
 
   private static Matcher<QueryParamEntry> queryParamEntry(
       final Matcher<String> paramName, final Matcher<String> paramVal) {
-    final Matcher<Iterable<? super String>> valMatcher = hasItem(paramVal);
+    final Matcher<Iterable<? extends String>> valMatcher = hasItem(paramVal);
 
     return new TypeSafeMatcher<QueryParamEntry>(QueryParamEntry.class) {
 
