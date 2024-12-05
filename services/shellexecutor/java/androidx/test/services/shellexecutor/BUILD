@@ -9,28 +9,6 @@ package(default_applicable_licenses = ["//services:license"])
 
 licenses(["notice"])
 
-kt_android_library(
-    name = "coroutine_file_observer",
-    srcs = [
-        "CoroutineFileObserver.kt",
-    ],
-    visibility = ["//visibility:private"],
-    deps = [
-        "@maven//:org_jetbrains_kotlinx_kotlinx_coroutines_core",
-    ],
-)
-
-kt_android_library(
-    name = "file_observer_protocol",
-    srcs = [
-        "FileObserverProtocol.kt",
-        "Messages.kt",
-    ],
-    visibility = [
-        "//services/shellexecutor/javatests/androidx/test/services/shellexecutor:__subpackages__",
-    ],
-)
-
 proto_library(
     name = "local_socket_protocol_pb",
     srcs = ["local_socket_protocol.proto"],
@@ -61,12 +39,10 @@ kt_android_library(
     name = "exec_server",
     srcs = [
         "BlockingPublish.java",
-        "FileObserverShellMain.kt",
         "LocalSocketShellMain.kt",
         "ShellCommand.java",
         "ShellCommandExecutor.java",
         "ShellCommandExecutorServer.java",
-        "ShellCommandFileObserverExecutorServer.kt",
         "ShellCommandLocalSocketExecutorServer.kt",
         "ShellExecSharedConstants.java",
         "ShellMain.java",
@@ -74,8 +50,6 @@ kt_android_library(
     idl_srcs = ["Command.aidl"],
     visibility = [":export"],
     deps = [
-        ":coroutine_file_observer",
-        ":file_observer_protocol",
         ":local_socket_protocol",
         ":local_socket_protocol_pb_java_proto_lite",
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
@@ -93,20 +67,16 @@ kt_android_library(
         "ClientNotConnected.java",
         "ShellCommand.java",
         "ShellCommandClient.java",
-        "ShellCommandFileObserverClient.kt",
         "ShellCommandLocalSocketClient.kt",
         "ShellExecSharedConstants.java",
         "ShellExecutor.java",
         "ShellExecutorFactory.java",
-        "ShellExecutorFileObserverImpl.kt",
         "ShellExecutorImpl.java",
         "ShellExecutorLocalSocketImpl.kt",
     ],
     idl_srcs = ["Command.aidl"],
     visibility = [":export"],
     deps = [
-        ":coroutine_file_observer",
-        ":file_observer_protocol",
         ":local_socket_protocol",
         ":local_socket_protocol_pb_java_proto_lite",
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",

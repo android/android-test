@@ -6,6 +6,9 @@
 
 **Bug Fixes**
 
+* The obsolete FileObserver protocol has been removed in favor of the
+  LocalSocket-based protocol.
+
 **New Features**
 
 **Breaking Changes**
