@@ -19,6 +19,8 @@ package androidx.test.espresso.base;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.Nullable;
+import androidx.test.internal.platform.ServiceLoaderWrapper;
+import androidx.test.internal.platform.os.ControlledLooper;
 import java.lang.reflect.Field;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -41,6 +43,10 @@ final class ThreadPoolExecutorExtractor {
       "androidx.loader.content.ModernAsyncTask";
   private static final String MODERN_ASYNC_TASK_FIELD_NAME = "THREAD_POOL_EXECUTOR";
   private final Handler mainHandler;
+
+  private final ControlledLooper controlledLooper =
+      ServiceLoaderWrapper.loadSingleService(
+          ControlledLooper.class, () -> ControlledLooper.NO_OP_CONTROLLED_LOOPER);
 
   @Inject
   ThreadPoolExecutorExtractor(Looper looper) {
@@ -85,6 +91,7 @@ final class ThreadPoolExecutorExtractor {
             }
           });
       try {
+        controlledLooper.drainMainThreadUntilIdle();
         latch.await();
       } catch (InterruptedException ie) {
         if (!futureToRun.isDone()) {
