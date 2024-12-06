@@ -12,6 +12,8 @@
 
 **New Features**
 
+* Evaluate annotation with @CustomFilter on test class
+
 **Breaking Changes**
 
 **API Changes**
