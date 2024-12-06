@@ -16,6 +16,8 @@ The following artifacts were released:
 
 **Bug Fixes**
 
+* Fix deadlock in espresso in Robolectric INSTRUMENTATION_TEST + paused looper.
+
 **New Features**
 
 **Breaking Changes**
