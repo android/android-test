@@ -9,6 +9,7 @@
 * Exceptions during `@AfterClass` were not being reported via `InstrumentationResultPrinter`.
 * Exceptions arising in AndroidJUnitRunner.buildRequest are now handled.
 * Assumption failures during a ClassRule or BeforeClass are now reported more consistently via `InstrumentationResultPrinter`
+* Clarify SdkSuppress reference docs
 
 **New Features**
 

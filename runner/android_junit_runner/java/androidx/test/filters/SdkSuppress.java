@@ -21,10 +21,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that a specific test or class should or should not be run on certain API levels.
+ * Indicates that a specific test or class should not be run on certain API levels.
  *
- * <p>Test(s) will be skipped when executed on android platforms less/more than specified level
- * (inclusive) or executed on an android platform whose SDK level is in the excludedSdks list.
+ * <p>Test(s) will be skipped when executed on Android platforms with SDK API level:
+ *
+ * <ul>
+ *   <li>less than specified minSdkVersion OR
+ *   <li>greater than specified maxSdkVersion OR
+ *   <li>in the excludedSdks list.
+ * </ul>
  *
  * <p>If {@code @SdkSuppress} is applied at both the class and test method, the test method
  * annotation takes precedence, and the class level {@code @SdkSuppress} is ignored.
@@ -36,8 +41,10 @@ public @interface SdkSuppress {
   int minSdkVersion() default 1;
   /** The maximum API level to execute (inclusive) */
   int maxSdkVersion() default Integer.MAX_VALUE;
-  /** The list of SDK versions to exclude */
+
+  /** The (additional) list of SDK versions to exclude */
   int[] excludedSdks() default {};
+
   /**
    * The {@link android.os.Build.VERSION.CODENAME} to execute on. This is intended to be used to run
    * on a pre-release SDK, where the {@link android.os.Build.VERSION.SDK_INT} has not yet been
