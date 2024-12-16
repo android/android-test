@@ -19,7 +19,6 @@ package androidx.test.espresso.base;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.MessageQueue;
 import androidx.test.espresso.IdlingResource;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
@@ -69,7 +68,7 @@ class LooperIdlingResourceInterrogationHandler
 
   // read on main - written on looper
   private volatile boolean started = false;
-  private volatile MessageQueue queue = null;
+  private volatile Looper looper = null;
   private volatile boolean idle = true;
 
   // written on main - read on looper
@@ -97,7 +96,7 @@ class LooperIdlingResourceInterrogationHandler
             new Runnable() {
               @Override
               public void run() {
-                ir.queue = Looper.myQueue();
+                ir.looper = Looper.myLooper();
                 ir.started = true;
                 Interrogator.loopAndInterrogate(ir);
               }
@@ -163,7 +162,7 @@ class LooperIdlingResourceInterrogationHandler
       // make sure nothing has arrived in the queue while the looper thread is waiting to pull a
       // new task out of it. There can be some delay between a new message entering the queue and
       // the looper thread pulling it out and processing it.
-      return Boolean.FALSE.equals(Interrogator.peekAtQueueState(queue, queueHasNewTasks));
+      return Boolean.FALSE.equals(Interrogator.peekAtQueueState(looper, queueHasNewTasks));
     }
     return false;
   }

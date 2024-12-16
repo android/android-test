@@ -16,27 +16,19 @@
 
 package androidx.test.espresso.base;
 
-import static androidx.test.espresso.util.Throwables.throwIfUnchecked;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
 
 import android.os.Binder;
 import android.os.Looper;
 import android.os.Message;
-import android.os.MessageQueue;
 import android.os.SystemClock;
 import android.util.Log;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /** Isolates the nasty details of touching the message queue. */
 final class Interrogator {
 
   private static final String TAG = "Interrogator";
-  private static final Method messageQueueNextMethod;
-  private static final Field messageQueueHeadField;
-  private static final Method recycleUncheckedMethod;
 
   private static final int LOOKAHEAD_MILLIS = 15;
   private static final ThreadLocal<Boolean> interrogating =
@@ -47,30 +39,7 @@ final class Interrogator {
         }
       };
 
-  static {
-    try {
-      // TODO(b/112000181): remove the hidden api access here
-      messageQueueNextMethod = MessageQueue.class.getDeclaredMethod("next");
-      messageQueueNextMethod.setAccessible(true);
 
-      messageQueueHeadField = MessageQueue.class.getDeclaredField("mMessages");
-      messageQueueHeadField.setAccessible(true);
-    } catch (IllegalArgumentException
-        | NoSuchFieldException
-        | SecurityException
-        | NoSuchMethodException e) {
-      Log.e(TAG, "Could not initialize interrogator!", e);
-      throw new RuntimeException("Could not initialize interrogator!", e);
-    }
-
-    Method recycleUnchecked = null;
-    try {
-      recycleUnchecked = Message.class.getDeclaredMethod("recycleUnchecked");
-      recycleUnchecked.setAccessible(true);
-    } catch (NoSuchMethodException expectedOnLowerApiLevels) {
-    }
-    recycleUncheckedMethod = recycleUnchecked;
-  }
 
   /** Informed of the state of the queue and controls whether to continue interrogation or quit. */
   interface QueueInterrogationHandler<R> {
@@ -133,7 +102,8 @@ final class Interrogator {
     checkSanity();
     interrogating.set(Boolean.TRUE);
     boolean stillInterested = true;
-    MessageQueue q = Looper.myQueue();
+    TestLooperManagerCompat testLooperManager = TestLooperManagerCompat.acquire(Looper.myLooper());
+
     // We may have an identity when we're called - we want to restore it at the end of the fn.
     final long entryIdentity = Binder.clearCallingIdentity();
     try {
@@ -141,9 +111,9 @@ final class Interrogator {
       final long threadIdentity = Binder.clearCallingIdentity();
       while (stillInterested) {
         // run until the observer is no longer interested.
-        stillInterested = interrogateQueueState(q, handler);
+        stillInterested = interrogateQueueState(testLooperManager, handler);
         if (stillInterested) {
-          Message m = getNextMessage();
+          Message m = testLooperManager.next();
 
           // the observer cannot stop us from dispatching this message - but we need to let it know
           // that we're about to dispatch.
@@ -153,7 +123,7 @@ final class Interrogator {
           }
           stillInterested = handler.beforeTaskDispatch();
           handler.setMessage(m);
-          m.getTarget().dispatchMessage(m);
+          testLooperManager.execute(m);
 
           // ensure looper invariants
           final long newIdentity = Binder.clearCallingIdentity();
@@ -172,46 +142,15 @@ final class Interrogator {
                     + " what="
                     + m.what);
           }
-          recycle(m);
+          testLooperManager.recycle(m);
         }
       }
     } finally {
       Binder.restoreCallingIdentity(entryIdentity);
       interrogating.set(Boolean.FALSE);
+      testLooperManager.release();
     }
     return handler.get();
-  }
-
-  private static void recycle(Message m) {
-    if (recycleUncheckedMethod != null) {
-      try {
-        recycleUncheckedMethod.invoke(m);
-      } catch (IllegalAccessException | IllegalArgumentException | SecurityException e) {
-        throwIfUnchecked(e);
-        throw new RuntimeException(e);
-      } catch (InvocationTargetException ite) {
-        if (ite.getCause() != null) {
-          throwIfUnchecked(ite.getCause());
-          throw new RuntimeException(ite.getCause());
-        } else {
-          throw new RuntimeException(ite);
-        }
-      }
-    } else {
-      m.recycle();
-    }
-  }
-
-  private static Message getNextMessage() {
-    try {
-      return (Message) messageQueueNextMethod.invoke(Looper.myQueue());
-    } catch (IllegalAccessException
-        | IllegalArgumentException
-        | InvocationTargetException
-        | SecurityException e) {
-      throwIfUnchecked(e);
-      throw new RuntimeException(e);
-    }
   }
 
   /**
@@ -228,36 +167,40 @@ final class Interrogator {
    *     queueEmpty(), taskDueSoon(), taskDueLong() or barrierUp(). once and only once.
    * @return the result of handler.get()
    */
-  static <R> R peekAtQueueState(MessageQueue q, QueueInterrogationHandler<R> handler) {
-    checkNotNull(q);
+  static <R> R peekAtQueueState(
+      TestLooperManagerCompat testLooperManager, QueueInterrogationHandler<R> handler) {
+    checkNotNull(testLooperManager);
     checkNotNull(handler);
     checkState(
-        !interrogateQueueState(q, handler),
+        !interrogateQueueState(testLooperManager, handler),
         "It is expected that %s would stop interrogation after a single peak at the queue.",
         handler);
     return handler.get();
   }
 
+  static <R> R peekAtQueueState(Looper looper, QueueInterrogationHandler<R> handler) {
+    TestLooperManagerCompat testLooperManager = TestLooperManagerCompat.acquire(looper);
+    try {
+      return peekAtQueueState(testLooperManager, handler);
+    } finally {
+      testLooperManager.release();
+    }
+  }
+
   private static boolean interrogateQueueState(
-      MessageQueue q, QueueInterrogationHandler<?> handler) {
-    synchronized (q) {
-      final Message head;
-      try {
-        head = (Message) messageQueueHeadField.get(q);
-      } catch (IllegalAccessException e) {
-        throw new RuntimeException(e);
-      }
-      if (null == head) {
-        // no messages pending - AT ALL!
-        return handler.queueEmpty();
-      } else if (null == head.getTarget()) {
-        // null target is a sync barrier token.
+      TestLooperManagerCompat testLooperManager, QueueInterrogationHandler<?> handler) {
+
+    Long headWhen = testLooperManager.peekWhen();
+    if (null == headWhen) {
+      if (testLooperManager.isBlockedOnSyncBarrier()) {
         if (Log.isLoggable(TAG, Log.DEBUG)) {
           Log.d(TAG, "barrier is up");
         }
         return handler.barrierUp();
       }
-      long headWhen = head.getWhen();
+      return handler.queueEmpty();
+    }
+
       long nowFuz = SystemClock.uptimeMillis() + LOOKAHEAD_MILLIS;
       if (Log.isLoggable(TAG, Log.DEBUG)) {
         Log.d(
@@ -268,7 +211,6 @@ final class Interrogator {
         return handler.taskDueSoon();
       }
       return handler.taskDueLong();
-    }
   }
 
   private static void checkSanity() {
