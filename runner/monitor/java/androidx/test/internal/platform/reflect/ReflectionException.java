@@ -24,7 +24,7 @@ import androidx.annotation.RestrictTo.Scope;
  * @hide
  */
 @RestrictTo(Scope.LIBRARY_GROUP)
-public class ReflectionException extends Exception {
+public class ReflectionException extends RuntimeException {
 
   ReflectionException(Exception cause) {
     super("Reflection access failed", cause);

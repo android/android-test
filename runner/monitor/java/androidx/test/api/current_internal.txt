@@ -63,7 +63,7 @@ package androidx.test.internal.platform.os {
 
 package androidx.test.internal.platform.reflect {
 
-  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ReflectionException extends java.lang.Exception {
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ReflectionException extends java.lang.RuntimeException {
   }
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ReflectiveField<T> {
