@@ -28,7 +28,7 @@ dependencyResolutionManagement {
             library('espresso.idlingresource', 'androidx.test.espresso:espresso-idling-resource:3.7.0-alpha01')
             library('espresso.intents', 'androidx.test.espresso:espresso-intents:3.7.0-alpha01')
             library('espresso.web', 'androidx.test.espresso:espresso-web:3.7.0-alpha01')
-            library('orchestrator', 'androidx.test:orchestrator:1.6.0-alpha01')
+            library('orchestrator', 'androidx.test:orchestrator:1.6.0-alpha02')
 
         }
     }
