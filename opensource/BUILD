@@ -12,3 +12,4 @@ java_import(
         "//visibility:public",
     ],
 )
+
