@@ -216,8 +216,8 @@ maven_install(
 
 android_sdk_repository(
     name = "androidsdk",
-    api_level = 34,
-    build_tools_version = "33.0.2",
+    api_level = 35,
+    build_tools_version = "35.0.0",
 )
 
 load("//:repo.bzl", "android_test_repositories")
