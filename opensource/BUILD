@@ -5,7 +5,7 @@ load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 java_import(
     name = "androidsdk_compiletime",
     jars = [
-        "@androidsdk//:platforms/android-33/android.jar",
+        "@androidsdk//:platforms/android-35/android.jar",
     ],
     neverlink = 1,
     visibility = [
