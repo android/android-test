@@ -288,3 +288,16 @@ axt_android_library_test(
         "@maven//:org_mockito_mockito_core",
     ],
 )
+
+axt_android_library_test(
+    name = "EspressoIdleTest",
+    srcs = ["EspressoIdleTest.java"],
+    deps = [
+        "//espresso/core",
+        "//espresso/core/java/androidx/test/espresso/base:idling_resource_registry",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+    ],
+)

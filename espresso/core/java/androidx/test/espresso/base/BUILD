@@ -25,6 +25,7 @@ android_library(
             "IdlingResourceRegistry.java",
             "Interrogator.java",
             "LooperIdlingResourceInterrogationHandler.java",
+            "TestLooperManagerCompat.java",
             "ViewHierarchyExceptionHandler.java",
         ],
     ),
@@ -64,6 +65,7 @@ android_library(
         "IdlingResourceRegistry.java",
         "Interrogator.java",
         "LooperIdlingResourceInterrogationHandler.java",
+        "TestLooperManagerCompat.java",
     ],
     deps = [
         "//espresso/core/java/androidx/test/espresso:interface",

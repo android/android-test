@@ -17,6 +17,7 @@ The following artifacts were released:
 **Bug Fixes**
 
 * Fix deadlock in espresso in Robolectric INSTRUMENTATION_TEST + paused looper.
+* Refactor espresso's MessageQueue access into a TestLooperManagerCompat class
 
 **New Features**
 
