@@ -289,7 +289,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
       }
       checkNotNull(
           activityResult,
-          "onActivityResult never be called after %d milliseconds",
+          "onActivityResult was not called within %d milliseconds",
           ActivityLifecycleTimeout.getMillis());
       return activityResult;
     }
