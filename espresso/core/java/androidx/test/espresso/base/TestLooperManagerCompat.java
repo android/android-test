@@ -164,6 +164,10 @@ final class TestLooperManagerCompat {
   }
 
   MessageQueue getQueue() {
-    return queue;
+    if (queue != null) {
+      return queue;
+    } else {
+      return delegate.getMessageQueue();
+    }
   }
 }
