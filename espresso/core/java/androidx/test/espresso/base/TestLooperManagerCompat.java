@@ -1,9 +1,15 @@
 package androidx.test.espresso.base;
 
+import static androidx.test.internal.util.Checks.checkNotNull;
+
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue;
+import android.os.TestLooperManager;
 import androidx.annotation.Nullable;
+import androidx.test.platform.app.InstrumentationRegistry;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -13,20 +19,40 @@ import java.lang.reflect.Method;
  *
  * <p>Unlike the real TestLooperManager this only supports being used from the Looper's thread.
  */
-class TestLooperManagerCompat {
+@SuppressWarnings("NonFinalStaticField")
+final class TestLooperManagerCompat {
 
-  private static final Method messageQueueNextMethod;
-  private static final Field messageQueueHeadField;
-  private static final Method recycleUncheckedMethod;
+  private static Method messageQueueNextMethod;
+  private static Field messageQueueHeadField;
+  private static Method recycleUncheckedMethod;
+  private static Method peekWhenMethod;
+  private static Method blockedOnBarrierMethod;
+
+  private static boolean initTestLooperManager() {
+    // TODO(b/112000181): update this check and remove reflection when compiling against Baklava
+    if (VERSION.SDK_INT >= VERSION_CODES.VANILLA_ICE_CREAM) {
+      try {
+        peekWhenMethod = TestLooperManager.class.getDeclaredMethod("peekWhen");
+        blockedOnBarrierMethod =
+            TestLooperManager.class.getDeclaredMethod("isBlockedOnSyncBarrier");
+        return true;
+      } catch (ReflectiveOperationException e) {
+        // fall through
+      }
+    }
+    return false;
+  }
 
   static {
     try {
-      messageQueueNextMethod = MessageQueue.class.getDeclaredMethod("next");
-      messageQueueNextMethod.setAccessible(true);
-      messageQueueHeadField = MessageQueue.class.getDeclaredField("mMessages");
-      messageQueueHeadField.setAccessible(true);
-      recycleUncheckedMethod = Message.class.getDeclaredMethod("recycleUnchecked");
-      recycleUncheckedMethod.setAccessible(true);
+      if (!initTestLooperManager()) {
+        messageQueueNextMethod = MessageQueue.class.getDeclaredMethod("next");
+        messageQueueNextMethod.setAccessible(true);
+        messageQueueHeadField = MessageQueue.class.getDeclaredField("mMessages");
+        messageQueueHeadField.setAccessible(true);
+        recycleUncheckedMethod = Message.class.getDeclaredMethod("recycleUnchecked");
+        recycleUncheckedMethod.setAccessible(true);
+      }
     } catch (ReflectiveOperationException e) {
       throw new RuntimeException(e);
     }
@@ -34,52 +60,92 @@ class TestLooperManagerCompat {
 
   private final MessageQueue queue;
 
+  // the TestLooperManager to defer to. Will only be non-null if running
+  // on an Android API level that supports it
+  private final TestLooperManager delegate;
+
   private TestLooperManagerCompat(MessageQueue queue) {
     this.queue = queue;
+    this.delegate = null;
+  }
+
+  private TestLooperManagerCompat(TestLooperManager testLooperManager) {
+    this.queue = null;
+    this.delegate = testLooperManager;
   }
 
   static TestLooperManagerCompat acquire(Looper looper) {
-    return new TestLooperManagerCompat(looper.getQueue());
+    if (peekWhenMethod != null) {
+      // running on a newer Android version that has the supported TestLooperManagerCompat changes
+      TestLooperManager testLooperManager =
+          InstrumentationRegistry.getInstrumentation().acquireLooperManager(looper);
+      return new TestLooperManagerCompat(testLooperManager);
+    } else {
+      return new TestLooperManagerCompat(looper.getQueue());
+    }
   }
 
   @Nullable
   Long peekWhen() {
-    Message msg = legacyPeek();
-    if (msg != null && msg.getTarget() == null) {
-      return null;
+    try {
+      if (delegate != null) {
+        return (Long) peekWhenMethod.invoke(delegate);
+      } else {
+        Message msg = legacyPeek();
+        if (msg != null && msg.getTarget() == null) {
+          return null;
+        }
+        return msg == null ? null : msg.getWhen();
+      }
+    } catch (ReflectiveOperationException e) {
+      throw new RuntimeException(e);
     }
-    return msg == null ? null : msg.getWhen();
   }
 
   @Nullable
-  private Message legacyPeek() {
+  private Message legacyPeek() throws IllegalAccessException {
+    checkNotNull(queue);
     // the legacy MessageQueue implementation synchronizes on itself,
     // so this uses the same lock
     synchronized (queue) {
-      try {
-        return (Message) messageQueueHeadField.get(queue);
-      } catch (IllegalAccessException e) {
-        throw new RuntimeException(e);
-      }
+      return (Message) messageQueueHeadField.get(queue);
     }
   }
 
   void execute(Message message) {
-    message.getTarget().dispatchMessage(message);
+    if (delegate != null) {
+      delegate.execute(message);
+    } else {
+      message.getTarget().dispatchMessage(message);
+    }
   }
 
   void release() {
-    // ignore for now
+    if (delegate != null) {
+      delegate.release();
+    }
   }
 
   boolean isBlockedOnSyncBarrier() {
-    Message msg = legacyPeek();
-    return msg != null && msg.getTarget() == null;
+    try {
+      if (delegate != null) {
+        return (boolean) blockedOnBarrierMethod.invoke(delegate);
+      } else {
+        Message msg = legacyPeek();
+        return msg != null && msg.getTarget() == null;
+      }
+    } catch (ReflectiveOperationException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   Message next() {
     try {
-      return (Message) messageQueueNextMethod.invoke(queue);
+      if (delegate != null) {
+        return delegate.next();
+      } else {
+        return (Message) messageQueueNextMethod.invoke(queue);
+      }
     } catch (ReflectiveOperationException e) {
       throw new RuntimeException(e);
     }
@@ -87,7 +153,11 @@ class TestLooperManagerCompat {
 
   void recycle(Message m) {
     try {
-      recycleUncheckedMethod.invoke(m);
+      if (delegate != null) {
+        delegate.recycle(m);
+      } else {
+        recycleUncheckedMethod.invoke(m);
+      }
     } catch (ReflectiveOperationException e) {
       throw new RuntimeException(e);
     }
