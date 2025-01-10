@@ -92,6 +92,19 @@ final class Interrogator {
     public String getMessage();
   }
 
+  private final TestLooperManagerCompat testLooperManager;
+
+  static Interrogator acquire(Looper looper) {
+    return new Interrogator(TestLooperManagerCompat.acquire(looper));
+  }
+
+  private Interrogator(TestLooperManagerCompat testLooperManager) {
+    this.testLooperManager = testLooperManager;
+  }
+
+  void release() {
+    testLooperManager.release();
+  }
 
   /**
    * Loops the main thread and informs the interrogation handler at interesting points in the exec
@@ -99,11 +112,10 @@ final class Interrogator {
    *
    * @param handler an interrogation handler that controls whether to continue looping or not.
    */
-  static <R> R loopAndInterrogate(InterrogationHandler<R> handler) {
+  <T> T loopAndInterrogate(InterrogationHandler<T> handler) {
     checkSanity();
     interrogating.set(Boolean.TRUE);
     boolean stillInterested = true;
-    TestLooperManagerCompat testLooperManager = TestLooperManagerCompat.acquire(Looper.myLooper());
 
     // We may have an identity when we're called - we want to restore it at the end of the fn.
     final long entryIdentity = Binder.clearCallingIdentity();
@@ -112,7 +124,7 @@ final class Interrogator {
       final long threadIdentity = Binder.clearCallingIdentity();
       while (stillInterested) {
         // run until the observer is no longer interested.
-        stillInterested = interrogateQueueState(testLooperManager, handler);
+        stillInterested = interrogateQueueState(handler);
         if (stillInterested) {
           Message m = testLooperManager.next();
 
@@ -149,7 +161,6 @@ final class Interrogator {
     } finally {
       Binder.restoreCallingIdentity(entryIdentity);
       interrogating.set(Boolean.FALSE);
-      testLooperManager.release();
     }
     return handler.get();
   }
@@ -168,37 +179,25 @@ final class Interrogator {
    *     queueEmpty(), taskDueSoon(), taskDueLong() or barrierUp(). once and only once.
    * @return the result of handler.get()
    */
-  static <R> R peekAtQueueState(
-      TestLooperManagerCompat testLooperManager, QueueInterrogationHandler<R> handler) {
-    checkNotNull(testLooperManager);
+  <T> T peekAtQueueState(QueueInterrogationHandler<T> handler) {
     checkNotNull(handler);
     checkState(
-        !interrogateQueueState(testLooperManager, handler),
+        !interrogateQueueState(handler),
         "It is expected that %s would stop interrogation after a single peak at the queue.",
         handler);
     return handler.get();
   }
 
-  static <R> R peekAtQueueState(Looper looper, QueueInterrogationHandler<R> handler) {
-    TestLooperManagerCompat testLooperManager = TestLooperManagerCompat.acquire(looper);
-    try {
-      return peekAtQueueState(testLooperManager, handler);
-    } finally {
-      testLooperManager.release();
-    }
-  }
-
-  private static boolean interrogateQueueState(
-      TestLooperManagerCompat testLooperManager, QueueInterrogationHandler<?> handler) {
+  private boolean interrogateQueueState(QueueInterrogationHandler<?> handler) {
     synchronized (testLooperManager.getQueue()) {
+      if (testLooperManager.isBlockedOnSyncBarrier()) {
+        if (Log.isLoggable(TAG, Log.DEBUG)) {
+          Log.d(TAG, "barrier is up");
+        }
+        return handler.barrierUp();
+      }
       Long headWhen = testLooperManager.peekWhen();
       if (headWhen == null) {
-        if (testLooperManager.isBlockedOnSyncBarrier()) {
-          if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.d(TAG, "barrier is up");
-          }
-          return handler.barrierUp();
-        }
         return handler.queueEmpty();
       }
 
@@ -215,7 +214,7 @@ final class Interrogator {
     }
   }
 
-  private static void checkSanity() {
+  private void checkSanity() {
     checkState(Looper.myLooper() != null, "Calling non-looper thread!");
     checkState(Boolean.FALSE.equals(interrogating.get()), "Already interrogating!");
   }

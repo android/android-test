@@ -156,6 +156,7 @@ final class UiControllerImpl
   private IdleNotifier<Runnable> asyncIdle;
   private IdleNotifier<Runnable> compatIdle;
   private Provider<IdleNotifier<IdleNotificationCallback>> dynamicIdleProvider;
+  private Interrogator interrogator;
 
   @VisibleForTesting
   @Inject
@@ -507,7 +508,7 @@ final class UiControllerImpl
           start + masterIdlePolicy.getIdleTimeoutUnit().toMillis(masterIdlePolicy.getIdleTimeout());
       interrogation = new MainThreadInterrogation(conditions, conditionSet, end);
 
-      InterrogationStatus result = Interrogator.loopAndInterrogate(interrogation);
+      InterrogationStatus result = getInterrogator().loopAndInterrogate(interrogation);
       if (InterrogationStatus.COMPLETED == result) {
         // did not time out, all conditions happy.
         return dynamicIdle;
@@ -583,6 +584,13 @@ final class UiControllerImpl
       interrogation = null;
     }
     return dynamicIdle;
+  }
+
+  private Interrogator getInterrogator() {
+    if (interrogator == null) {
+      interrogator = Interrogator.acquire(mainLooper);
+    }
+    return interrogator;
   }
 
   @Override

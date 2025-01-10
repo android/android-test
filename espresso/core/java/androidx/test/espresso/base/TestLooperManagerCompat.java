@@ -9,6 +9,7 @@ import android.os.Message;
 import android.os.MessageQueue;
 import android.os.TestLooperManager;
 import androidx.annotation.Nullable;
+import androidx.test.internal.util.Checks;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -77,6 +78,7 @@ final class TestLooperManagerCompat {
   static TestLooperManagerCompat acquire(Looper looper) {
     if (peekWhenMethod != null) {
       // running on a newer Android version that has the supported TestLooperManagerCompat changes
+      Checks.checkState(looper.isCurrentThread());
       TestLooperManager testLooperManager =
           InstrumentationRegistry.getInstrumentation().acquireLooperManager(looper);
       return new TestLooperManagerCompat(testLooperManager);

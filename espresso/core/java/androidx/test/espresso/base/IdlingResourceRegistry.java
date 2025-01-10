@@ -216,6 +216,9 @@ public final class IdlingResourceRegistry {
         boolean found = false;
         for (int i = 0; i < idlingStates.size(); i++) {
           if (idlingStates.get(i).resource.getName().equals(resource.getName())) {
+            if (idlingStates.get(i).resource instanceof LooperIdlingResourceInterrogationHandler) {
+              ((LooperIdlingResourceInterrogationHandler) idlingStates.get(i).resource).release();
+            }
             idlingStates.get(i).closeSpan();
             idlingStates.remove(i);
             found = true;

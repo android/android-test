@@ -71,6 +71,8 @@ class LooperIdlingResourceInterrogationHandler
   private volatile Looper looper = null;
   private volatile boolean idle = true;
 
+  private volatile Interrogator interrogator = null;
+
   // written on main - read on looper
   private volatile IdlingResource.ResourceCallback cb = null;
 
@@ -97,8 +99,9 @@ class LooperIdlingResourceInterrogationHandler
               @Override
               public void run() {
                 ir.looper = Looper.myLooper();
+                ir.interrogator = Interrogator.acquire(ir.looper);
                 ir.started = true;
-                Interrogator.loopAndInterrogate(ir);
+                ir.interrogator.loopAndInterrogate(ir);
               }
             });
 
@@ -115,6 +118,7 @@ class LooperIdlingResourceInterrogationHandler
 
   @Override
   public void quitting() {
+    interrogator.release();
     transitionToIdle();
   }
 
@@ -162,7 +166,7 @@ class LooperIdlingResourceInterrogationHandler
       // make sure nothing has arrived in the queue while the looper thread is waiting to pull a
       // new task out of it. There can be some delay between a new message entering the queue and
       // the looper thread pulling it out and processing it.
-      return Boolean.FALSE.equals(Interrogator.peekAtQueueState(looper, queueHasNewTasks));
+      return Boolean.FALSE.equals(interrogator.peekAtQueueState(queueHasNewTasks));
     }
     return false;
   }
@@ -182,5 +186,9 @@ class LooperIdlingResourceInterrogationHandler
     if (null != cb) {
       cb.onTransitionToIdle();
     }
+  }
+
+  public void release() {
+    interrogator.release();
   }
 }
