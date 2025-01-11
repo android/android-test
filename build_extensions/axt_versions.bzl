@@ -12,8 +12,8 @@ CORE_VERSION = "1.7.0-alpha01"
 ESPRESSO_DEVICE_VERSION = "1.1.0-alpha01"
 ANDROIDX_JUNIT_VERSION = "1.3.0-alpha01"
 ANDROIDX_TRUTH_VERSION = "1.7.0-alpha01"
-ORCHESTRATOR_VERSION = "1.6.0-alpha01"
-SERVICES_VERSION = "1.6.0-alpha01"
+ORCHESTRATOR_VERSION = "1.6.0-alpha02"
+SERVICES_VERSION = "1.6.0-alpha02"
 
 # Full maven artifact strings for apks.
 SERVICES_APK_ARTIFACT = "androidx.test.services:test-services:%s" % SERVICES_VERSION
