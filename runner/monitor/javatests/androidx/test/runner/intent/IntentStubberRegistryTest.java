@@ -58,8 +58,6 @@ public class IntentStubberRegistryTest {
   public void testIntentStubberLoading() {
     IntentStubberRegistry.load(mIntentStubber);
     assertThat(IntentStubberRegistry.isLoaded()).isTrue();
-
-    assertThat(IntentStubberRegistry.getInstance()).isNotNull();
   }
 
   @Test
@@ -83,22 +81,17 @@ public class IntentStubberRegistryTest {
   }
 
   @Test
-  public void testGetInstanceCanOnlyBeCalledOnMainThread() {
+  public void testGetActivityResultForIntent_loaded_returnsActivityResult() {
     IntentStubberRegistry.load(mIntentStubber);
-    try {
-      IntentStubberRegistry.getInstance();
-      fail(
-          "IllegalStateException expected. getInstance() should only be allowed on main"
-              + "thread!");
-    } catch (IllegalStateException expected) {
-    }
+
+    assertThat(IntentStubberRegistry.getActivityResultForIntent(new Intent())).isNotNull();
   }
 
   @Test
-  public void testNoInstanceLoadedThrows() {
+  public void testGetActivityResultForIntent_notLoaded_throws() {
     try {
-      IntentStubberRegistry.getInstance();
-      fail("IllegalStateException expected. No instance available, load must be called" + "first");
+      IntentStubberRegistry.getActivityResultForIntent(new Intent());
+      fail("IllegalStateException expected. No instance available, load must be called first");
     } catch (IllegalStateException expected) {
     }
   }
