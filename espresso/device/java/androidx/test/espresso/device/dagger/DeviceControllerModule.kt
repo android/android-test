@@ -81,7 +81,7 @@ internal class DeviceControllerModule {
       args.getString(EmulatorGrpcConn.ARGS_GRPC_TOKEN, ""),
       args.getString(EmulatorGrpcConn.ARGS_GRPC_CER, ""),
       args.getString(EmulatorGrpcConn.ARGS_GRPC_KEY, ""),
-      args.getString(EmulatorGrpcConn.ARGS_GRPC_CA, "")
+      args.getString(EmulatorGrpcConn.ARGS_GRPC_CA, ""),
     )
   }
 
@@ -95,7 +95,7 @@ internal class DeviceControllerModule {
       if (getDeviceApiLevel() >= 17) {
         Settings.Global.getString(
           InstrumentationRegistry.getInstrumentation().getTargetContext().getContentResolver(),
-          "mdevx.grpc_guest_port"
+          "mdevx.grpc_guest_port",
         )
       } else {
         val clazz = Class.forName("android.os.SystemProperties")
@@ -106,7 +106,7 @@ internal class DeviceControllerModule {
       throw DeviceControllerOperationException(
         "Unable to connect to Emulator gRPC port. Please make sure the Android Emulator version" +
           " is updated to 33.1.11+ and the controller gRPC service is enabled on the emulator." +
-          " See https://developer.android.com/studio/test/espresso-api#set_up_your_project_for_the_espresso_device_api for setup instructions."
+          " See https://developer.android.com/studio/test/espresso-api for setup instructions."
       )
     }
     return gRpcPort.toInt()

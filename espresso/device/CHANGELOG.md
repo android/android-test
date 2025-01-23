@@ -8,7 +8,7 @@
 
 * Add support for setting screen orientation with multiple resumed activities
 * Fix concurrent modification issue when setting screen orientation and fold modes
-* Adjust reference docs to state set up guide is now located at https://developer.android.com/studio/test/espresso-api#set_up_your_project_for_the_espresso_device_api
+* Adjust reference docs to state set up guide is now located at https://developer.android.com/studio/test/espresso-api
 
 **New Features**
 
