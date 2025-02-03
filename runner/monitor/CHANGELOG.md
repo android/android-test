@@ -12,9 +12,6 @@
 
 **API Changes**
 
-* Update to minSdkVersion 21
-* Make ReflectionException a RuntimeException
-
 **Breaking API Changes**
 
 **Known Issues**
