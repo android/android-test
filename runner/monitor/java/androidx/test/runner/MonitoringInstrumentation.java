@@ -677,7 +677,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
 
     @Override
     public ActivityResult call() {
-      return IntentStubberRegistry.getInstance().getActivityResultForIntent(intent);
+      return IntentStubberRegistry.getActivityResultForIntent(intent);
     }
   }
 
@@ -707,7 +707,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
           throw new RuntimeException(e);
         }
       } else {
-        return IntentStubberRegistry.getInstance().getActivityResultForIntent(intent);
+        return IntentStubberRegistry.getActivityResultForIntent(intent);
       }
     }
     return null;

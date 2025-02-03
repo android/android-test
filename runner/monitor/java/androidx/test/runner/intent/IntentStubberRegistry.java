@@ -19,15 +19,17 @@ package androidx.test.runner.intent;
 import static androidx.test.internal.util.Checks.checkNotNull;
 import static androidx.test.internal.util.Checks.checkState;
 
-import android.os.Looper;
+import android.app.Instrumentation.ActivityResult;
+import android.content.Intent;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /** Exposes an implementation of {@link IntentStubber}. */
 public final class IntentStubberRegistry {
 
-  private static IntentStubber instance;
+  private static final AtomicReference<IntentStubber> instance = new AtomicReference<>();
 
-  private static AtomicBoolean isLoaded = new AtomicBoolean();
+  private static final AtomicBoolean isLoaded = new AtomicBoolean();
 
   /**
    * Loads an {@link IntentStubber} into this registry. There can only be one active stubber at a
@@ -37,44 +39,51 @@ public final class IntentStubberRegistry {
    *
    * <p>This method can be called from any thread.
    */
-  public static void load(IntentStubber intentStubber) {
+  public static synchronized void load(IntentStubber intentStubber) {
     checkNotNull(intentStubber, "IntentStubber cannot be null!");
     checkState(
         !isLoaded.getAndSet(true),
         "Intent stubber already registered! Multiple stubbers are not"
             + "allowedAre you running under an ");
-    instance = intentStubber;
+    instance.set(intentStubber);
   }
 
-  /** @return if an {@link IntentStubber} has been loaded. */
+  /** Returns if an {@link IntentStubber} has been loaded. */
   public static boolean isLoaded() {
     return isLoaded.get();
+  }
+
+  /** Clears the current instance of Intent Stubber. */
+  public static synchronized void reset() {
+    instance.set(null);
+    isLoaded.set(false);
+  }
+
+  /**
+   * Returns the activity result for the given intent..
+   *
+   * <p>This method can be called from any thread.
+   *
+   * @throws IllegalStateException if no Intent Stubber has been loaded.
+   */
+  public static ActivityResult getActivityResultForIntent(Intent intent) {
+    return getInstance().getActivityResultForIntent(intent);
   }
 
   /**
    * Returns the loaded Intent Stubber instance.
    *
-   * @throws IllegalStateException if this method is not called on the main thread.
+   * <p>This method can be called from any thread.
+   *
    * @throws IllegalStateException if no Intent Stubber has been loaded.
    */
-  public static IntentStubber getInstance() {
-    checkMain();
-    checkState(
-        null != instance,
+  private static IntentStubber getInstance() {
+    checkNotNull(
+        instance,
         "No intent monitor registered! Are you running under an "
             + "Instrumentation which registers intent monitors?");
-    return instance;
-  }
-
-  private static void checkMain() {
-    checkState(Looper.myLooper() == Looper.getMainLooper(), "Must be called on main thread.");
+    return instance.get();
   }
 
   private IntentStubberRegistry() {}
-
-  /** Clears the current instance of Intent Stubber. */
-  public static synchronized void reset() {
-    instance = null;
-    isLoaded.set(false);
-  }
 }
