@@ -55,7 +55,7 @@ axt_android_library_test(
         "//ext/junit",
         "//runner/android_junit_runner",
         "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
-        "@androidsdk//:legacy_test-34",
+        "@androidsdk//:legacy_test-35",
     ],
 )
 
@@ -68,7 +68,7 @@ axt_android_library_test(
         "//ext/junit",
         "//runner/android_junit_runner",
         "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
-        "@androidsdk//:legacy_test-34",
+        "@androidsdk//:legacy_test-35",
     ],
 )
 
@@ -124,7 +124,7 @@ axt_android_library_test(
         "//runner/rules",
         "//services/events/java/androidx/test/services/events",
         "//services/storage",
-        "@androidsdk//:legacy_test-34",
+        "@androidsdk//:legacy_test-35",
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_truth_truth",
         "@maven//:junit_junit",
