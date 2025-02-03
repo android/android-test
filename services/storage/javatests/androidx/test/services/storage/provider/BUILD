@@ -26,7 +26,7 @@ axt_android_library_test(
         "//services/storage/java/androidx/test/services/storage:test_storage_constants",
         "//services/storage/java/androidx/test/services/storage/file",
         "//services/storage/java/androidx/test/services/storage/provider:storage_content_providers",
-        "@androidsdk//:legacy_test-34",
+        "@androidsdk//:legacy_test-35",
         "@maven//:com_google_guava_guava",
     ],
 )
@@ -46,7 +46,7 @@ axt_android_library_test(
         "//services/storage/java/androidx/test/services/storage:test_storage_constants",
         "//services/storage/java/androidx/test/services/storage/file",
         "//services/storage/java/androidx/test/services/storage/provider:storage_content_providers",
-        "@androidsdk//:legacy_test-34",
+        "@androidsdk//:legacy_test-35",
         "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
     ],
