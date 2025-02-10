@@ -15,21 +15,9 @@
  */
 package androidx.test.espresso.device.rules
 
-import android.app.Activity
-import android.content.res.Configuration
-import android.util.Log
-import android.view.View
-import android.view.ViewGroup
-import androidx.test.espresso.device.common.calculateCurrentDisplayWidthAndHeightPx
 import androidx.test.espresso.device.common.executeShellCommand
 import androidx.test.espresso.device.common.getDeviceApiLevel
-import androidx.test.espresso.device.common.getResumedActivityOrNull
-import androidx.test.espresso.device.controller.DeviceControllerOperationException
 import androidx.test.platform.device.UnsupportedDeviceOperationException
-import androidx.test.runner.lifecycle.ActivityLifecycleCallback
-import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
-import androidx.test.runner.lifecycle.Stage
-import java.util.concurrent.CountDownLatch
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
@@ -45,63 +33,11 @@ class DisplaySizeRule : TestRule {
           )
         }
 
-        val startingDisplaySize = calculateCurrentDisplayWidthAndHeightPx()
-        statement.evaluate()
-
-        if (startingDisplaySize != calculateCurrentDisplayWidthAndHeightPx()) {
-          val activity = getResumedActivityOrNull()
-          if (activity != null) {
-            val latch = CountDownLatch(1)
-            val container: ViewGroup =
-              activity.getWindow().findViewById(android.R.id.content) as ViewGroup
-            val activityView: View =
-              object : View(activity) {
-                override fun onConfigurationChanged(newConfig: Configuration?) {
-                  super.onConfigurationChanged(newConfig)
-                  if (startingDisplaySize == calculateCurrentDisplayWidthAndHeightPx()) {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                      Log.d(
-                        TAG,
-                        "View configuration changed. Display size restored to starting size."
-                      )
-                    }
-                    latch.countDown()
-                  }
-                }
-              }
-            activity.runOnUiThread { container.addView(activityView) }
-            val activityLifecyleCallback: ActivityLifecycleCallback =
-              object : ActivityLifecycleCallback {
-                override fun onActivityLifecycleChanged(activity: Activity, stage: Stage) {
-                  if (
-                    activity.getLocalClassName() == activity.getLocalClassName() &&
-                      stage == Stage.PAUSED &&
-                      startingDisplaySize == calculateCurrentDisplayWidthAndHeightPx()
-                  ) {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                      Log.d(TAG, "Activity restarted. Display size restored to starting size.")
-                    }
-                    latch.countDown()
-                  }
-                }
-              }
-            ActivityLifecycleMonitorRegistry.getInstance()
-              .addLifecycleCallback(activityLifecyleCallback)
-
-            executeShellCommand(
-              "wm size ${startingDisplaySize.first}x${startingDisplaySize.second}"
-            )
-            latch.await()
-
-            activity.runOnUiThread { container.removeView(activityView) }
-            ActivityLifecycleMonitorRegistry.getInstance()
-              .removeLifecycleCallback(activityLifecyleCallback)
-          } else {
-            throw DeviceControllerOperationException(
-              "Device could not be set to the requested display size because there are no activities in" +
-                " the resumed stage."
-            )
-          }
+        try {
+          statement.evaluate()
+        } finally {
+          // Always reset the display size to it's original size
+          executeShellCommand("wm size reset")
         }
       }
     }

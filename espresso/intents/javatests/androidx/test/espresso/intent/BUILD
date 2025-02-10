@@ -18,8 +18,7 @@ axt_android_library_test(
     name = "RuntimePermissionStubberIntegrationTest",
     srcs = ["RuntimePermissionStubberIntegrationTest.java"],
     args = ["--clear_package_data"],
-    device_list = devices(
-    ),
+    device_list = devices(),
     manifest = "AndroidManifest.xml",
     deps = [
         "//core",
