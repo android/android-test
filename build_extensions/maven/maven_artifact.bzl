@@ -179,32 +179,6 @@ def _rename_artifact(ctx, tpl_string, src_file, packaging_type, artifact_id, ver
     )
     return artifact
 
-def _override_license_file(ctx, src_file):
-    """Append a LICENSE file into the src if exists"""
-    artifact_with_license = ctx.actions.declare_file("%s-with-LICENSE.%s" % (src_file.basename, src_file.extension))
-    commands = []
-    commands.append("cp %s %s" % (src_file.path, artifact_with_license.path))
-
-    # Append a given LICENSE file to the root directory.
-    commands.append("%s -uf %s -C %s %s" % (
-        ctx.executable._jar.path,
-        artifact_with_license.path,
-        ctx.file.license_file.dirname,
-        ctx.file.license_file.basename,
-    ))
-
-    # Remove the LICENSE files in META_INF.
-    # (Ignore zip error: Nothing to do)
-    commands.append("(zip -dq %s META-INF/LICENSE  META-INF/LICENSE.txt || true)" % (artifact_with_license.path))
-
-    ctx.actions.run_shell(
-        inputs = [src_file, ctx.file.license_file, ctx.executable._jar],
-        outputs = [artifact_with_license],
-        command = "&&".join(commands),
-        tools = [ctx.executable._jar],
-    )
-    return artifact_with_license
-
 def _maven_artifact_impl(ctx):
     """Generates maven repository for a single artifact."""
 
@@ -276,12 +250,6 @@ maven_artifact = rule(
         "excluded_dependencies": attr.string_dict(
             mandatory = False,
             doc = "Map of maven dependency to a csv list of excluded dependencies. eg {\"com.google.foo:foo\":\"com.google.bar:bar,com.google.bar:bar-none\"}",
-        ),
-        "_jar": attr.label(
-            default = Label("@bazel_tools//tools/jdk:jar"),
-            executable = True,
-            allow_files = True,
-            cfg = "exec",
         ),
         "_maven_artifact_sh": attr.label(
             default = Label("//build_extensions/maven:maven_artifact_sh"),
