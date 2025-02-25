@@ -1,17 +1,7 @@
 """A rule wrapper for generating android_local_test ."""
 
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
-
-_CONFIG_JAR_COMMAND = """
-set -e
-JAR="$(location @local_jdk//:jar)"
-SRC="$<"
-[[ "$$(basename "$${SRC}")" = 'robolectric.properties' ]] || {
-  echo 'Must be named: robolectric.properties';
-  exit 1;
-}
-$${JAR} -cf "$@" -C "$$(dirname "$${SRC}")" "$$(basename "$${SRC}")"
-"""
+load("//build_extensions:create_jar.bzl", "create_jar")
 
 def axt_android_local_test(name, srcs = [], deps = [], manifest = "//build_extensions:AndroidManifest_robolectric.xml", tags = ["robolectric"], **kwargs):
     """A wrapper around android_local_test that provides sensible defaults for androidx.test.
@@ -72,21 +62,14 @@ def _robolectric_config(name, src):
       name: a string, the name of the rule
       src: a label, the properties file to package
     """
-    native.genrule(
+    create_jar(
         name = name + "_gen",
         srcs = [src],
-        outs = ["%s.jar" % name],
-        message = "Generating Robolectric config...",
-        cmd = _CONFIG_JAR_COMMAND,
-        tools = [
-            "@local_jdk//:jar",
-        ],
-        visibility = ["//visibility:private"],
     )
     native.java_import(
         name = name,
         constraints = ["android"],
-        jars = [name + "_gen"],
+        jars = [name + "_gen.jar"],
     )
 
 def _is_kotlin(srcs):

@@ -5,6 +5,7 @@ load("//build_extensions/maven:add_or_update_file_in_zip.bzl", "add_or_update_fi
 load("//build_extensions/maven:combine_jars.bzl", "combine_jars")
 load("//build_extensions/maven:jarjar.bzl", "jarjar_rule")
 load("//build_extensions/maven:maven_info.bzl", "MavenFilesInfo", "MavenInfo", "collect_maven_info")
+load("@build_bazel_rules_android//providers:providers.bzl", "AndroidLibraryAarInfo")
 
 def _android_aar_impl(ctx):
     # current_aar will include almost everything needed: an AndroidManifest.xml, compiled resources,

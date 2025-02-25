@@ -1,6 +1,6 @@
 # These need needs to be consistent with their counterparts in build_extensions/axt_deps_versions.bzl.
-#KOTLIN_VERSION = "1.8.20"
-#KOTLINX_COROUTINES_VERSION = "1.7.1" 
+KOTLIN_VERSION = "1.8.20"
+KOTLINX_COROUTINES_VERSION = "1.7.1" 
 #GRPC_VERSION = "1.54.1"
 # Get from https://github.com/JetBrains/kotlin/releases/
 #KOTLINC_RELEASE_SHA = "10df74c3c6e2eafd4c7a5572352d37cbe41774996e42de627023cb4c82b50ae4"
@@ -9,10 +9,17 @@ bazel_dep(name = "rules_java", version = "8.6.0")
 bazel_dep(name = "rules_jvm_external", version = "6.6")
 bazel_dep(name = "rules_android", version = "0.6.0", repo_name = "build_bazel_rules_android")
 bazel_dep(name = "rules_kotlin", version = "1.9.6", repo_name = "io_bazel_rules_kotlin")
-#bazel_dep(name = "protobuf", version = "28.3", repo_name = "com_google_protobuf")
+bazel_dep(name = "protobuf", version = "29.0", repo_name = "com_google_protobuf")
 #bazel_dep(name = "io_grpc_grpc_java", version = "1.54.1")
 #needed?
 #bazel_dep(name = "rules_python", version = "0.37.1")
+bazel_dep(name = "rules_robolectric", version = "4.14.1.2", repo_name = "robolectric")
+
+# Pin the version of rules_robolectric so that it matches the robolectric version we get from maven.
+single_version_override(
+    module_name = "rules_robolectric",
+    version = "4.14.1.2",
+)
 
 # maven dependencies
 maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
@@ -23,17 +30,17 @@ maven.install(
         "androidx.annotation:annotation:1.7.0-beta01",
 #        "androidx.annotation:annotation-experimental:jar:1.1.0",
 #        "androidx.appcompat:appcompat:1.3.1",
-#        "androidx.concurrent:concurrent-futures:1.1.0",
-#        "androidx.concurrent:concurrent-futures-ktx:1.1.0",
-#        "androidx.core:core:1.6.0",
+        "androidx.concurrent:concurrent-futures:1.1.0",
+        "androidx.concurrent:concurrent-futures-ktx:1.1.0",
+        "androidx.core:core:1.6.0",
 #        "androidx.cursoradapter:cursoradapter:1.0.0",
 #        "androidx.drawerlayout:drawerlayout:1.1.1",
 #        "androidx.fragment:fragment:1.3.6",
 #        "androidx.legacy:legacy-support-core-ui:1.0.0",
 #        "androidx.legacy:legacy-support-core-utils:1.0.0",
 #        "androidx.legacy:legacy-support-v4:1.0.0",
-#        "androidx.lifecycle:lifecycle-common:2.3.1",
-#        "androidx.multidex:multidex:2.0.0",
+        "androidx.lifecycle:lifecycle-common:2.3.1",
+        "androidx.multidex:multidex:2.0.0",
 #        "androidx.recyclerview:recyclerview:1.2.1",
          "androidx.tracing:tracing:1.1.0",
 #        "androidx.test.uiautomator:uiautomator:2.2.0",
@@ -96,21 +103,22 @@ maven.install(
 #        "javax.annotation:javax.annotation-api:1.3.1",
 #        "javax.inject:javax.inject:1",
 #        "joda-time:joda-time:2.10.1",
-#        "junit:junit:4.13.2",
+        "junit:junit:4.13.2",
 #        "net.bytebuddy:byte-buddy-agent:1.9.10",
 #        "net.bytebuddy:byte-buddy:1.9.10",
 #        "net.sf.kxml:kxml2:jar:2.3.0",
 #        "org.ccil.cowan.tagsoup:tagsoup:1.2.1",
 #        "org.checkerframework:checker-compat-qual:2.5.5",
 #        "org.hamcrest:hamcrest-core:1.3",
-#        "org.hamcrest:hamcrest-library:1.3",
+        "org.hamcrest:hamcrest-library:1.3",
 #        "org.mockito:mockito-core:2.28.1",
 #        "org.objenesis:objenesis:2.6",
-#        "org.pantsbuild:jarjar:1.7.2",
-#        "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
-#        "org.jetbrains.kotlinx:kotlinx-coroutines-core:%s" % KOTLINX_COROUTINES_VERSION,
-#        "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:%s" % KOTLINX_COROUTINES_VERSION,
-#        "org.jetbrains.kotlinx:kotlinx-coroutines-android:%s" % KOTLINX_COROUTINES_VERSION,
+        "org.pantsbuild:jarjar:1.7.2",
+        "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
+        "org.jetbrains.kotlinx:kotlinx-coroutines-core:%s" % KOTLINX_COROUTINES_VERSION,
+        "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:%s" % KOTLINX_COROUTINES_VERSION,
+        "org.jetbrains.kotlinx:kotlinx-coroutines-android:%s" % KOTLINX_COROUTINES_VERSION,
+         "org.robolectric:robolectric:4.14.1",
 #        maven.artifact(
 #            artifact = "robolectric",
 #            exclusions = [
