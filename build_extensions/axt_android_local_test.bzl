@@ -4,7 +4,7 @@ load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 
 _CONFIG_JAR_COMMAND = """
 set -e
-JAR="$(location @bazel_tools//tools/jdk:jar)"
+JAR="$(location @local_jdk//:jar)"
 SRC="$<"
 [[ "$$(basename "$${SRC}")" = 'robolectric.properties' ]] || {
   echo 'Must be named: robolectric.properties';
@@ -79,7 +79,7 @@ def _robolectric_config(name, src):
         message = "Generating Robolectric config...",
         cmd = _CONFIG_JAR_COMMAND,
         tools = [
-            "@bazel_tools//tools/jdk:jar",
+            "@local_jdk//:jar",
         ],
         visibility = ["//visibility:private"],
     )
