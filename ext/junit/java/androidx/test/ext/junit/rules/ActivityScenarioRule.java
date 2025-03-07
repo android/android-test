@@ -33,8 +33,8 @@ import org.junit.rules.ExternalResource;
  * #getScenario()}. You may finish your activity manually in your test, it will not cause any
  * problems and this rule does nothing after the test in such cases.
  *
- * <p>This rule is an upgraded version of the now deprecated {@link
- * androidx.test.rule.ActivityTestRule}.
+ * <p>This rule is an upgraded version of the now deprecated 
+ *    {@link androidx.test.rule.ActivityTestRule}.
  *
  * <p>This rule does not support calling scenario.getResult(). Use
  * ActivityScenario.launchActivityForResult() when the Activity result is needed.
