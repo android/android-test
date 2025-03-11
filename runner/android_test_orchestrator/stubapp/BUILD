@@ -32,11 +32,13 @@ android_binary(
 
 axt_maven_apk(
     name = "orchestrator_release_apk",
+    testonly = 1,
     included_dep = ":stubapp",
 )
 
 maven_artifact(
     name = "orchestrator_release_maven_artifact",
+    testonly = 1,
     last_updated = "20170622000000",
     target = ":orchestrator_release_apk",
 )

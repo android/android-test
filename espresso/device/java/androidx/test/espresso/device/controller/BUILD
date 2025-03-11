@@ -14,6 +14,7 @@ package(
 
 kt_android_library(
     name = "controller",
+    testonly = 1,
     srcs = [
         "DeviceControllerOperationException.kt",
         "DeviceMode.kt",

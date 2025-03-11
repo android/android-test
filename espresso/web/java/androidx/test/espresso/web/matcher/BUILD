@@ -9,6 +9,7 @@ licenses(["notice"])
 
 android_library(
     name = "matcher",
+    testonly = 1,
     srcs = glob(
         ["*.java"],
     ),

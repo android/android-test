@@ -202,6 +202,7 @@ android_library(
 
 android_library(
     name = "espresso_aar_lib",
+    testonly = 1,
     custom_package = "androidx.test.espresso.core",
     manifest = "AndroidManifest.xml",
     proguard_specs = [":proguard_library.cfg"],
@@ -214,6 +215,7 @@ android_library(
 
 axt_android_aar(
     name = "espresso_core_aar",
+    testonly = 1,
     expected_class_prefixes = [
         "androidx.test.espresso",
     ],
@@ -224,6 +226,7 @@ axt_android_aar(
 
 maven_artifact(
     name = "espresso_core_maven_artifact",
+    testonly = 1,
     last_updated = "20170622000000",
     target = ":espresso_core_aar",
 )

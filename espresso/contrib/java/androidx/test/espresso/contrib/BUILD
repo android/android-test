@@ -51,6 +51,7 @@ android_library(
 
 android_library(
     name = "picker_actions",
+    testonly = 1,
     srcs = ["PickerActions.java"],
     visibility = ["//visibility:public"],
     deps = [

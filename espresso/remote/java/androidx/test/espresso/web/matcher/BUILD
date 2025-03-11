@@ -9,6 +9,7 @@ licenses(["notice"])
 
 android_library(
     name = "remote_web_matchers",
+    testonly = 1,
     srcs = glob(
         ["*.java"],
     ),

@@ -34,6 +34,7 @@ android_library(
 
 axt_android_aar(
     name = "rules_aar",
+    testonly = 1,
     expected_class_prefixes = [
         "androidx.test.annotation.UiThreadTest",
         "androidx.test.rule",
@@ -43,6 +44,7 @@ axt_android_aar(
 
 maven_artifact(
     name = "rules_maven_artifact",
+    testonly = 1,
     last_updated = "20170622000000",
     target = ":rules_aar",
 )

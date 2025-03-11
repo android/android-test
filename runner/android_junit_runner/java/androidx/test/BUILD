@@ -51,6 +51,7 @@ android_library(
 # Generate rules for the release artifacts.
 axt_android_aar(
     name = "runner_aar",
+    testonly = 1,
     expected_class_prefixes = [
         "androidx.test.services.events",
         "androidx.test.runner",
@@ -63,6 +64,7 @@ axt_android_aar(
 
 maven_artifact(
     name = "runner_maven_artifact",
+    testonly = 1,
     last_updated = "20170622000000",
     target = ":runner_aar",
 )

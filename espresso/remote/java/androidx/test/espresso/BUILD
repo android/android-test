@@ -12,6 +12,7 @@ package(
 
 android_library(
     name = "data-interaction-remote",
+    testonly = 1,
     srcs = [
         "DataInteractionRemote.java",
     ],

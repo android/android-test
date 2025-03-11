@@ -12,6 +12,7 @@ package(
 
 android_library(
     name = "remote_webdriver_atoms",
+    testonly = 1,
     srcs = glob(
         ["*.java"],
     ),

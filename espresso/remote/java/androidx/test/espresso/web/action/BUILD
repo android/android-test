@@ -13,6 +13,7 @@ package(
 
 android_library(
     name = "remote_web_actions",
+    testonly = 1,
     srcs = glob(
         ["*.java"],
     ),

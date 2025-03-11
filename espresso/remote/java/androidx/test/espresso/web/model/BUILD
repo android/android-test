@@ -13,6 +13,7 @@ licenses(["notice"])
 
 android_library(
     name = "remote_web_model_atoms",
+    testonly = 1,
     srcs = glob(
         ["*.java"],
     ),

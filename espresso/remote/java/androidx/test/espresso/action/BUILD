@@ -12,6 +12,7 @@ package(
 
 android_library(
     name = "remote_view_actions",
+    testonly = 1,
     srcs = glob(
         ["*.java"],
     ),

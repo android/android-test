@@ -9,6 +9,7 @@ package(
 
 android_library(
     name = "remote_sugar",
+    testonly = 1,
     srcs = glob(
         ["*.java"],
     ),

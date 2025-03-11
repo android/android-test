@@ -13,6 +13,7 @@ package(
 
 android_library(
     name = "espresso_web_aar_lib",
+    testonly = 1,
     manifest = "AndroidManifest.xml",
     proguard_specs = [
         ":proguard_library.cfg",
@@ -29,6 +30,7 @@ android_library(
 
 axt_android_aar(
     name = "espresso_web_aar",
+    testonly = 1,
     expected_class_prefixes = [
         "androidx.test.espresso.web",
     ],
@@ -37,6 +39,7 @@ axt_android_aar(
 
 maven_artifact(
     name = "espresso_web_maven_artifact",
+    testonly = 1,
     last_updated = "20170622000000",
     target = ":espresso_web_aar",
 )

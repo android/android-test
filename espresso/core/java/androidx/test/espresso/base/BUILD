@@ -49,6 +49,7 @@ android_library(
 
 android_library(
     name = "active_root_lister",
+    testonly = 1,
     srcs = ["ActiveRootLister.java"],
     visibility = [
         "//espresso/core/java/androidx/test/espresso:espresso_first_party",

@@ -12,6 +12,7 @@ package(
 
 android_library(
     name = "remote_view_assertions",
+    testonly = 1,
     srcs = glob(
         ["*.java"],
     ),
