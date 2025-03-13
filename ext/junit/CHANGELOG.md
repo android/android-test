@@ -2,11 +2,13 @@
 
 {{date}}
 
-`androidx.test.ext:junit:{version}` and `androidx.test.ext:junit-ktx:{version}` are released.
+`androidx.test.ext:junit:{version}` and `androidx.test.ext:junit-ktx:{version}`
+are released.
 
 **Bug Fixes**
 
-Fixed link to the deprecated `androidx.test.rule.ActivityTestRule` in class description.
+Fixed link to the deprecated `androidx.test.rule.ActivityTestRule` in class 
+description.
 
 **New Features**
 
