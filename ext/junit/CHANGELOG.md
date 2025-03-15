@@ -7,8 +7,8 @@ are released.
 
 **Bug Fixes**
 
-Fixed link to the deprecated `androidx.test.rule.ActivityTestRule` in class
-description.
+Fixed the link to the deprecated `androidx.test.rule.ActivityTestRule` in 
+the class description.
 
 **New Features**
 
