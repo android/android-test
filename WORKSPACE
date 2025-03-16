@@ -158,7 +158,7 @@ maven_install(
         "com.squareup:javapoet:1.9.0",
         "io.grpc:grpc-okhttp:1.54.1",
         "io.grpc:grpc-stub:1.54.1",
-        "org.apache.tomcat:annotations-api:6.0.53",
+        "org.apache.tomcat:tomcat-annotations-api:10.0.0",
         "javax.annotation:javax.annotation-api:1.3.1",
         "javax.inject:javax.inject:1",
         "joda-time:joda-time:2.10.1",
