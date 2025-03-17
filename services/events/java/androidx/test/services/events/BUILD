@@ -12,7 +12,6 @@ package(
 
 android_library(
     name = "events",
-    testonly = 0,
     srcs = glob(["**/*.java"]),
     idl_parcelables = [
         "discovery/TestDiscoveryEvent.aidl",

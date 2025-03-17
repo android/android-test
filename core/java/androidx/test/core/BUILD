@@ -30,7 +30,6 @@ licenses(["notice"])
 # for the bootstrap activities
 android_library(
     name = "manifest",
-    testonly = 0,
     exports_manifest = 1,
     manifest = "AndroidManifest.xml",
     resource_files = glob(["res/**"]),
@@ -38,7 +37,6 @@ android_library(
 
 kt_android_library(
     name = "core_internal",
-    testonly = 0,
     srcs = glob(
         [
             "**/*.java",
@@ -67,7 +65,6 @@ android_library(
 
 android_library(
     name = "core_not_test_only",
-    testonly = 0,
     visibility = ["//espresso/core/java/androidx/test/espresso:__subpackages__"],
     exports = [":core_internal"],
 )

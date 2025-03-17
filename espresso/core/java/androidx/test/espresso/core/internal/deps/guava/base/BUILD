@@ -13,7 +13,6 @@ package(
 
 android_library(
     name = "base",
-    testonly = 0,
     srcs = glob(["*java"]),
     deps = [
         "//opensource/androidx:annotation",

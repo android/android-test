@@ -20,7 +20,6 @@ REMOTE_MSG_ANNOTATIONS = [
 
 android_library(
     name = "remote_msg_annotations",
-    testonly = 0,
     srcs = REMOTE_MSG_ANNOTATIONS,
     visibility = ["//visibility:public"],
 )

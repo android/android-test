@@ -13,7 +13,6 @@ licenses(["notice"])
 # Intended for internal use only.
 android_library(
     name = "file",
-    testonly = 0,
     srcs = glob(["*.java"]),
     deps = [
         "//opensource/androidx:annotation",

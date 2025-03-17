@@ -12,7 +12,6 @@ licenses(["notice"])
 
 android_library(
     name = "inject",
-    testonly = 0,
     srcs = glob(["*java"]),
     visibility = [
         "//:__subpackages__",

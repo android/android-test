@@ -11,7 +11,6 @@ licenses(["notice"])
 
 alias(
     name = "android_junit_runner",
-    testonly = 0,
     actual = "//runner/android_junit_runner/java/androidx/test:runner",
     visibility = ["//visibility:public"],
 )

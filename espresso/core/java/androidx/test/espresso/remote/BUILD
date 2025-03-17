@@ -24,7 +24,6 @@ REMOTE_INTERFACES = [
 
 android_library(
     name = "interface",
-    testonly = 0,
     srcs = REMOTE_INTERFACES,
     visibility = ["//visibility:public"],
     deps = [
@@ -45,7 +44,6 @@ REFLECTION_UTILS = [
 
 android_library(
     name = "reflectionUtils",
-    testonly = 0,
     srcs = REFLECTION_UTILS,
     visibility = ["//visibility:public"],
     deps = [
@@ -57,7 +55,6 @@ android_library(
 
 android_library(
     name = "aidls",
-    testonly = 0,
     custom_package = "androidx.test.espresso.remote",
     idl_import_root = "idls",
     idl_srcs = glob(["idls/**"]),
@@ -75,7 +72,6 @@ REMOTE_EXCEPTIONS = [
 
 android_library(
     name = "exceptions",
-    testonly = 0,
     srcs = REMOTE_EXCEPTIONS,
     visibility = ["//visibility:public"],
     deps = [
@@ -89,6 +85,5 @@ BINDABLE = [
 
 android_library(
     name = "bindable",
-    testonly = 0,
     srcs = BINDABLE,
 )

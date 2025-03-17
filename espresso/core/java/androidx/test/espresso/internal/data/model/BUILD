@@ -11,7 +11,6 @@ package(
 
 kt_android_library(
     name = "model",
-    testonly = 0,
     srcs = glob([
         "*.kt",
         "*.java",

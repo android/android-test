@@ -70,7 +70,6 @@ COMMON_JAVACOPTS = [
 
 jetify_android_library(
     name = "recycler_view",
-    testonly = 0,
     srcs = ["RecyclerViewActions.java"],
     javacopts = COMMON_JAVACOPTS,
     jetify_sources = True,

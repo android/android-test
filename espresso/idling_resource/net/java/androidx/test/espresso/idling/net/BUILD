@@ -16,7 +16,6 @@ package(
 
 android_library(
     name = "uri_idling_resource",
-    testonly = 0,
     srcs = ["UriIdlingResource.java"],
     manifest = "AndroidManifest.xml",
     visibility = ["//visibility:public"],

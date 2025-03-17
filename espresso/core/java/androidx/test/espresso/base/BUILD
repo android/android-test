@@ -13,7 +13,6 @@ package(
 
 android_library(
     name = "base",
-    testonly = 0,
     srcs = glob(
         ["*.java"],
         exclude = [
@@ -62,7 +61,6 @@ android_library(
 
 android_library(
     name = "idling_resource_registry",
-    testonly = 0,
     srcs = [
         "IdleNotifier.java",
         "IdlingResourceRegistry.java",
@@ -82,7 +80,6 @@ android_library(
 
 android_library(
     name = "idling_uicontroller_interface",
-    testonly = 0,
     srcs = ["IdlingUiController.java"],
     deps = [
         ":idling_resource_registry",
@@ -92,7 +89,6 @@ android_library(
 
 android_library(
     name = "default_failure_handler",
-    testonly = 0,
     srcs = [
         "AssertionErrorHandler.java",
         "DefaultFailureHandler.java",

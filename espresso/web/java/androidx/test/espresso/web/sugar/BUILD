@@ -10,7 +10,6 @@ package(
 
 android_library(
     name = "sugar",
-    testonly = 0,
     srcs = glob(
         ["*.java"],
     ),

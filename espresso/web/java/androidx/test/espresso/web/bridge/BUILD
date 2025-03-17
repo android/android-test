@@ -16,7 +16,6 @@ package_group(
 
 android_library(
     name = "bridge",
-    testonly = 0,
     srcs = glob(
         ["*java"],
     ),

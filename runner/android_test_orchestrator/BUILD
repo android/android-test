@@ -10,7 +10,6 @@ licenses(["notice"])
 
 alias(
     name = "android_test_orchestrator",
-    testonly = 0,
     actual = "//runner/android_test_orchestrator/java/androidx/test/orchestrator",
     visibility = [":odo"],
 )

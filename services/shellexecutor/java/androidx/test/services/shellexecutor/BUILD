@@ -14,13 +14,11 @@ licenses(["notice"])
 
 proto_library(
     name = "local_socket_protocol_pb",
-    testonly = 0,
     srcs = ["local_socket_protocol.proto"],
 )
 
 java_lite_proto_library(
     name = "local_socket_protocol_pb_java_proto_lite",
-    testonly = 0,
     visibility = [
         "//services/shellexecutor/javatests/androidx/test/services/shellexecutor:__subpackages__",
     ],
@@ -29,7 +27,6 @@ java_lite_proto_library(
 
 kt_android_library(
     name = "local_socket_protocol",
-    testonly = 0,
     srcs = ["LocalSocketProtocol.kt"],
     visibility = [
         "//services/shellexecutor/javatests/androidx/test/services/shellexecutor:__subpackages__",
@@ -43,7 +40,6 @@ kt_android_library(
 
 kt_android_library(
     name = "exec_server",
-    testonly = 0,
     srcs = [
         "BlockingPublish.java",
         "LocalSocketShellMain.kt",
@@ -69,7 +65,6 @@ kt_android_library(
 
 kt_android_library(
     name = "exec_client",
-    testonly = 0,
     srcs = [
         "BlockingFind.java",
         "ClientNotConnected.java",
@@ -97,7 +92,6 @@ kt_android_library(
 # Make it easy to deserialize exceptions that are sent over from device to host.
 java_library(
     name = "exceptions",
-    testonly = 0,
     srcs = [
         "ClientNotConnected.java",
     ],

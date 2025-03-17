@@ -14,7 +14,6 @@ licenses(["notice"])
 
 android_library(
     name = "model",
-    testonly = 0,
     srcs = glob(
         ["*.java"],
     ),

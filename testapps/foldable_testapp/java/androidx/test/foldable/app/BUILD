@@ -18,7 +18,6 @@ package(
 
 jetify_android_library(
     name = "lib",
-    testonly = 0,
     srcs = glob(
         ["**/*.java"],
     ),

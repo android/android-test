@@ -13,7 +13,6 @@ package(
 
 android_library(
     name = "concurrent",
-    testonly = 0,
     srcs = glob([
         "*.java",
         "*.kt",

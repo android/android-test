@@ -11,7 +11,6 @@ package(
 
 android_library(
     name = "data",
-    testonly = 0,
     srcs = glob([
         "*.java",
     ]),

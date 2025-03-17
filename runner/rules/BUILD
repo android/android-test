@@ -12,7 +12,6 @@ licenses(["notice"])
 # This needs to be a java_library instead of an alias, so java_* based rules can reference it
 java_library(
     name = "rules",
-    testonly = 0,
     visibility = ["//visibility:public"],
     exports = ["//runner/rules/java/androidx/test:rules"],
 )

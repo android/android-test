@@ -13,7 +13,6 @@ licenses(["notice"])
 
 android_library(
     name = "speak_easy_core",
-    testonly = 0,
     srcs = ["SpeakEasy.java"],
     deps = [
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
@@ -23,7 +22,6 @@ android_library(
 
 android_library(
     name = "speak_easy_service",
-    testonly = 0,
     srcs = [
         "SpeakEasyContentProvider.java",
         "SpeakEasyService.java",
@@ -44,6 +42,5 @@ android_library(
 
 android_library(
     name = "server",
-    testonly = 0,
     exports = [":speak_easy_service"],
 )

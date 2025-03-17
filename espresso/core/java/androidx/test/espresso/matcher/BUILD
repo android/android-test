@@ -13,7 +13,6 @@ package(
 
 android_library(
     name = "matcher",
-    testonly = 0,
     srcs = glob(
         ["*.java"],
     ),

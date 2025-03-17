@@ -14,7 +14,6 @@ package(
 
 proto_library(
     name = "root_matchers_proto",
-    testonly = 0,
     srcs = ["root_matchers.proto"],
     deps = [
         "@com_google_protobuf//:any_proto",
@@ -28,7 +27,6 @@ java_lite_proto_library(
 
 proto_library(
     name = "view_matchers_proto",
-    testonly = 0,
     srcs = ["view_matchers.proto"],
     deps = [
         "@com_google_protobuf//:any_proto",
@@ -42,7 +40,6 @@ java_lite_proto_library(
 
 proto_library(
     name = "hamcrest_matchersv1_3_proto",
-    testonly = 0,
     srcs = ["hamcrest_matchersv1_3.proto"],
     deps = [
         "@com_google_protobuf//:any_proto",
@@ -56,7 +53,6 @@ java_lite_proto_library(
 
 java_library(
     name = "package-info",
-    testonly = 0,
     srcs = ["package-info.java"],
     deps = [
         "//opensource/androidx:annotation",

@@ -25,7 +25,6 @@ exports_files(["LICENSE"])
 # Standard test services that can be installed on any device.
 android_binary(
     name = "test_services",
-    testonly = 0,
     custom_package = "androidx.test.services",
     licenses = ["permissive"],
     main_dex_proguard_specs = ["//build_extensions:mainDexClasses.rules"],

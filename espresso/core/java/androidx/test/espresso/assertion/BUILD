@@ -13,7 +13,6 @@ package(
 
 android_library(
     name = "assertion",
-    testonly = 0,
     srcs = glob(
         ["*.java"],
     ),

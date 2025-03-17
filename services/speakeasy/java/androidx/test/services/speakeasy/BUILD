@@ -9,7 +9,6 @@ licenses(["notice"])
 
 android_library(
     name = "protocol",
-    testonly = 0,
     srcs = ["SpeakEasyProtocol.java"],
     visibility = [
         "//services:__subpackages__",

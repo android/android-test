@@ -13,7 +13,6 @@ package(
 
 proto_library(
     name = "test_protos",
-    testonly = 0,
     srcs = ["test_protos.proto"],
     deps = [
         "@com_google_protobuf//:any_proto",

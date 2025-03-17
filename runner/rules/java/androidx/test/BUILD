@@ -19,7 +19,6 @@ package(
 # test rules
 android_library(
     name = "rules",
-    testonly = 0,
     srcs = glob(["**/*.java"]),
     custom_package = "androidx.test.rules",
     manifest = "AndroidManifest.xml",

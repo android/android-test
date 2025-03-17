@@ -13,7 +13,6 @@ package(
 
 android_library(
     name = "orchestrator",
-    testonly = 0,
     srcs = glob(["**/*java"]),
     idl_srcs = glob(["**/*.aidl"]),
     visibility = [

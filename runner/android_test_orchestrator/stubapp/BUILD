@@ -13,7 +13,6 @@ package(
 # Dummy app to allow the On Device Orchestration to run and execute.
 android_binary(
     name = "stubapp",
-    testonly = 0,
     srcs = ["src/androidx/test/orchestrator/Orchestrator.java"],
     custom_package = "androidx.test.orchestrator.stubapp",
     manifest = "src/AndroidManifest.xml",

@@ -11,7 +11,6 @@ licenses(["notice"])
 # Content providers that provide read write or read only access to the SDCard.
 android_library(
     name = "storage_content_providers",
-    testonly = 0,
     srcs = glob(["*.java"]),
     manifest = "AndroidManifest.xml",
     deps = [

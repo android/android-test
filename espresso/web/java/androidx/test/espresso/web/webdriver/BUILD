@@ -17,7 +17,6 @@ package(
 
 android_library(
     name = "webdriver",
-    testonly = 0,
     srcs = glob(
         ["*java"],
     ),

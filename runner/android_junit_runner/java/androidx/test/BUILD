@@ -26,7 +26,6 @@ licenses(["notice"])
 
 android_library(
     name = "runner",
-    testonly = 0,
     srcs = glob(
         ["**/*.java"],
     ),

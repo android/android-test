@@ -22,7 +22,6 @@ licenses(["notice"])
 
 android_library(
     name = "storage",
-    testonly = 0,
     srcs = [
         "TestStorage.java",
         "TestStorageException.java",
@@ -46,7 +45,6 @@ android_library(
 # infrastructure for the storage service.
 java_library(
     name = "test_storage_constants",
-    testonly = 0,
     srcs = ["TestStorageConstants.java"],
     deps = [
         "//opensource/androidx:annotation",
@@ -56,13 +54,11 @@ java_library(
 # Proto libs for the storage service.
 proto_library(
     name = "storage_service_pb",
-    testonly = 0,
     srcs = ["test_storage_service.proto"],
 )
 
 java_lite_proto_library(
     name = "storage_service_pb_java_proto_lite",
-    testonly = 0,
     deps = [":storage_service_pb"],
 )
 

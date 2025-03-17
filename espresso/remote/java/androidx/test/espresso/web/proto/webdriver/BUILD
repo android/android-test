@@ -14,7 +14,6 @@ package(
 
 proto_library(
     name = "web_driver_atoms_proto",
-    testonly = 0,
     srcs = ["web_webdriver_atoms.proto"],
     deps = [
         "@com_google_protobuf//:any_proto",
@@ -28,7 +27,6 @@ java_lite_proto_library(
 
 java_library(
     name = "package-info",
-    testonly = 0,
     srcs = ["package-info.java"],
     deps = [
         "//opensource/androidx:annotation",
