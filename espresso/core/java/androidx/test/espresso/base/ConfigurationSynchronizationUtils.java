@@ -18,6 +18,7 @@ package androidx.test.espresso.base;
 
 import static java.util.Collections.unmodifiableList;
 
+import android.app.Application;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
@@ -47,6 +48,11 @@ final class ConfigurationSynchronizationUtils {
     // The activity's orientation can differ from application's orientation when the activity is in
     // multi-window mode.
     if (Build.VERSION.SDK_INT >= 24 && currentActivity.isInMultiWindowMode()) {
+      return;
+    }
+    // If the application is running activities in different processes, activities that aren't
+    // on the main process may have a different orientation
+    if (Build.VERSION.SDK_INT >= 28 && !currentActivity.getApplicationInfo().processName.equals(Application.getProcessName())) {
       return;
     }
 
