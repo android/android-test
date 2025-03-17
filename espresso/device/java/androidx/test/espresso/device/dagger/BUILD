@@ -7,12 +7,12 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//espresso/device/java/androidx/test/espresso/device:__subpackages__"],
 )
 
 kt_android_library(
     name = "dagger",
-    testonly = 1,
     srcs = glob(["*.kt"]),
     deps = [
         "//espresso/device/java/androidx/test/espresso/device/common",

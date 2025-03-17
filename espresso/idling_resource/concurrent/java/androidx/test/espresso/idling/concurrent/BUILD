@@ -9,6 +9,7 @@ load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//:__subpackages__"],
 )
 

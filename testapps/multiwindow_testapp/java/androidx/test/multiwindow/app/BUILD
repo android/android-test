@@ -10,6 +10,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = [
         "//opensource/visibility:testing_pkg",
     ],
@@ -40,7 +41,6 @@ android_library(
 
 android_binary(
     name = "testapp",
-    testonly = 1,
     assets = glob(["assets/**"]),
     assets_dir = "assets",
     manifest = "AndroidManifest.xml",

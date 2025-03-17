@@ -1,6 +1,9 @@
 load("//build_extensions:axt_android_local_test.bzl", "axt_android_local_test")
 
-package(default_applicable_licenses = ["//services:license"])
+package(
+    default_applicable_licenses = ["//services:license"],
+    default_testonly = 1,
+)
 
 # Tests for On-Device Infrastructure - Orchestrator
 licenses(["notice"])

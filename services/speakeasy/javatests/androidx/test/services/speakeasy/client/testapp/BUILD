@@ -4,6 +4,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//services:license"],
+    default_testonly = 1,
     default_visibility = [
         "//services/speakeasy/javatests/androidx/test/services/speakeasy:__subpackages__",
     ],

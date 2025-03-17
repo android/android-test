@@ -7,12 +7,12 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//visibility:public"],
 )
 
 kt_android_library(
     name = "rule",
-    testonly = 1,
     srcs = glob(
         [
             "*.java",

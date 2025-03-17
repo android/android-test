@@ -9,6 +9,7 @@ load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 # all users should reference the equivalent targets in //runner/android_junit_runner
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = [
         ":allowlist",
     ],

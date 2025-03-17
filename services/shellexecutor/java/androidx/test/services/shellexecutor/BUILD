@@ -5,7 +5,10 @@ load("//build_extensions:kt_android_library.bzl", "kt_android_library")
 
 # A shell command execution server to allow shell commands to be run at elevated permissions
 
-package(default_applicable_licenses = ["//services:license"])
+package(
+    default_applicable_licenses = ["//services:license"],
+    default_testonly = 1,
+)
 
 licenses(["notice"])
 

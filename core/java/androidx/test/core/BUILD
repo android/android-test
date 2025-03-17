@@ -10,6 +10,7 @@ load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 # all users should reference the equivalent targets in //core
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = [
         ":allowlist",
     ],
@@ -59,7 +60,6 @@ kt_android_library(
 # TODO(b/199522848): delete these targets once espresso moves to testonly
 android_library(
     name = "core",
-    testonly = 1,
     exports = [":core_internal"],
 )
 
@@ -72,7 +72,6 @@ android_library(
 # kt_android_library does not produce an aar, so wrap in a android_library for release
 android_library(
     name = "core_aar_lib",
-    testonly = 1,
     manifest = "AndroidManifest.xml",
     resource_files = glob(["res/**"]),
     visibility = ["//visibility:private"],
@@ -90,7 +89,6 @@ alias(
 # Generate rules for the release artifacts.
 axt_android_aar(
     name = "core_aar",
-    testonly = 1,
     expected_class_prefixes = [
         "androidx.test.core",
     ],
@@ -99,7 +97,6 @@ axt_android_aar(
 
 maven_artifact(
     name = "core_maven_artifact",
-    testonly = 1,
     last_updated = "20180403000000",
     target = ":core_aar",
 )

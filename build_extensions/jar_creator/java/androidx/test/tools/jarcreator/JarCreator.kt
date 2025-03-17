@@ -31,7 +31,7 @@ import java.util.jar.JarOutputStream
  * directory of the jar.
  */
 fun createJar(args: Array<String>) {
-  require(args.size >= 2) { "Must provide a least two files: <output> <input...>" }
+  require(args.size >= 2) { "Must provide at least two files: <output> <input...>" }
 
   val outputFile = args[0]
   val jarOutputStream = JarOutputStream(FileOutputStream(outputFile, false))

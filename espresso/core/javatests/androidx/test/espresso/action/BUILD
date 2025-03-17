@@ -11,7 +11,10 @@ load(
 )
 load("//build_extensions:phone_devices.bzl", "apis", "devices")
 
-package(default_applicable_licenses = ["//espresso:license"])
+package(
+    default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
+)
 
 licenses(["notice"])
 

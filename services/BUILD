@@ -10,12 +10,15 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//services:license"],
+    default_testonly = 1,
     default_visibility = [
         "//:__subpackages__",
     ],
 )
 
-license(name = "license")
+license(
+    name = "license",
+)
 
 exports_files(["LICENSE"])
 

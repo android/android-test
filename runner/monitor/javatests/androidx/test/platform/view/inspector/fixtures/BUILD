@@ -1,6 +1,9 @@
 load("//build_extensions:kt_android_library.bzl", "kt_android_library")
 
-package(default_applicable_licenses = ["//:license"])
+package(
+    default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
+)
 
 kt_android_library(
     name = "fixtures",

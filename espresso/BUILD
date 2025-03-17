@@ -1,6 +1,9 @@
 load("@rules_license//rules:license.bzl", "license")
 
-package(default_applicable_licenses = ["//espresso:license"])
+package(
+    default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
+)
 
 license(
     name = "license",

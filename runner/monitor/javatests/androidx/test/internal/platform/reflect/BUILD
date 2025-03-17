@@ -3,7 +3,10 @@ load(
     "axt_android_library_test",
 )
 
-package(default_applicable_licenses = ["//:license"])
+package(
+    default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
+)
 
 axt_android_library_test(
     name = "ReflectiveFieldTest",

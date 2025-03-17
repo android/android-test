@@ -2,6 +2,7 @@ load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 package(
     default_applicable_licenses = ["//services:license"],
+    default_testonly = 1,
     default_visibility = [
         "//services:__subpackages__",
         "//services/speakeasy/javatests/androidx/test/services/speakeasy/server:__pkg__",

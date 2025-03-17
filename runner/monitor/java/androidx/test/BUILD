@@ -11,6 +11,7 @@ load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 # nearly all users should reference the equivalent target in //runner/monitor
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = [
         ":allowlist",
     ],

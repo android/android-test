@@ -26,8 +26,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.IdlingRegistry;
-import com.google.android.apps.common.testing.ui.multiprocess.testapp.idling.MessageDelayer;
-import com.google.android.apps.common.testing.ui.multiprocess.testapp.idling.SimpleIdlingResource;
+import androidx.test.multiprocess.app.idling.MessageDelayer;
+import androidx.test.multiprocess.app.idling.SimpleIdlingResource;
 
 /**
  * Gets a text String from the user and displays it back after a while.

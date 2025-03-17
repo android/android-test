@@ -11,12 +11,12 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//:__subpackages__"],
 )
 
 android_library(
     name = "intents",
-    testonly = 1,
     srcs = glob(
         ["*.java"],
         exclude = [
@@ -58,7 +58,6 @@ android_library(
 
 android_library(
     name = "espresso_intents_aar_lib",
-    testonly = 1,
     manifest = "AndroidManifest.xml",
     exports = [
         ":intents",
@@ -69,7 +68,6 @@ android_library(
 # Generates the release artifacts
 axt_android_aar(
     name = "espresso_intents_aar",
-    testonly = 1,
     expected_class_prefixes = [
         "androidx.test.espresso.intent",
     ],
@@ -78,7 +76,6 @@ axt_android_aar(
 
 maven_artifact(
     name = "espresso_intents_maven_artifact",
-    testonly = 1,
     last_updated = "20170622000000",
     target = ":espresso_intents_aar",
 )

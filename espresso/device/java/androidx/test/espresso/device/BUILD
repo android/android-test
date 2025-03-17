@@ -12,6 +12,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = [
         "//espresso/device/java/androidx/test/espresso/device:device_pkg",
     ],
@@ -27,7 +28,6 @@ package_group(
 
 kt_android_library(
     name = "device",
-    testonly = 1,
     exports = [
         ":espresso_device",
         "//espresso/device/java/androidx/test/espresso/device/action",
@@ -39,7 +39,6 @@ kt_android_library(
 
 kt_android_library(
     name = "espresso_device",
-    testonly = 1,
     srcs = glob(["*.kt"]),
     deps = [
         "//espresso/device/java/androidx/test/espresso/device/action",
@@ -53,7 +52,6 @@ kt_android_library(
 
 android_library(
     name = "device_aar_lib",
-    testonly = 1,
     custom_package = "androidx.test.espresso.device",
     manifest = "AndroidManifest.xml",
     visibility = ["//:__subpackages__"],
@@ -69,7 +67,6 @@ android_library(
 
 axt_android_aar(
     name = "device_aar",
-    testonly = 1,
     expected_class_prefixes = [
         "androidx.test.espresso.device",
     ],
@@ -83,7 +80,6 @@ axt_android_aar(
 
 maven_artifact(
     name = "device_maven_artifact",
-    testonly = 1,
     last_updated = "20220825000000",
     target = ":device_aar",
     visibility = ["//visibility:public"],

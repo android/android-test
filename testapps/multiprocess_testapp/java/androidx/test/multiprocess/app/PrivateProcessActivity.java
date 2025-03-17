@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -53,6 +54,9 @@ public class PrivateProcessActivity extends Activity implements OnItemClickListe
         new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItems);
     listView.setAdapter(adapter);
     listView.setOnItemClickListener(this);
+
+    Button displayButton = (Button) findViewById(R.id.displayBtn);
+    displayButton.setOnClickListener(this::onBtnClick);
   }
 
   public void onBtnClick(View view) {

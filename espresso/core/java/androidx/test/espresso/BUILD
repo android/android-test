@@ -25,6 +25,7 @@ package_group(
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//visibility:public"],
 )
 
@@ -202,6 +203,7 @@ android_library(
 
 android_library(
     name = "espresso_aar_lib",
+    testonly = 1,
     custom_package = "androidx.test.espresso.core",
     manifest = "AndroidManifest.xml",
     proguard_specs = [":proguard_library.cfg"],

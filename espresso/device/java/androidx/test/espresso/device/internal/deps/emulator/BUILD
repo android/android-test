@@ -7,6 +7,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = [
         "//espresso/device/java/androidx/test/espresso/device:device_pkg",
     ],
@@ -14,7 +15,6 @@ package(
 
 android_library(
     name = "emulator",
-    testonly = 1,
     srcs = glob(["*.java"]),
     deps = ["//opensource/androidx:annotation"],
 )

@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -37,6 +38,9 @@ public class DefaultProcessActivity extends Activity {
     setContentView(R.layout.activity_process_default);
     textView = (TextView) findViewById(R.id.textNamedProcess);
     setCurrentRunningProcess(textView, this);
+
+    Button buttonView = (Button) findViewById(R.id.startActivityBtn);
+    buttonView.setOnClickListener(this::onStartActivityBtnClick);
   }
 
   public void onStartActivityBtnClick(View view) {

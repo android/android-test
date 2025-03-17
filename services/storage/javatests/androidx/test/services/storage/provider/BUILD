@@ -7,7 +7,10 @@ load(
     "devices",
 )
 
-package(default_applicable_licenses = ["//services:license"])
+package(
+    default_applicable_licenses = ["//services:license"],
+    default_testonly = 1,
+)
 
 licenses(["notice"])
 

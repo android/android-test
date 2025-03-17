@@ -1,12 +1,14 @@
 # Publicly visible androidx.ext.junit Kotlin extension library
 
-package(default_applicable_licenses = ["//:license"])
+package(
+    default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
+)
 
 licenses(["notice"])
 
 alias(
     name = "junit",
-    testonly = 1,
     actual = "//ktx/ext/junit/java/androidx/test/ext/junit",
     visibility = ["//visibility:public"],
 )
