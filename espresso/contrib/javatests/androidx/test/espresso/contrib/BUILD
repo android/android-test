@@ -7,14 +7,16 @@ load(
 )
 load("//build_extensions:jetify.bzl", "jetify_android_library")
 
-package(default_applicable_licenses = ["//espresso:license"])
+package(
+    default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
+)
 
 licenses(["notice"])
 ## Android tests
 
 jetify_android_library(
     name = "recycler_view_tests",
-    testonly = 1,
     srcs = [
         "RecyclerViewGridLayoutManagerTest.java",
         "RecyclerViewIntegrationTest.java",

@@ -9,6 +9,7 @@ load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 # all users should reference the equivalent targets in //runner/android_junit_runner
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = [
         ":allowlist",
     ],
@@ -25,6 +26,7 @@ licenses(["notice"])
 
 android_library(
     name = "runner",
+    testonly = 0,
     srcs = glob(
         ["**/*.java"],
     ),
@@ -51,7 +53,6 @@ android_library(
 # Generate rules for the release artifacts.
 axt_android_aar(
     name = "runner_aar",
-    testonly = 1,
     expected_class_prefixes = [
         "androidx.test.services.events",
         "androidx.test.runner",
@@ -64,7 +65,6 @@ axt_android_aar(
 
 maven_artifact(
     name = "runner_maven_artifact",
-    testonly = 1,
     last_updated = "20170622000000",
     target = ":runner_aar",
 )

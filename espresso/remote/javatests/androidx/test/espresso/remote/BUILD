@@ -7,7 +7,10 @@ load(
     "axt_android_library_test",
 )
 
-package(default_applicable_licenses = ["//espresso:license"])
+package(
+    default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
+)
 
 licenses(["notice"])
 
@@ -17,7 +20,6 @@ UTIL_SRCS = [
 
 android_library(
     name = "util",
-    testonly = 1,
     srcs = UTIL_SRCS,
     visibility = [
         "//visibility:private",

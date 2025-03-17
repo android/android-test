@@ -9,6 +9,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = [
         "//opensource/visibility:testing_pkg",
         "//testapps/ui_testapp/javatests/androidx/test/ui/app:__pkg__",
@@ -37,7 +38,6 @@ jetify_android_library(
 
 jetify_android_library(
     name = "lib_exported",
-    testonly = 1,
     exports_manifest = 1,
     jetify_sources = True,
     manifest = "AndroidManifest.xml",
@@ -48,7 +48,6 @@ jetify_android_library(
 
 jetify_android_library(
     name = "lib_neverlink",
-    testonly = 1,
     jetify_sources = True,
     # No other libraries should depend on this one
     neverlink = 1,
@@ -57,7 +56,6 @@ jetify_android_library(
 
 jetify_android_binary(
     name = "testapp",
-    testonly = 1,
     assets = glob(["assets/**"]),
     assets_dir = "assets",
     jetify_sources = True,

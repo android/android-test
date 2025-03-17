@@ -9,6 +9,7 @@ load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//:__subpackages__"],
 )
 
@@ -16,6 +17,7 @@ licenses(["notice"])
 
 android_library(
     name = "scheduled_thread_pool_idling_resource",
+    testonly = 0,
     srcs = [
         "IdlingScheduledThreadPoolExecutor.java",
     ],
@@ -27,6 +29,7 @@ android_library(
 
 android_library(
     name = "thread_pool_idling_resource",
+    testonly = 0,
     srcs = [
         "IdlingThreadPoolExecutor.java",
     ],
@@ -38,6 +41,7 @@ android_library(
 
 android_library(
     name = "idling_concurrent",
+    testonly = 0,
     srcs = [
         "IdlingScheduledThreadPoolExecutor.java",
         "IdlingThreadPoolExecutor.java",

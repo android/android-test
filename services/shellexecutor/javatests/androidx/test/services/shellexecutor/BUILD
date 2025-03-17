@@ -2,7 +2,10 @@ load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 load("//build_extensions:android_library_test.bzl", "axt_android_library_test")
 load("//build_extensions:axt_android_local_test.bzl", "axt_android_local_test")
 
-package(default_applicable_licenses = ["//services:license"])
+package(
+    default_applicable_licenses = ["//services:license"],
+    default_testonly = 1,
+)
 
 licenses(["notice"])
 

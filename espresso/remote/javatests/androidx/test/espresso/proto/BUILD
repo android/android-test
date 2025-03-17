@@ -7,11 +7,13 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//opensource/visibility:testing_pkg"],
 )
 
 proto_library(
     name = "test_protos",
+    testonly = 0,
     srcs = ["test_protos.proto"],
     deps = [
         "@com_google_protobuf//:any_proto",

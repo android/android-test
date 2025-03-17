@@ -7,6 +7,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = ["//espresso/core/java/androidx/test/espresso:__pkg__"],
 )
 

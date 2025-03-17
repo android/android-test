@@ -10,6 +10,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = [
         "//opensource/visibility:testing_pkg",
     ],
@@ -17,6 +18,7 @@ package(
 
 jetify_android_library(
     name = "lib",
+    testonly = 0,
     srcs = glob(
         ["**/*.java"],
     ),
@@ -40,7 +42,6 @@ android_library(
 
 android_binary(
     name = "testapp",
-    testonly = 1,
     assets = glob(["assets/**"]),
     assets_dir = "assets",
     manifest = "AndroidManifest.xml",

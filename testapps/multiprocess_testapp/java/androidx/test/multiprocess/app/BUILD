@@ -8,6 +8,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = [
         "//opensource/visibility:testing_pkg",
         "//testapps/multiprocess_testapp/javatests/androidx/test/multiprocess/app:__pkg__",
@@ -43,7 +44,6 @@ jetify_android_library(
 
 android_binary(
     name = "testapp",
-    testonly = 1,
     manifest = "AndroidManifest.xml",
     multidex = "native",
     deps = [

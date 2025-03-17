@@ -4,7 +4,10 @@ load(
     "axt_android_local_test",
 )
 
-package(default_applicable_licenses = ["//:license"])
+package(
+    default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
+)
 
 # Description: Tests for the Orchestrator client connection
 licenses(["notice"])

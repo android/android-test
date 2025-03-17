@@ -11,6 +11,7 @@ load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 # nearly all users should reference the equivalent target in //runner/monitor
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = [
         ":allowlist",
     ],
@@ -27,6 +28,7 @@ licenses(["notice"])
 
 kt_android_library(
     name = "monitor",
+    testonly = 0,
     srcs = glob(
         [
             "**/*.java",
@@ -52,6 +54,7 @@ kt_android_library(
 # avoid the runtime dependency on errorprone
 java_library(
     name = "errorprone_neverlink",
+    testonly = 0,
     neverlink = 1,
     exports = [
         "@maven//:com_google_errorprone_error_prone_annotations",
@@ -60,6 +63,7 @@ java_library(
 
 android_library(
     name = "runtime_hidden_apis",
+    testonly = 0,
     srcs = [
         "internal/runner/runtime/ExposedInstrumentationApi.java",
     ],
@@ -68,6 +72,7 @@ android_library(
 
 android_library(
     name = "compiletime_hidden_apis",
+    testonly = 0,
     srcs = [
         "internal/runner/hidden/ExposedInstrumentationApi.java",
     ],
@@ -80,6 +85,7 @@ android_library(
 # group of targets to use to produce release binary + docs
 android_library(
     name = "monitor_release_lib",
+    testonly = 0,
     srcs = [
         # only needed for external release backwards compatibility
         "internal/platform/app/ActivityInvoker$$CC.java",

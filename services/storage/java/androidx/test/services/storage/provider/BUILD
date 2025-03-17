@@ -2,6 +2,7 @@ load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 package(
     default_applicable_licenses = ["//services:license"],
+    default_testonly = 1,
     default_visibility = ["//services:__subpackages__"],
 )
 
@@ -10,6 +11,7 @@ licenses(["notice"])
 # Content providers that provide read write or read only access to the SDCard.
 android_library(
     name = "storage_content_providers",
+    testonly = 0,
     srcs = glob(["*.java"]),
     manifest = "AndroidManifest.xml",
     deps = [

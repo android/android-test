@@ -11,6 +11,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//:__subpackages__"],
 )
 
@@ -26,7 +27,6 @@ REMOTE_REGISTRY = [
 
 android_library(
     name = "registry",
-    testonly = 1,
     srcs = REMOTE_REGISTRY,
     visibility = ["//visibility:public"],
     deps = [
@@ -61,7 +61,6 @@ PROTO_UTILS = [
 
 android_library(
     name = "protoUtils",
-    testonly = 1,
     srcs = PROTO_UTILS,
     visibility = ["//visibility:public"],
     deps = [
@@ -85,7 +84,6 @@ android_library(
 
 android_library(
     name = "remote",
-    testonly = 1,
     srcs = glob(
         ["*.java"],
         exclude = PROTO_UTILS + REMOTE_REGISTRY,
@@ -133,7 +131,6 @@ android_library(
 
 axt_android_aar(
     name = "espresso_remote_aar",
-    testonly = 1,
     expected_class_prefixes = [
         "androidx.test.espresso",
     ],
@@ -143,7 +140,6 @@ axt_android_aar(
 
 maven_artifact(
     name = "espresso_remote_maven_artifact",
-    testonly = 1,
     last_updated = "20170622000000",
     target = ":espresso_remote_aar",
 )

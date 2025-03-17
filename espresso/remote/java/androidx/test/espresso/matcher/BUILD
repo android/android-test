@@ -7,6 +7,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//espresso/remote:__subpackages__"],
 )
 
@@ -16,7 +17,6 @@ REMOTE_HAMCREST_v1_3_CORE_MATCHERS = [
 
 android_library(
     name = "remote_view_matchers",
-    testonly = 1,
     srcs = glob(
         ["*.java"],
         exclude = REMOTE_HAMCREST_v1_3_CORE_MATCHERS,
@@ -36,7 +36,6 @@ android_library(
 
 android_library(
     name = "remote_hamcrest_v1_3_core_matchers",
-    testonly = 1,
     srcs = glob(
         REMOTE_HAMCREST_v1_3_CORE_MATCHERS,
     ),

@@ -7,6 +7,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = [
         "//espresso/device/java/androidx/test/espresso/device:device_pkg",
     ],
@@ -14,7 +15,6 @@ package(
 
 kt_android_library(
     name = "filter",
-    testonly = 1,
     srcs = glob(["*.kt"]),
     deps = [
         "//espresso/device/java/androidx/test/espresso/device/common",
@@ -29,7 +29,6 @@ kt_android_library(
 
 kt_android_library(
     name = "requires_display_filter",
-    testonly = 1,
     srcs = [
         "RequiresDisplay.kt",
         "RequiresDisplayFilter.kt",

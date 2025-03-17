@@ -6,6 +6,7 @@ load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//visibility:public"],
 )
 
@@ -13,6 +14,7 @@ licenses(["notice"])
 
 android_library(
     name = "model",
+    testonly = 0,
     srcs = glob(
         ["*.java"],
     ),

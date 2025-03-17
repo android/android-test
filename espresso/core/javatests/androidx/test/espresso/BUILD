@@ -11,7 +11,10 @@ load(
     "axt_android_application_test",
 )
 
-package(default_applicable_licenses = ["//espresso:license"])
+package(
+    default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
+)
 
 licenses(["notice"])
 

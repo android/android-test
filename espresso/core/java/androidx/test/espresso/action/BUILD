@@ -8,6 +8,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//visibility:public"],
 )
 
@@ -22,6 +23,7 @@ COMMON_JAVACOPTS = [
 
 android_library(
     name = "adapter_view_protocol",
+    testonly = 0,
     srcs = ADAPTER_VIEW_PROTOCOL,
     deps = [
         "//espresso/core/java/androidx/test/espresso/matcher",
@@ -33,6 +35,7 @@ android_library(
 
 kt_android_library(
     name = "action",
+    testonly = 0,
     srcs = glob(
         [
             "*.java",

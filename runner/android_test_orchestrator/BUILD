@@ -1,12 +1,16 @@
 # Description:
 #   On Device Orchestrator, to run instrumentation tests sequentially from a single adb command.
 
-package(default_applicable_licenses = ["//:license"])
+package(
+    default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
+)
 
 licenses(["notice"])
 
 alias(
     name = "android_test_orchestrator",
+    testonly = 0,
     actual = "//runner/android_test_orchestrator/java/androidx/test/orchestrator",
     visibility = [":odo"],
 )

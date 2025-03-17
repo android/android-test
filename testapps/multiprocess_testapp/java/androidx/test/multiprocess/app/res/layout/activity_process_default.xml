@@ -34,7 +34,6 @@
         android:id="@+id/startActivityBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/start_activity"
-        android:onClick="onStartActivityBtnClick"/>
+        android:text="@string/start_activity"/>
 
 </LinearLayout>

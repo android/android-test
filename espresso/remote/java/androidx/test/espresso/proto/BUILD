@@ -8,11 +8,13 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//espresso/remote:__subpackages__"],
 )
 
 proto_library(
     name = "ui_interaction_proto",
+    testonly = 0,
     srcs = ["ui_interaction.proto"],
     deps = [
         "@com_google_protobuf//:any_proto",

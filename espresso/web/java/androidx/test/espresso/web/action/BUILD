@@ -7,6 +7,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//visibility:public"],
 )
 
@@ -16,6 +17,7 @@ package(
 
 android_library(
     name = "action",
+    testonly = 0,
     srcs = glob(
         ["*.java"],
     ),

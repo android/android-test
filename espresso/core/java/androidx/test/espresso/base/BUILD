@@ -7,11 +7,13 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//espresso/core/java/androidx/test/espresso:espresso_pkg"],
 )
 
 android_library(
     name = "base",
+    testonly = 0,
     srcs = glob(
         ["*.java"],
         exclude = [
@@ -49,7 +51,6 @@ android_library(
 
 android_library(
     name = "active_root_lister",
-    testonly = 1,
     srcs = ["ActiveRootLister.java"],
     visibility = [
         "//espresso/core/java/androidx/test/espresso:espresso_first_party",
@@ -61,6 +62,7 @@ android_library(
 
 android_library(
     name = "idling_resource_registry",
+    testonly = 0,
     srcs = [
         "IdleNotifier.java",
         "IdlingResourceRegistry.java",
@@ -80,6 +82,7 @@ android_library(
 
 android_library(
     name = "idling_uicontroller_interface",
+    testonly = 0,
     srcs = ["IdlingUiController.java"],
     deps = [
         ":idling_resource_registry",
@@ -89,6 +92,7 @@ android_library(
 
 android_library(
     name = "default_failure_handler",
+    testonly = 0,
     srcs = [
         "AssertionErrorHandler.java",
         "DefaultFailureHandler.java",

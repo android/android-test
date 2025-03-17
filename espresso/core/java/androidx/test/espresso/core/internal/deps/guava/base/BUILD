@@ -7,11 +7,13 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = ["//espresso/core/java/androidx/test/espresso:espresso_pkg"],
 )
 
 android_library(
     name = "base",
+    testonly = 0,
     srcs = glob(["*java"]),
     deps = [
         "//opensource/androidx:annotation",

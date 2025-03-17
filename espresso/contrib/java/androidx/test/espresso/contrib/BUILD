@@ -12,6 +12,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//:__subpackages__"],
 )
 
@@ -51,7 +52,6 @@ android_library(
 
 android_library(
     name = "picker_actions",
-    testonly = 1,
     srcs = ["PickerActions.java"],
     visibility = ["//visibility:public"],
     deps = [
@@ -70,6 +70,7 @@ COMMON_JAVACOPTS = [
 
 jetify_android_library(
     name = "recycler_view",
+    testonly = 0,
     srcs = ["RecyclerViewActions.java"],
     javacopts = COMMON_JAVACOPTS,
     jetify_sources = True,
@@ -87,7 +88,6 @@ jetify_android_library(
 
 android_library(
     name = "drawer_actions",
-    testonly = 1,
     srcs = [
         "DrawerActions.java",
         "DrawerMatchers.java",
@@ -116,7 +116,6 @@ android_library(
 
 android_library(
     name = "accessibility_checks",
-    testonly = 1,
     srcs = [
         "AccessibilityChecks.java",
     ],
@@ -130,7 +129,6 @@ android_library(
 
 android_library(
     name = "design_lib_actions",
-    testonly = 1,
     srcs = ["NavigationViewActions.java"],
     visibility = ["//visibility:public"],
     deps = [
@@ -146,7 +144,6 @@ android_library(
 
 android_library(
     name = "view_pager_actions",
-    testonly = 1,
     srcs = ["ViewPagerActions.java"],
     visibility = ["//visibility:public"],
     deps = [
@@ -160,7 +157,6 @@ android_library(
 
 android_library(
     name = "espresso_contrib_aar_lib",
-    testonly = 1,
     manifest = "AndroidManifest.xml",
     resource_files = glob(["res/**"]),
     exports = [
@@ -176,7 +172,6 @@ android_library(
 
 axt_android_aar(
     name = "espresso_contrib_aar",
-    testonly = 1,
     expected_class_prefixes = [
         "androidx.test.espresso.contrib",
     ],
@@ -185,7 +180,6 @@ axt_android_aar(
 
 maven_artifact(
     name = "espresso_contrib_maven_artifact",
-    testonly = 1,
     last_updated = "20170622000000",
     target = ":espresso_contrib_aar",
 )

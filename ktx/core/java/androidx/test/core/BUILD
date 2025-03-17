@@ -11,12 +11,12 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = ["//:__subpackages__"],
 )
 
 kt_android_library(
     name = "core",
-    testonly = 1,
     srcs = glob(["**/*.kt"]),
     custom_package = "androidx.test.core.ktx",
     manifest = "AndroidManifest.xml",
@@ -30,7 +30,6 @@ kt_android_library(
 # kt_android)library doesn't produce an aar, so wrap inside a android_library
 android_library(
     name = "core_aar_lib",
-    testonly = 1,
     custom_package = "androidx.test.core.ktx",
     manifest = "AndroidManifest.xml",
     visibility = ["//visibility:private"],
@@ -41,7 +40,7 @@ android_library(
 
 axt_android_aar(
     name = "core_aar",
-    testonly = 1,
+
     # we'll be super explicit with the expected classes here since this is effectively a
     # stale artifact. All future classes should just go into //core
     expected_class_prefixes = [
@@ -52,7 +51,6 @@ axt_android_aar(
 
 maven_artifact(
     name = "core_maven_artifact",
-    testonly = 1,
     last_updated = "20181029000000",
     target = ":core_aar",
 )

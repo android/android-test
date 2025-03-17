@@ -11,6 +11,7 @@ load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//visibility:public"],
 )
 
@@ -24,6 +25,7 @@ IDLING_INTERFACE = [
 
 java_library(
     name = "idling_resource_internal",
+    testonly = 0,
     srcs = IDLING_INTERFACE,
     visibility = [
         "//:__subpackages__",
@@ -34,11 +36,13 @@ java_library(
 
 alias(
     name = "idling_resource",
+    testonly = 0,
     actual = "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
 )
 
 alias(
     name = "counting_idling_resource",
+    testonly = 0,
     actual = "//espresso/idling_resource/java/androidx/test/espresso:idling_resource_internal",
 )
 
@@ -49,6 +53,7 @@ alias(
 
 alias(
     name = "thread_pool_idling_resource",
+    testonly = 0,
     actual = "//espresso/idling_resource/concurrent/java/androidx/test/espresso/idling/concurrent:thread_pool_idling_resource",
 )
 

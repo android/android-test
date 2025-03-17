@@ -12,7 +12,6 @@ licenses(["notice"])
 
 kt_android_library(
     name = "testing",
-    testonly = 1,
     srcs = glob([
         "**/*.java",
         "**/*.kt",

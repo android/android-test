@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.common.testing.ui.multiprocess.testapp.idling;
+package androidx.test.multiprocess.app.idling;
 
 import androidx.annotation.Nullable;
 import androidx.test.espresso.IdlingResource;

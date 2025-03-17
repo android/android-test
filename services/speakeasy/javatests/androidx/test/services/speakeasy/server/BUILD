@@ -1,6 +1,9 @@
 load("//build_extensions:android_library_test.bzl", "axt_android_library_test")
 
-package(default_applicable_licenses = ["//services:license"])
+package(
+    default_applicable_licenses = ["//services:license"],
+    default_testonly = 1,
+)
 
 licenses(["notice"])
 

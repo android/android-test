@@ -9,6 +9,7 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = [
         "//:__pkg__",
         "//runner/rules:__pkg__",
@@ -18,6 +19,7 @@ package(
 # test rules
 android_library(
     name = "rules",
+    testonly = 0,
     srcs = glob(["**/*.java"]),
     custom_package = "androidx.test.rules",
     manifest = "AndroidManifest.xml",
@@ -34,7 +36,6 @@ android_library(
 
 axt_android_aar(
     name = "rules_aar",
-    testonly = 1,
     expected_class_prefixes = [
         "androidx.test.annotation.UiThreadTest",
         "androidx.test.rule",
@@ -44,7 +45,6 @@ axt_android_aar(
 
 maven_artifact(
     name = "rules_maven_artifact",
-    testonly = 1,
     last_updated = "20170622000000",
     target = ":rules_aar",
 )

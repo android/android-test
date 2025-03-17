@@ -7,7 +7,10 @@ load(
 )
 load("//build_extensions:axt_android_local_test.bzl", "axt_android_local_test")
 
-package(default_applicable_licenses = ["//espresso:license"])
+package(
+    default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
+)
 
 licenses(["notice"])
 

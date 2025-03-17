@@ -5,7 +5,10 @@ load(
 )
 load("//build_extensions:java_service_map.bzl", "java_service_map")
 
-package(default_applicable_licenses = ["//:license"])
+package(
+    default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
+)
 
 android_library(
     name = "fixtures",

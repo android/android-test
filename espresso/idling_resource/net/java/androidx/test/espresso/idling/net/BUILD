@@ -10,11 +10,13 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//:__subpackages__"],
 )
 
 android_library(
     name = "uri_idling_resource",
+    testonly = 0,
     srcs = ["UriIdlingResource.java"],
     manifest = "AndroidManifest.xml",
     visibility = ["//visibility:public"],

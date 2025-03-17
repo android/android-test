@@ -10,18 +10,22 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//services:license"],
+    default_testonly = 1,
     default_visibility = [
         "//:__subpackages__",
     ],
 )
 
-license(name = "license")
+license(
+    name = "license",
+)
 
 exports_files(["LICENSE"])
 
 # Standard test services that can be installed on any device.
 android_binary(
     name = "test_services",
+    testonly = 0,
     custom_package = "androidx.test.services",
     licenses = ["permissive"],
     main_dex_proguard_specs = ["//build_extensions:mainDexClasses.rules"],

@@ -10,12 +10,12 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//:__subpackages__"],
 )
 
 android_library(
     name = "accessibility_checks",
-    testonly = 1,
     srcs = [
         "AccessibilityChecks.java",
     ],
@@ -31,7 +31,6 @@ android_library(
 
 axt_android_aar(
     name = "accessibility_checks_aar",
-    testonly = 1,
     expected_class_prefixes = [
         "androidx.test.espresso.accessibility",
     ],
@@ -40,7 +39,6 @@ axt_android_aar(
 
 maven_artifact(
     name = "accessibility_checks_maven_artifact",
-    testonly = 1,
     last_updated = "20170622000000",
     target = ":accessibility_checks_aar",
 )

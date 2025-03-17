@@ -7,11 +7,13 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = ["//:__subpackages__"],
 )
 
 android_library(
     name = "orchestrator",
+    testonly = 0,
     srcs = glob(["**/*java"]),
     idl_srcs = glob(["**/*.aidl"]),
     visibility = [

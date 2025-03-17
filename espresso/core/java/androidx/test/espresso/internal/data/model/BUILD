@@ -5,11 +5,13 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//espresso/core/java/androidx/test/espresso:espresso_pkg"],
 )
 
 kt_android_library(
     name = "model",
+    testonly = 0,
     srcs = glob([
         "*.kt",
         "*.java",

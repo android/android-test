@@ -2,6 +2,7 @@ load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 package(
     default_applicable_licenses = ["//services:license"],
+    default_testonly = 1,
     default_visibility = [
         "//services:__subpackages__",
         "//services/speakeasy/javatests/androidx/test/services/speakeasy/server:__pkg__",
@@ -12,6 +13,7 @@ licenses(["notice"])
 
 android_library(
     name = "speak_easy_core",
+    testonly = 0,
     srcs = ["SpeakEasy.java"],
     deps = [
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
@@ -21,6 +23,7 @@ android_library(
 
 android_library(
     name = "speak_easy_service",
+    testonly = 0,
     srcs = [
         "SpeakEasyContentProvider.java",
         "SpeakEasyService.java",
@@ -41,5 +44,6 @@ android_library(
 
 android_library(
     name = "server",
+    testonly = 0,
     exports = [":speak_easy_service"],
 )

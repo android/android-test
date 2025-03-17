@@ -7,11 +7,13 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//visibility:public"],
 )
 
 android_library(
     name = "assertion",
+    testonly = 0,
     srcs = glob(
         ["*.java"],
     ),

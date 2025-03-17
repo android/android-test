@@ -6,12 +6,14 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = ["//:__subpackages__"],
 )
 
 # Dummy app to allow the On Device Orchestration to run and execute.
 android_binary(
     name = "stubapp",
+    testonly = 0,
     srcs = ["src/androidx/test/orchestrator/Orchestrator.java"],
     custom_package = "androidx.test.orchestrator.stubapp",
     manifest = "src/AndroidManifest.xml",
@@ -32,13 +34,11 @@ android_binary(
 
 axt_maven_apk(
     name = "orchestrator_release_apk",
-    testonly = 1,
     included_dep = ":stubapp",
 )
 
 maven_artifact(
     name = "orchestrator_release_maven_artifact",
-    testonly = 1,
     last_updated = "20170622000000",
     target = ":orchestrator_release_apk",
 )

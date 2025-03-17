@@ -25,6 +25,7 @@ package_group(
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//visibility:public"],
 )
 
@@ -66,6 +67,7 @@ INTERNAL_API_ANNOTATION = [
 
 android_library(
     name = "view-interaction",
+    testonly = 0,
     srcs = VIEW_INTERACTION,
     visibility = ["//visibility:private"],
     deps = [
@@ -100,6 +102,7 @@ ESPRESSO_GRAPH = [
 
 android_library(
     name = "espresso-graph",
+    testonly = 0,
     srcs = ESPRESSO_GRAPH,
     visibility = ["//visibility:private"],
     deps = [
@@ -120,6 +123,7 @@ android_library(
 
 android_library(
     name = "espresso",
+    testonly = 0,
     srcs = glob(
         ["*.java"],
         exclude = BASE_LAYER_INTERFACES + PUBLIC_FRAMEWORK_LAYER + ESPRESSO_GRAPH + VIEW_INTERACTION + INTERNAL_API_ANNOTATION,
@@ -169,6 +173,7 @@ android_library(
 
 android_library(
     name = "framework",
+    testonly = 0,
     srcs = PUBLIC_FRAMEWORK_LAYER,
     deps = [
         ":interface",
@@ -179,6 +184,7 @@ android_library(
 
 android_library(
     name = "interface",
+    testonly = 0,
     srcs = BASE_LAYER_INTERFACES,
     manifest = "AndroidManifest.xml",
     deps = [
@@ -215,7 +221,6 @@ android_library(
 
 axt_android_aar(
     name = "espresso_core_aar",
-    testonly = 1,
     expected_class_prefixes = [
         "androidx.test.espresso",
     ],
@@ -226,7 +231,6 @@ axt_android_aar(
 
 maven_artifact(
     name = "espresso_core_maven_artifact",
-    testonly = 1,
     last_updated = "20170622000000",
     target = ":espresso_core_aar",
 )

@@ -7,12 +7,12 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//espresso/remote:__subpackages__"],
 )
 
 android_library(
     name = "data-interaction-remote",
-    testonly = 1,
     srcs = [
         "DataInteractionRemote.java",
     ],

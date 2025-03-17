@@ -9,6 +9,7 @@ load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 # all users should reference the equivalent targets in //ext/truth
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = [
         "//:__pkg__",
         "//ext/truth:__subpackages__",
@@ -19,7 +20,6 @@ licenses(["notice"])
 
 android_library(
     name = "truth",
-    testonly = 1,
     srcs = glob(
         ["**/*.java"],
     ),
@@ -35,7 +35,7 @@ android_library(
 # Generate rules for the release artifacts.
 axt_android_aar(
     name = "truth_aar",
-    testonly = 1,
+
     # omit banned check for guava, since its a dependency of upstream truth
     banned_maven_deps = ["com.google.dagger"],
     expected_class_prefixes = [
@@ -46,7 +46,6 @@ axt_android_aar(
 
 maven_artifact(
     name = "truth_maven_artifact",
-    testonly = 1,
     last_updated = "20180321000000",
     target = ":truth_aar",
 )

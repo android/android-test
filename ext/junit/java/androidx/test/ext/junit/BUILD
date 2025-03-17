@@ -10,6 +10,7 @@ load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 # all users should reference the equivalent targets in //ext/junit
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = ["//:__subpackages__"],
 )
 
@@ -17,7 +18,6 @@ licenses(["notice"])
 
 kt_android_library(
     name = "junit",
-    testonly = 1,
     srcs = glob(
         [
             "**/*.java",
@@ -39,7 +39,6 @@ kt_android_library(
 # group of targets to use to produce release binary + docs
 android_library(
     name = "junit_release_lib",
-    testonly = 1,
     custom_package = "androidx.test.ext.junit",
     exports_manifest = 1,
     manifest = "AndroidManifest.xml",
@@ -51,7 +50,6 @@ android_library(
 # Generate rules for the release artifacts.
 axt_android_aar(
     name = "junit_aar",
-    testonly = 1,
     expected_class_prefixes = [
         "androidx.test.ext.junit",
     ],
@@ -60,7 +58,6 @@ axt_android_aar(
 
 maven_artifact(
     name = "junit_maven_artifact",
-    testonly = 1,
     last_updated = "20180723000000",
     target = ":junit_aar",
 )

@@ -7,11 +7,13 @@ licenses(["notice"])
 
 package(
     default_applicable_licenses = ["//:license"],
+    default_testonly = 1,
     default_visibility = ["//espresso/web:__subpackages__"],
 )
 
 android_library(
     name = "concurrent",
+    testonly = 0,
     srcs = glob(
         ["*.java"],
     ),

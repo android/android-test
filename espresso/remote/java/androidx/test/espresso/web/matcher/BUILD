@@ -2,6 +2,7 @@ load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 package(
     default_applicable_licenses = ["//espresso:license"],
+    default_testonly = 1,
     default_visibility = ["//espresso/remote:__subpackages__"],
 )
 
@@ -9,7 +10,6 @@ licenses(["notice"])
 
 android_library(
     name = "remote_web_matchers",
-    testonly = 1,
     srcs = glob(
         ["*.java"],
     ),
