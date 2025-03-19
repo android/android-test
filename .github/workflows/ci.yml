@@ -46,14 +46,8 @@ jobs:
           name: local-snapshot
           path: ~/download
       - name: 'Clean bazel cache'
-        # Don't cache the bazel/external directory, since it can be  > 2GB
-        # and is expensive to restore and save
-        # According to the documentation, we should be able to exclude these via
-        # the actions/cache path, e.g. "!~/.cache/bazel/*/*/external/" but that
-        # doesn't seem to work.
         run: |
           rm -rf $(bazel info repository_cache)
-          rm -rf ~/.cache/bazel/*/*/external/
         shell: bash
   test:
     runs-on: ubuntu-latest
@@ -77,14 +71,8 @@ jobs:
         run: bazelisk test --test_tag_filters=robolectric,fast --build_tag_filters=robolectric,fast --test_output=all ...
         shell: bash
       - name: 'Clean bazel cache'
-        # Don't cache the bazel/external directory, since it can be  > 2GB
-        # and is expensive to restore and save
-        # According to the documentation, we should be able to exclude these via
-        # the actions/cache path, e.g. "!~/.cache/bazel/*/*/external/" but that
-        # doesn't seem to work.
         run: |
           rm -rf $(bazel info repository_cache)
-          rm -rf ~/.cache/bazel/*/*/external/
         shell: bash
   gradle-emulator-test:
     runs-on: ubuntu-latest
