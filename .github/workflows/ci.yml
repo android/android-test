@@ -11,7 +11,7 @@ on:
       - 'axt_**_release_branch'
 
 env:
-  cache-version: v1
+  cache-version: v2
 
 jobs:
   build:
