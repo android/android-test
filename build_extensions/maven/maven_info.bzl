@@ -150,7 +150,7 @@ def _isJavaProtoTarget(all_deps):
 
 def _findGrpcJavaProtoJar(target):
     for jar in target[JavaInfo].transitive_runtime_jars.to_list():
-        if "io_grpc_grpc_java/protobuf-lite" in jar.path:
+        if "grpc-java/protobuf-lite" in jar.path:
             return jar
     return None
 

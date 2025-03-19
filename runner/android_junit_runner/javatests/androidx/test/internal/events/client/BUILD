@@ -27,9 +27,7 @@ axt_android_local_test(
 
 android_library(
     name = "sampletest",
-    testonly = 1,
     srcs = ["SampleJUnitTest.java"],
-    testonly = 1,
     deps = ["@maven//:junit_junit"],
 )
 
