@@ -2,7 +2,7 @@
 
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 load("//build_extensions:create_jar.bzl", "create_jar")
-load("@build_bazel_rules_android//android:rules.bzl", "android_local_test")
+load("@build_bazel_rules_android//android:rules.bzl", "android_local_test", "android_library")
 
 def axt_android_local_test(name, srcs = [], deps = [], manifest = "//build_extensions:AndroidManifest_robolectric.xml", tags = ["robolectric"], **kwargs):
     """A wrapper around android_local_test that provides sensible defaults for androidx.test.
