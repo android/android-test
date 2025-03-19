@@ -25,6 +25,7 @@ dependencyResolutionManagement {
             library('espresso.accessibility', 'androidx.test.espresso:espresso-accessibility:3.7.0-alpha02')
             library('espresso.contrib', 'androidx.test.espresso:espresso-contrib:3.7.0-alpha02')
             library('espresso.core', 'androidx.test.espresso:espresso-core:3.7.0-alpha02')
+            library('espresso.device', 'androidx.test.espresso:espresso-device:1.1.0-alpha02')
             library('espresso.idlingresource', 'androidx.test.espresso:espresso-idling-resource:3.7.0-alpha02')
             library('espresso.intents', 'androidx.test.espresso:espresso-intents:3.7.0-alpha02')
             library('espresso.web', 'androidx.test.espresso:espresso-web:3.7.0-alpha02')
@@ -39,6 +40,7 @@ include ':runner'
 include ':espresso'
 include ':espresso:accessibility'
 include ':espresso:contrib'
+include ':espresso:device'
 include ':espresso:idling_resource'
 include ':espresso:web'
 include ':orchestrator'
