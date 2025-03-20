@@ -24,8 +24,8 @@ kt_android_library(
         "//opensource/emulator/proto:emulator_controller_java_grpc",
         "//opensource/emulator/proto:emulator_controller_java_proto_lite",
         "//runner/monitor",
+        "@maven//:io_grpc_grpc_core",
         "@maven//:io_grpc_grpc_okhttp",
         "@maven//:io_grpc_grpc_stub",
-        "@maven//:org_apache_tomcat_annotations_api",
     ],
 )
