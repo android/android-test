@@ -23,6 +23,7 @@ android_library(
         "platform/ITestPlatformEvent.aidl",
         "run/ITestRunEvent.aidl",
     ],
+    testonly = 1,
     deps = [
         "//opensource/androidx:annotation",
         "//runner/monitor",

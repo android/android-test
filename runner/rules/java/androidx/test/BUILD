@@ -25,6 +25,7 @@ android_library(
     proguard_specs = [
         "proguard.cfg",
     ],
+    testonly = 1,
     deps = [
         "//opensource/androidx:annotation",
         "//runner/android_junit_runner",

@@ -18,6 +18,7 @@ android_library(
     visibility = [
         ":export",
     ],
+    testonly = 1,
     deps = [
         "//opensource/androidx:annotation",
         "//runner/android_junit_runner",

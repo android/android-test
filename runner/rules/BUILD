@@ -13,5 +13,6 @@ licenses(["notice"])
 java_library(
     name = "rules",
     visibility = ["//visibility:public"],
+    testonly = 1,
     exports = ["//runner/rules/java/androidx/test:rules"],
 )

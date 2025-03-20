@@ -45,11 +45,18 @@ _TARGET_TO_MAVEN_ARTIFACT = {
     "//services/events/java/": "androidx.test:runner:%s" % RUNNER_VERSION,
     "//services:test_services": "androidx.test.services:test-services:%s" % SERVICES_VERSION,
     "//runner/android_test_orchestrator/stubapp:stubapp": "androidx.test:orchestrator:%s" % ORCHESTRATOR_VERSION,
+
+    "@@grpc-java~//okhttp:okhttp": "io.grpc:grpc-okhttp:1.54.1",
+    "@@grpc-java~//api": "io.grpc:grpc-stub:1.54.1",
+    "@@grpc-java~//core": "io.grpc:grpc-stub:1.54.1",
+    "@@grpc-java~//context": "io.grpc:grpc-stub:1.54.1",
+    "@@grpc-java~//util": "io.grpc:grpc-stub:1.54.1",
+    "@@grpc-java~//stub": "io.grpc:grpc-stub:1.54.1",
 }
 
 _SHADED_TARGETS = [
     "@com_google_protobuf//:protobuf_javalite",
-    "@com_google_protobuf//java/core:lite",
+    "@@protobuf~//java/core:lite",
     "//opensource/proto:any_java_proto_lite",
     "@com_google_protobuf//:any_proto",
     "//opensource/dagger:dagger",
@@ -110,6 +117,6 @@ def is_shaded_from_label(label):
     renamed via jarjar.
     """
 
-    # bazel 6.0.0 mysteriously prefixes a '@' onto //opensource/dagger, so just remove it
-    string_label = str(label).replace("@//", "//")
+    # bazel mysteriously prefixes a '@' onto //opensource/dagger, sometimes two, so just remove it
+    string_label = str(label).replace("@//", "//").replace("@//", "//")
     return string_label in _SHADED_TARGETS

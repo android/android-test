@@ -35,6 +35,7 @@ android_library(
     proguard_specs = [
         "proguard_library.cfg",
     ],
+    testonly = 1,
     exports = [
         "//runner/monitor",
     ],
@@ -60,12 +61,14 @@ axt_android_aar(
         "androidx.test.filters",
     ],
     included_dep = ":runner",
+    testonly = 1,
 )
 
 maven_artifact(
     name = "runner_maven_artifact",
     last_updated = "20170622000000",
     target = ":runner_aar",
+    testonly = 1,
 )
 
 dackka_test(
