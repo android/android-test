@@ -24,7 +24,7 @@ JANK_VERSION = "1.0.1"
 
 # this should match the kotlin toolchain version eg bazel_rules/rules_kotlin/toolchains/kotlin_jvm/kt_jvm_toolchains.bzl KT_VERSION
 # and WORKSPACE:KOTLIN_VERSION
-KOTLIN_VERSION = "1.8.20"
+KOTLIN_VERSION = "2.1.0"
 GRPC_VERSION = "1.54.1"  # needs to match WORKSPACE:GRPC_VERSION
 
 ATF_VERSION = "3.1.2"  # accessibilitytestframework

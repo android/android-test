@@ -1,3 +1,4 @@
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 load("@com_google_protobuf//bazel:java_lite_proto_library.bzl", "java_lite_proto_library")
 load("@com_google_protobuf//bazel:proto_library.bzl", "proto_library")
 load("@rules_java//java:defs.bzl", "java_library")
@@ -38,6 +39,12 @@ kt_android_library(
     ],
 )
 
+android_library(
+    name = "exec_idl",
+    idl_srcs = ["Command.aidl"],
+    visibility = ["//visibility:private"],
+)
+
 kt_android_library(
     name = "exec_server",
     srcs = [
@@ -50,9 +57,9 @@ kt_android_library(
         "ShellExecSharedConstants.java",
         "ShellMain.java",
     ],
-    idl_srcs = ["Command.aidl"],
     visibility = [":export"],
     deps = [
+        ":exec_idl",
         ":local_socket_protocol",
         ":local_socket_protocol_pb_java_proto_lite",
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
@@ -77,9 +84,9 @@ kt_android_library(
         "ShellExecutorImpl.java",
         "ShellExecutorLocalSocketImpl.kt",
     ],
-    idl_srcs = ["Command.aidl"],
     visibility = [":export"],
     deps = [
+        ":exec_idl",
         ":local_socket_protocol",
         ":local_socket_protocol_pb_java_proto_lite",
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",

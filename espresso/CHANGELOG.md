@@ -16,6 +16,8 @@ The following artifacts were released:
 
 **Bug Fixes**
 
+* Update build toolchain to bazel 7.5 and kotlin 2.1.0
+
 **New Features**
 
 **Breaking Changes**

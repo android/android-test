@@ -156,11 +156,17 @@ def _create_exclusions_string(group_id, artifact_id, excluded_dependencies_map):
     return _exclusions_tmpl.format(exclusion = excluded_dependencies_string)
 
 def _parse_artifact_versioning(artifact_coordinates):
-    """Parse out artifact_id, version and group info from a full coordinate string"""
-    if artifact_coordinates.count(":") != 2:
-        fail("artifact_deps values must be of form: groupId:artifactId:version. Found %s" % artifact_coordinates)
+    """Parse out artifact_id, version and group info from a full coordinate strings.
 
-    return artifact_coordinates.split(":")
+    Expected format groupId:artifactId:[type:]version
+    """
+    segments = artifact_coordinates.split(":")
+    if len(segments) == 3:
+        return segments
+    elif len(segments) == 4:
+        return segments[0], segments[1], segments[3]
+
+    fail("artifact_deps values must be of form: groupId:artifactId:[type:]version. Found %s" % artifact_coordinates)
 
 def _parse_group_artifact(artifact_coordinates):
     """Parse out artifact_id, and group info from a  coordinate string"""

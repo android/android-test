@@ -1,6 +1,6 @@
 # Protos for interacting with emulator
 
-load("@io_grpc_grpc_java//:java_grpc_library.bzl", "java_grpc_library")
+load("@grpc-java//:java_grpc_library.bzl", "java_grpc_library")
 
 package(
     default_applicable_licenses = ["//espresso:license"],
@@ -26,5 +26,9 @@ java_grpc_library(
     name = "emulator_controller_java_grpc",
     srcs = [":emulator_controller_proto"],
     flavor = "lite",
-    deps = [":emulator_controller_java_proto_lite"],
+    deps = [
+        ":emulator_controller_java_proto_lite",
+        # explicitly depend on grpc-protobuf-lite so protobuf classes can be shaded
+        "@maven//:io_grpc_grpc_protobuf_lite",
+    ],
 )

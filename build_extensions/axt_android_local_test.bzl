@@ -1,5 +1,6 @@
 """A rule wrapper for generating android_local_test ."""
 
+load("@build_bazel_rules_android//android:rules.bzl", "android_library", "android_local_test")
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 load("//build_extensions:create_jar.bzl", "create_jar")
 
@@ -41,12 +42,12 @@ def axt_android_local_test(name, srcs = [], deps = [], manifest = "//build_exten
             exports_manifest = True,
             manifest = manifest,
             deps = deps,
-            testonly = 1,
+            testonly = True,
         )
         deps = [":%s_kt_lib" % name]
         srcs = []
 
-    native.android_local_test(
+    android_local_test(
         name = name,
         srcs = srcs,
         tags = tags,

@@ -9,6 +9,7 @@ are released.
 
 * Fixed the link to the deprecated `androidx.test.rule.ActivityTestRule` in
 the class description.
+* Update build toolchain to bazel 7.5 and kotlin 2.1.0
 
 **New Features**
 

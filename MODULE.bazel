@@ -1,0 +1,97 @@
+# These need needs to be consistent with their counterparts in build_extensions/axt_deps_versions.bzl.
+KOTLIN_VERSION = "2.1.0"
+KOTLINX_COROUTINES_VERSION = "1.7.1" 
+GRPC_VERSION = "1.68.1"
+# TODO(brettchabot): make this the same as GRPC_VERSION.
+# Tryng to do so results in `external/grpc-java~/okhttp/src/main/java/io/grpc/okhttp/ExceptionHandlingFrameWriter.java:147: error: [strict] Using type okio.Buffer from an indirect dependency (TOOL_INFO: "@maven//:com_squareup_okio_okio_jvm")`
+GRPC_MAVEN_VERSION = "1.54.1"
+
+bazel_dep(name = "rules_java", version = "8.6.0")
+bazel_dep(name = "rules_jvm_external", version = "6.6")
+bazel_dep(name = "rules_android", version = "0.6.3", repo_name = "build_bazel_rules_android")
+bazel_dep(name = "rules_kotlin", version = "2.1.3", repo_name = "io_bazel_rules_kotlin")
+bazel_dep(name = "protobuf", version = "29.0", repo_name = "com_google_protobuf")
+bazel_dep(name = "grpc-java", version = GRPC_VERSION)
+bazel_dep(name = "rules_robolectric", version = "4.14.1.2", repo_name = "robolectric")
+
+# Pin the version of rules_robolectric so that it matches the robolectric version we get from maven.
+single_version_override(
+    module_name = "rules_robolectric",
+    version = "4.14.1.2",
+)
+
+# maven dependencies
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+
+maven.artifact(
+    artifact = "accessibility-test-framework",
+    # exclude the org.checkerframework dependency since that require
+    # java8 compatibility. See b/176926990
+    # accessibility-test-framework depends on hamcrest 2.2 which causes 'Using type org.hamcrest.Matcher from an indirect dependency' compile errors
+    exclusions = [
+        "org.checkerframework:checker",
+        "org.hamcrest:hamcrest-core",
+        "org.hamcrest:hamcrest-library",
+    ],
+    group = "com.google.android.apps.common.testing.accessibility.framework",
+    version = "3.1.2",
+)
+
+maven.install(
+    name = "maven",
+    artifacts = [
+        "androidx.annotation:annotation:1.7.0-beta01",
+        "androidx.concurrent:concurrent-futures:1.1.0",
+        "androidx.concurrent:concurrent-futures-ktx:1.1.0",
+        "androidx.core:core:1.6.0",
+        "androidx.lifecycle:lifecycle-common:2.3.1",
+        "androidx.multidex:multidex:2.0.0",
+         "androidx.tracing:tracing:1.1.0",
+        "androidx.window:window-java:1.1.0",
+        "androidx.window:window-core:1.1.0",
+        "com.google.dagger:dagger-compiler:2.46",
+        "com.google.dagger:dagger-producers:2.46",
+        "com.google.dagger:dagger:2.46",
+        "com.google.googlejavaformat:google-java-format:1.4",
+        "com.squareup:javapoet:1.9.0",
+        "io.grpc:grpc-okhttp:%s" % GRPC_MAVEN_VERSION,
+        "io.grpc:grpc-api:%s" % GRPC_MAVEN_VERSION,
+        "io.grpc:grpc-stub:%s" % GRPC_MAVEN_VERSION,
+        "io.grpc:grpc-core:%s" % GRPC_MAVEN_VERSION,
+        "io.grpc:grpc-context:%s" % GRPC_MAVEN_VERSION,
+        "io.grpc:grpc-protobuf-lite:%s" % GRPC_MAVEN_VERSION,
+        "junit:junit:4.13.2",
+        "org.ccil.cowan.tagsoup:tagsoup:1.2.1",
+        "org.hamcrest:hamcrest-library:1.3",
+        "org.pantsbuild:jarjar:1.7.2",
+        "org.jetbrains.kotlin:kotlin-stdlib:%s" % KOTLIN_VERSION,
+        "org.jetbrains.kotlinx:kotlinx-coroutines-core:%s" % KOTLINX_COROUTINES_VERSION,
+        "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:%s" % KOTLINX_COROUTINES_VERSION,
+        "org.jetbrains.kotlinx:kotlinx-coroutines-android:%s" % KOTLINX_COROUTINES_VERSION,
+        "org.robolectric:robolectric:4.14.1",
+    ],
+    fetch_sources = True,
+    repositories = [
+        "https://maven.google.com",
+        "https://repo1.maven.org/maven2",
+        "https://dl.bintray.com/linkedin/maven",
+    ],
+)
+
+use_repo(maven, "maven")
+
+# need to have a isolated version tree for listenablefuture, because otherwise
+# listenablefuture will get resolved to 9999.0-empty-to-avoid-conflict-with-guava
+maven.install(
+    name = "maven_listenablefuture",
+    artifacts = [
+        "com.google.guava:listenablefuture:1.0",
+    ],
+    repositories = [
+        "https://maven.google.com",
+        "https://repo1.maven.org/maven2",
+        "https://dl.bintray.com/linkedin/maven",
+    ],
+)
+use_repo(maven, "maven_listenablefuture")
+

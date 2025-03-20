@@ -1,6 +1,10 @@
 """Defines maven artifact definitions"""
 
 load(
+    "//build_extensions:axt_deps_versions.bzl",
+    "GRPC_VERSION",
+)
+load(
     "//build_extensions:axt_versions.bzl",
     "ANDROIDX_JUNIT_VERSION",
     "ANDROIDX_TRUTH_VERSION",
@@ -45,11 +49,19 @@ _TARGET_TO_MAVEN_ARTIFACT = {
     "//services/events/java/": "androidx.test:runner:%s" % RUNNER_VERSION,
     "//services:test_services": "androidx.test.services:test-services:%s" % SERVICES_VERSION,
     "//runner/android_test_orchestrator/stubapp:stubapp": "androidx.test:orchestrator:%s" % ORCHESTRATOR_VERSION,
+
+    # map gRPC deps introduced by bazel grpc rules
+    "@@grpc-java~//okhttp:okhttp": "io.grpc:grpc-okhttp:%s" % GRPC_VERSION,
+    "@@grpc-java~//api": "io.grpc:grpc-api:%s" % GRPC_VERSION,
+    "@@grpc-java~//core": "io.grpc:grpc-core:%s" % GRPC_VERSION,
+    "@@grpc-java~//context": "io.grpc:grpc-context:%s" % GRPC_VERSION,
+    "@@grpc-java~//util": "io.grpc:grpc-util:%s" % GRPC_VERSION,
+    "@@grpc-java~//stub": "io.grpc:grpc-stub:%s" % GRPC_VERSION,
 }
 
 _SHADED_TARGETS = [
     "@com_google_protobuf//:protobuf_javalite",
-    "@com_google_protobuf//java/core:lite",
+    "@@protobuf~//java/core:lite",
     "//opensource/proto:any_java_proto_lite",
     "@com_google_protobuf//:any_proto",
     "//opensource/dagger:dagger",
@@ -110,6 +122,6 @@ def is_shaded_from_label(label):
     renamed via jarjar.
     """
 
-    # bazel 6.0.0 mysteriously prefixes a '@' onto //opensource/dagger, so just remove it
-    string_label = str(label).replace("@//", "//")
+    # bazel mysteriously prefixes a '@' onto //opensource/dagger, sometimes two, so just remove it
+    string_label = str(label).replace("@//", "//").replace("@//", "//")
     return string_label in _SHADED_TARGETS

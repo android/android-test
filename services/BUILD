@@ -26,7 +26,6 @@ exports_files(["LICENSE"])
 android_binary(
     name = "test_services",
     custom_package = "androidx.test.services",
-    licenses = ["permissive"],
     main_dex_proguard_specs = ["//build_extensions:mainDexClasses.rules"],
     manifest = "AndroidManifest.xml",
     manifest_values = {
