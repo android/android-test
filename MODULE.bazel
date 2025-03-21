@@ -1,6 +1,6 @@
 # These need needs to be consistent with their counterparts in build_extensions/axt_deps_versions.bzl.
 KOTLIN_VERSION = "2.1.0"
-KOTLINX_COROUTINES_VERSION = "1.7.1" 
+KOTLINX_COROUTINES_VERSION = "1.10.1" 
 GRPC_VERSION = "1.68.1"
 # TODO(brettchabot): make this the same as GRPC_VERSION.
 # Tryng to do so results in `external/grpc-java~/okhttp/src/main/java/io/grpc/okhttp/ExceptionHandlingFrameWriter.java:147: error: [strict] Using type okio.Buffer from an indirect dependency (TOOL_INFO: "@maven//:com_squareup_okio_okio_jvm")`
