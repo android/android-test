@@ -6,7 +6,7 @@ GRPC_VERSION = "1.68.1"
 # Tryng to do so results in `external/grpc-java~/okhttp/src/main/java/io/grpc/okhttp/ExceptionHandlingFrameWriter.java:147: error: [strict] Using type okio.Buffer from an indirect dependency (TOOL_INFO: "@maven//:com_squareup_okio_okio_jvm")`
 GRPC_MAVEN_VERSION = "1.54.1"
 
-bazel_dep(name = "rules_java", version = "8.6.0")
+bazel_dep(name = "rules_java", version = "8.6.3")
 bazel_dep(name = "rules_jvm_external", version = "6.6")
 bazel_dep(name = "rules_android", version = "0.6.3", repo_name = "build_bazel_rules_android")
 bazel_dep(name = "rules_kotlin", version = "2.1.3", repo_name = "io_bazel_rules_kotlin")
