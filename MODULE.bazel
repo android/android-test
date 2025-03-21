@@ -40,9 +40,9 @@ maven.artifact(
 maven.install(
     name = "maven",
     artifacts = [
-        "androidx.annotation:annotation:1.7.0-beta01",
-        "androidx.concurrent:concurrent-futures:1.1.0",
-        "androidx.concurrent:concurrent-futures-ktx:1.1.0",
+        "androidx.annotation:annotation:1.7.0",
+        "androidx.concurrent:concurrent-futures:1.2.0",
+        "androidx.concurrent:concurrent-futures-ktx:1.2.0",
         "androidx.core:core:1.6.0",
         "androidx.lifecycle:lifecycle-common:2.3.1",
         "androidx.multidex:multidex:2.0.0",

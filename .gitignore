@@ -1,5 +1,6 @@
 # Bazel
 bazel-*
+MODULE.bazel.lock
 
 # Android Studio
 .aswb

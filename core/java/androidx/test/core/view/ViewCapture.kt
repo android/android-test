@@ -33,6 +33,7 @@ import android.view.ViewTreeObserver.OnDrawListener
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.annotation.RestrictTo
+import androidx.concurrent.futures.SuspendToFutureAdapter
 import androidx.test.core.internal.os.HandlerExecutor
 import androidx.test.internal.platform.ServiceLoaderWrapper
 import androidx.test.internal.platform.os.ControlledLooper

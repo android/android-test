@@ -7,6 +7,7 @@
 **Bug Fixes**
 
 * Update build toolchain to bazel 7.5 and kotlin 2.1.0
+* Update to androidx.concurrent 1.2.0
 
 **New Features**
 
