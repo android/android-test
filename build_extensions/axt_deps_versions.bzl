@@ -1,35 +1,10 @@
 """Defines versions of androidx.test dependencies."""
 
+# These must match versions specified in MODULE.bazel
+# Unfortunately MODULE.bazel files do not support load
+# so there is no known way to share these constants
+
 # Maven dependency versions
-ANDROIDX_ANNOTATION_VERSION = "1.7.0-beta01"
-ANDROIDX_ANNOTATION_EXPERIMENTAL_VERSION = "1.1.0"
-ANDROIDX_COMPAT_VERSION = "1.3.1"
-
-# TODO(i336855276): update to 1.2.0 release when available
-ANDROIDX_CONCURRENT_VERSION = "1.1.0"
-ANDROIDX_CORE_VERSION = "1.6.0"
-ANDROIDX_FRAGMENT_VERSION = "1.3.6"
-ANDROIDX_CURSOR_ADAPTER_VERSION = "1.0.0"
-ANDROIDX_DRAWER_LAYOUT_VERSION = "1.1.1"
-ANDROIDX_LEGACY_SUPPORT_VERSION = "1.0.0"
-ANDROIDX_LIFECYCLE_VERSION = "2.3.1"
-ANDROIDX_MULTIDEX_VERSION = "2.0.0"
-ANDROIDX_RECYCLERVIEW_VERSION = "1.2.1"
-ANDROIDX_TRACING_VERSION = "1.1.0"
-ANDROIDX_VIEWPAGER_VERSION = "1.0.0"
-ANDROIDX_WINDOW_VERSION = "1.1.0"
-GOOGLE_MATERIAL_VERSION = "1.4.0"
-UIAUTOMATOR_VERSION = "2.2.0"
-JANK_VERSION = "1.0.1"
-
-# this should match the kotlin toolchain version eg bazel_rules/rules_kotlin/toolchains/kotlin_jvm/kt_jvm_toolchains.bzl KT_VERSION
-# and WORKSPACE:KOTLIN_VERSION
+ANDROIDX_ANNOTATION_VERSION = "1.7.0"
 KOTLIN_VERSION = "2.1.0"
 GRPC_VERSION = "1.54.1"  # needs to match WORKSPACE:GRPC_VERSION
-
-ATF_VERSION = "3.1.2"  # accessibilitytestframework
-JUNIT_VERSION = "4.13.2"
-HAMCREST_VERSION = "1.3"
-TRUTH_VERSION = "1.1.3"
-GUAVA_VERSION = "30.1.1-android"
-GUAVA_LISTENABLEFUTURE_VERSION = "1.0"
