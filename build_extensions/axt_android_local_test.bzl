@@ -4,7 +4,7 @@ load("@build_bazel_rules_android//android:rules.bzl", "android_library", "androi
 load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
 load("//build_extensions:create_jar.bzl", "create_jar")
 
-def axt_android_local_test(name, srcs = [], deps = [], manifest = "//build_extensions:AndroidManifest_robolectric.xml", tags = ["robolectric"], **kwargs):
+def axt_android_local_test(name, srcs = [], deps = [], manifest = "//build_extensions:AndroidManifest_robolectric.xml", tags = ["robolectric"], jvm_flags = [], **kwargs):
     """A wrapper around android_local_test that provides sensible defaults for androidx.test.
 
 
@@ -52,6 +52,8 @@ def axt_android_local_test(name, srcs = [], deps = [], manifest = "//build_exten
         srcs = srcs,
         tags = tags,
         manifest = manifest,
+        # Allow running tests on JDK 21. See https://github.com/bazelbuild/bazel/issues/14502
+        jvm_flags = jvm_flags + ["-Djava.security.manager=allow"],
         deps = deps,
         **kwargs
     )
