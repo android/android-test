@@ -7,4 +7,4 @@
 # Maven dependency versions
 ANDROIDX_ANNOTATION_VERSION = "1.7.0"
 KOTLIN_VERSION = "2.1.0"
-GRPC_VERSION = "1.54.1"  # needs to match WORKSPACE:GRPC_VERSION
+GRPC_VERSION = "1.71.0"

@@ -29,6 +29,6 @@ java_grpc_library(
     deps = [
         ":emulator_controller_java_proto_lite",
         # explicitly depend on grpc-protobuf-lite so protobuf classes can be shaded
-        "@maven//:io_grpc_grpc_protobuf_lite",
+        "@grpc-java//protobuf-lite:protobuf-lite",
     ],
 )
