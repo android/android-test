@@ -36,3 +36,5 @@ The following artifacts were released:
 **Breaking API Changes**
 
 **Known Issues**
+
+**New Locator declared**
