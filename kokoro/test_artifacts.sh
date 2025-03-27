@@ -15,4 +15,5 @@ apt-get install -y zulu21-jdk
 export JAVA_HOME="$(update-java-alternatives -l | grep "1.21" | head -n 1 | tr -s " " | cut -d " " -f 3)"
 
 cd gradle-tests
-./gradlew nexusOneDebugAndroidTest --stacktrace -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect -Dandroid.experimental.androidTest.numManagedDeviceShards=1
+# TODO(b/406071564): remove exclusion of espresso-device tests once they work in kokoro env
+./gradlew nexusOneDebugAndroidTest --stacktrace -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect -Dandroid.experimental.androidTest.numManagedDeviceShards=1 -x :espresso:device:nexusOneDebugAndroidTest
