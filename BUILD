@@ -1,6 +1,8 @@
 load("@rules_jvm_external//:defs.bzl", "artifact")
 load("@rules_license//rules:license.bzl", "license")
 load("//build_extensions/maven:maven_repo.bzl", "maven_repository")
+load("@io_bazel_rules_kotlin//kotlin:core.bzl", "define_kt_toolchain")
+load("//build_extensions:axt_deps_versions.bzl", "KOTLIN_LANG_VERSION")
 
 package(default_visibility = ["//:__subpackages__"])
 
@@ -9,6 +11,13 @@ exports_files([
     "LICENSE",
     "repo.bzl",
 ])
+
+# Setup kotlin toolchain
+define_kt_toolchain(
+    name = "kotlin_toolchain",
+    api_version = KOTLIN_LANG_VERSION,
+    language_version = KOTLIN_LANG_VERSION,
+)
 
 # Creates maven release repository
 maven_repository(
