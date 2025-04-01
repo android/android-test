@@ -16,6 +16,8 @@ The following artifacts were released:
 
 **Bug Fixes**
 
+* Downgrade to kotlin 1.9
+
 **New Features**
 
 **Breaking Changes**

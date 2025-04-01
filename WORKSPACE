@@ -1,12 +1,12 @@
-#############################
-# Load Android Sdk
-#############################
+# Define project setup not yet supported in MODULE.bzlmod
 
-# This is needed by rules_kotlin.
-# TODO(brettchabot): move this to MODULE.bzlmod
+
+# Load Android Sdk
 
 android_sdk_repository(
     name = "androidsdk",
     api_level = 35,
     build_tools_version = "35.0.0",
 )
+
+register_toolchains("//:kotlin_toolchain")

@@ -1,6 +1,6 @@
 # These need needs to be consistent with their counterparts in build_extensions/axt_deps_versions.bzl.
-KOTLIN_VERSION = "2.1.0"
-KOTLINX_COROUTINES_VERSION = "1.10.1" 
+KOTLIN_VERSION = "1.9.21"
+KOTLINX_COROUTINES_VERSION = "1.8.1" 
 GRPC_VERSION = "1.71.0"
 
 bazel_dep(name = "rules_java", version = "8.6.3")
