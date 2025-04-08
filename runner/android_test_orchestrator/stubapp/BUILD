@@ -1,4 +1,5 @@
 load("@build_bazel_rules_android//android:rules.bzl", "android_binary")
+load("//build_extensions:axt_versions.bzl", "ORCHESTRATOR_VERSION")
 load("//build_extensions/maven:axt_maven_apk.bzl", "axt_maven_apk")
 load("//build_extensions/maven:maven_artifact.bzl", "maven_artifact")
 
@@ -16,6 +17,9 @@ android_binary(
     srcs = ["src/androidx/test/orchestrator/Orchestrator.java"],
     custom_package = "androidx.test.orchestrator.stubapp",
     manifest = "src/AndroidManifest.xml",
+    manifest_values = {
+        "appVersion": ORCHESTRATOR_VERSION,
+    },
     multidex = "native",  # actually fits into one file, so skip main dex list
     proguard_specs = [
         "//:proguard_binary.cfg",

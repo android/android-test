@@ -16,7 +16,9 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="androidx.test.orchestrator">
+    package="androidx.test.orchestrator"
+    android:versionCode="1"
+    android:versionName="${appVersion}">
 
   <queries>
       <package android:name="androidx.test.services" />
