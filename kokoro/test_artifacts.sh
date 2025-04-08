@@ -16,4 +16,4 @@ export JAVA_HOME="$(update-java-alternatives -l | grep "1.21" | head -n 1 | tr -
 
 cd gradle-tests
 # TODO(b/406071564): remove exclusion of espresso-device tests once they work in kokoro env
-./gradlew nexusOneDebugAndroidTest --stacktrace -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect -Dandroid.experimental.androidTest.numManagedDeviceShards=1 -x :espresso:device:nexusOneDebugAndroidTest
+./gradlew nexusOneDebugAndroidTest --stacktrace -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect -Dandroid.experimental.androidTest.numManagedDeviceShards=1
