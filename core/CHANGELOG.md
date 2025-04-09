@@ -7,6 +7,7 @@
 **Bug Fixes**
 
 * Downgrade to kotlin 1.9
+* Support launching activities in fullscreen mode with ActivityScenario on XR devices
 
 **New Features**
 
