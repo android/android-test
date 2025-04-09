@@ -10,6 +10,8 @@
 
 **New Features**
 
+* StackTrimmer now reports suppressed exceptions
+
 **Breaking Changes**
 
 **API Changes**

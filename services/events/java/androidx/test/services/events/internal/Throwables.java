@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2020 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package androidx.test.services.events.internal;
 
 import java.io.BufferedReader;
@@ -35,6 +50,8 @@ final class Throwables {
 
     StringBuilder result = new StringBuilder(exception.toString());
     appendStackTraceLines(trimmedStackTraceLines, result);
+    // Throwable.lockedPrintStackTrace prints suppressed exceptions before it prints the cause.
+    appendStackTraceLines(getSuppressedStackTraceLines(exception), result);
     appendStackTraceLines(getCauseStackTraceLines(exception), result);
     return result.toString();
   }
@@ -61,6 +78,27 @@ final class Throwables {
       linesToInclude--;
     }
     return Collections.emptyList();
+  }
+
+  private static List<String> getSuppressedStackTraceLines(Throwable exception) {
+    if (exception.getSuppressed() == null || exception.getSuppressed().length == 0) {
+      return Collections.emptyList();
+    }
+    List<String> lines = new ArrayList<>();
+    for (Throwable suppressed : exception.getSuppressed()) {
+      lines.add(
+          "\tSuppressed: " + suppressed.getClass().getName() + ": " + suppressed.getMessage());
+      for (String line : getTrimmedStackTraceLines(suppressed)) {
+        if (line.isEmpty()) {
+          continue;
+        }
+        lines.add("\t" + line);
+      }
+      for (String line : getCauseStackTraceLines(suppressed)) {
+        lines.add("\t" + line);
+      }
+    }
+    return lines;
   }
 
   private static List<String> getCauseStackTraceLines(Throwable exception) {

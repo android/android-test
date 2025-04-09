@@ -57,6 +57,28 @@ public class StackTrimmerTest {
         testResultTraceLength <= MAX_TRACE_SIZE);
   }
 
+  @Test
+  public void verifySuppressedExceptionIsRendered() throws Exception {
+    Throwable example = new Exception("Failing exception");
+    example.initCause(new RuntimeException("Cause of failing exception"));
+    Throwable suppressed = new RuntimeException("Suppressed exception");
+    suppressed.initCause(new RuntimeException("Cause of suppressed exception"));
+    example.addSuppressed(suppressed);
+    Failure testFailure = new Failure(Description.EMPTY, example);
+
+    // ensure trace contains the current method, but not any of the junit + androidx.test framework
+    // traces
+    String trace = StackTrimmer.getTrimmedStackTrace(testFailure);
+    assertThat(trace).contains("StackTrimmerTest.verifySuppressedExceptionIsRendered");
+    assertThat(trace).contains("Failing exception");
+    assertThat(trace).contains("Cause of failing exception");
+    assertThat(trace).contains("Suppressed exception");
+    assertThat(trace).contains("Cause of suppressed exception");
+    // Make sure that nothing crept into the suppressed exception's stack trace, or its cause.
+    assertThat(trace).doesNotContain("androidx.test.runner.AndroidJUnitRunner.onStart");
+    assertThat(trace).doesNotContain("org.junit.runners.ParentRunner.run");
+  }
+
   private static String getVeryLargeString() {
     return new String(new char[1000000]);
   }
