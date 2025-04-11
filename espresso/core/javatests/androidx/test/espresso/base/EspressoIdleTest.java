@@ -1,11 +1,15 @@
 package androidx.test.espresso.base;
 
 import static android.os.Looper.getMainLooper;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assume.assumeTrue;
 
+import android.os.Build.VERSION;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.TestLooperManager;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -63,5 +67,42 @@ public class EspressoIdleTest {
       IdlingRegistry.getInstance().unregisterLooperAsIdlingResource(looper);
       ht.quit();
     }
+  }
+
+  /** Verify TestLooperManager can be used after Espresso idle is run. */
+  @Test
+  public void onIdle_with_TestLooperManager() {
+    assumeTrue(VERSION.SDK_INT >= 36);
+
+    Espresso.onIdle();
+
+    TestLooperManager manager = getInstrumentation().acquireLooperManager(getMainLooper());
+    assertThat(manager).isNotNull();
+    manager.release();
+
+    Espresso.onIdle();
+  }
+
+  @Test
+  public void onIdle_backgroundLooper_with_TestLooperManager() throws InterruptedException {
+    assumeTrue(VERSION.SDK_INT >= 36);
+
+    HandlerThread ht = new HandlerThread("onIdle_backgroundLooper_with_TestLooperManager");
+    ht.start();
+    Looper looper = ht.getLooper();
+
+    IdlingRegistry.getInstance().registerLooperAsIdlingResource(looper);
+    AtomicBoolean wasRun = new AtomicBoolean(false);
+    new Handler(looper).post(() -> wasRun.set(true));
+    Espresso.onIdle();
+    assertThat(wasRun.get()).isTrue();
+    IdlingRegistry.getInstance().unregisterLooperAsIdlingResource(looper);
+
+    Espresso.onIdle();
+
+    TestLooperManager manager = getInstrumentation().acquireLooperManager(looper);
+    assertThat(manager).isNotNull();
+    manager.release();
+    ht.quit();
   }
 }

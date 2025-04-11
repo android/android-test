@@ -92,19 +92,7 @@ final class Interrogator {
     public String getMessage();
   }
 
-  private final TestLooperManagerCompat testLooperManager;
-
-  static Interrogator acquire(Looper looper) {
-    return new Interrogator(TestLooperManagerCompat.acquire(looper));
-  }
-
-  private Interrogator(TestLooperManagerCompat testLooperManager) {
-    this.testLooperManager = testLooperManager;
-  }
-
-  void release() {
-    testLooperManager.release();
-  }
+  Interrogator() {}
 
   /**
    * Loops the main thread and informs the interrogation handler at interesting points in the exec
@@ -112,7 +100,8 @@ final class Interrogator {
    *
    * @param handler an interrogation handler that controls whether to continue looping or not.
    */
-  <T> T loopAndInterrogate(InterrogationHandler<T> handler) {
+  <T> T loopAndInterrogate(
+      TestLooperManagerCompat testLooperManager, InterrogationHandler<T> handler) {
     checkSanity();
     interrogating.set(Boolean.TRUE);
     boolean stillInterested = true;
@@ -124,7 +113,7 @@ final class Interrogator {
       final long threadIdentity = Binder.clearCallingIdentity();
       while (stillInterested) {
         // run until the observer is no longer interested.
-        stillInterested = interrogateQueueState(handler);
+        stillInterested = interrogateQueueState(testLooperManager, handler);
         if (stillInterested) {
           Message m = testLooperManager.next();
 
@@ -179,16 +168,18 @@ final class Interrogator {
    *     queueEmpty(), taskDueSoon(), taskDueLong() or barrierUp(). once and only once.
    * @return the result of handler.get()
    */
-  <T> T peekAtQueueState(QueueInterrogationHandler<T> handler) {
+  <T> T peekAtQueueState(
+      TestLooperManagerCompat testLooperManager, QueueInterrogationHandler<T> handler) {
     checkNotNull(handler);
     checkState(
-        !interrogateQueueState(handler),
+        !interrogateQueueState(testLooperManager, handler),
         "It is expected that %s would stop interrogation after a single peak at the queue.",
         handler);
     return handler.get();
   }
 
-  private boolean interrogateQueueState(QueueInterrogationHandler<?> handler) {
+  private boolean interrogateQueueState(
+      TestLooperManagerCompat testLooperManager, QueueInterrogationHandler<?> handler) {
     synchronized (testLooperManager.getQueue()) {
       if (testLooperManager.isBlockedOnSyncBarrier()) {
         if (Log.isLoggable(TAG, Log.DEBUG)) {

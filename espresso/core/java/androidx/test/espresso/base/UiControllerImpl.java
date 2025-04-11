@@ -502,13 +502,15 @@ final class UiControllerImpl
       EnumSet<IdleCondition> conditions, IdleNotifier<IdleNotificationCallback> dynamicIdle) {
     IdlingPolicy masterIdlePolicy = IdlingPolicies.getMasterIdlingPolicy();
     IdlingPolicy dynamicIdlePolicy = IdlingPolicies.getDynamicIdlingResourceErrorPolicy();
+    TestLooperManagerCompat testLooperManager = TestLooperManagerCompat.acquire(mainLooper);
     try {
       long start = SystemClock.uptimeMillis();
       long end =
           start + masterIdlePolicy.getIdleTimeoutUnit().toMillis(masterIdlePolicy.getIdleTimeout());
       interrogation = new MainThreadInterrogation(conditions, conditionSet, end);
 
-      InterrogationStatus result = getInterrogator().loopAndInterrogate(interrogation);
+      InterrogationStatus result =
+          new Interrogator().loopAndInterrogate(testLooperManager, interrogation);
       if (InterrogationStatus.COMPLETED == result) {
         // did not time out, all conditions happy.
         return dynamicIdle;
@@ -582,17 +584,10 @@ final class UiControllerImpl
         condition.reset(conditionSet);
       }
       interrogation = null;
+      testLooperManager.release();
     }
     return dynamicIdle;
   }
-
-  private Interrogator getInterrogator() {
-    if (interrogator == null) {
-      interrogator = Interrogator.acquire(mainLooper);
-    }
-    return interrogator;
-  }
-
   @Override
   public void interruptEspressoTasks() {
     controllerHandler.post(
