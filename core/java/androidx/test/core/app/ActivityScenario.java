@@ -25,6 +25,8 @@ import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.Property;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Looper;
@@ -200,7 +202,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    */
   public static <A extends Activity> ActivityScenario<A> launch(Class<A> activityClass) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(activityClass));
-    scenario.launchInternal(/*activityOptions=*/ null, /*launchActivityForResult=*/ false);
+    scenario.checkXrAndLaunchInternal(/* activityOptions= */ null);
     return scenario;
   }
 
@@ -213,7 +215,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   public static <A extends Activity> ActivityScenario<A> launch(
       Class<A> activityClass, @Nullable Bundle activityOptions) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(activityClass));
-    scenario.launchInternal(activityOptions, /*launchActivityForResult=*/ false);
+    scenario.checkXrAndLaunchInternal(activityOptions);
     return scenario;
   }
 
@@ -234,7 +236,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
    */
   public static <A extends Activity> ActivityScenario<A> launch(Intent startActivityIntent) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(startActivityIntent));
-    scenario.launchInternal(/*activityOptions=*/ null, /*launchActivityForResult=*/ false);
+    scenario.checkXrAndLaunchInternal(/* activityOptions= */ null);
     return scenario;
   }
 
@@ -249,7 +251,7 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
   public static <A extends Activity> ActivityScenario<A> launch(
       Intent startActivityIntent, @Nullable Bundle activityOptions) {
     ActivityScenario<A> scenario = new ActivityScenario<>(checkNotNull(startActivityIntent));
-    scenario.launchInternal(activityOptions, /*launchActivityForResult=*/ false);
+    scenario.checkXrAndLaunchInternal(activityOptions);
     return scenario;
   }
 
@@ -380,6 +382,39 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
       waitForActivityToBecomeAnyOf(STEADY_STATES.values().toArray(new State[0]));
     } finally {
       Trace.endSection();
+    }
+  }
+
+  /**
+   * An internal helper method for handling launching the activity for the given scenario instance
+   * on XR devices.
+   *
+   * @param activityOptions activity options bundle to be passed when launching this activity
+   */
+  private void checkXrAndLaunchInternal(@Nullable Bundle activityOptions) {
+    // Activities cannot be launched in full screen mode from the application context on XR devices.
+    // Check if the current device is an XR device and fall back to launching activity for result
+    // if the android.window.PROPERTY_XR_ACTIVITY_START_MODE property is set to full screen mode
+    // so that the bootstrap activity can act as a temporary focused activity which the requested
+    // activity is launched from.
+    PackageManager packageManager = getInstrumentation().getTargetContext().getPackageManager();
+    if (packageManager.hasSystemFeature("android.software.xr.immersive")) {
+      String packageName = getInstrumentation().getTargetContext().getPackageName();
+      try {
+        Property startMode =
+            packageManager.getProperty(
+                "android.window.PROPERTY_XR_ACTIVITY_START_MODE", packageName);
+        if (startMode.getString().equals("XR_ACTIVITY_START_MODE_FULL_SPACE_MANAGED")
+            || startMode.getString().equals("XR_ACTIVITY_START_MODE_FULL_SPACE_UNMANAGED")) {
+          launchInternal(activityOptions, true);
+        } else {
+          launchInternal(activityOptions, false);
+        }
+      } catch (PackageManager.NameNotFoundException e) {
+        launchInternal(activityOptions, false);
+      }
+    } else {
+      launchInternal(activityOptions, false);
     }
   }
 
