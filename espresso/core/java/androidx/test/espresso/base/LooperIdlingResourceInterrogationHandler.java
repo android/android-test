@@ -70,6 +70,7 @@ class LooperIdlingResourceInterrogationHandler
   private volatile boolean started = false;
   private volatile Looper looper = null;
   private volatile boolean idle = true;
+  private volatile boolean releasing = false;
 
   private volatile TestLooperManagerCompat testLooperManager = null;
 
@@ -101,7 +102,11 @@ class LooperIdlingResourceInterrogationHandler
                 ir.looper = Looper.myLooper();
                 ir.testLooperManager = TestLooperManagerCompat.acquire(ir.looper);
                 ir.started = true;
-                new Interrogator().loopAndInterrogate(ir.testLooperManager, ir);
+                try {
+                  new Interrogator().loopAndInterrogate(ir.testLooperManager, ir);
+                } finally {
+                  ir.testLooperManager.release();
+                }
               }
             });
 
@@ -118,41 +123,37 @@ class LooperIdlingResourceInterrogationHandler
 
   @Override
   public void quitting() {
-    if (testLooperManager != null) {
-      testLooperManager.release();
-      testLooperManager = null;
-    }
-    transitionToIdle();
+    releasing = true;
   }
 
   @Override
   public boolean queueEmpty() {
     transitionToIdle();
-    return true;
+    return !releasing;
   }
 
   @Override
   public boolean taskDueLong() {
     transitionToIdle();
-    return true;
+    return !releasing;
   }
 
   @Override
   public boolean beforeTaskDispatch() {
     idle = false;
-    return true;
+    return !releasing;
   }
 
   @Override
   public boolean taskDueSoon() {
     idle = false;
-    return true;
+    return !releasing;
   }
 
   @Override
   public boolean barrierUp() {
     idle = false;
-    return true;
+    return !releasing;
   }
 
   @Override
@@ -162,7 +163,7 @@ class LooperIdlingResourceInterrogationHandler
 
   @Override
   public boolean isIdleNow() {
-    if (!started) {
+    if (!started || releasing) {
       return false;
     }
     if (idle) {
@@ -193,9 +194,8 @@ class LooperIdlingResourceInterrogationHandler
   }
 
   public void release() {
-    if (testLooperManager != null) {
-      testLooperManager.release();
-      testLooperManager = null;
-    }
+    releasing = true;
+    // post a message to looper to wake up interrogator if necessary
+    new Handler(looper).post(() -> {});
   }
 }

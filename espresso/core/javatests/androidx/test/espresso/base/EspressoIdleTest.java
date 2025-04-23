@@ -13,6 +13,7 @@ import android.os.TestLooperManager;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,13 +93,20 @@ public class EspressoIdleTest {
     Looper looper = ht.getLooper();
 
     IdlingRegistry.getInstance().registerLooperAsIdlingResource(looper);
+    Espresso.onIdle();
     AtomicBoolean wasRun = new AtomicBoolean(false);
     new Handler(looper).post(() -> wasRun.set(true));
     Espresso.onIdle();
     assertThat(wasRun.get()).isTrue();
-    IdlingRegistry.getInstance().unregisterLooperAsIdlingResource(looper);
 
+    IdlingRegistry.getInstance().unregisterLooperAsIdlingResource(looper);
     Espresso.onIdle();
+
+    // The Looper IdlingResource releases its TestLooperManager asynchronously on
+    // the Looper thread. Post and wait for the Looper thread to clear
+    CountDownLatch latch = new CountDownLatch(1);
+    new Handler(looper).post(() -> latch.countDown());
+    latch.await();
 
     TestLooperManager manager = getInstrumentation().acquireLooperManager(looper);
     assertThat(manager).isNotNull();
