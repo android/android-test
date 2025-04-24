@@ -1,4 +1,4 @@
-"""Defines released AXT versions.
+"""Defines current released AXT versions.
 """
 
 RUNNER_VERSION = "1.7.0-alpha03"
