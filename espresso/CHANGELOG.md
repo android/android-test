@@ -16,9 +16,6 @@ The following artifacts were released:
 
 **Bug Fixes**
 
-* Downgrade to kotlin 1.9
-* Only hold main Looper's TestLooperManager during interrogation
-
 **New Features**
 
 **Breaking Changes**

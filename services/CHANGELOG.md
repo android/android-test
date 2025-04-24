@@ -6,11 +6,7 @@
 
 **Bug Fixes**
 
-* Downgrade to kotlin 1.9
-
 **New Features**
-
-* StackTrimmer now reports suppressed exceptions
 
 **Breaking Changes**
 
