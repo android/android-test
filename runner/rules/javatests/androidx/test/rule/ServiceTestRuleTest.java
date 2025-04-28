@@ -17,11 +17,12 @@
 package androidx.test.rule;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.runner.JUnitCore.runClasses;
@@ -249,6 +250,22 @@ public class ServiceTestRuleTest {
   }
 
   @Rule public final ServiceTestRule serviceRule = new ServiceTestRule();
+
+  @Test
+  public void verifyFailureIfServiceNotStarted() throws Exception {
+    final class NotDeclaredService extends Service {
+      @Override
+      public IBinder onBind(Intent intent) {
+        return null;
+      }
+    }
+    try {
+      serviceRule.startService(new Intent(getApplicationContext(), NotDeclaredService.class));
+      fail("Should have thrown");
+    } catch (IllegalArgumentException e) {
+      assertThat(e.getMessage(), containsString("did not start a service"));
+    }
+  }
 
   @Test
   public void verifySuccessfulServiceStart() throws TimeoutException {

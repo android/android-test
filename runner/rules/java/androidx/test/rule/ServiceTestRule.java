@@ -120,10 +120,20 @@ public class ServiceTestRule implements TestRule {
    *     {@link android.content.Context#startService(Intent) Context.startService (Intent)}.
    * @throws SecurityException if you do not have permission to bind to the given service.
    * @throws TimeoutException if timed out waiting for a successful connection with the service.
+   * @throws IllegalArgumentException if the intent did not resolve to a service
    */
   public void startService(@NonNull Intent intent) throws TimeoutException {
     serviceIntent = Checks.checkNotNull(intent, "intent can't be null");
-    InstrumentationRegistry.getInstrumentation().getTargetContext().startService(serviceIntent);
+    ComponentName componentName =
+        InstrumentationRegistry.getInstrumentation().getTargetContext().startService(serviceIntent);
+    if (componentName == null) {
+      throw new IllegalArgumentException(
+          "Intent "
+              + intent
+              + "did not start a service - this could be triggered by:\n"
+              + "  1. Your service is not declared in the manifest\n"
+              + "  2. The service is not visible to your app, because of package filtering\n");
+    }
     serviceStarted = true;
 
     // bind to the started service to guarantee its started and connected before test execution
