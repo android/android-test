@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /** Runnable to run a single am instrument command to execute a single test. */
@@ -187,14 +188,26 @@ public class TestRunnable implements Runnable {
 
   /**
    * Instrumentation params are delimited by comma, each param is stripped from leading and trailing
-   * whitespace.
+   * whitespace. *
+   *
+   * <p>The order of the params are critical to the correctness here as we split up params that have
+   * whitespace (eg: key value) into two different params `key` and `value` which means that those
+   * two different params must be next to each other the entire time.
    */
   private List<String> getInstrumentationParamsAndRemoveBundleArgs(Bundle arguments) {
     List<String> cleanedParams = new ArrayList<>();
     String forwardedArgs = arguments.getString(ORCHESTRATOR_FORWARDED_INSTRUMENTATION_ARGS);
     if (forwardedArgs != null) {
       for (String param : forwardedArgs.split(",")) {
-        cleanedParams.add(param.strip());
+        // The instrumentation code within the Android Platform was not designed to deal
+        // with whitespace in the arguments. The options parsing logic:
+        // https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/cmds/am/src/com/android/commands/am/Am.java;l=160-204;drc=61197364367c9e404c7da6900658f1b16c42d0da;bpv=0;bpt=0?q=am.java&ss=android%2Fplatform%2Fsuperproject%2Fmain
+        // uses `opt.equal("--key")` which assumes that each individual key will live
+        // in its separate string. However, if we start sending strings like "--key value" then
+        // options parsing will fail. The problem here is that this termination is very subtle.
+        // as the instrumentation does not report to logcat, but to System.err which can sometimes
+        // buffer the error and silently drop it on process exit.
+        Collections.addAll(cleanedParams, param.strip().split(" "));
       }
       arguments.remove(ORCHESTRATOR_FORWARDED_INSTRUMENTATION_ARGS);
     }

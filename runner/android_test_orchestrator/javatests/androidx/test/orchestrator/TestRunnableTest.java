@@ -16,6 +16,7 @@
 package androidx.test.orchestrator;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static com.google.common.truth.Truth.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWith;
@@ -200,6 +201,33 @@ public class TestRunnableTest {
         new FakeTestRunnable(context, "secret", arguments, outputStream, listener, null, true);
     runnable.run();
     assertContainsRunnerArgs(runnable.params, "--no-hidden-api-checks");
+  }
+
+  @Test
+  public void testRun_buildsParams_givenInstrumentationParamsAreSpaceDelimited() {
+    arguments.putString("orchestratorInstrumentationArgs", "--abi x86_64");
+    FakeListener listener = new FakeListener();
+    FakeTestRunnable runnable =
+        new FakeTestRunnable(context, "secret", arguments, outputStream, listener, null, true);
+    runnable.run();
+    assertThat(runnable.params).containsAtLeast("--abi", "x86_64").inOrder();
+  }
+
+  @Test
+  public void testRun_buildsParams_allowTestNamesWithSpace() {
+    FakeListener listener = new FakeListener();
+    FakeTestRunnable runnable =
+        new FakeTestRunnable(
+            context,
+            "secret",
+            arguments,
+            outputStream,
+            listener,
+            "com.google.android.example.MyClass#methodNameWith Space",
+            true);
+    runnable.run();
+    assertContainsRunnerArgs(
+        runnable.params, "-e class com.google.android.example.MyClass#methodNameWith Space");
   }
 
   @Test
