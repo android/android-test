@@ -27,6 +27,7 @@ import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.espresso.UiController;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /** Helper methods to synchronize configuration changes with onView actions. */
 final class ConfigurationSynchronizationUtils {
@@ -52,7 +53,8 @@ final class ConfigurationSynchronizationUtils {
     }
     // If the application is running activities in different processes, activities that aren't
     // on the main process may have a different orientation
-    if (Build.VERSION.SDK_INT >= 28 && !currentActivity.getApplicationInfo().processName.equals(Application.getProcessName())) {
+    if (Build.VERSION.SDK_INT >= 28 && !Objects.equals(
+        currentActivity.getApplicationInfo().processName, Application.getProcessName())) {
       return;
     }
 
