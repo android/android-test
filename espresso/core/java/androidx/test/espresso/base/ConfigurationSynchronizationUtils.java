@@ -19,6 +19,7 @@ package androidx.test.espresso.base;
 import static java.util.Collections.unmodifiableList;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
@@ -26,6 +27,7 @@ import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.espresso.UiController;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /** Helper methods to synchronize configuration changes with onView actions. */
 final class ConfigurationSynchronizationUtils {
@@ -47,6 +49,13 @@ final class ConfigurationSynchronizationUtils {
     // The activity's orientation can differ from application's orientation when the activity is in
     // multi-window mode.
     if (Build.VERSION.SDK_INT >= 24 && currentActivity.isInMultiWindowMode()) {
+      return;
+    }
+    // If the application is running activities in different processes, activities that aren't
+    // on the main process may have a different orientation
+    if (Build.VERSION.SDK_INT >= 28
+        && !Objects.equals(
+            currentActivity.getApplicationInfo().processName, Application.getProcessName())) {
       return;
     }
 
