@@ -8,6 +8,9 @@
 
 **New Features**
 
+* Adds @Supersedes to ServiceLoaderWrapper so it's possible to choose one
+implementation over another when multiple exist.
+
 **Breaking Changes**
 
 **API Changes**
