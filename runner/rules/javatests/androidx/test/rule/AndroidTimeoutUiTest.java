@@ -44,7 +44,7 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class AndroidTimeoutUiTest {
-  @Rule public Timeout globalTimeout = new Timeout(100);
+  @Rule public Timeout globalTimeout = Timeout.millis(100);
 
   private static final ActivityFixture mockActivity = mock(ActivityFixture.class);
 
