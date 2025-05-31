@@ -18,8 +18,10 @@ package androidx.test.internal.platform;
 import android.os.StrictMode;
 import androidx.annotation.RestrictTo;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 /**
  * Wrapper class for {@link ServiceLoader} that disables StrictMode.
@@ -86,7 +88,7 @@ public final class ServiceLoaderWrapper {
    * @throws IllegalStateException if more than one service implementations are found
    */
   public static <T> T loadSingleServiceOrNull(Class<T> serviceClass) {
-    List<T> impls = ServiceLoaderWrapper.loadService(serviceClass);
+    List<T> impls = filter(ServiceLoaderWrapper.loadService(serviceClass));
     if (impls.isEmpty()) {
       return null;
     } else if (impls.size() == 1) {
@@ -100,6 +102,29 @@ public final class ServiceLoaderWrapper {
 
       throw new IllegalStateException(
           "Found more than one implementation for " + serviceClass.getName() + combinedImpls);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <T> List<T> filter(List<T> services) {
+    Set<Class<?>> superseded = new HashSet<>();
+    for (T service : services) {
+      Class<? extends T> clazz = (Class<? extends T>) service.getClass();
+      Supersedes supersedes = clazz.getAnnotation(Supersedes.class);
+      if (supersedes != null) {
+        superseded.add(supersedes.value());
+      }
+    }
+    if (superseded.isEmpty()) {
+      return services;
+    } else {
+      List<T> filtered = new ArrayList<>();
+      for (T service : services) {
+        if (!superseded.contains(service.getClass())) {
+          filtered.add(service);
+        }
+      }
+      return filtered;
     }
   }
 }
