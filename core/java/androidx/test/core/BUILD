@@ -36,7 +36,7 @@ android_library(
 )
 
 kt_android_library(
-    name = "core_internal",
+    name = "core",
     srcs = glob(
         [
             "**/*.java",
@@ -44,7 +44,6 @@ kt_android_library(
         ],
     ),
     tags = ["alt_dep=//core"],
-    visibility = ["//visibility:private"],
     deps = [
         ":manifest",
         "//opensource/androidx:annotation",
@@ -55,18 +54,6 @@ kt_android_library(
         "@maven//:org_jetbrains_kotlinx_kotlinx_coroutines_core_jvm",
         "@maven_listenablefuture//:com_google_guava_listenablefuture",
     ],
-)
-
-# TODO(b/199522848): delete these targets once espresso moves to testonly
-android_library(
-    name = "core",
-    exports = [":core_internal"],
-)
-
-android_library(
-    name = "core_not_test_only",
-    visibility = ["//espresso/core/java/androidx/test/espresso:__subpackages__"],
-    exports = [":core_internal"],
 )
 
 # kt_android_library does not produce an aar, so wrap in a android_library for release

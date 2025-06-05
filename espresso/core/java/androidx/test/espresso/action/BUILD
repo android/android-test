@@ -44,7 +44,7 @@ kt_android_library(
     javacopts = COMMON_JAVACOPTS,
     deps = [
         ":adapter_view_protocol",
-        "//core/java/androidx/test/core:core_not_test_only",
+        "//core",
         "//espresso/core/java/androidx/test/espresso:framework",
         "//espresso/core/java/androidx/test/espresso:interface",
         "//espresso/core/java/androidx/test/espresso/matcher",
