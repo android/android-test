@@ -120,12 +120,12 @@ public class BaseLayerModule {
   @Provides
   @Singleton
   public EventInjector provideEventInjector() {
-    // Adroid uses input manager to inject events.
+    // Android uses input manager to inject events.
     // Instrumentation does not check if the event presses went through by checking the
     // boolean return value of injectInputEvent, which is why we created this class to better
     // handle lost/dropped press events. Instrumentation cannot be used as a fallback strategy,
     // since this will be executed on the main thread.
-    return new EventInjector(new InputManagerEventInjectionStrategy().initialize());
+    return new EventInjector(new InputManagerEventInjectionStrategy());
   }
 
   /** Holder for AtomicReference<FailureHandler> which allows updating it at runtime. */
