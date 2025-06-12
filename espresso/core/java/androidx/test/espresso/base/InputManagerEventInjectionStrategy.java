@@ -16,6 +16,8 @@
 
 package androidx.test.espresso.base;
 
+import android.content.Context;
+import android.hardware.input.InputManager;
 import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
@@ -23,14 +25,18 @@ import android.view.InputDevice;
 import android.view.InputEvent;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
 import androidx.test.espresso.InjectEventSecurityException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import androidx.test.internal.platform.reflect.ReflectionException;
+import androidx.test.internal.platform.reflect.ReflectiveMethod;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.platform.view.inspector.WindowInspectorCompat;
+import androidx.test.platform.view.inspector.WindowInspectorCompat.ViewRetrievalException;
+import java.util.List;
 
 /**
  * An {@link EventInjectionStrategy} that uses the input manager to inject Events. This strategy
- * supports API level 16 and above.
+ * supports API level 23 and above.
  */
 final class InputManagerEventInjectionStrategy implements EventInjectionStrategy {
   private static final String TAG = "EventInjectionStrategy";
@@ -38,84 +44,42 @@ final class InputManagerEventInjectionStrategy implements EventInjectionStrategy
   private static final long KEYBOARD_DISMISSAL_DELAY_MILLIS = 1000L;
 
   // Used in reflection
-  private boolean initComplete;
-  private Method injectInputEventMethod;
-  private Method setSourceMotionMethod;
-  private Object instanceInputManagerObject;
-  private int asyncEventMode;
-  private int syncEventMode;
+  // TODO(b/404661556): use a public API method instead
+  private final ReflectiveMethod<Boolean> injectInputEventMethod =
+      new ReflectiveMethod<>(
+          InputManager.class, "injectInputEvent", InputEvent.class, Integer.TYPE);
+
+  // only used on APIs < 23
+  private final ReflectiveMethod<InputManager> getInstanceMethod =
+      new ReflectiveMethod<>(InputManager.class, "getInstance");
+  ;
+
+  // hardcoded copies of private InputManager fields.
+  // historically these were obtained via reflection, but that seems
+  // wasteful as these values have not changed since they were introduced
+  // copy of private InputManager.INJECT_INPUT_EVENT_MODE_ASYNC.
+  // This value has always been 0
+  private static final int INJECT_INPUT_EVENT_MODE_ASYNC = 0;
+
+  // Setting event mode to INJECT_INPUT_EVENT_MODE_WAIT_FOR_FINISH to ensure
+  // that we've dispatched the event and any side effects its had on the view hierarchy
+  // have occurred.
+  private static final int INJECT_INPUT_EVENT_MODE_WAIT_FOR_FINISH = 2;
 
   InputManagerEventInjectionStrategy() {}
-
-  InputManagerEventInjectionStrategy initialize() {
-    if (initComplete) {
-      return this;
-    }
-
-    try {
-      Log.d(TAG, "Creating injection strategy with input manager.");
-
-      // Get the InputManager class object and initialize if necessary.
-      Class<?> inputManagerClassObject = Class.forName("android.hardware.input.InputManager");
-      Method getInstanceMethod = inputManagerClassObject.getDeclaredMethod("getInstance");
-      getInstanceMethod.setAccessible(true);
-
-      instanceInputManagerObject = getInstanceMethod.invoke(inputManagerClassObject);
-
-      injectInputEventMethod =
-          instanceInputManagerObject
-              .getClass()
-              .getDeclaredMethod("injectInputEvent", InputEvent.class, Integer.TYPE);
-      injectInputEventMethod.setAccessible(true);
-
-      // Setting event mode to INJECT_INPUT_EVENT_MODE_WAIT_FOR_FINISH to ensure
-      // that we've dispatched the event and any side effects its had on the view hierarchy
-      // have occurred.
-      Field motionEventModeField =
-          inputManagerClassObject.getField("INJECT_INPUT_EVENT_MODE_WAIT_FOR_FINISH");
-      motionEventModeField.setAccessible(true);
-      syncEventMode = motionEventModeField.getInt(inputManagerClassObject);
-
-      if (Build.VERSION.SDK_INT >= 28) {
-        // Starting from android P it is not allowed to access this field with reflection, hardcoded
-        // this value as workaround.
-        asyncEventMode = 0;
-      } else {
-        Field asyncMotionEventModeField =
-            inputManagerClassObject.getField("INJECT_INPUT_EVENT_MODE_ASYNC");
-        asyncMotionEventModeField.setAccessible(true);
-        asyncEventMode = asyncMotionEventModeField.getInt(inputManagerClassObject);
-      }
-
-      setSourceMotionMethod = MotionEvent.class.getDeclaredMethod("setSource", Integer.TYPE);
-      initComplete = true;
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    } catch (InvocationTargetException e) {
-      throw new RuntimeException(e);
-    } catch (NoSuchMethodException e) {
-      throw new RuntimeException(e);
-    } catch (NoSuchFieldException e) {
-      throw new RuntimeException(e);
-    }
-    return this;
-  }
 
   @Override
   public boolean injectKeyEvent(KeyEvent keyEvent) throws InjectEventSecurityException {
     try {
-      return (Boolean)
-          injectInputEventMethod.invoke(instanceInputManagerObject, keyEvent, syncEventMode);
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    } catch (InvocationTargetException e) {
-      Throwable cause = e.getCause();
+      return injectInputEventMethod.invoke(
+          getInputManager(), keyEvent, INJECT_INPUT_EVENT_MODE_WAIT_FOR_FINISH);
+    } catch (ReflectionException e) {
+      // annoyingly, ReflectiveMethod always rewraps the underlying exception
+      Throwable cause = e.getCause().getCause();
       if (cause instanceof SecurityException) {
         throw new InjectEventSecurityException(cause);
       }
-      throw new RuntimeException(e);
+      throw new RuntimeException(cause);
     } catch (SecurityException e) {
       throw new InjectEventSecurityException(e);
     }
@@ -135,18 +99,14 @@ final class InputManagerEventInjectionStrategy implements EventInjectionStrategy
       // TODO: proper handling of events from a trackball (SOURCE_TRACKBALL) and joystick.
       if ((motionEvent.getSource() & InputDevice.SOURCE_CLASS_POINTER) == 0
           && !isFromTouchpadInGlassDevice(motionEvent)) {
-        // Need to do runtime invocation of setSource because it was not added until 2.3_r1.
-        setSourceMotionMethod.invoke(motionEvent, InputDevice.SOURCE_TOUCHSCREEN);
+
+        motionEvent.setSource(InputDevice.SOURCE_TOUCHSCREEN);
       }
-      int eventMode = sync ? syncEventMode : asyncEventMode;
-      return (Boolean)
-          injectInputEventMethod.invoke(instanceInputManagerObject, motionEvent, eventMode);
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    } catch (IllegalArgumentException e) {
-      throw e;
-    } catch (InvocationTargetException e) {
-      Throwable cause = e.getCause();
+      int eventMode =
+          sync ? INJECT_INPUT_EVENT_MODE_WAIT_FOR_FINISH : INJECT_INPUT_EVENT_MODE_ASYNC;
+      return injectInputEventMethod.invoke(getInputManager(), motionEvent, eventMode);
+    } catch (ReflectionException e) {
+      Throwable cause = e.getCause().getCause();
       if (cause instanceof SecurityException) {
         if (shouldRetry) {
           Log.w(
@@ -164,7 +124,7 @@ final class InputManagerEventInjectionStrategy implements EventInjectionStrategy
               cause);
         }
       } else {
-        throw new RuntimeException(e);
+        throw new RuntimeException(e.getCause());
       }
     } catch (SecurityException e) {
       throw new InjectEventSecurityException(e);
@@ -178,5 +138,33 @@ final class InputManagerEventInjectionStrategy implements EventInjectionStrategy
             || Build.DEVICE.contains("Glass")
             || Build.DEVICE.contains("wingman"))
         && ((motionEvent.getSource() & InputDevice.SOURCE_TOUCHPAD) != 0);
+  }
+
+  private InputManager getInputManager() {
+    if (Build.VERSION.SDK_INT < 23) {
+      return getInstanceMethod.invokeStatic();
+    } else {
+      return getContext().getSystemService(InputManager.class);
+    }
+  }
+
+  private static Context getContext() {
+    try {
+      return InstrumentationRegistry.getInstrumentation().getTargetContext();
+    } catch (IllegalStateException e) {
+      // Espresso is being used outside of instrumentation. Unusual, but prior art exists
+      // Attempt to get context from global views
+      try {
+        List<View> views = WindowInspectorCompat.getGlobalWindowViews();
+        if (views.isEmpty()) {
+          throw new IllegalStateException(
+              "Could not get Context. Not running under instrumentation and there is no UI"
+                  + " present");
+        }
+        return views.get(0).getContext();
+      } catch (ViewRetrievalException ve) {
+        throw new IllegalStateException(ve);
+      }
+    }
   }
 }
