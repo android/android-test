@@ -108,8 +108,7 @@ public class UiControllerImplTest {
         new IdlingResourceRegistry(testThread.getLooper(), Tracing.getInstance());
     asyncPool =
         new ThreadPoolExecutor(3, 3, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
-    EventInjector injector =
-        new EventInjector(new InputManagerEventInjectionStrategy().initialize());
+    EventInjector injector = new EventInjector(new InputManagerEventInjectionStrategy());
 
     uiController.set(
         new UiControllerImpl(

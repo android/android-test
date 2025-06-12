@@ -18,6 +18,7 @@ The following artifacts were released:
 
 * Fix #2349, where multi-process + different rotation on 2 activities would
   instantly timeout when waiting for the UI to rotate.
+* Use getSystemService instead of reflective InputManager.getInstance
 
 **New Features**
 

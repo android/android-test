@@ -45,7 +45,7 @@ public class EventInjectorTest {
 
   @Before
   public void setUp() throws Exception {
-    injector = new EventInjector(new InputManagerEventInjectionStrategy().initialize());
+    injector = new EventInjector(new InputManagerEventInjectionStrategy());
   }
 
   @Test
