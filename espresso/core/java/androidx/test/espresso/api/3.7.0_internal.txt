@@ -1,0 +1,49 @@
+// Signature format: 3.0
+package androidx.test.espresso.remote {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public interface IInteractionExecutionStatus extends android.os.IInterface {
+    method public boolean canExecute() throws android.os.RemoteException;
+    field public static final String DESCRIPTOR = "androidx.test.espresso.remote.IInteractionExecutionStatus";
+  }
+
+  public static class IInteractionExecutionStatus.Default implements androidx.test.espresso.remote.IInteractionExecutionStatus {
+    ctor public IInteractionExecutionStatus.Default();
+    method public android.os.IBinder! asBinder();
+    method public boolean canExecute() throws android.os.RemoteException;
+  }
+
+  public abstract static class IInteractionExecutionStatus.Stub extends android.os.Binder implements androidx.test.espresso.remote.IInteractionExecutionStatus {
+    ctor public IInteractionExecutionStatus.Stub();
+    method public android.os.IBinder! asBinder();
+    method public static androidx.test.espresso.remote.IInteractionExecutionStatus! asInterface(android.os.IBinder!);
+    method public boolean onTransact(int, android.os.Parcel!, android.os.Parcel!, int) throws android.os.RemoteException;
+  }
+
+}
+
+package androidx.test.espresso.util {
+
+  public final class IterablesKt {
+    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static <T> Iterable<T> filter(Iterable<? extends T> iterable, org.hamcrest.Matcher<T> matcher);
+    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static <T> java.util.List<T> filterToList(Iterable<? extends T> iterable, org.hamcrest.Matcher<T> matcher);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class Iterators {
+    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static <T> T![]! toArray(java.util.Iterator<T!>!, Class<T!>!);
+  }
+
+  public final class StringJoinerKt {
+    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static String joinToString(Iterable<?> iterable, String delimiter);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class Throwables {
+    method public static void throwIfUnchecked(Throwable!);
+  }
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class ToStringHelper {
+    ctor public ToStringHelper(Object obj);
+    method public androidx.test.espresso.util.ToStringHelper add(String name, Object? obj);
+  }
+
+}
+

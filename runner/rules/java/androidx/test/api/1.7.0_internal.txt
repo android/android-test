@@ -1,0 +1,17 @@
+// Signature format: 3.0
+package androidx.test.rule {
+
+  @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class PortForwardingRule implements org.junit.rules.TestRule {
+    ctor protected PortForwardingRule(int);
+    method protected void afterPortForwarding();
+    method protected void afterRestoreForwarding();
+    method public org.junit.runners.model.Statement! apply(org.junit.runners.model.Statement!, org.junit.runner.Description!);
+    method protected void beforePortForwarding();
+    method protected void beforeRestoreForwarding();
+    method protected static int getDefaultPort();
+    field public static final int MAX_PORT = 65535; // 0xffff
+    field public static final int MIN_PORT = 1024; // 0x400
+  }
+
+}
+
