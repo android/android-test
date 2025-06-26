@@ -14,7 +14,7 @@ axt_android_library_test(
     name = "AtraceLoggerTest",
     srcs = ["AtraceLoggerTest.kt"],
     device_list = devices(
-        apis(min_api = 21),
+        apis(),
     ),
     deps = [
         "//ext/junit",
