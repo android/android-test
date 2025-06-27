@@ -1,0 +1,316 @@
+// Signature format: 3.0
+package androidx.test.filters {
+
+  public abstract class AbstractFilter extends org.junit.runner.manipulation.Filter {
+    ctor public AbstractFilter();
+    method protected abstract boolean evaluateTest(org.junit.runner.Description!);
+    method protected java.util.List<java.lang.annotation.Annotation!>! getClassAnnotations(org.junit.runner.Description!);
+    method protected java.util.List<java.lang.annotation.Annotation!>! getMethodAnnotations(org.junit.runner.Description!);
+    method public boolean shouldRun(org.junit.runner.Description!);
+  }
+
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.ANNOTATION_TYPE}) public @interface CustomFilter {
+    method public abstract Class<? extends androidx.test.filters.AbstractFilter!> filterClass();
+  }
+
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.METHOD, java.lang.annotation.ElementType.TYPE}) public @interface FlakyTest {
+    method public abstract int bugId() default -1;
+    method public abstract String detail() default "";
+  }
+
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.METHOD, java.lang.annotation.ElementType.TYPE}) public @interface LargeTest {
+  }
+
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.METHOD, java.lang.annotation.ElementType.TYPE}) public @interface MediumTest {
+  }
+
+  @Deprecated @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.TYPE, java.lang.annotation.ElementType.METHOD}) public @interface RequiresDevice {
+  }
+
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.TYPE, java.lang.annotation.ElementType.METHOD}) public @interface SdkSuppress {
+    method public abstract String codeName() default "unset";
+    method public abstract int[] excludedSdks() default {};
+    method public abstract int maxSdkVersion() default java.lang.Integer.MAX_VALUE;
+    method public abstract int minSdkVersion() default 1;
+  }
+
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.METHOD, java.lang.annotation.ElementType.TYPE}) public @interface SmallTest {
+  }
+
+  @Deprecated @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.METHOD, java.lang.annotation.ElementType.TYPE}) public @interface Suppress {
+  }
+
+}
+
+package androidx.test.orchestrator.callback {
+
+  public interface OrchestratorCallback extends android.os.IInterface {
+    method public void addTest(String!) throws android.os.RemoteException;
+    method public void sendTestNotification(android.os.Bundle!) throws android.os.RemoteException;
+    field public static final String DESCRIPTOR = "androidx.test.orchestrator.callback.OrchestratorCallback";
+  }
+
+  public static class OrchestratorCallback.Default implements androidx.test.orchestrator.callback.OrchestratorCallback {
+    ctor public OrchestratorCallback.Default();
+    method public void addTest(String!) throws android.os.RemoteException;
+    method public android.os.IBinder! asBinder();
+    method public void sendTestNotification(android.os.Bundle!) throws android.os.RemoteException;
+  }
+
+  public abstract static class OrchestratorCallback.Stub extends android.os.Binder implements androidx.test.orchestrator.callback.OrchestratorCallback {
+    ctor public OrchestratorCallback.Stub();
+    method public android.os.IBinder! asBinder();
+    method public static androidx.test.orchestrator.callback.OrchestratorCallback! asInterface(android.os.IBinder!);
+    method public boolean onTransact(int, android.os.Parcel!, android.os.Parcel!, int) throws android.os.RemoteException;
+  }
+
+}
+
+package androidx.test.orchestrator.junit {
+
+  public final class BundleJUnitUtils {
+    method public static android.os.Bundle! getBundleFromDescription(org.junit.runner.Description!);
+    method public static android.os.Bundle! getBundleFromFailure(org.junit.runner.notification.Failure!);
+    method public static android.os.Bundle! getBundleFromResult(org.junit.runner.Result!);
+    method public static android.os.Bundle! getBundleFromThrowable(org.junit.runner.Description!, Throwable!);
+    method public static androidx.test.orchestrator.junit.ParcelableDescription! getDescription(android.os.Bundle!);
+    method public static androidx.test.orchestrator.junit.ParcelableFailure! getFailure(android.os.Bundle!);
+    method public static androidx.test.orchestrator.junit.ParcelableResult! getResult(android.os.Bundle!);
+  }
+
+  public final class ParcelableDescription implements android.os.Parcelable {
+    ctor public ParcelableDescription(String!);
+    ctor public ParcelableDescription(org.junit.runner.Description!);
+    method public int describeContents();
+    method public String! getClassName();
+    method public String! getDisplayName();
+    method public String! getMethodName();
+    method public void writeToParcel(android.os.Parcel!, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.orchestrator.junit.ParcelableDescription!>! CREATOR;
+  }
+
+  public final class ParcelableFailure implements android.os.Parcelable {
+    ctor public ParcelableFailure(androidx.test.orchestrator.junit.ParcelableDescription!, String!);
+    ctor public ParcelableFailure(androidx.test.orchestrator.junit.ParcelableDescription!, Throwable!);
+    ctor public ParcelableFailure(org.junit.runner.notification.Failure!);
+    method public int describeContents();
+    method public androidx.test.orchestrator.junit.ParcelableDescription! getDescription();
+    method public String! getTrace();
+    method public void writeToParcel(android.os.Parcel!, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.orchestrator.junit.ParcelableFailure!>! CREATOR;
+  }
+
+  public final class ParcelableResult implements android.os.Parcelable {
+    ctor public ParcelableResult(java.util.List<androidx.test.orchestrator.junit.ParcelableFailure!>!);
+    ctor public ParcelableResult(org.junit.runner.Result!);
+    method public int describeContents();
+    method public int getFailureCount();
+    method public java.util.List<androidx.test.orchestrator.junit.ParcelableFailure!>! getFailures();
+    method public boolean wasSuccessful();
+    method public void writeToParcel(android.os.Parcel!, int);
+    field public static final android.os.Parcelable.Creator<androidx.test.orchestrator.junit.ParcelableResult!>! CREATOR;
+  }
+
+}
+
+package androidx.test.orchestrator.listeners {
+
+  public final class OrchestrationListenerManager {
+    ctor public OrchestrationListenerManager(android.app.Instrumentation!);
+    method public void addListener(androidx.test.orchestrator.listeners.OrchestrationRunListener!);
+    method public void handleNotification(android.os.Bundle!);
+    method public void orchestrationRunStarted(int);
+    method public void testProcessFinished(String!);
+    method public void testProcessStarted(androidx.test.orchestrator.junit.ParcelableDescription!);
+    field public static final String KEY_TEST_EVENT = "TestEvent";
+  }
+
+  public enum OrchestrationListenerManager.TestEvent {
+    enum_constant public static final androidx.test.orchestrator.listeners.OrchestrationListenerManager.TestEvent TEST_ASSUMPTION_FAILURE;
+    enum_constant public static final androidx.test.orchestrator.listeners.OrchestrationListenerManager.TestEvent TEST_FAILURE;
+    enum_constant public static final androidx.test.orchestrator.listeners.OrchestrationListenerManager.TestEvent TEST_FINISHED;
+    enum_constant public static final androidx.test.orchestrator.listeners.OrchestrationListenerManager.TestEvent TEST_IGNORED;
+    enum_constant public static final androidx.test.orchestrator.listeners.OrchestrationListenerManager.TestEvent TEST_RUN_FINISHED;
+    enum_constant public static final androidx.test.orchestrator.listeners.OrchestrationListenerManager.TestEvent TEST_RUN_STARTED;
+    enum_constant public static final androidx.test.orchestrator.listeners.OrchestrationListenerManager.TestEvent TEST_STARTED;
+  }
+
+  public abstract class OrchestrationRunListener {
+    ctor public OrchestrationRunListener();
+    method public android.app.Instrumentation! getInstrumentation();
+    method public void orchestrationRunStarted(int);
+    method public void setInstrumentation(android.app.Instrumentation!);
+    method public void testAssumptionFailure(androidx.test.orchestrator.junit.ParcelableFailure!);
+    method public void testFailure(androidx.test.orchestrator.junit.ParcelableFailure!);
+    method public void testFinished(androidx.test.orchestrator.junit.ParcelableDescription!);
+    method public void testIgnored(androidx.test.orchestrator.junit.ParcelableDescription!);
+    method public void testProcessFinished(String!);
+    method public void testRunFinished(androidx.test.orchestrator.junit.ParcelableResult!);
+    method public void testRunStarted(androidx.test.orchestrator.junit.ParcelableDescription!);
+    method public void testStarted(androidx.test.orchestrator.junit.ParcelableDescription!);
+  }
+
+}
+
+package androidx.test.orchestrator.listeners.result {
+
+  public interface ITestRunListener {
+    method public void testAssumptionFailure(androidx.test.orchestrator.listeners.result.TestIdentifier!, String!);
+    method public void testEnded(androidx.test.orchestrator.listeners.result.TestIdentifier!, java.util.Map<java.lang.String!,java.lang.String!>!);
+    method public void testFailed(androidx.test.orchestrator.listeners.result.TestIdentifier!, String!);
+    method public void testIgnored(androidx.test.orchestrator.listeners.result.TestIdentifier!);
+    method public void testRunEnded(long, java.util.Map<java.lang.String!,java.lang.String!>!);
+    method public void testRunFailed(String!);
+    method public void testRunStarted(String!, int);
+    method public void testRunStopped(long);
+    method public void testStarted(androidx.test.orchestrator.listeners.result.TestIdentifier!);
+  }
+
+  public class TestIdentifier {
+    ctor public TestIdentifier(String!, String!);
+    method public String! getClassName();
+    method public String! getTestName();
+  }
+
+  public class TestResult {
+    ctor public TestResult();
+    method public long getEndTime();
+    method public java.util.Map<java.lang.String!,java.lang.String!>! getMetrics();
+    method public String! getStackTrace();
+    method public long getStartTime();
+    method public androidx.test.orchestrator.listeners.result.TestResult.TestStatus! getStatus();
+    method public void setEndTime(long);
+    method public void setMetrics(java.util.Map<java.lang.String!,java.lang.String!>!);
+    method public void setStackTrace(String!);
+    method public androidx.test.orchestrator.listeners.result.TestResult! setStatus(androidx.test.orchestrator.listeners.result.TestResult.TestStatus!);
+  }
+
+  public enum TestResult.TestStatus {
+    enum_constant public static final androidx.test.orchestrator.listeners.result.TestResult.TestStatus ASSUMPTION_FAILURE;
+    enum_constant public static final androidx.test.orchestrator.listeners.result.TestResult.TestStatus FAILURE;
+    enum_constant public static final androidx.test.orchestrator.listeners.result.TestResult.TestStatus IGNORED;
+    enum_constant public static final androidx.test.orchestrator.listeners.result.TestResult.TestStatus INCOMPLETE;
+    enum_constant public static final androidx.test.orchestrator.listeners.result.TestResult.TestStatus PASSED;
+  }
+
+  public class TestRunResult implements androidx.test.orchestrator.listeners.result.ITestRunListener {
+    ctor public TestRunResult();
+    method public java.util.Set<androidx.test.orchestrator.listeners.result.TestIdentifier!>! getCompletedTests();
+    method public long getElapsedTime();
+    method public String! getName();
+    method public int getNumAllFailedTests();
+    method public int getNumCompleteTests();
+    method public int getNumTests();
+    method public int getNumTestsInState(androidx.test.orchestrator.listeners.result.TestResult.TestStatus!);
+    method public String! getRunFailureMessage();
+    method public java.util.Map<java.lang.String!,java.lang.String!>! getRunMetrics();
+    method public java.util.Map<androidx.test.orchestrator.listeners.result.TestIdentifier!,androidx.test.orchestrator.listeners.result.TestResult!>! getTestResults();
+    method public String! getTextSummary();
+    method public boolean hasFailedTests();
+    method public boolean isRunComplete();
+    method public boolean isRunFailure();
+    method public void setAggregateMetrics(boolean);
+    method public void setRunComplete(boolean);
+    method public void testAssumptionFailure(androidx.test.orchestrator.listeners.result.TestIdentifier!, String!);
+    method public void testEnded(androidx.test.orchestrator.listeners.result.TestIdentifier!, java.util.Map<java.lang.String!,java.lang.String!>!);
+    method public void testFailed(androidx.test.orchestrator.listeners.result.TestIdentifier!, String!);
+    method public void testIgnored(androidx.test.orchestrator.listeners.result.TestIdentifier!);
+    method public void testRunEnded(long, java.util.Map<java.lang.String!,java.lang.String!>!);
+    method public void testRunFailed(String!);
+    method public void testRunStarted(String!, int);
+    method public void testRunStopped(long);
+    method public void testStarted(androidx.test.orchestrator.listeners.result.TestIdentifier!);
+  }
+
+}
+
+package androidx.test.runner {
+
+  @Deprecated public final class AndroidJUnit4 extends org.junit.runner.Runner implements org.junit.runner.manipulation.Filterable org.junit.runner.manipulation.Sortable {
+    ctor @Deprecated public AndroidJUnit4(Class<? extends java.lang.Object!>!) throws org.junit.runners.model.InitializationError;
+    method @Deprecated public void filter(org.junit.runner.manipulation.Filter!) throws org.junit.runner.manipulation.NoTestsRemainException;
+    method @Deprecated public org.junit.runner.Description! getDescription();
+    method @Deprecated public void run(org.junit.runner.notification.RunNotifier!);
+    method @Deprecated public void sort(org.junit.runner.manipulation.Sorter!);
+  }
+
+  public class AndroidJUnitRunner extends androidx.test.runner.MonitoringInstrumentation {
+    ctor public AndroidJUnitRunner();
+  }
+
+  @Deprecated public class UsageTrackerFacilitator {
+    ctor @Deprecated public UsageTrackerFacilitator(boolean);
+    method @Deprecated public void sendUsages();
+    method @Deprecated public boolean shouldTrackUsage();
+    method @Deprecated public void trackUsage(String!, String!);
+  }
+
+}
+
+package androidx.test.runner.intercepting {
+
+  public abstract class SingleActivityFactory<T extends android.app.Activity> implements androidx.test.runner.intercepting.InterceptingActivityFactory {
+    ctor public SingleActivityFactory(Class<T!>!);
+    method protected abstract T! create(android.content.Intent!);
+    method public final android.app.Activity! create(ClassLoader!, String!, android.content.Intent!);
+    method public final Class<T!>! getActivityClassToIntercept();
+    method public final boolean shouldIntercept(ClassLoader!, String!, android.content.Intent!);
+  }
+
+}
+
+package androidx.test.runner.screenshot {
+
+  @Deprecated public class BasicScreenCaptureProcessor implements androidx.test.runner.screenshot.ScreenCaptureProcessor {
+    ctor @Deprecated public BasicScreenCaptureProcessor();
+    method @Deprecated protected String! getDefaultFilename();
+    method @Deprecated protected String! getFilename(String!);
+    method @Deprecated public String! process(androidx.test.runner.screenshot.ScreenCapture!) throws java.io.IOException;
+    field @Deprecated protected String! mDefaultFilenamePrefix;
+    field @Deprecated protected java.io.File! mDefaultScreenshotPath;
+    field @Deprecated protected String! mFileNameDelimiter;
+    field @Deprecated protected String! mTag;
+  }
+
+  @Deprecated public final class ScreenCapture {
+    method @Deprecated public android.graphics.Bitmap! getBitmap();
+    method @Deprecated public android.graphics.Bitmap.CompressFormat! getFormat();
+    method @Deprecated public String! getName();
+    method @Deprecated public void process() throws java.io.IOException;
+    method @Deprecated public void process(java.util.Set<androidx.test.runner.screenshot.ScreenCaptureProcessor!>) throws java.io.IOException;
+    method @Deprecated public androidx.test.runner.screenshot.ScreenCapture! setFormat(android.graphics.Bitmap.CompressFormat!);
+    method @Deprecated public androidx.test.runner.screenshot.ScreenCapture! setName(String!);
+  }
+
+  @Deprecated public interface ScreenCaptureProcessor {
+    method @Deprecated public String! process(androidx.test.runner.screenshot.ScreenCapture!) throws java.io.IOException;
+  }
+
+  @Deprecated public final class Screenshot {
+    ctor @Deprecated public Screenshot();
+    method @Deprecated public static void addScreenCaptureProcessors(java.util.Set<androidx.test.runner.screenshot.ScreenCaptureProcessor!>!);
+    method @Deprecated public static androidx.test.runner.screenshot.ScreenCapture! capture() throws androidx.test.runner.screenshot.Screenshot.ScreenShotException;
+    method @Deprecated public static androidx.test.runner.screenshot.ScreenCapture! capture(android.app.Activity) throws androidx.test.runner.screenshot.Screenshot.ScreenShotException;
+    method @Deprecated public static androidx.test.runner.screenshot.ScreenCapture! capture(android.view.View) throws androidx.test.runner.screenshot.Screenshot.ScreenShotException;
+    method @Deprecated public static void setScreenshotProcessors(java.util.Set<androidx.test.runner.screenshot.ScreenCaptureProcessor!>!);
+  }
+
+  @Deprecated public static final class Screenshot.ScreenShotException extends java.lang.RuntimeException {
+  }
+
+  @Deprecated public class UiAutomationWrapper {
+    method @Deprecated public android.graphics.Bitmap! takeScreenshot();
+  }
+
+}
+
+package androidx.test.runner.suites {
+
+  @org.junit.runner.RunWith(RunnerSuite.class) public final class AndroidClasspathSuite {
+  }
+
+  public final class PackagePrefixClasspathSuite extends org.junit.runners.Suite {
+  }
+
+}
+
