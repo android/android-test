@@ -82,7 +82,7 @@ axt_android_local_test(
 axt_android_library_test(
     name = "PersistableBundleSubjectTest_android",
     srcs = ["PersistableBundleSubjectTest.java"],
-    device_list = devices(apis()),
+    device_list = devices(apis(min_api = 21)),
     deps = [
         "//core",
         "//core/javatests/androidx/test/core/app/testing",
