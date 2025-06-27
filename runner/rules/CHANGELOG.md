@@ -10,9 +10,6 @@
 
 **Breaking Changes**
 
-* `ServiceTestRule.startService` will now throw if the provided intent does not
-  launch a service.
-
 **API Changes**
 
 **Breaking API Changes**
