@@ -622,6 +622,12 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       int requestCode,
       Bundle options,
       UserHandle user) {
+    intentMonitor.signalIntent(intent);
+    ActivityResult ar = stubResultFor(intent);
+    if (ar != null) {
+      Log.i(TAG, String.format("Stubbing intent %s", intent));
+      return ar;
+    }
     return super.execStartActivity(
         who, contextThread, token, target, intent, requestCode, options, user);
   }

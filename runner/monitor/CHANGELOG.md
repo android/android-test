@@ -6,6 +6,9 @@
 
 **Bug Fixes**
 
+* Fixes missing IntentMonitor for startActivity with user overload. Now it's
+  possible to intercept intents started with startActivityAsUser.
+
 **New Features**
 
 **Breaking Changes**
