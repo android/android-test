@@ -60,8 +60,6 @@ axt_android_application_test(
     srcs = ["ClassPathScannerTest.java"],
     # TODO(b/116007991): enable more APIs once fixed
     device_list = devices([
-        21,
-        22,
         23,
         26,
         27,
