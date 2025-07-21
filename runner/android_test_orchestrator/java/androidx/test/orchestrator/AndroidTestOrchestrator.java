@@ -48,7 +48,9 @@ import androidx.annotation.VisibleForTesting;
 import androidx.core.content.ContextCompat;
 import androidx.test.orchestrator.TestRunnable.RunFinishedListener;
 import androidx.test.orchestrator.junit.ParcelableDescription;
+import androidx.test.orchestrator.junit.ParcelableFailure;
 import androidx.test.orchestrator.listeners.OrchestrationListenerManager;
+import androidx.test.orchestrator.listeners.OrchestrationRunListener;
 import androidx.test.orchestrator.listeners.OrchestrationResult;
 import androidx.test.orchestrator.listeners.OrchestrationResultPrinter;
 import androidx.test.services.shellexecutor.ClientNotConnected;
@@ -60,6 +62,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -127,6 +130,22 @@ import java.util.regex.Pattern;
 public final class AndroidTestOrchestrator extends android.app.Instrumentation
     implements RunFinishedListener {
 
+  private class OrchestratorListener extends OrchestrationRunListener {
+    @Override
+    public void testStarted(ParcelableDescription description) {
+      if (!runsInIsolatedMode(arguments)) {
+        test = description.getClassName() + "#" + description.getMethodName();
+        testsToExecuteNoIsolation.remove(test);
+      }
+    }
+
+    @Override
+    public void testFailure(ParcelableFailure failure) {
+        isRecoveringFromCrash = true;
+    }
+  }
+
+
   private static final String TAG = "AndroidTestOrchestrator";
   // As defined in the AndroidManifest of the Orchestrator app.
   private static final String ORCHESTRATOR_SERVICE_LOCATION = "OrchestratorService";
@@ -145,6 +164,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   private final OrchestrationResultPrinter resultPrinter = new OrchestrationResultPrinter();
   private final OrchestrationListenerManager listenerManager =
       new OrchestrationListenerManager(this);
+  private final OrchestratorListener orchestratorListener = new OrchestratorListener();
 
   private final ExecutorService executorService;
 
@@ -157,6 +177,9 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   // instrumentation, it should live in its own state machine class.
   private String test;
   private Iterator<String> testIterator;
+
+  private List<String> testsToExecuteNoIsolation;
+  private boolean isRecoveringFromCrash = false;
 
   public AndroidTestOrchestrator() {
     super();
@@ -315,6 +338,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     if (null == test) {
       List<String> allTests = callbackLogic.provideCollectedTests();
       testIterator = allTests.iterator();
+      testsToExecuteNoIsolation = new ArrayList<>(allTests);
       addListeners(allTests.size());
 
       if (allTests.isEmpty()) {
@@ -333,6 +357,13 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   }
 
   private void executeEntireTestSuite() {
+    // If we're recovering from a crash, continue with remaining tests
+    if (isRecoveringFromCrash && testsToExecuteNoIsolation != null && !testsToExecuteNoIsolation.isEmpty()) {
+      isRecoveringFromCrash = false;
+      executeRemainingTests();
+      return;
+    }
+    
     if (null != test) {
       finish(Activity.RESULT_OK, createResultBundle());
       return;
@@ -344,6 +375,23 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     executorService.execute(
         TestRunnable.legacyTestRunnable(
             getContext(), getSecret(arguments), arguments, getOutputStream(), this));
+  }
+
+  private void executeRemainingTests() {
+    // Create a list of remaining tests from the current iterator position
+    List<String> remainingTests = new ArrayList<>(testsToExecuteNoIsolation);
+    
+    if (remainingTests.isEmpty()) {
+      finish(Activity.RESULT_OK, createResultBundle());
+      return;
+    }
+    
+    // Set test to indicate execution has started
+    test = "";
+    // Execute remaining tests using a subset TestRunnable
+    executorService.execute(
+        TestRunnable.testSubsetRunnable(
+            getContext(), getSecret(arguments), arguments, getOutputStream(), this, remainingTests));
   }
 
   private void executeNextTest() {
@@ -434,6 +482,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   private void addListeners(int testSize) {
     listenerManager.addListener(resultBuilder);
     listenerManager.addListener(resultPrinter);
+    listenerManager.addListener(orchestratorListener);
     listenerManager.orchestrationRunStarted(testSize);
   }
 
