@@ -143,8 +143,13 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     public void testFailure(ParcelableFailure failure) {
         isRecoveringFromCrash = true;
     }
-  }
 
+    @Override
+    public void testProcessFinished(String message) {
+      super.testProcessFinished(message);
+      Log.i(TAG, "Test process finished: " + message);
+    }
+  }
 
   private static final String TAG = "AndroidTestOrchestrator";
   // As defined in the AndroidManifest of the Orchestrator app.
@@ -388,10 +393,12 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     
     // Set test to indicate execution has started
     test = "";
-    // Execute remaining tests using a subset TestRunnable
-    executorService.execute(
-        TestRunnable.testSubsetRunnable(
-            getContext(), getSecret(arguments), arguments, getOutputStream(), this, remainingTests));
+    // Execute remaining tests using a subset TestRunnable, we need to prevent the argument list from being too long
+    // Run 500 tests at a time
+    List<String> remainingTestsSubset = remainingTests.subList(0, Math.min(500, remainingTests.size()));
+            executorService.execute(
+                    TestRunnable.testSubsetRunnable(
+                            getContext(), getSecret(arguments), arguments, getOutputStream(), this, remainingTestsSubset));
   }
 
   private void executeNextTest() {
