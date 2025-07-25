@@ -51,24 +51,6 @@ public class TestRunnable implements Runnable {
   private final String secret;
 
   /**
-   * Constructs a TestRunnable executes all tests in arguments.
-   *
-   * @param context A context
-   * @param secret A string representing the speakeasy binder key
-   * @param arguments contains arguments to be passed to the target instrumentation
-   * @param outputStream the stream to write the results of the test process
-   * @param listener a callback listener to know when the run has completed
-   */
-  public static TestRunnable legacyTestRunnable(
-      Context context,
-      String secret,
-      Bundle arguments,
-      OutputStream outputStream,
-      RunFinishedListener listener) {
-    return new TestRunnable(context, secret, arguments, outputStream, listener, null, null, false);
-  }
-
-  /**
    * Constructs a TestRunnable which will run a single test.
    *
    * @param context A context

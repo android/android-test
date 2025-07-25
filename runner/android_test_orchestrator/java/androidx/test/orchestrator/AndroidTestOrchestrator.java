@@ -374,19 +374,16 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
       return;
     }
 
-    // We don't actually need test to have any particular value,
-    // just to indicate we've started execution.
-    test = "";
-    executorService.execute(
-        TestRunnable.legacyTestRunnable(
-            getContext(), getSecret(arguments), arguments, getOutputStream(), this));
+    executeRemainingTests();
   }
 
   private void executeRemainingTests() {
+    Log.i(TAG, "Executing remaining tests...");
     // Create a list of remaining tests from the current iterator position
     List<String> remainingTests = new ArrayList<>(testsToExecuteNoIsolation);
     
     if (remainingTests.isEmpty()) {
+      Log.i(TAG, "No remaining tests to execute.");
       finish(Activity.RESULT_OK, createResultBundle());
       return;
     }
@@ -396,9 +393,10 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     // Execute remaining tests using a subset TestRunnable, we need to prevent the argument list from being too long
     // Run 500 tests at a time
     List<String> remainingTestsSubset = remainingTests.subList(0, Math.min(500, remainingTests.size()));
-            executorService.execute(
-                    TestRunnable.testSubsetRunnable(
-                            getContext(), getSecret(arguments), arguments, getOutputStream(), this, remainingTestsSubset));
+    Log.i(TAG, "Executing subset of remaining tests: " + remainingTestsSubset.size() + " tests.");
+    executorService.execute(
+            TestRunnable.testSubsetRunnable(
+                    getContext(), getSecret(arguments), arguments, getOutputStream(), this, remainingTestsSubset));
   }
 
   private void executeNextTest() {
