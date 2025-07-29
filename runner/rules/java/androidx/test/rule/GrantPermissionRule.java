@@ -113,6 +113,12 @@ public class GrantPermissionRule implements TestRule {
     return grantPermissionRule;
   }
 
+  public static void grantImmediately(String... permissions) {
+    GrantPermissionRule grantPermissionRule = new GrantPermissionRule();
+    grantPermissionRule.grantPermissions(permissions);
+    grantPermissionRule.permissionGranter.requestPermissions();
+  }
+
   private void grantPermissions(String... permissions) {
     Set<String> permissionSet = satisfyPermissionDependencies(permissions);
     permissionGranter.addPermissions(permissionSet.toArray(new String[permissionSet.size()]));
