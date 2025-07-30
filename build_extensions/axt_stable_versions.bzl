@@ -1,5 +1,6 @@
-"""Defines current released AXT versions.
-"""
+"""Defines currently released stable AXT versions."""
+
+# currently only used for documentation purposes
 
 RUNNER_VERSION = "1.7.0"
 RULES_VERSION = "1.7.0"
