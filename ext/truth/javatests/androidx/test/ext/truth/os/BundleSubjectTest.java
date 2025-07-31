@@ -123,6 +123,42 @@ public class BundleSubjectTest {
   }
 
   @Test
+  public void booleanArray() {
+    Bundle bundle = new Bundle();
+    bundle.putBooleanArray("foo", new boolean[] {true, false});
+
+    assertThat(bundle).booleanArray("foo").asList().containsExactly(true, false).inOrder();
+  }
+
+  @Test
+  public void intArray() {
+    Bundle bundle = new Bundle();
+    bundle.putIntArray("foo", new int[] {1, 2, 3});
+
+    assertThat(bundle).intArray("foo").asList().containsExactly(1, 2, 3).inOrder();
+  }
+
+  @Test
+  public void longArray() {
+    Bundle bundle = new Bundle();
+    bundle.putLongArray("foo", new long[] {1L, 2L, 3L});
+
+    assertThat(bundle).longArray("foo").asList().containsExactly(1L, 2L, 3L).inOrder();
+  }
+
+  @Test
+  public void doubleArray() {
+    Bundle bundle = new Bundle();
+    bundle.putDoubleArray("foo", new double[] {1.0, 2.0, 3.0});
+
+    assertThat(bundle)
+        .doubleArray("foo")
+        .usingExactEquality()
+        .containsExactly(1.0, 2.0, 3.0)
+        .inOrder();
+  }
+
+  @Test
   public void stringArray() {
     Bundle bundle = new Bundle();
     bundle.putStringArray("foo", new String[] {"bar", "baz"});

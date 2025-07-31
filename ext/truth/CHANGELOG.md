@@ -8,6 +8,9 @@
 
 **New Features**
 
+* `BundleSubject` and `PersistableBundleSubject` now share `BaseBundle` support,
+  including additional array type assertions
+
 **Breaking Changes**
 
 **API Changes**

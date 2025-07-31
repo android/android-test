@@ -16,9 +16,7 @@
 package androidx.test.ext.truth.os;
 
 import static androidx.test.ext.truth.os.PersistableBundleSubject.assertThat;
-import static org.junit.Assume.assumeTrue;
 
-import android.os.Build;
 import android.os.PersistableBundle;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Test;
@@ -88,13 +86,46 @@ public class PersistableBundleSubjectTest {
 
   @Test
   public void bool() {
-    // PersistableBundle (and BaseBundle) didn't get boolean support until 22
-    assumeTrue(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1);
-
     PersistableBundle bundle = new PersistableBundle();
     bundle.putBoolean("foo", true);
 
     assertThat(bundle).bool("foo").isTrue();
+  }
+
+  @Test
+  public void booleanArray() {
+    PersistableBundle bundle = new PersistableBundle();
+    bundle.putBooleanArray("foo", new boolean[] {true, false});
+
+    assertThat(bundle).booleanArray("foo").asList().containsExactly(true, false).inOrder();
+  }
+
+  @Test
+  public void intArray() {
+    PersistableBundle bundle = new PersistableBundle();
+    bundle.putIntArray("foo", new int[] {1, 2, 3});
+
+    assertThat(bundle).intArray("foo").asList().containsExactly(1, 2, 3).inOrder();
+  }
+
+  @Test
+  public void longArray() {
+    PersistableBundle bundle = new PersistableBundle();
+    bundle.putLongArray("foo", new long[] {1L, 2L, 3L});
+
+    assertThat(bundle).longArray("foo").asList().containsExactly(1L, 2L, 3L).inOrder();
+  }
+
+  @Test
+  public void doubleArray() {
+    PersistableBundle bundle = new PersistableBundle();
+    bundle.putDoubleArray("foo", new double[] {1.0, 2.0, 3.0});
+
+    assertThat(bundle)
+        .doubleArray("foo")
+        .usingExactEquality()
+        .containsExactly(1.0, 2.0, 3.0)
+        .inOrder();
   }
 
   @Test
