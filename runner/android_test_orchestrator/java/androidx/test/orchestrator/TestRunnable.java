@@ -22,13 +22,14 @@ import static androidx.test.orchestrator.OrchestratorConstants.ORCHESTRATOR_FORW
 import static androidx.test.orchestrator.OrchestratorConstants.TARGET_INSTRUMENTATION_ARGUMENT;
 
 import android.content.Context;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.services.shellexecutor.ClientNotConnected;
 import androidx.test.services.shellexecutor.ShellExecutorFactory;
-import com.google.common.io.ByteStreams;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -135,7 +136,7 @@ public class TestRunnable implements Runnable {
       InputStream inputStream =
           runShellCommand(buildShellParams(getTargetInstrumentationArguments()));
       try {
-        ByteStreams.copy(inputStream, outputStream);
+        transferInputToOutputStream(inputStream, outputStream);
       } finally {
         if (inputStream != null) {
           inputStream.close();
@@ -155,6 +156,19 @@ public class TestRunnable implements Runnable {
     }
 
     listener.runFinished();
+  }
+
+  private static void transferInputToOutputStream(InputStream is, OutputStream os)
+      throws IOException {
+    if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
+      is.transferTo(os);
+    } else {
+      byte[] buf = new byte[8192];
+      int bytesRead = -1;
+      while ((bytesRead = is.read(buf)) >= 0) {
+        os.write(buf, 0, bytesRead);
+      }
+    }
   }
 
   private String getTargetInstrumentation() {

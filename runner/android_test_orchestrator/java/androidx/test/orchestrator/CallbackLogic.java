@@ -16,18 +16,19 @@
 
 package androidx.test.orchestrator;
 
+import static androidx.test.internal.util.Checks.checkNotNull;
+import static androidx.test.internal.util.Checks.checkState;
+
 import android.os.Bundle;
 import androidx.test.orchestrator.callback.OrchestratorCallback;
 import androidx.test.orchestrator.listeners.OrchestrationListenerManager;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Splitter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /** Encapsulates all the logic for receiving callbacks from the app under test. */
 class CallbackLogic extends OrchestratorCallback.Stub {
   private static final String TAG = "CallbackLogic";
-  private static final Splitter CLASS_METHOD_SPLITTER = Splitter.on('#');
 
   private final List<String> listOfTests = new ArrayList<>();
   private final Object testLock = new Object();
@@ -38,7 +39,7 @@ class CallbackLogic extends OrchestratorCallback.Stub {
   @Override
   public void addTest(String test) {
     synchronized (testLock) {
-      List<String> classAndMethod = CLASS_METHOD_SPLITTER.splitToList(test);
+      List<String> classAndMethod = Arrays.asList(test.split("#"));
       if (classAndMethod.size() > 1
           && (classAndMethod.get(1).isEmpty() || classAndMethod.get(1).equals("null"))) {
         listOfTests.add(classAndMethod.get(0));
@@ -51,8 +52,7 @@ class CallbackLogic extends OrchestratorCallback.Stub {
   @Override
   public void sendTestNotification(Bundle bundle) {
     synchronized (testLock) {
-      Preconditions.checkNotNull(
-          listenerManager, "Unable to process test notification. No ListenerManager");
+      checkNotNull(listenerManager, "Unable to process test notification. No ListenerManager");
       listenerManager.handleNotification(bundle);
     }
   }
@@ -65,8 +65,8 @@ class CallbackLogic extends OrchestratorCallback.Stub {
 
   void setListenerManager(OrchestrationListenerManager mListenerManager) {
     synchronized (testLock) {
-      Preconditions.checkState(null == this.listenerManager, "Listener manager assigned twice.");
-      this.listenerManager = Preconditions.checkNotNull(mListenerManager, "Listener manager null");
+      checkState(null == this.listenerManager, "Listener manager assigned twice.");
+      this.listenerManager = checkNotNull(mListenerManager, "Listener manager null");
     }
   }
 }
