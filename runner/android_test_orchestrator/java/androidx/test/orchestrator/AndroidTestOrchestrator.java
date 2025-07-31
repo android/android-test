@@ -16,6 +16,7 @@
 
 package androidx.test.orchestrator;
 
+import static androidx.test.internal.util.Checks.checkState;
 import static androidx.test.orchestrator.OrchestratorConstants.AJUR_CLASS_ARGUMENT;
 import static androidx.test.orchestrator.OrchestratorConstants.AJUR_COVERAGE;
 import static androidx.test.orchestrator.OrchestratorConstants.AJUR_COVERAGE_FILE;
@@ -24,7 +25,6 @@ import static androidx.test.orchestrator.OrchestratorConstants.COVERAGE_FILE_PAT
 import static androidx.test.orchestrator.OrchestratorConstants.ISOLATED_ARGUMENT;
 import static androidx.test.orchestrator.OrchestratorConstants.ORCHESTRATOR_DEBUG_ARGUMENT;
 import static androidx.test.orchestrator.OrchestratorConstants.TARGET_INSTRUMENTATION_ARGUMENT;
-import static com.google.common.base.Preconditions.checkState;
 
 import android.Manifest.permission;
 import android.app.Activity;
