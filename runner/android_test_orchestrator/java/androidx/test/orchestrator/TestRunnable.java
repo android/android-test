@@ -45,7 +45,7 @@ public class TestRunnable implements Runnable {
   private final RunFinishedListener listener;
   private final OutputStream outputStream;
   private final String test;
-  private final List<String> testSubset;
+  private final String testFilePath;
   private final boolean collectTests;
   private final Context context;
   private final String secret;
@@ -90,14 +90,14 @@ public class TestRunnable implements Runnable {
   }
 
   /**
-   * Constructs a TestRunnable which will run a specific subset of tests.
+   * Constructs a TestRunnable which will run a specific subset of tests from a file.
    *
    * @param context A context
    * @param secret A string representing the speakeasy binder key
    * @param arguments contains arguments to be passed to the target instrumentation
    * @param outputStream the stream to write the results of the test process
    * @param listener a callback listener to know when the run has completed
-   * @param testSubset a list of specific tests to run
+   * @param testFilePath the path to a file containing the tests to run
    */
   public static TestRunnable testSubsetRunnable(
       Context context,
@@ -105,8 +105,8 @@ public class TestRunnable implements Runnable {
       Bundle arguments,
       OutputStream outputStream,
       RunFinishedListener listener,
-      List<String> testSubset) {
-    return new TestRunnable(context, secret, arguments, outputStream, listener, null, testSubset, false);
+      String testFilePath) {
+    return new TestRunnable(context, secret, arguments, outputStream, listener, null, testFilePath, false);
   }
 
   @VisibleForTesting
@@ -117,7 +117,7 @@ public class TestRunnable implements Runnable {
       OutputStream outputStream,
       RunFinishedListener listener,
       String test,
-      List<String> testSubset,
+      String testFilePath,
       boolean collectTests) {
     this.context = context;
     this.secret = secret;
@@ -125,7 +125,7 @@ public class TestRunnable implements Runnable {
     this.outputStream = outputStream;
     this.listener = listener;
     this.test = test;
-    this.testSubset = testSubset;
+    this.testFilePath = testFilePath;
     this.collectTests = collectTests;
   }
 
@@ -183,12 +183,12 @@ public class TestRunnable implements Runnable {
       targetArgs.remove("testFile");
     }
 
-    // Override the class parameter with the current test target or test subset.
+    // Override the class parameter with the current test target or use testFile for test subset.
     if (test != null) {
       targetArgs.putString(AJUR_CLASS_ARGUMENT, test);
-    } else if (testSubset != null && !testSubset.isEmpty()) {
-      // For test subset, create a comma-separated list of tests
-      targetArgs.putString(AJUR_CLASS_ARGUMENT, String.join(",", testSubset));
+    } else if (testFilePath != null && !testFilePath.isEmpty()) {
+      // For test subset, use testFile parameter to read tests from file
+      targetArgs.putString("testFile", testFilePath);
     }
 
     return targetArgs;

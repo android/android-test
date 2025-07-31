@@ -40,28 +40,36 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
+import android.os.Environment;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
+
 import androidx.annotation.VisibleForTesting;
 import androidx.core.content.ContextCompat;
 import androidx.test.orchestrator.TestRunnable.RunFinishedListener;
 import androidx.test.orchestrator.junit.ParcelableDescription;
 import androidx.test.orchestrator.junit.ParcelableFailure;
 import androidx.test.orchestrator.listeners.OrchestrationListenerManager;
-import androidx.test.orchestrator.listeners.OrchestrationRunListener;
 import androidx.test.orchestrator.listeners.OrchestrationResult;
 import androidx.test.orchestrator.listeners.OrchestrationResultPrinter;
+import androidx.test.orchestrator.listeners.OrchestrationRunListener;
 import androidx.test.services.shellexecutor.ClientNotConnected;
 import androidx.test.services.shellexecutor.ShellExecSharedConstants;
 import androidx.test.services.shellexecutor.ShellExecutor;
 import androidx.test.services.shellexecutor.ShellExecutorFactory;
+
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -362,6 +370,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   }
 
   private void executeEntireTestSuite() {
+    Log.i(TAG, "Executing entire test suite...");
     // If we're recovering from a crash, continue with remaining tests
     if (isRecoveringFromCrash && testsToExecuteNoIsolation != null && !testsToExecuteNoIsolation.isEmpty()) {
       isRecoveringFromCrash = false;
@@ -392,11 +401,45 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     test = "";
     // Execute remaining tests using a subset TestRunnable, we need to prevent the argument list from being too long
     // Run 500 tests at a time
-    List<String> remainingTestsSubset = remainingTests.subList(0, Math.min(500, remainingTests.size()));
-    Log.i(TAG, "Executing subset of remaining tests: " + remainingTestsSubset.size() + " tests.");
+    Log.i(TAG, "Executing subset of remaining tests: " + remainingTests.size() + " tests.");
+    
+    // Write tests to file to avoid argument length limits
+    String testFilePath = writeTestsToFile(remainingTests);
+    Log.i(TAG, "Test file path: " + testFilePath);
+    
     executorService.execute(
             TestRunnable.testSubsetRunnable(
-                    getContext(), getSecret(arguments), arguments, getOutputStream(), this, remainingTestsSubset));
+                    getContext(), getSecret(arguments), arguments, getOutputStream(), this, testFilePath));
+  }
+
+  private String writeTestsToFile(List<String> tests) {
+    String fileName = "test_subset.txt";
+    String filePath = "/data/local/tmp/" + fileName;
+    Context context = getContext();
+    String secret = getSecret(arguments);
+    
+    try {
+      // Create the file using shell command to ensure proper permissions
+      execShellCommandSync(context, secret, "touch", Arrays.asList(filePath));
+      
+      // Make the file world readable/writable so both processes can access it
+      execShellCommandSync(context, secret, "chmod", Arrays.asList("666", filePath));
+      
+      // Write the test content to the file using shell commands
+      StringBuilder content = new StringBuilder();
+      for (String test : tests) {
+        content.append(test).append("\n");
+      }
+      
+      // Use echo to write content (escape any special characters)
+      String escapedContent = content.toString().replace("\"", "\\\"").replace("$", "\\$");
+      execShellCommandSync(context, secret, "sh", Arrays.asList("-c", "echo \"" + escapedContent + "\" > " + filePath));
+      
+      return filePath;
+    } catch (Exception e) {
+      Log.e(TAG, "Failed to write tests to file using shell commands", e);
+      throw new RuntimeException("Could not write tests to file", e);
+    }
   }
 
   private void executeNextTest() {
