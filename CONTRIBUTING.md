@@ -33,8 +33,8 @@ Currently only Linux is fully supported. Mac may work but is not regularly teste
     on PATH.
 *   Install the [Android SDK](https://developer.android.com/studio/install) and
     run the following command to ensure you have the necessary components:
-    `./tools/bin/sdkmanager --install 'build-tools;33.0.2'
-    'platforms;android-34' 'emulator' 'platform-tools'
+    `cmdline-tools/latest/bin/sdkmanager  "build-tools;33.0.2"`
+    `cmdline-tools/latest/bin/sdkmanager "platforms;android-35" "build-tools;35.0.0"`
 *   Set the `ANDROID_HOME` environment variable to point to the SDK install
     location. For example
     *   On Linux: `export ANDROID_HOME=/home/$USER/Android/Sdk`
