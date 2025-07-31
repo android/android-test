@@ -30,7 +30,6 @@ android_binary(
         "//runner/android_junit_runner",
         "//runner/android_test_orchestrator",
         "@maven//:androidx_multidex_multidex",
-        "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
     ],
 )
