@@ -17,7 +17,6 @@ package androidx.test.services.storage.file;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build.VERSION;
 import android.os.Environment;
 import android.os.UserManager;
 import android.provider.OpenableColumns;
@@ -154,9 +153,7 @@ public final class HostedFile {
 
   public static File getOutputRootDirectory(Context context) {
     UserManager userManager = (UserManager) context.getSystemService(Context.USER_SERVICE);
-    if (VERSION.SDK_INT < 23) {
-      return Environment.getExternalStorageDirectory();
-    } else if (userManager.isSystemUser()) {
+    if (userManager.isSystemUser()) {
       return Environment.getExternalStorageDirectory();
     } else {
       // using legacy external storage for output in automotive devices where tests run as

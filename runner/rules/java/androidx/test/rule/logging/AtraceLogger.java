@@ -17,10 +17,8 @@ package androidx.test.rule.logging;
 
 import android.app.Instrumentation;
 import android.app.UiAutomation;
-import android.os.Build.VERSION;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
-import androidx.annotation.RequiresApi;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,12 +33,8 @@ import java.util.concurrent.CountDownLatch;
 /**
  * Class contains helper methods to dump atrace info asynchronously while running the test case.
  *
- * <p>Supported only for minsdk version 21 and above because of UiAutomation#executeShellCommand
- * availability.
- *
  * @deprecated unsupported. Consider running trace from host such as via Android Studio
  */
-@RequiresApi(21)
 @Deprecated
 public class AtraceLogger {
 
@@ -70,9 +64,6 @@ public class AtraceLogger {
    * @return instance of the AtraceLogger
    */
   public static AtraceLogger getAtraceLoggerInstance(Instrumentation instrumentation) {
-    if (VERSION.SDK_INT < 21) {
-      throw new UnsupportedOperationException("AtraceLogger is only supported on APIs >= 21");
-    }
     if (loggerInstance == null) {
       synchronized (AtraceLogger.class) {
         if (loggerInstance == null) {

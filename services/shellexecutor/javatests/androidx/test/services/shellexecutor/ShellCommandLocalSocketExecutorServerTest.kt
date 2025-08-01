@@ -1,7 +1,6 @@
 package androidx.test.services.shellexecutor
 
 import android.net.LocalSocket
-import android.os.Build
 import androidx.test.services.shellexecutor.LocalSocketProtocol.addressFromBinderKey
 import androidx.test.services.shellexecutor.LocalSocketProtocol.hasExited
 import androidx.test.services.shellexecutor.LocalSocketProtocol.readResponse
@@ -37,23 +36,16 @@ class ShellCommandLocalSocketExecutorServerTest {
       } while (!responses.last().hasExited())
       server.stop(100.milliseconds)
     }
-    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
-      // On API 21 and 22, echo only exists as a shell builtin!
-      assertThat(responses).hasSize(1)
-      assertThat(responses[0].exitCode).isEqualTo(-1)
-      assertThat(responses[0].buffer.toStringUtf8()).contains("Permission denied")
-    } else {
-      // On rare occasions, the output of the command will come back in two packets! So to keep
-      // this test from being 1% flaky:
-      val stdout = buildString {
-        for (response in responses) {
-          if (response.buffer.size() > 0) append(response.buffer.toStringUtf8())
-        }
+    // On rare occasions, the output of the command will come back in two packets! So to keep
+    // this test from being 1% flaky:
+    val stdout = buildString {
+      for (response in responses) {
+        if (response.buffer.size() > 0) append(response.buffer.toStringUtf8())
       }
-      assertThat(stdout).isEqualTo("\${POTRZEBIE}\n")
-      assertThat(responses.last().hasExited()).isTrue()
-      assertThat(responses.last().exitCode).isEqualTo(0)
     }
+    assertThat(stdout).isEqualTo("\${POTRZEBIE}\n")
+    assertThat(responses.last().hasExited()).isTrue()
+    assertThat(responses.last().exitCode).isEqualTo(0)
   }
 
   @Test

@@ -27,7 +27,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
@@ -1709,13 +1708,7 @@ public final class ViewMatchers {
       protected boolean matchesSafely(TextView textView, Description mismatchDescription) {
         context = textView.getContext();
         int textViewColor = textView.getCurrentTextColor();
-        int expectedColor;
-
-        if (Build.VERSION.SDK_INT <= 22) {
-          expectedColor = context.getResources().getColor(colorResId);
-        } else {
-          expectedColor = context.getColor(colorResId);
-        }
+        int expectedColor = context.getColor(colorResId);
 
         mismatchDescription
             .appendText("textView.getCurrentTextColor() was ")
@@ -1729,10 +1722,7 @@ public final class ViewMatchers {
         if (context == null) {
           description.appendText("ID ").appendValue(colorResId);
         } else {
-          int color =
-              (Build.VERSION.SDK_INT <= 22)
-                  ? context.getResources().getColor(colorResId)
-                  : context.getColor(colorResId);
+          int color = context.getColor(colorResId);
           description.appendText("value " + getColorHex(color));
         }
       }

@@ -61,7 +61,7 @@ package androidx.test.rule {
 
 package androidx.test.rule.logging {
 
-  @Deprecated @RequiresApi(21) public class AtraceLogger {
+  @Deprecated public class AtraceLogger {
     method @Deprecated public void atraceStart(java.util.Set<java.lang.String!>!, int, int, java.io.File!, String!) throws java.io.IOException;
     method @Deprecated public void atraceStop() throws java.io.IOException, java.lang.InterruptedException;
     method @Deprecated public static androidx.test.rule.logging.AtraceLogger! getAtraceLoggerInstance(android.app.Instrumentation!);

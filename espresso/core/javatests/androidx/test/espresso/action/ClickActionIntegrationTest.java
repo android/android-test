@@ -22,14 +22,12 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.assertTrue;
 
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.ui.app.LargeViewActivity;
 import androidx.test.ui.app.R;
 import org.junit.Rule;
@@ -59,18 +57,5 @@ public class ClickActionIntegrationTest {
     onView(withText(R.string.context_item_1_text)).check(matches(isDisplayed()));
     onView(withText(R.string.context_item_2_text)).check(matches(isDisplayed()));
     onView(withText(R.string.context_item_3_text)).check(matches(isDisplayed()));
-  }
-
-  @Test
-  @SdkSuppress(maxSdkVersion = 13)
-  public void rightClickTest_unsupportedApiLevel() {
-    boolean exceptionThrown = false;
-    try {
-      onView(withId(R.id.large_view)).perform(click(0, 0));
-    } catch (UnsupportedOperationException e) {
-      exceptionThrown = true;
-    } finally {
-      assertTrue(exceptionThrown);
-    }
   }
 }

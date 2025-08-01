@@ -21,7 +21,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
 import androidx.test.runner.permission.UiAutomationShellCommand.PmCommand;
 import org.junit.Test;
@@ -36,13 +35,7 @@ public class UiAutomationShellCommandTest {
 
   private static final String RUNTIME_PERMISSION1 = "android.permission.PERMISSION1";
 
-  // Placeholder test to avoid the 'empty test suite' error on < sdk 23.
   @Test
-  @SdkSuppress(maxSdkVersion = 22)
-  public void emptyTest() {}
-
-  @Test
-  @SdkSuppress(minSdkVersion = 23)
   public void commandForPermission() {
     assertTrue(true);
     UiAutomationShellCommand shellCmdGrant =

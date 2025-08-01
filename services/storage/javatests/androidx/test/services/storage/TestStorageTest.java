@@ -23,7 +23,6 @@ import static org.junit.Assume.assumeTrue;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.UserManager;
 import androidx.test.services.storage.file.HostedFile;
 import androidx.test.services.storage.internal.TestStorageUtil;
@@ -122,13 +121,10 @@ public final class TestStorageTest {
   }
 
   private static boolean isSystemUser() {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-      return true;
-    } else {
+
       UserManager um =
           ((UserManager) getApplicationContext().getSystemService(Context.USER_SERVICE));
       return um.isSystemUser();
-    }
   }
 
   @Test

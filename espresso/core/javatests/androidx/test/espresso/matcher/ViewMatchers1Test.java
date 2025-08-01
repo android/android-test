@@ -57,7 +57,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.os.Build;
 import android.text.SpannedString;
 import android.text.method.TransformationMethod;
 import android.view.View;
@@ -576,13 +575,7 @@ public class ViewMatchers1Test {
     TextView textView = new TextView(context);
     textView.setText("text");
 
-    int color;
-    if (Build.VERSION.SDK_INT <= 22) {
-      color = context.getResources().getColor(R.color.green);
-    } else {
-      color = context.getColor(R.color.green);
-    }
-
+    int color = context.getColor(R.color.green);
     textView.setTextColor(color);
 
     assertTrue(hasTextColor(R.color.green).matches(textView));

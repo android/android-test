@@ -49,11 +49,6 @@ final class InputManagerEventInjectionStrategy implements EventInjectionStrategy
       new ReflectiveMethod<>(
           InputManager.class, "injectInputEvent", InputEvent.class, Integer.TYPE);
 
-  // only used on APIs < 23
-  private final ReflectiveMethod<InputManager> getInstanceMethod =
-      new ReflectiveMethod<>(InputManager.class, "getInstance");
-  ;
-
   // hardcoded copies of private InputManager fields.
   // historically these were obtained via reflection, but that seems
   // wasteful as these values have not changed since they were introduced
@@ -72,7 +67,9 @@ final class InputManagerEventInjectionStrategy implements EventInjectionStrategy
   public boolean injectKeyEvent(KeyEvent keyEvent) throws InjectEventSecurityException {
     try {
       return injectInputEventMethod.invoke(
-          getInputManager(), keyEvent, INJECT_INPUT_EVENT_MODE_WAIT_FOR_FINISH);
+          getContext().getSystemService(InputManager.class),
+          keyEvent,
+          INJECT_INPUT_EVENT_MODE_WAIT_FOR_FINISH);
     } catch (ReflectionException e) {
       // annoyingly, ReflectiveMethod always rewraps the underlying exception
       Throwable cause = e.getCause().getCause();
@@ -104,7 +101,8 @@ final class InputManagerEventInjectionStrategy implements EventInjectionStrategy
       }
       int eventMode =
           sync ? INJECT_INPUT_EVENT_MODE_WAIT_FOR_FINISH : INJECT_INPUT_EVENT_MODE_ASYNC;
-      return injectInputEventMethod.invoke(getInputManager(), motionEvent, eventMode);
+      return injectInputEventMethod.invoke(
+          getContext().getSystemService(InputManager.class), motionEvent, eventMode);
     } catch (ReflectionException e) {
       Throwable cause = e.getCause().getCause();
       if (cause instanceof SecurityException) {
@@ -138,14 +136,6 @@ final class InputManagerEventInjectionStrategy implements EventInjectionStrategy
             || Build.DEVICE.contains("Glass")
             || Build.DEVICE.contains("wingman"))
         && ((motionEvent.getSource() & InputDevice.SOURCE_TOUCHPAD) != 0);
-  }
-
-  private InputManager getInputManager() {
-    if (Build.VERSION.SDK_INT < 23) {
-      return getInstanceMethod.invokeStatic();
-    } else {
-      return getContext().getSystemService(InputManager.class);
-    }
   }
 
   private static Context getContext() {

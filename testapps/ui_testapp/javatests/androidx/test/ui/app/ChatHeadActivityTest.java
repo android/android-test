@@ -17,13 +17,10 @@
 package androidx.test.ui.app;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.pressBackUnconditionally;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isFocusable;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.allOf;
@@ -35,11 +32,9 @@ import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 import androidx.test.InstrumentationRegistry;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -65,72 +60,6 @@ public class ChatHeadActivityTest {
 
   @After
   public void tearDown() {
-  }
-
-  @SdkSuppress(maxSdkVersion = 22) // Requires special permission to draw over other apps
-  @Test
-  public void testFindingRootViewWithNotFocusableFlagSetOnTheWindowManager()
-      throws InterruptedException {
-    // Create a chat head
-    onView(withId(R.id.create_chat_head_btn)).perform(click());
-
-    // Verify chat head changed color
-    onView(withId(R.id.chat_head_btn_id))
-        .inRoot(withDecorView(not(is(activity.getWindow().getDecorView()))))
-        .check(matches(withTagValue((Matchers.is((Object) "red")))));
-
-    // Preform a click on the chat head button
-    Log.d(TAG, "click on chat chat head...");
-    clickOnChatHead();
-    Log.d(TAG, "click on chat chat head...");
-    clickOnChatHead();
-    Log.d(TAG, "click on chat chat head...");
-    clickOnChatHead();
-
-    // Verify chat head changed color
-    onView(withId(R.id.chat_head_btn_id))
-        .inRoot(withDecorView(not(is(activity.getWindow().getDecorView()))))
-        .check(matches(withTagValue((Matchers.is((Object) "blue")))));
-
-    // Preform a click on the chat head button
-    Log.d(TAG, "click on chat chat head...");
-    clickOnChatHead();
-
-    // Verify chat head changed color
-    onView(withId(R.id.chat_head_btn_id))
-        .inRoot(withDecorView(not(is(activity.getWindow().getDecorView()))))
-        .check(matches(withTagValue((Matchers.is((Object) "red")))));
-
-    // Destroy chat head
-    onView(withId(R.id.destroy_chat_head_btn)).perform(click());
-  }
-
-  @SdkSuppress(maxSdkVersion = 22) // Requires special permission to draw over other apps
-  @Test
-  public void testNoActivityApi() throws InterruptedException {
-    // Create a chat head
-    onView(withId(R.id.create_chat_head_btn)).perform(click());
-
-    // Verify chat head changed color
-    Log.d(TAG, "Varying chat head color is red");
-    onView(withId(R.id.chat_head_btn_id))
-        .inRoot(withDecorView(not(is(activity.getWindow().getDecorView()))))
-        .check(matches(withTagValue((Matchers.is((Object) "red")))));
-
-    Log.d(TAG, "click on chat chat head...");
-    clickOnChatHead();
-
-    Log.d(TAG, "pressBack");
-    pressBackUnconditionally();
-
-    Log.d(TAG, "click on chat chat head...");
-    onView(withId(R.id.chat_head_btn_id)).noActivity().perform(click());
-
-    // Verify chat head changed color
-    Log.d(TAG, "Varying chat head color is red");
-    onView(withId(R.id.chat_head_btn_id))
-        .noActivity()
-        .check(matches(withTagValue((Matchers.is((Object) "red")))));
   }
 
   /** Helper method to click on the chat head */

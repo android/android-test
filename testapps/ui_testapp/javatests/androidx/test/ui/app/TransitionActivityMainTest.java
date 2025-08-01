@@ -30,7 +30,6 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ActivityScenario.ActivityAction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.filters.SdkSuppress;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,10 +47,7 @@ public class TransitionActivityMainTest {
     activityScenario = ActivityScenario.launch(TransitionActivityMain.class);
   }
 
-  // This test only applies to Lollipop+
-  // b/29833613
   @Test
-  @SdkSuppress(minSdkVersion = 21)
   public void testTransition() throws InterruptedException {
     onView(withId(R.id.grid)).check(matches(isDisplayed()));
     onData(Matchers.anything()).atPosition(0).perform(click());
@@ -62,7 +58,6 @@ public class TransitionActivityMainTest {
   }
 
   @Test
-  @SdkSuppress(minSdkVersion = 21)
   public void testInterruptedBackDoesntExit() {
     // Set a flag in the activity to intercept the back button.
     activityScenario.onActivity(

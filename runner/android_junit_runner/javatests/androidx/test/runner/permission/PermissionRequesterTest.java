@@ -29,7 +29,6 @@ import static org.mockito.Mockito.when;
 import android.content.Context;
 import android.os.Build;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
 import androidx.test.runner.permission.RequestPermissionCallable.Result;
 import org.junit.Before;
@@ -67,7 +66,6 @@ public class PermissionRequesterTest {
   }
 
   @Test
-  @SdkSuppress(minSdkVersion = 23)
   public void permissionAddsPermissionToSet() {
     RequestPermissionCallable requestPermissionCallable1 =
         withGrantPermissionCallable(RUNTIME_PERMISSION1);
@@ -90,14 +88,12 @@ public class PermissionRequesterTest {
   }
 
   @Test
-  @SdkSuppress(minSdkVersion = 23)
   public void duplicatePermissionThrows() {
     expected.expect(IllegalStateException.class);
     permissionRequester.addPermissions(RUNTIME_PERMISSION1, RUNTIME_PERMISSION1);
   }
 
   @Test
-  @SdkSuppress(minSdkVersion = 23)
   public void requestPermission_SuccessInGrantingPermissionRunsTest() throws Throwable {
     RequestPermissionCallable stubbedCallable = withStubbedCallable(Result.SUCCESS);
 
@@ -107,7 +103,6 @@ public class PermissionRequesterTest {
   }
 
   @Test
-  @SdkSuppress(minSdkVersion = 23)
   public void failureInGrantingPermissionFailsTest() throws Throwable {
     expected.expect(AssertionError.class);
 
@@ -119,7 +114,6 @@ public class PermissionRequesterTest {
   }
 
   @Test
-  @SdkSuppress(minSdkVersion = 23)
   public void callableThrowsExceptionFailsTest() throws Throwable {
     expected.expect(AssertionError.class);
 
