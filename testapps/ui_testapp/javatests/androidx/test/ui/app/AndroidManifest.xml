@@ -19,7 +19,7 @@
     package="androidx.test.ui.app.tests" >
 
     <uses-sdk
-        android:minSdkVersion="21"
+        android:minSdkVersion="23"
         android:targetSdkVersion="34" />
 
     <application>

@@ -15,7 +15,7 @@ axt_android_local_test(
         "StackTrimmerTest.java",
     ],
     manifest_values = {
-        "minSdkVersion": "21",
+        "minSdkVersion": "23",
     },
     deps = [
         "//ext/junit",

@@ -22,7 +22,7 @@
   android:versionName="${appVersion}">
 
   <uses-sdk
-    android:minSdkVersion="21"
+    android:minSdkVersion="23"
     tools:overrideLibrary="android.support.graphics.drawable, androidx.vectordrawable.graphics.drawable.animated, androidx.test.services.speakeasy.server, androidx.test.services.storage.provider"
     android:targetSdkVersion="30" />
 

@@ -14,6 +14,8 @@
 
 **API Changes**
 
+* Update to minSdkVersion 23
+
 **Breaking API Changes**
 
 **Known Issues**

@@ -23,7 +23,7 @@
     </queries>
 
     <uses-sdk
-        android:minSdkVersion="21"
+        android:minSdkVersion="23"
         android:targetSdkVersion="30" />
 
     <application />

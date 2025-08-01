@@ -25,7 +25,7 @@
   <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
 
-  <uses-sdk android:minSdkVersion="21"
+  <uses-sdk android:minSdkVersion="23"
             android:targetSdkVersion="30"/>
 
 </manifest>
