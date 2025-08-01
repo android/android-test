@@ -1,3 +1,0 @@
-android/support/multidex/MultiDexApplication.class
-androidx/test/multidex/app/MultiDexActivity.class
-candroidx/test/multidex/app/MultiDexApplication.class

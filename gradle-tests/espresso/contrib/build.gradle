@@ -16,7 +16,6 @@ android {
     defaultConfig {
         minSdk rootProject.ext.minSdk
         targetSdk rootProject.ext.targetSdk
-        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -46,7 +45,6 @@ android {
 }
 
 dependencies {
-    implementation "androidx.multidex:multidex:2.0.0"
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     androidTestImplementation libs.espresso.contrib
     androidTestImplementation libs.ext.junit

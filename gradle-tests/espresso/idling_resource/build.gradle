@@ -16,7 +16,6 @@ android {
     defaultConfig {
         minSdk rootProject.ext.minSdk
         targetSdk rootProject.ext.targetSdk
-        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -47,7 +46,6 @@ android {
 
 dependencies {
     implementation "androidx.annotation:annotation:1.7.0-beta01"
-    implementation "androidx.multidex:multidex:2.0.0"
     implementation libs.espresso.idlingresource
     androidTestImplementation libs.espresso.core
     androidTestImplementation libs.espresso.intents

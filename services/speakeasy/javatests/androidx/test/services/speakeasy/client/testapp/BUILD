@@ -13,9 +13,7 @@ package(
 android_binary(
     name = "testapp",
     manifest = "AndroidManifest.xml",
-    multidex = "legacy",
     deps = [
         "//services/speakeasy/java/androidx/test/services/speakeasy/server:speak_easy_service",
-        "@maven//:androidx_multidex_multidex",
     ],
 )

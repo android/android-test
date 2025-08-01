@@ -20,7 +20,6 @@ android_binary(
     manifest_values = {
         "appVersion": ORCHESTRATOR_VERSION,
     },
-    multidex = "native",  # actually fits into one file, so skip main dex list
     proguard_specs = [
         "//:proguard_binary.cfg",
         "proguard_binary.cfg",
@@ -29,7 +28,6 @@ android_binary(
     deps = [
         "//runner/android_junit_runner",
         "//runner/android_test_orchestrator",
-        "@maven//:androidx_multidex_multidex",
         "@maven//:junit_junit",
     ],
 )

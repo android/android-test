@@ -44,11 +44,9 @@ android_binary(
     assets = glob(["assets/**"]),
     assets_dir = "assets",
     manifest = "AndroidManifest.xml",
-    multidex = "legacy",
     resource_files = glob(["res/**"]),
     deps = [
         ":lib",
         "//core:manifest",
-        "@maven//:androidx_multidex_multidex",
     ],
 )

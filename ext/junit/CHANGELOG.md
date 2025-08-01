@@ -13,7 +13,7 @@ are released.
 
 **API Changes**
 
-* Update to minSdkVersion 23
+* Update to minSdkVersion 23 and remove all related logic for SDKs < 23
 
 **Breaking API Changes**
 

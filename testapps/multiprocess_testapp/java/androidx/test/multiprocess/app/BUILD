@@ -45,7 +45,6 @@ jetify_android_library(
 android_binary(
     name = "testapp",
     manifest = "AndroidManifest.xml",
-    multidex = "native",
     deps = [
         ":lib",
     ],

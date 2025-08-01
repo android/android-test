@@ -18,11 +18,9 @@ licenses(["notice"])
 android_binary(
     name = "ActivityScenarioTest_target",
     manifest = "AndroidManifest_target.xml",
-    multidex = "legacy",
     deps = [
         "//core/javatests/androidx/test/core/app/testing",
         "//core/javatests/androidx/test/core/app/testing:manifest",
-        "@maven//:androidx_multidex_multidex",
     ],
 )
 

@@ -1,14 +1,7 @@
 # Description: Tests for Runner
 
-load("@build_bazel_rules_android//android:rules.bzl", "android_binary")
 load("//build_extensions:android_library_test.bzl", "axt_android_library_test")
-load("//build_extensions:axt_android_application_test.bzl", "axt_android_application_test")
 load("//build_extensions:axt_android_local_test.bzl", "axt_android_local_test")
-load(
-    "//build_extensions:phone_devices.bzl",
-    "apis",
-    "devices",
-)
 
 package(
     default_applicable_licenses = ["//:license"],
@@ -16,76 +9,6 @@ package(
 )
 
 licenses(["notice"])
-
-# test classpath scanning for a multidex self-instrumenting apk
-axt_android_library_test(
-    name = "ClassPathScannerTest",
-    srcs = ["ClassPathScannerTest.java"],
-    # api 15 is flaky
-    # dex2oat fails on 24 + 25 for an unknown reason
-    device_list = devices(apis(
-        exclude_apis = [
-            24,
-            25,
-        ],
-    )),
-    deps = [
-        # include the large number of methods that will force classes off main dex
-        "//testapps/multidex_testapp/java/androidx/test/multidex/app:src",
-        "//core",
-        "//ext/junit",
-        "//runner/android_junit_runner",
-        "@maven//:junit_junit",
-        "@maven//:org_mockito_mockito_core",
-        "@maven//:com_google_truth_truth",
-    ],
-)
-
-# # test classpath scanning for a multidex test apk, with a small app apk
-android_binary(
-    name = "stub_target_app",
-    manifest = "//build_extensions:AndroidManifest_target_stub.xml",
-    manifest_values = {
-        "applicationId": "androidx.test.multidex",
-    },
-    multidex = "legacy",
-    deps = [
-        "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
-        "@maven//:androidx_multidex_multidex",
-    ],
-)
-
-axt_android_application_test(
-    name = "ClassPathScannerTest_stub_application_under_test",
-    srcs = ["ClassPathScannerTest.java"],
-    # TODO(b/116007991): enable more APIs once fixed
-    device_list = devices([
-        23,
-        26,
-        27,
-        28,
-        29,
-        30,
-    ]),
-    instruments = ":stub_target_app",
-    manifest = "//build_extensions:AndroidManifest_instrumentation_test_template.xml",
-    manifest_values = {
-        "applicationId": "androidx.test.tests",
-        "instrumentationTargetPackage": "androidx.test.multidex",
-        "minSdkVersion": "21",
-    },
-    multidex = "legacy",
-    deps = [
-        # include the large number of methods that will force classes off main dex
-        "//testapps/multidex_testapp/java/androidx/test/multidex/app:src",
-        "//core",
-        "//ext/junit",
-        "//runner/android_junit_runner",
-        "@maven//:junit_junit",
-        "@maven//:org_mockito_mockito_core",
-        "@maven//:com_google_truth_truth",
-    ],
-)
 
 axt_android_library_test(
     name = "AndroidLogOnlyBuilderTest",

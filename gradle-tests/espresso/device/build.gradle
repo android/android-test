@@ -16,7 +16,6 @@ android {
     defaultConfig {
         minSdk rootProject.ext.minSdk
         targetSdk rootProject.ext.targetSdk
-        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

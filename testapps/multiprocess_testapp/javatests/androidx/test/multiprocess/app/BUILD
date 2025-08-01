@@ -26,7 +26,6 @@ axt_android_application_test(
     device_list = DEVICES,
     instruments = "//testapps/multiprocess_testapp/java/androidx/test/multiprocess/app:testapp",
     manifest = "AndroidManifest.xml",
-    multidex = "native",
     tags = ["integration"],
     deps = [
         "//espresso/core/java/androidx/test/espresso",
@@ -48,7 +47,6 @@ axt_android_application_test(
     device_list = DEVICES,
     instruments = "//testapps/multiprocess_testapp/java/androidx/test/multiprocess/app:testapp",
     manifest = "AndroidManifest_global.xml",
-    multidex = "native",
     tags = ["integration"],
     deps = [
         "//core",
@@ -68,7 +66,6 @@ axt_android_application_test(
     device_list = DEVICES,
     instruments = "//testapps/multiprocess_testapp/java/androidx/test/multiprocess/app:testapp",
     manifest = "AndroidManifest_idling.xml",
-    multidex = "native",
     tags = ["integration"],
     deps = [
         "//espresso/core",
@@ -86,7 +83,6 @@ axt_android_application_test(
     device_list = DEVICES,
     instruments = "//testapps/multiprocess_testapp/java/androidx/test/multiprocess/app:testapp",
     manifest = "AndroidManifest.xml",
-    multidex = "native",
     tags = ["integration"],
     deps = [
         "//espresso/core/java/androidx/test/espresso",
@@ -108,7 +104,6 @@ axt_android_application_test(
     device_list = DEVICES,
     instruments = "//testapps/multiprocess_testapp/java/androidx/test/multiprocess/app:testapp",
     manifest = "AndroidManifest_private.xml",
-    multidex = "native",
     tags = ["integration"],
     deps = [
         "//espresso/core/java/androidx/test/espresso",
@@ -127,7 +122,6 @@ axt_android_application_test(
     device_list = DEVICES,
     instruments = "//testapps/multiprocess_testapp/java/androidx/test/multiprocess/app:testapp",
     manifest = "AndroidManifest.xml",
-    multidex = "native",
     tags = ["integration"],
     deps = [
         "//espresso/core/java/androidx/test/espresso",

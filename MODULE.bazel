@@ -52,7 +52,6 @@ maven.install(
         "androidx.concurrent:concurrent-futures-ktx:1.2.0",
         "androidx.core:core:1.6.0",
         "androidx.lifecycle:lifecycle-common:2.3.1",
-        "androidx.multidex:multidex:2.0.0",
         "androidx.tracing:tracing:1.1.0",
         "androidx.window:window-java:1.1.0",
         "androidx.window:window-core:1.1.0",

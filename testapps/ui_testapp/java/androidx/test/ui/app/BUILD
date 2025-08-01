@@ -29,7 +29,6 @@ jetify_android_library(
     deps = [
         "//opensource/androidx:annotation",
         "@maven//:androidx_appcompat_appcompat",
-        "@maven//:androidx_multidex_multidex",
         "@maven//:androidx_recyclerview_recyclerview",
         "@maven//:com_google_android_material_material",
         "@maven//:com_google_guava_guava",
@@ -60,12 +59,10 @@ jetify_android_binary(
     assets_dir = "assets",
     jetify_sources = True,
     manifest = "AndroidManifest.xml",
-    multidex = "legacy",
     resource_files = glob(["res/**"]),
     deps = [
         ":lib",
         "//core:manifest",
         "@maven//:androidx_appcompat_appcompat",
-        "@maven//:androidx_multidex_multidex",
     ],
 )

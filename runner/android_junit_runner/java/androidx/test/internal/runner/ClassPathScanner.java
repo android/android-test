@@ -17,23 +17,16 @@
 package androidx.test.internal.runner;
 
 import android.app.Instrumentation;
-import android.content.pm.ApplicationInfo;
-import android.os.Build.VERSION;
-import android.util.Log;
 import dalvik.system.DexFile;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * Finds class entries in provided paths to scan.
@@ -205,46 +198,11 @@ public class ClassPathScanner {
    * <p>This will only scan for tests in the current Apk aka testContext. Note that this represents
    * a change from InstrumentationTestRunner where getTargetContext().getPackageCodePath() aka app
    * under test was also scanned.
-   *
-   * <p>This method will also handle cases where test apk is using multidex.
    */
   public static Collection<String> getDefaultClasspaths(Instrumentation instrumentation) {
     Collection<String> classPaths = new ArrayList<>();
     // add the test apk to claspath
     classPaths.add(instrumentation.getContext().getPackageCodePath());
-
-    if (VERSION.SDK_INT <= 20) {
-      // for platforms that do not support multidex natively, getPackageCodePath is not sufficient -
-      // each individual class.dex needs to be added.
-      Pattern extractedSecondaryName = Pattern.compile(".*\\.classes\\d+\\.zip");
-      ApplicationInfo applicationInfo;
-      try {
-        // need to get target context's application info, because the test apk classes.dex are
-        // extracted there
-        applicationInfo = instrumentation.getTargetContext().getApplicationInfo();
-      } catch (RuntimeException re) {
-        Log.w(
-            TAG,
-            "Failed to retrieve ApplicationInfo, no additional .dex files add for "
-                + "app under test",
-            re);
-        return Collections.emptyList();
-      }
-      File root = new File(applicationInfo.dataDir);
-      ArrayDeque<File> directoriesToScan = new ArrayDeque<>();
-      directoriesToScan.add(root);
-      while (!directoriesToScan.isEmpty()) {
-        File directory = directoriesToScan.pop();
-        for (File element : directory.listFiles()) {
-          if (element.isDirectory()) {
-            directoriesToScan.add(element);
-          } else if (element.isFile()
-              && extractedSecondaryName.matcher(element.getName()).matches()) {
-            classPaths.add(element.getPath());
-          }
-        }
-      }
-    }
     return classPaths;
   }
 

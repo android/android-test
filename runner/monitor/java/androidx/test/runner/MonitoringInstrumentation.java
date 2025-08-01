@@ -141,12 +141,12 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
    * Does initialization before creating the application.
    *
    * <p>Note, {@link #newApplication(ClassLoader, String, Context)} is called before {@link
-   * #onCreate(Bundle)} on API > 15. For API <= 15, {@link #onCreate(Bundle)} is called first.
+   * #onCreate(Bundle)}.
    */
   @Override
   public Application newApplication(ClassLoader cl, String className, Context context)
       throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-    installMultidexAndExceptionHandler();
+    installExceptionHandler();
 
     Application application = AppComponentFactoryRegistry.instantiateApplication(cl, className);
     if (application != null) {
@@ -195,55 +195,18 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
     useDefaultInterceptingActivityFactory();
   }
 
-  protected void installMultidex() {
-    // Typically multidex is installed by inserting call at Application#attachBaseContext
-    // However instrumentation#onCreate is called before Application#attachBaseContext. Thus
-    // need to install it here, if its on classpath.
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-      try {
-        Class<?> multidex = getMultiDexClass();
-        try {
-          Method installInstrumentation =
-              multidex.getDeclaredMethod("installInstrumentation", Context.class, Context.class);
-          installInstrumentation.invoke(null, getContext(), getTargetContext());
-        } catch (NoSuchMethodException nsme) {
-          Log.w(
-              TAG,
-              "Could not find MultiDex.installInstrumentation. Calling MultiDex.install instead."
-                  + " Is an old version of the multidex library being used? If test app is using"
-                  + " multidex, classes might not be found");
-          installOldMultiDex(multidex);
-        }
-      } catch (ClassNotFoundException ignored) {
-        Log.i(TAG, "No multidex.");
-      } catch (NoSuchMethodException nsme) {
-        Log.i(TAG, "No multidex.", nsme);
-      } catch (InvocationTargetException ite) {
-        throw new RuntimeException("multidex is available at runtime, but calling it failed.", ite);
-      } catch (IllegalAccessException iae) {
-        throw new RuntimeException("multidex is available at runtime, but calling it failed.", iae);
-      }
-    }
-  }
-
-  private static Class<?> getMultiDexClass() throws ClassNotFoundException {
-    try {
-      return Class.forName("androidx.multidex.MultiDex");
-    } catch (ClassNotFoundException e) {
-      // check for support multidex
-      return Class.forName("android.support.multidex.MultiDex");
-    }
-  }
+  /**
+   * @deprecated no-op: multidex is not necessary on SDKS >= 23
+   */
+  @Deprecated
+  protected void installMultidex() {}
 
   /**
-   * Perform application MultiDex installation only when instrumentation installation is not
-   * available. Called when MultiDex class is available but MultiDex.installInstrumentation is not.
+   * @deprecated no-op: multidex is not necessary on SDKS >= 23
    */
+  @Deprecated
   protected void installOldMultiDex(Class<?> multidexClass)
-      throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-    Method install = multidexClass.getDeclaredMethod("install", Context.class);
-    install.invoke(null, getTargetContext());
-  }
+      throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {}
 
   protected void specifyDexMakerCacheProperty() {
     // DexMaker uses heuristics to figure out where to store its temporary dex files
@@ -290,10 +253,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
     isDexmakerClassLoaderInitialized.set(Boolean.TRUE);
   }
 
-  private void installMultidexAndExceptionHandler() {
-    // Multidex must be installed early otherwise we could call into code that has
-    // landed in a different dex split.
-    installMultidex();
+  private void installExceptionHandler() {
     // App could crash even before #onCreate(Bundle) method is called, e.g. during installing
     // content providers.
     // Registers a custom uncaught exception handler to shuttle back the exception to the

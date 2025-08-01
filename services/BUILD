@@ -26,12 +26,10 @@ exports_files(["LICENSE"])
 android_binary(
     name = "test_services",
     custom_package = "androidx.test.services",
-    main_dex_proguard_specs = ["//build_extensions:mainDexClasses.rules"],
     manifest = "AndroidManifest.xml",
     manifest_values = {
         "appVersion": SERVICES_VERSION,
     },
-    multidex = "legacy",  # to support android_fix_libs
     proguard_specs = [
         "//:proguard_binary.cfg",
         "proguard_library.cfg",
@@ -44,7 +42,6 @@ android_binary(
         "//services/speakeasy/java/androidx/test/services/speakeasy:protocol",
         "//services/speakeasy/java/androidx/test/services/speakeasy/server",
         "//services/storage/java/androidx/test/services/storage/provider:storage_content_providers",
-        "@maven//:androidx_multidex_multidex",
     ],
 )
 

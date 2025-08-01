@@ -10,7 +10,6 @@ def axt_android_library_test(
         data = [],
         device_list = None,
         manifest = None,
-        multidex = None,
         deps = [],
         **kwargs):
     """Placeholder for future instrumentation test support.
