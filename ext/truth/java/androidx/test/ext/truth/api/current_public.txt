@@ -116,6 +116,7 @@ package androidx.test.ext.truth.os {
     method public final void hasSize(int);
     method public final com.google.common.truth.PrimitiveIntArraySubject! intArray(String!);
     method public final com.google.common.truth.IntegerSubject! integer(String!);
+    method public com.google.common.truth.IterableSubject! integerArrayList(String!);
     method public final void isEmpty();
     method public final void isNotEmpty();
     method public final com.google.common.truth.PrimitiveLongArraySubject! longArray(String!);

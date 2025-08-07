@@ -60,6 +60,10 @@ public final class BundleSubject extends BaseBundleSubject {
     return check("getParcelable(%s)", key).about(subjectFactory).that(actual.<T>getParcelable(key));
   }
 
+  public IterableSubject integerArrayList(String key) {
+    return check("getIntegerArrayList(%s)", key).that(actual.getIntegerArrayList(key));
+  }
+
   public IterableSubject stringArrayList(String key) {
     return check("getStringArrayList(%s)", key).that(actual.getStringArrayList(key));
   }

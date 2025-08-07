@@ -139,6 +139,14 @@ public class BundleSubjectTest {
   }
 
   @Test
+  public void integerArrayList() {
+    Bundle bundle = new Bundle();
+    bundle.putIntegerArrayList("foo", Lists.newArrayList(1, 2, 3));
+
+    assertThat(bundle).integerArrayList("foo").containsExactly(1, 2, 3).inOrder();
+  }
+
+  @Test
   public void longArray() {
     Bundle bundle = new Bundle();
     bundle.putLongArray("foo", new long[] {1L, 2L, 3L});

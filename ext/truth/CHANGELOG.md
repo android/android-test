@@ -10,6 +10,7 @@
 
 * `BundleSubject` and `PersistableBundleSubject` now share `BaseBundle` support,
   including additional array type assertions
+* Added `integerArrayList` method to `BundleSubject`.
 
 **Breaking Changes**
 
