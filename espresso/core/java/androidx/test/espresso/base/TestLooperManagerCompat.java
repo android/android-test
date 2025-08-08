@@ -26,27 +26,10 @@ final class TestLooperManagerCompat {
   private static Method messageQueueNextMethod;
   private static Field messageQueueHeadField;
   private static Method recycleUncheckedMethod;
-  private static Method peekWhenMethod;
-  private static Method blockedOnBarrierMethod;
-
-  private static boolean initTestLooperManager() {
-    // TODO(b/112000181): update this check and remove reflection when compiling against Baklava
-    if (VERSION.SDK_INT >= VERSION_CODES.VANILLA_ICE_CREAM) {
-      try {
-        peekWhenMethod = TestLooperManager.class.getDeclaredMethod("peekWhen");
-        blockedOnBarrierMethod =
-            TestLooperManager.class.getDeclaredMethod("isBlockedOnSyncBarrier");
-        return true;
-      } catch (ReflectiveOperationException e) {
-        // fall through
-      }
-    }
-    return false;
-  }
 
   static {
     try {
-      if (!initTestLooperManager()) {
+      if (VERSION.SDK_INT < VERSION_CODES.BAKLAVA) {
         messageQueueNextMethod = MessageQueue.class.getDeclaredMethod("next");
         messageQueueNextMethod.setAccessible(true);
         messageQueueHeadField = MessageQueue.class.getDeclaredField("mMessages");
@@ -76,7 +59,7 @@ final class TestLooperManagerCompat {
   }
 
   static TestLooperManagerCompat acquire(Looper looper) {
-    if (peekWhenMethod != null) {
+    if (VERSION.SDK_INT >= VERSION_CODES.BAKLAVA) {
       // running on a newer Android version that has the supported TestLooperManagerCompat changes
       Checks.checkState(looper.isCurrentThread());
       TestLooperManager testLooperManager =
@@ -91,7 +74,7 @@ final class TestLooperManagerCompat {
   Long peekWhen() {
     try {
       if (delegate != null) {
-        return (Long) peekWhenMethod.invoke(delegate);
+        return delegate.peekWhen();
       } else {
         Message msg = legacyPeek();
         if (msg != null && msg.getTarget() == null) {
@@ -131,7 +114,7 @@ final class TestLooperManagerCompat {
   boolean isBlockedOnSyncBarrier() {
     try {
       if (delegate != null) {
-        return (boolean) blockedOnBarrierMethod.invoke(delegate);
+        return delegate.isBlockedOnSyncBarrier();
       } else {
         Message msg = legacyPeek();
         return msg != null && msg.getTarget() == null;

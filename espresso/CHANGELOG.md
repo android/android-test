@@ -16,6 +16,8 @@ The following artifacts were released:
 
 **Bug Fixes**
 
+* Replace now-unnecessary reflection from TestLooperManagerCompat when using Android SDK 36 APIs
+
 **New Features**
 
 **Breaking Changes**
