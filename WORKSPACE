@@ -5,8 +5,8 @@
 
 android_sdk_repository(
     name = "androidsdk",
-    api_level = 35,
-    build_tools_version = "35.0.0",
+    api_level = 36,
+    build_tools_version = "36.0.0",
 )
 
 register_toolchains("//:kotlin_toolchain")

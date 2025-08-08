@@ -11,7 +11,7 @@ source kokoro/common.sh
 install_bazelisk
 # building :axt_m2_repository uses @androidsdk//:build-tools/33.0.2/aapt2
 /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/opt/android-sdk "build-tools;33.0.2"
-/opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/opt/android-sdk "platforms;android-35" "build-tools;35.0.0"
+/opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/opt/android-sdk "platforms;android-36" "build-tools;36.0.0"
 
 bazelisk build :axt_m2repository
 
