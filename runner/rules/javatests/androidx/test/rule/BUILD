@@ -35,7 +35,7 @@ axt_android_library_test(
         "//ext/junit",
         "//runner/android_junit_runner",
         "//runner/rules",
-        "@androidsdk//:legacy_test-35",
+        "@androidsdk//:legacy_test-36",
         "@maven//:junit_junit",
         "@maven//:org_mockito_mockito_core",
     ],
@@ -103,7 +103,7 @@ axt_android_library_test(
         "//ext/junit",
         "//runner/android_junit_runner",
         "//runner/rules",
-        "@androidsdk//:legacy_test-35",
+        "@androidsdk//:legacy_test-36",
         "@maven//:junit_junit",
     ],
 )

@@ -28,7 +28,7 @@ android_library(
     deps = [
         "//opensource/androidx:annotation",
         "//runner/android_junit_runner",
-        "@androidsdk//:legacy_test-35",
+        "@androidsdk//:legacy_test-36",
         "@maven//:junit_junit",
     ],
 )

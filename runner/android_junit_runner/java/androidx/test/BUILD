@@ -43,7 +43,7 @@ android_library(
         "//runner/monitor",
         "//services/events/java/androidx/test/services/events",
         "//services/storage",
-        "@androidsdk//:legacy_test-35",
+        "@androidsdk//:legacy_test-36",
         "@maven//:androidx_tracing_tracing",
         "@maven//:junit_junit",
     ],

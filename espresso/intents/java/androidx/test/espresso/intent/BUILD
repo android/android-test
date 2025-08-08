@@ -35,7 +35,7 @@ android_library(
         "//espresso/intents/java/androidx/test/espresso/intent/matcher",
         "//opensource/androidx:annotation",
         "//runner/android_junit_runner",
-        "@androidsdk//:legacy_test-35",
+        "@androidsdk//:legacy_test-36",
         "@maven//:com_google_errorprone_error_prone_annotations",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
