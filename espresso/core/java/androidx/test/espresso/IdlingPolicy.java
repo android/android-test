@@ -20,6 +20,7 @@ import static androidx.test.internal.util.Checks.checkArgument;
 import static androidx.test.internal.util.Checks.checkNotNull;
 
 import android.util.Log;
+import androidx.test.internal.platform.util.TestOutputEmitter;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -58,7 +59,14 @@ public final class IdlingPolicy {
   public void handleTimeout(List<String> busyResources, String message) {
     switch (errorHandler) {
       case THROW_APP_NOT_IDLE:
-        throw AppNotIdleException.create(busyResources, message);
+        AppNotIdleException appNotIdleException =
+            AppNotIdleException.create(busyResources, message);
+        try {
+          TestOutputEmitter.dumpThreadStates("ThreadState-AppNotIdleException.txt");
+        } catch (RuntimeException e) {
+          appNotIdleException.addSuppressed(e);
+        }
+        throw appNotIdleException;
       case THROW_IDLE_TIMEOUT:
         throw new IdlingResourceTimeoutException(busyResources);
       case LOG_ERROR:

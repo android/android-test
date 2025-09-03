@@ -17,6 +17,7 @@ The following artifacts were released:
 **Bug Fixes**
 
 * Replace now-unnecessary reflection from TestLooperManagerCompat when using Android SDK 36 APIs
+* Don't suppress AppNotIdleException if dumpThreadStates throws.
 
 **New Features**
 

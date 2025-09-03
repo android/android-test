@@ -20,7 +20,6 @@ import static androidx.test.internal.util.Checks.checkState;
 
 import android.os.Looper;
 import androidx.test.espresso.util.StringJoinerKt;
-import androidx.test.internal.platform.util.TestOutputEmitter;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,7 +30,6 @@ public final class AppNotIdleException extends RuntimeException implements Espre
 
   private AppNotIdleException(String description) {
     super(description);
-    TestOutputEmitter.dumpThreadStates("ThreadState-AppNotIdleException.txt");
   }
 
   /**
