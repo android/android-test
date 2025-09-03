@@ -63,7 +63,7 @@ public final class IdlingPolicy {
             AppNotIdleException.create(busyResources, message);
         try {
           TestOutputEmitter.dumpThreadStates("ThreadState-AppNotIdleException.txt");
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | Error e) {
           appNotIdleException.addSuppressed(e);
         }
         throw appNotIdleException;
