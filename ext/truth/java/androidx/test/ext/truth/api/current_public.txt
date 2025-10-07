@@ -149,7 +149,9 @@ package androidx.test.ext.truth.os {
     method public final com.google.common.truth.PrimitiveIntArraySubject! intArray(String!);
     method public final com.google.common.truth.IntegerSubject! integer(String!);
     method public final void isEmpty();
+    method public void isEqualTo(android.os.PersistableBundle!);
     method public final void isNotEmpty();
+    method public void isNotEqualTo(android.os.PersistableBundle!);
     method public final com.google.common.truth.PrimitiveLongArraySubject! longArray(String!);
     method public final com.google.common.truth.LongSubject! longInt(String!);
     method public androidx.test.ext.truth.os.PersistableBundleSubject! persistableBundle(String!);

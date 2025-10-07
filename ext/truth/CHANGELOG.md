@@ -10,6 +10,8 @@
 
 * `BundleSubject` and `PersistableBundleSubject` now share `BaseBundle` support,
   including additional array type assertions
+* `PersistableBundleSubject` now supports `isEqualTo` and `isNotEqualTo` for
+  direct comparison between two `PersistableBundle`'s.
 * Added `integerArrayList` method to `BundleSubject`.
 
 **Breaking Changes**
