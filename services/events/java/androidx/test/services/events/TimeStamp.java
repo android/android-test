@@ -44,7 +44,6 @@ public final class TimeStamp implements Parcelable {
   @NonNull public final Integer nanos;
 
   /** Clock, package-private for testing. */
-  @SuppressWarnings("AndroidJdkLibsChecker")
   static Clock clock = null;
 
   /** Constructor to create a {@link TimeStamp}. */
@@ -89,7 +88,6 @@ public final class TimeStamp implements Parcelable {
       };
 
   @TargetApi(Build.VERSION_CODES.O)
-  @SuppressWarnings("AndroidJdkLibsChecker")
   private static TimeStamp modernNow() {
     if (clock == null) {
       clock = Clock.systemUTC();
