@@ -18,9 +18,14 @@ package androidx.test.ext.truth.os;
 import android.os.Build;
 import android.os.PersistableBundle;
 import androidx.annotation.RequiresApi;
+import com.google.common.primitives.Booleans;
+import com.google.common.primitives.Doubles;
+import com.google.common.primitives.Ints;
+import com.google.common.primitives.Longs;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +72,18 @@ public final class PersistableBundleSubject extends BaseBundleSubject {
       Object value = bundle.get(key);
       if (value instanceof PersistableBundle) {
         value = toMap((PersistableBundle) value);
+      } else if (value instanceof boolean[]) {
+        // Array types require special handling since arrays use reference equality by default and
+        // MapSubject doesn't work around that.
+        value = Booleans.asList((boolean[]) value);
+      } else if (value instanceof double[]) {
+        value = Doubles.asList((double[]) value);
+      } else if (value instanceof int[]) {
+        value = Ints.asList((int[]) value);
+      } else if (value instanceof long[]) {
+        value = Longs.asList((long[]) value);
+      } else if (value instanceof String[]) {
+        value = Arrays.asList((String[]) value);
       }
       map.put(key, value);
     }

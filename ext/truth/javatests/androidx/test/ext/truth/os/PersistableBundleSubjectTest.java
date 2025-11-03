@@ -47,6 +47,7 @@ public class PersistableBundleSubjectTest {
   private static final long LONG_VALUE = 1L;
   private static final String STRING_VALUE = "bar";
 
+  // Be weary of reference equality here. getTestBundle() uses #clone to perform a shallow copy.
   private static final boolean[] booleanArrayValue = new boolean[] {true, false};
   private static final double[] doubleArrayValue = new double[] {1.0, 2.0, 3.0};
   private static final int[] intArrayValue = new int[] {1, 2, 3};
@@ -367,11 +368,13 @@ public class PersistableBundleSubjectTest {
     bundle.putInt(INT_KEY, INT_VALUE);
     bundle.putLong(LONG_KEY, LONG_VALUE);
     bundle.putString(STRING_KEY, STRING_VALUE);
-    bundle.putBooleanArray(BOOLEAN_ARRAY_KEY, booleanArrayValue);
-    bundle.putDoubleArray(DOUBLE_ARRAY_KEY, doubleArrayValue);
-    bundle.putIntArray(INT_ARRAY_KEY, intArrayValue);
-    bundle.putLongArray(LONG_ARRAY_KEY, longArrayValue);
-    bundle.putStringArray(STRING_ARRAY_KEY, stringArrayValue);
+    // Perform a shallow copy with clone to avoid reference equality. The underlying types support
+    // content equals just fine, so we don't have to worry about them being the same reference.
+    bundle.putBooleanArray(BOOLEAN_ARRAY_KEY, booleanArrayValue.clone());
+    bundle.putDoubleArray(DOUBLE_ARRAY_KEY, doubleArrayValue.clone());
+    bundle.putIntArray(INT_ARRAY_KEY, intArrayValue.clone());
+    bundle.putLongArray(LONG_ARRAY_KEY, longArrayValue.clone());
+    bundle.putStringArray(STRING_ARRAY_KEY, stringArrayValue.clone());
     PersistableBundle innerBundle = new PersistableBundle();
     innerBundle.putString(STRING_KEY, STRING_VALUE);
     bundle.putPersistableBundle(PERSISTABLE_BUNDLE_KEY, innerBundle);
