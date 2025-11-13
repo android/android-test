@@ -1,6 +1,7 @@
 # Description: Build rules for building androidx.test from source
 
 load("@build_bazel_rules_android//android:rules.bzl", "android_library")
+load("@rules_java//java:defs.bzl", "java_library")
 load("//build_extensions:api_checks.bzl", "api_checks")
 load("//build_extensions:dackka_test.bzl", "dackka_test")
 load("//build_extensions/maven:axt_android_aar.bzl", "axt_android_aar")
@@ -27,7 +28,8 @@ licenses(["notice"])
 android_library(
     name = "runner",
     srcs = glob(
-        ["**/*.java"],
+        include = ["**/*.java"],
+        exclude = ["filters/*.java"],
     ),
     custom_package = "androidx.test.runner",
     idl_srcs = glob(["**/*.aidl"]),
@@ -36,15 +38,29 @@ android_library(
         "proguard_library.cfg",
     ],
     exports = [
+        ":filters",
         "//runner/monitor",
     ],
     deps = [
+        ":filters",
         "//opensource/androidx:annotation",
         "//runner/monitor",
         "//services/events/java/androidx/test/services/events",
         "//services/storage",
         "@androidsdk//:legacy_test-36",
         "@maven//:androidx_tracing_tracing",
+        "@maven//:junit_junit",
+    ],
+)
+
+java_library(
+    name = "filters",
+    srcs = glob(["filters/*.java"]),
+    visibility = [
+        "//visibility:public",
+    ],
+    deps = [
+        "//opensource/androidx:annotation",
         "@maven//:junit_junit",
     ],
 )

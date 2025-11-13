@@ -1,8 +1,8 @@
 # Description: Tests for Runner
 
 load(
-    "//build_extensions:android_library_test.bzl",
-    "axt_android_library_test",
+    "//build_extensions:axt_android_local_test.bzl",
+    "axt_android_local_test",
 )
 
 package(
@@ -12,7 +12,7 @@ package(
 
 licenses(["notice"])
 
-axt_android_library_test(
+axt_android_local_test(
     name = "TestsRegExFilterTest",
     srcs = [
         "TestsRegExFilterTest.java",
@@ -20,9 +20,8 @@ axt_android_library_test(
     deps = [
         "//core",
         "//ext/junit",
-        "//runner/android_junit_runner",
+        "//runner/android_junit_runner/java/androidx/test:filters",
         "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
         "@maven//:com_google_truth_truth",
-        "@maven//:junit_junit",
     ],
 )

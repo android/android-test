@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.internal.runner.filters;
+package androidx.test.filters;
 
-import androidx.test.filters.AbstractFilter;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import java.util.regex.Pattern;
 import org.junit.runner.Description;
 
-/** A JUnit filter for filtering tests whose name match one of the given regular expression */
+/**
+ * A JUnit filter for filtering tests whose name match one of the given regular expression.
+ *
+ * @hide
+ */
+@RestrictTo(Scope.LIBRARY)
 public final class TestsRegExFilter extends AbstractFilter {
 
   private Pattern pattern = null;

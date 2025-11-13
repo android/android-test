@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.test.internal.runner.filters;
+package androidx.test.filters;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -30,7 +30,7 @@ public class TestsRegExFilterTest {
 
   @Test
   public void emptyPasses() {
-    TestsRegExFilter filter = new TestsRegExFilter();
+    androidx.test.filters.TestsRegExFilter filter = new androidx.test.filters.TestsRegExFilter();
     Description d = Description.createTestDescription(TestFixture.class, "any");
     ;
     assertThat(filter.evaluateTest(d)).isTrue();
@@ -38,7 +38,7 @@ public class TestsRegExFilterTest {
 
   @Test
   public void partialClassName() {
-    TestsRegExFilter filter = new TestsRegExFilter();
+    androidx.test.filters.TestsRegExFilter filter = new androidx.test.filters.TestsRegExFilter();
     filter.setPattern("TestFixture");
     Description d = Description.createTestDescription(TestFixture.class, "any");
 
@@ -47,7 +47,7 @@ public class TestsRegExFilterTest {
 
   @Test
   public void partialClassName_noMatch() {
-    TestsRegExFilter filter = new TestsRegExFilter();
+    androidx.test.filters.TestsRegExFilter filter = new androidx.test.filters.TestsRegExFilter();
     filter.setPattern("NotTheClassImLookingFor");
     Description d = Description.createTestDescription(TestFixture.class, "any");
 
@@ -56,8 +56,8 @@ public class TestsRegExFilterTest {
 
   @Test
   public void packageMatch() {
-    TestsRegExFilter filter = new TestsRegExFilter();
-    filter.setPattern("androidx.test.internal.runner.filters");
+    androidx.test.filters.TestsRegExFilter filter = new androidx.test.filters.TestsRegExFilter();
+    filter.setPattern("androidx.test.filters");
     Description d = Description.createTestDescription(TestFixture.class, "any");
 
     assertThat(filter.evaluateTest(d)).isTrue();
@@ -65,8 +65,8 @@ public class TestsRegExFilterTest {
 
   @Test
   public void package_noMatch() {
-    TestsRegExFilter filter = new TestsRegExFilter();
-    filter.setPattern("androidx.test.internal.runner.filters.notit");
+    androidx.test.filters.TestsRegExFilter filter = new androidx.test.filters.TestsRegExFilter();
+    filter.setPattern("androidx.test.filters.notit");
     Description d = Description.createTestDescription(TestFixture.class, "any");
 
     assertThat(filter.evaluateTest(d)).isFalse();
@@ -74,7 +74,7 @@ public class TestsRegExFilterTest {
 
   @Test
   public void methodMatch() {
-    TestsRegExFilter filter = new TestsRegExFilter();
+    androidx.test.filters.TestsRegExFilter filter = new androidx.test.filters.TestsRegExFilter();
     filter.setPattern("TestFixture#any");
     Description d = Description.createTestDescription(TestFixture.class, "any");
 
@@ -87,7 +87,7 @@ public class TestsRegExFilterTest {
 
   @Test
   public void methodOrMatch() {
-    TestsRegExFilter filter = new TestsRegExFilter();
+    androidx.test.filters.TestsRegExFilter filter = new TestsRegExFilter();
     filter.setPattern("TestFixture#any|TestFixture#excluded");
     Description d = Description.createTestDescription(TestFixture.class, "any");
 
