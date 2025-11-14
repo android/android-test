@@ -17,20 +17,20 @@
 package androidx.test.internal.runner;
 
 import android.app.Instrumentation;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
 import androidx.test.filters.AbstractFilter;
 import androidx.test.filters.CustomFilter;
 import androidx.test.filters.RequiresDevice;
-import androidx.test.filters.SdkSuppress;
+import androidx.test.filters.SdkSuppressFilter;
 import androidx.test.filters.TestsRegExFilter;
 import androidx.test.internal.runner.ClassPathScanner.ChainedClassNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExcludeClassNamesFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExcludePackageNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExternalClassNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.InclusivePackageNamesFilter;
-import androidx.test.internal.util.Checks;
 import androidx.tracing.Trace;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -84,7 +84,6 @@ public class TestRequestBuilder {
           .intersect(new CustomFilters());
   private List<Class<? extends RunnerBuilder>> customRunnerBuilderClasses = new ArrayList<>();
   private boolean skipExecution = false;
-  private final DeviceBuild deviceBuild;
   private long perTestTimeout = 0;
   private ClassLoader classLoader;
 
@@ -95,39 +94,6 @@ public class TestRequestBuilder {
    * InstrumentationTestRunner.
    */
   private boolean ignoreSuiteMethods = false;
-
-  /**
-   * Accessor interface for retrieving device build properties.
-   *
-   * <p>Used so unit tests can mock calls
-   */
-  interface DeviceBuild {
-    /** Returns the SDK API level for current device. */
-    int getSdkVersionInt();
-
-    /** Returns the hardware type of the current device. */
-    String getHardware();
-
-    /** Returns the version code name of the current device. */
-    String getCodeName();
-  }
-
-  private static class DeviceBuildImpl implements DeviceBuild {
-    @Override
-    public int getSdkVersionInt() {
-      return android.os.Build.VERSION.SDK_INT;
-    }
-
-    @Override
-    public String getHardware() {
-      return android.os.Build.HARDWARE;
-    }
-
-    @Override
-    public String getCodeName() {
-      return android.os.Build.VERSION.CODENAME;
-    }
-  }
 
   /** Filter that only runs tests whose method or class has been annotated with given filter. */
   private static class AnnotationInclusionFilter extends AbstractFilter {
@@ -277,42 +243,6 @@ public class TestRequestBuilder {
     }
   }
 
-  private class SdkSuppressFilter extends AbstractFilter {
-
-    @Override
-    protected boolean evaluateTest(Description description) {
-      final SdkSuppress sdkSuppress = getAnnotationForTest(description);
-      if (sdkSuppress != null) {
-        if ((getDeviceSdkInt() >= sdkSuppress.minSdkVersion()
-                && getDeviceSdkInt() <= sdkSuppress.maxSdkVersion()
-                && !isInExcludedSdks(sdkSuppress.excludedSdks()))
-            || getDeviceCodeName().equals(sdkSuppress.codeName())) {
-          return true; // run the test
-        }
-        return false; // don't run the test
-      }
-      return true; // no SdkSuppress, run the test
-    }
-
-    private SdkSuppress getAnnotationForTest(Description description) {
-      final SdkSuppress s = description.getAnnotation(SdkSuppress.class);
-      if (s != null) {
-        return s;
-      }
-      final Class<?> testClass = description.getTestClass();
-      if (testClass != null) {
-        return testClass.getAnnotation(SdkSuppress.class);
-      }
-      return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String describe() {
-      return String.format("skip tests annotated with SdkSuppress if necessary");
-    }
-  }
-
   /** Class that filters out tests annotated with {@link RequiresDevice} when running on emulator */
   @VisibleForTesting
   class RequiresDeviceFilter extends AnnotationExclusionFilter {
@@ -335,7 +265,7 @@ public class TestRequestBuilder {
     protected boolean evaluateTest(Description description) {
       if (!super.evaluateTest(description)) {
         // annotation is present - check if device is an emulator
-        return !emulatorHardwareNames.contains(getDeviceHardware());
+        return !emulatorHardwareNames.contains(Build.HARDWARE);
       }
       return true;
     }
@@ -536,18 +466,10 @@ public class TestRequestBuilder {
 
   /** Creates a TestRequestBuilder */
   public TestRequestBuilder() {
-    this(new DeviceBuildImpl());
-  }
-
-  /** Alternate TestRequestBuilder constructor that accepts a custom DeviceBuild */
-  @VisibleForTesting
-  TestRequestBuilder(DeviceBuild deviceBuildAccessor) {
-    deviceBuild = Checks.checkNotNull(deviceBuildAccessor);
-
     maybeAddLegacySuppressFilter();
   }
 
-  // add legacy Suppress filer iff it is on classpath
+  // add legacy Suppress filter iff it is on classpath
   private void maybeAddLegacySuppressFilter() {
     try {
       Class<? extends Annotation> legacySuppressClass =
@@ -928,26 +850,5 @@ public class TestRequestBuilder {
       Log.e(TAG, String.format("Class %s is not an annotation", className));
     }
     return null;
-  }
-
-  private int getDeviceSdkInt() {
-    return deviceBuild.getSdkVersionInt();
-  }
-
-  private String getDeviceHardware() {
-    return deviceBuild.getHardware();
-  }
-
-  private String getDeviceCodeName() {
-    return deviceBuild.getCodeName();
-  }
-
-  private boolean isInExcludedSdks(int[] excludedSdks) {
-    for (int sdk : excludedSdks) {
-      if (sdk == getDeviceSdkInt()) {
-        return true;
-      }
-    }
-    return false;
   }
 }

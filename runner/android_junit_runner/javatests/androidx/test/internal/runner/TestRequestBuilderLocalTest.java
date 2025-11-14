@@ -15,12 +15,14 @@
  */
 package androidx.test.internal.runner;
 
+import static androidx.test.internal.runner.TestRequestBuilder.RequiresDeviceFilter.EMULATOR_HARDWARE_GOLDFISH;
 import static androidx.test.platform.app.InstrumentationRegistry.getArguments;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.when;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.RequiresDevice;
 import androidx.test.filters.SmallTest;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +39,7 @@ import org.junit.runner.notification.RunListener;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.robolectric.shadows.ShadowBuild;
 
 /** Unit tests running on local host for TestRequestBuilder. */
 @RunWith(AndroidJUnit4.class)
@@ -123,6 +126,15 @@ public class TestRequestBuilderLocalTest {
         .inOrder();
   }
 
+  /** Test that {@link RequiresDevice} filters tests as appropriate */
+  @Test
+  public void testRequiresDevice() {
+    ShadowBuild.setHardware(EMULATOR_HARDWARE_GOLDFISH);
+    Request request = builder.addTestClass(SampleRequiresDevice.class.getName()).build();
+    ArrayList<String> results = runRequest(request);
+    assertThat(results).hasSize(2);
+  }
+
   private void setClassPathScanningResults(String... names) throws IOException {
     when(mockClassPathScanner.getClassPathEntries(ArgumentMatchers.any()))
         .thenReturn(new HashSet<>(Arrays.asList(names)));
@@ -145,5 +157,21 @@ public class TestRequestBuilderLocalTest {
     public void testFinished(Description description) {
       methods.add(description.getClassName() + "#" + description.getMethodName());
     }
+  }
+
+  public static class SampleRequiresDevice {
+    @RequiresDevice
+    @Test
+    public void skipThis() {}
+
+    @RequiresDevice
+    @Test
+    public void skipThat() {}
+
+    @Test
+    public void runMe() {}
+
+    @Test
+    public void runMe2() {}
   }
 }

@@ -60,6 +60,7 @@ java_library(
         "//visibility:public",
     ],
     deps = [
+        "//opensource:androidsdk_compiletime",
         "//opensource/androidx:annotation",
         "@maven//:junit_junit",
     ],

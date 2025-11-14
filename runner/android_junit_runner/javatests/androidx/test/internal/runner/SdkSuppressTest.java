@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 The Android Open Source Project
+ * Copyright (C) 3023 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,8 @@ package androidx.test.internal.runner;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import android.os.Build;
 import androidx.test.filters.SdkSuppress;
-import androidx.test.internal.runner.TestRequestBuilder.DeviceBuild;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -29,27 +28,30 @@ import org.junit.runner.Request;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+import org.robolectric.util.ReflectionHelpers;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(RobolectricTestRunner.class)
 public class SdkSuppressTest {
 
   public static class SampleSdkSuppress {
-    @SdkSuppress(minSdkVersion = 15)
+    @SdkSuppress(minSdkVersion = 25)
     @Test
-    public void min15() {
-      fail("min15");
+    public void min25() {
+      fail("min25");
     }
 
-    @SdkSuppress(minSdkVersion = 16)
+    @SdkSuppress(minSdkVersion = 26)
     @Test
-    public void min16() {
-      fail("min16");
+    public void min26() {
+      fail("min26");
     }
 
-    @SdkSuppress(minSdkVersion = 17)
+    @SdkSuppress(minSdkVersion = 27)
     @Test
-    public void min17() {
-      fail("min17");
+    public void min27() {
+      fail("min27");
     }
 
     @Test
@@ -57,65 +59,65 @@ public class SdkSuppressTest {
       fail("noSdkSuppress");
     }
 
-    @SdkSuppress(maxSdkVersion = 19)
+    @SdkSuppress(maxSdkVersion = 29)
     @Test
-    public void max19() {
-      fail("max19");
+    public void max29() {
+      fail("max29");
     }
 
-    @SdkSuppress(excludedSdks = {16, 17})
+    @SdkSuppress(excludedSdks = {26, 27})
     @Test
-    public void excludedSdks1617() {
-      fail("excludedSdks1617");
+    public void excludedSdks2627() {
+      fail("excludedSdks2627");
     }
 
-    @SdkSuppress(excludedSdks = {19})
+    @SdkSuppress(excludedSdks = {29})
     @Test
-    public void excludedSdks19() {
-      fail("excludedSdks19");
+    public void excludedSdks29() {
+      fail("excludedSdks29");
     }
 
-    @SdkSuppress(excludedSdks = {19, 20, 21})
+    @SdkSuppress(excludedSdks = {29, 30, 31})
     @Test
-    public void excludedSdks192021() {
-      fail("excludedSdks192021");
+    public void excludedSdks293031() {
+      fail("excludedSdks293031");
     }
 
     @SdkSuppress(
-        minSdkVersion = 14,
-        maxSdkVersion = 20,
-        excludedSdks = {16, 17})
+        minSdkVersion = 24,
+        maxSdkVersion = 30,
+        excludedSdks = {26, 27})
     @Test
-    public void min14max20excludedSdks1617() {
-      fail("min14max20excludedSdks1617");
+    public void min24max30excludedSdks2627() {
+      fail("min24max30excludedSdks2627");
     }
 
-    @SdkSuppress(minSdkVersion = 17, maxSdkVersion = 19)
+    @SdkSuppress(minSdkVersion = 27, maxSdkVersion = 29)
     @Test
-    public void min17max19() {
-      fail("min17max19");
+    public void min27max29() {
+      fail("min27max29");
     }
 
-    @SdkSuppress(minSdkVersion = 14, maxSdkVersion = 16)
+    @SdkSuppress(minSdkVersion = 24, maxSdkVersion = 26)
     @Test
-    public void min14max16() {
-      fail("min14max16");
+    public void min24max26() {
+      fail("min24max26");
     }
 
-    @SdkSuppress(minSdkVersion = 29, codeName = "R")
+    @SdkSuppress(minSdkVersion = 35, codeName = "R")
     @Test
-    public void min29CodeNameR() {
-      fail("min29CodeNameR");
+    public void min35CodeNameR() {
+      fail("min35CodeNameR");
     }
 
-    @SdkSuppress(minSdkVersion = 20, codeName = "R")
+    @SdkSuppress(minSdkVersion = 36, codeName = "R")
     @Test
-    public void min20CodeNameR() {
-      fail("min20CodeNameR");
+    public void min36CodeNameR() {
+      fail("min36CodeNameR");
     }
   }
 
-  @SdkSuppress(minSdkVersion = 17)
+  @SdkSuppress(minSdkVersion = 27)
   public static class SampleSdkSuppressOnClass {
     @Test
     public void noSdkSuppress() {
@@ -123,22 +125,22 @@ public class SdkSuppressTest {
     }
   }
 
-  @SdkSuppress(minSdkVersion = 17)
+  @SdkSuppress(minSdkVersion = 27)
   public static class SampleSdkSuppressOnClassAndMethod {
     @Test
-    @SdkSuppress(minSdkVersion = 18)
-    public void min18() {
-      fail("min18");
+    @SdkSuppress(minSdkVersion = 28)
+    public void min28() {
+      fail("min28");
     }
   }
 
-  @SdkSuppress(minSdkVersion = 17)
+  @SdkSuppress(minSdkVersion = 27)
   public static class SampleSdkSuppressOnClassAndMethodMaxMin {
     // the method annotation here will completely take precedence over the class level annotation
     @Test
-    @SdkSuppress(maxSdkVersion = 18)
-    public void maxSdk18() {
-      fail("maxSdk18");
+    @SdkSuppress(maxSdkVersion = 28)
+    public void maxSdk28() {
+      fail("maxSdk28");
     }
 
     @Test
@@ -147,44 +149,15 @@ public class SdkSuppressTest {
     }
   }
 
-  private static class FakeDeviceBuild implements DeviceBuild {
-
-    private final int sdkVersion;
-    private final String codeName;
-
-    FakeDeviceBuild(int sdkVersion) {
-      this(sdkVersion, "REL");
-    }
-
-    FakeDeviceBuild(int sdkVersion, String codeName) {
-      this.sdkVersion = sdkVersion;
-      this.codeName = codeName;
-    }
-
-    @Override
-    public int getSdkVersionInt() {
-      return sdkVersion;
-    }
-
-    @Override
-    public String getHardware() {
-      return "goldfish";
-    }
-
-    @Override
-    public String getCodeName() {
-      return codeName;
-    }
-  }
-
-  private static TestRequestBuilder createBuilder(DeviceBuild deviceBuild) {
-    return new TestRequestBuilder(deviceBuild);
+  private static TestRequestBuilder createBuilder() {
+    return new TestRequestBuilder();
   }
 
   /** Test that {@link SdkSuppress} filters tests as appropriate */
   @Test
+  @Config(sdk = 26)
   public void testSdkSuppress() throws Exception {
-    TestRequestBuilder builder = createBuilder(new FakeDeviceBuild(16));
+    TestRequestBuilder builder = createBuilder();
     Request request = builder.addTestClass(SampleSdkSuppress.class.getName()).build();
     Result result = new JUnitCore().run(request);
 
@@ -195,19 +168,21 @@ public class SdkSuppressTest {
 
     assertThat(failingMethods)
         .containsExactly(
-            "min15",
-            "min16",
+            "min25",
+            "min26",
             "noSdkSuppress",
-            "max19",
-            "min14max16",
-            "excludedSdks19",
-            "excludedSdks192021");
+            "max29",
+            "min24max26",
+            "excludedSdks29",
+            "excludedSdks293031");
   }
 
   /** Test that {@link SdkSuppress} filters tests as appropriate when codeName specified */
   @Test
+  @Config(sdk = 35)
   public void testSdkSuppress_codeName() throws Exception {
-    TestRequestBuilder builder = createBuilder(new FakeDeviceBuild(29, "R"));
+    ReflectionHelpers.setStaticField(Build.VERSION.class, "CODENAME", "R");
+    TestRequestBuilder builder = createBuilder();
     Request request = builder.addTestClass(SampleSdkSuppress.class.getName()).build();
     Result result = new JUnitCore().run(request);
 
@@ -218,20 +193,21 @@ public class SdkSuppressTest {
 
     assertThat(failingMethods)
         .containsExactly(
-            "min29CodeNameR",
-            "min20CodeNameR",
+            "min35CodeNameR",
+            "min36CodeNameR",
             "noSdkSuppress",
-            "min15",
-            "min16",
-            "min17",
-            "excludedSdks1617",
-            "excludedSdks19",
-            "excludedSdks192021");
+            "min25",
+            "min26",
+            "min27",
+            "excludedSdks2627",
+            "excludedSdks29",
+            "excludedSdks293031");
   }
 
   @Test
+  @Config(sdk = 26)
   public void testSdkSuppress_classAllFiltered() throws Exception {
-    TestRequestBuilder builder = createBuilder(new FakeDeviceBuild(16));
+    TestRequestBuilder builder = createBuilder();
     Request request = builder.addTestClass(SampleSdkSuppressOnClass.class.getName()).build();
     Result result = new JUnitCore().run(request);
 
@@ -239,8 +215,9 @@ public class SdkSuppressTest {
   }
 
   @Test
+  @Config(sdk = 27)
   public void testSdkSuppress_classAllNotFiltered() throws Exception {
-    TestRequestBuilder builder = createBuilder(new FakeDeviceBuild(17));
+    TestRequestBuilder builder = createBuilder();
     Request request = builder.addTestClass(SampleSdkSuppressOnClass.class.getName()).build();
     Result result = new JUnitCore().run(request);
 
@@ -253,8 +230,9 @@ public class SdkSuppressTest {
   }
 
   @Test
+  @Config(sdk = 27)
   public void testSdkSuppress_classAndMethod() throws Exception {
-    TestRequestBuilder builder = createBuilder(new FakeDeviceBuild(17));
+    TestRequestBuilder builder = createBuilder();
     Request request =
         builder.addTestClass(SampleSdkSuppressOnClassAndMethod.class.getName()).build();
     Result result = new JUnitCore().run(request);
@@ -263,8 +241,9 @@ public class SdkSuppressTest {
   }
 
   @Test
+  @Config(sdk = 26)
   public void testSdkSuppress_classAndMethodMaxMin() throws Exception {
-    TestRequestBuilder builder = createBuilder(new FakeDeviceBuild(16));
+    TestRequestBuilder builder = createBuilder();
     Request request =
         builder.addTestClass(SampleSdkSuppressOnClassAndMethodMaxMin.class.getName()).build();
     Result result = new JUnitCore().run(request);
@@ -274,6 +253,6 @@ public class SdkSuppressTest {
       failingMethods.add(failure.getDescription().getMethodName());
     }
 
-    assertThat(failingMethods).containsExactly("maxSdk18");
+    assertThat(failingMethods).containsExactly("maxSdk28");
   }
 }

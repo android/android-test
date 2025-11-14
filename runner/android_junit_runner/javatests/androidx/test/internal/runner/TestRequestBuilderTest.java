@@ -15,8 +15,6 @@
  */
 package androidx.test.internal.runner;
 
-import static androidx.test.internal.runner.TestRequestBuilder.RequiresDeviceFilter.EMULATOR_HARDWARE_GOLDFISH;
-import static androidx.test.internal.runner.TestRequestBuilder.RequiresDeviceFilter.EMULATOR_HARDWARE_RANCHU;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -33,11 +31,9 @@ import androidx.test.filters.CustomFilter;
 import androidx.test.filters.FlakyTest;
 import androidx.test.filters.LargeTest;
 import androidx.test.filters.MediumTest;
-import androidx.test.filters.RequiresDevice;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
 import androidx.test.filters.Suppress;
-import androidx.test.internal.runner.TestRequestBuilder.DeviceBuild;
 import androidx.test.testing.fixtures.BrokenRunnerBuilder;
 import androidx.test.testing.fixtures.CustomRunnerBuilder;
 import androidx.test.testing.fixtures.CustomTestFilter;
@@ -298,22 +294,6 @@ public class TestRequestBuilderTest {
     }
   }
 
-  public static class SampleRequiresDevice {
-    @RequiresDevice
-    @Test
-    public void skipThis() {}
-
-    @RequiresDevice
-    @Test
-    public void skipThat() {}
-
-    @Test
-    public void runMe() {}
-
-    @Test
-    public void runMe2() {}
-  }
-
   public static class DollarMethod {
 
     @Test
@@ -481,8 +461,6 @@ public class TestRequestBuilderTest {
       fail("Broken");
     }
   }
-
-  @Mock private DeviceBuild mockDeviceBuild;
   @Mock private ClassPathScanner mockClassPathScanner;
 
   private TestRequestBuilder builder;
@@ -495,15 +473,6 @@ public class TestRequestBuilderTest {
 
   private TestRequestBuilder createBuilder() {
     return new TestRequestBuilder() {
-      @Override
-      ClassPathScanner createClassPathScanner(List<String> paths) {
-        return mockClassPathScanner;
-      }
-    };
-  }
-
-  private TestRequestBuilder createBuilder(DeviceBuild deviceBuild) {
-    return new TestRequestBuilder(deviceBuild) {
       @Override
       ClassPathScanner createClassPathScanner(List<String> paths) {
         return mockClassPathScanner;
@@ -918,20 +887,6 @@ public class TestRequestBuilderTest {
     JUnitCore testRunner = new JUnitCore();
     Result result = testRunner.run(request);
     Assert.assertEquals(0, result.getRunCount());
-  }
-
-
-  /** Test that {@link RequiresDevice} filters tests as appropriate */
-  @Test
-  public void testRequiresDevice() {
-    MockitoAnnotations.initMocks(this);
-    TestRequestBuilder b = createBuilder(mockDeviceBuild);
-    when(mockDeviceBuild.getHardware())
-        .thenReturn(EMULATOR_HARDWARE_GOLDFISH, EMULATOR_HARDWARE_RANCHU);
-    Request request = b.addTestClass(SampleRequiresDevice.class.getName()).build();
-    JUnitCore testRunner = new JUnitCore();
-    Result result = testRunner.run(request);
-    Assert.assertEquals(2, result.getRunCount());
   }
 
   /** Test that {@link CustomFilter} filters tests as appropriate */
