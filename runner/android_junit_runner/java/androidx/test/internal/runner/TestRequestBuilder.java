@@ -243,6 +243,15 @@ public class TestRequestBuilder {
   }
 
   private static class CustomFilters extends AbstractFilter {
+
+    @Override
+    public boolean shouldRun(Description description) {
+      if (description.isSuite() && !evaluateTest(description)) {
+        return false;
+      }
+      return super.shouldRun(description);
+    }
+
     @Override
     protected boolean evaluateTest(Description description) {
       Collection<Annotation> allAnnotations = description.getAnnotations();
