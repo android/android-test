@@ -25,6 +25,7 @@ import androidx.test.filters.AbstractFilter;
 import androidx.test.filters.CustomFilter;
 import androidx.test.filters.RequiresDevice;
 import androidx.test.filters.SdkSuppressFilter;
+import androidx.test.filters.ShardingFilter;
 import androidx.test.filters.TestsRegExFilter;
 import androidx.test.internal.runner.ClassPathScanner.ChainedClassNameFilter;
 import androidx.test.internal.runner.ClassPathScanner.ExcludeClassNamesFilter;
@@ -274,34 +275,6 @@ public class TestRequestBuilder {
     @Override
     public String describe() {
       return String.format("skip tests annotated with RequiresDevice if necessary");
-    }
-  }
-
-  private static class ShardingFilter extends Filter {
-    private final int numShards;
-    private final int shardIndex;
-
-    ShardingFilter(int numShards, int shardIndex) {
-      this.numShards = numShards;
-      this.shardIndex = shardIndex;
-    }
-
-    @Override
-    public boolean shouldRun(Description description) {
-      if (description.isTest()) {
-        return (Math.abs(description.hashCode()) % numShards) == shardIndex;
-      }
-
-      // The description is a suite, so assume that it can be run so that filtering is
-      // applied to its children. If after filtering it has no children then it will be
-      // automatically filtered out.
-      return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String describe() {
-      return String.format("Shard %s of %s shards", shardIndex, numShards);
     }
   }
 
