@@ -323,39 +323,37 @@ public final class Espresso {
    * @throws AppNotIdleException when app does not go Idle within the master policies timeout.
    */
   public static <T> T onIdle(Callable<T> action) {
-    try (Span ignored = tracer.beginSpan("Espresso.onIdle")) {
-      if (Thread.currentThread().equals(Looper.getMainLooper().getThread())) {
-        BASE.controlledLooper().drainMainThreadUntilIdle();
-        BASE.uiController().loopMainThreadUntilIdle();
-        try {
-          return action.call();
-        } catch (Exception e) {
-          throw new RuntimeException("Callable action in onIdle reported an exception.", e);
-        }
-      }
-      FutureTask<T> actionTask = new FutureTask<>(action);
-      ListenableFutureTask<Void> idleFuture =
-          ListenableFutureTask.create(
-              () -> {
-                BASE.uiController().loopMainThreadUntilIdle();
-                return null;
-              });
-      Executor mainThreadExecutor = BASE.mainThreadExecutor();
-      idleFuture.addListener(actionTask, mainThreadExecutor);
-      mainThreadExecutor.execute(idleFuture);
+    if (Thread.currentThread().equals(Looper.getMainLooper().getThread())) {
       BASE.controlledLooper().drainMainThreadUntilIdle();
-
+      BASE.uiController().loopMainThreadUntilIdle();
       try {
-        idleFuture.get();
-        return actionTask.get();
-      } catch (InterruptedException ie) {
-        throw new RuntimeException(ie);
-      } catch (ExecutionException ee) {
-        if (ee.getCause() instanceof AppNotIdleException) {
-          throw (AppNotIdleException) ee.getCause();
-        } else {
-          throw new RuntimeException(ee);
-        }
+        return action.call();
+      } catch (Exception e) {
+        throw new RuntimeException("Callable action in onIdle reported an exception.", e);
+      }
+    }
+    FutureTask<T> actionTask = new FutureTask<>(action);
+    ListenableFutureTask<Void> idleFuture =
+        ListenableFutureTask.create(
+            () -> {
+              BASE.uiController().loopMainThreadUntilIdle();
+              return null;
+            });
+    Executor mainThreadExecutor = BASE.mainThreadExecutor();
+    idleFuture.addListener(actionTask, mainThreadExecutor);
+    mainThreadExecutor.execute(idleFuture);
+    BASE.controlledLooper().drainMainThreadUntilIdle();
+
+    try {
+      idleFuture.get();
+      return actionTask.get();
+    } catch (InterruptedException ie) {
+      throw new RuntimeException(ie);
+    } catch (ExecutionException ee) {
+      if (ee.getCause() instanceof AppNotIdleException) {
+        throw (AppNotIdleException) ee.getCause();
+      } else {
+        throw new RuntimeException(ee);
       }
     }
   }
