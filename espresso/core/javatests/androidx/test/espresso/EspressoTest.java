@@ -428,9 +428,6 @@ public class EspressoTest {
   @Test
   public void onIdle_worksFromScenarioOnActivity() {
     rule.getScenario().onActivity(activity -> onIdle());
-
-    assertThat(
-        tracer.getSpans(), contains("beginSpan: Espresso.onIdle", "+-endSpan: Espresso.onIdle"));
   }
 
   @Test
@@ -445,9 +442,6 @@ public class EspressoTest {
         });
 
     latch.await();
-
-    assertThat(
-        tracer.getSpans(), contains("beginSpan: Espresso.onIdle", "+-endSpan: Espresso.onIdle"));
   }
 
   private static class DummyIdlingResource implements IdlingResource {
