@@ -223,6 +223,50 @@ public class TestRequestBuilderTest {
     }
   }
 
+  @SampleCustomAnnotationOnClass(runTests = true)
+  public static class SampleCustomFilterOnClassRunTestsTestClass {
+    @Test
+    public void testOneRun() {}
+
+    @Test
+    public void testTwoRun() {}
+  }
+
+  @SampleCustomAnnotationOnClass(runTests = false)
+  public static class SampleCustomFilterOnClassSkipTestsTestClass {
+    @Test
+    public void testOneSkip() {}
+
+    @Test
+    public void testTwoSkip() {}
+  }
+
+  public static class SampleCustomFilterOnClass extends AbstractFilter {
+    public SampleCustomFilterOnClass() {}
+
+    @Override
+    public boolean shouldRun(Description description) {
+      return evaluateTest(description);
+    }
+
+    @Override
+    protected boolean evaluateTest(Description description) {
+      return description.getAnnotation(SampleCustomAnnotationOnClass.class).runTests();
+    }
+
+    @Override
+    public String describe() {
+      return "skip all tests in class if runTests is false";
+    }
+  }
+
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target({ElementType.TYPE})
+  @CustomFilter(filterClass = SampleCustomFilterOnClass.class)
+  public @interface SampleCustomAnnotationOnClass {
+    boolean runTests() default true;
+  }
+
   @Retention(RetentionPolicy.RUNTIME)
   @Target({ElementType.TYPE, ElementType.METHOD})
   @CustomFilter(filterClass = SampleCustomFilter.class)
@@ -924,6 +968,24 @@ public class TestRequestBuilderTest {
     JUnitCore testRunner = new JUnitCore();
     Result result = testRunner.run(request);
     Assert.assertEquals(1, result.getRunCount());
+  }
+
+  /** Test that {@link CustomFilter} filters the class as appropriate */
+  @Test
+  public void testCustomFilterAnnotation_onClass_runTests() {
+    Request request = builder.addTestClass(SampleCustomFilterOnClassRunTestsTestClass.class.getName()).build();
+    JUnitCore testRunner = new JUnitCore();
+    Result result = testRunner.run(request);
+    Assert.assertEquals(2, result.getRunCount());
+  }
+
+  /** Test that {@link CustomFilter} filters the class as appropriate */
+  @Test
+  public void testCustomFilterAnnotation_onClass_skipTests() {
+    Request request = builder.addTestClass(SampleCustomFilterOnClassSkipTestsTestClass.class.getName()).build();
+    JUnitCore testRunner = new JUnitCore();
+    Result result = testRunner.run(request);
+    Assert.assertEquals(0, result.getRunCount());
   }
 
   /** Test that a custom RunnerBuilder is used. */
