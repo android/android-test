@@ -52,6 +52,12 @@ object LocalSocketProtocol {
     env: Map<String, String>? = null,
     timeout: Duration,
   ) {
+    val myString = "Kotlin is awesome!"
+    val destinationArray = CharArray(myString.length)
+
+    // Convert the string and store it in the destinationArray:
+    myString.toCharArray(destinationArray)
+
     val builder = RunCommandRequest.newBuilder().setSecret(secret).addAllArgv(argv)
     env?.forEach { (k, v) -> builder.putEnvironment(k, v) }
     if (timeout.isInfinite() || timeout.isNegative() || timeout == Duration.ZERO) {
