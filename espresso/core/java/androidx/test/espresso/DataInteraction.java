@@ -41,8 +41,8 @@ import androidx.test.espresso.remote.ConstructorInvocation;
 import androidx.test.espresso.remote.annotation.RemoteMsgConstructor;
 import androidx.test.espresso.remote.annotation.RemoteMsgField;
 import androidx.test.espresso.util.EspressoOptional;
+import java.util.function.Consumer;
 import javax.annotation.CheckReturnValue;
-import kotlin.jvm.functions.Function1;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -219,14 +219,13 @@ public class DataInteraction {
         @NonNull Matcher<? extends Object> dataMatcher,
         @NonNull AdapterViewProtocol adapterViewProtocol,
         @NonNull AdapterDataLoaderAction adapterDataLoaderAction,
-        @NonNull Function1<AdapterDataLoaderAction, ViewInteraction> loadDataFunction) {
+        @NonNull Consumer<AdapterDataLoaderAction> loadDataFunction) {
       this.adapterMatcher = checkNotNull(adapterMatcher);
       this.dataMatcher = checkNotNull(dataMatcher);
       this.adapterViewProtocol = checkNotNull(adapterViewProtocol);
       this.adapterViewProtocolClass = adapterViewProtocol.getClass();
       this.adapterDataLoaderAction = checkNotNull(adapterDataLoaderAction);
-      // TODO(b/223229374): This return value was unused, but likely should have been used.
-      Object unused = checkNotNull(loadDataFunction).invoke(adapterDataLoaderAction);
+      checkNotNull(loadDataFunction).accept(adapterDataLoaderAction);
     }
 
     /**

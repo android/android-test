@@ -70,7 +70,7 @@ public class DisplayDataMatcherRemoteMsgTest {
             stringMatcher,
             adapterViewProtocol,
             adapterDataLoaderAction,
-            adapterDataLoaderAction1 -> null);
+            adapterDataLoaderAction1 -> {});
     return (DisplayDataMatcherProto) new GenericRemoteMessage(displayDataMatcher).toProto();
   }
 
