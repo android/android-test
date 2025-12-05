@@ -29,9 +29,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
 import androidx.test.espresso.ViewAction;
-import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.ui.app.R;
 import androidx.test.ui.app.SwipeActivity;
 import org.junit.Rule;
@@ -39,10 +38,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /** Integration tests for swiping actions. */
-@LargeTest
 @RunWith(AndroidJUnit4.class)
 public class SwipeActionIntegrationTest {
-  @Rule public ActivityTestRule<SwipeActivity> rule = new ActivityTestRule<>(SwipeActivity.class);
+  @Rule
+  public ActivityScenarioRule<SwipeActivity> rule = new ActivityScenarioRule<>(SwipeActivity.class);
 
   /** Tests that a small view can be swiped in both directions. */
   @Test

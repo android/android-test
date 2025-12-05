@@ -327,8 +327,6 @@ axt_android_library_test(
         "//espresso/intents/java/androidx/test/espresso/intent:intents",
         "//espresso/intents/java/androidx/test/espresso/intent/matcher",
         "//ext/junit",
-        "//runner/android_junit_runner",
-        "//runner/rules",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_exported",
         "//testapps/ui_testapp/javatests/androidx/test/ui/app:test_resources",
         "@maven//:junit_junit",
