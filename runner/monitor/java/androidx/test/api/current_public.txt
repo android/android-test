@@ -1,4 +1,4 @@
-// Signature format: 3.0
+// Signature format: 5.0
 package androidx.test {
 
   @Deprecated public final class InstrumentationRegistry {

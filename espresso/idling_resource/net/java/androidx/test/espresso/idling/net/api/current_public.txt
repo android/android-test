@@ -1,4 +1,4 @@
-// Signature format: 3.0
+// Signature format: 5.0
 package androidx.test.espresso.idling.net {
 
   public class UriIdlingResource implements androidx.test.espresso.IdlingResource {

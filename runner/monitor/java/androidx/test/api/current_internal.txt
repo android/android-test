@@ -1,4 +1,4 @@
-// Signature format: 3.0
+// Signature format: 5.0
 package androidx.test.internal.platform {
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class ServiceLoaderWrapper {
@@ -200,7 +200,7 @@ package androidx.test.platform.app {
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class AppComponentFactoryRegistry {
     method public static android.app.AppComponentFactory? getAppComponentFactory();
-    method public static android.app.Activity? instantiateActivity(ClassLoader cl, String className, android.content.Intent? intent = null);
+    method public static android.app.Activity? instantiateActivity(ClassLoader cl, String className, optional android.content.Intent? intent);
     method public static android.app.Application? instantiateApplication(ClassLoader cl, String className);
     method public static void setAppComponentFactory(android.app.AppComponentFactory?);
     property public static final android.app.AppComponentFactory? appComponentFactory;

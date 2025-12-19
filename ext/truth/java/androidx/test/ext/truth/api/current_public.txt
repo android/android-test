@@ -1,4 +1,4 @@
-// Signature format: 3.0
+// Signature format: 5.0
 package androidx.test.ext.truth.app {
 
   public class NotificationActionSubject extends com.google.common.truth.Subject {

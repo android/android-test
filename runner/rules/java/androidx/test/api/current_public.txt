@@ -1,4 +1,4 @@
-// Signature format: 3.0
+// Signature format: 5.0
 package androidx.test.annotation {
 
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target({java.lang.annotation.ElementType.METHOD, java.lang.annotation.ElementType.TYPE}) public @interface UiThreadTest {

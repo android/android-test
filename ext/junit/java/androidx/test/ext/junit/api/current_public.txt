@@ -1,4 +1,4 @@
-// Signature format: 3.0
+// Signature format: 5.0
 package androidx.test.ext.junit.rules {
 
   public final class ActivityScenarioRule<A extends android.app.Activity> extends org.junit.rules.ExternalResource {

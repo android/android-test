@@ -1,4 +1,4 @@
-// Signature format: 3.0
+// Signature format: 5.0
 package androidx.test.core.app {
 
   public final class ActivityScenario<A extends android.app.Activity> implements java.lang.AutoCloseable java.io.Closeable {
@@ -110,13 +110,13 @@ package androidx.test.core.view {
   }
 
   public final class ViewCapture {
-    method public static suspend Object? captureToBitmap(android.view.View, android.graphics.Rect? rect = null, kotlin.coroutines.Continuation<? super android.graphics.Bitmap>);
-    method public static com.google.common.util.concurrent.ListenableFuture<android.graphics.Bitmap> captureToBitmapAsync(android.view.View, android.graphics.Rect? rect = null);
+    method public static suspend Object? captureToBitmap(android.view.View, optional android.graphics.Rect? rect, kotlin.coroutines.Continuation<? super android.graphics.Bitmap>);
+    method public static com.google.common.util.concurrent.ListenableFuture<android.graphics.Bitmap> captureToBitmapAsync(android.view.View, optional android.graphics.Rect? rect);
   }
 
   public final class WindowCapture {
-    method public static suspend Object? captureRegionToBitmap(android.view.Window, android.graphics.Rect? boundsInWindow = null, kotlin.coroutines.Continuation<? super android.graphics.Bitmap>);
-    method public static com.google.common.util.concurrent.ListenableFuture<android.graphics.Bitmap> captureRegionToBitmapAsync(android.view.Window, android.graphics.Rect? boundsInWindow = null);
+    method public static suspend Object? captureRegionToBitmap(android.view.Window, optional android.graphics.Rect? boundsInWindow, kotlin.coroutines.Continuation<? super android.graphics.Bitmap>);
+    method public static com.google.common.util.concurrent.ListenableFuture<android.graphics.Bitmap> captureRegionToBitmapAsync(android.view.Window, optional android.graphics.Rect? boundsInWindow);
   }
 
 }

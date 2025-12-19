@@ -1,9 +1,9 @@
-// Signature format: 3.0
+// Signature format: 5.0
 package androidx.test.core.app {
 
   public final class ActivityScenarioKt {
-    method public static inline <reified A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A> launchActivity(android.content.Intent? intent = null, android.os.Bundle? activityOptions = null);
-    method public static inline <reified A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A> launchActivityForResult(android.content.Intent? intent = null, android.os.Bundle? activityOptions = null);
+    method public static inline <reified A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A> launchActivity(optional android.content.Intent? intent, optional android.os.Bundle? activityOptions);
+    method public static inline <reified A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A> launchActivityForResult(optional android.content.Intent? intent, optional android.os.Bundle? activityOptions);
   }
 
 }
