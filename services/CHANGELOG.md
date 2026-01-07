@@ -2,13 +2,20 @@
 
 {{date}}
 
+<!-- disableFinding(LINE_OVER_80) -->
 `androidx.test.services:test-services:{version}` `androidx.test.services:storage:{version}` are released.
 
 **Bug Fixes**
 
+* Ensure TestStorage library is multi-linux-user compatible.
+
 **New Features**
 
 **Breaking Changes**
+
+* The location where TestStorage stores files has changed. This is non-breaking
+if using the TestStorage API, but breaking if tests depended on the explicit
+location of the files (e.g., by reading them without using TestStorage).
 
 **API Changes**
 
