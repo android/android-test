@@ -52,7 +52,8 @@ public final class TraceRunListenerTest {
     listener.testFinished(description);
 
     assertThat(ShadowTrace.getCurrentSections()).isEmpty();
-    assertThat(ShadowTrace.getPreviousSections()).containsExactly("ClassUnderTest#theMethodName");
+    assertThat(ShadowTrace.getPreviousSections())
+        .containsExactly("test:ClassUnderTest#theMethodName");
   }
 
   @Test
@@ -72,7 +73,7 @@ public final class TraceRunListenerTest {
     assertThat(ShadowTrace.getCurrentSections()).isEmpty();
     assertThat(ShadowTrace.getPreviousSections())
         .containsExactly(
-            "ClassUnderTest#anExcessivelyLongDescriptionStringWithLengthAboveThe127CharLimitWillBeTrimmedToAvoidThrowingAnExceptionFromBegin");
+            "test:ClassUnderTest#anExcessivelyLongDescriptionStringWithLengthAboveThe127CharLimitWillBeTrimmedToAvoidThrowingAnExceptionFrom");
   }
 
   private static final class ClassUnderTest {}

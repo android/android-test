@@ -8,6 +8,8 @@
 
 **New Features**
 
+* Make perfetto trace sections for tests more identifiable by prefixing with "test:" and using fully qualified class name. (b/204992764)
+
 **Breaking Changes**
 
 **API Changes**
