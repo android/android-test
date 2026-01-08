@@ -122,9 +122,8 @@ public final class TestStorageTest {
 
   private static boolean isSystemUser() {
 
-      UserManager um =
-          ((UserManager) getApplicationContext().getSystemService(Context.USER_SERVICE));
-      return um.isSystemUser();
+    UserManager um = ((UserManager) getApplicationContext().getSystemService(Context.USER_SERVICE));
+    return um.isSystemUser();
   }
 
   @Test
