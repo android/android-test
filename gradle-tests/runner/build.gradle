@@ -44,5 +44,6 @@ android {
 
 dependencies {
     androidTestImplementation libs.runner
+    androidTestImplementation libs.monitor
 }
 

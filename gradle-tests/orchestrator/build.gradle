@@ -50,6 +50,7 @@ android {
 dependencies {
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.runner
+    androidTestImplementation libs.monitor
     androidTestImplementation libs.ext.truth
     androidTestUtil libs.orchestrator
 }

@@ -18,6 +18,7 @@ dependencyResolutionManagement {
     versionCatalogs {
         libs {
             library('core', 'androidx.test:core:{CORE_VERSION}')
+            library('monitor', 'androidx.test:monitor:{MONITOR_VERSION}')
             library('runner', 'androidx.test:runner:{RUNNER_VERSION}')
             library('ext.junit', 'androidx.test.ext:junit:{ANDROIDX_JUNIT_VERSION}')
             library('ext.truth', 'androidx.test.ext:truth:{ANDROIDX_TRUTH_VERSION}')

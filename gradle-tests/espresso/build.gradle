@@ -49,5 +49,7 @@ dependencies {
     androidTestImplementation libs.ext.truth
     androidTestImplementation libs.espresso.core
     androidTestImplementation libs.espresso.intents
-
+    androidTestImplementation libs.runner
+    androidTestImplementation libs.monitor
+    androidTestImplementation libs.core
 }
