@@ -32,6 +32,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.MessageQueue.IdleHandler;
+import android.os.PersistableBundle;
 import android.os.UserHandle;
 import android.util.Log;
 import androidx.annotation.Nullable;
@@ -730,6 +731,14 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
   public void callActivityOnCreate(Activity activity, Bundle bundle) {
     lifecycleMonitor.signalLifecycleChange(Stage.PRE_ON_CREATE, activity);
     super.callActivityOnCreate(activity, bundle);
+    lifecycleMonitor.signalLifecycleChange(Stage.CREATED, activity);
+  }
+
+  @Override
+  public void callActivityOnCreate(
+      Activity activity, Bundle bundle, PersistableBundle persistentState) {
+    lifecycleMonitor.signalLifecycleChange(Stage.PRE_ON_CREATE, activity);
+    super.callActivityOnCreate(activity, bundle, persistentState);
     lifecycleMonitor.signalLifecycleChange(Stage.CREATED, activity);
   }
 
