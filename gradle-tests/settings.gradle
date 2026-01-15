@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     versionCatalogs {
         libs {
             library('core', 'androidx.test:core:1.8.0-alpha01')
-            library('monitor', 'androidx.test:monitor:1.9.0-alpha01')
+            library('monitor', 'androidx.test:monitor:1.9.0-alpha02')
             library('runner', 'androidx.test:runner:1.8.0-alpha01')
             library('ext.junit', 'androidx.test.ext:junit:1.4.0-alpha01')
             library('ext.truth', 'androidx.test.ext:truth:1.8.0-alpha01')

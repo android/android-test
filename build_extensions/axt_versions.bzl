@@ -6,7 +6,7 @@ Use tools/release/validate_and_propagate_versions.sh to propagate these versions
 
 RUNNER_VERSION = "1.8.0-alpha01"
 RULES_VERSION = "1.8.0-alpha01"
-MONITOR_VERSION = "1.9.0-alpha01"
+MONITOR_VERSION = "1.9.0-alpha02"
 ESPRESSO_VERSION = "3.8.0-alpha01"
 CORE_VERSION = "1.8.0-alpha01"
 ESPRESSO_DEVICE_VERSION = "1.2.0-alpha01"
