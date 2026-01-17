@@ -28,11 +28,14 @@ import androidx.test.services.storage.TestStorageConstants;
 import androidx.test.services.storage.TestStorageServiceProto.TestArgument;
 import androidx.test.services.storage.TestStorageServiceProto.TestArguments;
 import androidx.test.services.storage.file.HostedFile;
+import androidx.test.services.storage.file.HostedFile.FileHost;
 import androidx.test.services.storage.file.PropertyFile;
 import androidx.test.services.storage.file.PropertyFile.Authority;
+import androidx.test.services.storage.internal.TestStorageUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -119,13 +122,28 @@ public final class TestArgsContentProvider extends ContentProvider {
   }
 
   private static TestArguments readProtoFromFile(Context context) {
+    // File written by the InternalUseOnlyFilesContentProvider
+    Uri testArgsProtoUri =
+        HostedFile.buildUri(FileHost.INTERNAL_USE_ONLY, TestStorageConstants.TEST_ARGS_FILE_NAME);
+
+    try (InputStream testArgsProtoInputStream =
+        TestStorageUtil.getInputStream(testArgsProtoUri, context.getContentResolver())) {
+      Log.i(TAG, "Parsing test args from URI: " + testArgsProtoUri);
+      return TestArguments.parseFrom(testArgsProtoInputStream);
+    } catch (IOException e) {
+      Log.i(
+          TAG,
+          "Test args file not found via URI: " + testArgsProtoUri + ". Checking file system...");
+    }
+
+    // File written directly to /sdcard/
     File testArgsFile =
         new File(
             HostedFile.getInputRootDirectory(context),
             TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE
                 + TestStorageConstants.TEST_ARGS_FILE_NAME);
     if (!testArgsFile.exists()) {
-      Log.i(TAG, "Test args file not found at " + testArgsFile.getAbsolutePath());
+      Log.i(TAG, "Test args file also not found at " + testArgsFile.getAbsolutePath());
       return TestArguments.getDefaultInstance();
     }
     try {
