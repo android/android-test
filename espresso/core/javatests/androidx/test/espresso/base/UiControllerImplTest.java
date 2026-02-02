@@ -20,12 +20,17 @@ import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemClock;
 import android.util.Log;
+import androidx.test.espresso.AppNotIdleException;
+import androidx.test.espresso.IdlingPolicies;
+import androidx.test.espresso.IdlingPolicy;
 import androidx.test.espresso.IdlingResourceTimeoutException;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -369,6 +374,63 @@ public class UiControllerImplTest {
         "Should not have stopped looping the main thread yet!", latch.await(2, TimeUnit.SECONDS));
     fakeResource.forceIdleNow();
     assertTrue("App should be idle.", latch.await(5, TimeUnit.SECONDS));
+  }
+
+  @Test
+  public void loopMainThreadUntilIdle_racyIdleResource() throws InterruptedException {
+    IdlingPolicies.setMasterPolicyTimeout(10, TimeUnit.SECONDS);
+    OnDemandIdlingResource fakeResource = new OnDemandIdlingResource("FakeResource");
+    idlingResourceRegistry.registerResources(singletonList(fakeResource));
+    final CountDownLatch startedLatch = new CountDownLatch(1);
+    final CountDownLatch interruptedLatch = new CountDownLatch(1);
+    assertTrue(
+        testThread
+            .getHandler()
+            .post(
+                () -> {
+                  // This is the sequence of events we want:
+                  // - Resource starts busy.
+                  // - Resource becomes idle, event posted to queue to update idle registry.
+                  // - Timeout occurs, no more events will be processed.
+                  // - Espresso detects race condition while checking if the resource is idle.
+                  IdlingPolicy masterIdlingPolicy = IdlingPolicies.getMasterIdlingPolicy();
+                  long expectedTimeout =
+                      SystemClock.uptimeMillis()
+                          + masterIdlingPolicy
+                              .getIdleTimeoutUnit()
+                              .toMillis(masterIdlingPolicy.getIdleTimeout());
+                  testThread
+                      .getHandler()
+                      .postAtTime(
+                          () -> {
+                            Log.i(TAG, "Forcing resource to be idle.");
+                            fakeResource.forceIdleNow();
+                            // Busy wait until after the timeout to ensure race buster cannot run.
+                            try {
+                              Thread.sleep(200);
+                            } catch (InterruptedException e) {
+                              throw new RuntimeException(e);
+                            }
+                            assertTrue(
+                                "Sleep should bring us past the timeout.",
+                                SystemClock.uptimeMillis() > expectedTimeout);
+                          },
+                          expectedTimeout - 100);
+
+                  Log.i(TAG, "Hijacking thread and looping it.");
+                  startedLatch.countDown();
+                  assertThrows(
+                      "Expected for loopMainThreadUntilIdle to be interrupted",
+                      AppNotIdleException.class,
+                      () -> uiController.get().loopMainThreadUntilIdle());
+                  interruptedLatch.countDown();
+                }));
+
+    assertTrue("looper has started.", startedLatch.await(2, TimeUnit.SECONDS));
+    assertFalse(
+        "Should not have stopped looping the main thread yet!",
+        interruptedLatch.await(2, TimeUnit.SECONDS));
+    assertTrue("App should be interrupted.", interruptedLatch.await(20, TimeUnit.SECONDS));
   }
 
   @Test
