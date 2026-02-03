@@ -1,5 +1,7 @@
 load("@rules_java//java:defs.bzl", "java_library")
 
+package(default_applicable_licenses = ["//:license"])
+
 java_library(
     name = "jar1",
     srcs = ["Jar1Class.java"],
