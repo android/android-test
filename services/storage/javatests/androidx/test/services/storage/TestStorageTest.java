@@ -19,11 +19,8 @@ import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assume.assumeTrue;
 
-import android.content.Context;
 import android.net.Uri;
-import android.os.UserManager;
 import androidx.test.services.storage.file.HostedFile;
 import androidx.test.services.storage.internal.TestStorageUtil;
 import java.io.BufferedReader;
@@ -113,17 +110,9 @@ public final class TestStorageTest {
 
   @Test
   public void writeInternalFile() throws IOException {
-    // known not to work in multi-user mode
-    assumeTrue(isSystemUser());
     try (OutputStream output = testStorage.openInternalOutputFile("path/to/file")) {
       output.write(new byte[] {'h', 'e', 'l', 'l', 'o'});
     }
-  }
-
-  private static boolean isSystemUser() {
-
-    UserManager um = ((UserManager) getApplicationContext().getSystemService(Context.USER_SERVICE));
-    return um.isSystemUser();
   }
 
   @Test
