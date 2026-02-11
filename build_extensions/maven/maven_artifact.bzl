@@ -182,6 +182,7 @@ def _rename_artifact(ctx, tpl_string, src_file, packaging_type, artifact_id, ver
         inputs = [src_file],
         outputs = [artifact],
         command = "cp %s %s" % (src_file.path, artifact.path),
+        mnemonic = "AndroidxMavenArtifactRename",
     )
     return artifact
 
@@ -235,6 +236,7 @@ def _maven_artifact_impl(ctx):
         progress_message = (
             "Packaging repository: %s" % ctx.outputs.m2repository.short_path
         ),
+        mnemonic = "AndroidxMavenRepositoryGen",
     )
 
 maven_artifact = rule(

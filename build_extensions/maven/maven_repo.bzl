@@ -14,6 +14,7 @@ def _maven_repository_impl(ctx):
     ctx.actions.run(
         inputs = source_files,
         outputs = [ctx.outputs.m2repository],
+        mnemonic = "MavenRepository",
         arguments = [args],
         executable = ctx.executable._zip_combiner,
         progress_message = (

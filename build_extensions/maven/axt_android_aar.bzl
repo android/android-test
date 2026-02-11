@@ -39,6 +39,7 @@ def _android_aar_impl(ctx):
     ctx.actions.run(
         inputs = [classes_jar],
         outputs = [validation_output],
+        mnemonic = "AxtAndroidAarValidateJar",
         executable = ctx.executable._validate_jar_java,
         arguments = [validation_output.path, classes_jar.path] + ctx.attr.expected_class_prefixes,
     )

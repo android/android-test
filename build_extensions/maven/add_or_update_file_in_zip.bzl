@@ -7,6 +7,7 @@ def add_or_update_file_in_zip(ctx, name, src, out, update_src, update_path):
     ctx.actions.run_shell(
         inputs = [src, update_src],
         outputs = [out],
+        mnemonic = "AndroidxTestZipUpdate",
         command = ";".join([
             "tmp={}_tmp".format(name),
             "rm -rf $$tmp",

@@ -21,6 +21,7 @@ def combine_jars(ctx, input_jars_deps, output):
 
     ctx.actions.run(
         executable = ctx.executable._combine_jars_java,
+        mnemonic = "AndroidxTestCombineJars",
         inputs = input_jars_deps,
         arguments = [args],
         outputs = [output],

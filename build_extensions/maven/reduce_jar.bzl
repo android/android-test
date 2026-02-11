@@ -28,4 +28,5 @@ def reduce_jar(ctx, input_jar, overlapping_jar, output_jar):
         inputs = [input_jar, overlapping_jar],
         arguments = [args],
         outputs = [output_jar],
+        mnemonic = "ReduceJar",
     )

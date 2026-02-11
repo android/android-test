@@ -25,6 +25,7 @@ def jarjar_rule(ctx, rule, src, out):
         inputs = [rule, src],
         outputs = [out],
         arguments = [args],
+        mnemonic = "JarJar",
     )
 
 def _jarjar_impl(ctx):
