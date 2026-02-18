@@ -18,6 +18,7 @@
 
 package androidx.test.internal.runner.junit4.statement;
 
+import android.util.Log;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.runners.model.FrameworkMethod;
@@ -30,6 +31,9 @@ public class RunBefores extends UiThreadStatement {
   private final Object target;
 
   private final List<FrameworkMethod> befores;
+
+  /** Tag for logging. Set to TestRunner to match LogRunListener.TAG for easier debugging. */
+  private static final String TAG = "TestRunner";
 
   /**
    * Run all non-overridden {@code @Before} methods on this class and superclasses before running
@@ -52,6 +56,7 @@ public class RunBefores extends UiThreadStatement {
 
   @Override
   public void evaluate() throws Throwable {
+    Log.d(TAG, "starting @Before execution");
     final AtomicReference<Throwable> exceptionRef = new AtomicReference<>();
     for (final FrameworkMethod before : befores) {
       if (shouldRunOnUiThread(before)) {
@@ -77,6 +82,7 @@ public class RunBefores extends UiThreadStatement {
       }
     }
 
+    Log.d(TAG, "finished @Before execution");
     next.evaluate();
   }
 }

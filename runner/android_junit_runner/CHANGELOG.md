@@ -10,6 +10,8 @@
 
 * Make perfetto trace sections for tests more identifiable by prefixing with "test:" and using fully qualified class name. (b/204992764)
 
+* Add logs at the start and end of RunBefore and RunAfters sections to help bug understanding. (b/445754263)
+
 **Breaking Changes**
 
 **API Changes**

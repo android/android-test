@@ -18,6 +18,7 @@
 
 package androidx.test.internal.runner.junit4.statement;
 
+import android.util.Log;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.junit.runners.model.FrameworkMethod;
@@ -31,6 +32,9 @@ public class RunAfters extends UiThreadStatement {
   private final Object target;
 
   private final List<FrameworkMethod> afters;
+
+  /** Tag for logging. Set to TestRunner to match LogRunListener.TAG for easier debugging. */
+  private static final String TAG = "TestRunner";
 
   /**
    * Run all non-overridden {@code @After} methods on this class and superclasses before running
@@ -62,6 +66,7 @@ public class RunAfters extends UiThreadStatement {
     } catch (Throwable e) {
       errors.add(e);
     } finally {
+      Log.d(TAG, "starting @After execution");
       for (final FrameworkMethod each : afters) {
         if (shouldRunOnUiThread(each)) {
           runOnUiThread(
@@ -83,6 +88,8 @@ public class RunAfters extends UiThreadStatement {
           }
         }
       }
+
+      Log.d(TAG, "finished @After execution");
     }
     MultipleFailureException.assertEmpty(errors);
   }
