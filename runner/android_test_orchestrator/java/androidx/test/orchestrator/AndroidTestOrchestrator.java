@@ -35,8 +35,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.InstrumentationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.PermissionInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
@@ -60,7 +62,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -140,6 +144,8 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
 
   private static final List<String> RUNTIME_PERMISSIONS =
       Arrays.asList(permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE);
+
+  private final List<String> systemDevelopmentPermissionCache = null;
 
   private final OrchestrationResult.Builder resultBuilder = new OrchestrationResult.Builder();
   private final OrchestrationResultPrinter resultPrinter = new OrchestrationResultPrinter();
@@ -384,8 +390,91 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
                 getSecret(arguments),
                 "pm",
                 Arrays.asList("clear", getTargetInstrPackage(arguments)));
+            if (Build.VERSION.SDK_INT < 23) {
+              // pm clear revokes development permissions on API 23+.
+              // We have to do it manually on older platforms.
+              revokeDevelopmentPermissions();
+            }
           }
         });
+  }
+
+  private void revokeDevelopmentPermissions() {
+    String targetPackage = getTargetPackage(arguments);
+    List<String> permissions = collectGrantedDevelopmentPermissions(targetPackage);
+    revokePermissions(targetPackage, permissions);
+
+    String targetInstrPackage = getTargetInstrPackage(arguments);
+    if (!targetInstrPackage.equals(targetPackage)) {
+      permissions = collectGrantedDevelopmentPermissions(targetInstrPackage);
+      revokePermissions(targetInstrPackage, permissions);
+    }
+  }
+
+  private List<String> collectGrantedDevelopmentPermissions(String packageName) {
+    try {
+      PackageManager pm = getContext().getPackageManager();
+      PackageInfo packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS);
+
+      List<String> out = new ArrayList<>();
+      String permission;
+      for (int i = 0, size = packageInfo.requestedPermissions.length; i < size; i++) {
+        if ((packageInfo.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
+          permission = packageInfo.requestedPermissions[i];
+          if (isDevelopmentPermission(permission)) {
+            out.add(permission);
+          }
+        }
+      }
+      return out;
+    } catch (PackageManager.NameNotFoundException ignore) {
+      return Collections.emptyList();
+    }
+  }
+
+  private boolean isDevelopmentPermission(String permission) {
+    // We're assuming system-defined permissions don't change.
+    if (getSystemDevelopmentPermissions().contains(permission)) {
+      return true;
+    }
+    // App-defined permissions can change any time apps get (un)installed.
+    try {
+      PermissionInfo permissionInfo = getContext().getPackageManager().getPermissionInfo(permission, 0);
+      return (permissionInfo.protectionLevel & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0;
+    } catch (PackageManager.NameNotFoundException ignore) {
+      return false;
+    }
+  }
+
+  private List<String> getSystemDevelopmentPermissions() {
+    List<String> out = systemDevelopmentPermissionCache;
+    if (out == null) {
+      out = new ArrayList<>();
+      try {
+        PackageInfo packageInfo = getContext().getPackageManager()
+                .getPackageInfo("android", PackageManager.GET_PERMISSIONS);
+        for (PermissionInfo permissionInfo : packageInfo.permissions) {
+          if ((permissionInfo.protectionLevel & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
+            out.add(permissionInfo.name);
+          }
+        }
+      } catch (PackageManager.NameNotFoundException ignore) {
+      }
+      systemDevelopmentPermissionCache = Collections.unmodifiableList(out);
+    }
+    return out;
+  }
+
+  private void revokePermissions(String packageName, List<String> permissions) {
+    if (permissions.isEmpty()) {
+      return;
+    }
+    Context context = getContext();
+    PackageManager pm = context.getPackageManager();
+    String secret = getSecret(arguments);
+    for (String permission : permissions) {
+      execShellCommandSync(context, secret, "pm", Arrays.asList("revoke", packageName, permission));
+    }
   }
 
   @VisibleForTesting
