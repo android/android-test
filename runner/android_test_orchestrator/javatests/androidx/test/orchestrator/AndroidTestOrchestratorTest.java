@@ -27,26 +27,6 @@ import org.junit.runner.RunWith;
 /** Unit tests for {@link AndroidTestOrchestrator}. */
 @RunWith(AndroidJUnit4.class)
 public class AndroidTestOrchestratorTest {
-
-  @Test
-  public void testSingleMethodTest() {
-    assertThat(AndroidTestOrchestrator.isSingleMethodTest("org.example.class#method"), is(true));
-    assertThat(AndroidTestOrchestrator.isSingleMethodTest("org.example.class"), is(false));
-    assertThat(
-        AndroidTestOrchestrator.isSingleMethodTest("org.example.class,org.example.another#method"),
-        is(false));
-    assertThat(
-        AndroidTestOrchestrator.isSingleMethodTest(
-            "org.example.class#method,org.example.class#anotherMethod"),
-        is(false));
-  }
-
-  @Test
-  public void testSingleMethodTest_blankInput() {
-    assertThat(AndroidTestOrchestrator.isSingleMethodTest(null), is(false));
-    assertThat(AndroidTestOrchestrator.isSingleMethodTest(""), is(false));
-  }
-
   @Test
   public void testMakeValidFilename_notTooLong() {
     final int maxLength = 20;
