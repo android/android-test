@@ -25,15 +25,18 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
 import androidx.test.services.storage.TestStorageConstants;
+import androidx.test.services.storage.TestStorageException;
 import androidx.test.services.storage.TestStorageServiceProto.TestArgument;
 import androidx.test.services.storage.TestStorageServiceProto.TestArguments;
 import androidx.test.services.storage.file.HostedFile;
+import androidx.test.services.storage.file.HostedFile.FileHost;
 import androidx.test.services.storage.file.PropertyFile;
 import androidx.test.services.storage.file.PropertyFile.Authority;
+import androidx.test.services.storage.internal.TestStorageUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -48,17 +51,6 @@ import java.util.Map.Entry;
 public final class TestArgsContentProvider extends ContentProvider {
 
   private static final String TAG = "TestArgCP";
-  private static final String ANDROID_TEST_SERVER_SPEC_FORMAT = "_server_address";
-
-  private static final String SYSTEM_PROPERTY_CLAZZ = "android.os.SystemProperties";
-  private static final String GET_METHOD = "get";
-
-  private String systemPropertyClassName;
-  private Method getString;
-
-  void setSystemPropertyClassNameForTest(String className) {
-    this.systemPropertyClassName = className;
-  }
 
   @Override
   public int delete(Uri arg0, String arg1, String[] arg2) {
@@ -119,13 +111,28 @@ public final class TestArgsContentProvider extends ContentProvider {
   }
 
   private static TestArguments readProtoFromFile(Context context) {
+    // File written by the InternalUseOnlyFilesContentProvider
+    Uri testArgsProtoUri =
+        HostedFile.buildUri(FileHost.INTERNAL_USE_ONLY, TestStorageConstants.TEST_ARGS_FILE_NAME);
+
+    try (InputStream testArgsProtoInputStream =
+        TestStorageUtil.getInputStream(testArgsProtoUri, context.getContentResolver())) {
+      Log.i(TAG, "Parsing test args from URI: " + testArgsProtoUri);
+      return TestArguments.parseFrom(testArgsProtoInputStream);
+    } catch (IOException | TestStorageException e) {
+      Log.i(
+          TAG,
+          "Test args file not found via URI: " + testArgsProtoUri + ". Checking file system...");
+    }
+
+    // File written directly to /sdcard/
     File testArgsFile =
         new File(
             HostedFile.getInputRootDirectory(context),
             TestStorageConstants.ON_DEVICE_PATH_INTERNAL_USE
                 + TestStorageConstants.TEST_ARGS_FILE_NAME);
     if (!testArgsFile.exists()) {
-      Log.i(TAG, "Test args file not found at " + testArgsFile.getAbsolutePath());
+      Log.i(TAG, "Test args file also not found at " + testArgsFile.getAbsolutePath());
       return TestArguments.getDefaultInstance();
     }
     try {
