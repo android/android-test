@@ -25,7 +25,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import androidx.test.internal.runner.listener.InstrumentationRunListener;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.Description;
@@ -67,7 +66,7 @@ public class TestExecutorTest {
 
   /** Simple normal case execution */
   @Test
-  public void testExecute() throws UnsupportedEncodingException {
+  public void testExecute() {
     executor.execute(mockRequest);
     verify(mockListener)
         .instrumentationRunFinished(

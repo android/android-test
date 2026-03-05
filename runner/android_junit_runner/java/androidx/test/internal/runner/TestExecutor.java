@@ -16,6 +16,7 @@
 package androidx.test.internal.runner;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import android.app.Instrumentation;
 import android.os.Bundle;
@@ -53,7 +54,7 @@ public final class TestExecutor {
    * <p>If an error occurred during the test execution, the exception will be thrown, and it's the
    * caller's responsibility to handle the exception properly.
    */
-  public Bundle execute(Request request) throws UnsupportedEncodingException {
+  public Bundle execute(Request request) {
     Trace.beginSection("execute tests");
     try {
       return execute(new JUnitCore(), request);
@@ -62,7 +63,7 @@ public final class TestExecutor {
     }
   }
 
-  Bundle execute(JUnitCore junitRunner, Request request) throws UnsupportedEncodingException {
+  Bundle execute(JUnitCore junitRunner, Request request) {
     Bundle resultBundle = new Bundle();
     setUpListeners(junitRunner);
     Result junitResults = junitRunner.run(request);
@@ -72,10 +73,15 @@ public final class TestExecutor {
     try (PrintStream summaryWriter = new PrintStream(summaryStream)) {
       reportRunEnded(listeners, summaryWriter, resultBundle, junitResults);
     }
-    String summaryOutput = StackTrimmer.getTrimmedSummary(summaryStream.toString("UTF_8"));
-    resultBundle.putString(
-        Instrumentation.REPORT_KEY_STREAMRESULT, String.format("\n%s", summaryOutput));
-    return resultBundle;
+    try {
+      // ByteArrayOutputStream.toString(Charset) requires API level 33
+      String summaryOutput = StackTrimmer.getTrimmedSummary(summaryStream.toString(UTF_8.name()));
+      resultBundle.putString(
+          Instrumentation.REPORT_KEY_STREAMRESULT, String.format("\n%s", summaryOutput));
+      return resultBundle;
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException("UTF-8 encoding not supported?", e);
+    }
   }
 
   /** Initialize listeners and add them to the JUnitCore runner */
