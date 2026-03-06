@@ -18,18 +18,15 @@ package androidx.test.ext.truth.os;
 import static androidx.test.ext.truth.os.ParcelableSubject.assertThat;
 import static androidx.test.ext.truth.os.ParcelableSubject.parcelables;
 import static com.google.common.truth.ExpectFailure.assertThat;
+import static com.google.common.truth.ExpectFailure.expectFailureAbout;
 
 import android.accounts.Account;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import com.google.common.truth.ExpectFailure;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public final class ParcelableSubjectTest {
-
-  @Rule public final ExpectFailure expectFailure = new ExpectFailure();
 
   @Test
   public void marshallsEquallyTo() {
@@ -42,9 +39,9 @@ public final class ParcelableSubjectTest {
   public void marshallsEquallyTo_failure() {
     Account account = new Account("name", "type");
     Account other = new Account("different name", "type");
-    expectFailure.whenTesting().about(parcelables()).that(account).marshallsEquallyTo(other);
-    assertThat(expectFailure.getFailure())
-        .factValue("expected to serialize like")
-        .isEqualTo(other.toString());
+    AssertionError failure =
+        expectFailureAbout(
+            parcelables(), whenTesting -> whenTesting.that(account).marshallsEquallyTo(other));
+    assertThat(failure).factValue("expected to serialize like").isEqualTo(other.toString());
   }
 }
