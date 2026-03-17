@@ -9,20 +9,20 @@ package androidx.test.annotation {
 package androidx.test.rule {
 
   @Deprecated public class ActivityTestRule<T extends android.app.Activity> implements org.junit.rules.TestRule {
-    ctor @Deprecated public ActivityTestRule(androidx.test.runner.intercepting.SingleActivityFactory<T!>!, boolean, boolean);
-    ctor @Deprecated public ActivityTestRule(Class<T!>!);
-    ctor @Deprecated public ActivityTestRule(Class<T!>!, boolean);
-    ctor @Deprecated public ActivityTestRule(Class<T!>!, boolean, boolean);
-    ctor @Deprecated public ActivityTestRule(Class<T!>!, String, int, boolean, boolean);
+    ctor @Deprecated public ActivityTestRule(androidx.test.runner.intercepting.SingleActivityFactory<T>!, boolean, boolean);
+    ctor @Deprecated public ActivityTestRule(Class<T>!);
+    ctor @Deprecated public ActivityTestRule(Class<T>!, boolean);
+    ctor @Deprecated public ActivityTestRule(Class<T>!, boolean, boolean);
+    ctor @Deprecated public ActivityTestRule(Class<T>!, String, int, boolean, boolean);
     method @Deprecated protected void afterActivityFinished();
     method @Deprecated protected void afterActivityLaunched();
     method @Deprecated public org.junit.runners.model.Statement! apply(org.junit.runners.model.Statement!, org.junit.runner.Description!);
     method @Deprecated protected void beforeActivityLaunched();
     method @Deprecated public void finishActivity();
-    method @Deprecated public T! getActivity();
+    method @Deprecated public T getActivity();
     method @Deprecated protected android.content.Intent! getActivityIntent();
     method @Deprecated public android.app.Instrumentation.ActivityResult! getActivityResult();
-    method @Deprecated public T! launchActivity(android.content.Intent?);
+    method @Deprecated public T launchActivity(android.content.Intent?);
     method @Deprecated public void runOnUiThread(Runnable!) throws java.lang.Throwable;
   }
 
@@ -81,8 +81,8 @@ package androidx.test.rule.provider {
   }
 
   @Deprecated public static class ProviderTestRule.Builder {
-    ctor @Deprecated public <T extends android.content.ContentProvider> ProviderTestRule.Builder(Class<T!>, String);
-    method @Deprecated public <T extends android.content.ContentProvider> androidx.test.rule.provider.ProviderTestRule.Builder! addProvider(Class<T!>, String);
+    ctor @Deprecated public <T extends android.content.ContentProvider> ProviderTestRule.Builder(Class<T>, String);
+    method @Deprecated public <T extends android.content.ContentProvider> androidx.test.rule.provider.ProviderTestRule.Builder! addProvider(Class<T>, String);
     method @Deprecated public androidx.test.rule.provider.ProviderTestRule! build();
     method @Deprecated public androidx.test.rule.provider.ProviderTestRule.Builder! setDatabaseCommands(String, java.lang.String!...);
     method @Deprecated public androidx.test.rule.provider.ProviderTestRule.Builder! setDatabaseCommandsFile(String, java.io.File);

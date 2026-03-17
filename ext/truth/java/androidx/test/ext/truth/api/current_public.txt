@@ -121,9 +121,9 @@ package androidx.test.ext.truth.os {
     method public final void isNotEmpty();
     method public final com.google.common.truth.PrimitiveLongArraySubject! longArray(String!);
     method public final com.google.common.truth.LongSubject! longInt(String!);
-    method public <T extends android.os.Parcelable> androidx.test.ext.truth.os.ParcelableSubject<T!>! parcelable(String!);
+    method public <T extends android.os.Parcelable> androidx.test.ext.truth.os.ParcelableSubject<T>! parcelable(String!);
     method public com.google.common.truth.IterableSubject! parcelableArrayList(String!);
-    method public <T extends android.os.Parcelable, SubjectT extends com.google.common.truth.Subject> SubjectT! parcelableAsType(String!, com.google.common.truth.Subject.Factory<SubjectT!,T!>!);
+    method public <T extends android.os.Parcelable, SubjectT extends com.google.common.truth.Subject> SubjectT parcelableAsType(String!, com.google.common.truth.Subject.Factory<SubjectT,T>!);
     method public com.google.common.truth.Subject! serializable(String!);
     method public final com.google.common.truth.StringSubject! string(String!);
     method public final com.google.common.truth.ObjectArraySubject<java.lang.String!>! stringArray(String!);
@@ -131,10 +131,10 @@ package androidx.test.ext.truth.os {
   }
 
   public final class ParcelableSubject<T extends android.os.Parcelable> extends com.google.common.truth.Subject {
-    method public static <T extends android.os.Parcelable> androidx.test.ext.truth.os.ParcelableSubject<T!>! assertThat(T!);
+    method public static <T extends android.os.Parcelable> androidx.test.ext.truth.os.ParcelableSubject<T>! assertThat(T);
     method public void marshallsEquallyTo(android.os.Parcelable!);
-    method public static <T extends android.os.Parcelable> com.google.common.truth.Subject.Factory<androidx.test.ext.truth.os.ParcelableSubject<T!>!,T!>! parcelables();
-    method public void recreatesEqual(android.os.Parcelable.Creator<T!>!);
+    method public static <T extends android.os.Parcelable> com.google.common.truth.Subject.Factory<androidx.test.ext.truth.os.ParcelableSubject<T>!,T>! parcelables();
+    method public void recreatesEqual(android.os.Parcelable.Creator<T>!);
   }
 
   @RequiresApi(android.os.Build.VERSION_CODES.LOLLIPOP) public final class PersistableBundleSubject extends com.google.common.truth.Subject {

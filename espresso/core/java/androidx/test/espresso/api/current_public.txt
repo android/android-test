@@ -46,7 +46,7 @@ package androidx.test.espresso {
     method @Deprecated public static java.util.List<androidx.test.espresso.IdlingResource!>! getIdlingResources();
     method @CheckResult @javax.annotation.CheckReturnValue public static androidx.test.espresso.DataInteraction! onData(org.hamcrest.Matcher<? extends java.lang.Object!>!);
     method public static void onIdle();
-    method public static <T> T! onIdle(java.util.concurrent.Callable<T!>!);
+    method public static <T> T onIdle(java.util.concurrent.Callable<T>!);
     method @CheckResult @javax.annotation.CheckReturnValue public static androidx.test.espresso.ViewInteraction! onView(org.hamcrest.Matcher<android.view.View!>!);
     method public static void openActionBarOverflowOrOptionsMenu(android.content.Context!);
     method public static void openContextualActionModeOverflowMenu();
@@ -233,11 +233,11 @@ package androidx.test.espresso.action {
 
   public final class CaptureToBitmapAction implements androidx.test.espresso.ViewAction {
     ctor public CaptureToBitmapAction(androidx.test.espresso.action.ViewActions.BitmapReceiver bitmapReceiver);
-    method public androidx.test.espresso.action.ViewActions.BitmapReceiver getBitmapReceiver();
+    method @InaccessibleFromKotlin public androidx.test.espresso.action.ViewActions.BitmapReceiver getBitmapReceiver();
     method public org.hamcrest.Matcher<android.view.View> getConstraints();
     method public String getDescription();
     method public void perform(androidx.test.espresso.UiController uiController, android.view.View view);
-    property public final androidx.test.espresso.action.ViewActions.BitmapReceiver bitmapReceiver;
+    property public androidx.test.espresso.action.ViewActions.BitmapReceiver bitmapReceiver;
   }
 
   public final class CloseKeyboardAction implements androidx.test.espresso.ViewAction {
@@ -560,46 +560,46 @@ package androidx.test.espresso.base {
 package androidx.test.espresso.core.internal.deps.guava.base {
 
   @Deprecated public interface Function<F, T> {
-    method @Deprecated public T! apply(F!);
+    method @Deprecated public T apply(F);
   }
 
   @Deprecated public class Optional<T> implements java.io.Serializable {
-    method @Deprecated public java.util.Set<T!>! asSet();
-    method @Deprecated public static <T> androidx.test.espresso.core.internal.deps.guava.base.Optional<T!>! fromNullable(T?);
-    method @Deprecated public T! get();
+    method @Deprecated public java.util.Set<T>! asSet();
+    method @Deprecated public static <T> androidx.test.espresso.core.internal.deps.guava.base.Optional<T>! fromNullable(T?);
+    method @Deprecated public T get();
     method @Deprecated public boolean isPresent();
-    method @Deprecated public static <T> androidx.test.espresso.core.internal.deps.guava.base.Optional<T!>! of(T!);
-    method @Deprecated public androidx.test.espresso.core.internal.deps.guava.base.Optional<T!>! or(androidx.test.espresso.core.internal.deps.guava.base.Optional<T!>!);
-    method @Deprecated public T! or(androidx.test.espresso.core.internal.deps.guava.base.Supplier<T!>!);
-    method @Deprecated public T! or(T!);
-    method @Deprecated public T! orNull();
-    method @Deprecated public static <T> Iterable<T!>! presentInstances(Iterable<? extends androidx.test.espresso.core.internal.deps.guava.base.Optional<? extends T!>!>!);
-    method @Deprecated public <V> androidx.test.espresso.core.internal.deps.guava.base.Optional<V!>! transform(androidx.test.espresso.core.internal.deps.guava.base.Function<? super T!,V!>!);
+    method @Deprecated public static <T> androidx.test.espresso.core.internal.deps.guava.base.Optional<T>! of(T);
+    method @Deprecated public androidx.test.espresso.core.internal.deps.guava.base.Optional<T>! or(androidx.test.espresso.core.internal.deps.guava.base.Optional<T>!);
+    method @Deprecated public T or(androidx.test.espresso.core.internal.deps.guava.base.Supplier<T>!);
+    method @Deprecated public T or(T);
+    method @Deprecated public T orNull();
+    method @Deprecated public static <T> Iterable<T>! presentInstances(Iterable<? extends androidx.test.espresso.core.internal.deps.guava.base.Optional<? extends T>!>!);
+    method @Deprecated public <V> androidx.test.espresso.core.internal.deps.guava.base.Optional<V>! transform(androidx.test.espresso.core.internal.deps.guava.base.Function<? super T,V>!);
   }
 
   @Deprecated public interface Supplier<T> {
-    method @Deprecated public T! get();
+    method @Deprecated public T get();
   }
 
 }
 
 package androidx.test.espresso.matcher {
 
-  public abstract class BoundedDiagnosingMatcher<S, T extends S> extends org.hamcrest.BaseMatcher<S!> {
-    ctor public BoundedDiagnosingMatcher(Class<? extends S!>!);
-    ctor public BoundedDiagnosingMatcher(Class<? extends S!>!, Class<? extends java.lang.Object!>!, Class<? extends java.lang.Object!>!...!);
+  public abstract class BoundedDiagnosingMatcher<S, T extends S> extends org.hamcrest.BaseMatcher<S> {
+    ctor public BoundedDiagnosingMatcher(Class<? extends S>!);
+    ctor public BoundedDiagnosingMatcher(Class<? extends S>!, Class<? extends java.lang.Object!>!, Class<? extends java.lang.Object!>!...!);
     method public final void describeMismatch(Object!, org.hamcrest.Description!);
     method protected abstract void describeMoreTo(org.hamcrest.Description!);
     method public final void describeTo(org.hamcrest.Description!);
     method public final boolean matches(Object!);
-    method protected abstract boolean matchesSafely(T!, org.hamcrest.Description!);
+    method protected abstract boolean matchesSafely(T, org.hamcrest.Description!);
   }
 
-  public abstract class BoundedMatcher<T, S extends T> extends org.hamcrest.BaseMatcher<T!> {
-    ctor public BoundedMatcher(Class<? extends S!>!);
+  public abstract class BoundedMatcher<T, S extends T> extends org.hamcrest.BaseMatcher<T> {
+    ctor public BoundedMatcher(Class<? extends S>!);
     ctor public BoundedMatcher(Class<? extends java.lang.Object!>!, Class<? extends java.lang.Object!>!, Class<? extends java.lang.Object!>!...!);
     method public final boolean matches(Object!);
-    method protected abstract boolean matchesSafely(S!);
+    method protected abstract boolean matchesSafely(S);
   }
 
   public final class CursorMatchers {
@@ -681,8 +681,8 @@ package androidx.test.espresso.matcher {
   }
 
   public final class ViewMatchers {
-    method public static <T> void assertThat(String!, T!, org.hamcrest.Matcher<T!>!);
-    method public static <T> void assertThat(T!, org.hamcrest.Matcher<T!>!);
+    method public static <T> void assertThat(String!, T, org.hamcrest.Matcher<T>!);
+    method public static <T> void assertThat(T, org.hamcrest.Matcher<T>!);
     method public static org.hamcrest.Matcher<android.view.View!>! doesNotHaveFocus();
     method public static org.hamcrest.Matcher<android.view.View!>! hasBackground(int);
     method public static org.hamcrest.Matcher<android.view.View!>! hasChildCount(int);
@@ -776,11 +776,11 @@ package androidx.test.espresso.remote {
   }
 
   public static interface EspressoRemoteMessage.From<T, M> {
-    method public T! fromProto(M!);
+    method public T fromProto(M);
   }
 
   public static interface EspressoRemoteMessage.To<M> {
-    method public M! toProto();
+    method public M toProto();
   }
 
   public final class NoRemoteEspressoInstanceException extends java.lang.RuntimeException implements androidx.test.espresso.EspressoException {
@@ -839,18 +839,18 @@ package androidx.test.espresso.util {
   }
 
   @Deprecated public final class EspressoOptional<T> {
-    method @Deprecated public static <T> androidx.test.espresso.util.EspressoOptional<T!>! absent();
-    method @Deprecated public java.util.Set<T!>! asSet();
-    method @Deprecated public static <T> androidx.test.espresso.util.EspressoOptional<T!>! fromNullable(T!);
-    method @Deprecated public T! get();
+    method @Deprecated public static <T> androidx.test.espresso.util.EspressoOptional<T>! absent();
+    method @Deprecated public java.util.Set<T>! asSet();
+    method @Deprecated public static <T> androidx.test.espresso.util.EspressoOptional<T>! fromNullable(T);
+    method @Deprecated public T get();
     method @Deprecated public boolean isPresent();
-    method @Deprecated public static <T> androidx.test.espresso.util.EspressoOptional<T!>! of(T!);
-    method @Deprecated public androidx.test.espresso.core.internal.deps.guava.base.Optional<T!>! or(androidx.test.espresso.core.internal.deps.guava.base.Optional<? extends T!>!);
-    method @Deprecated public T! or(androidx.test.espresso.core.internal.deps.guava.base.Supplier<? extends T!>!);
-    method @Deprecated public T! or(T!);
-    method @Deprecated public T! orNull();
-    method @Deprecated public static <T> Iterable<T!>! presentInstances(Iterable<? extends androidx.test.espresso.core.internal.deps.guava.base.Optional<? extends T!>!>!);
-    method @Deprecated public <V> androidx.test.espresso.core.internal.deps.guava.base.Optional<V!>! transform(androidx.test.espresso.core.internal.deps.guava.base.Function<? super T!,V!>!);
+    method @Deprecated public static <T> androidx.test.espresso.util.EspressoOptional<T>! of(T);
+    method @Deprecated public androidx.test.espresso.core.internal.deps.guava.base.Optional<T>! or(androidx.test.espresso.core.internal.deps.guava.base.Optional<? extends T>!);
+    method @Deprecated public T or(androidx.test.espresso.core.internal.deps.guava.base.Supplier<? extends T>!);
+    method @Deprecated public T or(T);
+    method @Deprecated public T orNull();
+    method @Deprecated public static <T> Iterable<T>! presentInstances(Iterable<? extends androidx.test.espresso.core.internal.deps.guava.base.Optional<? extends T>!>!);
+    method @Deprecated public <V> androidx.test.espresso.core.internal.deps.guava.base.Optional<V>! transform(androidx.test.espresso.core.internal.deps.guava.base.Function<? super T,V>!);
   }
 
   public final class HumanReadables {
@@ -860,10 +860,10 @@ package androidx.test.espresso.util {
     method public static String! getViewHierarchyErrorMessage(android.view.View!, java.util.List<android.view.View!>!, String!, String!, int);
   }
 
-  public final class IterablesKt {
+  @SuppressCompatibility public final class IterablesKt {
   }
 
-  public final class StringJoinerKt {
+  @SuppressCompatibility public final class StringJoinerKt {
   }
 
   public final class TreeIterables {

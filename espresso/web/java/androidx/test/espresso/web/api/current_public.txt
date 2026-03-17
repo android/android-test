@@ -2,12 +2,12 @@
 package androidx.test.espresso.web.action {
 
   public final class AtomAction<E> implements androidx.test.espresso.remote.Bindable androidx.test.espresso.ViewAction {
-    ctor public AtomAction(androidx.test.espresso.web.model.Atom<E!>!, androidx.test.espresso.web.model.WindowReference?, androidx.test.espresso.web.model.ElementReference?);
-    method public E! get() throws java.util.concurrent.ExecutionException, java.lang.InterruptedException;
-    method public E! get(long, java.util.concurrent.TimeUnit!) throws java.util.concurrent.ExecutionException, java.lang.InterruptedException, java.util.concurrent.TimeoutException;
+    ctor public AtomAction(androidx.test.espresso.web.model.Atom<E>!, androidx.test.espresso.web.model.WindowReference?, androidx.test.espresso.web.model.ElementReference?);
+    method public E get() throws java.util.concurrent.ExecutionException, java.lang.InterruptedException;
+    method public E get(long, java.util.concurrent.TimeUnit!) throws java.util.concurrent.ExecutionException, java.lang.InterruptedException, java.util.concurrent.TimeoutException;
     method public org.hamcrest.Matcher<android.view.View!>! getConstraints();
     method public String! getDescription();
-    method public java.util.concurrent.Future<E!>! getFuture();
+    method public java.util.concurrent.Future<E>! getFuture();
     method public android.os.IBinder! getIBinder();
     method public String! getId();
     method public void perform(androidx.test.espresso.UiController!, android.view.View!);
@@ -51,20 +51,20 @@ package androidx.test.espresso.web.assertion {
   }
 
   public abstract class WebAssertion<E> {
-    ctor @androidx.test.espresso.remote.annotation.RemoteMsgConstructor public WebAssertion(androidx.test.espresso.web.model.Atom<E!>!);
-    method protected abstract void checkResult(android.webkit.WebView!, E!);
-    method public final androidx.test.espresso.web.model.Atom<E!>! getAtom();
-    method public final androidx.test.espresso.ViewAssertion! toViewAssertion(E!);
+    ctor @androidx.test.espresso.remote.annotation.RemoteMsgConstructor public WebAssertion(androidx.test.espresso.web.model.Atom<E>!);
+    method protected abstract void checkResult(android.webkit.WebView!, E);
+    method public final androidx.test.espresso.web.model.Atom<E>! getAtom();
+    method public final androidx.test.espresso.ViewAssertion! toViewAssertion(E);
   }
 
   public final class WebViewAssertions {
     method public static androidx.test.espresso.web.assertion.WebAssertion<org.w3c.dom.Document!>! webContent(org.hamcrest.Matcher<org.w3c.dom.Document!>!);
-    method public static <E> androidx.test.espresso.web.assertion.WebAssertion<E!>! webMatches(androidx.test.espresso.web.model.Atom<E!>!, org.hamcrest.Matcher<E!>!);
-    method public static <E> androidx.test.espresso.web.assertion.WebAssertion<E!>! webMatches(androidx.test.espresso.web.model.Atom<E!>!, org.hamcrest.Matcher<E!>!, androidx.test.espresso.web.assertion.WebViewAssertions.ResultDescriber<? super E!>!);
+    method public static <E> androidx.test.espresso.web.assertion.WebAssertion<E>! webMatches(androidx.test.espresso.web.model.Atom<E>!, org.hamcrest.Matcher<E>!);
+    method public static <E> androidx.test.espresso.web.assertion.WebAssertion<E>! webMatches(androidx.test.espresso.web.model.Atom<E>!, org.hamcrest.Matcher<E>!, androidx.test.espresso.web.assertion.WebViewAssertions.ResultDescriber<? super E>!);
   }
 
   public static interface WebViewAssertions.ResultDescriber<E> {
-    method public String! apply(E!);
+    method public String! apply(E);
   }
 
 }
@@ -93,17 +93,17 @@ package androidx.test.espresso.web.model {
   public interface Atom<R> {
     method public java.util.List<java.lang.Object!>! getArguments(androidx.test.espresso.web.model.ElementReference?);
     method public String! getScript();
-    method public R! transform(androidx.test.espresso.web.model.Evaluation!);
+    method public R transform(androidx.test.espresso.web.model.Evaluation!);
   }
 
   public final class Atoms {
-    method public static <E> androidx.test.espresso.web.model.TransformingAtom.Transformer<androidx.test.espresso.web.model.Evaluation!,E!>! castOrDie(Class<E!>!);
+    method public static <E> androidx.test.espresso.web.model.TransformingAtom.Transformer<androidx.test.espresso.web.model.Evaluation!,E>! castOrDie(Class<E>!);
     method public static androidx.test.espresso.web.model.Atom<java.lang.String!>! getCurrentUrl();
     method public static androidx.test.espresso.web.model.Atom<java.lang.String!>! getTitle();
     method public static androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.Evaluation!>! script(String!);
-    method public static <O> androidx.test.espresso.web.model.Atom<O!>! script(String!, androidx.test.espresso.web.model.TransformingAtom.Transformer<androidx.test.espresso.web.model.Evaluation!,O!>!);
+    method public static <O> androidx.test.espresso.web.model.Atom<O>! script(String!, androidx.test.espresso.web.model.TransformingAtom.Transformer<androidx.test.espresso.web.model.Evaluation!,O>!);
     method public static androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.Evaluation!>! scriptWithArgs(String!, java.util.List<java.lang.Object!>!);
-    method public static <I, O> androidx.test.espresso.web.model.Atom<O!>! transform(androidx.test.espresso.web.model.Atom<I!>!, androidx.test.espresso.web.model.TransformingAtom.Transformer<I!,O!>!);
+    method public static <I, O> androidx.test.espresso.web.model.Atom<O>! transform(androidx.test.espresso.web.model.Atom<I>!, androidx.test.espresso.web.model.TransformingAtom.Transformer<I,O>!);
   }
 
   public final class ElementReference implements androidx.test.espresso.web.model.JSONAble {
@@ -154,15 +154,15 @@ package androidx.test.espresso.web.model {
     enum_constant public static final androidx.test.espresso.web.model.SimpleAtom.ElementReferencePlacement LAST;
   }
 
-  public class TransformingAtom<I, O> implements androidx.test.espresso.web.model.Atom<O!> {
-    ctor @androidx.test.espresso.remote.annotation.RemoteMsgConstructor public TransformingAtom(androidx.test.espresso.web.model.Atom<I!>!, androidx.test.espresso.web.model.TransformingAtom.Transformer<I!,O!>!);
+  public class TransformingAtom<I, O> implements androidx.test.espresso.web.model.Atom<O> {
+    ctor @androidx.test.espresso.remote.annotation.RemoteMsgConstructor public TransformingAtom(androidx.test.espresso.web.model.Atom<I>!, androidx.test.espresso.web.model.TransformingAtom.Transformer<I,O>!);
     method public java.util.List<java.lang.Object!>! getArguments(androidx.test.espresso.web.model.ElementReference?);
     method public String! getScript();
-    method public O! transform(androidx.test.espresso.web.model.Evaluation!);
+    method public O transform(androidx.test.espresso.web.model.Evaluation!);
   }
 
   public static interface TransformingAtom.Transformer<I, O> {
-    method public O! apply(I!);
+    method public O apply(I);
   }
 
   public final class WindowReference implements androidx.test.espresso.web.model.JSONAble {
@@ -180,18 +180,18 @@ package androidx.test.espresso.web.sugar {
   }
 
   public static class Web.WebInteraction<R> {
-    method public <E> androidx.test.espresso.web.sugar.Web.WebInteraction<E!>! check(androidx.test.espresso.web.assertion.WebAssertion<E!>!);
-    method public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! forceJavascriptEnabled();
-    method public R! get();
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! inWindow(androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.WindowReference!>!);
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! inWindow(androidx.test.espresso.web.model.WindowReference!);
-    method public <E> androidx.test.espresso.web.sugar.Web.WebInteraction<E!>! perform(androidx.test.espresso.web.model.Atom<E!>!);
-    method public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! reset();
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! withContextualElement(androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.ElementReference!>!);
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! withElement(androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.ElementReference!>!);
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! withElement(androidx.test.espresso.web.model.ElementReference!);
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! withNoTimeout();
-    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R!>! withTimeout(long, java.util.concurrent.TimeUnit!);
+    method public <E> androidx.test.espresso.web.sugar.Web.WebInteraction<E>! check(androidx.test.espresso.web.assertion.WebAssertion<E>!);
+    method public androidx.test.espresso.web.sugar.Web.WebInteraction<R>! forceJavascriptEnabled();
+    method public R get();
+    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R>! inWindow(androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.WindowReference!>!);
+    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R>! inWindow(androidx.test.espresso.web.model.WindowReference!);
+    method public <E> androidx.test.espresso.web.sugar.Web.WebInteraction<E>! perform(androidx.test.espresso.web.model.Atom<E>!);
+    method public androidx.test.espresso.web.sugar.Web.WebInteraction<R>! reset();
+    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R>! withContextualElement(androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.ElementReference!>!);
+    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R>! withElement(androidx.test.espresso.web.model.Atom<androidx.test.espresso.web.model.ElementReference!>!);
+    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R>! withElement(androidx.test.espresso.web.model.ElementReference!);
+    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R>! withNoTimeout();
+    method @CheckResult @javax.annotation.CheckReturnValue public androidx.test.espresso.web.sugar.Web.WebInteraction<R>! withTimeout(long, java.util.concurrent.TimeUnit!);
   }
 
 }

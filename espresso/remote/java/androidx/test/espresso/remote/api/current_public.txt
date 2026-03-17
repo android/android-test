@@ -2,7 +2,7 @@
 package androidx.test.espresso.remote {
 
   public interface Converter<I, O> {
-    method public O! convert(I);
+    method public O convert(I);
   }
 
   public final class EspressoRemote implements androidx.test.espresso.remote.RemoteInteraction {
@@ -74,7 +74,7 @@ package androidx.test.espresso.remote {
 
   public final class ProtoUtils {
     method public static String! capitalizeFirstChar(String!);
-    method public static <T extends java.lang.Enum> T! checkedGetEnumForProto(int, Class<T!>!);
+    method public static <T extends java.lang.Enum> T checkedGetEnumForProto(int, Class<T>!);
     method public static java.util.List<java.lang.reflect.Field!>! getFilteredFieldList(Class<? extends java.lang.Object!>!, java.util.List<java.lang.String!>!) throws java.lang.NoSuchFieldException;
   }
 
@@ -112,9 +112,9 @@ package androidx.test.espresso.remote {
   }
 
   public final class TypeProtoConverters {
-    method public static <T> T! anyToType(com.google.protobuf.Any);
+    method public static <T> T anyToType(com.google.protobuf.Any);
     method public static android.os.Parcelable! byteStringToParcelable(com.google.protobuf.ByteString, Class<android.os.Parcelable!>);
-    method public static <T> T! byteStringToType(com.google.protobuf.ByteString);
+    method public static <T> T byteStringToType(com.google.protobuf.ByteString);
     method public static com.google.protobuf.ByteString! parcelableToByteString(android.os.Parcelable);
     method public static <T> com.google.protobuf.Any! typeToAny(T);
     method public static com.google.protobuf.ByteString! typeToByteString(Object);

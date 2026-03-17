@@ -9,9 +9,9 @@ package androidx.test.espresso.intent {
     method public static void checkArgument(boolean);
     method public static void checkArgument(boolean, Object!);
     method public static void checkArgument(boolean, String!, java.lang.Object!...!);
-    method public static <T> T! checkNotNull(T!);
-    method public static <T> T! checkNotNull(T!, Object!);
-    method public static <T> T! checkNotNull(T!, String!, java.lang.Object!...!);
+    method public static <T> T checkNotNull(T);
+    method public static <T> T checkNotNull(T, Object!);
+    method public static <T> T checkNotNull(T, String!, java.lang.Object!...!);
     method public static void checkState(boolean, Object!);
     method public static void checkState(boolean, String!, java.lang.Object!...!);
   }
@@ -101,12 +101,12 @@ package androidx.test.espresso.intent.matcher {
     method public static org.hamcrest.Matcher<android.os.Bundle!> doesNotHaveKey(String);
     method public static org.hamcrest.Matcher<android.os.Bundle!> doesNotHaveKey(org.hamcrest.Matcher<java.lang.String!>);
     method public static org.hamcrest.Matcher<android.os.Bundle!>! hasEntry(String!, org.hamcrest.Matcher<? extends java.lang.Object!>!);
-    method public static <T> org.hamcrest.Matcher<android.os.Bundle!>! hasEntry(String!, T!);
+    method public static <T> org.hamcrest.Matcher<android.os.Bundle!>! hasEntry(String!, T);
     method public static org.hamcrest.Matcher<android.os.Bundle!>! hasEntry(org.hamcrest.Matcher<java.lang.String!>!, org.hamcrest.Matcher<? extends java.lang.Object!>!);
     method public static org.hamcrest.Matcher<android.os.Bundle!>! hasKey(String!);
     method public static org.hamcrest.Matcher<android.os.Bundle!>! hasKey(org.hamcrest.Matcher<java.lang.String!>!);
     method public static org.hamcrest.Matcher<android.os.Bundle!>! hasValue(org.hamcrest.Matcher<? extends java.lang.Object!>!);
-    method public static <T> org.hamcrest.Matcher<android.os.Bundle!>! hasValue(T!);
+    method public static <T> org.hamcrest.Matcher<android.os.Bundle!>! hasValue(T);
     method public static org.hamcrest.Matcher<android.os.Bundle!>! isEmpty();
     method public static org.hamcrest.Matcher<android.os.Bundle!>! isEmptyOrNull();
   }
@@ -138,7 +138,7 @@ package androidx.test.espresso.intent.matcher {
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasData(org.hamcrest.Matcher<android.net.Uri!>!);
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasDataString(org.hamcrest.Matcher<java.lang.String!>!);
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasExtra(String!, org.hamcrest.Matcher<? extends java.lang.Object!>!);
-    method public static <T> org.hamcrest.Matcher<android.content.Intent!>! hasExtra(String!, T!);
+    method public static <T> org.hamcrest.Matcher<android.content.Intent!>! hasExtra(String!, T);
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasExtra(org.hamcrest.Matcher<java.lang.String!>!, org.hamcrest.Matcher<? extends java.lang.Object!>!);
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasExtraWithKey(String!);
     method public static org.hamcrest.Matcher<android.content.Intent!>! hasExtraWithKey(org.hamcrest.Matcher<java.lang.String!>!);
@@ -178,10 +178,10 @@ package androidx.test.espresso.intent.rule {
     method protected void before();
   }
 
-  @Deprecated public class IntentsTestRule<T extends android.app.Activity> extends androidx.test.rule.ActivityTestRule<T!> {
-    ctor @Deprecated public IntentsTestRule(Class<T!>!);
-    ctor @Deprecated public IntentsTestRule(Class<T!>!, boolean);
-    ctor @Deprecated public IntentsTestRule(Class<T!>!, boolean, boolean);
+  @Deprecated public class IntentsTestRule<T extends android.app.Activity> extends androidx.test.rule.ActivityTestRule<T> {
+    ctor @Deprecated public IntentsTestRule(Class<T>!);
+    ctor @Deprecated public IntentsTestRule(Class<T>!, boolean);
+    ctor @Deprecated public IntentsTestRule(Class<T>!, boolean, boolean);
   }
 
 }

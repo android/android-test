@@ -2,13 +2,13 @@
 package androidx.test.internal.platform {
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class ServiceLoaderWrapper {
-    method public static <T> java.util.List<T!>! loadService(Class<T!>!);
-    method public static <T> T! loadSingleService(Class<T!>!, androidx.test.internal.platform.ServiceLoaderWrapper.Factory<T!>!);
-    method public static <T> T! loadSingleServiceOrNull(Class<T!>!);
+    method public static <T> java.util.List<T>! loadService(Class<T>!);
+    method public static <T> T loadSingleService(Class<T>!, androidx.test.internal.platform.ServiceLoaderWrapper.Factory<T>!);
+    method public static <T> T loadSingleServiceOrNull(Class<T>!);
   }
 
   public static interface ServiceLoaderWrapper.Factory<T> {
-    method public T! create();
+    method public T create();
   }
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @java.lang.annotation.Documented @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME) @java.lang.annotation.Target(java.lang.annotation.ElementType.TYPE) public @interface Supersedes {
@@ -73,14 +73,14 @@ package androidx.test.internal.platform.reflect {
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ReflectiveField<T> {
     ctor public ReflectiveField(Class<? extends java.lang.Object!>!, String!);
     ctor public ReflectiveField(String!, String!);
-    method public T! get(Object!) throws androidx.test.internal.platform.reflect.ReflectionException;
+    method public T get(Object!) throws androidx.test.internal.platform.reflect.ReflectionException;
   }
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class ReflectiveMethod<T> {
     ctor public ReflectiveMethod(Class<? extends java.lang.Object!>!, String!, Class<? extends java.lang.Object!>!...!);
     ctor public ReflectiveMethod(String!, String!, Class<? extends java.lang.Object!>!...!);
-    method public T! invoke(Object!, java.lang.Object!...!) throws androidx.test.internal.platform.reflect.ReflectionException;
-    method public T! invokeStatic(java.lang.Object!...!) throws androidx.test.internal.platform.reflect.ReflectionException;
+    method public T invoke(Object!, java.lang.Object!...!) throws androidx.test.internal.platform.reflect.ReflectionException;
+    method public T invokeStatic(java.lang.Object!...!) throws androidx.test.internal.platform.reflect.ReflectionException;
   }
 
 }
@@ -151,9 +151,9 @@ package androidx.test.internal.util {
     method public static void checkArgument(boolean, String!, java.lang.Object!...!);
     method public static void checkMainThread();
     method public static void checkNotMainThread();
-    method public static <T> T checkNotNull(T!);
-    method public static <T> T checkNotNull(T!, Object!);
-    method public static <T> T checkNotNull(T!, String!, java.lang.Object!...!);
+    method public static <T> T checkNotNull(T);
+    method public static <T> T checkNotNull(T, Object!);
+    method public static <T> T checkNotNull(T, String!, java.lang.Object!...!);
     method public static void checkState(boolean);
     method public static void checkState(boolean, Object!);
     method public static void checkState(boolean, String!, java.lang.Object!...!);
@@ -199,11 +199,12 @@ package androidx.test.internal.util {
 package androidx.test.platform.app {
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class AppComponentFactoryRegistry {
-    method public static android.app.AppComponentFactory? getAppComponentFactory();
+    method @InaccessibleFromKotlin public static android.app.AppComponentFactory? getAppComponentFactory();
     method public static android.app.Activity? instantiateActivity(ClassLoader cl, String className, optional android.content.Intent? intent);
     method public static android.app.Application? instantiateApplication(ClassLoader cl, String className);
-    method public static void setAppComponentFactory(android.app.AppComponentFactory?);
-    property public static final android.app.AppComponentFactory? appComponentFactory;
+    method @InaccessibleFromKotlin public static void setAppComponentFactory(android.app.AppComponentFactory?);
+    property public static android.app.AppComponentFactory? appComponentFactory;
+    field public static final androidx.test.platform.app.AppComponentFactoryRegistry INSTANCE;
   }
 
 }

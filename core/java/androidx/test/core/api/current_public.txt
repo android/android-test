@@ -5,25 +5,25 @@ package androidx.test.core.app {
     method public void close();
     method public android.app.Instrumentation.ActivityResult! getResult();
     method public androidx.lifecycle.Lifecycle.State! getState();
-    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A!>! launch(android.content.Intent!);
-    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A!>! launch(android.content.Intent!, android.os.Bundle?);
-    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A!>! launch(Class<A!>!);
-    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A!>! launch(Class<A!>!, android.os.Bundle?);
-    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A!> launchActivityForResult(android.content.Intent);
-    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A!> launchActivityForResult(android.content.Intent, android.os.Bundle?);
-    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A!> launchActivityForResult(Class<A!>);
-    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A!> launchActivityForResult(Class<A!>, android.os.Bundle?);
-    method public androidx.test.core.app.ActivityScenario<A!>! moveToState(androidx.lifecycle.Lifecycle.State!);
-    method public androidx.test.core.app.ActivityScenario<A!>! onActivity(androidx.test.core.app.ActivityScenario.ActivityAction<A!>!);
-    method public androidx.test.core.app.ActivityScenario<A!>! recreate();
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A>! launch(android.content.Intent!);
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A>! launch(android.content.Intent!, android.os.Bundle?);
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A>! launch(Class<A>!);
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A>! launch(Class<A>!, android.os.Bundle?);
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A> launchActivityForResult(android.content.Intent);
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A> launchActivityForResult(android.content.Intent, android.os.Bundle?);
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A> launchActivityForResult(Class<A>);
+    method public static <A extends android.app.Activity> androidx.test.core.app.ActivityScenario<A> launchActivityForResult(Class<A>, android.os.Bundle?);
+    method public androidx.test.core.app.ActivityScenario<A>! moveToState(androidx.lifecycle.Lifecycle.State!);
+    method public androidx.test.core.app.ActivityScenario<A>! onActivity(androidx.test.core.app.ActivityScenario.ActivityAction<A>!);
+    method public androidx.test.core.app.ActivityScenario<A>! recreate();
   }
 
   public static interface ActivityScenario.ActivityAction<A extends android.app.Activity> {
-    method public void perform(A!);
+    method public void perform(A);
   }
 
   public final class ApplicationProvider {
-    method public static <T extends android.content.Context> T! getApplicationContext();
+    method public static <T extends android.content.Context> T getApplicationContext();
   }
 
   public final class DeviceCapture {
@@ -65,7 +65,7 @@ package androidx.test.core.graphics {
 package androidx.test.core.os {
 
   public final class Parcelables {
-    method public static <T extends android.os.Parcelable> T! forceParcel(T!, android.os.Parcelable.Creator<T!>!);
+    method public static <T extends android.os.Parcelable> T forceParcel(T, android.os.Parcelable.Creator<T>!);
   }
 
 }

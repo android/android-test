@@ -250,10 +250,10 @@ package androidx.test.runner {
 package androidx.test.runner.intercepting {
 
   public abstract class SingleActivityFactory<T extends android.app.Activity> implements androidx.test.runner.intercepting.InterceptingActivityFactory {
-    ctor public SingleActivityFactory(Class<T!>!);
-    method protected abstract T! create(android.content.Intent!);
+    ctor public SingleActivityFactory(Class<T>!);
+    method protected abstract T create(android.content.Intent!);
     method public final android.app.Activity! create(ClassLoader!, String!, android.content.Intent!);
-    method public final Class<T!>! getActivityClassToIntercept();
+    method public final Class<T>! getActivityClassToIntercept();
     method public final boolean shouldIntercept(ClassLoader!, String!, android.content.Intent!);
   }
 

@@ -29,7 +29,7 @@ package androidx.test.espresso.util {
   }
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class Iterators {
-    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static <T> T![]! toArray(java.util.Iterator<T!>!, Class<T!>!);
+    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static <T> T[]! toArray(java.util.Iterator<T>!, Class<T>!);
   }
 
   public final class StringJoinerKt {

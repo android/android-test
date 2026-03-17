@@ -63,13 +63,15 @@ package androidx.test.espresso.device.controller {
 package androidx.test.espresso.device.filter {
 
   @androidx.test.filters.CustomFilter(filterClass=RequiresDeviceModeFilter::class) @java.lang.annotation.Repeatable(RequiresDeviceModes::class) @kotlin.annotation.Retention(kotlin.annotation.AnnotationRetention.RUNTIME) @kotlin.annotation.Target(allowedTargets={kotlin.annotation.AnnotationTarget.CLASS, kotlin.annotation.AnnotationTarget.FUNCTION}) public @interface RequiresDeviceMode {
-    method public abstract androidx.test.espresso.device.controller.DeviceMode mode();
+    ctor @KotlinOnly public RequiresDeviceMode(androidx.test.espresso.device.controller.DeviceMode mode);
+    method @InaccessibleFromKotlin public abstract androidx.test.espresso.device.controller.DeviceMode mode();
     property public abstract androidx.test.espresso.device.controller.DeviceMode mode;
   }
 
   @androidx.test.filters.CustomFilter(filterClass=RequiresDisplayFilter::class) @kotlin.annotation.Retention(kotlin.annotation.AnnotationRetention.RUNTIME) @kotlin.annotation.Target(allowedTargets={kotlin.annotation.AnnotationTarget.CLASS, kotlin.annotation.AnnotationTarget.FUNCTION}) public @interface RequiresDisplay {
-    method public abstract androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum heightSizeClass();
-    method public abstract androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum widthSizeClass();
+    ctor @KotlinOnly public RequiresDisplay(androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum widthSizeClass, androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum heightSizeClass);
+    method @InaccessibleFromKotlin public abstract androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum heightSizeClass();
+    method @InaccessibleFromKotlin public abstract androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum widthSizeClass();
     property public abstract androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum heightSizeClass;
     property public abstract androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum widthSizeClass;
   }
@@ -116,11 +118,14 @@ package androidx.test.espresso.device.sizeclass {
     method public androidx.test.espresso.device.sizeclass.HeightSizeClass compute(int dpHeight);
     method public androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum getEnum(androidx.test.espresso.device.sizeclass.HeightSizeClass sizeClass);
     method public int getHeightDpInSizeClass(androidx.test.espresso.device.sizeclass.HeightSizeClass sizeClass);
+    property public androidx.test.espresso.device.sizeclass.HeightSizeClass COMPACT;
+    property public androidx.test.espresso.device.sizeclass.HeightSizeClass EXPANDED;
+    property public androidx.test.espresso.device.sizeclass.HeightSizeClass MEDIUM;
   }
 
   public enum HeightSizeClass.Companion.HeightSizeClassEnum {
-    method public String getDescription();
-    property public final String description;
+    method @InaccessibleFromKotlin public String getDescription();
+    property public String description;
     enum_constant public static final androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum COMPACT;
     enum_constant public static final androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum EXPANDED;
     enum_constant public static final androidx.test.espresso.device.sizeclass.HeightSizeClass.Companion.HeightSizeClassEnum MEDIUM;
@@ -140,11 +145,14 @@ package androidx.test.espresso.device.sizeclass {
     method public androidx.test.espresso.device.sizeclass.WidthSizeClass compute(int dpWidth);
     method public androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum getEnum(androidx.test.espresso.device.sizeclass.WidthSizeClass sizeClass);
     method public int getWidthDpInSizeClass(androidx.test.espresso.device.sizeclass.WidthSizeClass sizeClass);
+    property public androidx.test.espresso.device.sizeclass.WidthSizeClass COMPACT;
+    property public androidx.test.espresso.device.sizeclass.WidthSizeClass EXPANDED;
+    property public androidx.test.espresso.device.sizeclass.WidthSizeClass MEDIUM;
   }
 
   public enum WidthSizeClass.Companion.WidthSizeClassEnum {
-    method public String getDescription();
-    property public final String description;
+    method @InaccessibleFromKotlin public String getDescription();
+    property public String description;
     enum_constant public static final androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum COMPACT;
     enum_constant public static final androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum EXPANDED;
     enum_constant public static final androidx.test.espresso.device.sizeclass.WidthSizeClass.Companion.WidthSizeClassEnum MEDIUM;
