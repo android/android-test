@@ -73,7 +73,22 @@ public class AndroidJUnit4ClassRunner extends BlockJUnit4ClassRunner {
   @Override
   protected Statement withAfters(FrameworkMethod method, Object target, Statement statement) {
     List<FrameworkMethod> afters = getTestClass().getAnnotatedMethods(After.class);
-    return afters.isEmpty() ? statement : new RunAfters(method, statement, afters, target);
+    Statement combined =
+        afters.isEmpty() ? statement : new RunAfters(method, statement, afters, target);
+
+    long timeout = getTimeout(method.getAnnotation(Test.class));
+    if (timeout <= 0 && perTestTimeout > 0) {
+      timeout = perTestTimeout;
+    }
+
+    if (timeout > 0) {
+      // Cannot switch to use builder as that is not supported in JUnit 4.10 which is what is
+      // available in AOSP.
+      @SuppressWarnings("deprecation")
+      var failOnTimeout = new FailOnTimeout(combined, timeout);
+      return failOnTimeout;
+    }
+    return combined;
   }
 
   /**
@@ -82,22 +97,7 @@ public class AndroidJUnit4ClassRunner extends BlockJUnit4ClassRunner {
    */
   @Override
   protected Statement withPotentialTimeout(FrameworkMethod method, Object test, Statement next) {
-    // test level timeout i.e @Test(timeout = 123)
-    long timeout = getTimeout(method.getAnnotation(Test.class));
-
-    // use runner arg timeout if test level timeout is not present
-    if (timeout <= 0 && perTestTimeout > 0) {
-      timeout = perTestTimeout;
-    }
-
-    if (timeout <= 0) {
-      // no timeout was set
-      return next;
-    }
-
-    // Cannot switch to use builder as that is not supported in JUnit 4.10 which is what is
-    // available in AOSP.
-    return new FailOnTimeout(next, timeout);
+    return next;
   }
 
   private long getTimeout(Test annotation) {

@@ -12,6 +12,8 @@
 
 * Add logs at the start and end of RunBefore and RunAfters sections to help bug understanding. (b/445754263)
 
+* Ensure @Before and @Test run on the same thread in AndroidJUnit4ClassRunner.
+
 **Breaking Changes**
 
 **API Changes**
