@@ -6,6 +6,8 @@
 
 **Bug Fixes**
 
+* Ensure @Before and @Test run on the same thread in AndroidJUnit4ClassRunner.
+
 **New Features**
 
 * Make perfetto trace sections for tests more identifiable by prefixing with "test:" and using fully qualified class name. (b/204992764)

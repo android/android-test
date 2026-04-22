@@ -26,13 +26,17 @@ import androidx.test.filters.Suppress;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runners.JUnit4;
 import org.junit.runners.Parameterized;
+import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -132,5 +136,42 @@ public class AndroidAnnotatedBuilderTest {
         };
     // attempt to create a runner for a class with no @RunWith annotation
     ab.runnerForClass(NoRunWithClass.class);
+  }
+
+  @SuppressWarnings("NonFinalStaticField") // Static fields are needed to check thread assignment.
+  public static class TimeoutTestClass {
+    static Thread beforeThread;
+    static Thread testThread;
+    static Thread afterThread;
+
+    @Before
+    public void before() {
+      beforeThread = Thread.currentThread();
+    }
+
+    @Test(timeout = 5000)
+    public void testWithTimeout() {
+      testThread = Thread.currentThread();
+    }
+
+    @After
+    public void after() {
+      afterThread = Thread.currentThread();
+    }
+  }
+
+  @Test
+  public void testThreadsSameWithTimeout() throws InitializationError {
+    TimeoutTestClass.beforeThread = null;
+    TimeoutTestClass.testThread = null;
+    TimeoutTestClass.afterThread = null;
+
+    AndroidJUnit4ClassRunner runner = new AndroidJUnit4ClassRunner(TimeoutTestClass.class, 0);
+    Result result = new JUnitCore().run(runner);
+
+    assertEquals(0, result.getFailureCount());
+    Assert.assertNotNull(TimeoutTestClass.beforeThread);
+    assertEquals(TimeoutTestClass.beforeThread, TimeoutTestClass.testThread);
+    assertEquals(TimeoutTestClass.testThread, TimeoutTestClass.afterThread);
   }
 }
