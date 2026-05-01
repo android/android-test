@@ -60,7 +60,14 @@ public interface IdlingResource {
 
   /** Registered by an {@link IdlingResource} to notify Espresso of a transition to idle. */
   public interface ResourceCallback {
-    /** Called when the resource goes from busy to idle. */
+    /**
+     * Called when the resource goes from busy to idle.
+     *
+     * <p>If the idle state is updated on a thread other than the main thread, this method should be
+     * called <b>before</b> the state is updated to return true. Failing to do so can cause a race
+     * condition where Espresso throws a consistency error due to observing {@link #isIdleNow()}
+     * returning true before the callback is invoked.
+     */
     public void onTransitionToIdle();
   }
 }
