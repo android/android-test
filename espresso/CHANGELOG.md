@@ -19,6 +19,7 @@ The following artifacts were released:
 * Replace now-unnecessary reflection from TestLooperManagerCompat when using Android SDK 36 APIs
 * Don't suppress AppNotIdleException if dumpThreadStates throws.
 * Remove Espresso.onIdle tracing
+* Downgrade IdlingResourceRegistry potential race condition exception to warning.
 
 **New Features**
 

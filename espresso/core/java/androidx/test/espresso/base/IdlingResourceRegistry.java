@@ -547,7 +547,8 @@ public final class IdlingResourceRegistry {
         if (is.idle) {
           // it was a race... i is now idle, everything is fine...
         } else {
-          throw new IllegalStateException(
+          Log.w(
+              TAG,
               String.format(
                   Locale.ROOT,
                   "Resource %s isIdleNow() is returning true, but a message indicating that the "
