@@ -18,6 +18,8 @@ package androidx.test.orchestrator.listeners;
 import android.app.Instrumentation;
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.test.orchestrator.AndroidTestOrchestrator;
 import androidx.test.orchestrator.junit.ParcelableDescription;
 import androidx.test.orchestrator.junit.ParcelableFailure;
 import java.io.PrintStream;
@@ -138,6 +140,14 @@ public class OrchestrationResultPrinter extends OrchestrationRunListener {
     if (testResultCode == REPORT_VALUE_RESULT_OK) {
       testResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT, ".");
     }
+
+    Instrumentation instrumentation = this.getInstrumentation();
+
+    if (instrumentation instanceof AndroidTestOrchestrator) {
+      String test = description.getClassName() + "#" + description.getMethodName();
+      ((AndroidTestOrchestrator) instrumentation).removeFinishedTests(test);
+    }
+
     sendStatus(testResultCode, testResult);
   }
 
