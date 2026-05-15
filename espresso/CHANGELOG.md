@@ -22,6 +22,8 @@ The following artifacts were released:
 
 **New Features**
 
+* Allow ResettingStubberImpl to be called from any thread.
+
 **Breaking Changes**
 
 **API Changes**
