@@ -30,7 +30,6 @@ axt_android_library_test(
     ],
     deps = [
         "//core/java/androidx/test/core",
-        "//runner/monitor/java/androidx/test:monitor",
         "//services/storage/java/androidx/test/services/storage",
         "//services/storage/java/androidx/test/services/storage/file",
         "@maven//:com_google_truth_truth",
