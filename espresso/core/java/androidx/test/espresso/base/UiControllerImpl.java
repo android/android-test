@@ -35,7 +35,6 @@ import androidx.annotation.VisibleForTesting;
 import androidx.test.espresso.IdlingPolicies;
 import androidx.test.espresso.IdlingPolicy;
 import androidx.test.espresso.InjectEventSecurityException;
-import androidx.test.espresso.UiController;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
 import androidx.test.espresso.util.StringJoinerKt;
 import androidx.test.espresso.util.concurrent.ThreadFactoryBuilder;
@@ -77,7 +76,8 @@ final class UiControllerImpl
     COMPAT_TASKS_HAVE_IDLED,
     KEY_INJECT_HAS_COMPLETED,
     MOTION_INJECTION_HAS_COMPLETED,
-    DYNAMIC_TASKS_HAVE_IDLED;
+    DYNAMIC_TASKS_HAVE_IDLED,
+    POSSIBLE_RACE_CONDITION_DETECTED;
 
     /** Checks whether this condition has been signaled. */
     public boolean isSignaled(BitSet conditionSet) {
@@ -509,8 +509,9 @@ final class UiControllerImpl
           start + masterIdlePolicy.getIdleTimeoutUnit().toMillis(masterIdlePolicy.getIdleTimeout());
       interrogation = new MainThreadInterrogation(conditions, conditionSet, end);
 
+      Interrogator interrogator = new Interrogator();
       InterrogationStatus result =
-          new Interrogator().loopAndInterrogate(testLooperManager, interrogation);
+          interrogator.loopAndInterrogate(testLooperManager, interrogation);
       if (InterrogationStatus.COMPLETED == result) {
         // did not time out, all conditions happy.
         return dynamicIdle;
@@ -551,12 +552,51 @@ final class UiControllerImpl
               }
 
               List<String> busyResources = idlingResourceRegistry.getBusyResources();
+
+              if (busyResources == null) {
+                Log.w(
+                    TAG, "Possible race condition detected, looping until race buster is complete");
+                // Null return value indicates a possible race condition.
+                // Flush the queue to allow resolution to take place.
+                controllerHandler.sendMessage(
+                    IdleCondition.POSSIBLE_RACE_CONDITION_DETECTED.createSignal(
+                        controllerHandler, generation));
+
+                // New interrogation to reset timeout and wait only for our signal.
+                // Since we are just emptying the queue this should not ever timeout.
+                start = SystemClock.uptimeMillis();
+                end =
+                    start
+                        + masterIdlePolicy
+                            .getIdleTimeoutUnit()
+                            .toMillis(masterIdlePolicy.getIdleTimeout());
+                interrogation =
+                    new MainThreadInterrogation(
+                        EnumSet.of(IdleCondition.POSSIBLE_RACE_CONDITION_DETECTED),
+                        conditionSet,
+                        end);
+                InterrogationStatus raceBusterResult =
+                    interrogator.loopAndInterrogate(testLooperManager, interrogation);
+                if (raceBusterResult == InterrogationStatus.COMPLETED) {
+                  // Can still return null if resource is buggy.
+                  busyResources = idlingResourceRegistry.getBusyResources();
+                } else {
+                  Log.w(
+                      TAG,
+                      String.format(
+                          Locale.ROOT,
+                          "Failed to resolve possible race condition: " + raceBusterResult));
+                }
+              }
+
               conditionName =
                   String.format(
                       Locale.ROOT,
                       "%s(busy resources=%s)",
                       conditionName,
-                      StringJoinerKt.joinToString(busyResources, ","));
+                      busyResources != null
+                          ? StringJoinerKt.joinToString(busyResources, ",")
+                          : "null");
               break;
             default:
               break;
@@ -588,6 +628,7 @@ final class UiControllerImpl
     }
     return dynamicIdle;
   }
+
   @Override
   public void interruptEspressoTasks() {
     controllerHandler.post(

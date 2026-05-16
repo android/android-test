@@ -236,7 +236,6 @@ axt_android_library_test(
         "//espresso/core/java/androidx/test/espresso/base:default_failure_handler",
         "//espresso/core/java/androidx/test/espresso/base:idling_resource_registry",
         "//ext/junit",
-        "//opensource/androidx:annotation",
         "//runner/android_junit_runner/java/androidx/test:runner",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_exported",
         "//testapps/ui_testapp/javatests/androidx/test/ui/app:test_resources",
