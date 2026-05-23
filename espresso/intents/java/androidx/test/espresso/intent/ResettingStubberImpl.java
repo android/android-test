@@ -23,20 +23,19 @@ import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.os.Looper;
 import android.util.Pair;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.hamcrest.Matcher;
 
 /** Implementation of {@link ResettingStubber} */
 public final class ResettingStubberImpl implements ResettingStubber {
 
-  // Should be accessed only from main thread
   private List<Pair<Matcher<Intent>, ActivityResultFunction>> intentResponsePairs =
-      new ArrayList<Pair<Matcher<Intent>, ActivityResultFunction>>();
+      new CopyOnWriteArrayList<Pair<Matcher<Intent>, ActivityResultFunction>>();
 
   private PackageManager packageManager;
   private boolean isInitialized;
@@ -55,7 +54,6 @@ public final class ResettingStubberImpl implements ResettingStubber {
 
   @Override
   public void reset() {
-    checkMain();
     intentResponsePairs.clear();
     isInitialized = false;
   }
@@ -70,15 +68,13 @@ public final class ResettingStubberImpl implements ResettingStubber {
       Matcher<Intent> matcher, ActivityResultFunction result) {
     checkState(isInitialized, "ResettingStubber must be initialized before calling this method");
     checkNotNull(matcher);
-    checkMain();
     intentResponsePairs.add(new Pair<Matcher<Intent>, ActivityResultFunction>(matcher, result));
   }
 
   @Override
-  public ActivityResult getActivityResultForIntent(Intent intent) {
+  public synchronized ActivityResult getActivityResultForIntent(Intent intent) {
     checkState(isInitialized, "ResettingStubber must be initialized before calling this method");
     checkNotNull(intent);
-    checkMain();
     ListIterator<Pair<Matcher<Intent>, ActivityResultFunction>> reverseIterator =
         intentResponsePairs.listIterator(intentResponsePairs.size());
     while (reverseIterator.hasPrevious()) {
@@ -99,14 +95,10 @@ public final class ResettingStubberImpl implements ResettingStubber {
     // why-does-the-flag-specified-in-queryintentactivities-method-is-set-to-zero and
     // http://developer.android.com/training/basics/intents/sending.html
     List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent, 0);
-    if (null == resolveInfos) {
+    if (resolveInfos == null) {
       // Gingerbread returns null here if nothing resolves, other APIs return an empty list.
       resolveInfos = new ArrayList<ResolveInfo>();
     }
     return new ResolvedIntentImpl(intent, resolveInfos);
-  }
-
-  private static void checkMain() {
-    checkState(Looper.myLooper() == Looper.getMainLooper(), "Must be called on main thread.");
   }
 }
