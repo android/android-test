@@ -302,3 +302,15 @@ axt_android_library_test(
         "@maven//:junit_junit",
     ],
 )
+
+axt_android_library_test(
+    name = "QueueIdleDetectorTest",
+    srcs = ["QueueIdleDetectorTest.java"],
+    deps = [
+        "//core",
+        "//espresso/core/java/androidx/test/espresso/base:idling_resource_registry",
+        "//ext/junit",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+    ],
+)

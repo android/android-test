@@ -25,6 +25,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
 import androidx.annotation.VisibleForTesting;
+import java.util.Locale;
 
 /** Isolates the nasty details of touching the message queue. */
 final class Interrogator {
@@ -32,6 +33,79 @@ final class Interrogator {
   private static final String TAG = "Interrogator";
 
   @VisibleForTesting static final int LOOKAHEAD_MILLIS = 15;
+
+  private static boolean useNewSync() {
+    return Boolean.parseBoolean(System.getProperty("espresso.use_new_sync", "true"));
+  }
+
+  private static boolean enableMlLogging() {
+    return Boolean.parseBoolean(System.getProperty("espresso.enable_ml_logging", "true"));
+  }
+
+  private static void logEvent(
+      String event, long now, Long headWhen, boolean barrier, String decision) {
+    if (!enableMlLogging()) {
+      return;
+    }
+    String headWhenStr = headWhen == null ? "null" : String.valueOf(headWhen);
+    Log.i(
+        "ESPRESSO_ML",
+        String.format(
+            Locale.ROOT,
+            "{\"event\":\"%s\",\"time\":%d,\"headWhen\":%s,\"barrier\":%b,\"decision\":\"%s\"}",
+            event,
+            now,
+            headWhenStr,
+            barrier,
+            decision));
+  }
+
+  private static void logDispatch(Message m) {
+    if (!enableMlLogging()) {
+      return;
+    }
+    long now = SystemClock.uptimeMillis();
+    String target = m.getTarget() == null ? "null" : m.getTarget().getClass().getName();
+    String callback = m.getCallback() == null ? "null" : m.getCallback().getClass().getName();
+    Log.i(
+        "ESPRESSO_ML",
+        String.format(
+            Locale.ROOT,
+            "{\"event\":\"dispatch\",\"time\":%d,\"msgWhen\":%d,\"what\":%d,\"target\":\"%s\",\"callback\":\"%s\"}",
+            now,
+            m.getWhen(),
+            m.what,
+            target,
+            callback));
+  }
+
+  private static final ThreadLocal<QueueIdleDetector> detectorThreadLocal =
+      new ThreadLocal<QueueIdleDetector>() {
+        @Override
+        protected QueueIdleDetector initialValue() {
+          return createDefaultDetector();
+        }
+      };
+
+  private final QueueIdleDetector detector;
+
+  Interrogator() {
+    this(detectorThreadLocal.get());
+  }
+
+  @VisibleForTesting
+  Interrogator(QueueIdleDetector detector) {
+    this.detector = checkNotNull(detector);
+  }
+
+  private static QueueIdleDetector createDefaultDetector() {
+    if (useNewSync()) {
+      return new UnifiedRecentCountDetector(50, 4);
+    } else {
+      return new LegacyLookaheadDetector(LOOKAHEAD_MILLIS);
+    }
+  }
+
   private static final ThreadLocal<Boolean> interrogating =
       new ThreadLocal<Boolean>() {
         @Override
@@ -92,7 +166,6 @@ final class Interrogator {
     public String getMessage();
   }
 
-  Interrogator() {}
 
   /**
    * Loops the main thread and informs the interrogation handler at interesting points in the exec
@@ -125,6 +198,8 @@ final class Interrogator {
           }
           stillInterested = handler.beforeTaskDispatch();
           handler.setMessage(m);
+          logDispatch(m);
+          detector.recordDispatch(SystemClock.uptimeMillis(), m);
           testLooperManager.execute(m);
 
           // ensure looper invariants
@@ -181,27 +256,30 @@ final class Interrogator {
   private boolean interrogateQueueState(
       TestLooperManagerCompat testLooperManager, QueueInterrogationHandler<?> handler) {
     synchronized (testLooperManager.getQueue()) {
+      long now = SystemClock.uptimeMillis();
       if (testLooperManager.isBlockedOnSyncBarrier()) {
         if (Log.isLoggable(TAG, Log.DEBUG)) {
           Log.d(TAG, "barrier is up");
         }
+        logEvent("interrogate", now, null, true, "barrier");
         return handler.barrierUp();
       }
       Long headWhen = testLooperManager.peekWhen();
-      if (headWhen == null) {
-        return handler.queueEmpty();
-      }
 
-      long nowFuz = SystemClock.uptimeMillis() + LOOKAHEAD_MILLIS;
-      if (Log.isLoggable(TAG, Log.DEBUG)) {
-        Log.d(
-            TAG,
-            "headWhen: " + headWhen + " nowFuz: " + nowFuz + " due long: " + (nowFuz < headWhen));
-      }
-      if (nowFuz > headWhen) {
+      boolean isUnifiedIdle = detector.isIdle(now, headWhen);
+
+      if (isUnifiedIdle) {
+        if (headWhen == null) {
+          logEvent("interrogate", now, null, false, "empty");
+          return handler.queueEmpty();
+        } else {
+          logEvent("interrogate", now, headWhen, false, "long");
+          return handler.taskDueLong();
+        }
+      } else {
+        logEvent("interrogate", now, headWhen, false, "soon");
         return handler.taskDueSoon();
       }
-      return handler.taskDueLong();
     }
   }
 
