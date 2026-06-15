@@ -127,9 +127,8 @@ public class InstrumentationTestRunnerProcessor implements LineProcessor<List<Ex
     if (line.startsWith(STATUS_CODE)) {
       String statusCode = extractContent(line, STATUS_CODE).trim();
       int code = Integer.parseInt(statusCode);
-      applyStatus(code);
       try {
-        // A chamada onTestStart, se necessária, já foi feita em applyStatus
+        applyStatus(code);
       } finally {
         onTestFinished(currentTest.build());
         currentTest = null;
