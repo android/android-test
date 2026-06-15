@@ -24,6 +24,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.io.LineProcessor;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.Map;
+
 
 /**
  * {@link LineProcessor} for instrumentation test runner output.
@@ -123,36 +125,15 @@ public class InstrumentationTestRunnerProcessor implements LineProcessor<List<Ex
     }
 
     if (line.startsWith(STATUS_CODE)) {
-      String statusCode = line.replace(STATUS_CODE, "").trim();
-      int statusInt = Integer.parseInt(statusCode);
-
+      String statusCode = extractContent(line, STATUS_CODE).trim();
+      int code = Integer.parseInt(statusCode);
+      applyStatus(code);
       try {
-        switch (statusInt) {
-          case 1:
-            currentTest.setStatus(Status.STARTED);
-            onTestStart(currentTest.build());
-            break;
-          case 0:
-            currentTest.setStatus(Status.PASSED);
-            break;
-          case -1:
-            currentTest.setStatus(Status.ERROR);
-            break;
-          case -2:
-            currentTest.setStatus(Status.FAILED);
-            break;
-          case -4:
-            currentTest.setStatus(Status.ASSUMPTION_FAILURE);
-            break;
-          default:
-            throw new IllegalArgumentException(
-                String.format("Illegal test instrumentation code: \"%s\"", statusCode));
-        }
+        // A chamada onTestStart, se necessária, já foi feita em applyStatus
       } finally {
         onTestFinished(currentTest.build());
         currentTest = null;
       }
-
       return true;
     }
 
@@ -188,6 +169,38 @@ public class InstrumentationTestRunnerProcessor implements LineProcessor<List<Ex
     logger.severe("Line not handled by the parser:\n" + line);
 
     return true;
+  }
+
+  private static final Map<Integer, Status> STATUS_CODE_MAP = Map.of(
+    1,  Status.STARTED,
+    0,  Status.PASSED,
+    -1,  Status.ERROR,
+    -2,  Status.FAILED,
+    -4,  Status.ASSUMPTION_FAILURE
+  );
+
+  private Status statusFromCode(int code) {
+    Status status = STATUS_CODE_MAP.get(code);
+    if (status == null) {
+      throw new IllegalArgumentException(
+        "Illegal test instrumentation code: \"" + code + "\"");
+    }
+    return status;
+}
+
+  private void applyStatus(int code) {
+    Status status = statusFromCode(code);
+    currentTest.setStatus(status);
+    if (status == Status.STARTED) {
+      onTestStart(currentTest.build());
+    }
+  }
+  /**
+   * Returns the content of {@code line} after removing the expected {@code prefix}.
+   * Assumes the line starts with the given prefix.
+   */
+  private String extractContent(String line, String prefix) {
+      return line.substring(prefix.length());
   }
 
   private void onTestFinished(ExecutedTest executedTest) {
