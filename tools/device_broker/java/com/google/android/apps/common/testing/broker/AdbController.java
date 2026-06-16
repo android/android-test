@@ -1219,127 +1219,164 @@ public class AdbController {
   }
 
   private List<ExecutedTest> runTest(
-      Instrumentation instrumentation,
-      String testMethodTarget,
-      boolean collectCodeCoverage,
-      @Nullable String coverageDataPath,
-      boolean enableDebug,
-      HostTestSize size,
-      boolean dumpHProfData,
-      boolean withAnimation,
-      Map<String, String> extraInstrumentationOptions) {
+    Instrumentation instrumentation,
+    String testMethodTarget,
+    boolean collectCodeCoverage,
+    @Nullable String coverageDataPath,
+    boolean enableDebug,
+    HostTestSize size,
+    boolean dumpHProfData,
+    boolean withAnimation,
+    Map<String, String> extraInstrumentationOptions) {
 
-    List<String> adbArgs = Lists.newArrayList();
-
-    if (installBasicServices) {
-      // We exec the instrumentation through a wrapper launcher defined in basic_services.apk to
-      // allow test code to execute shell commands with root|shell user privileges.
-      adbArgs.add("CLASSPATH=" + getClassPathForTestServices());
-      adbArgs.add("SM_EXIT=1");
-      adbArgs.add("app_process / androidx.test.services.shellexecutor.ShellMain");
-    }
-
-    adbArgs.add("am");
-    adbArgs.add("instrument");
-
-    if (collectCodeCoverage) {
-      adbArgs.addAll(Lists.newArrayList("-e", "coverage", "true"));
-      adbArgs.addAll(Lists.newArrayList(
-          "-e", "coverageDataPath", coverageDataPath));
-    }
-    if (enableDebug) {
-      adbArgs.addAll(Lists.newArrayList("-e", "debug", "true"));
-    }
-
-    if (dumpHProfData) {
-      adbArgs.addAll(Lists.newArrayList("-e", "hprofDataFile", "hprof.dump"));
-    }
-
-    for (String key : extraInstrumentationOptions.keySet()) {
-      adbArgs.add("-e");
-      adbArgs.add(ShellUtils.shellEscape(key));
-      adbArgs.add(ShellUtils.shellEscape(extraInstrumentationOptions.get(key)));
-    }
-
-    if (!withAnimation) {
-      if (device.getApiVersion() >= 10) {
-        adbArgs.add("--no_window_animation");
-      } // not supported for less then gingerbread.
-    }
-    long testTimeout = size.getTestTimeout(TimeUnit.SECONDS);
-    if (testTimeoutOverride.isPresent()) {
-      testTimeout = testTimeoutOverride.get();
-    }
-
-    adbArgs.addAll(
-        Lists.newArrayList(
-            "-e", "testTimeoutSeconds", String.valueOf(testTimeout)));
-
-    boolean runTestsThroughOrchestrator = installBasicServices
-        && ORCHESTRATOR_ENABLED_RUNNERS.contains(instrumentation.getInstrumentationClass());
-
-
-    if (runTestsThroughOrchestrator) {
-      adbArgs.addAll(
-          Lists.newArrayList(
-              "-r",
-              "-w",
-              "-e",
-              "class",
-              ShellUtils.shellEscape(testMethodTarget),
-              "-e",
-              "targetInstrumentation",
-              instrumentation.getFullName(),
-              ORCHESTRATOR_COMPONENT_NAME));
-    } else {
-      adbArgs.addAll(
-          Lists.newArrayList(
-              "-r",
-              "-w",
-              "-e",
-              "class",
-              ShellUtils.shellEscape(testMethodTarget),
-              instrumentation.getFullName()));
-    }
-
-    if (installBasicServices) {
-      // adb shell commands _may_ return their exit code from the device - if they are run on the
-      // right system image and the host machine has the right version of adb installed
-      // otherwise they wont. SM_EXIT kills itself at the end, so we do not want that
-      // exit code bubbling up.
-      adbArgs.add("||");
-      adbArgs.add("true");
-    }
-
-    InstrumentationTestRunnerProcessor stdoutProcessor =
-        new InstrumentationTestRunnerProcessor(new EventBus());
-    SimpleLineListProcessor stderrProcessor = new SimpleLineListProcessor();
-    SubprocessCommunicator.Builder builder = communicatorBuilderProvider.get();
-    builder
-        .withStdoutProcessor(stdoutProcessor)
-        .withStderrProcessor(stderrProcessor);
-    String shellArgs = Joiner.on(" ").join(adbArgs);
-
-    List<String> partialArgs = Lists.newArrayList("shell", shellArgs);
-
-    try {
-      makeCheckedCall(builder,
-          prefixArgsWithDeviceSerial(partialArgs.toArray(new String[partialArgs.size()])),
-          testTimeout);
-    } catch (IllegalStateException e) {
-      StringBuilder allLines = new StringBuilder();
-      for (ExecutedTest executedTest : stdoutProcessor.getResult()) {
-        allLines.append(executedTest.getAllLines());
-      }
-
-      throw new RuntimeException(String.format(
-          "Error when executing adb.\n STDOUT: %s\n STDERR: %s",
-          allLines,
-          Joiner.on("\n").join(stderrProcessor.getResult())), e);
-    }
-
-    return stdoutProcessor.getResult();
+  long testTimeout = size.getTestTimeout(TimeUnit.SECONDS);
+  if (testTimeoutOverride.isPresent()) {
+    testTimeout = testTimeoutOverride.get();
   }
+
+  String shellCommand =
+      buildInstrumentationShellCommand(
+          instrumentation,
+          testMethodTarget,
+          collectCodeCoverage,
+          coverageDataPath,
+          enableDebug,
+          dumpHProfData,
+          withAnimation,
+          extraInstrumentationOptions,
+          testTimeout);
+
+  InstrumentationTestRunnerProcessor stdoutProcessor =
+      new InstrumentationTestRunnerProcessor(new EventBus());
+  SimpleLineListProcessor stderrProcessor = new SimpleLineListProcessor();
+  SubprocessCommunicator.Builder builder =
+      communicatorBuilderProvider
+          .get()
+          .withStdoutProcessor(stdoutProcessor)
+          .withStderrProcessor(stderrProcessor);
+
+  List<String> partialArgs = Lists.newArrayList("shell", shellCommand);
+
+  try {
+    makeCheckedCall(
+        builder,
+        prefixArgsWithDeviceSerial(partialArgs.toArray(new String[0])),
+        testTimeout);
+  } catch (IllegalStateException e) {
+    StringBuilder allLines = new StringBuilder();
+    for (ExecutedTest executedTest : stdoutProcessor.getResult()) {
+      allLines.append(executedTest.getAllLines());
+    }
+    throw new RuntimeException(
+        String.format(
+            "Error when executing adb.\n STDOUT: %s\n STDERR: %s",
+            allLines, Joiner.on("\n").join(stderrProcessor.getResult())),
+        e);
+  }
+
+  return stdoutProcessor.getResult();
+}
+
+/**
+ * Constrói a linha de comando a ser passada para {@code adb shell} contendo a invocação completa
+ * do {@code am instrument}.
+ */
+private String buildInstrumentationShellCommand(
+    Instrumentation instrumentation,
+    String testMethodTarget,
+    boolean collectCodeCoverage,
+    @Nullable String coverageDataPath,
+    boolean enableDebug,
+    boolean dumpHProfData,
+    boolean withAnimation,
+    Map<String, String> extraInstrumentationOptions,
+    long testTimeout) {
+
+  List<String> tokens = Lists.newArrayList();
+
+  // Prefixo opcional para serviços básicos (ShellMain)
+  if (installBasicServices) {
+    tokens.add("CLASSPATH=" + getClassPathForTestServices());
+    tokens.add("SM_EXIT=1");
+    tokens.add("app_process / androidx.test.services.shellexecutor.ShellMain");
+  }
+
+  tokens.add("am");
+  tokens.add("instrument");
+
+  // Opções de cobertura
+  if (collectCodeCoverage) {
+    tokens.add("-e");
+    tokens.add("coverage");
+    tokens.add("true");
+    tokens.add("-e");
+    tokens.add("coverageDataPath");
+    tokens.add(coverageDataPath);
+  }
+
+  // Debug
+  if (enableDebug) {
+    tokens.add("-e");
+    tokens.add("debug");
+    tokens.add("true");
+  }
+
+  // HPROF
+  if (dumpHProfData) {
+    tokens.add("-e");
+    tokens.add("hprofDataFile");
+    tokens.add("hprof.dump");
+  }
+
+  // Extras genéricos
+  for (Map.Entry<String, String> entry : extraInstrumentationOptions.entrySet()) {
+    tokens.add("-e");
+    tokens.add(ShellUtils.shellEscape(entry.getKey()));
+    tokens.add(ShellUtils.shellEscape(entry.getValue()));
+  }
+
+  // Animação (apenas API ≥ 10)
+  if (!withAnimation && device.getApiVersion() >= 10) {
+    tokens.add("--no_window_animation");
+  }
+
+  // Timeout
+  tokens.add("-e");
+  tokens.add("testTimeoutSeconds");
+  tokens.add(String.valueOf(testTimeout));
+
+  // Decisão sobre orquestrador
+  boolean useOrchestrator =
+      installBasicServices
+          && ORCHESTRATOR_ENABLED_RUNNERS.contains(instrumentation.getInstrumentationClass());
+
+  if (useOrchestrator) {
+    tokens.add("-r");
+    tokens.add("-w");
+    tokens.add("-e");
+    tokens.add("class");
+    tokens.add(ShellUtils.shellEscape(testMethodTarget));
+    tokens.add("-e");
+    tokens.add("targetInstrumentation");
+    tokens.add(instrumentation.getFullName());
+    tokens.add(ORCHESTRATOR_COMPONENT_NAME);
+  } else {
+    tokens.add("-r");
+    tokens.add("-w");
+    tokens.add("-e");
+    tokens.add("class");
+    tokens.add(ShellUtils.shellEscape(testMethodTarget));
+    tokens.add(instrumentation.getFullName());
+  }
+
+  // Se usamos serviços básicos, ocultamos o código de saída do ShellMain
+  if (installBasicServices) {
+    tokens.add("||");
+    tokens.add("true");
+  }
+
+  return Joiner.on(" ").join(tokens);
+}
 
   private boolean isApkAlreadyInstalled(String apkPath, String appPackageName) throws IOException {
     checkNotNull(apkPath);
