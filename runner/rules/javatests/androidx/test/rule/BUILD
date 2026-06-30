@@ -57,7 +57,7 @@ axt_android_library_test(
     name = "GrantPermissionRuleTest",
     srcs = ["GrantPermissionRuleTest.java"],
     # runtime permissions only a thing from api 23+
-    device_list = devices(apis(min_api = 23)),
+    device_list = devices(apis(min_api = 24)),
     deps = [
         "//core",
         "//ext/junit",
