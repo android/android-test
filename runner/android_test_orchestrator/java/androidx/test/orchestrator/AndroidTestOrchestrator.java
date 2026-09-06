@@ -24,6 +24,7 @@ import static androidx.test.orchestrator.OrchestratorConstants.CLEAR_PKG_DATA;
 import static androidx.test.orchestrator.OrchestratorConstants.COVERAGE_FILE_PATH;
 import static androidx.test.orchestrator.OrchestratorConstants.ISOLATED_ARGUMENT;
 import static androidx.test.orchestrator.OrchestratorConstants.ORCHESTRATOR_DEBUG_ARGUMENT;
+import static androidx.test.orchestrator.OrchestratorConstants.RESUME_ARGUMENT;
 import static androidx.test.orchestrator.OrchestratorConstants.TARGET_INSTRUMENTATION_ARGUMENT;
 
 import android.Manifest.permission;
@@ -59,6 +60,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -155,6 +157,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   // TODO(b/73548232) logic that touches these fields has nothing to do with being an
   // instrumentation, it should live in its own state machine class.
   private String test;
+  private List<String> remainedTests;
   private Iterator<String> testIterator;
 
   public AndroidTestOrchestrator() {
@@ -310,6 +313,7 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
     if (null == test) {
       List<String> allTests = callbackLogic.provideCollectedTests();
       testIterator = allTests.iterator();
+      remainedTests = new ArrayList<>(allTests);
       addListeners(allTests.size());
 
       if (allTests.isEmpty()) {
@@ -320,11 +324,36 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
       listenerManager.testProcessFinished(getOutputFile(test));
     }
 
-    if (runsInIsolatedMode(arguments)) {
+    if (runsInResumeMode(arguments)) {
+      executeEntireTestSuiteWithResume();
+    } else if (runsInIsolatedMode(arguments)) {
       executeNextTest();
     } else {
       executeEntireTestSuite();
     }
+  }
+
+  public void removeFinishedTests(String finishedTest) {
+    remainedTests.remove(finishedTest);
+  }
+
+  private void executeEntireTestSuiteWithResume() {
+    if (remainedTests.isEmpty()) {
+      finish(Activity.RESULT_OK  , createResultBundle());
+      return;
+    }
+
+    test = remainedTests.get(0);
+    listenerManager.testProcessStarted(new ParcelableDescription(test));
+
+    arguments.remove("package");
+    arguments.remove("testFile");
+    arguments.remove(AJUR_CLASS_ARGUMENT);
+    arguments.putString(AJUR_CLASS_ARGUMENT, String.join(",", remainedTests));
+
+    executorService.execute(
+            TestRunnable.legacyTestRunnable(
+                    getContext(), getSecret(arguments), arguments, getOutputStream(), this));
   }
 
   private void executeEntireTestSuite() {
@@ -471,6 +500,10 @@ public final class AndroidTestOrchestrator extends android.app.Instrumentation
   private static boolean runsInIsolatedMode(Bundle arguments) {
     // We run in isolated mode always, unless flag isolated is explicitly false.
     return !(Boolean.FALSE.toString().equalsIgnoreCase(arguments.getString(ISOLATED_ARGUMENT)));
+  }
+
+  private static boolean runsInResumeMode(Bundle arguments) {
+    return Boolean.TRUE.toString().equalsIgnoreCase(arguments.getString(RESUME_ARGUMENT));
   }
 
   private static boolean debugOrchestrator(Bundle arguments) {
