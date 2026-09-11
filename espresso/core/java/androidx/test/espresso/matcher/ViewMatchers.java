@@ -994,16 +994,23 @@ public final class ViewMatchers {
 
       Rect screen = getScreenWithoutStatusBarActionBar(view);
 
-      float viewHeight = (view.getHeight() > screen.height()) ? screen.height() : view.getHeight();
-      float viewWidth = (view.getWidth() > screen.width()) ? screen.width() : view.getWidth();
+      float totalScaleX = view.getScaleX();
+      float totalScaleY = view.getScaleY();
+      ViewParent parent = view.getParent();
+      while (parent instanceof View) {
+        View parentView = (View) parent;
+        totalScaleX *= parentView.getScaleX();
+        totalScaleY *= parentView.getScaleY();
+        parent = parentView.getParent();
+      }
 
-      // factor in the View's scaleX and scaleY properties.
-      viewHeight = Math.min(view.getHeight() * Math.abs(view.getScaleY()), screen.height());
-      viewWidth = Math.min(view.getWidth() * Math.abs(view.getScaleX()), screen.width());
+      // factor in the View and its ancestors' scaleX and scaleY properties.
+      float viewHeight = Math.min(view.getHeight() * Math.abs(totalScaleY), screen.height());
+      float viewWidth = Math.min(view.getWidth() * Math.abs(totalScaleX), screen.width());
 
       double maxArea = viewHeight * viewWidth;
       double visibleArea = visibleParts.height() * visibleParts.width();
-      int displayedPercentage = (int) ((visibleArea / maxArea) * 100);
+      int displayedPercentage = maxArea > 0 ? (int) ((visibleArea / maxArea) * 100) : 0;
 
       if (displayedPercentage < areaPercentage) {
         mismatchDescription
