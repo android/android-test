@@ -65,6 +65,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Checkable;
 import android.widget.CheckedTextView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -765,6 +766,32 @@ public class ViewMatchers1Test {
 
     assertFalse(isDisplayingAtLeast(30).matches(view));
     assertTrue(isDisplayingAtLeast(20).matches(view));
+  }
+
+  @Test
+  public void isDisplayingAtLeast_withParentScale() {
+    GlobalVisibleRectProvider providerMock = mock(GlobalVisibleRectProvider.class);
+    FrameLayout parent = new FrameLayout(context);
+    View child = new GlobalVisibleRectTestView(context, providerMock);
+    parent.addView(child);
+
+    // Set the view to be 100x100 with scale(0.5, -0.5): 2,500 pixels
+    child.setVisibility(View.VISIBLE);
+    child.layout(0, 0, 100, 100);
+    child.setScaleX(0.5f);
+    parent.setScaleY(-0.5f);
+    when(providerMock.get(any(), any()))
+        .then(
+            (Answer<Boolean>)
+                invocation -> {
+                  // Set the output rectangle to 40x40: 1,600 pixels
+                  Rect argRect = invocation.getArgument(0);
+                  argRect.set(0, 0, 40, 40);
+                  return true;
+                });
+
+    assertFalse(isDisplayingAtLeast(70).matches(child));
+    assertTrue(isDisplayingAtLeast(60).matches(child));
   }
 
   @Test
