@@ -6,6 +6,7 @@ load(
     "//build_extensions:android_library_test.bzl",
     "axt_android_library_test",
 )
+load("//build_extensions:axt_android_local_test.bzl", "axt_android_local_test")
 load(
     "//build_extensions:phone_devices.bzl",
     "apis",
@@ -129,11 +130,8 @@ axt_android_library_test(
         ":utils",
         "//core",
         "//espresso/core/java/androidx/test/espresso",
-        "//espresso/core/java/androidx/test/espresso/action",
-        "//espresso/core/java/androidx/test/espresso/assertion",
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//ext/junit",
-        "//opensource/androidx:annotation",
         "//runner/android_junit_runner",
         "//runner/rules",
         "//testapps/ui_testapp/java/androidx/test/ui/app:lib_exported",
@@ -171,6 +169,39 @@ axt_android_library_test(
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_hamcrest_hamcrest_library",
+        "@maven//:org_mockito_mockito_core",
+    ],
+)
+
+axt_android_local_test(
+    name = "IsDisplayingAtLeastIntegrationTest",
+    srcs = ["IsDisplayingAtLeastIntegrationTest.java"],
+    deps = [
+        ":utils",
+        "//core",
+        "//espresso/core/java/androidx/test/espresso",
+        "//espresso/core/java/androidx/test/espresso/assertion",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_mockito_mockito_core",
+    ],
+)
+
+axt_android_library_test(
+    name = "IsDisplayingAtLeastIntegrationTest_android",
+    srcs = ["IsDisplayingAtLeastIntegrationTest.java"],
+    deps = [
+        ":utils",
+        "//core",
+        "//espresso/core/java/androidx/test/espresso",
+        "//espresso/core/java/androidx/test/espresso/assertion",
+        "//espresso/core/java/androidx/test/espresso/matcher",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
         "@maven//:org_mockito_mockito_core",
     ],
 )

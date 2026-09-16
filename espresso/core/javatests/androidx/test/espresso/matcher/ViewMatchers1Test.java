@@ -28,7 +28,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotClickable;
@@ -85,7 +84,6 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.stubbing.Answer;
 
 /** Unit tests for {@link ViewMatchers}. */
 @LargeTest
@@ -734,89 +732,6 @@ public class ViewMatchers1Test {
     assertThat(
         getMismatchDescription(isDisplayed(), view),
         is("view.getGlobalVisibleRect() returned empty rectangle"));
-  }
-
-  @Test
-  public void isDisplayingAtLeast_invalidPercentageRange() {
-    assertThrows(IllegalArgumentException.class, () -> isDisplayingAtLeast(-1));
-    assertThrows(IllegalArgumentException.class, () -> isDisplayingAtLeast(101));
-  }
-
-  @Test
-  public void isDisplayingAtLeastTest() {
-    GlobalVisibleRectProvider providerMock = mock(GlobalVisibleRectProvider.class);
-    View view = new GlobalVisibleRectTestView(context, providerMock);
-
-    view.setVisibility(View.GONE);
-    assertFalse(isDisplayingAtLeast(5).matches(view));
-
-    // Set the view to be 100x100: 10,000 pixels
-    view.setVisibility(View.VISIBLE);
-    view.layout(0, 0, 100, 100);
-    when(providerMock.get(any(), any()))
-        .then(
-            (Answer<Boolean>)
-                invocation -> {
-                  // Set the output rectangle to 50x50: 2500 pixels
-                  Rect argRect = invocation.getArgument(0);
-                  argRect.set(0, 0, 50, 50);
-                  return true;
-                });
-
-    assertFalse(isDisplayingAtLeast(30).matches(view));
-    assertTrue(isDisplayingAtLeast(20).matches(view));
-  }
-
-  @Test
-  public void isDisplayingAtLeast_description() {
-    assertThat(
-        getDescription(isDisplayingAtLeast(15)),
-        is(
-            "("
-                + getDescription(withEffectiveVisibility(Visibility.VISIBLE))
-                + " and view.getGlobalVisibleRect() covers at least <15> percent of the view's"
-                + " area)"));
-  }
-
-  @Test
-  public void isDisplayingAtLeast_mismatchDescription_wrongVisibility() {
-    View view = new View(context);
-    view.setVisibility(View.GONE);
-    assertThat(
-        getMismatchDescription(isDisplayingAtLeast(15), view),
-        is(getMismatchDescription(withEffectiveVisibility(Visibility.VISIBLE), view)));
-  }
-
-  @Test
-  public void isDisplayingAtLeast_mismatchDescription_notVisible() {
-    GlobalVisibleRectProvider providerMock = mock(GlobalVisibleRectProvider.class);
-    View view = new GlobalVisibleRectTestView(context, providerMock);
-    view.setVisibility(View.VISIBLE);
-    when(providerMock.get(any(), any())).thenReturn(false);
-    assertThat(
-        getMismatchDescription(isDisplayingAtLeast(15), view),
-        is("view was <0> percent visible to the user"));
-  }
-
-  @Test
-  public void isDisplayingAtLeast_mismatchDescription_lowVisibility() {
-    GlobalVisibleRectProvider providerMock = mock(GlobalVisibleRectProvider.class);
-    View view = new GlobalVisibleRectTestView(context, providerMock);
-    view.setVisibility(View.VISIBLE);
-    // Set the area of the view to 100x100 = 10,000
-    view.layout(0, 0, 100, 100);
-    when(providerMock.get(any(), any()))
-        .then(
-            (Answer<Boolean>)
-                invocation -> {
-                  // Set the output rectangle to 50x50: 2500 pixels
-                  Rect argRect = invocation.getArgument(0);
-                  argRect.set(0, 0, 50, 50);
-                  return true;
-                });
-    assertThat(
-        getMismatchDescription(isDisplayingAtLeast(35), view),
-        is("view was <25> percent visible to the user"));
   }
 
   /** This interface is used to mock the {@link View#getGlobalVisibleRect(Rect, Point)} method. */
