@@ -179,13 +179,14 @@ axt_android_local_test(
     deps = [
         ":utils",
         "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//core/javatests/androidx/test/core/app/testing:manifest",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/assertion",
         "//espresso/core/java/androidx/test/espresso/matcher",
         "//ext/junit",
         "//runner/android_junit_runner",
         "@maven//:org_hamcrest_hamcrest_core",
-        "@maven//:org_mockito_mockito_core",
     ],
 )
 
@@ -195,6 +196,8 @@ axt_android_library_test(
     deps = [
         ":utils",
         "//core",
+        "//core/javatests/androidx/test/core/app/testing",
+        "//core/javatests/androidx/test/core/app/testing:manifest",
         "//espresso/core/java/androidx/test/espresso",
         "//espresso/core/java/androidx/test/espresso/assertion",
         "//espresso/core/java/androidx/test/espresso/matcher",
@@ -202,6 +205,5 @@ axt_android_library_test(
         "//runner/android_junit_runner",
         "@maven//:junit_junit",
         "@maven//:org_hamcrest_hamcrest_core",
-        "@maven//:org_mockito_mockito_core",
     ],
 )

@@ -20,6 +20,7 @@ The following artifacts were released:
 * Don't suppress AppNotIdleException if dumpThreadStates throws.
 * Remove Espresso.onIdle tracing
 * Fix NullPointerException in UiControllerImpl.
+* Fix `isDisplayingAtLeast` matcher to factor in the scale of ancestor views.
 
 **New Features**
 

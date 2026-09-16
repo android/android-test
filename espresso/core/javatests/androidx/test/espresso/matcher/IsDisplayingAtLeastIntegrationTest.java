@@ -17,43 +17,37 @@
 package androidx.test.espresso.matcher;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.MatcherTestUtils.getDescription;
 import static androidx.test.espresso.matcher.MatcherTestUtils.getMismatchDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertFalse;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import android.content.Context;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import androidx.test.core.app.testing.UiActivity;
 import androidx.test.espresso.matcher.ViewMatchers.Visibility;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.stubbing.Answer;
 
 /** Integration tests for {@link ViewMatchers#isDisplayingAtLeast(int)}. */
-// TODO: Use real views instead of mocking.
-@LargeTest
 @RunWith(AndroidJUnit4.class)
+@LargeTest
 public class IsDisplayingAtLeastIntegrationTest {
 
-  private Context context;
-
-  @Before
-  public void setUp() throws Exception {
-    context = getApplicationContext();
-  }
+  @Rule
+  public ActivityScenarioRule<UiActivity> activityScenarioRule =
+      new ActivityScenarioRule<>(UiActivity.class);
 
   @Test
   public void invalidPercentageRange() {
@@ -62,28 +56,97 @@ public class IsDisplayingAtLeastIntegrationTest {
   }
 
   @Test
+  public void fullyDisplayed() {
+    View[] childHolder = new View[1];
+    activityScenarioRule
+        .getScenario()
+        .onActivity(
+            activity -> {
+              View child = new View(activity);
+              childHolder[0] = child;
+              activity.setContentView(child, new ViewGroup.LayoutParams(100, 100));
+            });
+
+    onView(is(childHolder[0])).check(matches(isDisplayingAtLeast(100)));
+  }
+
+  @Test
+  public void fullyDisplayed_withScale() {
+    View[] childHolder = new View[1];
+    activityScenarioRule
+        .getScenario()
+        .onActivity(
+            activity -> {
+              FrameLayout parent = new FrameLayout(activity);
+              parent.setScaleX(0.5f);
+              View child = new View(activity);
+              childHolder[0] = child;
+              child.setScaleY(0.5f);
+              parent.addView(child, new FrameLayout.LayoutParams(100, 100));
+              activity.setContentView(
+                  parent,
+                  new ViewGroup.LayoutParams(
+                      ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            });
+
+    onView(is(childHolder[0])).check(matches(isDisplayingAtLeast(100)));
+  }
+
+  @Test
   public void partiallyDisplayed() {
-    GlobalVisibleRectProvider providerMock = mock(GlobalVisibleRectProvider.class);
-    View view = new GlobalVisibleRectTestView(context, providerMock);
+    View[] childHolder = new View[1];
+    activityScenarioRule
+        .getScenario()
+        .onActivity(
+            activity -> {
+              FrameLayout parent = new FrameLayout(activity);
+              View child = new View(activity);
+              childHolder[0] = child;
+              parent.addView(child, new FrameLayout.LayoutParams(100, 100));
+              activity.setContentView(parent, new ViewGroup.LayoutParams(50, 50));
+            });
 
-    view.setVisibility(View.GONE);
-    assertFalse(isDisplayingAtLeast(5).matches(view));
+    // Set the view to be 100x100: 10,000 pixels, parent 50x50: 2,500 pixels (25% visible)
+    onView(is(childHolder[0])).check(matches(isDisplayingAtLeast(20)));
+    onView(is(childHolder[0])).check(matches(not(isDisplayingAtLeast(30))));
+  }
 
-    // Set the view to be 100x100: 10,000 pixels
-    view.setVisibility(View.VISIBLE);
-    view.layout(0, 0, 100, 100);
-    when(providerMock.get(any(), any()))
-        .then(
-            (Answer<Boolean>)
-                invocation -> {
-                  // Set the output rectangle to 50x50: 2500 pixels
-                  Rect argRect = invocation.getArgument(0);
-                  argRect.set(0, 0, 50, 50);
-                  return true;
-                });
+  @Test
+  public void partiallyDisplayed_withScale() {
+    View[] childHolder = new View[1];
+    activityScenarioRule
+        .getScenario()
+        .onActivity(
+            activity -> {
+              FrameLayout parent = new FrameLayout(activity);
+              parent.setScaleY(-0.9f);
+              View child = new View(activity);
+              childHolder[0] = child;
+              child.setScaleX(0.6f);
+              parent.addView(child, new FrameLayout.LayoutParams(100, 100));
+              activity.setContentView(parent, new ViewGroup.LayoutParams(60, 60));
+            });
 
-    assertFalse(isDisplayingAtLeast(30).matches(view));
-    assertTrue(isDisplayingAtLeast(20).matches(view));
+    // Scaled child: 60x90 = 5,400 pixels (horizontal range [20, 80]),
+    // parent 60x60 clips child to 40x54 = 2,160 pixels (40% visible).
+    onView(is(childHolder[0])).check(matches(isDisplayingAtLeast(39)));
+    onView(is(childHolder[0])).check(matches(not(isDisplayingAtLeast(41))));
+  }
+
+  @Test
+  public void gone() {
+    View[] childHolder = new View[1];
+    activityScenarioRule
+        .getScenario()
+        .onActivity(
+            activity -> {
+              View child = new View(activity);
+              childHolder[0] = child;
+              child.setVisibility(View.GONE);
+              activity.setContentView(child, new ViewGroup.LayoutParams(100, 100));
+            });
+
+    onView(is(childHolder[0])).check(matches(not(isDisplayingAtLeast(5))));
   }
 
   @Test
@@ -99,7 +162,7 @@ public class IsDisplayingAtLeastIntegrationTest {
 
   @Test
   public void mismatchDescription_wrongVisibility() {
-    View view = new View(context);
+    View view = new View(getApplicationContext());
     view.setVisibility(View.GONE);
     assertThat(
         getMismatchDescription(isDisplayingAtLeast(15), view),
@@ -108,10 +171,8 @@ public class IsDisplayingAtLeastIntegrationTest {
 
   @Test
   public void mismatchDescription_notVisible() {
-    GlobalVisibleRectProvider providerMock = mock(GlobalVisibleRectProvider.class);
-    View view = new GlobalVisibleRectTestView(context, providerMock);
+    View view = new View(getApplicationContext());
     view.setVisibility(View.VISIBLE);
-    when(providerMock.get(any(), any())).thenReturn(false);
     assertThat(
         getMismatchDescription(isDisplayingAtLeast(15), view),
         is("view was <0> percent visible to the user"));
@@ -119,42 +180,24 @@ public class IsDisplayingAtLeastIntegrationTest {
 
   @Test
   public void mismatchDescription_lowVisibility() {
-    GlobalVisibleRectProvider providerMock = mock(GlobalVisibleRectProvider.class);
-    View view = new GlobalVisibleRectTestView(context, providerMock);
-    view.setVisibility(View.VISIBLE);
-    // Set the area of the view to 100x100 = 10,000
-    view.layout(0, 0, 100, 100);
-    when(providerMock.get(any(), any()))
-        .then(
-            (Answer<Boolean>)
-                invocation -> {
-                  // Set the output rectangle to 50x50: 2500 pixels
-                  Rect argRect = invocation.getArgument(0);
-                  argRect.set(0, 0, 50, 50);
-                  return true;
-                });
-    assertThat(
-        getMismatchDescription(isDisplayingAtLeast(35), view),
-        is("view was <25> percent visible to the user"));
-  }
+    View[] childHolder = new View[1];
+    activityScenarioRule
+        .getScenario()
+        .onActivity(
+            activity -> {
+              // Set the area of the view to 100x100 = 10,000, parent to 50x50 = 2,500: 25% visible
+              FrameLayout parent = new FrameLayout(activity);
+              View child = new View(activity);
+              childHolder[0] = child;
+              parent.addView(child, new FrameLayout.LayoutParams(100, 100));
+              activity.setContentView(parent, new ViewGroup.LayoutParams(50, 50));
+            });
 
-  /** This interface is used to mock the {@link View#getGlobalVisibleRect(Rect, Point)} method. */
-  interface GlobalVisibleRectProvider {
-    boolean get(Rect r, Point offset);
-  }
-
-  private static class GlobalVisibleRectTestView extends View {
-
-    private final GlobalVisibleRectProvider provider;
-
-    GlobalVisibleRectTestView(Context context, GlobalVisibleRectProvider provider) {
-      super(context);
-      this.provider = provider;
-    }
-
-    @Override
-    public final boolean getGlobalVisibleRect(Rect r, Point globalOffset) {
-      return provider.get(r, globalOffset);
-    }
+    onView(is(childHolder[0]))
+        .check(
+            (view, noViewFoundException) ->
+                assertThat(
+                    getMismatchDescription(isDisplayingAtLeast(35), view),
+                    is("view was <25> percent visible to the user")));
   }
 }
