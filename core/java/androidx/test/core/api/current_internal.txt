@@ -3,7 +3,7 @@ package androidx.test.core.app {
 
   public final class DeviceCapture {
     method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static boolean canTakeScreenshot();
-    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static android.graphics.Bitmap takeScreenshotNoSync() throws java.lang.RuntimeException;
+    method @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @kotlin.jvm.Throws(exceptionClasses=RuntimeException::class) public static android.graphics.Bitmap takeScreenshotNoSync() throws java.lang.RuntimeException;
   }
 
 }
@@ -11,7 +11,7 @@ package androidx.test.core.app {
 package androidx.test.core.graphics {
 
   public final class BitmapStorage {
-    method @Deprecated @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public static void writeToTestStorage(android.graphics.Bitmap, androidx.test.platform.io.PlatformTestStorage testStorage, String name) throws java.io.IOException;
+    method @Deprecated @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @kotlin.jvm.Throws(exceptionClasses=IOException::class) public static void writeToTestStorage(android.graphics.Bitmap, androidx.test.platform.io.PlatformTestStorage testStorage, String name) throws java.io.IOException;
   }
 
 }
