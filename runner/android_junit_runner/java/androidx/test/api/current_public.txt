@@ -47,6 +47,7 @@ package androidx.test.orchestrator.callback {
   public interface OrchestratorCallback extends android.os.IInterface {
     method public void addTest(String!) throws android.os.RemoteException;
     method public void sendTestNotification(android.os.Bundle!) throws android.os.RemoteException;
+    field public static final String DESCRIPTOR = "androidx.test.orchestrator.callback.OrchestratorCallback";
   }
 
   public static class OrchestratorCallback.Default implements androidx.test.orchestrator.callback.OrchestratorCallback {
@@ -61,6 +62,10 @@ package androidx.test.orchestrator.callback {
     method public android.os.IBinder! asBinder();
     method public static androidx.test.orchestrator.callback.OrchestratorCallback! asInterface(android.os.IBinder!);
     method public boolean onTransact(int, android.os.Parcel!, android.os.Parcel!, int) throws android.os.RemoteException;
+  }
+
+  public static class OrchestratorCallback._Parcel {
+    ctor public OrchestratorCallback._Parcel();
   }
 
 }

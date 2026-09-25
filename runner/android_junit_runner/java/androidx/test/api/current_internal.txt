@@ -134,6 +134,7 @@ package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @Restric
 
   public interface ITestDiscoveryEvent extends android.os.IInterface {
     method public void send(androidx.test.services.events.discovery.TestDiscoveryEvent!) throws android.os.RemoteException;
+    field public static final String DESCRIPTOR = "androidx.test.services.events.discovery.ITestDiscoveryEvent";
   }
 
   public static class ITestDiscoveryEvent.Default implements androidx.test.services.events.discovery.ITestDiscoveryEvent {
@@ -147,6 +148,10 @@ package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @Restric
     method public android.os.IBinder! asBinder();
     method public static androidx.test.services.events.discovery.ITestDiscoveryEvent! asInterface(android.os.IBinder!);
     method public boolean onTransact(int, android.os.Parcel!, android.os.Parcel!, int) throws android.os.RemoteException;
+  }
+
+  public static class ITestDiscoveryEvent._Parcel {
+    ctor public ITestDiscoveryEvent._Parcel();
   }
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestDiscoveryErrorEvent extends androidx.test.services.events.discovery.TestDiscoveryEvent {
@@ -180,6 +185,7 @@ package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @Restric
 
   public interface ITestPlatformEvent extends android.os.IInterface {
     method public void send(androidx.test.services.events.platform.TestPlatformEvent!) throws android.os.RemoteException;
+    field public static final String DESCRIPTOR = "androidx.test.services.events.platform.ITestPlatformEvent";
   }
 
   public static class ITestPlatformEvent.Default implements androidx.test.services.events.platform.ITestPlatformEvent {
@@ -193,6 +199,10 @@ package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @Restric
     method public android.os.IBinder! asBinder();
     method public static androidx.test.services.events.platform.ITestPlatformEvent! asInterface(android.os.IBinder!);
     method public boolean onTransact(int, android.os.Parcel!, android.os.Parcel!, int) throws android.os.RemoteException;
+  }
+
+  public static class ITestPlatformEvent._Parcel {
+    ctor public ITestPlatformEvent._Parcel();
   }
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestCaseErrorEvent extends androidx.test.services.events.platform.TestPlatformEvent {
@@ -265,6 +275,7 @@ package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @Restric
 
   public interface ITestRunEvent extends android.os.IInterface {
     method public void send(androidx.test.services.events.run.TestRunEvent!) throws android.os.RemoteException;
+    field public static final String DESCRIPTOR = "androidx.test.services.events.run.ITestRunEvent";
   }
 
   public static class ITestRunEvent.Default implements androidx.test.services.events.run.ITestRunEvent {
@@ -278,6 +289,10 @@ package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @Restric
     method public android.os.IBinder! asBinder();
     method public static androidx.test.services.events.run.ITestRunEvent! asInterface(android.os.IBinder!);
     method public boolean onTransact(int, android.os.Parcel!, android.os.Parcel!, int) throws android.os.RemoteException;
+  }
+
+  public static class ITestRunEvent._Parcel {
+    ctor public ITestRunEvent._Parcel();
   }
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public class TestAssumptionFailureEvent extends androidx.test.services.events.run.TestFailureEvent {

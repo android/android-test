@@ -24,6 +24,7 @@ package androidx.test.espresso.web.action {
   public interface IAtomActionResultPropagator extends android.os.IInterface {
     method public void setError(android.os.Bundle!) throws android.os.RemoteException;
     method public void setResult(androidx.test.espresso.web.model.Evaluation!) throws android.os.RemoteException;
+    field public static final String DESCRIPTOR = "androidx.test.espresso.web.action.IAtomActionResultPropagator";
   }
 
   public static class IAtomActionResultPropagator.Default implements androidx.test.espresso.web.action.IAtomActionResultPropagator {
@@ -38,6 +39,10 @@ package androidx.test.espresso.web.action {
     method public android.os.IBinder! asBinder();
     method public static androidx.test.espresso.web.action.IAtomActionResultPropagator! asInterface(android.os.IBinder!);
     method public boolean onTransact(int, android.os.Parcel!, android.os.Parcel!, int) throws android.os.RemoteException;
+  }
+
+  public static class IAtomActionResultPropagator._Parcel {
+    ctor public IAtomActionResultPropagator._Parcel();
   }
 
 }
