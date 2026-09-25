@@ -338,6 +338,30 @@ public class TestRequestBuilderTest {
     public void testParameterized() {}
   }
 
+  /**
+   * Parameterized test fixture whose generated names have non-numeric parameter suffixes, e.g.
+   * {@code testFoo[0: a b]}, {@code testFoo[1: [1, 2]]}, {@code testFoo[2: key=value (Integer)]}
+   * and a multiline {@code testFoo[3: multi\nline]}.
+   */
+  @RunWith(value = Parameterized.class)
+  public static class NamedParameterizedTest {
+
+    public NamedParameterizedTest(String data) {}
+
+    @Parameterized.Parameters(name = "{index}: {0}")
+    public static Collection<Object[]> data() {
+      Object[][] data =
+          new Object[][] {{"a b"}, {"[1, 2]"}, {"key=value (Integer)"}, {"multi\nline"}};
+      return Arrays.asList(data);
+    }
+
+    @Test
+    public void testFoo() {}
+
+    @Test
+    public void testBar() {}
+  }
+
   /** Test fixture for verifying support for suite() methods */
   public static class JUnit3Suite {
     public static junit.framework.Test suite() {
@@ -1007,6 +1031,42 @@ public class TestRequestBuilderTest {
     JUnitCore testRunner = new JUnitCore();
     Result result = testRunner.run(request);
     Assert.assertEquals(3, result.getRunCount());
+  }
+
+  /** Test including a parameterized method by root name with non-numeric parameter names. */
+  @Test
+  public void testNamedParameterizedMethods_include() {
+    Request request =
+        builder.addTestMethod(NamedParameterizedTest.class.getName(), "testFoo").build();
+    JUnitCore testRunner = new JUnitCore();
+    Result result = testRunner.run(request);
+    Assert.assertEquals(4, result.getRunCount());
+  }
+
+  /** Test excluding a parameterized method by root name with non-numeric parameter names. */
+  @Test
+  public void testNamedParameterizedMethods_exclude() {
+    Request request =
+        builder
+            .addTestClass(NamedParameterizedTest.class.getName())
+            .removeTestMethod(NamedParameterizedTest.class.getName(), "testFoo")
+            .build();
+    JUnitCore testRunner = new JUnitCore();
+    Result result = testRunner.run(request);
+    Assert.assertEquals(4, result.getRunCount());
+  }
+
+  /** Test including a single parameterized instance by its full name. */
+  @Test
+  public void testNamedParameterizedMethods_includeFullName() {
+    Request request =
+        builder
+            .addTestMethod(NamedParameterizedTest.class.getName(), "testFoo[1: [1, 2]]")
+            .addTestMethod(NamedParameterizedTest.class.getName(), "testBar[3: multi\nline]")
+            .build();
+    JUnitCore testRunner = new JUnitCore();
+    Result result = testRunner.run(request);
+    Assert.assertEquals(2, result.getRunCount());
   }
 
   /** Verify adding a class method and removing same class leaves no tests. */

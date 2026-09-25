@@ -8,6 +8,8 @@
 
 * Catch LinkageError when loading annotation classes (b/536117227)
 
+* Support filtering parameterized tests with arbitrary (non-numeric) parameter names by their root method name. (b/564761639)
+
 **New Features**
 
 * Make perfetto trace sections for tests more identifiable by prefixing with "test:" and using fully qualified class name. (b/204992764)

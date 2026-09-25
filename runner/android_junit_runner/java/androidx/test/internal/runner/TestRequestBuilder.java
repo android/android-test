@@ -46,6 +46,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.junit.runner.Description;
 import org.junit.runner.Request;
@@ -364,6 +365,17 @@ public class TestRequestBuilder {
   /** A {@link Filter} used to filter out desired test methods from a given class */
   private static class MethodFilter extends AbstractFilter {
 
+    /**
+     * Matches a parameterized test method name, capturing the root method name.
+     *
+     * <p>Parameterized runners name tests as {@code methodName[<params>]}, where {@code <params>}
+     * is arbitrary text, e.g. {@code [0]}, {@code [0: 1 + 2 = 3]}, {@code [dryRun=true,retries=2]}
+     * or {@code [[1, 2]]}. Since a JVM method name cannot contain {@code '['}, everything before
+     * the first {@code '['} is the root method name.
+     */
+    private static final Pattern PARAMETERIZED_SUFFIX_PATTERN =
+        Pattern.compile("^([^\\[]+)\\[.*\\]$", Pattern.DOTALL);
+
     private final String className;
     private Set<String> includedMethods = new HashSet<>();
     private Set<String> excludedMethods = new HashSet<>();
@@ -408,12 +420,9 @@ public class TestRequestBuilder {
     }
 
     // Strips out the parameterized suffix if it exists
-    private String stripParameterizedSuffix(String name) {
-      Pattern suffixPattern = Pattern.compile(".+(\\[[0-9]+\\])$");
-      if (suffixPattern.matcher(name).matches()) {
-        name = name.substring(0, name.lastIndexOf('['));
-      }
-      return name;
+    private static String stripParameterizedSuffix(String name) {
+      Matcher matcher = PARAMETERIZED_SUFFIX_PATTERN.matcher(name);
+      return matcher.matches() ? matcher.group(1) : name;
     }
 
     public void addInclusionMethod(String methodName) {
