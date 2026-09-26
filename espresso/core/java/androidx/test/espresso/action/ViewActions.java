@@ -586,4 +586,13 @@ public final class ViewActions {
   public static ViewAction captureToBitmap(BitmapReceiver bitmapReceiver) {
     return new CaptureToBitmapAction(bitmapReceiver);
   }
+
+  public static ViewAction slowSwipeUp() {
+    return actionWithAssertions(
+        new GeneralSwipeAction(
+            Swipe.SLOW,
+            GeneralLocation.translate(GeneralLocation.BOTTOM_CENTER, 0, -EDGE_FUZZ_FACTOR),
+            GeneralLocation.TOP_CENTER,
+            Press.FINGER));
+  }
 }
