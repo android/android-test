@@ -71,7 +71,8 @@ public final class AndroidJUnit4 extends Runner implements Filterable, Sortable 
 
   private static boolean hasClass(String className) {
     try {
-      return Class.forName(className) != null;
+      Class<?> unused = Class.forName(className);
+      return true;
     } catch (ClassNotFoundException e) {
       return false;
     }
