@@ -117,148 +117,178 @@ class DexDumpIterator extends AbstractIterator<DexClassData> {
     return result;
   }
 
-  @Override
-  protected DexClassData computeNext() {
+
+private static class EndElementResult {
+    final DexClassData.Builder currentClass;
+    final MethodData.MethodBuilder currentMethod;
+    final boolean inConstructor;
+    final DexClassData returnValue;
+
+    EndElementResult(DexClassData.Builder currentClass,
+                     MethodData.MethodBuilder currentMethod,
+                     boolean inConstructor,
+                     DexClassData returnValue) {
+        this.currentClass = currentClass;
+        this.currentMethod = currentMethod;
+        this.inConstructor = inConstructor;
+        this.returnValue = returnValue;
+    }
+}
+
+ @Override
+protected DexClassData computeNext() {
     DexClassData.Builder currentClass = null;
     MethodData.MethodBuilder currentMethod = null;
     Deque<AnnotationContext> annotationStack = Lists.newLinkedList();
     boolean inConstructor = false;
 
     while (streamHasNext()) {
-      String name = null;
-      switch (streamNext()) {
-        case END_DOCUMENT:
-          return endOfData();
-        case START_ELEMENT:
-          currentLocation = xmlStreamReader.getLocation();
-          name = xmlStreamReader.getLocalName();
-          if ("package".equals(name)) {
-            currentPackage = handleNewPackageNode();
-          } else if ("class".equals(name)) {
-            currentClass = handleNewClassNode(currentClass);
-          } else if ("method".equals(name)) {
-            currentMethod = handleNewMethodNode(currentMethod);
-          } else if ("parameter".equals(name)) {
-            currentMethod = handleParameterNode(currentMethod, inConstructor);
-          } else if ("constructor".equals(name)) {
-            checkState(!inConstructor, "Already in a constructor node. %s",
+        String name = null;
+        switch (streamNext()) {
+            case END_DOCUMENT:
+                return endOfData();
+            case START_ELEMENT:
+                currentLocation = xmlStreamReader.getLocation();
+                name = xmlStreamReader.getLocalName();
+                if ("package".equals(name)) {
+                    currentPackage = handleNewPackageNode();
+                } else if ("class".equals(name)) {
+                    currentClass = handleNewClassNode(currentClass);
+                } else if ("method".equals(name)) {
+                    currentMethod = handleNewMethodNode(currentMethod);
+                } else if ("parameter".equals(name)) {
+                    currentMethod = handleParameterNode(currentMethod, inConstructor);
+                } else if ("constructor".equals(name)) {
+                    checkState(!inConstructor, "Already in a constructor node. %s",
+                            currentLocation);
+                    inConstructor = true;
+                } else if ("annotation".equals(name)) {
+                    AnnotationContext context = new AnnotationContext();
+                    annotationStack.push(context);
+                    context.currentAnnotation = handleNewAnnotationNode();
+                } else if ("anno_field".equals(name)) {
+                    checkState(!annotationStack.isEmpty(), "Not in annotation! %s",
+                            currentLocation);
+                    AnnotationContext context = annotationStack.pop();
+                    context.currentAnnotationValue = handleNewAnnotationFieldNode(
+                            context.currentAnnotationValue);
+                    annotationStack.push(context);
+                } else if ("anno_field_value".equals(name)) {
+                    checkState(!annotationStack.isEmpty(), "Not in annotation! %s",
+                            currentLocation);
+                    AnnotationContext context = annotationStack.pop();
+                    context.currentAnnotationValue = handleNewAnnotationFieldValueNode(
+                            context.currentAnnotationValue,
+                            context.currentArrayStatus);
+                    annotationStack.push(context);
+                } else if ("anno_field_array".equals(name)) {
+                    checkState(!annotationStack.isEmpty(), "Not in annotation! %s",
+                            currentLocation);
+                    AnnotationContext context = annotationStack.pop();
+                    context.currentArrayStatus = handleNewAnnotationFieldArrayNode(
+                            context.currentAnnotationValue,
+                            context.currentArrayStatus);
+                    annotationStack.push(context);
+                } else if ("array_element".equals(name)) {
+                    checkState(!annotationStack.isEmpty(), "Not in annotation! %s",
+                            currentLocation);
+                    AnnotationContext context = annotationStack.pop();
+                    context.currentArrayStatus = handleNewAnnotationFieldArrayElementNode(
+                            context.currentAnnotationValue,
+                            context.currentArrayStatus);
+                    annotationStack.push(context);
+                }
+                break;
+            case END_ELEMENT:
+                currentLocation = xmlStreamReader.getLocation();
+                name = xmlStreamReader.getLocalName();
+                EndElementResult result = handleEndElement(name, currentClass, currentMethod,
+                        annotationStack, inConstructor);
+                currentClass = result.currentClass;
+                currentMethod = result.currentMethod;
+                inConstructor = result.inConstructor;
+                if (result.returnValue != null) {
+                    return result.returnValue;
+                }
+                break;
+            default: { /* don't care */ }
+        }
+        currentLocation = null;
+    }
+    throw new IllegalStateException("Should never happen. Document end not emitted?");
+}
+
+private EndElementResult handleEndElement(String name,
+                                          DexClassData.Builder currentClass,
+                                          MethodData.MethodBuilder currentMethod,
+                                          Deque<AnnotationContext> annotationStack,
+                                          boolean inConstructor) {
+    if ("package".equals(name)) {
+        currentPackage = handleEndPackageNode();
+    } else if ("class".equals(name)) {
+        return new EndElementResult(currentClass, currentMethod, inConstructor,
+                handleEndClassNode(currentClass, currentMethod, annotationStack));
+    } else if ("method".equals(name)) {
+        currentMethod = handleEndMethodNode(currentClass, currentMethod);
+    } else if ("constructor".equals(name)) {
+        checkState(inConstructor, "Not in constructor. %s", currentLocation);
+        inConstructor = false;
+    } else if ("annotation".equals(name)) {
+        checkState(!annotationStack.isEmpty(), "Not in annotation! %s", currentLocation);
+        AnnotationContext context = annotationStack.pop();
+        checkState(null == context.currentAnnotationValue, "Never closed value node %s",
                 currentLocation);
-            inConstructor = true;
-          } else if ("annotation".equals(name)) {
-            AnnotationContext context = new AnnotationContext();
-            annotationStack.push(context);
-            context.currentAnnotation = handleNewAnnotationNode();
-          } else if ("anno_field".equals(name)) {
-            checkState(!annotationStack.isEmpty(), "Not in annotation! %s",
-                currentLocation);
-            AnnotationContext context = annotationStack.pop();
-            context.currentAnnotationValue = handleNewAnnotationFieldNode(
-                context.currentAnnotationValue);
-            annotationStack.push(context);
-          } else if ("anno_field_value".equals(name)) {
-            checkState(!annotationStack.isEmpty(), "Not in annotation! %s",
-                currentLocation);
-            AnnotationContext context = annotationStack.pop();
-            context.currentAnnotationValue = handleNewAnnotationFieldValueNode(
-                context.currentAnnotationValue,
-                context.currentArrayStatus);
-            annotationStack.push(context);
-          } else if ("anno_field_array".equals(name)) {
-            checkState(!annotationStack.isEmpty(), "Not in annotation! %s",
-                currentLocation);
-            AnnotationContext context = annotationStack.pop();
-            context.currentArrayStatus = handleNewAnnotationFieldArrayNode(
-                context.currentAnnotationValue,
-                context.currentArrayStatus);
-            annotationStack.push(context);
-          } else if ("array_element".equals(name)) {
-            checkState(!annotationStack.isEmpty(), "Not in annotation! %s",
-                currentLocation);
-            AnnotationContext context = annotationStack.pop();
-            context.currentArrayStatus = handleNewAnnotationFieldArrayElementNode(
-                context.currentAnnotationValue,
-                context.currentArrayStatus);
-            annotationStack.push(context);
-          }
-          break;
-        case END_ELEMENT:
-          currentLocation = xmlStreamReader.getLocation();
-          name = xmlStreamReader.getLocalName();
-          if ("package".equals(name)) {
-            currentPackage = handleEndPackageNode();
-          } else if ("class".equals(name)) {
-            return handleEndClassNode(currentClass, currentMethod, annotationStack);
-          } else if ("method".equals(name)) {
-            currentMethod = handleEndMethodNode(currentClass, currentMethod);
-          } else if ("constructor".equals(name)) {
-            checkState(inConstructor, "Not in constructor. %s", currentLocation);
-            inConstructor = false;
-          } else if ("annotation".equals(name)) {
-            checkState(!annotationStack.isEmpty(), "Not in annotation! %s",
-                currentLocation);
-            AnnotationContext context = annotationStack.pop();
-            checkState(null == context.currentAnnotationValue, "Never closed value node %s",
-                currentLocation);
-            checkState(null == context.currentArrayStatus, "Never closed array node %s",
+        checkState(null == context.currentArrayStatus, "Never closed array node %s",
                 currentLocation);
 
-            if (annotationStack.isEmpty()) {
-              handleEndAnnotationNode(
-                  context.currentAnnotation,
-                  currentClass,
-                  currentMethod,
-                  inConstructor);
-            } else {
-              AnnotationContext parentContext = annotationStack.pop();
-              AnnotationPb nestedAnnotation =
-                  handleEndNestedAnnotation(
-                      context.currentAnnotation,
-                      parentContext.currentAnnotation,
-                      parentContext.currentAnnotationValue);
-              parentContext.nestedAnnotations.add(nestedAnnotation);
-              annotationStack.push(parentContext);
-            }
-          } else if ("anno_field".equals(name)) {
-            checkState(!annotationStack.isEmpty(), "Not in annotation! %s",
-                currentLocation);
-            AnnotationContext context = annotationStack.pop();
-            context.currentAnnotationValue = handleEndAnnotationFieldNode(
+        if (annotationStack.isEmpty()) {
+            handleEndAnnotationNode(
+                    context.currentAnnotation,
+                    currentClass,
+                    currentMethod,
+                    inConstructor);
+        } else {
+            AnnotationContext parentContext = annotationStack.pop();
+            AnnotationPb nestedAnnotation =
+                    handleEndNestedAnnotation(
+                            context.currentAnnotation,
+                            parentContext.currentAnnotation,
+                            parentContext.currentAnnotationValue);
+            parentContext.nestedAnnotations.add(nestedAnnotation);
+            annotationStack.push(parentContext);
+        }
+    } else if ("anno_field".equals(name)) {
+        checkState(!annotationStack.isEmpty(), "Not in annotation! %s", currentLocation);
+        AnnotationContext context = annotationStack.pop();
+        context.currentAnnotationValue = handleEndAnnotationFieldNode(
                 context.currentAnnotation,
                 context.currentAnnotationValue,
                 context.nestedAnnotations);
-            context.nestedAnnotations.clear();
-            annotationStack.push(context);
-          } else if ("anno_field_value".equals(name)) {
-            checkState(!annotationStack.isEmpty(), "Not in annotation! %s",
+        context.nestedAnnotations.clear();
+        annotationStack.push(context);
+    } else if ("anno_field_value".equals(name)) {
+        checkState(!annotationStack.isEmpty(), "Not in annotation! %s", currentLocation);
+        AnnotationContext context = annotationStack.pop();
+        checkState(null != context.currentAnnotationValue, "anno value not set. %s",
                 currentLocation);
-            AnnotationContext context = annotationStack.pop();
-            checkState(null != context.currentAnnotationValue, "anno value not set. %s",
-                currentLocation);
-            annotationStack.push(context);
-          } else if ("anno_field_array".equals(name)) {
-            checkState(!annotationStack.isEmpty(), "Not in annotation! %s",
-                currentLocation);
-            AnnotationContext context = annotationStack.pop();
-            context.currentArrayStatus = handleEndAnnotationFieldArrayNode(
+        annotationStack.push(context);
+    } else if ("anno_field_array".equals(name)) {
+        checkState(!annotationStack.isEmpty(), "Not in annotation! %s", currentLocation);
+        AnnotationContext context = annotationStack.pop();
+        context.currentArrayStatus = handleEndAnnotationFieldArrayNode(
                 context.currentAnnotationValue,
                 context.currentArrayStatus);
-            annotationStack.push(context);
-          } else if ("array_element".equals(name)) {
-            checkState(!annotationStack.isEmpty(), "Not in annotation! %s",
-                currentLocation);
-            AnnotationContext context = annotationStack.pop();
-            context.currentArrayStatus = handleEndAnnotationFieldArrayElementNode(
+        annotationStack.push(context);
+    } else if ("array_element".equals(name)) {
+        checkState(!annotationStack.isEmpty(), "Not in annotation! %s", currentLocation);
+        AnnotationContext context = annotationStack.pop();
+        context.currentArrayStatus = handleEndAnnotationFieldArrayElementNode(
                 context.currentAnnotationValue,
                 context.currentArrayStatus);
-            annotationStack.push(context);
-          }
-          break;
-        default: { /* don't care */ }
-      }
-      currentLocation = null;
+        annotationStack.push(context);
     }
-    throw new IllegalStateException("Should never happen. Document end not emitted?");
-  }
+    return new EndElementResult(currentClass, currentMethod, inConstructor, null);
+}
 
   private static class AnnotationContext {
     private AnnotationPb.Builder currentAnnotation = null;
