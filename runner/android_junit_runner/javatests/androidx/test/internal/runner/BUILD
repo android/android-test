@@ -56,6 +56,58 @@ axt_android_library_test(
 )
 
 axt_android_library_test(
+    name = "ClassPathScannerTest",
+    srcs = [
+        "ClassPathScannerTest.java",
+    ],
+    # needs uses-library android.test.runner
+    manifest = "AndroidManifest.xml",
+    deps = [
+        "//core",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
+        "//runner/rules",
+        "//services/events/java/androidx/test/services/events",
+        "//services/storage",
+        "@androidsdk//:legacy_test-36",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_mockito_mockito_core",
+    ],
+)
+
+# Same test, but with R8 obfuscating org.junit.* as release test APKs do.
+axt_android_library_test(
+    name = "ClassPathScannerObfuscatedTest",
+    srcs = [
+        "ClassPathScannerTest.java",
+    ],
+    args = ["--test_args=expectObfuscatedJUnit=true"],
+    # needs uses-library android.test.runner
+    manifest = "AndroidManifest.xml",
+    proguard_specs = ["class_path_scanner_obfuscated_test.pgcfg"],
+    test_class = "androidx.test.internal.runner.ClassPathScannerTest",
+    deps = [
+        "//core",
+        "//ext/junit",
+        "//runner/android_junit_runner",
+        "//runner/android_junit_runner/javatests/androidx/test/testing/fixtures",
+        "//runner/rules",
+        "//services/events/java/androidx/test/services/events",
+        "//services/storage",
+        "@androidsdk//:legacy_test-36",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_truth_truth",
+        "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_mockito_mockito_core",
+    ],
+)
+
+axt_android_library_test(
     name = "DirectTestLoaderTest",
     srcs = [
         "DirectTestLoaderTest.java",

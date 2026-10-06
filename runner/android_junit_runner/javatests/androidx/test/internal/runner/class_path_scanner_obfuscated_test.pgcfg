@@ -1,0 +1,13 @@
+# Obfuscates the ClassPathScannerObfuscatedTest APK the way release test APKs are, notably
+# renaming org.junit.** and junit.framework.**, so DexBytecodeScanner is exercised against
+# obfuscated JUnit marker types.
+
+# The test class itself, and runners instantiated reflectively via @RunWith.
+-keep class androidx.test.internal.runner.ClassPathScannerTest { *; }
+-keep class androidx.test.ext.junit.runners.AndroidJUnit4 { *; }
+-keep class org.junit.runners.JUnit4 { *; }
+
+# JUnit discovers tests through runtime annotations; keep the attributes (not the names).
+-keepattributes *Annotation*,InnerClasses,EnclosingMethod
+
+-dontwarn **
