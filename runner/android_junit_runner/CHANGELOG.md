@@ -16,6 +16,8 @@
 
 * Add logs at the start and end of RunBefore and RunAfters sections to help bug understanding. (b/445754263)
 
+* Add opt-in DEX bytecode pre-filtering of candidate test classes to `AndroidClasspathSuite` via `-e useDexBytecodeScanner true`, speeding up test discovery on large APKs.
+
 **Breaking Changes**
 
 **API Changes**
