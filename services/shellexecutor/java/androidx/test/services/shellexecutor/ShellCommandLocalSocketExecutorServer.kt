@@ -32,6 +32,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.CompletableJob
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -59,7 +60,7 @@ constructor(
   // Since LocalServerSocket.accept() has to be interrupted, we keep that in its own Job...
   lateinit var serverJob: Job
   // ...while all the child jobs are under a single SupervisorJob that we can join later.
-  val shellJobs = SupervisorJob()
+  val shellJobs: CompletableJob = SupervisorJob()
   val running = AtomicBoolean(true)
 
   /** Returns the binder key to pass to client processes. */
