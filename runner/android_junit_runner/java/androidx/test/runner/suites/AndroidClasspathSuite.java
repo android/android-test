@@ -16,6 +16,7 @@
 package androidx.test.runner.suites;
 
 import static androidx.test.internal.runner.ClassPathScanner.getDefaultClasspaths;
+import static androidx.test.platform.app.InstrumentationRegistry.getArguments;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 import androidx.annotation.RestrictTo;
@@ -44,9 +45,18 @@ import org.junit.runners.model.RunnerBuilder;
  * <p>'adb shell am instrument mypkg/androidx.test.runner.AndroidJUnitRunner' 'adb shell am
  * instrument -e class androidx.test.runner.suites.AndroidClasspathSuite
  * mypkg/androidx.test.runner.AndroidJUnitRunner'
+ *
+ * <p>Pass {@code -e useDexBytecodeScanner true} to speed up discovery by pre-filtering candidate
+ * test classes from the APK's DEX bytecode tables instead of loading every class.
  */
 @RunWith(RunnerSuite.class)
 public final class AndroidClasspathSuite {
+
+  /**
+   * Instrumentation argument that, when {@code true}, enables DEX bytecode pre-filtering of
+   * candidate test classes. Disabled by default.
+   */
+  private static final String ARGUMENT_USE_DEX_BYTECODE_SCANNER = "useDexBytecodeScanner";
 
   /**
    * Only called reflectively. Do not use programmatically.
@@ -77,7 +87,9 @@ public final class AndroidClasspathSuite {
     private static List<Runner> getRunnersForClasses(RunnerBuilder builder) {
       try {
         Collection<String> classNames =
-            new ClassPathScanner(getDefaultClasspaths(getInstrumentation())).getClassPathEntries();
+            new ClassPathScanner(
+                    getDefaultClasspaths(getInstrumentation()), isDexBytecodeScannerEnabled())
+                .getClassPathEntries();
         return TestLoader.Factory.create(null, builder, true).getRunnersFor(classNames);
       } catch (IOException e) {
         return Arrays.asList(
@@ -86,6 +98,14 @@ public final class AndroidClasspathSuite {
                 new RuntimeException(
                     "Failed to perform classpath scanning to determine tests to run", e)));
       }
+    }
+
+    /**
+     * Returns whether the {@code useDexBytecodeScanner} instrumentation argument is set to {@code
+     * true}.
+     */
+    private static boolean isDexBytecodeScannerEnabled() {
+      return Boolean.parseBoolean(getArguments().getString(ARGUMENT_USE_DEX_BYTECODE_SCANNER));
     }
   }
 }

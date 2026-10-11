@@ -173,6 +173,7 @@ public class ClassPathScanner {
   }
 
   private final Set<String> classPath = new HashSet<>();
+  private final boolean useDexBytecodePreFilter;
 
   /**
    * Constructs a new instance of a {@link ClassPathScanner}.
@@ -180,7 +181,7 @@ public class ClassPathScanner {
    * @param paths filepaths that should be scanned (.apk and .dex files)
    */
   public ClassPathScanner(String... paths) {
-    this(Arrays.asList(paths));
+    this(Arrays.asList(paths), /* useDexBytecodePreFilter= */ false);
   }
 
   /**
@@ -189,7 +190,20 @@ public class ClassPathScanner {
    * @param paths a list of paths that should be scanned (.apk and .dex files)
    */
   public ClassPathScanner(Collection<String> paths) {
-    classPath.addAll(paths);
+    this(paths, /* useDexBytecodePreFilter= */ false);
+  }
+
+  /**
+   * Constructs a new instance of a {@link ClassPathScanner}.
+   *
+   * @param paths a list of paths that should be scanned (.apk and .dex files)
+   * @param useDexBytecodePreFilter if true, candidate test classes are pre-filtered by reading DEX
+   *     bytecode tables via {@link DexBytecodeScanner}; otherwise every class is enumerated via
+   *     {@link DexFile}
+   */
+  public ClassPathScanner(Collection<String> paths, boolean useDexBytecodePreFilter) {
+    this.classPath.addAll(paths);
+    this.useDexBytecodePreFilter = useDexBytecodePreFilter;
   }
 
   /**
@@ -213,6 +227,9 @@ public class ClassPathScanner {
    */
   private void addEntriesFromPath(Set<String> entryNames, String path, ClassNameFilter filter)
       throws IOException {
+    if (useDexBytecodePreFilter && DexBytecodeScanner.scanPath(entryNames, path, filter)) {
+      return;
+    }
     DexFile dexFile = null;
     try {
       try {
