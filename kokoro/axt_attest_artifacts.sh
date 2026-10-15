@@ -59,6 +59,13 @@ find "$SCRATCH_DIR" -type f -name "*.pom" | while IFS= read -r pom_path; do
   echo "Added attestation: $target_attestation"
 done
 
+echo "Scanning for binary files (.aar, .apk, .jar) to add companion attestations..."
+find "$SCRATCH_DIR" -type f \( -name "*.aar" -o -name "*.apk" -o -name "*.jar" \) | while IFS= read -r bin_path; do
+  target_attestation="${bin_path}.intoto.jsonl"
+  cp "$ATTESTATION_FILE" "$target_attestation"
+  echo "Added binary attestation: $target_attestation"
+done
+
 echo "Re-zipping content to $OUTPUT_ZIP..."
 OUTPUT_ZIP_ABS="$(pwd)/$OUTPUT_ZIP"
 

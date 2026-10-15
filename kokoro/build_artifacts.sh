@@ -17,3 +17,7 @@ bazelisk build :axt_m2repository
 
 # copy the zip here so that we don't follow symlinks to get the files to upload
 cp bazel-bin/axt_m2repository.zip axt_m2repository_unsigned.zip
+
+# unpack the repository so kokoro can attest individual artifacts
+mkdir -p m2repository
+unzip -q axt_m2repository_unsigned.zip -d m2repository
