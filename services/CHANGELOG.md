@@ -6,16 +6,11 @@
 
 **Bug Fixes**
 
-* Make ShellExecutor more resilient to low memory conditions by binding to
-  androidx.test.services.SpeakEasyService
-
 **New Features**
 
 **Breaking Changes**
 
 **API Changes**
-
-* Update to minSdkVersion 24 and remove all related logic for SDKs < 24
 
 **Breaking API Changes**
 

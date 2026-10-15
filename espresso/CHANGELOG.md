@@ -16,21 +16,11 @@ The following artifacts were released:
 
 **Bug Fixes**
 
-* Replace now-unnecessary reflection from TestLooperManagerCompat when using Android SDK 36 APIs
-* Don't suppress AppNotIdleException if dumpThreadStates throws.
-* Remove Espresso.onIdle tracing
-* Fix NullPointerException in UiControllerImpl.
-* Fix `isDisplayingAtLeast` matcher to factor in the scale of ancestor views.
-
 **New Features**
-
-* Add `doesNotHaveFlag` and `doesNotHaveFlags` matchers to `IntentMatchers`.
 
 **Breaking Changes**
 
 **API Changes**
-
-* Update to minSdkVersion 24 and remove all related logic for SDKs < 24
 
 **Breaking API Changes**
 
