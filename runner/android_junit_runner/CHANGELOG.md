@@ -6,6 +6,8 @@
 
 **Bug Fixes**
 
+* Inspect class-level annotations in `TestRequestBuilder.CustomFilters` so `@CustomFilter` annotations applied at the test class level are evaluated. (b/573501234)
+
 **New Features**
 
 **Breaking Changes**

@@ -209,12 +209,36 @@ public class TestRequestBuilderTest {
     public void testNotRun() {}
   }
 
+  @SampleCustomAnnotation(runTest = true)
+  public static class SampleCustomFilterClassIncludedTestClass {
+    @Test
+    public void testRunFromClassAnnotation() {}
+
+    @Test
+    @SampleCustomAnnotation(runTest = false)
+    public void testNotRunOverridingClassAnnotation() {}
+  }
+
+  @SampleCustomAnnotation(runTest = false)
+  public static class SampleCustomFilterClassExcludedTestClass {
+    @Test
+    public void testNotRunFromClassAnnotation() {}
+
+    @Test
+    @SampleCustomAnnotation(runTest = true)
+    public void testRunOverridingClassAnnotation() {}
+  }
+
   public static class SampleCustomFilter extends AbstractFilter {
     public SampleCustomFilter() {}
 
     @Override
     protected boolean evaluateTest(Description description) {
-      return description.getAnnotation(SampleCustomAnnotation.class).runTest();
+      SampleCustomAnnotation annotation = description.getAnnotation(SampleCustomAnnotation.class);
+      if (annotation == null && description.getTestClass() != null) {
+        annotation = description.getTestClass().getAnnotation(SampleCustomAnnotation.class);
+      }
+      return annotation == null || annotation.runTest();
     }
 
     @Override
@@ -485,6 +509,7 @@ public class TestRequestBuilderTest {
       fail("Broken");
     }
   }
+
   @Mock private ClassPathScanner mockClassPathScanner;
 
   private TestRequestBuilder builder;
@@ -920,6 +945,23 @@ public class TestRequestBuilderTest {
     JUnitCore testRunner = new JUnitCore();
     Result result = testRunner.run(request);
     Assert.assertEquals(1, result.getRunCount());
+  }
+
+  /** Test that {@link CustomFilter} on a class-level annotation filters tests as appropriate */
+  @Test
+  public void testCustomFilterAnnotation_classLevel() {
+    Request request =
+        builder
+            .addTestClass(SampleCustomFilterClassIncludedTestClass.class.getName())
+            .addTestClass(SampleCustomFilterClassExcludedTestClass.class.getName())
+            .build();
+    List<String> results = runRequest(request);
+    assertThat(results)
+        .containsExactly(
+            SampleCustomFilterClassIncludedTestClass.class.getName()
+                + "#testRunFromClassAnnotation",
+            SampleCustomFilterClassExcludedTestClass.class.getName()
+                + "#testRunOverridingClassAnnotation");
   }
 
   /** Test that {@link CustomFilter} throws when the filter class cannot be instantiated */

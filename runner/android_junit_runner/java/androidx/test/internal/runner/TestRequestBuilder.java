@@ -213,7 +213,15 @@ public class TestRequestBuilder {
   private static class CustomFilters extends AbstractFilter {
     @Override
     protected boolean evaluateTest(Description description) {
-      Collection<Annotation> allAnnotations = description.getAnnotations();
+      List<Annotation> allAnnotations = new ArrayList<>(description.getAnnotations());
+      Class<?> testClass = description.getTestClass();
+      if (testClass != null) {
+        for (Annotation classAnnotation : testClass.getAnnotations()) {
+          if (description.getAnnotation(classAnnotation.annotationType()) == null) {
+            allAnnotations.add(classAnnotation);
+          }
+        }
+      }
 
       for (Annotation a : allAnnotations) {
         CustomFilter filter = a.annotationType().getAnnotation(CustomFilter.class);
