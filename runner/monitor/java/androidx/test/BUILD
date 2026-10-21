@@ -21,6 +21,7 @@ package_group(
     name = "allowlist",
     packages = [
         "//...",
+        "//wireless/android/pixel/make_pixel_testing/dc_service/...",
     ],
 )
 
