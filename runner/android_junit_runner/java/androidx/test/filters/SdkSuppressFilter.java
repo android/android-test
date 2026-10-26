@@ -8,7 +8,8 @@ import java.util.Objects;
 import org.junit.runner.Description;
 
 /**
- * A JUnit {@link Filter} that implements SdkSuppress annotation based filtering.
+ * A JUnit {@link org.junit.manipulation.Filter} that implements SdkSuppress annotation based
+ * filtering.
  *
  * @hide
  */

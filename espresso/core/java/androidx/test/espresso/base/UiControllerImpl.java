@@ -53,7 +53,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-/** Implementation of {@link UiController}. */
+/** Implementation of {@link androidx.test.espresso.UiController}. */
 @Singleton
 final class UiControllerImpl
     implements InterruptableUiController, Handler.Callback, IdlingUiController {
