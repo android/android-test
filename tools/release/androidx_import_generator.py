@@ -125,25 +125,22 @@ def _edit_docs_versions():
 def _output_import_command():
   """Output the command to download the maven artifacts in androidx repo."""
   print('Run this command:')
-  print(
-      """
-        development/importMaven/importMaven.sh \\
-        androidx.test.espresso:espresso-accessibility:{Espresso} \\
-        androidx.test.espresso:espresso-device:{Espresso Device} \\
-        androidx.test.espresso:espresso-remote:{Espresso} \\
-        androidx.test.espresso.idling:idling-concurrent:{Espresso} \\
-        androidx.test.espresso.idling:idling-net:{Espresso} \\
-        androidx.test.espresso:espresso-contrib:{Espresso}  \\
-        androidx.test.ext:truth:{Truth Extensions} \\
-        androidx.test.ext:junit-ktx:{JUnit Extensions} \\
-        androidx.test:monitor:{Monitor} \\
-        androidx.test:rules:{Rules} \\
-        androidx.test:runner:{Runner} \\
-        androidx.test.espresso:espresso-intents:{Espresso} \\
-        androidx.test:core-ktx:{Core}""".format(
-          **release_versions.RELEASED_VERSIONS_DICT
-      )
-  )
+  artifacts = ','.join([
+      'androidx.test.espresso:espresso-accessibility:{Espresso}',
+      'androidx.test.espresso:espresso-device:{Espresso Device}',
+      'androidx.test.espresso:espresso-remote:{Espresso}',
+      'androidx.test.espresso.idling:idling-concurrent:{Espresso}',
+      'androidx.test.espresso.idling:idling-net:{Espresso}',
+      'androidx.test.espresso:espresso-contrib:{Espresso}',
+      'androidx.test.ext:truth:{Truth Extensions}',
+      'androidx.test.ext:junit-ktx:{JUnit Extensions}',
+      'androidx.test:monitor:{Monitor}',
+      'androidx.test:rules:{Rules}',
+      'androidx.test:runner:{Runner}',
+      'androidx.test.espresso:espresso-intents:{Espresso}',
+      'androidx.test:core-ktx:{Core}',
+  ]).format(**release_versions.RELEASED_VERSIONS_DICT)
+  print(f'\n        development/importMaven/importMaven.sh {artifacts}')
 
 
 if __name__ == '__main__':
