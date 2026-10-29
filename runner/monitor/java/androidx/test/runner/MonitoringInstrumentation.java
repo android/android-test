@@ -33,6 +33,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.MessageQueue.IdleHandler;
 import android.os.PersistableBundle;
+import android.os.SystemClock;
 import android.os.UserHandle;
 import android.util.Log;
 import androidx.annotation.Nullable;
@@ -129,7 +130,7 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       new IdleHandler() {
         @Override
         public boolean queueIdle() {
-          lastIdleTime.set(System.currentTimeMillis());
+          lastIdleTime.set(SystemClock.uptimeMillis());
           return true;
         }
       };
@@ -392,9 +393,9 @@ public class MonitoringInstrumentation extends ExposedInstrumentationApi {
       throw new IllegalStateException("Cannot be called from main thread!");
     }
 
-    long endTime = System.currentTimeMillis() + MILLIS_TO_WAIT_FOR_ACTIVITY_TO_STOP;
+    long endTime = SystemClock.uptimeMillis() + MILLIS_TO_WAIT_FOR_ACTIVITY_TO_STOP;
     int currentActivityCount = startedActivityCounter.get();
-    while (currentActivityCount > 0 && System.currentTimeMillis() < endTime) {
+    while (currentActivityCount > 0 && SystemClock.uptimeMillis() < endTime) {
       try {
         Log.i(TAG, "Unstopped activity count: " + currentActivityCount);
         Thread.sleep(MILLIS_TO_POLL_FOR_ACTIVITY_STOP);
