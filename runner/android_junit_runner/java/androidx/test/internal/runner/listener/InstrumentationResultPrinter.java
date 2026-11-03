@@ -22,6 +22,7 @@ import androidx.annotation.VisibleForTesting;
 import androidx.test.services.events.internal.StackTrimmer;
 import java.io.PrintStream;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.junit.Ignore;
 import org.junit.internal.TextListener;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
@@ -197,6 +198,13 @@ public class InstrumentationResultPrinter extends InstrumentationRunListener {
   public void testIgnored(Description description) {
     testStarted(description);
     testResultCode = REPORT_VALUE_RESULT_IGNORED;
+    Ignore ignore = description.getAnnotation(Ignore.class);
+    if ((ignore == null || ignore.value().isEmpty()) && description.getTestClass() != null) {
+      ignore = description.getTestClass().getAnnotation(Ignore.class);
+    }
+    if (ignore != null && !ignore.value().isEmpty()) {
+      testResult.putString(REPORT_KEY_STACK, ignore.value());
+    }
     testFinished(description);
   }
 

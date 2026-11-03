@@ -18,6 +18,7 @@ package androidx.test.internal.runner.listener;
 
 import static androidx.test.internal.runner.listener.InstrumentationResultPrinter.REPORT_KEY_STACK;
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
@@ -30,6 +31,7 @@ import java.util.List;
 import junit.framework.Assert;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.Computer;
 import org.junit.runner.Description;
@@ -139,6 +141,164 @@ public class InstrumentationResultPrinterTest {
     assertThat(intrResultPrinter.resultsLog)
         .containsExactly(
             "code=1, name=" + className + "#null", "code=-4, name=" + className + "#null")
+        .inOrder();
+  }
+
+  public static final class IgnoredMethodTest {
+    @Ignore("Flaky test")
+    @Test
+    public void ignoredTest() {}
+  }
+
+  @Ignore("Class ignore reason")
+  public static final class IgnoredClassTest {
+    @Test
+    public void ignoredTest() {}
+  }
+
+  public static final class IgnoredNoReasonMethodTest {
+    @Ignore
+    @Test
+    public void ignoredTest() {}
+  }
+
+  @Ignore
+  public static final class IgnoredNoReasonClassTest {
+    @Test
+    public void ignoredTest() {}
+  }
+
+  @Ignore("Class ignore reason")
+  public static final class IgnoredMethodInIgnoredClassTest {
+    @Ignore("Method ignore reason")
+    @Test
+    public void ignoredWithMethodReason() {}
+
+    @Ignore
+    @Test
+    public void ignoredWithoutMethodReason() {}
+  }
+
+  @Test
+  public void testIgnored_populatesStackWithIgnoreReason() throws Exception {
+    List<String> stacks = new ArrayList<>();
+    InstrumentationResultPrinter intrResultPrinter =
+        new InstrumentationResultPrinter() {
+          @Override
+          public void sendStatus(int code, Bundle bundle) {
+            if (code == REPORT_VALUE_RESULT_IGNORED) {
+              stacks.add(bundle.getString(REPORT_KEY_STACK));
+            }
+          }
+        };
+    JUnitCore core = new JUnitCore();
+    core.addListener(intrResultPrinter);
+
+    core.run(Request.classes(new Computer(), IgnoredMethodTest.class));
+
+    assertWithMessage("ignored test stacks").that(stacks).containsExactly("Flaky test");
+  }
+
+  @Test
+  public void testIgnored_classLevelIgnore_populatesStackWithIgnoreReason() throws Exception {
+    List<String> stacks = new ArrayList<>();
+    InstrumentationResultPrinter intrResultPrinter =
+        new InstrumentationResultPrinter() {
+          @Override
+          public void sendStatus(int code, Bundle bundle) {
+            if (code == REPORT_VALUE_RESULT_IGNORED) {
+              stacks.add(bundle.getString(REPORT_KEY_STACK));
+            }
+          }
+        };
+    JUnitCore core = new JUnitCore();
+    core.addListener(intrResultPrinter);
+
+    core.run(Request.classes(new Computer(), IgnoredClassTest.class));
+
+    assertWithMessage("ignored test stacks").that(stacks).containsExactly("Class ignore reason");
+  }
+
+  @Test
+  public void testIgnored_withoutReason_doesNotPopulateStack() throws Exception {
+    List<Bundle> ignoredBundles = new ArrayList<>();
+    InstrumentationResultPrinter intrResultPrinter =
+        new InstrumentationResultPrinter() {
+          @Override
+          public void sendStatus(int code, Bundle bundle) {
+            if (code == REPORT_VALUE_RESULT_IGNORED) {
+              ignoredBundles.add(new Bundle(bundle));
+            }
+          }
+        };
+    JUnitCore core = new JUnitCore();
+    core.addListener(intrResultPrinter);
+
+    core.run(Request.classes(new Computer(), IgnoredNoReasonMethodTest.class));
+
+    assertWithMessage("ignored test bundles").that(ignoredBundles).hasSize(1);
+    assertWithMessage("bundle keys for ignored method without reason")
+        .that(ignoredBundles.get(0).keySet())
+        .doesNotContain(REPORT_KEY_STACK);
+  }
+
+  @Test
+  public void testIgnored_classLevelIgnoreWithoutReason_doesNotPopulateStack() throws Exception {
+    List<Bundle> ignoredBundles = new ArrayList<>();
+    InstrumentationResultPrinter intrResultPrinter =
+        new InstrumentationResultPrinter() {
+          @Override
+          public void sendStatus(int code, Bundle bundle) {
+            if (code == REPORT_VALUE_RESULT_IGNORED) {
+              ignoredBundles.add(new Bundle(bundle));
+            }
+          }
+        };
+    JUnitCore core = new JUnitCore();
+    core.addListener(intrResultPrinter);
+
+    core.run(Request.classes(new Computer(), IgnoredNoReasonClassTest.class));
+
+    assertWithMessage("ignored test bundles").that(ignoredBundles).hasSize(1);
+    assertWithMessage("bundle keys for ignored class without reason")
+        .that(ignoredBundles.get(0).keySet())
+        .doesNotContain(REPORT_KEY_STACK);
+  }
+
+  @Test
+  public void testIgnored_methodAndClassIgnore_prefersMethodReasonAndFallsBackToClassReason()
+      throws Exception {
+    List<String> stacks = new ArrayList<>();
+    InstrumentationResultPrinter intrResultPrinter =
+        new InstrumentationResultPrinter() {
+          @Override
+          public void sendStatus(int code, Bundle bundle) {
+            if (code == REPORT_VALUE_RESULT_IGNORED) {
+              stacks.add(bundle.getString(REPORT_KEY_STACK));
+            }
+          }
+        };
+    Description methodWithReason =
+        Description.createTestDescription(
+            IgnoredMethodInIgnoredClassTest.class,
+            "ignoredWithMethodReason",
+            IgnoredMethodInIgnoredClassTest.class
+                .getMethod("ignoredWithMethodReason")
+                .getAnnotations());
+    Description methodWithoutReason =
+        Description.createTestDescription(
+            IgnoredMethodInIgnoredClassTest.class,
+            "ignoredWithoutMethodReason",
+            IgnoredMethodInIgnoredClassTest.class
+                .getMethod("ignoredWithoutMethodReason")
+                .getAnnotations());
+
+    intrResultPrinter.testIgnored(methodWithReason);
+    intrResultPrinter.testIgnored(methodWithoutReason);
+
+    assertWithMessage("ignored test stacks")
+        .that(stacks)
+        .containsExactly("Method ignore reason", "Class ignore reason")
         .inOrder();
   }
 }
