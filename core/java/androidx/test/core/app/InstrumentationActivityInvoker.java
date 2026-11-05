@@ -464,7 +464,7 @@ class InstrumentationActivityInvoker implements ActivityInvoker {
                     getApplicationContext(),
                     /* requestCode= */ 0,
                     intent,
-                    /* flags= */ PendingIntent.FLAG_UPDATE_CURRENT | intentMutability))
+                    /* flags= */ PendingIntent.FLAG_CANCEL_CURRENT | intentMutability))
             .putExtra(TARGET_ACTIVITY_OPTIONS_BUNDLE_KEY, activityOptionsBundle);
 
     getApplicationContext().startActivity(bootstrapIntent, activityOptionsBundle);
