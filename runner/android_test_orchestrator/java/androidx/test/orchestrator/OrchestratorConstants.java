@@ -20,6 +20,7 @@ final class OrchestratorConstants {
 
   static final String TARGET_INSTRUMENTATION_ARGUMENT = "targetInstrumentation";
   static final String ISOLATED_ARGUMENT = "isolated";
+  static final String RESUME_ARGUMENT = "resume";
   static final String ORCHESTRATOR_DEBUG_ARGUMENT = "orchestratorDebug";
   static final String COVERAGE_FILE_PATH = "coverageFilePath";
   static final String CLEAR_PKG_DATA = "clearPackageData";
