@@ -31,11 +31,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Unit tests for {@link TestArgsContentProvider}.
- *
- * TODO(b/145236542): Converts the tests to JUnit4.
- */
+/** Unit tests for {@link TestArgsContentProvider}. */
 public class TestArgsContentProviderTest extends ProviderTestCase2<TestArgsContentProvider> {
 
   private static final String[] ARGS = {"arg1", "arg2", "arg3", "someth_server_address"};
@@ -50,7 +46,6 @@ public class TestArgsContentProviderTest extends ProviderTestCase2<TestArgsConte
   @Override
   public void setUp() throws Exception {
     super.setUp();
-    getProvider().setSystemPropertyClassNameForTest(FakeSystemProperties.class.getName());
   }
 
   @Override
@@ -122,31 +117,6 @@ public class TestArgsContentProviderTest extends ProviderTestCase2<TestArgsConte
     public static String get(String key, String def) {
       return Optional.fromNullable(props.get(key)).or(def);
     }
-  }
-
-  private static TestArguments makeSomeServerSpecArgs(String localhost) {
-    return TestArguments.newBuilder()
-        .addArg(
-            TestArgument.newBuilder()
-                .setName("non_local_server_address")
-                .setValue("www.google.com:80")
-                .build())
-        .addArg(
-            TestArgument.newBuilder()
-                .setName("local_server_address")
-                .setValue(localhost + ":12345")
-                .build())
-        .addArg(
-            TestArgument.newBuilder()
-                .setName("local_2_server_address")
-                .setValue(localhost + ":984")
-                .build())
-        .addArg(
-            TestArgument.newBuilder()
-                .setName("val_is_a_spec_but_not_key")
-                .setValue(localhost + ":100")
-                .build())
-        .build();
   }
 
   private static void createTestArgsFileWithMultipleArgs() throws IOException {

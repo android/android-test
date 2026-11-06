@@ -17,13 +17,11 @@ package androidx.test.services.storage.file;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
-import android.os.UserManager;
 import android.provider.OpenableColumns;
-import android.util.Log;
 import androidx.test.services.storage.TestStorageConstants;
 import java.io.File;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
@@ -37,8 +35,6 @@ import androidx.annotation.RestrictTo.Scope;
 public final class HostedFile {
 
   private static final String TAG = "HostedFile";
-
-  private static final AtomicBoolean loggedOutputDir = new AtomicBoolean(false);
 
   /** An enum of the columns returned by the hosted file service. */
   public enum HostedFileColumn {
@@ -152,20 +148,11 @@ public final class HostedFile {
   }
 
   public static File getOutputRootDirectory(Context context) {
-    UserManager userManager = (UserManager) context.getSystemService(Context.USER_SERVICE);
-    if (userManager.isSystemUser()) {
-      return Environment.getExternalStorageDirectory();
+    // Use a reliably self-writable directory.
+    if (Build.VERSION.SDK_INT >= 29) {
+      return context.getExternalFilesDir(null);
     } else {
-      // using legacy external storage for output in automotive devices where tests run as
-      // a secondary user has been flaky. So use local storage instead.
-      if (!loggedOutputDir.getAndSet(true)) {
-        // limit log spam by only logging choice once
-        Log.d(
-            TAG,
-            "Secondary user detected. Choosing local storage as output root dir: "
-                + context.getCacheDir().getAbsolutePath());
-      }
-      return context.getCacheDir();
+      return Environment.getExternalStorageDirectory();
     }
   }
 
