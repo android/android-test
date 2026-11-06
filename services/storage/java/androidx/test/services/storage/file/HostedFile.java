@@ -28,11 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.RestrictTo.Scope;
 
-/**
- * Constants to access hosted file data and convenience methods for building Uris.
- *
- * @hide
- */
+/** Constants to access hosted file data and convenience methods for building Uris. */
 @RestrictTo(Scope.LIBRARY)
 public final class HostedFile {
 
