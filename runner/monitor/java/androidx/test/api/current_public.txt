@@ -105,7 +105,7 @@ package androidx.test.platform.ui {
 
 package androidx.test.runner {
 
-  public class MonitoringInstrumentation extends androidx.test.internal.runner.hidden.ExposedInstrumentationApi {
+  public class MonitoringInstrumentation extends android.app.Instrumentation {
     ctor public MonitoringInstrumentation();
     method protected void dumpThreadStateToOutputs(String!);
     method public void execStartActivities(android.content.Context!, android.os.IBinder!, android.os.IBinder!, android.app.Activity!, android.content.Intent![]!, android.os.Bundle!);
