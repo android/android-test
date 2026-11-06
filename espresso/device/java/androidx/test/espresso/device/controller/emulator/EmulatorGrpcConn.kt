@@ -29,8 +29,6 @@ import io.grpc.stub.AbstractFutureStub
  *
  * This provides all the proper channels and credentials to create RPC stubs that interact with the
  * emulator.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 interface EmulatorGrpcConn {

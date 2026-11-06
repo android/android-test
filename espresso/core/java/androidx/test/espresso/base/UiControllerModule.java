@@ -29,8 +29,6 @@ import javax.inject.Singleton;
 
 /**
  * Dagger module for UiController.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 @Module

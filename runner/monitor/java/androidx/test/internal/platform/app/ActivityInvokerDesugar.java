@@ -17,8 +17,6 @@ import androidx.annotation.RestrictTo.Scope;
  * generated a ActivityInvoker$-CC class. Class names with hyphens are rejected by javac, so we
  * cannot directly declare a ActivityInvoker$-CC class here. So instead we use a placeholder name,
  * and use jarjar to rename the class after the javac step.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY_GROUP)
 public final class ActivityInvokerDesugar {

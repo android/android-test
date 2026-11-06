@@ -19,11 +19,7 @@ import android.os.Handler
 import androidx.annotation.RestrictTo
 import java.util.concurrent.Executor
 
-/**
- * A likely temporary utility class that redirects Executor calls to a Handler.
- *
- * @hide
- */
+/** A likely temporary utility class that redirects Executor calls to a Handler. */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 class HandlerExecutor(val handler: Handler) : Executor {
 

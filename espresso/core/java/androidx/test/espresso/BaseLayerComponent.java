@@ -32,8 +32,6 @@ import javax.inject.Singleton;
 
 /**
  * Dagger component for base classes.
- *
- * @hide
  */
 @Component(modules = {BaseLayerModule.class, UiControllerModule.class})
 @Singleton

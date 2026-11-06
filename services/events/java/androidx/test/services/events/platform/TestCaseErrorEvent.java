@@ -32,7 +32,6 @@ import androidx.test.services.events.TimeStamp;
  * @see TestCaseFinishedEvent to signal an individual test case as completed.
  * @see TestRunErrorEvent to signal errors that are not able to be attributed to an individual test
  *     case.
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestCaseErrorEvent extends TestPlatformEvent {

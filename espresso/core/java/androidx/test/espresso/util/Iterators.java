@@ -23,8 +23,6 @@ import java.util.Iterator;
 
 /**
  * A reimplementation of needed methods from Guava, to avoid the direct dependency.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY_GROUP)
 public class Iterators {
@@ -37,7 +35,6 @@ public class Iterators {
    * @param iterator the {@link Iterator} to convert
    * @param clazz the element type
    * @return an array of all of the iterators' elements
-   * @hide
    */
   @RestrictTo(Scope.LIBRARY_GROUP)
   public static <T> T[] toArray(Iterator<T> iterator, Class<T> clazz) {

@@ -353,7 +353,6 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
    * orchestratorService} parameter is set.
    *
    * @deprecated use onTestEventClientConnect()
-   * @hide
    */
   @RestrictTo(Scope.LIBRARY)
   @Deprecated // TODO(b/161833844): Remove onOrchestratorConnect(), use onTestEventClientConnect()
@@ -364,8 +363,6 @@ public class AndroidJUnitRunner extends MonitoringInstrumentation
   /**
    * Called when AndroidJUnitRunner connects to a test orchestrator, if the {@code
    * orchestratorService}, {@code discoveryService} or {@code testRunEventService} parameter is set.
-   *
-   * @hide
    */
   @RestrictTo(Scope.LIBRARY)
   @Override

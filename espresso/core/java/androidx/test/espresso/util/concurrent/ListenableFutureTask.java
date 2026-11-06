@@ -24,8 +24,6 @@ import java.util.concurrent.FutureTask;
 
 /**
  * Minimal fork of Guava's ListenableFutureTask to avoid the full dependency.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public class ListenableFutureTask<V> extends FutureTask<V> implements ListenableFuture<V> {

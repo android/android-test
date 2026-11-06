@@ -30,8 +30,6 @@ import java.util.List;
 /**
  * Compat class that supports {@link android.viee.inspector.WindowInspector} functionality on older
  * Android SDKs.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // currently used by core, consider making public
 public class WindowInspectorCompat {
@@ -48,8 +46,6 @@ public class WindowInspectorCompat {
    *
    * <p>This should only occur if the device does not support the view retrieval mechanism used on
    * used on APIs < 29, before WindowInspector existed.
-   *
-   * @hide
    */
   @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
   public static class ViewRetrievalException extends Exception {

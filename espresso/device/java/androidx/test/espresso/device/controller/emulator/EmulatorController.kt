@@ -38,11 +38,7 @@ import com.android.emulator.control.Posture
 import com.android.emulator.control.Posture.PostureValue
 import io.grpc.StatusRuntimeException
 
-/**
- * Implementation of {@link DeviceController} for tests run on an Emulator.
- *
- * @hide
- */
+/** Implementation of {@link DeviceController} for tests run on an Emulator. */
 @RestrictTo(Scope.LIBRARY)
 class EmulatorController
 constructor(

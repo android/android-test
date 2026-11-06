@@ -20,8 +20,6 @@ import androidx.annotation.RestrictTo;
 
 /**
  * Denotes that test discovery has finished
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestDiscoveryFinishedEvent extends TestDiscoveryEvent {

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-/** @hide */
 @RestrictTo(Scope.LIBRARY_GROUP)
 package androidx.test.services.events.run;
 

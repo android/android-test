@@ -34,10 +34,8 @@ import androidx.annotation.RestrictTo
  * frameworks. It is **NOT** designed for direct use by third party clients.
  *
  * TODO(b/275323224): In order to avoid breaking open source, support for
- *  `RoboMonitoringInstrumentation` will be done later, once `AppComponentFactoryRegistry` is
- *  available in a published `androidx.test:monitor` release.
- *
- * @hide
+ *   `RoboMonitoringInstrumentation` will be done later, once `AppComponentFactoryRegistry` is
+ *   available in a published `androidx.test:monitor` release.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object AppComponentFactoryRegistry {
@@ -71,10 +69,7 @@ object AppComponentFactoryRegistry {
    * @see [AppComponentFactory.instantiateApplication]
    */
   @JvmStatic
-  fun instantiateApplication(
-    cl: ClassLoader,
-    className: String,
-  ): Application? =
+  fun instantiateApplication(cl: ClassLoader, className: String): Application? =
     if (isVersionCodeAtLeastP()) {
       appComponentFactory?.instantiateApplication(cl, className)
     } else {
@@ -95,11 +90,7 @@ object AppComponentFactoryRegistry {
    * @see [AppComponentFactory.instantiateApplication]
    */
   @JvmStatic
-  fun instantiateActivity(
-    cl: ClassLoader,
-    className: String,
-    intent: Intent? = null,
-  ): Activity? =
+  fun instantiateActivity(cl: ClassLoader, className: String, intent: Intent? = null): Activity? =
     if (isVersionCodeAtLeastP()) {
       appComponentFactory?.instantiateActivity(cl, className, intent)
     } else {

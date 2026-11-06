@@ -10,8 +10,6 @@ import java.lang.annotation.Target;
 /**
  * Indicates that the annotated type loaded by ServiceLoadWrapper is intended as a replacement for
  * another type.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Documented

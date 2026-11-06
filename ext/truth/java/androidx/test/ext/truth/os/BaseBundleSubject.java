@@ -38,8 +38,6 @@ import com.google.common.truth.Subject;
  *
  * <p>Concrete implementations for external users are {@link BundleSubject} and {@link
  * PersistableBundleSubject}.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public abstract class BaseBundleSubject extends Subject {

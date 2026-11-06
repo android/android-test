@@ -20,8 +20,6 @@ import androidx.annotation.RestrictTo.Scope;
 
 /**
  * Holds constants that are shared between on-device and host-side testing infrastructure.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public final class TestStorageConstants {

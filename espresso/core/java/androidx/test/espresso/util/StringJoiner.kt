@@ -25,10 +25,9 @@ import androidx.annotation.RestrictTo
  * kotlin's joinToString has many parameters and thus is a bit unwieldy to call directly from java.
  * This method exposes just the needed parameters for most cases.
  *
- * @param the [Iterable] whose elements should be joined
+ * @param iterable the [Iterable] whose elements should be joined
  * @param delimiter the separator to add between each element
  * @return the combined [String]
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun joinToString(iterable: Iterable<kotlin.Any>, delimiter: String): String {

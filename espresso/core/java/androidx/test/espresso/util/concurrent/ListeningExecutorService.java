@@ -27,8 +27,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * A minimal implementation of Guava's ListeningExecutorService.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public class ListeningExecutorService extends AbstractExecutorService {

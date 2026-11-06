@@ -35,10 +35,6 @@ enum class DeviceMode(private val mode: Int) {
   // the device screen is closed
   CLOSED(3);
 
-  /**
-   * Returns the mode.
-   *
-   * @hide
-   */
+  /** Returns the mode. */
   @RestrictTo(Scope.LIBRARY) fun getMode(): Int = mode
 }

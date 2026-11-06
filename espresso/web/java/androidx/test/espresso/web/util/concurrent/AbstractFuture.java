@@ -56,7 +56,6 @@ import java.util.logging.Logger;
  * @author Sven Mawson
  * @author Luke Sandberg
  * @since 1.0
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 @SuppressWarnings("ShortCircuitBoolean") // we use non-short circuiting comparisons intentionally

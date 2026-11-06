@@ -24,8 +24,6 @@ import androidx.test.services.events.TestCaseInfo;
 /**
  * Denotes that the test ended with a TEST_FINISHED. It has the {@link TestCaseInfo} object to
  * denote which case this event is associated to.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestFinishedEvent extends TestRunEventWithTestCase {

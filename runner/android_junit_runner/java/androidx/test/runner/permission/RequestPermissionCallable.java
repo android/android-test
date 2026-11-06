@@ -34,8 +34,6 @@ import java.util.concurrent.Callable;
  * Base class for runtime permission {@link Callable}s.
  *
  * <p>Note: This class is visible only for testing. Please do not use it directly.
- *
- * @hide
  */
 @VisibleForTesting
 @RestrictTo(Scope.LIBRARY)

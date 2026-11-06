@@ -33,8 +33,10 @@ import androidx.test.espresso.device.sizeclass.WidthSizeClass
  * This action is for foldable devices only. Currently only supported for tests run on Android
  * Emulators.
  *
- * @throws androidx.test.platform.device.UnsupportedDeviceOperationException if used on a real device.
- * @throws androidx.test.espresso.device.controller.DeviceControllerOperationException when called on a non-foldable Emulator.
+ * @throws androidx.test.platform.device.UnsupportedDeviceOperationException if used on a real
+ *   device.
+ * @throws androidx.test.espresso.device.controller.DeviceControllerOperationException when called
+ *   on a non-foldable Emulator.
  */
 fun setTabletopMode(): DeviceAction {
   return TabletopModeAction()
@@ -48,8 +50,10 @@ fun setTabletopMode(): DeviceAction {
  * This action is for foldable devices only. Currently only supported for tests run on Android
  * Emulators.
  *
- * @throws androidx.test.platform.device.UnsupportedDeviceOperationException if used on a real device.
- * @throws androidx.test.espresso.device.controller.DeviceControllerOperationException when called on a non-foldable Emulator.
+ * @throws androidx.test.platform.device.UnsupportedDeviceOperationException if used on a real
+ *   device.
+ * @throws androidx.test.espresso.device.controller.DeviceControllerOperationException when called
+ *   on a non-foldable Emulator.
  */
 fun setBookMode(): DeviceAction {
   return BookModeAction()
@@ -62,8 +66,10 @@ fun setBookMode(): DeviceAction {
  * This action is for foldable devices only. Currently only supported for tests run on Android
  * Emulators.
  *
- * @throws androidx.test.platform.device.UnsupportedDeviceOperationException if used on a real device.
- * @throws androidx.test.espresso.device.controller.DeviceControllerOperationException when called on a non-foldable Emulator.
+ * @throws androidx.test.platform.device.UnsupportedDeviceOperationException if used on a real
+ *   device.
+ * @throws androidx.test.espresso.device.controller.DeviceControllerOperationException when called
+ *   on a non-foldable Emulator.
  */
 fun setFlatMode(): DeviceAction {
   return FlatModeAction()
@@ -75,8 +81,10 @@ fun setFlatMode(): DeviceAction {
  * This action is for foldable devices only. Currently only supported for tests run on Android
  * Emulators.
  *
- * @throws androidx.test.platform.device.UnsupportedDeviceOperationException if used on a real device.
- * @throws androidx.test.espresso.device.controller.DeviceControllerOperationException when called on a non-foldable Emulator.
+ * @throws androidx.test.platform.device.UnsupportedDeviceOperationException if used on a real
+ *   device.
+ * @throws androidx.test.espresso.device.controller.DeviceControllerOperationException when called
+ *   on a non-foldable Emulator.
  */
 fun setClosedMode(): DeviceAction {
   return ClosedModeAction()
@@ -106,10 +114,6 @@ enum class ScreenOrientation(private val orientation: Int) {
   PORTRAIT(0),
   LANDSCAPE(1);
 
-  /**
-   * Returns the orientation.
-   *
-   * @hide
-   */
+  /** Returns the orientation. */
   @RestrictTo(Scope.LIBRARY) fun getOrientation(): Int = orientation
 }

@@ -24,8 +24,6 @@ import androidx.annotation.RestrictTo.Scope;
  * This is the ExposedInstrumentationApi class which gets packaged into the aar. The
  * execStartActivity methods will be available through {@link Instrumentation} at runtime and exist
  * in the android.jar on the device.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public abstract class ExposedInstrumentationApi extends Instrumentation {}

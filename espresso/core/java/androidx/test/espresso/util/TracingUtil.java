@@ -23,8 +23,6 @@ import java.util.List;
 
 /**
  * Utility methods for tracing.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public final class TracingUtil {

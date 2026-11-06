@@ -54,8 +54,6 @@ import java.util.Map;
  * <p>Users should ideally not reference this class directly, but rather retrieve the
  * PlatformTestStorage implementation appropriate for their execution environment from {@link
  * androidx.test.platform.io.PlatformTestStorageRegistry}.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY_GROUP)
 public final class TestStorage implements PlatformTestStorage {
@@ -328,7 +326,6 @@ public final class TestStorage implements PlatformTestStorage {
    *     the input files under "/sdcard/internal_only", with a pathname "/path/to/my_input.txt", the
    *     file will end up at "/sdcard/internal_only/path/to/my_input.txt" on device.
    * @return an InputStream to the given test file.
-   * @hide
    */
   // TODO(b/335660740): remove this unused method
   @RestrictTo(Scope.LIBRARY)
@@ -347,7 +344,6 @@ public final class TestStorage implements PlatformTestStorage {
    *     output files under "/sdcard/internal_only", with a pathname "/path/to/my_output.txt", the
    *     file will end up at "/sdcard/internal_only/path/to/my_output.txt" on device.
    * @return an OutputStream to the given output file.
-   * @hide
    */
   @RestrictTo(Scope.LIBRARY)
   @Override

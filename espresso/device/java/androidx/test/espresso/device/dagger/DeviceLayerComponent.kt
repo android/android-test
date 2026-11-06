@@ -21,11 +21,7 @@ import androidx.test.platform.device.DeviceController
 import dagger.Component
 import javax.inject.Singleton
 
-/**
- * Dagger component for device classes.
- *
- * @hide
- */
+/** Dagger component for device classes. */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 @Singleton
 @Component(modules = [DeviceControllerModule::class])

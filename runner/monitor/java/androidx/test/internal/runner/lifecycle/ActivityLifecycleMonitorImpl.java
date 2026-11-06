@@ -33,8 +33,6 @@ import java.util.List;
 
 /**
  * The lifecycle monitor implementation.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by robolectric
 public final class ActivityLifecycleMonitorImpl implements ActivityLifecycleMonitor {

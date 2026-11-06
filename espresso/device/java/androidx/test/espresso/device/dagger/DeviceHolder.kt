@@ -19,11 +19,7 @@ package androidx.test.espresso.device.dagger
 import androidx.annotation.RestrictTo
 import java.util.concurrent.atomic.AtomicReference
 
-/**
- * Holds Espresso's device graph.
- *
- * @hide
- */
+/** Holds Espresso's device graph. */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 class DeviceHolder {
   companion object {

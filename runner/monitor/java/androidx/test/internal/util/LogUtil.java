@@ -21,8 +21,6 @@ import androidx.annotation.RestrictTo;
 
 /**
  * Util methods related to logging, using the android.util.Log class.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by espresso
 public final class LogUtil {

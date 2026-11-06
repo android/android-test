@@ -10,8 +10,6 @@ import org.junit.runner.Description;
 /**
  * A JUnit {@link org.junit.runner.manipulation.Filter} that implements SdkSuppress annotation based
  * filtering.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public final class SdkSuppressFilter extends AbstractFilter {

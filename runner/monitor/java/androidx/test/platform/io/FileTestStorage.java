@@ -41,8 +41,6 @@ import java.util.Map;
  * retrieved from by passing 'additionalTestOutputDir' and 'testInputDir' instrumentation arguments.
  * If these arguments are not provided, the implementation will choose an appropriate location based
  * on android API level that minimizes the need for any extra permissions. See TestDirCalculator.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY_GROUP)
 public final class FileTestStorage implements PlatformTestStorage {

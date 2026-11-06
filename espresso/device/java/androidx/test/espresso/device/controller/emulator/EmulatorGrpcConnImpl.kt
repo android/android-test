@@ -50,7 +50,6 @@ import java.io.File
  *   server's identity instead of the system's default. Generally they should be PEM-encoded with
  *   all the certificates concatenated together (file header has "BEGIN CERTIFICATE", and would
  *   occur once per certificate).
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 class EmulatorGrpcConnImpl

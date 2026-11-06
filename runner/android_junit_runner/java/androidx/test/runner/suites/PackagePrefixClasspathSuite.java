@@ -56,8 +56,6 @@ public final class PackagePrefixClasspathSuite extends Suite {
 
   /**
    * Only called reflectively. Do not use programmatically.
-   *
-   * @hide
    */
   @RestrictTo(Scope.LIBRARY)
   public PackagePrefixClasspathSuite(Class<?> klass, RunnerBuilder builder)

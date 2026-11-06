@@ -50,24 +50,18 @@ public final class AndroidClasspathSuite {
 
   /**
    * Only called reflectively. Do not use programmatically.
-   *
-   * @hide
    */
   @RestrictTo(Scope.LIBRARY)
   public AndroidClasspathSuite() {}
 
   /**
    * Internal suite class that performs the work of class path scanning.
-   *
-   * @hide
    */
   @RestrictTo(Scope.LIBRARY)
   public static class RunnerSuite extends Suite {
 
     /**
      * Only called reflectively. Do not use programmatically.
-     *
-     * @hide
      */
     @RestrictTo(Scope.LIBRARY)
     public RunnerSuite(Class<?> klass, RunnerBuilder builder) throws InitializationError {

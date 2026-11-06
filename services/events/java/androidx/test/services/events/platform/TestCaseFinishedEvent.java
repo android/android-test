@@ -40,7 +40,6 @@ import androidx.test.services.events.TimeStamp;
  * @see TestCaseStartedEvent to signal that a test case has started.
  * @see TestCaseErrorEvent for reporting errors that occurred while this test case was running.
  * @see TestStatus.Status for more information on our test statuses.
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestCaseFinishedEvent extends TestPlatformEvent {
