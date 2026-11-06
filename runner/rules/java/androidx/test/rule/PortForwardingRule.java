@@ -62,6 +62,7 @@ public class PortForwardingRule implements TestRule {
   private Properties backUpProp;
 
   /** @hide */
+  @RestrictTo(Scope.LIBRARY)
   public static class Builder {
 
     private String proxyHost = DEFAULT_PROXY_HOST;
