@@ -23,8 +23,6 @@ import java.lang.reflect.Field;
  * Helper class for making more performant reflection field access.
  *
  * <p>Lazy initializes and caches Method object ro attempt to reduce reflection overhead.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY_GROUP)
 public class ReflectiveField<T> {

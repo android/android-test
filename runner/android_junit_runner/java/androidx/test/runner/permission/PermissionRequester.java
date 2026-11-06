@@ -47,8 +47,6 @@ import java.util.HashSet;
  * <p>Note: This class is not intended to be used directly, but rather through {@link
  * androidx.test.rule.GrantPermissionRule}. For tests running on Android SDKs >= API 28, use {@link
  * android.app.UiAutomation#grantRuntimePermission(String, String)} instead.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY_GROUP) // used by rule
 public class PermissionRequester implements PermissionGranter {

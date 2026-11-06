@@ -25,8 +25,6 @@ import androidx.annotation.VisibleForTesting;
  * Ideally we wouldn't need this abstraction but since {@link UiAutomation} is final we need an
  * abstraction on top to be able to mock it in tests. It also gives us the flexibility to switch to
  * another implementation in the future.
- *
- * @hide
  */
 @VisibleForTesting
 @RestrictTo(Scope.LIBRARY)

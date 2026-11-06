@@ -24,8 +24,6 @@ import java.util.concurrent.Executor;
  * execute}.
  *
  * <p>Fork of androidx.concurrent.futures.DirectExecutor.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY_GROUP)
 public enum DirectExecutor implements Executor {

@@ -32,7 +32,6 @@ import androidx.test.services.events.TimeStamp;
  *
  * @see TestCaseErrorEvent for an event regarding errors for a specific test.
  * @see TestRunFinishedEvent to mark the test run as finished.
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestRunErrorEvent extends TestPlatformEvent {

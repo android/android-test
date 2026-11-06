@@ -22,8 +22,6 @@ import androidx.annotation.RestrictTo;
 
 /**
  * Base class for all other {@code TestPlatformEvents} to extend.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public abstract class TestPlatformEvent implements Parcelable {

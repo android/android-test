@@ -22,8 +22,6 @@ import java.util.List;
 
 /**
  * Utility class for asserting flag values
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public final class FlagUtil {
@@ -33,8 +31,6 @@ public final class FlagUtil {
   /**
    * Builds list of specified flags as hex strings, intended for building readable error messages
    * for flag assets.
-   *
-   * @hide
    */
   @RestrictTo(Scope.LIBRARY)
   public static List<String> flagNames(int flags) {

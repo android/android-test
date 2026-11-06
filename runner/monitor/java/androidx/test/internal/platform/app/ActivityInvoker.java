@@ -32,7 +32,6 @@ import androidx.annotation.RestrictTo;
  *
  * @see <a href="https://developer.android.com/topic/libraries/architecture/lifecycle#lc">Android
  *     Component LifeCycles</a>
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by core
 public interface ActivityInvoker {

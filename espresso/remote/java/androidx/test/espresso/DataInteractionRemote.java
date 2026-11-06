@@ -27,8 +27,6 @@ import java.util.Arrays;
 
 /**
  * Registers all supported DataInteraction remote features with the {@link RemoteDescriptorRegistry}
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public final class DataInteractionRemote {

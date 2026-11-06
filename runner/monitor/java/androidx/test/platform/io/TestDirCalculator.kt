@@ -22,7 +22,6 @@ import androidx.annotation.RestrictTo.Scope
 import androidx.test.platform.app.InstrumentationRegistry
 import java.io.File
 
-/** @hide */
 // this should be just an internal class, but lint complains about accessing a kotlin internal class
 // from java
 @RestrictTo(Scope.LIBRARY)

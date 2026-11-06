@@ -26,8 +26,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * A minimal implementation of Guava's ThreadFactoryBuilder
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public class ThreadFactoryBuilder {

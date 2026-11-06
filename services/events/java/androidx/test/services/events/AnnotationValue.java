@@ -30,8 +30,6 @@ import java.util.List;
  *
  * <p>See <a href="https://developer.android.com/reference/android/os/Parcelable.html">Android
  * Parcelable</a>.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class AnnotationValue implements Parcelable {

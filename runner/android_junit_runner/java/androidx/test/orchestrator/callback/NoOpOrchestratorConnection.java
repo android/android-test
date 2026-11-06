@@ -27,8 +27,6 @@ import androidx.test.services.events.run.TestRunEvent;
 
 /**
  * A no-op connection to the Android test orchestrator.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public class NoOpOrchestratorConnection

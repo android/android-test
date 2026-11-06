@@ -29,8 +29,6 @@ import androidx.annotation.RestrictTo;
  *
  * <p>Required to maintain backwards comparability back to API level 8. Since {@code
  * Bundle.putBinder(...)} was only introduced in API level 18.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by espresso remote
 public class ParcelableIBinder implements Parcelable {

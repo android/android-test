@@ -22,8 +22,6 @@ import org.junit.runner.Description;
 
 /**
  * A JUnit filter for filtering tests whose name match one of the given regular expression.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public final class TestsRegExFilter extends AbstractFilter {

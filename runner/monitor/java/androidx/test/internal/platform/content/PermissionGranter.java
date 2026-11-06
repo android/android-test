@@ -24,8 +24,6 @@ import androidx.annotation.RestrictTo;
  *
  * <p>Note: This class should not be used directly, but through {@link
  * androidx.test.rule.GrantPermissionRule}.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by rule
 public interface PermissionGranter {

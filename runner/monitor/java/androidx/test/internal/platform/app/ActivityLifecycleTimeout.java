@@ -5,8 +5,6 @@ import androidx.test.internal.platform.util.InstrumentationParameterUtil;
 
 /**
  * Timeout for Activity's lifecycle state transitions.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by core/runner
 public class ActivityLifecycleTimeout {

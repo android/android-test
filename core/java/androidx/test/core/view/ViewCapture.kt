@@ -115,8 +115,6 @@ fun View.captureToBitmapAsync(rect: Rect? = null): ListenableFuture<Bitmap> {
  * Trigger a redraw of the given view.
  *
  * Should only be called on UI thread.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 suspend fun View.forceRedraw() {
@@ -177,14 +175,13 @@ private suspend fun SurfaceView.generateBitmapFromSurfaceViewPixelCopy(
   rect: Rect?,
 ): Bitmap {
   return suspendCancellableCoroutine<Bitmap> { cont ->
-    val onCopyFinished =
-      PixelCopy.OnPixelCopyFinishedListener { result ->
-        if (result == PixelCopy.SUCCESS) {
-          cont.resume(destBitmap)
-        } else {
-          cont.resumeWithException(RuntimeException(String.format("PixelCopy failed: %d", result)))
-        }
+    val onCopyFinished = PixelCopy.OnPixelCopyFinishedListener { result ->
+      if (result == PixelCopy.SUCCESS) {
+        cont.resume(destBitmap)
+      } else {
+        cont.resumeWithException(RuntimeException(String.format("PixelCopy failed: %d", result)))
       }
+    }
     PixelCopy.request(this, rect, destBitmap, onCopyFinished, handler)
   }
 }
@@ -219,14 +216,13 @@ private suspend fun View.generateBitmapFromPixelCopy(
     if (rect != null) {
       bounds = Rect(rect).apply { offset(bounds.left, bounds.top) }
     }
-    val onCopyFinished =
-      PixelCopy.OnPixelCopyFinishedListener { result ->
-        if (result == PixelCopy.SUCCESS) {
-          cont.resume(destBitmap)
-        } else {
-          cont.resumeWithException(RuntimeException("PixelCopy failed: $result"))
-        }
+    val onCopyFinished = PixelCopy.OnPixelCopyFinishedListener { result ->
+      if (result == PixelCopy.SUCCESS) {
+        cont.resume(destBitmap)
+      } else {
+        cont.resumeWithException(RuntimeException("PixelCopy failed: $result"))
       }
+    }
     PixelCopy.request(surface, bounds, destBitmap, onCopyFinished, Handler(Looper.getMainLooper()))
   }
 }

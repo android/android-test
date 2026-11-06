@@ -30,7 +30,6 @@ import androidx.test.services.events.TimeStamp;
  * sent after this. This event should always be emitted.
  *
  * @see TestRunStartedEvent to begin a test run.
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestRunFinishedEvent extends TestPlatformEvent {

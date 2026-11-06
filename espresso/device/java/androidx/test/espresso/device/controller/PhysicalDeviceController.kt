@@ -35,11 +35,7 @@ import androidx.test.platform.device.UnsupportedDeviceOperationException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-/**
- * Implementation of {@link DeviceController} for tests run on a physical device.
- *
- * @hide
- */
+/** Implementation of {@link DeviceController} for tests run on a physical device. */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 class PhysicalDeviceController() : DeviceController {
   override fun setDeviceMode(deviceMode: Int) {

@@ -34,7 +34,6 @@ public class UsageTrackerFacilitator implements UsageTracker {
 
   private final boolean shouldTrackUsage;
 
-  /** @hide */
   @RestrictTo(Scope.LIBRARY)
   public UsageTrackerFacilitator(@NonNull RunnerArgs runnerArgs) {
     checkNotNull(runnerArgs, "runnerArgs cannot be null!");
@@ -55,7 +54,6 @@ public class UsageTrackerFacilitator implements UsageTracker {
     return shouldTrackUsage;
   }
 
-  /** @hide */
   @RestrictTo(Scope.LIBRARY)
   public void registerUsageTracker(@Nullable UsageTracker usageTracker) {
     if (usageTracker != null && shouldTrackUsage()) {

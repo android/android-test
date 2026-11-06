@@ -45,8 +45,6 @@ import javax.inject.Singleton;
 
 /**
  * Dagger module for creating the implementation classes within the base package.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 @Module(includes = {PlatformTestStorageModule.class})

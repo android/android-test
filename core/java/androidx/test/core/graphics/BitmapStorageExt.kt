@@ -35,10 +35,7 @@ fun Bitmap.writeToTestStorage(name: String) {
   writeToTestStorage(PlatformTestStorageRegistry.getInstance(), name)
 }
 
-/**
- * @deprecated
- * @hide
- */
+/** @deprecated */
 @Deprecated(
   "use  PlatformTestStorageRegistry.setInstance in the rare cases where you want to override the PlatformTestStorage to use",
   replaceWith = ReplaceWith("writeToTestStorage()"),

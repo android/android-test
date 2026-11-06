@@ -39,7 +39,6 @@ import androidx.test.services.events.TimeStamp;
  *
  * @see TestCaseFinishedEvent to indicate the end of a test case
  * @see TestCaseErrorEvent for reporting various errors encountered during a test run.
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class TestCaseStartedEvent extends TestPlatformEvent {

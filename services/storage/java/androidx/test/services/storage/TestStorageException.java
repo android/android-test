@@ -20,8 +20,6 @@ import androidx.annotation.RestrictTo.Scope;
 
 /**
  * A RuntimeException thrown out of the test storage service.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY_GROUP)
 public class TestStorageException extends RuntimeException {

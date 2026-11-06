@@ -17,8 +17,6 @@ import java.util.Set;
 /**
  * A {@link PermissionGranter} that uses {@link
  * android.app.UiAutomation#grantRuntimePermission(String, String)}
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY_GROUP)
 @RequiresApi(28)

@@ -30,7 +30,6 @@ import androidx.test.services.events.TimeStamp;
  *
  * @see TestRunFinishedEvent to report that a test run is finished.
  * @see TestCaseStartedEvent to report individual test cases have begun.
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestRunStartedEvent extends TestPlatformEvent {

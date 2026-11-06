@@ -23,8 +23,6 @@ import dagger.Subcomponent;
 
 /**
  * Dagger component for view interaction classes.
- *
- * @hide
  */
 @RootViewPickerScope
 @Subcomponent(modules = ViewInteractionModule.class)

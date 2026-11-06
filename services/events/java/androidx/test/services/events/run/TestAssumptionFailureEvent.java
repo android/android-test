@@ -25,8 +25,6 @@ import androidx.test.services.events.TestCaseInfo;
 /**
  * Denotes that the test ended with a TEST_ASSUMPTION_FAILURE. It has the {@link FailureInfo} object
  * to denote what was the cause of the failure/error.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestAssumptionFailureEvent extends TestFailureEvent {

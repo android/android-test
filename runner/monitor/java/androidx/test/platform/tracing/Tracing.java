@@ -40,8 +40,6 @@ import java.util.Map;
  * tests by invoking the {@link #beginSpan(String)} method. The returned {@link Span} object must be
  * properly closed by invoking the {@link Span#close()} method or wrapping them in a try-resource
  * block.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class Tracing {

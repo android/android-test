@@ -70,8 +70,6 @@ import java.util.concurrent.TimeUnit;
  * use any functionality of this class. Call {@link #terminate()} after using
  * InstrumentationConnection to release any resources. Failure to do so will lead to memory leaks
  * and unexpected behavior.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by espresso remote
 public class InstrumentationConnection {
