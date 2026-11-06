@@ -6,6 +6,7 @@ def api_checks(
         name,
         runtime_dep,
         src_jar,
+        hide_packages = [],
         testonly = 1):
     """Generates api definitions and checks for a macro.
 
@@ -16,5 +17,6 @@ def api_checks(
       name: name of rule
       runtime_dep: runtime java dependency of the srcs
       src_jar: contains the source to generate api for
+      hide_packages: packages to exclude from the generated api
       testonly: the testonly restriction. Default 1
    """
