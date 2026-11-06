@@ -15,6 +15,8 @@
  */
 package androidx.test.internal.platform.util;
 
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -22,9 +24,8 @@ import java.util.Map;
  * An extension definition for outputting debugging information to the test execution environment.
  *
  * <p>Implementations should be provided via {@link ServiceLoader}
- *
- * @hide
  */
+@RestrictTo(Scope.LIBRARY)
 public interface TestOutputHandler {
 
   /** Output the stack traces of all running threads back to the execution environment. */

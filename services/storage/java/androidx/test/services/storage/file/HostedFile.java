@@ -30,8 +30,6 @@ import androidx.annotation.RestrictTo.Scope;
 
 /**
  * Constants to access hosted file data and convenience methods for building Uris.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public final class HostedFile {

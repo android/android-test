@@ -26,8 +26,6 @@ import androidx.annotation.RestrictTo.Scope;
 /**
  * Constants to access property file data (holding name/value pairs) and convenience methods for
  * build URIs.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public final class PropertyFile {

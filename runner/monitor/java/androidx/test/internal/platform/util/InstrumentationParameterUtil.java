@@ -1,14 +1,13 @@
 package androidx.test.internal.platform.util;
 
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.test.internal.util.Checks;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Provides utility functions to retrieve and parse data from instrumentation parameter.
- *
- * @hide
- */
+/** Provides utility functions to retrieve and parse data from instrumentation parameter. */
+@RestrictTo(Scope.LIBRARY)
 public class InstrumentationParameterUtil {
 
   /**

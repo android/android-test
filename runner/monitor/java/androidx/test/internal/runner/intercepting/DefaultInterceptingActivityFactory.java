@@ -18,15 +18,16 @@ package androidx.test.internal.runner.intercepting;
 
 import android.app.Activity;
 import android.content.Intent;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.test.runner.MonitoringInstrumentation;
 import androidx.test.runner.intercepting.InterceptingActivityFactory;
 
 /**
  * Default implementation of {@link InterceptingActivityFactory} which does not intercept activity
  * creation in {@link MonitoringInstrumentation#newActivity(ClassLoader, String, Intent)}
- *
- * @hide
  */
+@RestrictTo(Scope.LIBRARY)
 public final class DefaultInterceptingActivityFactory implements InterceptingActivityFactory {
 
   @Override
