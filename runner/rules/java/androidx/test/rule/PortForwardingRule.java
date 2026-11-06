@@ -37,8 +37,6 @@ import org.junit.runners.model.Statement;
  * <p>Note: Traffic forwarding will only apply to the current process under test.
  *
  * <p><b>This API is currently in beta.</b>
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY_GROUP)
 public class PortForwardingRule implements TestRule {
@@ -61,7 +59,7 @@ public class PortForwardingRule implements TestRule {
 
   private Properties backUpProp;
 
-  /** @hide */
+  @RestrictTo(Scope.LIBRARY)
   public static class Builder {
 
     private String proxyHost = DEFAULT_PROXY_HOST;
