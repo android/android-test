@@ -34,8 +34,6 @@ import androidx.annotation.RestrictTo.Scope;
  * the device).
  *
  * <p>This class will actually never be included in our .aar!
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public class ExposedInstrumentationApi extends Instrumentation {

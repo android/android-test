@@ -18,7 +18,6 @@ package androidx.test.espresso.remote;
 
 /**
 * Enables the ability to share interaction execution status cross process
-* @hide
 */
 @JavaPassthrough(annotation="@androidx.annotation.RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP)")
 interface IInteractionExecutionStatus {

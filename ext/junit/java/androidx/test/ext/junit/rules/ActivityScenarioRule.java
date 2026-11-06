@@ -57,8 +57,6 @@ public final class ActivityScenarioRule<A extends Activity> extends ExternalReso
 
   /**
    * Same as {@link java.util.function.Supplier} which requires API level 24.
-   *
-   * @hide
    */
   @RestrictTo(Scope.LIBRARY)
   interface Supplier<T> {

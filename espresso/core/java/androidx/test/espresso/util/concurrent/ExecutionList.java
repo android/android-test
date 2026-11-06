@@ -27,8 +27,6 @@ import java.util.concurrent.Executor;
 
 /**
  * Minimal fork of Guava's ExecutionList to avoid the full dependency.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 final class ExecutionList {

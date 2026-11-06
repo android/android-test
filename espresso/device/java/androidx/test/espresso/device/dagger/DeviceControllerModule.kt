@@ -34,8 +34,6 @@ import javax.inject.Singleton
 
 /**
  * Dagger module for DeviceController.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 @Module
