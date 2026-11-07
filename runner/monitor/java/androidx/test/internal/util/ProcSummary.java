@@ -17,6 +17,8 @@ package androidx.test.internal.util;
 
 import static androidx.test.internal.util.Checks.checkNotNull;
 
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import androidx.annotation.VisibleForTesting;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +30,7 @@ import java.io.InputStreamReader;
  *
  * @hide
  */
+@RestrictTo(Scope.LIBRARY)
 public final class ProcSummary {
   public final String name;
   public final String pid;
