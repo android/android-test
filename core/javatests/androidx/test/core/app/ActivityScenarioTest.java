@@ -21,13 +21,16 @@ import static androidx.test.ext.truth.content.IntentSubject.assertThat;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import androidx.lifecycle.Lifecycle.State;
 import androidx.test.core.app.ActivityScenario.ActivityAction;
 import androidx.test.core.app.testing.AsyncRecordingActivity;
@@ -40,6 +43,8 @@ import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.runner.lifecycle.ActivityLifecycleCallback;
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitor;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
 import java.util.ArrayList;
@@ -389,6 +394,66 @@ public final class ActivityScenarioTest {
   }
 
   @Test
+  public void closeAfterActivityFinishedItselfWhileStopped() throws Exception {
+    // Robolectric does not launch activities started via Activity#startActivity.
+    assumeFalse(Build.FINGERPRINT.contains("robolectric"));
+    try (ActivityScenario<RecordingActivity> scenario =
+        ActivityScenario.launchActivityForResult(RecordingActivity.class)) {
+      // Cover the activity under test with another activity so that it gets stopped.
+      scenario.onActivity(
+          activity ->
+              activity.startActivity(new Intent(activity, RecreationRecordingActivity.class)));
+      waitForState(scenario, State.CREATED);
+
+      // Finish the covering activity, and finish the activity under test once the covering activity
+      // is paused. At that point the system has already started bringing the activity under test
+      // back to the foreground, so it receives onRestart (but not onStart since it is finishing)
+      // and stays in the transient RESTARTED stage until it is destroyed, even though the main
+      // thread is idle.
+      ActivityLifecycleMonitor monitor = ActivityLifecycleMonitorRegistry.getInstance();
+      ActivityLifecycleCallback finishOnCoveringActivityPaused =
+          new ActivityLifecycleCallback() {
+            @Override
+            public void onActivityLifecycleChanged(Activity activity, Stage stage) {
+              if (activity instanceof RecreationRecordingActivity && stage == Stage.PAUSED) {
+                // Post so that the system is notified of the pause (and starts resuming the
+                // activity under test) before the activity under test finishes.
+                new Handler(Looper.getMainLooper())
+                    .post(
+                        () -> {
+                          for (Activity stopped : monitor.getActivitiesInStage(Stage.STOPPED)) {
+                            if (stopped instanceof RecordingActivity) {
+                              stopped.setResult(RESULT_OK);
+                              stopped.finish();
+                            }
+                          }
+                        });
+              }
+            }
+          };
+      monitor.addLifecycleCallback(finishOnCoveringActivityPaused);
+      try {
+        InstrumentationRegistry.getInstrumentation()
+            .runOnMainSync(
+                () -> {
+                  for (Activity activity : monitor.getActivitiesInStage(Stage.RESUMED)) {
+                    if (activity instanceof RecreationRecordingActivity) {
+                      activity.finish();
+                    }
+                  }
+                });
+
+        assertThat(scenario.getResult().getResultCode()).isEqualTo(RESULT_OK);
+        // Must not throw even if the activity has not been destroyed yet.
+        scenario.close();
+      } finally {
+        monitor.removeLifecycleCallback(finishOnCoveringActivityPaused);
+      }
+      assertThat(scenario.getState()).isEqualTo(State.DESTROYED);
+    }
+  }
+
+  @Test
   public void scenarioResultAfterLaunch() throws Exception {
     try (ActivityScenario<RecreationRecordingActivity> scenario =
         ActivityScenario.launch(RecreationRecordingActivity.class)) {
@@ -551,5 +616,14 @@ public final class ActivityScenarioTest {
 
   private static Stage lastLifeCycleTransition(Activity activity) {
     return ActivityLifecycleMonitorRegistry.getInstance().getLifecycleStageOf(activity);
+  }
+
+  private static void waitForState(ActivityScenario<?> scenario, State state)
+      throws InterruptedException {
+    long deadline = SystemClock.elapsedRealtime() + TimeUnit.SECONDS.toMillis(10);
+    while (scenario.getState() != state && SystemClock.elapsedRealtime() < deadline) {
+      Thread.sleep(50);
+    }
+    assertThat(scenario.getState()).isEqualTo(state);
   }
 }

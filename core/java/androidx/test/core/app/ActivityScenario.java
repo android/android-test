@@ -51,6 +51,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -654,6 +655,14 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
     getInstrumentation().waitForIdleSync();
 
     ActivityState<A> currentState = getCurrentActivityState();
+    if (currentState.state == null && isFinishingOffMainThread(currentState.activity)) {
+      // An idle main thread does not guarantee that the activity has reached a steady state. A
+      // finishing activity may stay in a transient stage (e.g. RESTARTED, if it finished itself
+      // while stopped) until the system destroys it. Since it is going to be destroyed, wait for
+      // it to settle instead of failing.
+      waitForActivityToBecomeAnyOf(STEADY_STATES.values().toArray(new State[0]));
+      currentState = getCurrentActivityState();
+    }
     checkNotNull(
         currentState.state,
         String.format("Current state was null unexpectedly. Last stage = %s", currentState.stage));
@@ -688,6 +697,22 @@ public final class ActivityScenario<A extends Activity> implements AutoCloseable
 
     waitForActivityToBecomeAnyOf(newState);
     return this;
+  }
+
+  /**
+   * Returns true if the given activity is finishing and the caller is not on the main thread.
+   *
+   * <p>Waiting for a lifecycle transition is only meaningful off the main thread, since the
+   * transition cannot progress while the main thread is blocked (e.g. in Robolectric tests that run
+   * on the main thread).
+   */
+  private static boolean isFinishingOffMainThread(@Nullable Activity activity) {
+    if (activity == null || Looper.myLooper() == Looper.getMainLooper()) {
+      return false;
+    }
+    AtomicBoolean isFinishing = new AtomicBoolean();
+    getInstrumentation().runOnMainSync(() -> isFinishing.set(activity.isFinishing()));
+    return isFinishing.get();
   }
 
   /**
