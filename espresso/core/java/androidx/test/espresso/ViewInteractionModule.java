@@ -36,8 +36,6 @@ import org.hamcrest.Matcher;
 
 /**
  * Adds the user interaction scope to the Espresso graph.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 @Module(includes = {PlatformTestStorageModule.class})

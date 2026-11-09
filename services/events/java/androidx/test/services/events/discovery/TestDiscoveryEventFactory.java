@@ -25,8 +25,6 @@ import androidx.test.services.events.discovery.TestDiscoveryEvent.EventType;
  * The factory for {@link TestDiscoveryEvent#CREATOR}. When the parcel was created, the first entry
  * written to it was the {@link TestDiscoveryEvent#instanceType()} enum value, so use the EventType
  * to instantiate the correct subclass.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 final class TestDiscoveryEventFactory implements Creator<TestDiscoveryEvent> {
