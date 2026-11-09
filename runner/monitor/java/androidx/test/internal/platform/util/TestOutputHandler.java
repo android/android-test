@@ -15,6 +15,8 @@
  */
 package androidx.test.internal.platform.util;
 
+import androidx.annotation.RestrictTo;
+import androidx.annotation.RestrictTo.Scope;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -25,6 +27,7 @@ import java.util.Map;
  *
  * @hide
  */
+@RestrictTo(Scope.LIBRARY)
 public interface TestOutputHandler {
 
   /** Output the stack traces of all running threads back to the execution environment. */
