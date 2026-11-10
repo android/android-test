@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-/** @hide */
 @RestrictTo(Scope.LIBRARY)
 package androidx.test.espresso.proto.assertion;
 

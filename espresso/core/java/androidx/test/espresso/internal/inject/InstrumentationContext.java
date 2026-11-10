@@ -23,8 +23,6 @@ import javax.inject.Qualifier;
 
 /**
  * Annotates a context as being the InstrumentationContext of an instrumentation.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 @Qualifier

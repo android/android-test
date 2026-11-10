@@ -23,8 +23,6 @@ import androidx.annotation.RestrictTo;
  *
  * <p>Implementations should be loaded via {@link
  * androidx.test.internal.platform.ServiceLoaderWrapper}
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by core and espresso
 public interface ControlledLooper {

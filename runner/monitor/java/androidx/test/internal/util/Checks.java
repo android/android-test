@@ -26,8 +26,6 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 /**
  * Utility methods for checking null references, method arguments, and thread state to simplify
  * other library code.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by runner and rules
 public final class Checks {

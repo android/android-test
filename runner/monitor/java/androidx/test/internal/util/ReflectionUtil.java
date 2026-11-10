@@ -24,7 +24,6 @@ import java.lang.reflect.Method;
  * Utility methods for invoking calls via reflection.
  *
  * @deprecated use {@link androidx.test.platform.reflect.ReflectiveMethod} instead.
- * @hide
  */
 @Deprecated
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by runner 1.4.0
@@ -58,8 +57,6 @@ public class ReflectionUtil {
   }
   /**
    * Thrown when there was a failure making a reflective call.
-   *
-   * @hide
    */
   @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by runner 1.4.0
   public static class ReflectionException extends Exception {

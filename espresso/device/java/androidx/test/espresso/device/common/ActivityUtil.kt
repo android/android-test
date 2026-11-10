@@ -38,7 +38,6 @@ private const val TAG = "ActivityUtil"
  * @param configBit, bit in ActivityInfo#configChanges that indicates whether the activity can
  *   handle this type of configuration change.
  * @return whether the activity handles the given configuration change.
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 fun Activity.isConfigurationChangeHandled(configBit: Int): Boolean {
@@ -49,8 +48,6 @@ fun Activity.isConfigurationChangeHandled(configBit: Int): Boolean {
 /**
  * Returns the first activity found in the RESUMED stage, or null if none are found after waiting up
  * to two seconds for one.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 fun getResumedActivityOrNull(): Activity? {

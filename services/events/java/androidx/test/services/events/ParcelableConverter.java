@@ -35,8 +35,6 @@ import org.junit.runner.notification.Failure;
 /**
  * Utility to convert JUnit {@link Description} and related test data classes to parcelables for
  * sending to a remote service.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class ParcelableConverter {

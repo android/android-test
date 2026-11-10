@@ -32,8 +32,6 @@ import java.io.OutputStream;
 
 /**
  * Helper methods for the test storage implementations.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public final class TestStorageUtil {

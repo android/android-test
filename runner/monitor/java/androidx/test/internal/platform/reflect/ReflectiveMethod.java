@@ -25,8 +25,6 @@ import java.lang.reflect.Method;
  * Helper class for making more performant reflection method invocations.
  *
  * <p>Lazy initializes and caches Method object to attempt to reduce reflection overhead.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY_GROUP)
 public class ReflectiveMethod<T> {

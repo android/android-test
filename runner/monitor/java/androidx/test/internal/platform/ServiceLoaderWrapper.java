@@ -29,8 +29,6 @@ import java.util.Set;
  * <p>Loading a service via ServiceLoader can result in disk I/O. Disk I/O on Android can be
  * restricted via StrictMode. This class disables disk access checking and then reenables StrictMode
  * when loading a service.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by core, espresso, rule
 public final class ServiceLoaderWrapper {

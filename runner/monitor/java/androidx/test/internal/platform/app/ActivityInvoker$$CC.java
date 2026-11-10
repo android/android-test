@@ -17,8 +17,6 @@ import androidx.annotation.RestrictTo.Scope;
  * <p>This meant previous releases of androidx.test:monitor had an effective inter-library
  * dependency on a generated ActivityInvoker$$CC class. Thus retain this class so monitor is
  * compatible with older androidx.test core versions.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY_GROUP)
 public final class ActivityInvoker$$CC {

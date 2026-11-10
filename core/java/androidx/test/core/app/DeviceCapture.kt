@@ -45,8 +45,6 @@ import kotlinx.coroutines.withTimeout
  * this method returns false then attempting to take a screenshot will fail. Note that taking a
  * screenshot may still fail if this method returns true, for example if the call to [UiAutomation]
  * fails.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun canTakeScreenshot(): Boolean =
@@ -89,7 +87,6 @@ fun takeScreenshot(): Bitmap {
  * @return a [Bitmap]
  * @throws [IllegalStateException] if called on the main thread. This is a limitation of connecting
  *   to UiAutomation, [RuntimeException] if UiAutomation fails to take the screenshot
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("FutureReturnValueIgnored")

@@ -27,8 +27,6 @@ import androidx.test.services.events.TimeStamp;
 /**
  * This event is sent when an error is encountered during test discovery. Multiple {@link
  * TestDiscoveryErrorEvent}s may be reported. This event does not mean discovery has finished.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestDiscoveryErrorEvent extends TestDiscoveryEvent {

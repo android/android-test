@@ -7,8 +7,6 @@ import org.junit.runner.manipulation.Filter;
 
 /**
  * A JUnit sharding filter uses the hashcode of the test description to assign it to a shard.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 public class ShardingFilter extends Filter {

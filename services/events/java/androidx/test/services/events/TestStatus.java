@@ -25,8 +25,6 @@ import androidx.annotation.RestrictTo;
 
 /**
  * The final status of a Test Case or Test Run.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class TestStatus implements Parcelable {

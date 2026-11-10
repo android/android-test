@@ -21,8 +21,6 @@ import androidx.annotation.RestrictTo;
 
 /**
  * A checked {@link Exception} indicating that a test event operation failed.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestEventException extends Exception {

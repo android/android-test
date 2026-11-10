@@ -26,18 +26,13 @@ import org.hamcrest.Matcher
  * @param iterable the sequence of items to filter
  * @param matcher the [Matcher] to perform the filtering.
  * @return subset of iterable that matched
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <T> filter(iterable: Iterable<T>, matcher: Matcher<T>): Iterable<T> {
   return iterable.filter { matcher.matches(it) }
 }
 
-/**
- * A variant of [filter] that returns a [List]
- *
- * @hide
- */
+/** A variant of [filter] that returns a [List] */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <T> filterToList(iterable: Iterable<T>, matcher: Matcher<T>): List<T> {
   return filter(iterable, matcher).toList()

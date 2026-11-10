@@ -22,8 +22,6 @@ import androidx.annotation.RestrictTo;
 
 /**
  * Base class for different test discovery events to implement.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public abstract class TestDiscoveryEvent implements Parcelable {

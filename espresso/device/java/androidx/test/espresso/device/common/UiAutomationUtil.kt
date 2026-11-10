@@ -31,7 +31,6 @@ import java.nio.charset.Charset
  *
  * @param command the shell command to execute
  * @return stdout output
- * @hide
  */
 @RestrictTo(Scope.LIBRARY)
 fun executeShellCommand(command: String): String {

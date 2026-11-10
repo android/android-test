@@ -28,8 +28,6 @@ import org.junit.runner.notification.Failure;
 
 /**
  * Denotes an android test error. Has details of the error including stack trace, type, and message.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class ErrorInfo implements Parcelable {

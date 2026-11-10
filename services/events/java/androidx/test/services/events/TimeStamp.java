@@ -31,8 +31,6 @@ import java.time.Instant;
 
 /**
  * Denotes an android test error. Has details of the error including stack trace, type, and message.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class TimeStamp implements Parcelable {

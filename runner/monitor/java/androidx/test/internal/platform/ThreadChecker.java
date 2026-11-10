@@ -20,8 +20,6 @@ import androidx.annotation.RestrictTo;
 
 /**
  * An API to check thread conditions. All classes that implement this API must be thread-safe.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by robolectric
 public interface ThreadChecker {

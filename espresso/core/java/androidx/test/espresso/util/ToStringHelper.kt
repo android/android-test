@@ -6,8 +6,6 @@ import androidx.annotation.RestrictTo
  * Simplified version of guava's ToStringHelper.
  *
  * Used to help pretty prints an object and a set of its members.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ToStringHelper constructor(obj: Object) {

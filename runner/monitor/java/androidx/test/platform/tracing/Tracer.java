@@ -45,8 +45,6 @@ import java.io.Closeable;
  *     ...action to be traced...
  *   }
  * </pre>
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public interface Tracer {

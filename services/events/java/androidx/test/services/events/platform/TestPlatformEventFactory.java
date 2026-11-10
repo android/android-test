@@ -25,8 +25,6 @@ import androidx.test.services.events.platform.TestPlatformEvent.EventType;
  * The factory for {@link TestPlatformEvent#CREATOR}. When the parcel was created, the first entry
  * written to it was the {@link TestPlatformEvent#instanceType()} enum value, so use the EventType
  * to instantiate the correct subclass.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class TestPlatformEventFactory implements Creator<TestPlatformEvent> {

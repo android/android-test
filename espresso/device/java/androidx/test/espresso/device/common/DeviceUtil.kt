@@ -27,8 +27,6 @@ import java.util.regex.Pattern
 /**
  * Detects if the test is running on an emulator or a real device using some heuristics based on the
  * device properties.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 fun isTestDeviceAnEmulator(): Boolean {
@@ -41,19 +39,13 @@ fun isTestDeviceAnEmulator(): Boolean {
 /**
  * Detects if the test is running on Robolectric using some heuristics based on the device
  * properties.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 fun isRobolectricTest(): Boolean {
   return Build.FINGERPRINT.equals("robolectric")
 }
 
-/**
- * Returns the API level of the current test device.
- *
- * @hide
- */
+/** Returns the API level of the current test device. */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 fun getDeviceApiLevel(): Int {
   return Build.VERSION.SDK_INT
@@ -67,8 +59,6 @@ fun getDeviceApiLevel(): Int {
  * [ DeviceState{identifier=1, name='CLOSED'}, DeviceState{identifier=2, name='HALF_OPENED'}, DeviceState{identifier=3, name='OPENED'}, ]
  * This method returns a map where the keys are the device state names and the values are the device
  * state identifiers.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 fun getMapOfDeviceStateNamesToIdentifiers(): MutableMap<String, String> {
@@ -112,11 +102,7 @@ fun getMapOfDeviceStateNamesToIdentifiers(): MutableMap<String, String> {
   return deviceStateNameToIdentifier
 }
 
-/**
- * Returns a Pair containing the current width and height of the test device in pixels
- *
- * @hide
- */
+/** Returns a Pair containing the current width and height of the test device in pixels */
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 fun calculateCurrentDisplayWidthAndHeightPx(): Pair<Int, Int> {
   // "wm size" will output a string with the format

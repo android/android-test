@@ -33,8 +33,6 @@ import java.util.List;
  *
  * <p>This intent monitor will be notified by {@link androidx.test.runner.MonitoringInstrumentation}
  * when a new activity was started using {@link Activity#startActivity(Intent)}.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP) // used by robolectric
 public final class IntentMonitorImpl implements IntentMonitor {

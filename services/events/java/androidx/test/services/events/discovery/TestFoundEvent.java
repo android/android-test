@@ -26,8 +26,6 @@ import androidx.test.services.events.TestCaseInfo;
 /**
  * Denotes that test discovery has found a test case. The {@link TestCaseInfo} is provided along
  * with the event.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestFoundEvent extends TestDiscoveryEvent {

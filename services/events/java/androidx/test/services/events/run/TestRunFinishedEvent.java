@@ -28,8 +28,6 @@ import java.util.List;
 
 /**
  * Denotes that the test ended with a TEST_RUN_FINISHED event.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class TestRunFinishedEvent extends TestRunEvent {

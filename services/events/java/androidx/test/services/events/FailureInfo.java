@@ -27,8 +27,6 @@ import androidx.annotation.RestrictTo;
 /**
  * Denotes an android test failure, has details of the failure including stack trace / type and
  * message.
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public final class FailureInfo implements Parcelable {

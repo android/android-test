@@ -20,8 +20,6 @@ import androidx.annotation.RestrictTo.Scope;
 
 /**
  * Thrown when there was a failure making a reflective call.
- *
- * @hide
  */
 @RestrictTo(Scope.LIBRARY_GROUP)
 public class ReflectionException extends RuntimeException {

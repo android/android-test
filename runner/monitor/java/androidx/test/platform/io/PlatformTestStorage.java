@@ -130,7 +130,6 @@ public interface PlatformTestStorage {
    * @param pathname path to the internal file. Should not be null.
    * @return an InputStream to the given test file.
    * @throws FileNotFoundException if pathname does not exist
-   * @hide
    */
   @RestrictTo(Scope.LIBRARY_GROUP)
   default InputStream openInternalInputFile(String pathname) throws FileNotFoundException {
@@ -143,7 +142,6 @@ public interface PlatformTestStorage {
    * @param pathname path to the internal file. Should not be null.
    * @return an OutputStream to the given output file.
    * @throws FileNotFoundException if pathname does not exist
-   * @hide
    */
   @RestrictTo(Scope.LIBRARY_GROUP)
   default OutputStream openInternalOutputFile(String pathname) throws FileNotFoundException {

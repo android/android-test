@@ -6,8 +6,6 @@ import androidx.annotation.RestrictTo;
 
 /**
  * Re-implementation of needed methods from Guava's Throwables to avoid the direct dependency
- *
- * @hide
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class Throwables {
