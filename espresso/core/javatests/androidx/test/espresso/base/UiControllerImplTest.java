@@ -31,6 +31,7 @@ import android.util.Log;
 import androidx.test.espresso.AppNotIdleException;
 import androidx.test.espresso.IdlingPolicies;
 import androidx.test.espresso.IdlingPolicy;
+import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.IdlingResourceTimeoutException;
 import androidx.test.espresso.base.IdlingResourceRegistry.IdleNotificationCallback;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -41,6 +42,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Provider;
 import org.junit.After;
@@ -439,6 +441,112 @@ public class UiControllerImplTest {
   }
 
   @Test
+  public void loopMainThreadUntilIdle_runsTaskPostedByResourceGoingIdleDuringRecheck()
+      throws InterruptedException {
+    // Background work commonly posts a follow-up task to the main thread and then goes idle. If it
+    // goes idle after the main queue was last checked but before the idling resources are checked
+    // again, the resources report idle while the follow-up task is still queued. This resource
+    // reproduces that interleaving deterministically by posting from inside the second check.
+    CountDownLatch followUpTaskRan = new CountDownLatch(1);
+    PostsTaskWhenPolledIdlingResource resource =
+        new PostsTaskWhenPolledIdlingResource(testThread.getHandler(), followUpTaskRan::countDown);
+    idlingResourceRegistry.registerResources(singletonList(resource));
+    AtomicBoolean ranBeforeIdle = new AtomicBoolean();
+    CountDownLatch returned = new CountDownLatch(1);
+    assertTrue(
+        testThread
+            .getHandler()
+            .post(() -> {
+              // Runs while loopMainThreadUntilIdle() drains the queue, which is after the
+              // resource has been checked once.
+              testThread.getHandler().post(resource::postTaskOnNextPoll);
+              uiController.get().loopMainThreadUntilIdle();
+              ranBeforeIdle.set(followUpTaskRan.getCount() == 0);
+              returned.countDown();
+            }));
+    assertTrue(
+        "Never returned from UiControllerImpl.loopMainThreadUntilIdle();",
+        returned.await(10, TimeUnit.SECONDS));
+    assertTrue(
+        "loopMainThreadUntilIdle() returned before running a task posted by an idle resource",
+        ranBeforeIdle.get());
+  }
+
+  @Test
+  public void loopMainThreadUntilIdle_resourceCallingOnTransitionToIdleWhenIdleDoesNotSpin()
+      throws InterruptedException {
+    IdlingResource resource =
+        new IdlingResource() {
+          private ResourceCallback callback;
+
+          @Override
+          public String getName() {
+            return "NotifiesWhenIdleResource";
+          }
+
+          @Override
+          public boolean isIdleNow() {
+            if (callback != null) {
+              callback.onTransitionToIdle();
+            }
+            return true;
+          }
+
+          @Override
+          public void registerIdleTransitionCallback(ResourceCallback callback) {
+            this.callback = callback;
+          }
+        };
+    idlingResourceRegistry.registerResources(singletonList(resource));
+    CountDownLatch returned = new CountDownLatch(1);
+    assertTrue(
+        testThread
+            .getHandler()
+            .post(() -> {
+              uiController.get().loopMainThreadUntilIdle();
+              returned.countDown();
+            }));
+    assertTrue(
+        "Never returned from UiControllerImpl.loopMainThreadUntilIdle();",
+        returned.await(5, TimeUnit.SECONDS));
+  }
+
+  @Test
+  public void loopMainThreadUntilIdle_resourcePostingTaskWhenIdle_timesOut()
+      throws InterruptedException {
+    IdlingPolicies.setMasterPolicyTimeout(200, TimeUnit.MILLISECONDS);
+    IdlingResource resource =
+        new IdlingResource() {
+          @Override
+          public String getName() {
+            return "PostsOnEveryPollResource";
+          }
+
+          @Override
+          public boolean isIdleNow() {
+            testThread.getHandler().post(() -> {});
+            return true;
+          }
+
+          @Override
+          public void registerIdleTransitionCallback(ResourceCallback callback) {}
+        };
+    idlingResourceRegistry.registerResources(singletonList(resource));
+    CountDownLatch timedOut = new CountDownLatch(1);
+    assertTrue(
+        testThread
+            .getHandler()
+            .post(() -> {
+              assertThrows(
+                  AppNotIdleException.class, () -> uiController.get().loopMainThreadUntilIdle());
+              timedOut.countDown();
+            }));
+    assertTrue(
+        "Expected idling policy timeout instead of spinning indefinitely",
+        timedOut.await(5, TimeUnit.SECONDS));
+  }
+
+  @Test
   public void loopMainThreadUntilIdle_multipleIdlingResources() throws InterruptedException {
     OnDemandIdlingResource fakeResource1 = new OnDemandIdlingResource("FakeResource1");
     OnDemandIdlingResource fakeResource2 = new OnDemandIdlingResource("FakeResource2");
@@ -580,5 +688,43 @@ public class UiControllerImplTest {
   @Test
   public void interruptInitialization() {
     uiController.get().interruptEspressoTasks();
+  }
+
+  /**
+   * An idling resource that is always idle but, once armed, posts a task to the main thread the
+   * next time it's polled. This models background work that posts a follow-up task to the main
+   * thread just before going idle.
+   */
+  private static final class PostsTaskWhenPolledIdlingResource implements IdlingResource {
+    private final Handler mainHandler;
+    private final Runnable task;
+    // Only accessed on the main thread.
+    private boolean armed = false;
+
+    PostsTaskWhenPolledIdlingResource(Handler mainHandler, Runnable task) {
+      this.mainHandler = mainHandler;
+      this.task = task;
+    }
+
+    void postTaskOnNextPoll() {
+      armed = true;
+    }
+
+    @Override
+    public boolean isIdleNow() {
+      if (armed) {
+        armed = false;
+        mainHandler.post(task);
+      }
+      return true;
+    }
+
+    @Override
+    public String getName() {
+      return "PostsTaskWhenPolledIdlingResource";
+    }
+
+    @Override
+    public void registerIdleTransitionCallback(ResourceCallback callback) {}
   }
 }

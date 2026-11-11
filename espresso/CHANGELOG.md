@@ -16,6 +16,12 @@ The following artifacts were released:
 
 **Bug Fixes**
 
+* Avoid enqueuing redundant idle notifications in `IdlingResourceRegistry`
+  when an already-idle `IdlingResource` calls `onTransitionToIdle()`.
+* Fix a race where Espresso could report the app as idle while the main
+  thread still had a task queued by background work that had just gone idle,
+  while preserving idling policy timeout enforcement across re-checks.
+
 **New Features**
 
 **Breaking Changes**

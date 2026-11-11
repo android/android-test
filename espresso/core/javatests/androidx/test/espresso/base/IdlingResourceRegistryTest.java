@@ -340,6 +340,69 @@ public class IdlingResourceRegistryTest {
   }
 
   @Test
+  public void allResourcesAreIdle_resourceCallingOnTransitionToIdleWhenIdle_doesNotEnqueueMessage()
+      throws Exception {
+    HandlerThread ht = new HandlerThread("idling-registry-test");
+    ht.start();
+    try {
+      Looper registryLooper = ht.getLooper();
+      Handler registryLooperHandler = new Handler(registryLooper);
+      IdlingResourceRegistry isolatedRegistry =
+          new IdlingResourceRegistry(registryLooper, Tracing.getInstance());
+      AtomicReference<IdlingResource.ResourceCallback> callbackRef = new AtomicReference<>();
+      IdlingResource resource =
+          new IdlingResource() {
+            @Override
+            public String getName() {
+              return "NotifiesWhenIdleResource";
+            }
+
+            @Override
+            public boolean isIdleNow() {
+              IdlingResource.ResourceCallback callback = callbackRef.get();
+              if (callback != null) {
+                callback.onTransitionToIdle();
+              }
+              return true;
+            }
+
+            @Override
+            public void registerIdleTransitionCallback(ResourceCallback callback) {
+              callbackRef.set(callback);
+            }
+          };
+
+      FutureTask<Void> checkNoMessagesQueued =
+          new FutureTask<>(() -> {
+            TestLooperManagerCompat looperManager = TestLooperManagerCompat.acquire(registryLooper);
+            try {
+              // Registering on the registry looper polls isIdleNow() while the state is
+              // initially not idle, and setIdle(true) should remove the resulting idle message.
+              assertTrue(isolatedRegistry.registerResources(singletonList(resource)));
+              assertThat(looperManager.peekWhen()).isNull();
+
+              // Polling allResourcesAreIdle() when already idle should ignore the redundant
+              // onTransitionToIdle() callback rather than enqueuing a message.
+              assertTrue(isolatedRegistry.allResourcesAreIdle());
+              assertThat(looperManager.peekWhen()).isNull();
+
+              // Calling onTransitionToIdle() directly on the registry looper while already idle
+              // should also be ignored.
+              callbackRef.get().onTransitionToIdle();
+              assertThat(looperManager.peekWhen()).isNull();
+            } finally {
+              looperManager.release();
+            }
+            return null;
+          });
+      registryLooperHandler.post(checkNoMessagesQueued);
+      checkNoMessagesQueued.get(5, TimeUnit.SECONDS);
+    } finally {
+      ht.quitSafely();
+    }
+  }
+
+  @Test
   public void notifyWhenAllResourcesAreIdle_success() throws InterruptedException {
     final CountDownLatch busyWarningLatch = new CountDownLatch(4);
     final CountDownLatch timeoutLatch = new CountDownLatch(1);
