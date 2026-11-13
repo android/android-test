@@ -16,6 +16,9 @@ The following artifacts were released:
 
 **Bug Fixes**
 
+* Avoid enqueuing redundant idle notifications in `IdlingResourceRegistry`
+  when an already-idle `IdlingResource` calls `onTransitionToIdle()`.
+
 **New Features**
 
 **Breaking Changes**
