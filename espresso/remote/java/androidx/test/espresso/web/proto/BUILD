@@ -1,6 +1,6 @@
 # Protocol buffer definitions for web remote UI interactions
 
-load("@rules_java//java:defs.bzl", "java_library")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 licenses(["notice"])
 
@@ -11,7 +11,7 @@ package(
 )
 
 # gather up the package-infos which hide the proto generated code from public API
-java_library(
+android_library(
     name = "package-infos",
     exports = [
         "//espresso/remote/java/androidx/test/espresso/web/proto/action:package-info",
