@@ -1,8 +1,8 @@
 # Protocol buffer definitions for remote UI interactions
 
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 load("@com_google_protobuf//bazel:java_lite_proto_library.bzl", "java_lite_proto_library")
 load("@com_google_protobuf//bazel:proto_library.bzl", "proto_library")
-load("@rules_java//java:defs.bzl", "java_library")
 
 licenses(["notice"])
 
@@ -28,7 +28,7 @@ java_lite_proto_library(
 )
 
 # gather up the package-infos which hide the proto generated code from public API
-java_library(
+android_library(
     name = "package-infos",
     srcs = ["package-info.java"],
     exports = [

@@ -1,7 +1,7 @@
 # Description:
 #   Internal package that will contain shaded dagger classes for external release
 
-load("@rules_java//java:defs.bzl", "java_library")
+load("@build_bazel_rules_android//android:rules.bzl", "android_library")
 
 licenses(["notice"])
 
@@ -11,7 +11,7 @@ package(
     default_visibility = ["//espresso/core/java/androidx/test/espresso:__pkg__"],
 )
 
-java_library(
+android_library(
     name = "dagger",
     srcs = glob(["*java"]),
     deps = [
