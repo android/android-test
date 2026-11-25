@@ -165,44 +165,83 @@ collect_maven_info = aspect(
     implementation = _collect_maven_info_impl,
 )
 
+_PlatformInfo = provider(
+    doc = "Internal provider tracking the target platform for filtering split deps.",
+    fields = {
+        "platform": "The target platform label of the configured target.",
+    },
+)
+
+def _filter_primary_split(deps, primary_platform):
+    """Filters split-transitioned deps down to a single split.
+
+    Prefers deps matching the target's primary platform (for multi-platform
+    android_binary builds). Falls back to deduplicating by label if splits
+    share a platform.
+    """
+    if primary_platform:
+        primary_deps = [
+            dep
+            for dep in deps
+            if _PlatformInfo in dep and dep[_PlatformInfo].platform == primary_platform
+        ]
+        if primary_deps:
+            deps = primary_deps
+    seen = {}
+    unique_deps = []
+    for dep in deps:
+        if dep.label not in seen:
+            seen[dep.label] = True
+            unique_deps.append(dep)
+    return unique_deps
+
 def _collect_maven_apk_info_impl(target, ctx):
     neverlink = getattr(ctx.rule.attr, "neverlink", False)
     deps = getattr(ctx.rule.attr, "deps", [])
     exports = getattr(ctx.rule.attr, "exports", [])
+    platform_info = _PlatformInfo(platform = ctx.fragments.platform.platform)
 
     # ignore non-runtime or non-java dependencies eg proto_library or non-axt-labels
     if neverlink or JavaInfo not in target or not is_axt_label(target.label):
-        return MavenInfo(
-            artifact = None,
-            is_compileOnly = True,
-            is_shaded = False,
-            transitive_included_runtime_jars = depset(),
-            transitive_included_src_jars = depset(),
-            transitive_maven_direct_deps = depset(),
-        )
+        return [
+            MavenInfo(
+                artifact = None,
+                is_compileOnly = True,
+                is_shaded = False,
+                transitive_included_runtime_jars = depset(),
+                transitive_included_src_jars = depset(),
+                transitive_maven_direct_deps = depset(),
+            ),
+            platform_info,
+        ]
 
     artifact = get_artifact_from_label(target.label)
     included_src_jars = target[JavaInfo].source_jars
     transitive_included_src_jars = []
 
+    deps = _filter_primary_split(deps, ctx.fragments.platform.platform)
     for dep in (deps + exports):
         transitive_included_src_jars.append(dep[MavenInfo].transitive_included_src_jars)
 
     maven_deps = get_maven_apk_deps(artifact)
-    return [MavenInfo(
-        artifact = artifact,
-        is_compileOnly = False,
-        is_shaded = False,
-        transitive_included_runtime_jars = depset(),
-        transitive_included_src_jars = depset(included_src_jars, transitive = transitive_included_src_jars),
-        transitive_maven_direct_deps = depset(maven_deps),
-    )]
+    return [
+        MavenInfo(
+            artifact = artifact,
+            is_compileOnly = False,
+            is_shaded = False,
+            transitive_included_runtime_jars = depset(),
+            transitive_included_src_jars = depset(included_src_jars, transitive = transitive_included_src_jars),
+            transitive_maven_direct_deps = depset(maven_deps),
+        ),
+        platform_info,
+    ]
 
 collect_maven_apk_info = aspect(
     attr_aspects = [
         "deps",
         "exports",
     ],
+    fragments = ["platform"],
     doc = """
     Collects the Maven apk information for targets, their dependencies, and their transitive exports.
     """,
