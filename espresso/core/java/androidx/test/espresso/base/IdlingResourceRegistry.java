@@ -447,6 +447,12 @@ public final class IdlingResourceRegistry {
         tracerSpan = null;
       }
 
+      if (idle) {
+        // Drop any pending idle transition messages (e.g. from resources that invoke
+        // onTransitionToIdle() inside isIdleNow() or registerIdleTransitionCallback()) so they do
+        // not leave a redundant message on the main Looper queue after the state is already idle.
+        handler.removeMessages(DYNAMIC_RESOURCE_HAS_IDLED, this);
+      }
       this.idle = idle;
     }
 
@@ -462,6 +468,12 @@ public final class IdlingResourceRegistry {
     @Override
     public void onTransitionToIdle() {
       // from app code - unknown thread
+      if (Looper.myLooper() == looper && idle) {
+        // Some IdlingResource implementations invoke onTransitionToIdle() inside isIdleNow()
+        // whenever they are idle. Ignore redundant notifications on the registry looper so polling
+        // isIdleNow() does not enqueue a message onto the main Looper.
+        return;
+      }
       Message m = handler.obtainMessage(DYNAMIC_RESOURCE_HAS_IDLED);
       m.obj = this;
       handler.sendMessage(m);

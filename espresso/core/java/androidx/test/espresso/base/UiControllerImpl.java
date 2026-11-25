@@ -387,6 +387,12 @@ final class UiControllerImpl
   public void loopMainThreadUntilIdle() {
     checkState(Looper.myLooper() == mainLooper, "Expecting to be on main thread!");
     IdleNotifier<IdleNotificationCallback> dynamicIdle = dynamicIdleProvider.get();
+    IdlingPolicy masterIdlePolicy = IdlingPolicies.getMasterIdlingPolicy();
+    long giveUpAtMs =
+        SystemClock.uptimeMillis()
+            + masterIdlePolicy.getIdleTimeoutUnit().toMillis(masterIdlePolicy.getIdleTimeout());
+    MainThreadInterrogation mainThreadInterrogation =
+        new MainThreadInterrogation(EnumSet.noneOf(IdleCondition.class), conditionSet, giveUpAtMs);
     do {
       EnumSet<IdleCondition> condChecks = EnumSet.noneOf(IdleCondition.class);
       if (!asyncIdle.isIdleNow()) {
@@ -429,13 +435,40 @@ final class UiControllerImpl
       }
 
       try {
-        dynamicIdle = loopUntil(condChecks, dynamicIdle);
+        mainThreadInterrogation.setConditions(condChecks);
+        dynamicIdle = loopUntil(condChecks, dynamicIdle, masterIdlePolicy, mainThreadInterrogation);
+        if (mainThreadInterrogation.get() == InterrogationStatus.TIMED_OUT) {
+          // The master IdlingPolicy handled the timeout without throwing (e.g. logWarning());
+          // stop looping rather than spinning forever on a continuously busy main queue.
+          return;
+        }
       } finally {
         asyncIdle.cancelCallback();
         compatIdle.cancelCallback();
         dynamicIdle.cancelCallback();
       }
-    } while (!asyncIdle.isIdleNow() || !compatIdle.isIdleNow() || !dynamicIdle.isIdleNow());
+    } while (!asyncIdle.isIdleNow()
+        || !compatIdle.isIdleNow()
+        || !dynamicIdle.isIdleNow()
+        || mainQueueHasTaskDueSoon());
+  }
+
+  /**
+   * Returns whether the main queue has a task that {@link #loopUntil} would wait for.
+   *
+   * <p>Background work often posts a follow-up task to the main thread and then goes idle. If it
+   * goes idle after {@link #loopUntil} last checked the main queue but before the idle checks in
+   * {@link #loopMainThreadUntilIdle}, those checks report idle while the follow-up task is still
+   * queued. Checking the queue after the idle checks catches the task, because work that has gone
+   * idle has already posted it.
+   */
+  private boolean mainQueueHasTaskDueSoon() {
+    TestLooperManagerCompat testLooperManager = TestLooperManagerCompat.acquire(mainLooper);
+    try {
+      return new Interrogator().peekAtQueueState(testLooperManager, new QueueHasTaskDueSoon());
+    } finally {
+      testLooperManager.release();
+    }
   }
 
   @Override
@@ -464,7 +497,17 @@ final class UiControllerImpl
 
   private void loopUntil(
       IdleCondition condition, IdleNotifier<IdleNotificationCallback> dynamicIdle) {
-    loopUntil(EnumSet.of(condition), dynamicIdle);
+    EnumSet<IdleCondition> conditions = EnumSet.of(condition);
+    IdlingPolicy masterIdlePolicy = IdlingPolicies.getMasterIdlingPolicy();
+    long end =
+        SystemClock.uptimeMillis()
+            + masterIdlePolicy.getIdleTimeoutUnit().toMillis(masterIdlePolicy.getIdleTimeout());
+    IdleNotifier<IdleNotificationCallback> unused =
+        loopUntil(
+            conditions,
+            dynamicIdle,
+            masterIdlePolicy,
+            new MainThreadInterrogation(conditions, conditionSet, end));
   }
 
   /**
@@ -497,15 +540,14 @@ final class UiControllerImpl
    * }</pre>
    */
   private IdleNotifier<IdleNotificationCallback> loopUntil(
-      EnumSet<IdleCondition> conditions, IdleNotifier<IdleNotificationCallback> dynamicIdle) {
-    IdlingPolicy masterIdlePolicy = IdlingPolicies.getMasterIdlingPolicy();
+      EnumSet<IdleCondition> conditions,
+      IdleNotifier<IdleNotificationCallback> dynamicIdle,
+      IdlingPolicy masterIdlePolicy,
+      MainThreadInterrogation mainThreadInterrogation) {
     IdlingPolicy dynamicIdlePolicy = IdlingPolicies.getDynamicIdlingResourceErrorPolicy();
     TestLooperManagerCompat testLooperManager = TestLooperManagerCompat.acquire(mainLooper);
     try {
-      long start = SystemClock.uptimeMillis();
-      long end =
-          start + masterIdlePolicy.getIdleTimeoutUnit().toMillis(masterIdlePolicy.getIdleTimeout());
-      interrogation = new MainThreadInterrogation(conditions, conditionSet, end);
+      interrogation = mainThreadInterrogation;
 
       InterrogationStatus result =
           new Interrogator().loopAndInterrogate(testLooperManager, interrogation);
@@ -600,9 +642,42 @@ final class UiControllerImpl
         });
   }
 
+  /** Records whether a queue has a task that is due soon or is blocked on a sync barrier. */
+  private static final class QueueHasTaskDueSoon
+      implements Interrogator.QueueInterrogationHandler<Boolean> {
+    private boolean hasTaskDueSoon = false;
+
+    @Override
+    public boolean queueEmpty() {
+      return false;
+    }
+
+    @Override
+    public boolean taskDueSoon() {
+      hasTaskDueSoon = true;
+      return false;
+    }
+
+    @Override
+    public boolean taskDueLong() {
+      return false;
+    }
+
+    @Override
+    public boolean barrierUp() {
+      hasTaskDueSoon = true;
+      return false;
+    }
+
+    @Override
+    public Boolean get() {
+      return hasTaskDueSoon;
+    }
+  }
+
   private static final class MainThreadInterrogation
       implements Interrogator.InterrogationHandler<InterrogationStatus> {
-    private final EnumSet<IdleCondition> conditions;
+    private EnumSet<IdleCondition> conditions;
     private final BitSet conditionSet;
     private final long giveUpAtMs;
     private String lastMessage;
@@ -615,6 +690,11 @@ final class UiControllerImpl
       this.conditions = conditions;
       this.conditionSet = conditionSet;
       this.giveUpAtMs = giveUpAtMs;
+    }
+
+    void setConditions(EnumSet<IdleCondition> conditions) {
+      this.conditions = conditions;
+      this.status = InterrogationStatus.COMPLETED;
     }
 
     @Override
@@ -648,7 +728,7 @@ final class UiControllerImpl
       if (conditionsMet()) {
         return false;
       }
-      return true;
+      return continueOrTimeout();
     }
 
     @Override
@@ -661,7 +741,7 @@ final class UiControllerImpl
       if (conditionsMet()) {
         return false;
       }
-      return true;
+      return continueOrTimeout();
     }
 
     @Override
