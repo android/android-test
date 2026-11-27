@@ -16,7 +16,7 @@ package androidx.test.runner.permission {
 
 }
 
-package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @RestrictTo({androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP}) androidx.test.services.events {
+package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) androidx.test.services.events {
 
   @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) public final class AnnotationInfo implements android.os.Parcelable {
     ctor public AnnotationInfo(String, java.util.List<androidx.test.services.events.AnnotationValue!>);
@@ -130,7 +130,7 @@ package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @Restric
 
 }
 
-package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @RestrictTo({androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP}) androidx.test.services.events.discovery {
+package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) androidx.test.services.events.discovery {
 
   public interface ITestDiscoveryEvent extends android.os.IInterface {
     method public void send(androidx.test.services.events.discovery.TestDiscoveryEvent!) throws android.os.RemoteException;
@@ -181,7 +181,7 @@ package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @Restric
 
 }
 
-package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @RestrictTo({androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP}) androidx.test.services.events.platform {
+package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) androidx.test.services.events.platform {
 
   public interface ITestPlatformEvent extends android.os.IInterface {
     method public void send(androidx.test.services.events.platform.TestPlatformEvent!) throws android.os.RemoteException;
@@ -271,7 +271,7 @@ package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @Restric
 
 }
 
-package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @RestrictTo({androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP}) androidx.test.services.events.run {
+package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) androidx.test.services.events.run {
 
   public interface ITestRunEvent extends android.os.IInterface {
     method public void send(androidx.test.services.events.run.TestRunEvent!) throws android.os.RemoteException;

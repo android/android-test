@@ -1,5 +1,5 @@
 // Signature format: 5.0
-package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) @RestrictTo({androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP}) androidx.test.espresso.web.util.concurrent {
+package @RestrictTo(androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP) androidx.test.espresso.web.util.concurrent {
 
   public interface AsyncFunction<I, O> {
     method public com.google.common.util.concurrent.ListenableFuture<O> apply(I?) throws java.lang.Exception;
